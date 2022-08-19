@@ -23,6 +23,7 @@ export interface LanguageI18NStaticTypes {
     clientProtocol:        (params?: Record<string, string | number>) => string;
     cloudStorage:          LanguageI18NStaticTypesCloudStorage;
     common:                Common;
+    components:            Components;
     cookieWarning:         (params?: Record<string, string | number>) => string;
     dashboard:             Dashboard;
     devConsole:            DevConsole;
@@ -33,12 +34,14 @@ export interface LanguageI18NStaticTypes {
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
+    layoutAutosave:        (params?: Record<string, string | number>) => string;
     systemsCount:          (params?: Record<string, string | number>) => string;
     alertsCount:           (params?: Record<string, string | number>) => string;
     ipvdTopXByVolume:      (params?: Record<string, string | number>) => string;
     ipvdDisclaimer:        (params?: Record<string, string | number>) => string;
     menu:                  Menu;
     tableHeaders:          TableHeaders;
+    pages:                 Pages;
     pageTitles:            PageTitles;
     pageDescriptions:      PageDescriptions;
     passwordRequirements:  PasswordRequirements;
@@ -315,6 +318,15 @@ export interface VoiceCommands {
     search:                 (params?: Record<string, string | number>) => string;
     "stop listening":       (params?: Record<string, string | number>) => string;
     view:                   (params?: Record<string, string | number>) => string;
+}
+
+export interface Components {
+    widgets: Widgets;
+}
+
+export interface Widgets {
+    lastUpdated: (params?: Record<string, string | number>) => string;
+    updatingIn:  (params?: Record<string, string | number>) => string;
 }
 
 export interface Dashboard {
@@ -914,6 +926,25 @@ export interface PageTitles {
     apiTool:                (params?: Record<string, string | number>) => string;
     security:               (params?: Record<string, string | number>) => string;
     twofaRequired:          (params?: Record<string, string | number>) => string;
+}
+
+export interface Pages {
+    developers:      Developers;
+    downloadHistory: DownloadHistory;
+    health:          Health;
+}
+
+export interface Developers {
+    menuNodeContainsErrors: (params?: Record<string, string | number>) => string;
+}
+
+export interface DownloadHistory {
+    published: (params?: Record<string, string | number>) => string;
+}
+
+export interface Health {
+    importedSystem: (params?: Record<string, string | number>) => string;
+    importedTime:   (params?: Record<string, string | number>) => string;
 }
 
 export interface PasswordRequirements {

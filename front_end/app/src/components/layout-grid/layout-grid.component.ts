@@ -266,6 +266,7 @@ export class NxLayoutGridComponent {
         configService: NxConfigService,
         private cd: ChangeDetectorRef
     ) {
+        this.LANG = languageService.translations;
         this.CONFIG = configService.config;
     }
 

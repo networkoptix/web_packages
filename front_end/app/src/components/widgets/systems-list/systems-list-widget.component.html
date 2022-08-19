@@ -3,6 +3,7 @@
         <button
             class="btn btn-primary"
             (click)="saveSettings()"
+            translate
         >
             Save Settings
         </button>
@@ -10,7 +11,7 @@
     <nx-stepper [saveButton]="saveButton">
         <cdk-step>
             <div class="h-100 overflow-auto">
-                <h4>Select Systems</h4>
+                <h4 translate>Select Systems</h4>
                 <ng-container
                     *ngFor="
                         let system of card.config.systems | as: { systemId: NxSystem } | keyvalue
@@ -37,7 +38,7 @@
         </cdk-step>
         <cdk-step>
             <div class="h-100 overflow-auto">
-                <h4>Enable Search</h4>
+                <h4 translate>Enable Search</h4>
                 <div class="d-flex mb-1">
                     <nx-checkbox
                         componentId="searchEnabled"

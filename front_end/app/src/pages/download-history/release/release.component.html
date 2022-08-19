@@ -3,7 +3,7 @@
     <h4 class="m-0 ml-3 subtitle">{{ release.productDescription }}</h4>
 </div>
 
-<h4 class="mb-3 subtitle">PUBLISHED {{ release.date }}</h4>
+<h4 class="mb-3 subtitle">{{ LANG.pages.downloadHistory.published({ date: release.date }) }}</h4>
 
 <div *ngIf="release.releaseNotes">
     <h4 translate>Release Notes</h4>

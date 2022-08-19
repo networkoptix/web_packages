@@ -22,6 +22,8 @@ export type WithType<AstElem, Type = TMPL_AST_NODES> = AstElem & {
 
 /**
  * Adaptation of `convertNodeSourceSpanToLoc()` from `@angular-eslint/template-parser`.
+ *
+ * Note: Template linenums are 0-indexed, but ESLint linenums are 1-indexed.
  */
 export function sourceSpanToLoc(
     sourceSpan: ParseSourceSpan,

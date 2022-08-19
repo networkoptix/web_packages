@@ -3,6 +3,7 @@
         <button
             class="btn btn-primary"
             (click)="saveSettings()"
+            translate
         >
             Save Settings
         </button>
@@ -15,7 +16,7 @@
         >
             <cdk-step>
                 <div class="h-100">
-                    <h4>Select to system find camera</h4>
+                    <h4 translate>Select to system find camera</h4>
                     <nx-select
                         [items]="systemsDropdownItems$ | async"
                         [selected]="selectedSystem"
@@ -26,7 +27,7 @@
             </cdk-step>
             <cdk-step>
                 <div class="h-100">
-                    <h4>Select a camera</h4>
+                    <h4 translate>Select a camera</h4>
                     <nx-select
                         [items]="camerasDropdownItems$ | async"
                         [selected]="selectedCamera"
@@ -37,7 +38,7 @@
             </cdk-step>
             <cdk-step>
                 <div class="h-100">
-                    <h4>Auto update settings</h4>
+                    <h4 translate>Auto update settings</h4>
                     <div>
                         <nx-checkbox
                             [(ngModel)]="card.config.autoUpdate"
@@ -46,6 +47,7 @@
                         <label
                             class="mb-0"
                             for="autoUpdate"
+                            translate
                             >Auto update</label
                         >
                     </div>

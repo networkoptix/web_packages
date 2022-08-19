@@ -50,7 +50,7 @@
             *ngIf="importedData.imported"
             class="importInfo h-auto"
         >
-            <p>Generated: {{ importedData.time }}</p>
+            <p>{{ LANG.pages.health.importedTime({ time: importedData.time }) }}</p>
         </div>
     </div>
     <div class="px-2 position-relative">

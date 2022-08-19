@@ -60,9 +60,9 @@
                 >
                     <thead>
                         <tr>
-                            <th>Address</th>
-                            <th>Mode</th>
-                            <th>Space</th>
+                            <th translate>Address</th>
+                            <th translate>Mode</th>
+                            <th translate>Space</th>
                             <th *ngIf="currentStorageState?.hasAction">&nbsp;</th>
                         </tr>
                     </thead>
@@ -366,6 +366,7 @@
                     <button
                         class="btn btn-default"
                         (click)="reindexingMain = false; cancelIndexing(storageModes.MAIN)"
+                        translate
                     >
                         Cancel
                     </button>
@@ -410,6 +411,7 @@
                         <button
                             class="btn btn-default"
                             (click)="reindexingBackup = false; cancelIndexing(storageModes.BACKUP)"
+                            translate
                         >
                             Cancel
                         </button>

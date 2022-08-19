@@ -29,10 +29,10 @@
 >
     <div class="error-display-block">
         <div class="heading bg-warning">
-            Menu node <span class="brand-title-span">"{{ menuNodeName }}"</span> contains errors
+            {{ LANG.pages.developers.menuNodeContainsErrors({ menuNodeName }) }}
         </div>
         <div class="error-wrapper error-block">
-            <h2>Errors:</h2>
+            <h2 translate>Errors:</h2>
             <ng-container
                 *ngTemplateOutlet="errorLevel; context: { node: errorsToDisplay, level: 1 }"
             ></ng-container>

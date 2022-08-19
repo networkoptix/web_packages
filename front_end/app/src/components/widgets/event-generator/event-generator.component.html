@@ -3,6 +3,7 @@
         <button
             class="btn btn-primary"
             (click)="saveSettings()"
+            translate
         >
             Save Settings
         </button>
@@ -11,7 +12,7 @@
         <nx-stepper [saveButton]="saveButton">
             <cdk-step>
                 <div class="h-100">
-                    <h4>Select to system</h4>
+                    <h4 translate>Select to system</h4>
                     <nx-select
                         [items]="systemsDropdownItems$ | async"
                         [selected]="selectedSystem"

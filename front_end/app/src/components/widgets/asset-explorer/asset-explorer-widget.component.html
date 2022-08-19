@@ -6,6 +6,7 @@
     <button
         class="btn btn-primary"
         (click)="saveSettings()"
+        translate
     >
         Save Settings
     </button>
@@ -24,10 +25,10 @@
             >
                 <cdk-step>
                     <div class="h-100">
-                        <h4>General Settings</h4>
+                        <h4 translate>General Settings</h4>
                         <div class="mt-2 mb-3">
                             <label class="my-0">
-                                <span>Max Cache Age</span>
+                                <span translate>Max Cache Age</span>
                             </label>
                             <nx-numeric
                                 [min]="1"
@@ -44,7 +45,7 @@
                                 class="mb-0"
                                 for="showAdmin"
                             >
-                                <span>Show Admin Links</span>
+                                <span translate>Show Admin Links</span>
                             </label>
                         </div>
                         <div class="d-flex mb-1">
@@ -56,14 +57,14 @@
                                 class="mb-0"
                                 for="showPreviews"
                             >
-                                <span>Show Preview Links</span>
+                                <span translate>Show Preview Links</span>
                             </label>
                         </div>
                     </div>
                 </cdk-step>
                 <cdk-step>
                     <div class="h-100">
-                        <h4>Selected Asset Types</h4>
+                        <h4 translate>Selected Asset Types</h4>
                         <div
                             *ngFor="
                                 let assetType of card.config.assetTypes
@@ -92,7 +93,9 @@
                 [ngClass]="{ 'animate-rotation': loading }"
                 (click)="refreshData()"
             >
-                <span>Last Updated {{ dataSource.last }}</span>
+                <span>
+                    {{ LANG.components.widgets.lastUpdated({ date: dataSource.last }) }}
+                </span>
                 <svg-icon
                     nx-add-svg-src
                     [src]="CONFIG.icons.dirTextButtons + 'reload.svg'"

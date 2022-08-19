@@ -3,6 +3,7 @@
         <button
             class="btn btn-primary"
             (click)="saveSettings()"
+            translate
         >
             Save Settings
         </button>
@@ -13,7 +14,7 @@
     >
         <cdk-step>
             <div class="h-100">
-                <h4>Select system to show bookmarks</h4>
+                <h4 translate>Select system to show bookmarks</h4>
                 <nx-select
                     [items]="systemsDropdownItems$ | async"
                     [selected]="selectedSystem"
@@ -42,7 +43,12 @@
             ></svg-icon>
         </h4>
         <cdk-accordion *ngIf="bookmarks$ | async as bookmarks; else preloader">
-            <div *ngIf="!bookmarks.length">No bookmarks</div>
+            <div
+                *ngIf="!bookmarks.length"
+                translate
+            >
+                No bookmarks
+            </div>
             <cdk-accordion-item
                 *ngFor="let bookmark of bookmarks; let index = index"
                 #accordionItem="cdkAccordionItem"

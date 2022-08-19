@@ -117,7 +117,12 @@
                         [innerHTML]="LANG.ipvdFeedback.request() | safe: 'html'"
                     ></span>
                 </p>
-                <button *ngIf="debug">reset</button>
+                <button
+                    *ngIf="debug"
+                    translate
+                >
+                    reset
+                </button>
             </div>
 
             <div class="row p-0 m-0">

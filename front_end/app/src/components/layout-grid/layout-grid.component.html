@@ -9,7 +9,7 @@
         *ngIf="(autoSaveHandler$ | async) > 0"
         class="auto-save-overlay"
     >
-        Auto saving in {{ autoSaveHandler$ | async }} seconds...
+        {{ LANG.layoutAutosave({ time: autoSaveHandler$ | async }) }}
     </h2>
     <div
         class="resources-sidebar"
@@ -23,7 +23,7 @@
             #settings
             (click)="openMenu = settings"
         >
-            <h3>Settings</h3>
+            <h3 translate>Settings</h3>
         </header>
         <div
             class="settings-menu"
@@ -74,7 +74,7 @@
             #resources
             (click)="openMenu = resources"
         >
-            <h3>Resources</h3>
+            <h3 translate>Resources</h3>
         </header>
         <cdk-tree
             [ngClass]="{ 'hide-settings': openMenu && openMenu !== resources }"
@@ -169,7 +169,12 @@
                         </div>
                     </header>
                     <ng-template #notSupported>
-                        <div class="not-supported">Not supported</div>
+                        <div
+                            class="not-supported"
+                            translate
+                        >
+                            Not supported
+                        </div>
                     </ng-template>
                     <div
                         cdkDragHandle

@@ -598,8 +598,7 @@ module.exports = {
                 // Not required for internal/testing components
             ],
             rules: {
-                // 'nx/template/require-translate': 'error',
-                // TODO: Activate and apply fixes
+                'nx/template/no-untranslated': 'error',
             }
         },
         {
