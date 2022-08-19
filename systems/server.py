@@ -304,8 +304,10 @@ class GroupView:
         return group
 
     @staticmethod
-    def create_group(name, email):
+    def create_group(name, email, parent_id=None):
         group = Group(name=name, owner_account_email=email)
+        if parent_id:
+            group.parent_group_id = parent_id
         db.session.add(group)
         db.session.commit()
         return group.data()
@@ -346,7 +348,7 @@ class GroupView:
         if system.get('ownerAccountEmail') != account.get('email'):
             return {'msg': 'You can only move systems that you own.', 'error': 403}
 
-        group = Group.query.get(group_id)
+        group = Group.query.filter(Group.id == group_id).first()
         if group and group.owner_account_email != account.get('email'):
             return {'msg': 'You can only move systems into groups that you own.', 'error': 403}
 
@@ -354,6 +356,7 @@ class GroupView:
         system = System.query.get(system_id)
         if not system:
             system = System(id=system_id)
+            db.session.add(system)
             db.session.commit()
 
         elif system.group_id:
@@ -363,7 +366,7 @@ class GroupView:
         if group_id:
             system.group_id = group_id
         else:
-            system.delete()
+            db.session.delete(system)
         db.session.commit()
 
         if group:
@@ -645,7 +648,7 @@ async def receiving(cloud_connector):
         # TODO actions: import/export, rename group
         elif action == 'create_group':
             # TODO: support assigining parent on creation
-            res = GroupView.create_group(data['name'], user_email)
+            res = GroupView.create_group(data['name'], user_email, data.get('target_id'))
         elif action == 'delete_group':
             res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'], user_email)
         elif action == 'move_group':

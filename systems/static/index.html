@@ -140,13 +140,8 @@
                     return _systems;
                 }, {});
             } else if (action === 'list_groups') {
-
-                const groups = data.filter(r => r.type === 'group')
-                const gidOptions = groups.map(g => `<option value="${g.id}">${g.name} (${g.id})</option>`)
-                groupId.innerHTML = gidOptions
-                groupId.value ||= groups[0]?.id
-                targetId.innerHTML = gidOptions
-                targetId.value ||= groups[0]?.id
+                const createGroupOption = (g) => `<option value="${g.id}">${g.name} (${g.id})</option>`;
+                const gidOptions = ['<option value="">Root</option>'];
 
                 const placedSystems = new Set();
                 const mapIdsToSystem = (groupSystems) => groupSystems
@@ -155,14 +150,18 @@
                         placedSystems.add(system.id);
                         return {...system, ...systems[system.id]}
                     });
-                const mapGroupsToSystems = (groups) => groups.map(group => ({
-                    ...group,
-                    groups: mapGroupsToSystems(group.groups),
-                    systems: mapIdsToSystem(group.systems)
-                }))
+                const mapGroupsToSystems = (groups) => groups.map(group => {
+                    gidOptions.push(createGroupOption(group));
+                    return {
+                        ...group,
+                        groups: mapGroupsToSystems(group.groups),
+                        systems: mapIdsToSystem(group.systems)
+                    };
+                })
                 const showData = data.filter((element) => element.type === 'group' || systems.hasOwnProperty(element.id))
                     .map(element => {
                         if (element.type === 'group') {
+                            gidOptions.push(createGroupOption(element));
                             element.groups = mapGroupsToSystems(element.groups);
                             element.systems = mapIdsToSystem(element.systems);
                         } else {
@@ -170,6 +169,12 @@
                         }
                         return element;
                     });
+                const stringOptions = gidOptions.join();
+                groupId.innerHTML = stringOptions;
+                targetId.innerHTML = stringOptions;
+                groupId.value ||= gidOptions[0]?.id;
+                targetId.value ||= gidOptions[0]?.id;
+
                 Object.entries(systems).forEach(([id, system]) => {
                     if (!placedSystems.has(id)) {
                         showData.push(system);
