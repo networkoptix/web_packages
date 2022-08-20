@@ -286,6 +286,12 @@
         },
         "viewingOutdatedReport": "Vous visualisez un rapport obsolète."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
     "cookieWarning": "Nous avons utilisé des cookies pour améliorer votre expérience sur notre site et nous aider à comprendre comment notre site est utilisé. En savoir plus et configurer vos préférences de cookies&nbsp; | ici | . En continuant à utiliser notre site, vous consentez à utiliser nos cookies.",
     "dashboard": {
         "dashboardEditEnabled": "L'édition du tableau de bord est activée",
@@ -728,6 +734,7 @@
     "ipvdFeedback": {
         "request": "Veuillez <span id=\"request\">soumettre une demande</span> pour des questions/préoccupations supplémentaires concernant les appareils pris en charge."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systèmes} one{# Système} other{# Systèmes}} trouvé",
     "alertsCount": "{count, plural, =0{# alerte} one{# alerte} other{# alertes}}",
     "ipvdTopXByVolume": "Top {value} par volume :",
@@ -752,6 +759,18 @@
         "type": "Type",
         "server": "Serveur",
         "alert": "Alerte"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "À Propos",

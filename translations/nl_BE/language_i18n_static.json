@@ -286,6 +286,12 @@
         },
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
     "cookieWarning": "We hebben cookies gebruikt om uw ervaring op onze site te verbeteren. Ze helpen ons ook te begrijpen hoe onze site wordt gebruikt. Lees meer en stel uw cookievoorkeuren in&nbsp; | hier | . Door onze site te blijven gebruiken, stemt u in met het gebruik van onze cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Bewerken van dashboard is ingeschakeld",
@@ -728,6 +734,7 @@
     "ipvdFeedback": {
         "request": "Gelieve <span id=\"request\">een verzoek in te dienen</span> voor aanvullende vragen/opmerkingen met betrekking tot ondersteunde apparaten."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}} gevonden",
     "alertsCount": "{count, plural, =0{# waarschuwingen} one{# waarschuwing} other{# waarschuwingen}}",
     "ipvdTopXByVolume": "Top {value} door volume:",
@@ -752,6 +759,18 @@
         "type": "Type",
         "server": "Server",
         "alert": "Waarschuwing"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Over",

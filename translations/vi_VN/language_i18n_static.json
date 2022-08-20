@@ -286,6 +286,12 @@
         },
         "viewingOutdatedReport": "Bạn đang xem một báo cáo lỗi thời."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
     "cookieWarning": "Chúng tôi sử dụng cookie để cải thiện trải nghiệm của bạn trên trang web của chúng tôi. Chúng cũng giúp chúng tôi hiểu cách trang web của chúng tôi đang được sử dụng. Tìm hiểu thêm và đặt tùy chọn cookie &nbsp; |tại đây|. Bằng cách tiếp tục sử dụng trang web, bạn đồng ý sử dụng cookie của chúng tôi.",
     "dashboard": {
         "dashboardEditEnabled": "Chỉnh sửa bảng điều khiển được bật",
@@ -728,6 +734,7 @@
     "ipvdFeedback": {
         "request": "Vui lòng <span id=\"request\">gửi yêu cầu</span> nếu bạn có thêm câu hỏi / thắc mắc liên quan đến các thiết bị được hỗ trợ."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "Tìm thấy {count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
     "alertsCount": "{count, plural, =0{# cảnh báo} one{# cảnh báo} other{# cảnh báo}}",
     "ipvdTopXByVolume": "Top {value} theo khối lượng:",
@@ -752,6 +759,18 @@
         "type": "Kiểu",
         "server": "May chủ",
         "alert": "Cảnh báo"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Đối với",

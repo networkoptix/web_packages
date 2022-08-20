@@ -286,6 +286,12 @@
         },
         "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
     "cookieWarning": "Vi använde cookies för att förbättra din upplevelse på vår webbplats. De hjälper oss också att förstå hur vår webbplats används. Ta reda på mer och ställ in dina cookies-preferenser&nbsp; | här | . Genom att fortsätta använda vår sida samtycker du till att använda våra cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard redigering är aktiverad",
@@ -728,6 +734,7 @@
     "ipvdFeedback": {
         "request": "Vänligen <span id=\"request\">skicka in en begäran</span> för ytterligare frågor/bekymmer angående enheter som stöds."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# System} one{# Systemet} other{# System}}",
     "alertsCount": "{count, plural, =0{# varningar} one{# varna} other{# varningar}}",
     "ipvdTopXByVolume": "Topp {value} efter volym:",
@@ -752,6 +759,18 @@
         "type": "Typ",
         "server": "Server",
         "alert": "Varning"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Om",
@@ -977,8 +996,8 @@
         "transferTo": "Överför äganderätten till – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+        "groupCount": "{count, plural, =0{# Grupper} one{# Grupp} other{# Grupper}}",
+        "systemCount": "{count, plural, =0{# System} one{# System} other{# System}}"
     },
     "systemStatuses": {
         "activated": "aktiverad",

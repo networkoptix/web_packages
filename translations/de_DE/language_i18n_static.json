@@ -286,6 +286,12 @@
         },
         "viewingOutdatedReport": "Sie sehen einen veralteten Bericht."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
     "cookieWarning": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Sie helfen uns auch zu verstehen, wie unsere Website genutzt wird. Erfahren Sie mehr und legen Sie Ihre Cookie-Einstellungen&nbsp; | hier | fest. Wenn Sie unsere Website weiter nutzen, stimmen Sie der Verwendung von Cookies zu.",
     "dashboard": {
         "dashboardEditEnabled": "Bearbeitung des Dashboards ist aktiviert",
@@ -728,6 +734,7 @@
     "ipvdFeedback": {
         "request": "Bitte <span id=\"request\">senden Sie eine Anfrage</span> für weitere Fragen/Bedenken bezüglich unterstützter Geräte."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systeme} one{# System} other{# Systeme}} gefunden",
     "alertsCount": "{count, plural, =0{# Alarme} one{# Alarm} other{# Alarme}}",
     "ipvdTopXByVolume": "Top {value} nach Volumen:",
@@ -752,6 +759,18 @@
         "type": "Typ",
         "server": "Server",
         "alert": "Alarm"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Über",
@@ -977,8 +996,8 @@
         "transferTo": "Eigentum übertragen auf – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+        "groupCount": "{count, plural, =0{# Gruppen} one{# Gruppe} other{# Gruppen}}",
+        "systemCount": "{count, plural, =0{# Systeme} one{# System} other{# Systeme}}"
     },
     "systemStatuses": {
         "activated": "aktiviert",
