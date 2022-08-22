@@ -1,8 +1,13 @@
 FROM python:3.8.7-alpine3.12
 
 ARG CACHE_DATE
+ARG ARTIFACTORY_HOST
+ARG ARTIFACTORY_URL
+ENV PIP_INDEX_URL "$ARTIFACTORY_URL/api/pypi/pypi-python3.8-alpine3.12/simple"
+ENV PIP_EXTRA_INDEX_URL "$ARTIFACTORY_URL/api/pypi/pypi-remote/simple $ARTIFACTORY_URL/api/pypi/pypi-remote/simple"
+ENV PIP_TRUSTED_HOST $ARTIFACTORY_HOST
+
 COPY stage/requirements.txt /app/requirements.txt
-COPY pip.conf /root/.config/pip/pip.conf
 
 RUN set -ex \
     apk update \

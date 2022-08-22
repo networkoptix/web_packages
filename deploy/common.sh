@@ -53,7 +53,7 @@ function copy_deps()
 function pack()
 {
     echo "Packing $MODULE:$VERSION to a container"
-    local COMMON_BUILD_ARGS=(--build-arg VERSION="$VERSION" --build-arg REVISION="$REVISION" --build-arg BUILD_DATE="$BUILD_DATE" --build-arg BUILD_HOST="$BUILD_HOST" --build-arg BUILD_USER="$BUILD_USER" --build-arg BUILD_NUMBER="$BUILD_NUMBER")
+    local COMMON_BUILD_ARGS=(--build-arg VERSION="$VERSION" --build-arg REVISION="$REVISION" --build-arg BUILD_DATE="$BUILD_DATE" --build-arg BUILD_HOST="$BUILD_HOST" --build-arg BUILD_USER="$BUILD_USER" --build-arg BUILD_NUMBER="$BUILD_NUMBER" --build-arg ARTIFACTORY_HOST="$ARTIFACTORY_HOST" --build-arg ARTIFACTORY_URL="$ARTIFACTORY_URL")
 
     grep 'ARG.*DOCKER_REGISTRY' Dockerfile >& /dev/null && COMMON_BUILD_ARGS=("${COMMON_BUILD_ARGS[@]}" --build-arg DOCKER_REGISTRY="$DOCKER_REGISTRY")
 
