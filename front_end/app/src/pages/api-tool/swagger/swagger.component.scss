@@ -29,10 +29,6 @@
 			display: none !important;
 		}
 
-		.opblock-summary {
-			display: none !important;
-		}
-
 		.wrapper {
 			padding-left: 0px !important;
 		}
@@ -149,9 +145,12 @@
 			display          : flex;
 			align-items      : center;
 			padding          : 12px;
+			height: 48px;
 			cursor           : pointer;
-			background-color : var(--card-header-bg) !important;
 			position         : relative;
+			.opblock-summary-control {
+				padding-left: 4px !important;
+			}
 
 			&::after {
 				position   : absolute;
@@ -167,6 +166,7 @@
 		}
 
 		&.is-open .opblock-summary {
+			background-color : var(--card-header-bg) !important;
 			border-bottom : 1px solid var(--border-color) !important;
 
 			&::after {
@@ -226,28 +226,37 @@
 	li.tabitem {
 		height: 100%;
 		border-bottom: 1px solid transparent;
-		padding-bottom: 7px !important;
-		padding-right: 0px;
+		padding: 0px !important;
+		height: 40px !important;
 		min-width: 0px;
 		border-bottom: 1px solid $light6;
 		cursor: pointer;
 
 		&:first-of-type {
 			padding-right: 12px;
+			button {
+				margin-right: 20px;
+			}
 		}
 
-		a {
-			@include typography.medium14light16;
+		button {
+			@include typography.medium14nocolor;
+			color: var(--light-text-color) !important;
 			font-weight: 500;
 			text-decoration: none;
-			padding-bottom: 7px;
+			padding: 0px 0px 0px 0px !important;
+			height: 40px !important;
 		}
+
 		&.active {
 			position: relative;
-			a {
-				@include typography.medium14blue1;
-				padding-bottom: 8px;
-				border-bottom: 1px solid $blue1;
+			button {
+				@include typography.medium14nocolor;
+				color: var(--swagger-btn-execute-bg) !important;
+				font-weight: 500;
+				border-radius: 0px !important;
+				height: 40px !important;
+				border-bottom: 1px solid var(--swagger-btn-execute-bg);
 			}
 		}
 	}
@@ -309,7 +318,7 @@
 		}
 		&:disabled{
 			border-color: var(--swagger-input-disabled-border);
-			background-color: var(--swagger-input-disabled);
+			background-color: var(--swagger-input-disabled) !important;
 
 			&::placeholder {
 				color: var(--swagger-input-disabled);
@@ -725,6 +734,11 @@ nx-swagger-markdown + div#swagger-ui {
 	padding       : 2px 8px;
 	border-radius : 2px;
 	font-weight: 500 !important;
+	width: 90px;
+	height: 24px;
+	display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
 }
 
 .swagger-description .opblock-method {
@@ -732,10 +746,6 @@ nx-swagger-markdown + div#swagger-ui {
 	position: absolute;
 	right: 32px;
 	top: 6px;
-}
-
-.swagger-ui .opblock-summary-method, .swagger-description .opblock-method {
-	width: 90px;
 }
 
 .swagger-ui .opblock.opblock, .swagger-description .opblock-method {
@@ -768,7 +778,7 @@ nx-swagger-markdown + div#swagger-ui {
 	color           : var(--body-text-color);
 	width           : 100%;
 	margin-top	    : 10px;
-	padding	        : .8em 0.5em .8em 1em !important;
+	padding	        : .8em 0.5em 1.8em 1em !important;
 }
 
 .swagger-container .highlight-code {
@@ -838,7 +848,7 @@ nx-swagger-markdown + div#swagger-ui {
 
 .swagger-container table.parameters {
 	tbody tr td {
-		padding: 12px 8px 18px 24px;
+		padding: 12px 8px 18px 24px !important;
 	}
 }
 

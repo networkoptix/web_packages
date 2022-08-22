@@ -12,6 +12,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
 import type SwaggerUI from 'swagger-ui';
+import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -126,27 +127,27 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         };
     }
 
-    #swaggerUI: SwaggerUI;
+    #swaggerUI: ((opts: SwaggerUIOptions) => SwaggerUI);
 
-    private async getSwagger(): SwaggerUI {
+    private async getSwagger(): Promise<((opts: SwaggerUIOptions) => SwaggerUI)> {
         this.#swaggerUI ||= await import('swagger-ui').then(m => m.default);
         return this.#swaggerUI;
     }
 
-    private initSwagger(filter: string | string[], expand = 'list') {
+    private initSwagger(filter: string, expand: 'list' | 'full' | 'none' = 'list') {
         this.APIToolSystemService.setRequestURL(this.currentAPIDoc);
         if (filter === '' || filter?.length === 0) {
             return;
         }
         // wait for the DOM element
-        this.getSwagger().then(SwaggerUI => {
-            this.swagger = new SwaggerUI({
+        this.getSwagger().then(swagger => {
+            this.swagger = swagger({
                 dom_id: '#swagger-ui',
                 layout: 'BaseLayout',
-                presets: [
-                    SwaggerUI.presets.apis,
-                    SwaggerUI.SwaggerUIStandalonePreset
-                ],
+                // presets: [ Not sure if removing this breaks anything
+                //     // swagger.presets.apis,
+                //     // swagger.SwaggerUIStandalonePreset
+                // ],
                 plugins: [this.OnResponsesRenderPlugin],
                 spec: this.currentAPIDoc,
                 filter,
@@ -166,6 +167,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                     if (response.status === 403 && response?.obj?.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         this.handleOldSession();
                     }
+                    return response;
                 }
             });
             if (this.openAPIJSONService.isInfoNode) {
@@ -177,7 +179,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     }
 
     // initSwagger methods
-    private getSupportedMethods = () => {
+    private getSupportedMethods = (): SupportedHTTPMethods[] => {
         if (this.openAPIJSONService.isReadOnly) {
             return [];
         }
@@ -241,7 +243,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     // swagger-ui plugin system
-    private OnResponsesRenderPlugin = () => ({
+    private OnResponsesRenderPlugin: SwaggerUIPlugin = () => ({
         wrapComponents: {
             responses: (Responses, { React }) => props => {
                 const responses = React.createElement(Responses, props);
@@ -448,6 +450,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     addLineCounter = (parent: HTMLElement): void => {
+        if (parent.classList.contains('curl')) {
+            parent.innerHTML = parent.innerText;
+        }
         const el = parent.firstElementChild?.tagName === 'CODE' ? parent.firstElementChild : parent;
         const lines = el.innerHTML.split('\n').map(div => `<div class='line'>${div}</div>`);
         if (lines.length > 1) { // Don't show line counters if only one line
@@ -464,10 +469,6 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 } else {
                     contentFound = true;
                 }
-            }
-            if (parent.childElementCount > 1) {
-                // the code above adds one extra line, should be removed
-                parent.lastElementChild.remove();
             }
         } else {
             parent.innerHTML = parent.innerText; // If no lines are added, remove code highlighting elements that comes from swagger-ui
