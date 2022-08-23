@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
+import { animationFrameScheduler, interval, Subject } from 'rxjs';
 
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
@@ -9,6 +10,7 @@ import { TimeRange } from './TimeRange';
 import { cfg } from './timeline.config';
 import type { TimelineServiceStatus } from './timeline.services.types';
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -25,19 +27,25 @@ export class TimelineService {
         protected vms: VideoManagementSystemService,
         browserDetector: DeviceDetectorService
     ) {
-        const _60fps = Math.ceil(1000 / 17);
-        const _30fps = Math.ceil(1000 / 34);
+        // 1000 / [desired frames] = timeout between animation frames requests
+        const _60fps = Math.ceil(1000 / 60); // ~17ms
+        const _30fps = Math.ceil(1000 / 30); // ~34ms
 
-        let renderFps = _60fps;
+        let _renderFps = _60fps;
         if (
             browserDetector.isMobile() ||
             ['safari', 'firefox'].includes(browserDetector.browser)
         ) {
-            renderFps = _30fps;
+            _renderFps = _30fps;
         }
-        this.renderFps = renderFps;
+        this.renderFps = _renderFps;
 
-        requestAnimationFrame(() => this._onAnimationFrame());
+        // requestAnimationFrame(() => this._onAnimationFrame());
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
     }
 
     public get canvasGeometryUpdateRequested() {
@@ -271,8 +279,8 @@ export class TimelineService {
             this._animationStep = 0;
         }
         this._emit();
-        setTimeout(() => {
-            requestAnimationFrame(() => this._onAnimationFrame());
-        }, this.renderFps);
+        // setTimeout(() => {
+        //     requestAnimationFrame(() => this._onAnimationFrame());
+        // }, this.renderFps);
     }
 }

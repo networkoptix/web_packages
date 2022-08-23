@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
 
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -27,6 +28,7 @@ enum EDGE_SCROLLING_SPEED {
     FAST = 3,
 }
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -47,8 +49,13 @@ export class TimelineSelectionService {
     ) {
         // this.handleTimelineChange = this.handleTimelineChange.bind(this)
         // timeline.subject.subscribe(this.handleTimelineChange)
-        this.onAnimationFrame = this.onAnimationFrame.bind(this);
-        requestAnimationFrame(this.onAnimationFrame);
+        // this.onAnimationFrame = this.onAnimationFrame.bind(this);
+        // requestAnimationFrame(this.onAnimationFrame);
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
     }
 
     public get exportUrlParams(): Object {
@@ -388,10 +395,10 @@ export class TimelineSelectionService {
         this._emit();
     }
 
-    protected _animationFrameHandle: number;
+    // protected _animationFrameHandle: number;
 
-    public onAnimationFrame(): void {
-        this._animationFrameHandle = requestAnimationFrame(this.onAnimationFrame);
+    private _onAnimationFrame(): void {
+        // this._animationFrameHandle = requestAnimationFrame(this.onAnimationFrame);
         let speed, offset;
         const STEP = 0.2;
         switch (this._dragMode) {

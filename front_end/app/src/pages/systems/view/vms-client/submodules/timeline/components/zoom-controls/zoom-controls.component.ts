@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { animationFrameScheduler, interval, Subscription } from 'rxjs';
 
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
@@ -13,6 +14,7 @@ import type {
 
 type signType = int; // -1 | 0 | 1
 
+@UntilDestroy()
 @Component({
     selector: 'zoom-controls',
     templateUrl: './zoom-controls.component.html',
@@ -35,15 +37,15 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
     }
 
-    protected _animationFrameRequestHandler: number;
+    // protected _animationFrameRequestHandler: number;
 
-    public onAnimationFrame(): void {
+    private _onAnimationFrame(): void {
         this.performZoomingStep();
-        setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() =>
-                this.onAnimationFrame()
-            );
-        }, this.timeline.renderFps);
+        // setTimeout(() => {
+        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        //         this.onAnimationFrame()
+        //     );
+        // }, this.timeline.renderFps);
     }
 
     public ngOnInit(): void {
@@ -53,15 +55,20 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this.vmsSubscription = this.vms.subject.subscribe(
             this.onVmsSubjectChange
         );
-        this._animationFrameRequestHandler = requestAnimationFrame(() =>
-            this.onAnimationFrame()
-        );
+        // this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        //     this.onAnimationFrame()
+        // );
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
     }
 
     public ngOnDestroy(): void {
         this.timelineSubscription.unsubscribe();
         this.vmsSubscription.unsubscribe();
-        cancelAnimationFrame(this._animationFrameRequestHandler);
+        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     public onTimelineSubjectChange(state: TimelineServiceStatus): void {

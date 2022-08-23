@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy, isDevMode } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
 
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
@@ -16,6 +17,7 @@ import {
     ArchivePlaybackState
 } from '../datatypes/PlaybackState';
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -71,23 +73,28 @@ export class PlaybackService implements OnDestroy {
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService
     ) {
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(() => this.onAnimationFrame());
+        // this._animationFrameRequestHandler =
+        //     requestAnimationFrame(() => this.onAnimationFrame());
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
     }
 
-    protected _animationFrameRequestHandler: number;
+    // protected _animationFrameRequestHandler: number;
 
-    public onAnimationFrame(): void {
+    public _onAnimationFrame(): void {
         this.handleAnimationFrame();
-        setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() =>
-                this.onAnimationFrame()
-            );
-        }, this.timeline.renderFps);
+        // setTimeout(() => {
+        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        //         this.onAnimationFrame()
+        //     );
+        // }, this.timeline.renderFps);
     }
 
     public ngOnDestroy(): void {
-        cancelAnimationFrame(this._animationFrameRequestHandler);
+        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     protected _subject = new BehaviorSubject<PlaybackState>(

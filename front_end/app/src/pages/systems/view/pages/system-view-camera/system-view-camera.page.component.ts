@@ -9,9 +9,9 @@ import {
     Inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BehaviorSubject, Subject, Subscription, timer, interval } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, timer, interval, animationFrameScheduler } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -81,7 +81,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _uxStateSubscription: Subscription;
     protected _playbackSubscription: Subscription;
 
-    protected _animationFrameRequestHandler: number;
+    // protected _animationFrameRequestHandler: number;
 
     public settingsShown: boolean = false;
 
@@ -225,8 +225,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._uxStateSubscription = this.ux.subject
             .subscribe(clientUxState => this._onUxStateChange(clientUxState));
 
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(() => this._onAnimationFrame());
+        // this._animationFrameRequestHandler =
+        //     requestAnimationFrame(() => this._onAnimationFrame());
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
 
         this.document.addEventListener(
             'fullscreenchange',
@@ -633,7 +638,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.onFullScreenChange
         );
 
-        cancelAnimationFrame(this._animationFrameRequestHandler);
+        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     protected _onUxStateChange(s: WebClientUxState): void {
@@ -710,11 +715,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.timelineExtendToNow.extendToNow();
         }
 
-        setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() =>
-                this._onAnimationFrame()
-            );
-        }, this.timeline.renderFps);
+        // setTimeout(() => {
+        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        //         this._onAnimationFrame()
+        //     );
+        // }, this.timeline.renderFps);
     }
 
     public get showTimeline(): boolean {

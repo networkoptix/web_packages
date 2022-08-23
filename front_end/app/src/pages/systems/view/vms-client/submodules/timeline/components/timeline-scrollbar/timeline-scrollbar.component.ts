@@ -6,8 +6,9 @@ import {
     ViewChild,
     HostListener
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subscription } from 'rxjs';
+import { animationFrameScheduler, interval, Subscription } from 'rxjs';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -34,6 +35,7 @@ import type {
 
 // const MIN_BAR_WIDTH_PX = 50;
 
+@UntilDestroy()
 @Component({
     selector: 'timeline-scrollbar',
     templateUrl: './timeline-scrollbar.component.html',
@@ -96,16 +98,22 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this.selectionSubscription = this.selection.subject.subscribe(
             this.onSelectionSubjectChange
         );
-        this._animationFrameRequestHandler = requestAnimationFrame(() =>
-            this.onAnimationFrame()
-        );
+        // this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        //     this.onAnimationFrame()
+        // );
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
+
         setTimeout(() => this.onResize(), 0);
     }
 
     public ngOnDestroy(): void {
         this.scrollbarSubscription.unsubscribe();
         this.playbackSubscription.unsubscribe();
-        cancelAnimationFrame(this._animationFrameRequestHandler);
+        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     protected _magnification: float;
@@ -325,15 +333,15 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this.scrollbarRelative.handleButtonRightDblClick();
     }
 
-    protected _animationFrameRequestHandler: number;
+    // protected _animationFrameRequestHandler: number;
 
-    public onAnimationFrame(): void {
+    private _onAnimationFrame(): void {
         this.scrollbarRelative.updateIfMouseIsDown();
-        setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() =>
-                this.onAnimationFrame()
-            );
-        }, this.timeline.renderFps);
+        // setTimeout(() => {
+        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        //         this.onAnimationFrame()
+        //     );
+        // }, this.timeline.renderFps);
     }
 
     @HostListener('window:resize', ['$event'])
