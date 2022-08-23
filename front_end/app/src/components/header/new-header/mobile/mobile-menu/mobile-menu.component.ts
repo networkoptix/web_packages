@@ -20,8 +20,8 @@ import { NxHeaderService } from '@services/nx-header.service';
 export class NxMobileHeaderMenuComponent {
   @Input() menuNodes: MenuNode[] = [];
   @Input() selectedNode: MenuNode;
-  @Input() loggedIn = false;
-  @Input() isProfile = false;
+  @Input() loggedIn: boolean = false;
+  @Input() isProfile: boolean = false;
   @Output() nodeClicked = new EventEmitter<boolean>();
   profileMenu: MenuNode[];
   currentSystemMenu: MenuNode;
@@ -47,13 +47,13 @@ export class NxMobileHeaderMenuComponent {
       });
   }
 
-  nodeClick(node: MenuNode, event: any): void {
+  nodeClick(node: MenuNode, event: MouseEvent): void {
       this.headerService.handleNav(node, event);
       this.nodeClicked.emit(true);
   }
 
   makeProfileMenu(dropdownItems: AccountDropdown[]): MenuNode[] {
-      const menu = [];
+      const menu: MenuNode[] = [];
       for (const item of dropdownItems) {
           menu.push(new MenuNode(item.name, item.route, item.name));
       }

@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router, Resolve } from '@angular/router';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { EMPTY as empty } from 'rxjs';
 
+import type { PlatformMatch } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Injectable()
-export class OsResolver implements Resolve<any> {
-    deviceInfo;
+export class OsResolver implements Resolve<never> {
+    deviceInfo: DeviceInfo;
     platform: string;
-    platformMatch: {};
+    platformMatch: PlatformMatch;
     windows: string;
 
     constructor(
@@ -23,7 +24,7 @@ export class OsResolver implements Resolve<any> {
         this.platformMatch = configDownloads.platformMatch;
     }
 
-    resolve() {
+    resolve(): typeof empty {
         this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || this.windows;
         this.router
             .navigate(['/download/' + this.platform.toLowerCase()])

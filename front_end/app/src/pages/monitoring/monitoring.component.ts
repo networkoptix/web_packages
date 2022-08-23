@@ -43,7 +43,7 @@ export class NxMonitoringComponent implements OnInit {
     systemOnline: boolean = true;
     systemId: string;
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<true>();
 
     constructor(
         configService: NxConfigService,
@@ -88,7 +88,7 @@ export class NxMonitoringComponent implements OnInit {
             });
     }
 
-    private updateMonitor(system): void {
+    private updateMonitor(system: NxSystem): void {
         this.availServers = [];
         // this.selectedServer = undefined;
 
@@ -139,7 +139,7 @@ export class NxMonitoringComponent implements OnInit {
             this.monitoringService.system = undefined;
             this.monitoringService.selectedServerId = undefined;
 
-            let system;
+            let system: NxSystem;
             if (environment.isLocal) {
                 system = this.systemService.createLocalSystem(
                     this.accountService.mediaServerApi, account.id, account.email
@@ -171,7 +171,7 @@ export class NxMonitoringComponent implements OnInit {
         });
     }
 
-    changeSelectedServer(item): void {
+    changeSelectedServer(item: DropdownItem<string>): void {
         this.selectedServer = item;
         this.monitoringService.selectedServerId = item.value;
     }

@@ -18,6 +18,11 @@ describe('NxPasswordValidationComponent', () => {
     let fixture: ComponentFixture<NxPasswordValidationComponent>;
     let el: DebugElement;
 
+    // Mock NgModel, but NgModel properties are read-only so we're leaving
+    // forElement as any to avoid TS errors when configuring for tests
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let forElement: any;
+
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
@@ -34,7 +39,7 @@ describe('NxPasswordValidationComponent', () => {
                 component = fixture.componentInstance;
                 el = fixture.debugElement;
 
-                component.forElement = {
+                forElement = {
                     valid: true,
                     touched: true,
                     errors: {
@@ -45,6 +50,11 @@ describe('NxPasswordValidationComponent', () => {
                         required: false
                     }
                 };
+
+                // Placeholder to make the template work until assigning
+                // the configuration we want to test
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                component.forElement = { errors: {} } as any;
 
                 fixture.detectChanges();
             })
@@ -61,8 +71,9 @@ describe('NxPasswordValidationComponent', () => {
     });
 
     it('should not display if not touched', () => {
-        component.forElement.valid = false;
-        component.forElement.touched = false;
+        forElement.valid = false;
+        forElement.touched = false;
+        component.forElement = forElement;
         fixture.detectChanges();
 
         const error = el.nativeElement.querySelectorAll('div[name=error-labels]');
@@ -71,8 +82,9 @@ describe('NxPasswordValidationComponent', () => {
 
     it('should be "WEAK"',
         inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            component.forElement.valid = false;
-            component.forElement.errors.weak = true;
+            forElement.valid = false;
+            forElement.errors.weak = true;
+            component.forElement = forElement;
             fixture.detectChanges();
 
             const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
@@ -84,8 +96,9 @@ describe('NxPasswordValidationComponent', () => {
 
     it('should be "COMMON"',
         inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            component.forElement.valid = false;
-            component.forElement.errors.common = true;
+            forElement.valid = false;
+            forElement.errors.common = true;
+            component.forElement = forElement;
             fixture.detectChanges();
 
             const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
@@ -97,8 +110,9 @@ describe('NxPasswordValidationComponent', () => {
 
     it('should be "MIN_LENGTH"',
         inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            component.forElement.valid = false;
-            component.forElement.errors.minlength = true;
+            forElement.valid = false;
+            forElement.errors.minlength = true;
+            component.forElement = forElement;
             fixture.detectChanges();
 
             const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
@@ -110,8 +124,9 @@ describe('NxPasswordValidationComponent', () => {
 
     it('should be "PATTERN"',
         inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            component.forElement.valid = false;
-            component.forElement.errors.pattern = true;
+            forElement.valid = false;
+            forElement.errors.pattern = true;
+            component.forElement = forElement;
             fixture.detectChanges();
 
             const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
@@ -123,8 +138,9 @@ describe('NxPasswordValidationComponent', () => {
 
     it('should be "REQUIRED"',
         inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            component.forElement.valid = false;
-            component.forElement.errors.required = true;
+            forElement.valid = false;
+            forElement.errors.required = true;
+            component.forElement = forElement;
             fixture.detectChanges();
 
             const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');

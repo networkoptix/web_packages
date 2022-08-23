@@ -40,7 +40,7 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
-    getCurrentSystem() {
+    getCurrentSystem(): NxSystem {
         return this.system;
     }
 
@@ -52,9 +52,9 @@ export class NxSystemService {
         skipSettingSystem?: boolean
     ): NxSystem {
         const id = systemId || serverId;
-        const cloudSystemInfo: any =
+        const cloudSystemInfo =
             (this.systemsService.systems || []).find(system => system.id === id);
-        let system;
+        let system: NxSystem;
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
         } else {
@@ -126,7 +126,8 @@ export class NxSystemService {
         }
 
         if (!this.systemsService.systems) {
-            this.systemsService.systems = [<any> this.system];
+            // @ts-expect-error FIXME: type mismatch
+            this.systemsService.systems = [this.system];
         }
         return this.system;
     }

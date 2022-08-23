@@ -254,7 +254,7 @@ export class NxHeaderService {
      *
      * @param param0 - Accepts MenuNode which contains a url property
      */
-    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event): void {
+    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event: MouseEvent): void {
         const openNewWindow = newWindow || event?.metaKey || event?.ctrlKey;
         this.showSubject.next(false);
         const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;

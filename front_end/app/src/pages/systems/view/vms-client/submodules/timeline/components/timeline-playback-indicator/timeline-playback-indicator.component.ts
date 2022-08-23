@@ -55,7 +55,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('click', ['$event'])
-    onClick(e): void {
+    onClick(e: MouseEvent): void {
         if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.timeline.jumpScrollTo(
                 this.playback.state.currentTime -
@@ -79,7 +79,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         this.timelineSubscription.unsubscribe();
     }
 
-    public get edgeCaseClasses() {
+    public get edgeCaseClasses(): Record<string, boolean> {
         this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible');
         return {
             'left-most': this.honestOffset <= 0,
@@ -93,7 +93,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
 
     protected _svgArrowPoints: string = '';
 
-    public get svgArrowPoints() {
+    public get svgArrowPoints(): string {
         return this._svgArrowPoints;
     }
 
@@ -134,7 +134,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         this._svgArrowPoints = `${tl},0 ${tr},0 ${b},5`;
     }
 
-    public get verticalLineLeftPx() {
+    public get verticalLineLeftPx(): number {
         let result = PRIMARY_WIDTH / 2;
         if (this.edgeCaseClasses.leftish) {
             const offset = Math.abs(this.visibleOffset - this.honestOffset);

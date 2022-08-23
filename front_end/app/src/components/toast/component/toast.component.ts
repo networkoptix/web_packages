@@ -25,12 +25,15 @@ export class NxToast implements OnChanges {
     @Output() hide = new EventEmitter<boolean>();
 
     destroy$ = new Subject<boolean>();
-    isTemplate: boolean;
+
+    isTemplate(
+        content: string | TemplateRef<unknown>
+    ): content is TemplateRef<unknown> {
+        return content instanceof TemplateRef;
+    }
 
     ngOnChanges(changes: NgChanges<NxToast>): void {
         if (changes.toast.currentValue) {
-            this.isTemplate = this.toast.content instanceof TemplateRef;
-
             if (this.toast.autohide) {
                 timer(this.toast.delay).pipe(
                     takeUntil(this.destroy$)

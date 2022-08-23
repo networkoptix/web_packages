@@ -5,6 +5,7 @@ import {
     OnChanges,
     Output,
 } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -18,10 +19,10 @@ import { NgChanges } from '@utils/ng-changes';
     styleUrls: ['password-validation.component.scss']
 })
 export class NxPasswordValidationComponent implements OnChanges {
-    @Input() forElement;
-    @Input() value;
-    @Input() customClass;
-    @Input() hideErrors = false;
+    @Input() forElement: NgModel;
+    @Input() value: string;
+    @Input() customClass: string;
+    @Input() hideErrors: boolean = false;
     @Output() updateWeakPassword = new EventEmitter<boolean>();
 
     CONFIG: IConfig;

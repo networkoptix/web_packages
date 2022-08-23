@@ -106,7 +106,8 @@ export function paramSortFunc<Param>(
 }
 
 /* Object */
-export function isObject(obj: unknown): boolean {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function isObject(obj: unknown): obj is Object {
     return (!!obj) && (obj.constructor === Object);
 }
 

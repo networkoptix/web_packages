@@ -21,29 +21,29 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() state: string;
     @Input() time: string;
     @Input() url: string;
-    @Input() lightBackground = false;
-    @Input() motionPreview = false;
-    @Input() preloader = false;
+    @Input() lightBackground: boolean = false;
+    @Input() motionPreview: boolean = false;
+    @Input() preloader: boolean = false;
     @Input() aspect: string = 'Auto';
     @Output() loaded = new EventEmitter<boolean>();
     show: boolean;
 
-    get imageClass() {
-        return this.motionPreview
-            ? {
-                'motion-preview': true,
-                'd-none': !this.show
-            } : {
-                mini: !this.isPrimary,
-                'd-none': !this.show,
-                'light-thumbnail-preview': this.lightBackground,
-                'thumbnail-preview': !this.lightBackground,
-                wide: this.aspect === '16:9' || this.aspect === 'Auto',
-                normal: this.aspect === '4:3',
-                square: this.aspect === '1:1',
-                fill: this.aspect === 'override'
-            };
-    }
+    // get imageClass(): Record<string, boolean> {
+    //     return this.motionPreview
+    //         ? {
+    //             'motion-preview': true,
+    //             'd-none': !this.show
+    //         } : {
+    //             mini: !this.isPrimary,
+    //             'd-none': !this.show,
+    //             'light-thumbnail-preview': this.lightBackground,
+    //             'thumbnail-preview': !this.lightBackground,
+    //             wide: this.aspect === '16:9' || this.aspect === 'Auto',
+    //             normal: this.aspect === '4:3',
+    //             square: this.aspect === '1:1',
+    //             fill: this.aspect === 'override'
+    //         };
+    // }
 
     constructor() {
         this.show = false;

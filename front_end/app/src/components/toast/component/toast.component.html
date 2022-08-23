@@ -2,11 +2,8 @@
     class="alert alert-{{ toast.type }} toast"
     [ngClass]="{ 'alert-dismissible': !toast.autohide }"
 >
-    <ng-container *ngIf="isTemplate; else text">
-        <!-- isTemplate does the type discrimination, but this isn't
-        detected in the template and we can't use as pipe since TemplateRef
-        is a abstract class which can't be instantiated -->
-        <ng-template [ngTemplateOutlet]="$any(toast.content)"></ng-template>
+    <ng-container *ngIf="isTemplate(toast.content); else text">
+        <ng-template [ngTemplateOutlet]="toast.content"></ng-template>
     </ng-container>
     <ng-template #text>
         <span

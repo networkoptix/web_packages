@@ -10,6 +10,7 @@ import { Subject, timer } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -34,15 +35,15 @@ export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() systemId: string;
     @Input() selectedServerId: string;
-    @Input() noFrame = false;
-    @Input() refreshInterval = 1000;
+    @IBool() @Input() noFrame: CoercedBoolInput;
+    @Input() refreshInterval: number = 1000;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<true>();
 
-    view = undefined; // fitContainer
+    view: [number, number]; // fitContainer
     multi: {
         name: string;
         series: { name: number; value: number; }[]; // name type is number as we use position or uptimeMs to define data points

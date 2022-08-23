@@ -12,6 +12,7 @@ import {
     SubscriptionLike
 } from 'rxjs';
 
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -32,7 +33,7 @@ import { BaseDropdown } from '../injDropdown';
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
-    @Input() small = false;
+    @IBool() @Input() small: CoercedBoolInput;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
@@ -91,10 +92,10 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)
             .subscribe(([dropdown, button]) => {
                 if (dropdown && button) {
-                    const self: any = this?.dropdown.nativeElement;
+                    const self = this?.dropdown.nativeElement;
                     let widthFromRightEdge = 0;
                     if (this.environment.isLocal && self?.parentNode.nextSibling) {
-                        widthFromRightEdge = -1 * self.parentNode.nextSibling.offsetWidth;
+                        widthFromRightEdge = -1 * (self.parentNode.nextSibling as HTMLElement).offsetWidth;
                     }
 
                     this.rightOffset$.next(
@@ -110,12 +111,12 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         this.accountService.logout(false);
     }
 
-    hide() {
+    hide(): false {
         this.show = false;
         return false;
     }
 
-    makeFullName(account: Account) {
+    makeFullName(account: Account): string {
         if (account.first_name && account.last_name) {
             return (account.first_name + ' ' + account.last_name.charAt(0) + '.').toUpperCase();
         } else if (account.name) {
