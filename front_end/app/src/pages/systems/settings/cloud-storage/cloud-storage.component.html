@@ -1,3 +1,7 @@
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
 <!-- Main block templates -->
 <ng-template #mainDefault>
     <div class="default-wrapper">
@@ -166,7 +170,7 @@
             >
         </button>
     </header>
-    <nx-section>
+    <nx-section *ngIf="state !== CLOUD_STORAGE_STATES.LOADING; else preloader">
         <ng-container [ngSwitch]="state">
             <ng-container
                 *ngSwitchCase="CLOUD_STORAGE_STATES.DEFAULT"
@@ -217,6 +221,7 @@
         class="table-wrapper"
     >
         <table
+            *ngIf="state !== CLOUD_STORAGE_STATES.LOADING; else preloader"
             cdk-table
             [dataSource]="licenses$"
         >

@@ -99,7 +99,7 @@ def login_helper(request, token, user):
     request.session["has2fa"] = Account.get(
         request).get("account2faEnabled", False)
 
-    serializer = AccountSerializer(user, many=False)
+    serializer = AccountSerializer(request, many=False)
     return api_success(serializer.data)
 
 
@@ -305,32 +305,22 @@ def index(request):
 
     if request.method == 'GET':
         # get authorized user here
-        serializer = AccountSerializer(request.user, many=False)
+        return api_success(AccountSerializer(request, many=False).data)
 
-    elif request.method == 'POST':
-        serializer = AccountUpdateSerializer(request.user, data=request.data)
+    serializer = AccountUpdateSerializer(request, data=request.data)
 
-        if not serializer.is_valid():
-            raise APIRequestException('Wrong form parameters',
-                                      ErrorCodes.wrong_parameters,
-                                      error_data=serializer.errors)
+    if not serializer.is_valid():
+        raise APIRequestException('Wrong form parameters',
+                                    ErrorCodes.wrong_parameters,
+                                    error_data=serializer.errors)
 
-        Account.update(
-            request, request.data['first_name'], request.data['last_name'])
-        # if not success:
-        #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-    data = serializer.data
-    cdb_account = dict()
-    cdb_account_security = dict()
-    if request.user.is_authenticated:
-        cdb_account = Account.get(request)
-        cdb_account_security = Account.get_2fa_settings(request)
-    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
-    data["totpExistsForAccount"] = cdb_account_security.get(
-        "totpExistsForAccount", False)
-    data["sessionVerified"] = request.session.get("has2fa", False)
-    return api_success(data)
+    Account.update(
+        request, request.data['first_name'], request.data['last_name'])
+    # if not success:
+    #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.save()
+
+    return api_success(serializer.data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,

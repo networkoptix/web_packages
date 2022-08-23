@@ -66,6 +66,7 @@ export interface BaseConfig {
     isDarkTheme: boolean;
     landing: Landing;
     layout: Layout;
+    licenseServer: string;
     maintenanceTimeout: number;
     manifest: Record<ConsoleSection, ConsoleManifest>
     maxServers: number;

@@ -389,3 +389,17 @@ def mock_cache(mocker):
         cache_mock.set.side_effect = dummy_cache.set
         return cache_mock
     return _mock
+
+@pytest.fixture()
+def mock_session(mocker):
+    def _mock_session(session_dict = None):
+        if session_dict is None:
+            session_dict = {}
+
+        session_dict = {}
+        session =  mocker.MagicMock()
+        session.__getitem__.side_effect = session_dict.__getitem__
+        session.__setitem__.side_effect = session_dict.__setitem__
+        return session
+
+    return _mock_session

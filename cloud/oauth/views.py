@@ -367,7 +367,11 @@ def token(request):
             return api_success(Auth.get_refresh_token(refresh_token, ip=ip, scope=scope))
 
     elif grant_type == Auth.GRANT_TYPE.refresh_token and response_type == Auth.RESPONSE_TYPE.code:
-        require_params(request, ("refresh_token",))
+        if refresh_from_session := (refresh_token == 'session' and request.session['refresh_token']):
+            refresh_token = refresh_from_session
+        else:
+            require_params(request, ("refresh_token",))
+
         return api_success(Auth.get_code(email="",
                                          password="",
                                          grant_type=Auth.GRANT_TYPE.refresh_token,

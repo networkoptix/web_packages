@@ -350,6 +350,13 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
         "KEY_PREFIX": 'readonly_apis'
+    },
+    "license_servers": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT" : None,
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
+        "KEY_PREFIX": 'license_servers'
     }
 }
 
@@ -700,6 +707,7 @@ TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']
 TRAFFIC_RELAY_PROTOCOL = 'https://'
 
 CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
+LICENSE_SERVER = conf.get('licenseServer', 'https://nxlicensed.test.hdw.mx' if LOCAL_ENVIRONMENT else 'https://licensing.vmsproxy.com')
 
 SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'

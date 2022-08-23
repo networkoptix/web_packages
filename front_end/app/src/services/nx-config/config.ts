@@ -353,6 +353,7 @@ export const nxConfig: IConfig = {
     landing: {
         description: ''
     },
+    licenseServer: '',
     maintenanceTimeout: 60 * 1000,
     manifest: {
         [ConsoleSection.CUSTOM_CLIENTS]: {

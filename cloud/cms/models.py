@@ -3295,6 +3295,7 @@ class Flag(AbstractUserFlag):
 
         return super(AbstractUserFlag, self).is_active(request)
 
+
     def is_active_for_user(self, user, overrides=None, customization_name=settings.CUSTOMIZATION):
         if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
             with suppress(ValueError):

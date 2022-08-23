@@ -27,6 +27,7 @@ import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
 
 import { CustomClientAPI } from './custom-client-api';
+import { LicenseServerAPI } from './license-server-api';
 import * as t from './nx-cloud-api.types';
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
@@ -100,6 +101,7 @@ export class NxCloudApiService {
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
+    public licenseServerApiFactory: (licenseServer: string, cloudHost: string) => LicenseServerAPI;
 
     constructor(
         private configService: NxConfigService,
@@ -115,6 +117,7 @@ export class NxCloudApiService {
     ) {
         this.CONFIG = configService.getConfig();
         this.customClient = new CustomClientAPI(this.CONFIG, this.http, this.consoleService);
+        this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
     }
 
     getSubAPI(route: ConsoleSection) {
@@ -492,7 +495,7 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
     }
 
-    account(forceUpdate = false) {
+    account = (forceUpdate = false) => {
         const endpoint = this.CONFIG.apiBase + '/account';
         this.cacheService.addToCache(endpoint);
         let headers = new HttpHeaders();
@@ -508,7 +511,7 @@ export class NxCloudApiService {
                 },
                 tap(this.logRocketIdentifyUser))
             );
-    }
+    };
 
     checkFeatureNotice = <T>(noticeKey: string, firstViewCallback: () => T) => this.getCustomAccountProperty('featureNotices').pipe(
         catchError(() => Promise.resolve({})),
@@ -772,7 +775,46 @@ export class NxCloudApiService {
             grant_type,
             response_type
         };
-        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
+        return this.http.get<Record<string, string>>(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
+    }
+
+    /**
+     * This is used to ensure that request made to cloud services external to cloud portal have a fresh session to be used for request.
+     *
+     * The accessToken along with a getFreshAccessToken method it passed as an input the observableInputFactory to be used to authenticate the request and also to be able to retry with a fresh accessToken.
+     *
+     * @param minSessionSeconds : number
+     * @returns wraps: (observableInputFactory: ({ accessToken, getFreshAccessToken }) => ObservableInput<unknown>)
+     */
+    #withFreshSession: t.WithFreshSession = (
+        minSessionSeconds = 300
+    ) => observableInputFactory => {
+        const getAccessToken = (minSession?: number) => this.account().pipe(
+            switchMap(({
+                sessionExpires
+            }) => !minSession || ((Date.now() + minSession) < sessionExpires) ? this.renewSessionUsingRefreshToken() : this.account())
+        );
+
+        return getAccessToken(minSessionSeconds).pipe(
+            switchMap(({
+                accessToken
+            }) => observableInputFactory({
+                accessToken,
+                getFreshAccessToken: () => getAccessToken().pipe(map(({ accessToken }) => accessToken))
+            }))
+        );
+    };
+
+    renewSessionUsingRefreshToken(refreshToken: string | 'session' = 'session') {
+        return this.getTokensFromCloud(refreshToken, 'refresh_token', 'code').pipe(switchMap(({ code }) => this.renewToken(code)));
+    }
+
+    renewToken(code: string) {
+        return this.http.post<{ message: string }>(`${this.CONFIG.apiBase}/account/renewSession`, { code }).pipe(
+            map(() => true),
+            catchError(() => Promise.resolve(false)),
+            switchMap(refreshed => this.account(refreshed))
+        );
     }
 
     getTokenInfo(token: string) {
@@ -787,5 +829,11 @@ export class NxCloudApiService {
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);
+    }
+
+    checkLicenseServer(systemId: string, licenseServer?: string) {
+        const endpoint = `${this.CONFIG.apiBase}/systems/${systemId}/licenseServer`;
+        const response = licenseServer ? this.http.post<t.LicenseServerInfo>(endpoint, { licenseServer }) : this.http.get<t.LicenseServerInfo>(endpoint);
+        return response.pipe(catchError(() => Promise.resolve({ systemId, licenseServer: this.CONFIG.licenseServer, cacheUpdated: false })));
     }
 }

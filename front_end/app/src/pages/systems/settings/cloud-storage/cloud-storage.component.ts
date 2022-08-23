@@ -1,8 +1,9 @@
 import {
     Component, Input, OnInit, TemplateRef, ViewContainerRef,
 } from '@angular/core';
-import { startCase } from 'lodash-es';
-import { BehaviorSubject, filter, take } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { startCase } from 'lodash';
+import { BehaviorSubject, filter, Observable, switchMap, take } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { POS_STRATEGY } from '@components/popover/popover-config';
@@ -10,6 +11,7 @@ import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { LicenseServerAPI } from '@services/nx-cloud-api/license-server-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -18,6 +20,7 @@ import { NxMenuService } from '@src/menu/menu.service';
 import { NxSettingsService } from '../settings.service';
 
 enum CLOUD_STORAGE_STATES {
+    LOADING = 'loading',
     DEFAULT = 'default',
     ACTIVATED = 'activated'
 }
@@ -28,6 +31,7 @@ const mockLicenses = [
     { size: 'urMom', state: 'Inactive', system: 'Huge', expires: '20 Apr 2023', key: 'abcd1234efg69420' }
 ];
 
+@UntilDestroy()
 @Component({
     selector: 'nx-cloud-storage',
     templateUrl: './cloud-storage.component.html',
@@ -42,12 +46,13 @@ export class NxCloudStorageComponent implements OnInit {
     readonly MASK = 'AAAA-AAAA-AAAA-AAAA';
 
     CLOUD_STORAGE_STATES = CLOUD_STORAGE_STATES;
-    state = CLOUD_STORAGE_STATES.ACTIVATED;
+    state = CLOUD_STORAGE_STATES.LOADING;
     showKeys = false;
     fields = ['size', 'state', 'system', 'expires', 'key'];
     asc = true;
     sortBy = '';
     serverSettings = '';
+    licenseServerApi$: Observable<LicenseServerAPI>;
 
     // Mock state
     cloudStorageNotUsed = true;
@@ -125,6 +130,11 @@ export class NxCloudStorageComponent implements OnInit {
                 this.serverSettings = `/systems/${system.id}/servers`;
             });
         }
+        this.licenseServerApi$ = settingsService.systemSubject.pipe(
+            filter(system => !!system),
+            switchMap(system => system.getLicenseServerApi()),
+            untilDestroyed(this)
+        );
     }
 
     ngOnInit(): void {

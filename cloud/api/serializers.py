@@ -1,6 +1,7 @@
 from django.forms import ValidationError
 from rest_framework import serializers
 from django.conf import settings
+from django.core.cache import caches
 from datetime import datetime
 from math import log2
 import functools
@@ -67,7 +68,8 @@ class VerificationSerializer(serializers.Serializer):
 
 
 class TransferSystemActionSerializer(serializers.Serializer):
-    action = serializers.ChoiceField(required=True, choices=(('accepted', 'Accepted'), ('rejected', 'Rejected')))
+    action = serializers.ChoiceField(required=True, choices=(
+        ('accepted', 'Accepted'), ('rejected', 'Rejected')))
 
 
 class TransferSystemOwnerSerializer(serializers.Serializer):
@@ -205,6 +207,10 @@ class SettingsSerializer(CustomizationCacheSerializer):
     integrationStoreEnabled = serializers.BooleanField()
     developersEnabled = serializers.BooleanField()
     customClientsEnabled = serializers.BooleanField()
+    licenseServer = serializers.CharField()
+
+    def get_license_server(self):
+        return settings.LICENSE_SERVER
 
     def extend_settings(self, request):
         from api.views.utils import get_feature_flags
@@ -243,6 +249,8 @@ class SettingsSerializer(CustomizationCacheSerializer):
                 kwargs['data']['customClientsEnabled'] = True
             if not kwargs['data'].get('trafficRelayHost', False):
                 kwargs['data']['trafficRelayHost'] = settings.TRAFFIC_RELAY_HOST
+            if not kwargs['data'].get('licenseServer', False):
+                kwargs['data']['licenseServer'] = settings.LICENSE_SERVER
 
         super().__init__(*args, **kwargs)
 
@@ -423,4 +431,40 @@ class IpvdSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):
         if data := kwargs.pop('data', []):
             kwargs['data'] = process_cameras(data)
+        super().__init__(*args, **kwargs)
+
+
+def check_license_cache(data):
+    system_id = data.get('systemId')
+    license_servers_cache = caches['license_servers']
+    cached_license_server = license_servers_cache.get(system_id)
+    license_server = data.get('licenseServer', None)
+
+    if not license_server:
+        data['licenseServer'] = cached_license_server or settings.LICENSE_SERVER
+
+    elif license_server == settings.LICENSE_SERVER:
+        data['cacheUpdated'] = bool(license_servers_cache.delete(system_id))
+
+    elif license_server == cached_license_server:
+        data['cacheUpdated'] = False
+
+    else:
+        license_servers_cache.set(system_id, data['licenseServer'])
+        data['cacheUpdated'] = True
+
+    return data
+
+
+class SystemIdSerializer(serializers.Serializer):
+    systemId = serializers.CharField(required=True)
+
+
+class LicenseServerSerializer(SystemIdSerializer):
+    licenseServer = serializers.URLField(default=settings.LICENSE_SERVER)
+    cacheUpdated = serializers.BooleanField(default=False)
+
+    def __init__(self, *args, **kwargs):
+        if data := kwargs.pop('data', []):
+            kwargs['data'] = check_license_cache(data)
         super().__init__(*args, **kwargs)

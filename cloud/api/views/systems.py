@@ -11,7 +11,7 @@ from api.account_backend import get_ip
 from cloud.controllers import cloud_api, cloud_gateway
 from cloud.controllers.cloud_api import Auth
 from cloud.helpers.exceptions import api_success, require_params, \
-     APINotAuthorisedException, APIRequestException, ErrorCodes, APIException
+     APINotAuthorisedException, APIRequestException, ErrorCodes, APIException, APIInternalException
 from api.serializers import *
 
 
@@ -38,7 +38,8 @@ user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_refresh_from_request(request):
-    refresh_token = request.session.get('refresh_token') or request.data.get('refresh_token')
+    refresh_token = request.session.get(
+        'refresh_token') or request.data.get('refresh_token')
     if not refresh_token:
         raise APINotAuthorisedException('No refresh token was found')
     return refresh_token
@@ -55,6 +56,29 @@ def system(request, system_id):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Check if license server is cached for system else get default",
+                     manual_parameters=[system_id__route_param],
+                     responses={
+                         '200': openapi.Response('LicenseServer', LicenseServerSerializer)
+                     })
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Updates cached license server for system.",
+                     manual_parameters=[system_id__route_param],
+                     request_body=SystemIdSerializer,
+                     responses={
+                         '200': openapi.Response('LicenseServer', LicenseServerSerializer)
+                     })
+@api_view(['GET', 'POST'])
+@permission_classes((IsAuthenticated, ))
+def license_server(request, system_id):
+    serializer = LicenseServerSerializer(
+        data={**request.data, 'systemId': system_id})
+    serializer.is_valid()
+
+    return api_success(serializer.data)
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns a list of systems that the user has access to.")
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
@@ -68,7 +92,7 @@ def list_systems(request):
                      manual_parameters=[system_id__route_param])
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Adds the account related to user_email to the system. If the account does"
-                                           "not exist that user_email is sent an invite to register on cloud portal",
+                     "not exist that user_email is sent an invite to register on cloud portal",
                      manual_parameters=[system_id__route_param],
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -247,7 +271,8 @@ def merge(request):
     slave_id = request.data['slave_system_id']
     if password := request.data.get('password'):
         try:
-            data = cloud_api.System.merge(request, master_id, slave_id, email=request.user.email, password=password)
+            data = cloud_api.System.merge(
+                request, master_id, slave_id, email=request.user.email, password=password)
         except APINotAuthorisedException:
             raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
                                       error_data={'password': ['Not recognized']})
@@ -395,7 +420,7 @@ def system_groups_users_management(request):
     systems = request.data.get('systems', [])
     users = request.data.get('users', [])
     if len(users) == 0:
-        return api_success();
+        return api_success()
     for system_id in systems:
         for user in users:
             try:

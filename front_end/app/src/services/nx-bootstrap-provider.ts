@@ -180,6 +180,8 @@ export class NxBootstrapProvider {
                 }
             });
 
+            this.CONFIG.licenseServer = data.licenseServer;
+
             const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = data;
             this.CONFIG.company = {
                 copyrightYear,

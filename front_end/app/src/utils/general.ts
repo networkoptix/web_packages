@@ -269,3 +269,15 @@ export function delayInitial<Source>(
  * class Example implements Exacty<InterfaceOrClass, Example>{}
  */
 export type Exactly<T, U> = { [K in keyof U]: K extends keyof T ? T[K] : never };
+
+/**
+ * Decorator used to enforce that a class has certain static properties/methods.
+ *
+ * Usage Example:
+ *
+ * @staticImplements<CloudServiceAPI>()
+ * export class LicenseServerAPI extends BaseCloudServiceAPI {}
+ */
+export function staticImplements<T>() {
+    return <U extends T>(constructor: U) => constructor;
+}

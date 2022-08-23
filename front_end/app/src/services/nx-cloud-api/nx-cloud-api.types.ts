@@ -1,3 +1,5 @@
+import { Observable, ObservableInput } from 'rxjs';
+
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -7,6 +9,8 @@ export interface ILanguage {
     language: string;
     name: string;
 }
+
+export type WithFreshSession = (minSessionSeconds?: number) => <T>(observableInputFactory: (config: { accessToken: string, getFreshAccessToken: () => Observable<string> }) => ObservableInput<T>) => Observable<T>;
 
 export type ILanguages = ILanguage[];
 
@@ -175,7 +179,7 @@ export interface CloudUser {
     vmsUserId: string
 }
 
-export interface CloudUsers extends Array<CloudUser> {}
+export interface CloudUsers extends Array<CloudUser> { }
 
 export interface Downloads {
     version: string,
@@ -367,4 +371,10 @@ export interface SystemTransferInfo {
 export enum DOC_TYPES {
     knowledgebase = 'kb',
     struct = 'struct'
+}
+
+export interface LicenseServerInfo {
+    systemId: string;
+    licenseServer: string;
+    cacheUpdated: boolean;
 }

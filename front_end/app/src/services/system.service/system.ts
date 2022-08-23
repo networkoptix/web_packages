@@ -4,7 +4,7 @@ import {
     Subscription,
     Observable
 } from 'rxjs';
-import { auditTime, switchMap } from 'rxjs/operators';
+import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -648,6 +648,19 @@ export class NxSystem extends System {
                             return Promise.reject(err);
                         });
             });
+    }
+
+    public getLicenseServerApi() {
+        let _cloudHost = '';
+        return this.updateOrGetSystemSettings().pipe(
+            map(({ reply: { settings: { licenseServer, cloudHost } } }) => {
+                _cloudHost = cloudHost;
+                return licenseServer;
+            }),
+            catchError(() => Promise.resolve('')),
+            switchMap(licenseServer => this.cloudApi.checkLicenseServer(this.id, licenseServer)),
+            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, _cloudHost))
+        );
     }
 
     /**

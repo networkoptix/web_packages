@@ -18,13 +18,13 @@ def test_kill_tokens(arf, mocker):
         mock.assert_any_call(req, token)
 
 
-def test_login_helper(arf, mocker, django_user_model):
+def test_login_helper(arf, mocker, django_user_model, mock_session):
     req = arf.post('/')
-    req.session = {}
+    req.session = mock_session()
     req.data = {'timezone': 'America/Los_Angeles'}
     token = {'refresh_token': 'ref_token', 'access_token': 'acc_token'}
     user = django_user_model(email='test@test.com')
-
+    req.user = user
     mocker.patch.object(django.contrib.auth, 'login')
     timezone_now = timezone.now()
     now = time.time()
@@ -32,6 +32,7 @@ def test_login_helper(arf, mocker, django_user_model):
     mocker.patch.object(time, 'time', return_value=now)
     mocker.patch.object(Account, 'get', return_value={
                         'account2faEnabled': True})
+    mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
 
     resp = login_helper(req, token, user)
     assert req.session['access_token'] == 'acc_token'
@@ -39,7 +40,7 @@ def test_login_helper(arf, mocker, django_user_model):
     assert req.session['timezone'] == 'America/Los_Angeles'
     assert user.activated_date == timezone_now
     assert req.session['time'] == now
-    assert resp.data == AccountSerializer(user).data
+    assert resp.data == AccountSerializer(req).data
     assert req.session['has2fa'] is True
 
     mocker.patch.object(Account, 'get', return_value={
@@ -128,15 +129,13 @@ class TestAccountViews:
             Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
         req = self.arf.get('/api/account')
         req.user = active_user
-        req.session = {}
+        req.session = self.mocker.MagicMock()
+        req.session.get = lambda _, val: val
 
         # Test with totp exists
         resp = index(req)
         assert resp.status_code == status.HTTP_200_OK
-        expected_data = AccountSerializer(req.user).data
-        expected_data['account2faEnabled'] = True
-        expected_data['totpExistsForAccount'] = True
-        expected_data['sessionVerified'] = False
+        expected_data = AccountSerializer(req).data
 
         assert resp.data == expected_data
 
@@ -152,13 +151,12 @@ class TestAccountViews:
         req = self.arf.post(
             '/api/account', data={'first_name': 'new name', 'last_name': 'new last', 'language': 'en_US'})
         req.user = active_user
-        req.session = {}
+        req.session = self.mocker.MagicMock()
+        req.session.get = lambda _, val: val
 
         resp = index(req)
-        expected_data = AccountUpdateSerializer(req.user).data
-        expected_data['account2faEnabled'] = True
-        expected_data['totpExistsForAccount'] = True
-        expected_data['sessionVerified'] = False
+        expected_data = AccountUpdateSerializer(req).data
+
         assert resp.data == expected_data
         assert resp.status_code == status.HTTP_200_OK
         assert account_update_mock.call_args.args[1] == 'new name'
@@ -489,9 +487,11 @@ class TestAccountViews:
         assert resp.data == {'active': False, 'emailExists': False}
 
     def test_check_account_in_cloud_db_exists(self):
-        req = self.arf.post('/api/account/check', data={'email': 'not_exist@test.com'})
+        req = self.arf.post('/api/account/check',
+                            data={'email': 'not_exist@test.com'})
         req.session = {}
-        self.mocker.patch.object(Account, 'check_account', return_value={'status': 'invited'})
+        self.mocker.patch.object(Account, 'check_account', return_value={
+                                 'status': 'invited'})
         resp = check_account_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': True}
