@@ -443,7 +443,7 @@ Force Tags        system    Threaded
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
         Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}     ${permissions}[liveViewer]
-        Sleep    100
+        Sleep    10
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -454,8 +454,8 @@ Force Tags        system    Threaded
         Click Button    ${REMOVE CANCEL BUTTON}
         Remove User Permissions    ${random email}
         Log Out
-        Sleep    20
         Log In    ${random email}    ${password}
+        go to    ${ENV}
         IF    '''${mode}'''=='''cloud'''
             Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}    65
         ELSE
