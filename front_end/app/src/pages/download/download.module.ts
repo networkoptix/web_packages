@@ -14,10 +14,10 @@ import { DownloadComponent } from './download.component';
 import { OsResolver } from './os-resolver';
 
 const appRoutes: Routes = [
-    // {path: 'downloads', component: DownloadComponent},
-    // {path: '', redirectTo: 'download', pathMatch: 'full'},
-    { path: 'download', component: DownloadComponent, resolve: { platform: OsResolver } },
-    { path: 'download/:platform', component: DownloadComponent }
+    // { path: 'downloads', component: DownloadComponent},
+    // { path: '', redirectTo: 'download', pathMatch: 'full' },
+    { path: '', component: DownloadComponent, resolve: { platform: OsResolver } },
+    { path: ':platform', component: DownloadComponent }
 ];
 
 @NgModule({

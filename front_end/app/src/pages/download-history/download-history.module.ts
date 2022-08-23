@@ -12,9 +12,9 @@ import { ReleaseComponent } from './release/release.component';
 import { TypeResolver } from './type-resolver';
 
 const appRoutes: Routes = [
-    // { path: '', redirectTo: 'download', pathMatch: 'full' },
-    { path: 'downloads/history', component: DownloadHistoryComponent, resolve: { type: TypeResolver } },
-    { path: 'downloads/:type', component: DownloadHistoryComponent }
+    { path: '', redirectTo: 'releases', pathMatch: 'full' },
+    { path: 'history', component: DownloadHistoryComponent, resolve: { type: TypeResolver } },
+    { path: ':type', component: DownloadHistoryComponent }
 ];
 
 @NgModule({
