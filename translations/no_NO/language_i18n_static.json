@@ -288,8 +288,8 @@
     },
     "components": {
         "widgets": {
-            "lastUpdated": "Last Updated { date }",
-            "updatingIn": "Updating in { time } seconds"
+            "lastUpdated": "Sist oppdatert { date }",
+            "updatingIn": "Oppdaterer om { time } sekunder"
         }
     },
     "cookieWarning": "Vi brukte informasjonskapsler for å forbedre opplevelsen din på nettstedet vårt. De hjelper oss også å forstå hvordan nettstedet vårt brukes. Finn ut mer og angi dine cookies-preferanser&nbsp; | her | . Ved å fortsette å bruke nettstedet vårt samtykker du til å bruke informasjonskapslene våre.",
@@ -734,7 +734,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
-    "layoutAutosave": "Auto saving in { time } seconds...",
+    "layoutAutosave": "Lagrer automatisk om { time } sekunder...",
     "systemsCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}} funnet",
     "alertsCount": "{count, plural, =0{# varsler} one{# varsling} other{# varsler}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -762,14 +762,14 @@
     },
     "pages": {
         "developers": {
-            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+            "menuNodeContainsErrors": "Menynode <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> inneholder feil"
         },
         "downloadHistory": {
-            "published": "PUBLISHED { date }"
+            "published": "PUBLISERT { date }"
         },
         "health": {
             "importedSystem": "System: { system }",
-            "importedTime": "Generated: { time }"
+            "importedTime": "Generert: { time }"
         }
     },
     "pageTitles": {

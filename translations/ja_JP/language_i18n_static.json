@@ -288,8 +288,8 @@
     },
     "components": {
         "widgets": {
-            "lastUpdated": "Last Updated { date }",
-            "updatingIn": "Updating in { time } seconds"
+            "lastUpdated": "最終更新日 { date }",
+            "updatingIn": "{ time } 秒後に更新"
         }
     },
     "cookieWarning": "当サイトでのエクスペリエンスを向上させるためにCookieを使用しました。また、サイトがどのように使用されているかを理解するのにも役立ちます。詳細確認とCookieの設定を&nbsp; |こちら| で行ってください。当サイトの使用を継続することにより、あなたは当サイトのCookie利用に同意したことになります。",
@@ -734,7 +734,7 @@
     "ipvdFeedback": {
         "request": "対応デバイスに関する追加の質問/懸念事項については、<span id=\"request\">リクエストを送信</span>してください。"
     },
-    "layoutAutosave": "Auto saving in { time } seconds...",
+    "layoutAutosave": "{ time } 秒後に自動保存...",
     "systemsCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}が見つかりました",
     "alertsCount": "{count, plural, =0{# アラート} one{# アラート} other{# アラート}}",
     "ipvdTopXByVolume": "ボリューム別トップ {value}:",
@@ -762,14 +762,14 @@
     },
     "pages": {
         "developers": {
-            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+            "menuNodeContainsErrors": "メニューノード <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> にエラーが含まれています"
         },
         "downloadHistory": {
-            "published": "PUBLISHED { date }"
+            "published": "公開 { date }"
         },
         "health": {
-            "importedSystem": "System: { system }",
-            "importedTime": "Generated: { time }"
+            "importedSystem": "システム: { system }",
+            "importedTime": "生成日: { time }"
         }
     },
     "pageTitles": {
