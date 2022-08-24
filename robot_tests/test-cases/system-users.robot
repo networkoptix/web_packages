@@ -182,7 +182,7 @@ Force Tags        system    Threaded
         Log Out
     END
 
-6. Check Cancel and 'X' buttons
+6. Check Add User Cancel and 'X' buttons
     [Tags]    C78228    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin

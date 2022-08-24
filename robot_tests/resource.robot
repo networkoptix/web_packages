@@ -59,7 +59,7 @@ Regular Open Browser
     Go To    ${ENV}
 
 Open Browser With Options
-    Set Screenshot Directory    screenshots
+    SeleniumLibrary.Set Screenshot Directory    screenshots
     ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
@@ -565,6 +565,8 @@ Disconnect from my account
 
 Failure Tasks
     [timeout]    5 minutes
+    ${location}    Get Location
+    Log    ${location}    level=trace
     ${console}    Get Browser Log
     Log    ${console}    level=trace
     Capture Page Screenshot    EMBED

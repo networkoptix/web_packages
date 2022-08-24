@@ -136,7 +136,8 @@ Force Tags        merge
     Wait Until Elements Are Visible
     ...    ${MERGE ONLY AS OWNER}
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 2}[name]")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a[span="${OTHER SYSTEM}"]
+    # removed due to no longer being a feature
+    #...    ${MERGE CHECK MERGE FORM}//li/a[span="${OTHER SYSTEM}"]
     Click Button    ${MERGE X BUTTON}
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
@@ -413,6 +414,7 @@ Force Tags        merge
 10. Positive scenario with selected local autodiscovered system not connected to the cloud
     [Tags]    C70932    pos    must
     Log    Test Setup
+    Skip    No more local system merging
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
@@ -464,6 +466,7 @@ Force Tags        merge
 
 11. Positive scenario with selected non-autodiscovered system (dropdown + Server URL input)
     [Tags]    C76220    pos    must
+    Skip    no more url input
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -525,6 +528,7 @@ Force Tags        merge
 
 12. Positive scenario with selected non-autodiscovered system (only Server URL input)
     [Tags]    C76221    pos
+    skip    no more url input
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -565,27 +569,27 @@ Force Tags        merge
     Run keyword and continue on failure    Check For Alert    ${s}
 
 13. Positive scenario with selected new system
-     Log    Commented out due to CLOUD-5439
-#    [Tags]    C76269    pos
-#    Log    Test set up
-#    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-#    ${port 1}=   Set Variable    7081
-#    ${port 2}=   Set Variable    7082
-#    ${system 1}=   Set Variable    ${IMAGE 4.1}_${port 1}
-#    ${system 2}=   Set Variable    ${IMAGE 4.1}_${port 2}
-#    ${cont 1}=   Run Container    ${IMAGE 4.1}    ${port 1}    network=host
-#    ${cont 2}=   Run Container    ${IMAGE 4.1}    ${port 2}    network=host
-#    Append To List    ${test containers}    ${cont 1}
-#    Append To List    ${test containers}    ${cont 2}
-#    ${sys 1 id}=   Create system and attach to cloud    https://${QA BURBANK IP}    ${port 1}    ${system 1}    ${owner email}
-#    Setup Local System    https://${QA BURBANK IP}:${port 2}    ${base password}    ${system 2}
-#
-#    Log    Step 1
-#    Log In    ${owner email}    ${BASE PASSWORD}
-#    Go To    ${ENV}/systems/${sys 1 id}
-#    Reload Page
-#    Sleep    120    # To avoid false negative tests
-#    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    [Tags]    C76269    pos
+    skip     due to CLOUD-5439
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7081
+    ${port 2}=   Set Variable    7082
+    ${system 1}=   Set Variable    ${IMAGE 4.1}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.1}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.1}    ${port 1}    network=host
+    ${cont 2}=   Run Container    ${IMAGE 4.1}    ${port 2}    network=host
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    https://${QA BURBANK IP}    ${port 1}    ${system 1}    ${owner email}
+    Setup Local System    https://${QA BURBANK IP}:${port 2}    ${base password}    ${system 2}
+
+    Log    Step 1
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    120    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
 
 14. Positive scenario with back button use (on choosing primary system)
     [Tags]    C76270    pos
