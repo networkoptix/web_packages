@@ -35,6 +35,7 @@
                     [items]="userItems"
                     [ngModel]="selectedUser"
                     (ngModelChange)="selectUser($event)"
+                    (onClickElsewhere)="checkUser($event)"
                     [selected]="selectedUser"
                     canSearch
                     [noMatchMsg]="LANG.search.userNotFound()"
@@ -49,6 +50,12 @@
                         class="input-info subtext"
                         translate
                         >User disabled</span
+                    >
+                    <span
+                        *ngIf="transferOwnershipForm.errors.userNotFound"
+                        class="input-info subtext"
+                        translate
+                        >User not found</span
                     >
                 </div>
             </div>

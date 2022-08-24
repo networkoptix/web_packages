@@ -72,6 +72,11 @@ export class TransferOwnershipModalContent implements OnInit {
                     userDisabled: true
                 });
             },
+            userNotFound: () => {
+                this.form.control.setErrors({
+                    userNotFound: true
+                });
+            },
         };
 
         this.transferOwnership = this.processService.createProcess(
@@ -102,6 +107,12 @@ export class TransferOwnershipModalContent implements OnInit {
             this.form.control.setErrors({ userDisabled: false });
         }
         this.selectedUser = { ...user };
+    }
+
+    checkUser(input: string): void {
+        if (input !== '' && !this.userItems.some(el => el.value === input)) {
+            this.form.control.setErrors({ userNotFound: true });
+        }
     }
 
     close = (info?: SystemTransferInfo): void => {

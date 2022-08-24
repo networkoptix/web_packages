@@ -51,6 +51,7 @@ export class NxSearchableDropdown extends BaseDropdown {
     @Input() noMatchMsg: string;
 
     @Output() onSelected = new EventEmitter<Item>();
+    @Output() onClickElsewhere = new EventEmitter<string>();
 
     dropdownType: string = 'default';
     filter: string = '';
@@ -193,5 +194,7 @@ export class NxSearchableDropdown extends BaseDropdown {
             this.helpText = this._selectedItem.help;
         }
         this.show = false;
+
+        this.onClickElsewhere.emit(this.searchInput.nativeElement.innerText);
     }
 }
