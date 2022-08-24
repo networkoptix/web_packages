@@ -118,3 +118,8 @@ export function bitsToString(
 
     return `${prefix}${numberString} ${UNITS[exponent]}`;
 }
+
+export const bytesToString = (
+    number: number,
+    options?: IFromBytesOptions
+): string => bitsToString(number * 8, options);

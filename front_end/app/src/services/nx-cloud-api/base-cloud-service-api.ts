@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, switchMap } from 'rxjs';
 
+import { environment } from '@environments/environment';
+
 import { WithFreshSession } from './nx-cloud-api.types';
 
 interface BaseRequestOptions {
@@ -41,7 +43,11 @@ export abstract class BaseCloudServiceAPI {
         public cloudHost: string,
         private http: HttpClient,
         private withFreshSession: WithFreshSession
-    ) { }
+    ) {
+        if (this.serverUrl.endsWith('/') && this.apiBase.startsWith('/')) {
+            this.serverUrl = this.serverUrl.slice(0, -1);
+        }
+    }
 
     protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.get<T>(url, options), this.#processOptionsFactory(options));
 
@@ -53,7 +59,7 @@ export abstract class BaseCloudServiceAPI {
 
         const additionalHeaders = {
             Authorization: `Bearer ${accessToken}`,
-            'cloud-host': this.cloudHost
+            'cloud-host': this.cloudHost || environment.cloudHostDev
         };
 
         const updateHeading = ([key, value]: [string, string]): void => {

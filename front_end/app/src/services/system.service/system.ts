@@ -1,4 +1,5 @@
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
     BehaviorSubject,
     Subscription,
@@ -27,6 +28,7 @@ import { NxSystemsService } from '../systems.service';
 
 import { CameraManager } from './camera-manager/camera-manager';
 import type { ICamera, ITask } from './camera-manager/camera-manager-types';
+import { LicenseManager } from './license-manager/licence-manager';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
 import { System } from './system-types';
@@ -171,6 +173,7 @@ export class NxSystem extends System {
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
         private router: Router,
+        private translateService: TranslateService,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
@@ -223,7 +226,7 @@ export class NxSystem extends System {
         }
         // Handling promise to satisfy the linter.
         if (!this.useRest || !(<NxSystemRestAPI> this.mediaserver)?.accessToken) {
-            unauthorizedCallback(true).then(() => {});
+            unauthorizedCallback(true).then(() => { });
         }
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
@@ -265,7 +268,7 @@ export class NxSystem extends System {
 
         return this.cloudApi.getSystemToken(this.id).toPromise().then(tokens => {
             (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
-                .subscribe(() => {});
+                .subscribe(() => { });
             return Promise.resolve(true);
         }).catch(() => {
             this.lostConnection = true;
@@ -550,7 +553,7 @@ export class NxSystem extends System {
                 } else if (auth.access_token) {
                     (this.mediaserver as NxSystemRestAPI)
                         .setTokens(auth, true)
-                        .subscribe(() => {});
+                        .subscribe(() => { });
                 } else {
                     this.authPromise = null;
                     return Promise.reject(auth);
@@ -659,8 +662,14 @@ export class NxSystem extends System {
             }),
             catchError(() => Promise.resolve('')),
             switchMap(licenseServer => this.cloudApi.checkLicenseServer(this.id, licenseServer)),
-            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, _cloudHost))
+            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, _cloudHost || this.CONFIG.cloudHost))
         );
+    }
+
+    public getLicenseManager() {
+        return this.getLicenseServerApi().pipe(
+            map(licenseServerApi => new LicenseManager(licenseServerApi, this, this.systemsService, this.translateService)
+            ));
     }
 
     /**

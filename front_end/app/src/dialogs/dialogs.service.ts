@@ -15,6 +15,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
+import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
@@ -224,10 +225,9 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    #cloudStorageActionMethodFactory = <T>(modalContent: () => Promise<ComponentType<T>>) => async () => {
-        await this.preloadDialogsModule();
+    #cloudStorageActionMethodFactory = <T>(modalContent: () => Promise<ComponentType<T>>) => async (licenseManager: LicenseManager) => {
         const component = await modalContent();
-        return this.open(component, cloudStorageActionDialogConfig).afterClosed();
+        return this.open(component, { ...cloudStorageActionDialogConfig, data: { licenseManager } }).afterClosed();
     };
 
     public cloudStorageActivate = this.#cloudStorageActionMethodFactory(
@@ -679,14 +679,14 @@ export class NxDialogsService extends DialogBase {
      */
     #newFeatureMethodFactory = <T>(
         template: string | TemplateRef<T>
-    ) => async () => {
+    ) => async (data: Record<string, unknown>) => {
         await this.preloadDialogsModule();
         const component = await import('./new-feature/new-feature.component').then(m => m.NewFeatureInformationModalContent);
 
         return this.open(
             component, {
                 ...infoDialogConfig,
-                data: { template }
+                data: { ...data, template }
             }).afterClosed();
     };
 

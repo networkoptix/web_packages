@@ -271,7 +271,7 @@ export function delayInitial<Source>(
 export type Exactly<T, U> = { [K in keyof U]: K extends keyof T ? T[K] : never };
 
 /**
- * Decorator used to enforce that a class has certain static properties/methods.
+ * Decorator used to enforce that a class has certain static properties/methods from an interface.
  *
  * Usage Example:
  *

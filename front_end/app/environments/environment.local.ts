@@ -7,7 +7,8 @@ export const environment: IEnvironment = {
     isLocal: false,
     production: false,
     // !Important. Do not change this. If you need a new env for another instance add it.
-    cloudHost: 'localhost:8000'
+    cloudHost: 'localhost:8000',
+    cloudHostDev: 'cloud-test.hdw.mx'
 };
 
 /*

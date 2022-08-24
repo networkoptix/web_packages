@@ -19,14 +19,14 @@
     </div>
     <div class="default-buttons">
         <button
-            (click)="dialogService.cloudStorageActivate()"
+            (click)="dialogService.cloudStorageActivate(this.licenseManager)"
             class="btn btn-primary"
             translate
         >
             Activate Cloud Storage
         </button>
         <button
-            (click)="dialogService.cloudStorageInfo()"
+            (click)="dialogService.cloudStorageInfo({ licenseManager: this.licenseManager })"
             class="btn btn-default"
             translate
         >
@@ -64,8 +64,10 @@
 
 <ng-template #licenseBlock>
     <div class="license-info-block">
-        <h2>{{ license.size }}</h2>
-        <span>{{ license.expires }}</span>
+        <ng-container *ngIf="(systemLicenses$ | async)?.[0] as license; else preloader">
+            <h2>{{ license.size }}</h2>
+            <span>{{ license.expires }}</span>
+        </ng-container>
     </div>
 </ng-template>
 
@@ -126,7 +128,7 @@
 <!-- Alert Blocks -->
 <nx-alert-block
     *ngIf="
-        state === CLOUD_STORAGE_STATES.ACTIVATED &&
+        (licenseManager?.state$ | async) === CLOUD_STORAGE_STATES.ACTIVATED &&
         type !== 'servers' &&
         cloudStorageNotUsed &&
         serverSettings
@@ -141,17 +143,20 @@
 </nx-alert-block>
 
 <!-- Main Block-->
-<nx-block [type]="this.type === 'servers' ? 'mt-3' : ''">
+<nx-block
+    *ngIf="licenseManager; else preloader"
+    [type]="this.type === 'servers' ? 'mt-3' : ''"
+>
     <header class="with-child">
         <h4 translate>Cloud Storage</h4>
         <span
-            *ngIf="state === CLOUD_STORAGE_STATES.DEFAULT"
+            *ngIf="(licenseManager?.state$ | async) === CLOUD_STORAGE_STATES.DEFAULT"
             class="tag"
             translate
             >New Feature</span
         >
         <button
-            *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED"
+            *ngIf="(licenseManager?.state$ | async) === CLOUD_STORAGE_STATES.ACTIVATED"
             class="header-buttons"
             id="detailed-info"
         >
@@ -170,8 +175,10 @@
             >
         </button>
     </header>
-    <nx-section *ngIf="state !== CLOUD_STORAGE_STATES.LOADING; else preloader">
-        <ng-container [ngSwitch]="state">
+    <nx-section
+        *ngIf="(licenseManager?.state$ | async) !== CLOUD_STORAGE_STATES.LOADING; else preloader"
+    >
+        <ng-container [ngSwitch]="licenseManager?.state$ | async">
             <ng-container
                 *ngSwitchCase="CLOUD_STORAGE_STATES.DEFAULT"
                 [ngTemplateOutlet]="mainDefault"
@@ -186,7 +193,10 @@
 </nx-block>
 
 <!-- Keys Block -->
-<nx-block type="mt-3">
+<nx-block
+    *ngIf="licenseManager"
+    type="mt-3"
+>
     <header class="with-child">
         <h4>
             <span translate>Your Keys</span>
@@ -207,8 +217,8 @@
         </h4>
         <div
             class="toggle"
-            [ngClass]="{ opened: showKeys }"
-            (click)="showKeys = !showKeys"
+            [ngClass]="{ opened: showKeys$ | async }"
+            (click)="showKeys$.next(!showKeys$.value)"
         >
             <svg-icon
                 nx-add-svg-src
@@ -217,13 +227,17 @@
         </div>
     </header>
     <div
-        *ngIf="showKeys"
+        *ngIf="showKeys$ | async"
         class="table-wrapper"
     >
         <table
-            *ngIf="state !== CLOUD_STORAGE_STATES.LOADING; else preloader"
+            *ngIf="
+                (licenseManager?.state$ | async) !== CLOUD_STORAGE_STATES.LOADING && userLicenses$
+                    | async;
+                else preloader
+            "
             cdk-table
-            [dataSource]="licenses$"
+            [dataSource]="userLicenses$"
         >
             <ng-container
                 *ngFor="let field of fields"

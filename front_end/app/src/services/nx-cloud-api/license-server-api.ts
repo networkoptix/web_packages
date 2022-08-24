@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { staticImplements } from '@utils/general';
 
 import { BaseCloudServiceAPI, CloudServiceAPI, CreateApiFactory } from './base-cloud-service-api';
-import { CloudLicenseUpdate, CloudSystemIds, LicenseInfo, StorageActivation, StorageBase, StorageEventParams, SystemLicenseInfo, SystemStorage, UsageReportRequest, uuid, ValidateSystemLicense } from './license-server-api.types';
+import { CloudLicenseUpdate, CloudSystemId, CloudSystemIds, LicenseInfo, StorageActivation, StorageBase, StorageEventParams, SystemLicenseInfo, SystemStorage, UsageReportRequest, uuid, ValidateSystemLicense } from './license-server-api.types';
 import { WithFreshSession } from './nx-cloud-api.types';
 
 @staticImplements<CloudServiceAPI>()
@@ -12,7 +12,7 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
     /**
      * Api base for supported license server version. Future versions of license server can be supported by extending LicenseServerAPI.
      */
-    static readonly API_BASE = 'nxlicensed/api/v2';
+    static readonly API_BASE = '/nxlicensed/api/v2';
 
     /**
      * Create's a factory for instancating a LicenseServerApi pointing to a specific license server instance.
@@ -66,7 +66,7 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
      * @param body UsageReportRequest
      * @returns Observable<unknown>
      */
-    public usageReport(body: UsageReportRequest): Observable<unknown> {
+    public usageReport(body: CloudSystemId): Observable<UsageReportRequest> {
         return this.post('/license/cloud/usage_report', { body });
     }
 

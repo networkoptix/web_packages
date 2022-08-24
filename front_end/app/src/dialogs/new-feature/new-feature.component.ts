@@ -10,6 +10,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 
 @Component({
     selector: 'nx-modal-new-feature-content',
@@ -27,16 +28,17 @@ export class NewFeatureInformationModalContent<T> {
         language: NxLanguageProviderService,
         public dialogsService: NxDialogsService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) { template }: {
-            template: string | TemplateRef<T>
+        @Inject(DIALOG_DATA) public dialogData: {
+            template: string | TemplateRef<T>,
+            licenseManager?: LicenseManager
         }
     ) {
         this.LANG = language.translations;
         this.CONFIG = config.getConfig();
-        if (template instanceof TemplateRef) {
-            this.dynamicTemplate = template;
+        if (dialogData.template instanceof TemplateRef) {
+            this.dynamicTemplate = dialogData.template;
         } else {
-            this.templateName = template;
+            this.templateName = dialogData.template;
         }
     }
 

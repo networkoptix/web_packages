@@ -189,7 +189,20 @@ export interface CameraFilters {
 
 export interface LanguageI18NStaticTypesCloudStorage {
     keyTableFields: KeyTableFields;
+    fromServer:     FromServer;
     notUsedWarning: (params?: Record<string, string | number>) => string;
+}
+
+export interface FromServer {
+    ACTIVE:                                                                                   (params?: Record<string, string | number>) => string;
+    INACTIVE:                                                                                 (params?: Record<string, string | number>) => string;
+    Unassigned:                                                                               (params?: Record<string, string | number>) => string;
+    until:                                                                                    (params?: Record<string, string | number>) => string;
+    "This license was deactivated more than once AND was reactivated less than 24 hours ago": (params?: Record<string, string | number>) => string;
+    "License key is already activated":                                                       (params?: Record<string, string | number>) => string;
+    "Maximum number of items is 10000":                                                       (params?: Record<string, string | number>) => string;
+    "This Cloud license does not exist":                                                      (params?: Record<string, string | number>) => string;
+    "This license is already activated":                                                      (params?: Record<string, string | number>) => string;
 }
 
 export interface KeyTableFields {

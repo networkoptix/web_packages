@@ -71,13 +71,16 @@ export enum LicenseState {
   INACTIVE = 'INACTIVE'
 }
 
+export interface ExpirationDate {
+  expirationDate: datetime
+}
+
 /** State from schema */
-export interface LicenseStateInfo extends CloudSystemId {
+export interface LicenseStateInfo extends CloudSystemId, ExpirationDate {
   licenseState: LicenseState,
   userIds: uuid[],
   firstActivationDate: datetime,
   lastActivationDate: datetime,
-  expirationDate: datetime,
   deactivationsRemaining: int
 }
 
@@ -149,7 +152,7 @@ export interface StorageEvent extends Id, CloudStorageSize, Key, Partial<CloudSy
 
 /** StorageSystemBody from schema */
 export interface CloudSystemIds {
-  cloudSystemId: uuid[]
+  cloudSystemIds: uuid[]
 }
 
 /** SystemLicense from schema */

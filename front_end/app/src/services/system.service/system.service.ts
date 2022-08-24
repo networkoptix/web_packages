@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -33,7 +34,8 @@ export class NxSystemService {
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private router: Router,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        private translateService: TranslateService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -67,6 +69,7 @@ export class NxSystemService {
                 this.systemsService,
                 this.ribbonService,
                 this.router,
+                this.translateService,
                 currentUserEmail,
                 systemId,
                 serverId,
@@ -79,7 +82,7 @@ export class NxSystemService {
         // This is done to set the auth keys for video. Local doesn't need auth keys
         // because cookies are same site and will be attached to all requests.
         if (!environment.isLocal) {
-            system.updateSystemAuth(true).catch(() => {});
+            system.updateSystemAuth(true).catch(() => { });
         }
 
         if (environment.isLocal || skipSettingSystem) {
@@ -89,7 +92,7 @@ export class NxSystemService {
         if (cloudSystemInfo?.useRest) {
             (system.mediaserver as NxSystemRestAPI)
                 .setAccessTokenAsCookie()
-                .subscribe(() => {});
+                .subscribe(() => { });
         }
 
         this.system = system;
@@ -111,6 +114,7 @@ export class NxSystemService {
                 this.systemsService,
                 this.ribbonService,
                 this.router,
+                this.translateService,
                 userEmail,
                 '',
                 '',

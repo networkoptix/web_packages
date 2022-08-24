@@ -12,7 +12,8 @@
     <ng-template #placeholderHeading>
         <h1 class="modal-title"></h1>
     </ng-template>
-    <h1 *ngIf="!success; else placeholderHeading" class="modal-title" translate>{{'dialogs.cloudStorage.actions.' + actionType + '.heading'}}</h1>
+    <h1 *ngIf="!success; else placeholderHeading" class="modal-title" translate>{{'dialogs.cloudStorage.actions.' +
+        actionType + '.heading'}}</h1>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
@@ -70,22 +71,24 @@
                             <ng-template #inputOnly>
                                 <span translate>Input key to see the information</span>
                             </ng-template>
-                            <span *ngIf="licenses.length; else inputOnly" translate>Input or select inactive key to see
+                            <span *ngIf="(licenses$ | async).length; else inputOnly" translate>Input or select inactive
+                                key to see
                                 the information</span>
                         </ng-container>
                     </ng-template>
                     <ng-container *ngIf="licenseMessage || licenseWarning; else default">
                         <span *ngIf="licenseMessage">{{licenseMessage}}</span>
-                        <span *ngIf="licenseWarning">{{licenseWarning}}</span>
+                        <span *ngIf="licenseWarning" class="text-warning">{{licenseWarning}}</span>
                     </ng-container>
                 </div>
             </div>
-            <div *ngIf="licenses.length" class="form-group">
+            <div *ngIf="(licenses$ | async).length" class="form-group">
                 <label for="inactive" translate>You have inactive keys which also can be used:</label>
                 <div class="inactive-licenses">
-                    <nx-tag *ngFor="let licenseInfo of licenses" (onClick)="updateLicense($event && licenseInfo)"
-                        element="btn" size="large" [name]="licenseInfo.key"
-                        [value]="licenseInfo.key.toUpperCase() === license.toUpperCase()">
+                    <nx-tag *ngFor="let licenseInfo of (licenses$ | async)"
+                        (onClick)="updateLicense($event && licenseInfo)" element="btn" size="large"
+                        [name]="licenseInfo.key"
+                        [value]="licenseInfo.key.toUpperCase().replace(dashes, '') === license.toUpperCase().replace(dashes, '')">
                         {{licenseInfo.key.toUpperCase() |
                         mask: DEFAULT_MASK}}</nx-tag>
                 </div>
@@ -94,7 +97,7 @@
         <div *ngIf="actionType === ACTION_TYPES.DELETE" class="form-group read-only-license">
             <label for="license" translate>This key will be set to inactive</label>
             <input type="text" class="" placeHolderCharacter="&mdash;" [mask]="mask" pattern="[a-zA-Z0-9]*" id="license"
-                [showMaskTyped]="true" name="license" [ngModel]="license" readonly />
+                [showMaskTyped]="true" name="license" [ngModel]="this.license" readonly />
         </div>
         <div *ngIf="showPasswordInput" class="form-group">
             <label for="password" translate>Enter your account password to continue</label>
@@ -104,12 +107,21 @@
         </div>
         <div *ngIf="showSystemsDropdown" class="form-group">
             <label for="system" class="systems-input" translate>Move Cloud Storage to...</label>
-            <nx-select id="system" name="system" [items]="systems"></nx-select>
+            <nx-select id="system" name="system" [items]="targetSystems$ | async" [selected]="targetSystem"
+                (onSelected)="targetSystem = $event; systemWarning = ''"></nx-select>
+                <div class="input-info" class="text-warning">
+                    <span>{{systemWarning}}</span>
+                </div>
         </div>
     </div>
     <div class="modal-footer">
-        <nx-process-button [buttonDisabled]="" [process]="actionProcess" [form]="actionForm"
-            [actionType]="actionType === ACTION_TYPES.DELETE ? 'danger' : 'primary'"
+        <div *ngIf="errors.length">
+            <div *ngFor="let error of errors" class="input-info" class="text-warning">
+                <span>{{error}}</span>
+            </div>
+        </div>
+        <nx-process-button [buttonDisabled]="showSystemsDropdown && !targetSystem" [process]="actionProcess"
+            [form]="actionForm" [actionType]="actionType === ACTION_TYPES.DELETE ? 'danger' : 'primary'"
             [buttonText]="('dialogs.cloudStorage.actions.' + actionType + '.action') | translate"></nx-process-button>
         <nx-cancel-button [process]="actionProcess" [discardFn]="close" [buttonText]="'close' | translate">
         </nx-cancel-button>

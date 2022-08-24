@@ -1,11 +1,12 @@
 import {
     Component,
     Renderer2,
-    // Inject
+    Inject
 } from '@angular/core';
+import { defer } from 'rxjs';
 
 import {
-    // DIALOG_DATA,
+    DIALOG_DATA,
     DialogRef
 } from '@dialogs/dialog-ref';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -28,15 +29,14 @@ export class CloudStorageModifyModalContent extends BaseCloudStorageActionModalC
         public renderer: Renderer2,
         private dialogRef: DialogRef,
         private processService: NxProcessService,
-        // @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) protected dialogData: Record<string, unknown>,
     ) {
         super();
         this.init();
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
-        // Mock process
-        this.actionProcess = this.processService.createProcess(() => Promise.resolve(), {}, this.showSuccess);
+        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.modify(this.license)), this.processConfig, this.showSuccess, this.showErrors);
     }
 
     close = (): void => this.dialogRef.close();

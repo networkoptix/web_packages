@@ -25,6 +25,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { HoverPreloadModule } from 'ngx-hover-preload';
+import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
@@ -97,7 +98,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         CdkScrollableModule,
         HoverPreloadModule,
         PreLoaderModule,
-        ResizeModule
+        ResizeModule,
+        NgxMaskModule.forRoot()
     ],
     providers: [
         Location,

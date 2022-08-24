@@ -1,12 +1,13 @@
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { IConfig } from '@services/nx-config/config-types';
-import { Process } from '@services/process.service/process';
+import { map, Observable } from 'rxjs';
 
-export interface LicenseInfo {
-    key: string;
-    info: string;
-    warningText?: string;
-}
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { LicenseState } from '@services/nx-cloud-api/license-server-api.types';
+import { IConfig } from '@services/nx-config/config-types';
+import { Process, ProcessSettings } from '@services/process.service/process';
+import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
+import { LicenseTagInfo } from '@services/system.service/license-manager/license-manager.types';
+import { pickFrom } from '@utils/general';
 
 export enum CloudStorageActionType {
     ACTIVATE = 'activate',
@@ -20,7 +21,12 @@ export class BaseCloudStorageActionModalContent {
     CONFIG: IConfig;
     actionProcess: Process;
     actionType: CloudStorageActionType;
+    licenseManager: LicenseManager;
+    protected dialogData: Record<string, unknown>;
     close: () => void;
+    targetSystem: DropdownItem<string>;
+    targetSystems$: Observable<DropdownItem<string>[]>;
+    processConfig: Partial<ProcessSettings> = { ignoreError: true };
 
     // Dynamically set based on action type
     showLicenseInput: boolean;
@@ -36,55 +42,30 @@ export class BaseCloudStorageActionModalContent {
     license = '';
     licenseMessage = '';
     licenseWarning = '';
+    systemWarning = '';
     mask = this.DEFAULT_MASK;
     success = false;
+    dashes = /-/g;
+    errors = [];
 
-    // Mock systems
-    systems = [
-        {
-            value: '1234abcd5678efgh',
-            name: 'Some System'
-        },
-        {
-            value: '2345abcd5678efgh',
-            name: 'Another System'
-        },
-        {
-            value: '6789abcd5678efgh',
-            name: 'Also System'
-        },
-    ];
+    licenses$: Observable<LicenseTagInfo[]>;
 
-    // Mock data
-    licenses: LicenseInfo[] = [
-        {
-            key: '1234abcd5678efgh',
-            info: '50GB until 01 July 2022'
-        },
-        {
-            key: '2345abcd5678efgh',
-            info: '100GB until 01 July 2022'
-        },
-        {
-            key: '6789abcd5678efgh',
-            info: '200GB until 01 July 2022',
-            warningText: 'Some data will be deleted due to the smaller size of the new Cloud Storage'
-        },
-    ];
-
-    #updateMessages = (license?: LicenseInfo): void => {
+    #updateMessages = (license?: LicenseTagInfo): void => {
         this.licenseMessage = license?.info || '';
         this.licenseWarning = license?.warningText || '';
     };
 
-    updateLicense = (licenseInfo?: LicenseInfo): void => {
-        this.license = licenseInfo?.key?.toUpperCase() || '';
+    updateLicense = (licenseInfo?: LicenseTagInfo): void => {
+        this.license = (licenseInfo?.key?.toUpperCase() || '').replace(this.dashes, '');
         this.#updateMessages(licenseInfo);
     };
 
     updateMessage = (licenseKey): void => {
-        const license = this.licenses.find(({ key }) => key.toUpperCase() === licenseKey.toUpperCase());
-        this.#updateMessages(license);
+        this.licenses$.pipe(
+            map(licenses => licenses.find(({ key }) => key.toUpperCase() === licenseKey.toUpperCase()))
+        ).subscribe(license => {
+            this.#updateMessages(license);
+        });
     };
 
     updateCursorPosition(event): void {
@@ -102,7 +83,55 @@ export class BaseCloudStorageActionModalContent {
         this.success = true;
     };
 
+    showErrors = ({
+        userId = [],
+        cloudSystemId = [],
+        licenseKey = []
+    }: {
+        userId: string[],
+        cloudSystemId: string[],
+        licenseKey: string[],
+        status: string
+    }) => {
+        const errors = [];
+
+        const [licenseError, ...otherLicenseErrors] = licenseKey.map(this.licenseManager.translateMessage);
+
+        if (licenseError) {
+            this.licenseMessage = '';
+            if (this.showLicenseInput) {
+                this.licenseWarning = licenseError;
+            } else {
+                errors.push(licenseError);
+            }
+            errors.push(...otherLicenseErrors);
+        }
+
+        const [systemError, ...otherSystemErrors] = cloudSystemId.map(this.licenseManager.translateMessage);
+
+        if (licenseError) {
+            if (this.showLicenseInput) {
+                this.systemWarning = systemError;
+            } else {
+                errors.push(systemError);
+            }
+            errors.push(...otherSystemErrors);
+        }
+
+        errors.push(...userId.map(this.licenseManager.translateMessage));
+
+        this.errors = errors;
+    };
+
     init = (): void => {
+        pickFrom(this.dialogData, ['licenseManager'], this);
+        this.targetSystems$ = this.licenseManager.getTargetSystems();
+        this.licenses$ = this.licenseManager.getLicenseTagInfo(LicenseState.INACTIVE);
+        if ([CloudStorageActionType.DELETE, CloudStorageActionType.MOVE].includes(this.actionType)) {
+            this.licenseManager.systemKeys$.pipe(map(([{ key }]) => key.replace(/-/g, ''))).subscribe(key => {
+                this.license = key;
+            });
+        }
         this.showLicenseInput = [CloudStorageActionType.ACTIVATE, CloudStorageActionType.MODIFY].includes(this.actionType);
         this.showSystemsDropdown = CloudStorageActionType.MOVE === this.actionType;
         this.showPasswordInput = CloudStorageActionType.DELETE === this.actionType;
