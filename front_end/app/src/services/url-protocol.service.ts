@@ -159,13 +159,6 @@ export class NxUrlProtocolService {
                     .replace(this.LANG.clientProtocol(), 'nx-vms:')
                     .replace(this.window.location.host, environment.cloudHost);
             }
-            link = link.replace(/&/g, '&&'); // This is a hack,
-            // Google Chrome for mac has a bug - he looses one ampersand which brakes the link parameters
-            // Here we duplicate ampersands to keep one of them
-            // Dear successor, if you read this - please, check if the bug was fixed in chrome and remove this
-            // ugly thing!
-            // see CLOUD-716 for more information
-
             /* The browser opens a dialog that we cannot directly detect or get a response from.
              * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
              */
