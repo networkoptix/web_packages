@@ -1,5 +1,6 @@
 :host {
-    .system-card.cdk-drop-list-receiving {
+    .system-card.cdk-drop-list-receiving,
+    .system-card.cdk-drop-list-dragging {
         opacity: 0.75;
     }
 }

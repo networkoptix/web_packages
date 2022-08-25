@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
@@ -8,7 +8,6 @@ import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NgChanges } from '@utils/ng-changes';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
@@ -87,7 +86,6 @@ export class NxGroupsCardsComponent implements OnInit, OnChanges {
         configService: NxConfigService,
         private accountService: NxAccountService,
         private route: ActivatedRoute,
-        private router: Router,
         private groupsService: NxSystemGroupsService,
     ) {
         this.LANG = language.translations;
@@ -149,10 +147,6 @@ export class NxGroupsCardsComponent implements OnInit, OnChanges {
     trackItem(_index: number, item: GroupsItem): string | undefined {
         return item ? item.id : undefined;
     }
-
-    openSystem = (system: NxSystemWithUserInfo): void => {
-        this.router.navigate(['systems', system.id]);
-    };
 
     onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
         const dragged = event.item.data;

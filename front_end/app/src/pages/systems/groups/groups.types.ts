@@ -22,6 +22,7 @@ export interface BaseSystemItem {
 export interface SystemInfo extends System {
     authKeyHash: string;
     system2faEnabled: boolean;
+    version: string;
 }
 
 export type SystemItem = BaseSystemItem & SystemInfo;

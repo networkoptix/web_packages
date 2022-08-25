@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 // import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
-import { SystemCardModule } from '@components/system-card/system-card.module';
 
 import { NxGroupCardModule } from '../group-card/group-card.module';
+import { NxSystemCardModule } from '../system-card/system-card.module';
 
 import { NxGroupsCardsComponent } from './groups-cards.component';
 
@@ -15,8 +15,8 @@ import { NxGroupsCardsComponent } from './groups-cards.component';
         DragDropModule,
 
         ComponentsCoreModule,
-        SystemCardModule,
         NxGroupCardModule,
+        NxSystemCardModule,
     ],
     declarations: [
         NxGroupsCardsComponent,

@@ -7,12 +7,13 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import type { GroupItem } from '../../groups.types';
+import { NxSystemGroupsService } from '../../services/system-groups.service';
 
 @Component({
     selector: 'nx-group-card',
     templateUrl: 'group-card.component.html',
     styleUrls: [
-        '../../../../../components/system-card/system-card.component.scss',
+        '../system-card/system-card.component.scss',
         'group-card.component.scss',
     ]
 })
@@ -23,10 +24,13 @@ export class NxGroupCardComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    menuOpen: boolean = false;
+
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
         private router: Router,
+        private groupsService: NxSystemGroupsService,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.config;
@@ -35,7 +39,10 @@ export class NxGroupCardComponent implements OnInit {
     ngOnInit(): void {}
 
     openGroup(): void {
-        // TODO: Navigate without load (authguard)
         this.router.navigate(['systems', 'groups', this.group.id]);
+    }
+
+    deleteGroup(): void {
+        this.groupsService.deleteGroup(this.group.id);
     }
 }

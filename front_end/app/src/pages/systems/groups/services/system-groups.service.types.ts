@@ -30,7 +30,7 @@ export interface IncomingData {
     }
     delete_group: {
         action: WebSocketAction.DELETE_GROUP;
-        data: unknown;
+        data: { msg: string };
     };
     list_groups: {
         action: WebSocketAction.LIST_GROUPS;
@@ -42,7 +42,7 @@ export interface IncomingData {
     };
     move_group: {
         action: WebSocketAction.MOVE_GROUP;
-        data: unknown;
+        data: { msg: string };
     };
     move_system: {
         action: WebSocketAction.MOVE_SYSTEM;

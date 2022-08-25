@@ -12,8 +12,7 @@ import { GroupsState } from './groups.state';
 
 const selectGroupState = createFeatureSelector<GroupsState>('groups');
 
-// eslint-disable-next-line ngrx/prefix-selectors-with-select
-const _selectGroupsItems = createSelector(
+const selectBaseGroupsItems = createSelector(
     selectGroupState,
     state => state.items
 );
@@ -29,7 +28,7 @@ const selectSystemInfoMap = createSelector(
 );
 
 export const selectGroupsItems = createSelector(
-    _selectGroupsItems,
+    selectBaseGroupsItems,
     selectSystemInfoMap,
     (items, sysInfo) => {
         const placedSystem: Set<string> = new Set();
@@ -41,8 +40,7 @@ export const selectGroupsItems = createSelector(
                 placedSystem.add(s.id);
                 return {
                     ...s,
-                    ...(sysInfo.get(s.id) ?? {})
-                    // TODO: Remove once backend only returns your systems
+                    ...sysInfo.get(s.id)
                 };
             });
             return groupItem as GroupItem;
@@ -53,7 +51,7 @@ export const selectGroupsItems = createSelector(
             } else {
                 item = {
                     ...item,
-                    ...(sysInfo.get(item.id) ?? {}) // Here as well
+                    ...sysInfo.get(item.id)
                 };
             }
             return item as GroupsItem;
@@ -61,7 +59,7 @@ export const selectGroupsItems = createSelector(
 
         sysInfo.forEach(system => {
             if (!placedSystem.has(system.id)) {
-                data.push({ ...system, type: 'system', group_id: '' });
+                data.push({ ...system, type: 'system', group_id: null });
                 placedSystem.add(system.id);
             }
         });

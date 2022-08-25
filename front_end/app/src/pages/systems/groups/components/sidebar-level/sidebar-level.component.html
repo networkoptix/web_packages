@@ -44,8 +44,7 @@
                 cdkDragBoundary=".sidebar"
             >
                 <span *cdkDragPlaceholder></span>
-                <a [routerLink]="'/systems/' + system.id">{{ system.name ?? '(INACCESSIBLE)' }}</a>
-                <!-- Backend needs to be fixed to only send own systems -->
+                <a [routerLink]="'/systems/' + system.id">{{ system.name }}</a>
             </h3>
         </div>
     </li>

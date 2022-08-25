@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -66,6 +67,8 @@ export class NxSystemGroupsService {
     private receive = ({ action, data }: IncomingData[WebSocketAction]): void => {
         switch (action) {
             case WebSocketAction.CREATE_GROUP:
+            case WebSocketAction.DELETE_GROUP:
+            case WebSocketAction.MOVE_GROUP:
             case WebSocketAction.MOVE_SYSTEM:
                 // Automatically sends back updated list_groups
                 break;
@@ -84,12 +87,14 @@ export class NxSystemGroupsService {
         this.send({ action: WebSocketAction.CREATE_GROUP, name });
     }
 
-    // eslint-disable-next-line camelcase
+    deleteGroup(group_id: string): void {
+        this.send({ action: WebSocketAction.DELETE_GROUP, group_id });
+    }
+
     moveGroup(group_id: string, target_id: string | null): void {
         this.send({ action: WebSocketAction.MOVE_GROUP, group_id, target_id });
     }
 
-    // eslint-disable-next-line camelcase
     moveSystem(system_id: string, group_id: string | null): void {
         this.send({ action: WebSocketAction.MOVE_SYSTEM, system_id, group_id });
     }

@@ -1,0 +1,94 @@
+@use "../../../../../../styles/theme_variables_common" as theme_vars;
+@use "../../../../../styles/_mixins";
+
+:host {
+    .system-button {
+        user-select : none;
+        cursor      : pointer;
+        // overflow    : hidden;
+
+        h2 {
+            @include mixins.ellipsis;
+            color : var(--card-header-text) !important;
+        }
+
+        .old-h12 {
+            color : var(--card-header-text) !important;
+        }
+
+        &.card-condensed {
+            .card-body {
+                display          : flex;
+                flex-direction   : column;
+                background-color : var(--card-body-bg);
+
+                // &:hover {
+                //     background-color : var(--card-hover-bg);
+                // }
+            }
+        }
+    }
+
+    .info-text {
+        font-size     : theme_vars.$h6-font-size;
+    }
+
+    .system-owner {
+        line-height: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .system-list-bottom-bar {
+        height: 2rem;
+        display : flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        .system-status {
+            display: flex;
+        }
+    }
+
+    .three-dots {
+        position: absolute;
+        right: 16px;
+        top: 12px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        padding: 0.5rem;
+
+        cursor: initial;
+
+        .dot {
+            height: 0.2rem;
+            width: 0.2rem;
+            border-radius: 0.1rem;
+            background: theme_vars.$light10;
+        }
+
+        .card-menu {
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            padding: 0.25rem 0;
+            z-index: 100;
+
+            white-space: nowrap;
+
+            // TODO: Add variables from spec
+            background-color: var(--card-body-bg);
+            border: gray 1px solid;
+
+            &-option {
+                padding: 0.1rem 0.5rem;
+
+                &:not(.no-hover):hover {
+                    background-color: gray;
+                    color: white;
+                }
+            }
+        }
+    }
+}
