@@ -47,7 +47,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private readonly refreshToken = 'refreshToken';
     private injector: Injector;
 
-    private vmsToken: string;
+    #vmsToken: string;
 
     constructor(
         http: HttpClient,
@@ -106,6 +106,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         this.cookieService.delete(this.cloudAccessTokenName);
         this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
+    }
+
+    public setVmsToken(token) {
+        this.#vmsToken = token;
+    }
+
+    public get vmsToken() {
+        return this.#vmsToken;
     }
 
     protected proxy(method, protocol, serverAddress, requestUrl, data) {
@@ -264,8 +272,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         // if (!environment.isLocal && this.authGet) {
         //     params.auth = this.authGet;
         // }
-        if (this.vmsToken) {
-            headers = headers.set(this.token, this.vmsToken);
+        if (this.#vmsToken) {
+            headers = headers.set(this.token, this.#vmsToken);
         }
         if (this.accessToken) {
             headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
@@ -285,7 +293,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private buildHeader(customHttpHeaders: IParams<string> = {}) {
         const accessToken = this.accessToken;
         let headers = new HttpHeaders();
-        headers = headers.set(this.token, accessToken || this.vmsToken || '');
+        headers = headers.set(this.token, accessToken || this.#vmsToken || '');
 
         // Not used for the time being.
         // headers = headers.set('Authorization', `Bearer ${accessToken}`);
@@ -434,7 +442,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
                 .then((result: any) => {
                     if (!this.accessToken) {
-                        this.vmsToken = result.token;
+                        this.#vmsToken = result.token;
                     }
                     return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
                 })
@@ -546,7 +554,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             ).toPromise();
         }
         this.clearTokens();
-        return this.delete(`/rest/v1/login/sessions/${accessToken || this.vmsToken}`).toPromise();
+        return this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`).toPromise();
     }
 
     getApiDoc(type: APIDocType = 'main') {

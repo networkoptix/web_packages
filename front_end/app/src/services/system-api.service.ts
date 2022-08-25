@@ -73,8 +73,12 @@ export class NxSystemAPIService {
                 this.appState,
                 this.injector
             ) as S;
-            if (environment.isLocal && !this.localApi) {
-                this.localApi = serverApi;
+            if (environment.isLocal) {
+                if (!this.localApi) {
+                    this.localApi = serverApi;
+                } else {
+                    (serverApi as NxSystemRestAPI).setVmsToken((this.localApi as NxSystemRestAPI)?.vmsToken);
+                }
             }
             return serverApi;
         } else {
