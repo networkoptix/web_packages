@@ -32,6 +32,10 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
         }
     }
 
+    trackItem(_index: number, item: GroupsItem): string {
+        return item.id;
+    }
+
     onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
         const dragged = event.item.data;
         const droppedOn = event.container.data;

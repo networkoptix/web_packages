@@ -1,6 +1,9 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
-<div class="row">
+<div
+    class="row"
+    *ngIf="!emptyGroup"
+>
     <div
         *ngFor="let group of groups; trackBy: trackItem"
         class="col-sm-12 mb-3 mb-lg-0 col-lg-4 col-xl-3 col-md-6"
@@ -37,4 +40,11 @@
             ></system-card>
         </div>
     </div>
+</div>
+<div
+    *ngIf="emptyGroup"
+    class="no-systems"
+    translate
+>
+    No systems
 </div>

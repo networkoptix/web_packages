@@ -35,3 +35,8 @@ export interface GroupItem extends BaseGroupItem {
 export type BaseGroupsItem = BaseGroupItem | BaseSystemItem;
 
 export type GroupsItem = GroupItem | SystemItem;
+
+export interface Crumb {
+    id: string;
+    name: string;
+}

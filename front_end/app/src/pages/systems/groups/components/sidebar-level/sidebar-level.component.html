@@ -1,5 +1,5 @@
 <ul>
-    <li *ngFor="let group of groups">
+    <li *ngFor="let group of groups; trackBy: trackItem">
         <div
             class="group-drop-list"
             cdkDropList
@@ -31,7 +31,7 @@
         ></nx-sidebar-level>
     </li>
 
-    <li *ngFor="let system of systems">
+    <li *ngFor="let system of systems; trackBy: trackItem">
         <div
             cdkDropList
             cdkDropListSortingDisabled

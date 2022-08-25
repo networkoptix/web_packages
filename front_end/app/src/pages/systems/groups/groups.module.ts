@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { AuthGuard } from '@guards/authGuard';
 
 import {
@@ -37,6 +38,7 @@ import { groupsReducer } from './store/groups.reducer';
 
         NxGroupsSidebarLevelModule,
         NxGroupsCardsModule,
+        PreLoaderModule,
     ],
     declarations: [
         NxSystemGroupsComponent,

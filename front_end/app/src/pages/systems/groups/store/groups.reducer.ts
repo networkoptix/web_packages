@@ -3,17 +3,19 @@ import { createReducer, on } from '@ngrx/store';
 import * as GroupActions from './groups.actions';
 import type { GroupsState } from './groups.state';
 
-export const initialState: GroupsState = {
-    items: [],
-    systemInfo: [],
+const initialState: GroupsState = {
+    items: null,
+    systemInfo: null,
+    currentGroupId: '',
 };
 
 export const groupsReducer = createReducer(
     initialState,
-    on(GroupActions.reset, (_state): GroupsState => ({
-        items: [],
-        systemInfo: [],
-    })),
+    // on(GroupActions.reset, (_state): GroupsState => ({
+    //     items: [],
+    //     systemInfo: [],
+    //     currentGroupId: undefined,
+    // })),
     on(GroupActions.setItems, (state, { items }): GroupsState => ({
         ...state,
         items,
@@ -22,5 +24,10 @@ export const groupsReducer = createReducer(
         ...state,
         systemInfo,
     })),
-
+    on(
+        GroupActions.setCurrentGroupId,
+        (state, { currentGroupId }): GroupsState => ({
+            ...state,
+            currentGroupId,
+        }))
 );

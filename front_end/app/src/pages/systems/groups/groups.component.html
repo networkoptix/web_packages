@@ -1,4 +1,5 @@
 <div
+    *ngIf="(currentIndexes$ | async) !== null"
     id="groups"
     cdkDropListGroup
 >
@@ -28,11 +29,31 @@
             [systems]="rootSystems$ | async"
         ></nx-sidebar-level>
     </div>
-    <div class="cards">
+    <div
+        class="cards"
+        *ngIf="!!(currentIndexes$ | async)"
+    >
+        <div class="crumbs">
+            <a
+                routerLink="/systems/groups/"
+                translate
+                >(root)</a
+            >
+            <ng-container *ngFor="let crumb of crumbs$ | async; trackBy: trackItem">
+                {{ ' / ' }}
+                <a [routerLink]="'/systems/groups/' + crumb.id">{{ crumb.name }}</a>
+            </ng-container>
+        </div>
         <nx-groups-cards
-            [rootGroups]="rootGroups$ | async"
-            [rootSystems]="rootSystems$ | async"
+            [groups]="currentGroups$ | async"
+            [systems]="currentSystems$ | async"
         ></nx-groups-cards>
     </div>
+    <!-- TODO: Replace with actual placeholder -->
+    <!-- eslint-disable-next-line nx/template/no-untranslated -->
+    <div *ngIf="(currentIndexes$ | async) === undefined">No group found</div>
 </div>
-<!-- TODO: preloader -->
+<nx-pre-loader
+    *ngIf="(currentIndexes$ | async) === null"
+    type="page"
+></nx-pre-loader>

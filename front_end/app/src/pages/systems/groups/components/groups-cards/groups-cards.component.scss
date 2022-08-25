@@ -1,4 +1,6 @@
 :host {
+    flex: 1;
+
     .system-card.cdk-drop-list-receiving,
     .system-card.cdk-drop-list-dragging {
         opacity: 0.75;
@@ -7,4 +9,12 @@
 
 .cdk-drag-preview {
     opacity: 0.35;
+}
+
+.no-systems {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.8rem;
 }

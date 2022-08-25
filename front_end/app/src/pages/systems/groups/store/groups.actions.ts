@@ -13,3 +13,8 @@ export const setSystemInfo = createAction(
     '[System Groups] Set System Info',
     props<{ systemInfo: SystemInfo[] }>()
 );
+
+export const setCurrentGroupId = createAction(
+    '[System Groups] Set current group ID',
+    props<{ currentGroupId: string }>()
+);
