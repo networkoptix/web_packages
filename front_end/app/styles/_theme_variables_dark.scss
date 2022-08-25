@@ -67,7 +67,7 @@ html[data-theme="dark"] {
     --svg-std-icon-fill : #587785; //$dark18;
     --svg-path-light-color : #2B383F; //$dark9;
     --svg-path-dark-color  : #E1E7EA; //$light4;
-    
+
     --svg-placeholder-elm1-color : #E1E7EA; //$light4;
     --svg-placeholder-elm2-color : #A5B7C0; //$light10;
 
@@ -246,7 +246,7 @@ html[data-theme="dark"] {
     --left-menu-view-hover-bg    : #263137; //$dark8;
     --left-menu-view-selected-bg : #35464F; //$light16;
     // end View tab ****************************
-    
+
     --sidebar-toggling-ear-color : #E1E7EA; // $light16;
 
     --time-under-mouse-bg               : rgba(var(--dark9--rgb), 0.9);
@@ -549,4 +549,7 @@ html[data-theme="dark"] {
     --dashboard-widget-hover-color : var(--brand-core);
     --dashboard-settings-menu-bg : #1C2327; //$dark6;
     --dashboard-settings-menu-shadow : none;
+
+    --active-license-text: var(--green_main);
+    --inactive-license-text: var(--yellow_d2);
 }

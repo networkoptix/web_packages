@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { chunk } from 'lodash-es';
-import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, catchError } from 'rxjs';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-cloud-api/license-server-api.types';
@@ -66,8 +66,14 @@ export class LicenseManager {
         switchMap(systemIds => this.#systemsService.systemsSubject.pipe(map(systems => systemIds.map(value => ({ name: systems.find(({ id }) => id === value)?.name || value, value })))))
     );
 
+    /**
+     *  Get list of tags that could be activated.
+     *
+     * @param licenseState LicenseState
+     * @returns Observable<LicenseTagInfo[]
+     */
     public readonly getLicenseTagInfo = (licenseState?: LicenseState): Observable<LicenseTagInfo[]> => this.userKeys$.pipe(
-        map(keys => keys.filter(({ state }) => !licenseState || state === this.translateMessage(licenseState))),
+        map(keys => keys.filter(({ state }) => !licenseState || state === licenseState)),
         map(keys => keys.map(this.#toTagInfo))
     );
 
@@ -93,16 +99,19 @@ export class LicenseManager {
         );
     };
 
-    public readonly deactivate = (key?: string): Observable<LicenseInfo> => {
-        return this.licenseServerApi.deactivateLicense(this.#generateUpdateParams(key)).pipe(
+    public readonly deactivate = (password: string, key?: string): Observable<LicenseInfo> => {
+        key ||= this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey;
+        return this.licenseServerApi.verify(password).pipe(
+            catchError(async () => ({ password: ['Invalid Password'] })),
+            switchMap((res: Record<string, unknown>) => res?.password ? Promise.reject(res) : this.licenseServerApi.deactivateLicense(this.#generateUpdateParams(key))),
             tap(() => this.#updateLicense())
         );
     };
 
-    public readonly move = (key: string, cloudSystemId: string): Observable<LicenseInfo> => {
-        // const originalKey = this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey;
-        return this.licenseServerApi.deactivateLicense(this.#generateUpdateParams(key)).pipe(
-            switchMap(() => this.licenseServerApi.activateLicense(this.#generateUpdateParams(key, cloudSystemId))),
+    public readonly move = (targetCloudSystemId: string, key: string): Observable<LicenseInfo> => {
+        const licenseKey = LicenseManager.normalizeKey(key || this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey);
+        const sourceCloudSystemId = this.system.id;
+        return this.licenseServerApi.changeLicense({ targetCloudSystemId, licenseKey, sourceCloudSystemId }).pipe(
             tap(() => this.#updateLicense())
         );
     };

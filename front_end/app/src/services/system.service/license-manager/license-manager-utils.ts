@@ -35,7 +35,7 @@ export const processLicenseKeys = (systemsService: NxSystemsService, translate: 
             expirationDate, licenseState, cloudSystemId, licenseKey, cloudStorageSizeBytes
         }) => ({
             size: bytesToString(+cloudStorageSizeBytes),
-            state: translate(licenseState),
+            state: licenseState,
             system: licenseState === LicenseState.ACTIVE ? systems.find(({ id }) => id === cloudSystemId)?.name || cloudSystemId : translate('Unassigned'),
             expires: new Date(expirationDate).toLocaleDateString(),
             key: licenseKey

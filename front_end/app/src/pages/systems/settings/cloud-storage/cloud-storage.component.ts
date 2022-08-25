@@ -38,6 +38,8 @@ export class NxCloudStorageComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    TRANSLATION_KEY = LicenseManager.TRANSLATION_KEY;
+
     readonly MASK = 'AAAA-AAAA-AAAA-AAAA';
 
     CLOUD_STORAGE_STATES = CLOUD_STORAGE_STATES;

@@ -203,6 +203,14 @@ export interface FromServer {
     "Maximum number of items is 10000":                                                       (params?: Record<string, string | number>) => string;
     "This Cloud license does not exist":                                                      (params?: Record<string, string | number>) => string;
     "This license is already activated":                                                      (params?: Record<string, string | number>) => string;
+    "This license is not activated":                                                          (params?: Record<string, string | number>) => string;
+    "This license has already expired":                                                       (params?: Record<string, string | number>) => string;
+    "Already has a cloud storage license active":                                             (params?: Record<string, string | number>) => string;
+    "Cloud System ID does not match credentials used":                                        (params?: Record<string, string | number>) => string;
+    "Not Authorized for cloud system":                                                        (params?: Record<string, string | number>) => string;
+    "This license is not currently activated":                                                (params?: Record<string, string | number>) => string;
+    "This license has no deactivations remaining":                                            (params?: Record<string, string | number>) => string;
+    "Cloud system Id does not match license activation":                                      (params?: Record<string, string | number>) => string;
 }
 
 export interface KeyTableFields {

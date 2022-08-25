@@ -83,11 +83,12 @@
             @include typography.medium16dark9;
             display: flex;
             justify-content: flex-start;
-            margin: 0 12px;
+            margin: 0 0 12px 0;
 
             .action-icon {
                 width: 32px;
                 height: 20px;
+                margin-right: 12px;
             }
 
         }

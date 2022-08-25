@@ -69,7 +69,7 @@ html {
     --svg-std-icon-fill : #{$light16};
     --svg-path-light-color: #{$light4};
     --svg-path-dark-color: #{$dark9};
-    
+
     --svg-placeholder-elm1-color : #2B383F; // $dark9
     --svg-placeholder-elm2-color : #A5B7C0; //$light10;
 
@@ -243,7 +243,7 @@ html {
     --left-menu-view-hover-bg    : #{$additional_light3};
     --left-menu-view-selected-bg : #{$light5};
     // end View tab ****************************
-    
+
     --sidebar-toggling-ear-color : #{$light16};
 
     --time-under-mouse-bg               : rgba(var(--light6--rgb), 0.9);
@@ -547,4 +547,7 @@ html {
     --dashboard-widget-hover-color : var(--brand-l4);
     --dashboard-settings-menu-bg : #{$light4};
     --dashboard-settings-menu-shadow : 6px 0 6px -6px #{$light7};
+
+    --active-license-text: var(--green_main);
+    --inactive-license-text: var(--yellow_d2);
 }

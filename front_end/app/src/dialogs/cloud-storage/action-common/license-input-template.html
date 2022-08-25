@@ -71,7 +71,7 @@
                             <ng-template #inputOnly>
                                 <span translate>Input key to see the information</span>
                             </ng-template>
-                            <span *ngIf="(licenses$ | async).length; else inputOnly" translate>Input or select inactive
+                            <span *ngIf="(licenses$ | async)?.length; else inputOnly" translate>Input or select inactive
                                 key to see
                                 the information</span>
                         </ng-container>
@@ -82,7 +82,7 @@
                     </ng-container>
                 </div>
             </div>
-            <div *ngIf="(licenses$ | async).length" class="form-group">
+            <div *ngIf="(licenses$ | async)?.length" class="form-group">
                 <label for="inactive" translate>You have inactive keys which also can be used:</label>
                 <div class="inactive-licenses">
                     <nx-tag *ngFor="let licenseInfo of (licenses$ | async)"
@@ -96,22 +96,25 @@
         </ng-container>
         <div *ngIf="actionType === ACTION_TYPES.DELETE" class="form-group read-only-license">
             <label for="license" translate>This key will be set to inactive</label>
-            <input type="text" class="" placeHolderCharacter="&mdash;" [mask]="mask" pattern="[a-zA-Z0-9]*" id="license"
+            <input type="text" placeHolderCharacter="&mdash;" [mask]="mask" pattern="[a-zA-Z0-9]*" id="license"
                 [showMaskTyped]="true" name="license" [ngModel]="this.license" readonly />
         </div>
         <div *ngIf="showPasswordInput" class="form-group">
             <label for="password" translate>Enter your account password to continue</label>
-            <input class="form-control" [(ngModel)]="password" id="password"
-                [placeholder]="'Enter password' | translate" autocomplete="password" name="password" type="password"
-                required nxFocusMe />
+            <input class="form-control" [ngModel]="password" (ngModelChange)="password = $event; passwordWarning = ''"
+                id="password" [placeholder]="'Enter password' | translate" name="password" type="password" required
+                nxFocusMe />
+            <div *ngIf="passwordWarning" class="input-info text-warning">
+                <span>{{passwordWarning}}</span>
+            </div>
         </div>
         <div *ngIf="showSystemsDropdown" class="form-group">
             <label for="system" class="systems-input" translate>Move Cloud Storage to...</label>
             <nx-select id="system" name="system" [items]="targetSystems$ | async" [selected]="targetSystem"
                 (onSelected)="targetSystem = $event; systemWarning = ''"></nx-select>
-                <div class="input-info" class="text-warning">
-                    <span>{{systemWarning}}</span>
-                </div>
+            <div class="input-info text-warning">
+                <span>{{systemWarning}}</span>
+            </div>
         </div>
     </div>
     <div class="modal-footer">

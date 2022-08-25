@@ -36,7 +36,7 @@ export class CloudStorageDeleteModalContent extends BaseCloudStorageActionModalC
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
-        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.deactivate(this.license)), this.processConfig, this.showSuccess, this.showErrors);
+        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.deactivate(this.password, this.license)), this.processConfig, this.showSuccess, this.showErrors);
     }
 
     close = (): void => this.dialogRef.close();

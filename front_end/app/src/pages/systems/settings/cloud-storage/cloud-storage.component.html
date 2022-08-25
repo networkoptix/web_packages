@@ -66,7 +66,7 @@
     <div class="license-info-block">
         <ng-container *ngIf="(systemLicenses$ | async)?.[0] as license; else preloader">
             <h2>{{ license.size }}</h2>
-            <span>{{ license.expires }}</span>
+            <span>{{ TRANSLATION_KEY + 'until' | translate: license }}</span>
         </ng-container>
     </div>
 </ng-template>
@@ -269,7 +269,17 @@
                     cdk-cell
                     *cdkCellDef="let element"
                 >
-                    {{ field === 'key' ? (element[field] | mask: MASK) : element[field] }}
+                    <ng-container [ngSwitch]="field">
+                        <ng-container *ngSwitchCase="'key'">{{
+                            element[field] | mask: MASK
+                        }}</ng-container>
+                        <span
+                            *ngSwitchCase="'state'"
+                            [ngClass]="element[field]"
+                            >{{ TRANSLATION_KEY + element[field] | translate }}</span
+                        >
+                        <ng-container *ngSwitchDefault>{{ element[field] }}</ng-container>
+                    </ng-container>
                 </td>
             </ng-container>
             <thead>

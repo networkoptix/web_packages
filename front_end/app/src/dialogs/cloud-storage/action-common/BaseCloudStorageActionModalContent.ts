@@ -43,6 +43,7 @@ export class BaseCloudStorageActionModalContent {
     licenseMessage = '';
     licenseWarning = '';
     systemWarning = '';
+    passwordWarning = '';
     mask = this.DEFAULT_MASK;
     success = false;
     dashes = /-/g;
@@ -86,11 +87,13 @@ export class BaseCloudStorageActionModalContent {
     showErrors = ({
         userId = [],
         cloudSystemId = [],
-        licenseKey = []
+        licenseKey = [],
+        password = []
     }: {
         userId: string[],
         cloudSystemId: string[],
         licenseKey: string[],
+        password: string[],
         status: string
     }) => {
         const errors = [];
@@ -109,13 +112,24 @@ export class BaseCloudStorageActionModalContent {
 
         const [systemError, ...otherSystemErrors] = cloudSystemId.map(this.licenseManager.translateMessage);
 
-        if (licenseError) {
+        if (systemError) {
             if (this.showLicenseInput) {
                 this.systemWarning = systemError;
             } else {
                 errors.push(systemError);
             }
             errors.push(...otherSystemErrors);
+        }
+
+        const [passwordError, ...otherPasswordErrors] = password.map(this.licenseManager.translateMessage);
+
+        if (passwordError) {
+            if (this.showPasswordInput) {
+                this.passwordWarning = passwordError;
+            } else {
+                errors.push(passwordError);
+            }
+            errors.push(...otherPasswordErrors);
         }
 
         errors.push(...userId.map(this.licenseManager.translateMessage));

@@ -36,7 +36,7 @@ export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalCon
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
-        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.move(this.license, this.targetSystem.value)), this.processConfig, this.showSuccess, this.showErrors);
+        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.move(this.targetSystem.value, this.license)), this.processConfig, this.showSuccess, this.showErrors);
     }
 
     close = (): void => this.dialogRef.close();

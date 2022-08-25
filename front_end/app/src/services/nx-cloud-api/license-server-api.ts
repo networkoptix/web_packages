@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { staticImplements } from '@utils/general';
 
 import { BaseCloudServiceAPI, CloudServiceAPI, CreateApiFactory } from './base-cloud-service-api';
-import { CloudLicenseUpdate, CloudSystemId, CloudSystemIds, LicenseInfo, StorageActivation, StorageBase, StorageEventParams, SystemLicenseInfo, SystemStorage, UsageReportRequest, uuid, ValidateSystemLicense } from './license-server-api.types';
+import { CloudLicenseChange, CloudLicenseUpdate, CloudSystemId, CloudSystemIds, LicenseInfo, StorageActivation, StorageBase, StorageEventParams, SystemLicenseInfo, SystemStorage, UsageReportRequest, uuid, ValidateSystemLicense } from './license-server-api.types';
 import { WithFreshSession } from './nx-cloud-api.types';
 
 @staticImplements<CloudServiceAPI>()
@@ -48,6 +48,16 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
      */
     public deactivateLicense(body: CloudLicenseUpdate): Observable<LicenseInfo> {
         return this.post('/license/cloud/deactivate', { body });
+    }
+
+    /**
+     * Move cloud license.
+     *
+     * @param body CloudLicenseChange
+     * @returns Observable<LicenseInfo>
+     */
+    public changeLicense(body: CloudLicenseChange): Observable<LicenseInfo> {
+        return this.put('/license/cloud/change', { body });
     }
 
     /**

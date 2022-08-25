@@ -53,6 +53,8 @@ export abstract class BaseCloudServiceAPI {
 
     protected post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.post<T>(url, body, options), this.#processOptionsFactory(options));
 
+    protected put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.put<T>(url, body, options), this.#processOptionsFactory(options));
+
     #processOptionsFactory = <T extends BaseRequestOptions>(baseOptions?: T) => (accessToken: string): T | BaseRequestOptions => {
         const options = baseOptions || <BaseRequestOptions>{};
         options.headers ||= new HttpHeaders();
@@ -83,6 +85,12 @@ export abstract class BaseCloudServiceAPI {
             ).pipe(
                 // Retry once with fresh token else raise error.
                 catchError(() => getFreshAccessToken().pipe(switchMap(accessToken => request(url, getOptions(accessToken))))));
+        });
+    }
+
+    public verify(password: string): Observable<unknown> {
+        return this.http.post('/api/account/verify', {
+            password
         });
     }
 }

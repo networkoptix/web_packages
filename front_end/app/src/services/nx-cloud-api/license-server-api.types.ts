@@ -23,6 +23,14 @@ export interface CloudSystemId {
   cloudSystemId: uuid
 }
 
+export interface SourceCloudSystemId {
+  sourceCloudSystemId: uuid
+}
+
+export interface TargetCloudSystemId {
+  targetCloudSystemId: uuid
+}
+
 export interface LicenseKey {
   licenseKey: uuid
 }
@@ -31,6 +39,9 @@ export interface LicenseKey {
 export interface CloudLicenseUpdate extends CloudSystemId, LicenseKey {
   userId?: email
 }
+
+/** CloudLicenseChangeRequest from schema */
+export interface CloudLicenseChange extends LicenseKey, SourceCloudSystemId, TargetCloudSystemId { }
 
 export enum ServiceType {
   LOCAL_RECORDING = 'localRecording',
@@ -123,17 +134,17 @@ export interface Key {
 }
 
 /** StorageActivateBody from schema */
-export interface StorageBase extends CloudSystemId, Key {}
+export interface StorageBase extends CloudSystemId, Key { }
 
 export interface Expiration {
   expirationTs: datetime
 }
 
 /** StorageActivationShort from schema */
-export interface StorageActivationInfo extends CloudStorageSize, Expiration {}
+export interface StorageActivationInfo extends CloudStorageSize, Expiration { }
 
 /** StorageActivation from schema */
-export interface StorageActivation extends StorageBase, StorageActivationInfo {}
+export interface StorageActivation extends StorageBase, StorageActivationInfo { }
 
 export enum EventType {
   ACTIVATE = 'activate',
@@ -142,7 +153,7 @@ export enum EventType {
   UPDATE = 'update'
 }
 
-export interface StorageEventParams extends Partial<Pick<Record<string, number>, 'limit' | 'startId'>> {}
+export interface StorageEventParams extends Partial<Pick<Record<string, number>, 'limit' | 'startId'>> { }
 
 /** StorageEventResponse from schema */
 export interface StorageEvent extends Id, CloudStorageSize, Key, Partial<CloudSystemId>, Partial<Expiration> {

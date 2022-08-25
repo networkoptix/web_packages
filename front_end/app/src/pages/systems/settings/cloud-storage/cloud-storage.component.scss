@@ -17,6 +17,7 @@ header.with-child {
         padding: 4px 8px;
         border-radius: 2px;
         background-color: $yellow_main;
+        white-space: nowrap;
     }
 }
 
@@ -142,6 +143,18 @@ th, td {
     padding-left: 16px;
 }
 
+.cdk-cell.cdk-column-state {
+    & > span {
+        &.ACTIVE {
+            color: var(--active-license-text);
+        }
+
+        &.INACTIVE {
+            color: var(--inactive-license-text);
+        }
+    }
+}
+
 .actions {
     display: flex;
     padding-top: 16px;
@@ -189,6 +202,7 @@ th, td {
             .action-icon {
                 width: 32px;
                 height: 20px;
+                margin-right: 12px;
             }
 
         }
