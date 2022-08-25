@@ -81,7 +81,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
                 }
             } catch (err) {
                 console.error(err);
-                const source = image ? `<img alt="Embedded Image" src="${result}" style="width: 100%; font-size: inherit;"/>` : otherName.endsWith('.html') || otherName.endsWith('.htm') ? result : `<pre id="plain-text-editable" contenteditable>${result}</pre>`;
+                const source = image ? `<img class="fs-exclude" alt="Embedded Image" src="${result}" style="width: 100%; font-size: inherit;"/>` : otherName.endsWith('.html') || otherName.endsWith('.htm') ? result : `<pre id="plain-text-editable" contenteditable>${result}</pre>`;
                 card = {
                     name: image,
                     sizes: NxThirdPartyWidgetComponent.SIZES,

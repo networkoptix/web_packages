@@ -24,9 +24,9 @@
             [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
         ></svg-icon>
     </div>
-    <span
-        ><ng-container>{{ item.label }}</ng-container></span
-    >
+    <span [ngClass]="{ 'fs-mask': item.id === 'settings' }"
+        ><ng-container>{{ item.label }}</ng-container>
+    </span>
     <div
         *ngIf="item.alerts"
         class="menu-level-1-alerts"

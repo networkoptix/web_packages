@@ -19,7 +19,7 @@
                         class="header-username"
                         [ngClass]="{ 'mb-2': selectedUser.isCloud }"
                     >
-                        <h2 class="heading-style">{{ username }}</h2>
+                        <h2 class="fs-mask heading-style">{{ username }}</h2>
                         <div class="user-status-switch-wrapper">
                             <span
                                 *ngIf="!selectedUser.isEnabled && !editMode"
@@ -42,7 +42,7 @@
                 <div>
                     <span
                         *ngIf="selectedUser.isCloud"
-                        class="user-name"
+                        class="fs-mask user-name"
                         >{{ selectedUser.fullName }}</span
                     >
                 </div>

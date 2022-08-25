@@ -36,7 +36,7 @@
 
                 <input
                     type="text"
-                    class="form-control"
+                    class="fs-exclude form-control"
                     #tfaCodeInputChangePassword="ngModel"
                     name="tfaCodeInput"
                     id="tfaCodeInput"
@@ -120,7 +120,7 @@
 
         <div class="code-area">
             <div
-                class="code-area-code"
+                class="fs-exclude code-area-code"
                 *ngFor="let code of newCodes; let idx = index"
             >
                 <span class="code-area-code-idx">{{ scrambledIndexes[idx] }}</span
@@ -223,7 +223,7 @@
                 >
                 <input
                     type="password"
-                    class="form-control"
+                    class="fs-exclude form-control"
                     name="login_password"
                     id="login_password"
                     [(ngModel)]="password"
@@ -342,7 +342,10 @@
                 %CLOUD_NAME% account.
             </div>
 
-            <div id="paramsBlock">
+            <div
+                id="paramsBlock"
+                class="fs-exclude"
+            >
                 <nx-info-block
                     [sectionsOrColumns]="[credentials]"
                     [infoBlockSize]="infoBlockSizeEnum.COMPACT"
@@ -425,7 +428,7 @@
                 >
                 <input
                     type="text"
-                    class="fs-mask form-control"
+                    class="fs-exclude form-control"
                     #tfaCodeInputWizardCode="ngModel"
                     name="tfaCodeInput"
                     id="tfaCodeInput"
@@ -521,7 +524,7 @@
 
         <div class="code-area">
             <div
-                class="code-area-code"
+                class="fs-exclude code-area-code"
                 *ngFor="let code of newCodes; let idx = index"
             >
                 <span class="code-area-code-idx">{{ scrambledIndexes[idx] }}</span
@@ -613,7 +616,7 @@
                 </ng-template>
                 <input
                     type="text"
-                    class="form-control"
+                    class="fs-exclude form-control"
                     #tfaCodeInputCodeForm="ngModel"
                     name="tfaCodeInput"
                     id="tfaCodeInput"
@@ -707,7 +710,7 @@
 
                 <input
                     type="text"
-                    class="form-control"
+                    class="fs-exclude form-control"
                     #tfaCodeInputDisable="ngModel"
                     name="tfaCodeInput"
                     id="tfaCodeInput"

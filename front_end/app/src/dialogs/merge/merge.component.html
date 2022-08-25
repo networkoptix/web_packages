@@ -198,7 +198,7 @@
                     >Password</label
                 >
                 <input
-                    class="form-control"
+                    class="fs-exclude form-control"
                     #adminPassword="ngModel"
                     #adminPasswordInput
                     [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
@@ -407,7 +407,7 @@
                     >Enter password for your account to continue</label
                 >
                 <input
-                    class="form-control"
+                    class="fs-exclude form-control"
                     #cloudOwnerPassword="ngModel"
                     #confirmMergeInput
                     [ngClass]="{

@@ -79,7 +79,10 @@
     <ng-container *ngIf="card.config.selectedCamera && !card.editMode; else editMode">
         <ng-container *ngIf="cameraThumbnails$ | async as thumbnails">
             <span class="camera-name">{{ thumbnails[card.config.selectedCamera].name }}</span>
-            <img [src]="thumbnails[card.config.selectedCamera].previewUrl" />
+            <img
+                class="fs-exclude"
+                [src]="thumbnails[card.config.selectedCamera].previewUrl"
+            />
         </ng-container>
     </ng-container>
 </div>

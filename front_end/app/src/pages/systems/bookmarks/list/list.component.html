@@ -5,6 +5,7 @@
     <nx-tag
         *ngIf="tag.label"
         (resize)="updateTagSize(tag.label, $event)"
+        class="fs-mask"
         [style.grid-column]="gridColumnLookup[tag.label]"
         [ngClass]="{ ready: gridColumnLookup[tag.label] }"
         [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')"
@@ -51,12 +52,12 @@
         [intersectionThreshold]="0.1"
     >
         <header>
-            <span class="name">{{ bookmark.name }}</span>
-            <span class="date">{{ bookmark.startTimeMs | date: 'medium' }}</span>
+            <span class="fs-mask name">{{ bookmark.name }}</span>
+            <span class="fs-mask date">{{ bookmark.startTimeMs | date: 'medium' }}</span>
         </header>
         <main>
             <clip
-                class="video"
+                class="fs-exclude video"
                 [sourceUrl]="bookmark.src"
                 [posterUrl]="bookmark.isVisible ? bookmark.thumbnail : ''"
             ></clip>
@@ -65,7 +66,7 @@
             <ng-container *ngFor="let tag of bookmark.tagsFormatted">
                 <ng-container *ngTemplateOutlet="compactTags; context: { tag: tag }"></ng-container>
             </ng-container>
-            <p class="description mt-2">{{ bookmark.description }}</p>
+            <p class="fs-mask description mt-2">{{ bookmark.description }}</p>
         </footer>
     </div>
 </div>

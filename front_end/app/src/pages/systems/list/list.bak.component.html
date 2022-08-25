@@ -94,11 +94,11 @@
                                                 tile.name | unsafe | highlight: search.value
                                             "
                                         ></h2>
-                                        <span class="user-name">{{
+                                        <span class="fs-mask user-name">{{
                                             'tile.groupCount'
                                                 | translate: { count: tile.groups.length }
                                         }}</span>
-                                        <span class="user-name">{{
+                                        <span class="fs-mask user-name">{{
                                             'tile.systemCount'
                                                 | translate: { count: tile.systems.length }
                                         }}</span>
@@ -125,7 +125,7 @@
                                             "
                                         ></h2>
                                         <span
-                                            class="user-name"
+                                            class="fs-mask user-name"
                                             [innerHTML]="
                                                 getSystemOwnerName(tile, userEmail)
                                                     | unsafe

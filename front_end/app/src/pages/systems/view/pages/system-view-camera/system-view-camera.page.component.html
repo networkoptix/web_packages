@@ -156,6 +156,7 @@
             <player
                 *ngIf="camera && showPlayerSection; else noPlayer"
                 (videoDblClick)="onVideoDblClick($event)"
+                class="fs-exclude"
             ></player>
             <ng-template #noPlayer>
                 <div

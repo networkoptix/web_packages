@@ -44,7 +44,7 @@
         <div class="d-flex justify-content-center align-items-center">
             <span class="sub-header">{{ subHeader }}</span>
             <span
-                class="for-account"
+                class="fs-mask for-account"
                 (click)="setCurrentState.emit('email')"
                 >{{ loginEmail }}</span
             >
@@ -76,6 +76,7 @@
                 type="text"
                 id="authCode"
                 name="authCode"
+                class="fs-exclude"
                 [ngClass]="{
                     'invalid-state': authCode.invalid && (authCode.dirty || authCode.touched)
                 }"

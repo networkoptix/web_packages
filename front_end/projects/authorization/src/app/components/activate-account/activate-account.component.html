@@ -34,6 +34,7 @@
         <h3 class="authorize-header mt-3 mb-2">{{ contentHeader$ | async }}</h3>
         <div
             class="content-message"
+            [ngClass]="{ 'fs-mask': !!loginEmail }"
             [innerHTML]="contentMessage$ | async"
         ></div>
     </form>

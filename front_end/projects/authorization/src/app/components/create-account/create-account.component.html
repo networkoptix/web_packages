@@ -27,7 +27,7 @@
                 >For</span
             >
             <span
-                class="for-account"
+                class="fs-mask for-account"
                 (click)="setCurrentState.emit('email')"
                 >{{ existingEmail }}</span
             >
@@ -68,7 +68,7 @@
                 <nx-email-input
                     name="email"
                     componentId="email"
-                    class="form-component"
+                    class="fs-mask form-component"
                     [(ngModel)]="createEmail"
                     [lockEmail]="fromInvite"
                     [readonly]="fromInvite || createAccountProcess?.processing"
@@ -130,7 +130,7 @@
                     type="text"
                     id="firstName"
                     name="firstName"
-                    class="form-control"
+                    class="fs-mask form-control"
                     [disabled]="createAccountProcess?.processing"
                     [ngClass]="{
                         'invalid-state':
@@ -172,7 +172,7 @@
                     type="text"
                     id="lastName"
                     name="lastName"
-                    class="form-control"
+                    class="fs-mask form-control"
                     [disabled]="createAccountProcess?.processing"
                     [ngClass]="{
                         'invalid-state':
