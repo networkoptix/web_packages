@@ -55,7 +55,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<NxLicenseSummaryComponent>): void {
-        if (changes.update.previousValue !== changes.update.currentValue) {
+        if (changes.update && changes.update.previousValue !== changes.update.currentValue) {
             this.getLicenses();
         }
 
