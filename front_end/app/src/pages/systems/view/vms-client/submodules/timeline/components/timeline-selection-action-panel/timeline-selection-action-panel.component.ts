@@ -1,11 +1,10 @@
 import {
     Component,
     OnInit,
-    OnDestroy,
     ElementRef,
     AfterViewInit, TemplateRef, ViewContainerRef
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
@@ -29,15 +28,15 @@ import type {
 
 type ssRange = { start: number, end: number };
 
+@UntilDestroy()
 @Component({
     selector: 'timeline-selection-action-panel',
     templateUrl: './timeline-selection-action-panel.component.html',
     styleUrls: ['./timeline-selection-action-panel.component.scss']
 })
-export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
 
-    protected subscription: Subscription;
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
 
@@ -61,11 +60,14 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         private _viewContainerRef: ViewContainerRef,
     ) {
         this.CONFIG = configService.getConfig();
-        this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     public ngOnInit(): void {
-        this.subscription = this.selection.subject.subscribe(this.onSubjectChange);
+        this.selection.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: TimelineSelectionServiceStatus) => {
+                this.onSubjectChange(s);
+            });
 
         this.accountService.get().then(account => {
             if (!account) {
@@ -90,10 +92,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
 
     public ngAfterViewInit(): void {
         this.selection.$background = this.self.nativeElement;
-    }
-
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
     }
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {

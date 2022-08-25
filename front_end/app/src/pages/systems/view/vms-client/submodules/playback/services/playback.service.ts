@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, isDevMode } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
 
@@ -21,7 +21,7 @@ import {
 @Injectable({
     providedIn: 'root'
 })
-export class PlaybackService implements OnDestroy {
+export class PlaybackService {
     protected _logPrefix: string = 'PLAYBACK_SERVICE ::';
     protected _logDisable: boolean = true;
 
@@ -73,8 +73,6 @@ export class PlaybackService implements OnDestroy {
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService
     ) {
-        // this._animationFrameRequestHandler =
-        //     requestAnimationFrame(() => this.onAnimationFrame());
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
@@ -82,19 +80,8 @@ export class PlaybackService implements OnDestroy {
             });
     }
 
-    // protected _animationFrameRequestHandler: number;
-
     public _onAnimationFrame(): void {
         this.handleAnimationFrame();
-        // setTimeout(() => {
-        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
-        //         this.onAnimationFrame()
-        //     );
-        // }, this.timeline.renderFps);
-    }
-
-    public ngOnDestroy(): void {
-        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     protected _subject = new BehaviorSubject<PlaybackState>(

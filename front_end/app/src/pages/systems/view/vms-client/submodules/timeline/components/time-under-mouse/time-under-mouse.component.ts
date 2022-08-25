@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
-import { Subscription } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -20,14 +20,13 @@ const PRIMARY_WIDTH = 140;
 
 // const MAIN_MOUSE_BUTTON = 0;
 
+@UntilDestroy()
 @Component({
     selector: 'time-under-mouse',
     templateUrl: './time-under-mouse.component.html',
     styleUrls: ['./time-under-mouse.component.scss']
 })
-export class TimeUnderMouseComponent implements OnInit, OnDestroy {
-    protected subscription: Subscription;
-
+export class TimeUnderMouseComponent implements OnInit {
     public date: string = '';
     public time: string = '';
 
@@ -43,31 +42,30 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     ) {
         languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;
-        this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     public ngOnInit(): void {
-        this.subscription = this.timeUnderMouse.subject.subscribe(
-            this.onSubjectChange
-        );
-    }
-
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.timeUnderMouse.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: TimelineTimeUnderMouseServiceStatus) => {
+                this.onSubjectChange(s);
+            });
     }
 
     public onSubjectChange(s: TimelineTimeUnderMouseServiceStatus): void {
         if (s.isMouseInside) {
             this.self.nativeElement.style.opacity = 1.0;
             let offset = s.offsetX;
-            if (offset < MARGIN + PRIMARY_WIDTH / 2) {
-                offset = MARGIN + PRIMARY_WIDTH / 2;
+
+            const marginLeft = MARGIN + PRIMARY_WIDTH / 2;
+            if (offset < marginLeft) {
+                offset = marginLeft;
             }
-            if (
-                offset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2
-            ) {
-                offset = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2;
+            const marginRight = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2;
+            if (offset > marginRight) {
+                offset = marginRight;
             }
+
             this._honestOffset = s.offsetX;
             this._visualOffset = offset;
             this.self.nativeElement.style.left = `${offset}px`;

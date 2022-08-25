@@ -1,14 +1,13 @@
 import {
     Component,
     OnInit,
-    OnDestroy,
     HostListener,
     ElementRef,
     ViewChild,
     AfterViewInit,
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
-import { Subscription } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
@@ -31,14 +30,13 @@ const TIME_FORMAT_STRING = 'HH:MM:ss';
 
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
 
+@UntilDestroy()
 @Component({
     selector: 'timeline-selection',
     templateUrl: './timeline-selection.component.html',
     styleUrls: ['./timeline-selection.component.scss']
 })
-export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewInit {
-    protected timelineSubscription: Subscription;
-    protected selectionSubscription: Subscription;
+export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     protected selectionStatus: TimelineSelectionServiceStatus;
 
     public hideLeftEar: boolean = false;
@@ -50,6 +48,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     leftTime: string = '';
     rightDate: string = '';
     rightTime: string = '';
+    host: HTMLElement;
 
     @ViewChild('selectedRange')
     protected selectedRangeView: ElementRef<HTMLDivElement>;
@@ -85,28 +84,27 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         protected wheel: TimelineWheelHandlerService,
         protected timeUnderMouse: TimelineTimeUnderMouseService
     ) {
-        this.onSelectionSubjectChange = this.onSelectionSubjectChange.bind(this);
-        this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }
 
     public ngOnInit(): void {
-        this.selectionSubscription = this.selection.subject.subscribe(
-            this.onSelectionSubjectChange
-        );
-        this.timelineSubscription = this.timeline.subject.subscribe(
-            this.onTimelineSubjectChange
-        );
+        this.selection.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: TimelineSelectionServiceStatus) => {
+                this.onSelectionSubjectChange(s);
+            });
+
+        this.timeline.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: TimelineServiceStatus) => {
+                this.onTimelineSubjectChange(s);
+            });
     }
 
     public ngAfterViewInit(): void {
         this.selection.$background = this.self.nativeElement;
         this.selection.leftEar = this.leftEarView.nativeElement;
         this.selection.rightEar = this.rightEarView.nativeElement;
-    }
-
-    public ngOnDestroy(): void {
-        this.timelineSubscription && this.timelineSubscription.unsubscribe();
-        this.selectionSubscription && this.selectionSubscription.unsubscribe();
+        this.host = this.selectedRangeView.nativeElement.parentElement;
     }
 
     protected _updateCss(): void {
@@ -171,12 +169,13 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.selectionMode = false;
         this.hideLeftEar = this.selectionStatus.isActive;
         this.hideRightEar = this.selectionStatus.isActive;
-    }
-
-    @HostListener('document:mouseup', ['$event'])
-    public mouseUpHandler(e: MouseEvent): void {
         this.selection.handleMouseUp(e);
     }
+
+    // @HostListener('document:mouseup', ['$event'])
+    // public mouseUpHandler(e: MouseEvent): void {
+    //     this.selection.handleMouseUp(e);
+    // }
 
     @HostListener('mouseenter', ['$event'])
     public mouseEnterHandler(e: MouseEvent): void {
@@ -189,14 +188,13 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
-    @HostListener('document:mousemove', ['$event'])
+    @HostListener('mousemove', ['$event'])
     public mouseMoveHandler(e: MouseEvent): void {
-        const $host = this.selectedRangeView.nativeElement.parentElement;
         // @ts-expect-error
         this.timeUnderMouse.handleMouseMove({
             offsetX:
                 (e.target as HTMLElement).getBoundingClientRect().left -
-                $host.getBoundingClientRect().left +
+                this.host.getBoundingClientRect().left +
                 e.offsetX
         });
         this.selection.handleMouseMove(e);
@@ -237,13 +235,13 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     @HostListener('wheel', ['$event'])
     public wheelHandler(e: WheelEvent): void {
         e.preventDefault();
-        const $host = this.selectedRangeView.nativeElement.parentElement;
-        if (e.target !== $host) {
+
+        if (e.target !== this.host) {
             // @ts-expect-error
             this.wheel.handleWheel({
                 offsetX:
                     (e.target as HTMLElement).getBoundingClientRect().left -
-                    $host.getBoundingClientRect().left +
+                    this.host.getBoundingClientRect().left +
                     e.offsetX,
                 deltaX: e.deltaX,
                 deltaY: e.deltaY

@@ -49,8 +49,6 @@ export class TimelineSelectionService {
     ) {
         // this.handleTimelineChange = this.handleTimelineChange.bind(this)
         // timeline.subject.subscribe(this.handleTimelineChange)
-        // this.onAnimationFrame = this.onAnimationFrame.bind(this);
-        // requestAnimationFrame(this.onAnimationFrame);
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
@@ -395,10 +393,7 @@ export class TimelineSelectionService {
         this._emit();
     }
 
-    // protected _animationFrameHandle: number;
-
     private _onAnimationFrame(): void {
-        // this._animationFrameHandle = requestAnimationFrame(this.onAnimationFrame);
         let speed, offset;
         const STEP = 0.2;
         switch (this._dragMode) {

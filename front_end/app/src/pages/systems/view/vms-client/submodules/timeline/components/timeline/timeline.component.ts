@@ -120,8 +120,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.unsub$.next(true);
-        // cancelAnimationFrame(this._animationFrameRequestHandler);
         clearTimeout(this._animationTimeout);
+        this._animationFrameRequestHandler && cancelAnimationFrame(this._animationFrameRequestHandler);
         this._pinchDestructor && this._pinchDestructor();
     }
 

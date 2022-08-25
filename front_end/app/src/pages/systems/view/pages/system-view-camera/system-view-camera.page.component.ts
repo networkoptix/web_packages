@@ -11,7 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BehaviorSubject, Subject, Subscription, timer, interval, animationFrameScheduler } from 'rxjs';
+import { BehaviorSubject, Subject, timer, interval, animationFrameScheduler } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -50,7 +50,7 @@ import { fullscreen } from './fullscreen';
 
 const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-system-view-camera-page',
     templateUrl: 'system-view-camera.page.component.html',
@@ -75,13 +75,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     showElementsInFSM: boolean;
     onShowElements: any;
     onMoveShowElements: any;
-
-    protected _routeSubscription: Subscription;
-    protected _vmsStateSubscription: Subscription;
-    protected _uxStateSubscription: Subscription;
-    protected _playbackSubscription: Subscription;
-
-    // protected _animationFrameRequestHandler: number;
 
     public settingsShown: boolean = false;
 
@@ -215,18 +208,32 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public ngOnInit(): void {
-        this._playbackSubscription = this.playback.subject
-            .pipe(throttle(ev => interval(TIMESTAMP_UPDATE_THROTTLE_MS)))
-            .subscribe(this.onPlaybackChange);
-        this._routeSubscription = this.route.params
-            .subscribe(params => this._onRouteChange(params));
-        this._vmsStateSubscription = this.vms.subject
-            .subscribe(vmsState => this._onVmsStateChange(vmsState));
-        this._uxStateSubscription = this.ux.subject
-            .subscribe(clientUxState => this._onUxStateChange(clientUxState));
+        this.playback.subject
+            .pipe(
+                throttle(ev => interval(TIMESTAMP_UPDATE_THROTTLE_MS)),
+                untilDestroyed(this))
+            .subscribe(s => {
+                this.onPlaybackChange(s);
+            });
 
-        // this._animationFrameRequestHandler =
-        //     requestAnimationFrame(() => this._onAnimationFrame());
+        this.route.params
+            .pipe(untilDestroyed(this))
+            .subscribe(params => {
+                this._onRouteChange(params);
+            });
+
+        this.vms.subject
+            .pipe(untilDestroyed(this))
+            .subscribe(vmsState => {
+                this._onVmsStateChange(vmsState);
+            });
+
+        this.ux.subject
+            .pipe(untilDestroyed(this))
+            .subscribe(clientUxState => {
+                this._onUxStateChange(clientUxState);
+            });
+
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
@@ -250,7 +257,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.$self.classList.add('animated');
         this.availableTransportsAndResolutions$
-            .pipe(filter(TaR => TaR !== undefined))
+            .pipe(
+                filter(TaR => TaR !== undefined),
+                untilDestroyed(this))
             .subscribe((
                 transportsAndResolutions: AvailableTransportsAndResolutions
             ) => {
@@ -275,25 +284,29 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 ));
             });
 
-        this.transports$.subscribe(transports => {
-            if (!transports.length) {
-                this.selectedTransport = undefined;
-                this.qualities = undefined;
-            } else if (!transports.includes(this.selectedTransport)) {
-                this.resetTransport();
-            }
-            this.qualities = this.availableTransportsAndResolutions[
-                this.selectedTransport
-            ];
-        });
+        this.transports$
+            .pipe(untilDestroyed(this))
+            .subscribe(transports => {
+                if (!transports.length) {
+                    this.selectedTransport = undefined;
+                    this.qualities = undefined;
+                } else if (!transports.includes(this.selectedTransport)) {
+                    this.resetTransport();
+                }
+                this.qualities = this.availableTransportsAndResolutions[
+                    this.selectedTransport
+                ];
+            });
 
-        this.qualities$.subscribe(qualities => {
-            if (!qualities[this.selectedQuality]) {
-                this.selectedQuality = undefined;
-            } else {
-                this.selectedQuality$.next(this.selectedQuality);
-            }
-        });
+        this.qualities$
+            .pipe(untilDestroyed(this))
+            .subscribe(qualities => {
+                if (!qualities[this.selectedQuality]) {
+                    this.selectedQuality = undefined;
+                } else {
+                    this.selectedQuality$.next(this.selectedQuality);
+                }
+            });
 
         this.system = this.settingsService.system;
         this._getRecords();
@@ -621,10 +634,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public ngOnDestroy(): void {
         this.unsub$.next('done');
-        this._playbackSubscription?.unsubscribe();
-        this._routeSubscription?.unsubscribe();
-        this._vmsStateSubscription?.unsubscribe();
-        this._uxStateSubscription?.unsubscribe();
         this.document.removeEventListener(
             'fullscreenchange',
             this.onFullScreenChange
@@ -637,8 +646,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             'mozfullscreenchange',
             this.onFullScreenChange
         );
-
-        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     protected _onUxStateChange(s: WebClientUxState): void {
@@ -714,12 +721,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.camera?.isLive) {
             this.timelineExtendToNow.extendToNow();
         }
-
-        // setTimeout(() => {
-        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
-        //         this._onAnimationFrame()
-        //     );
-        // }, this.timeline.renderFps);
     }
 
     public get showTimeline(): boolean {

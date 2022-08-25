@@ -31,16 +31,14 @@ export class TimelineService {
         const _60fps = Math.ceil(1000 / 60); // ~17ms
         const _30fps = Math.ceil(1000 / 30); // ~34ms
 
-        let _renderFps = _60fps;
+        this.renderFps = _60fps;
         if (
             browserDetector.isMobile() ||
             ['safari', 'firefox'].includes(browserDetector.browser)
         ) {
-            _renderFps = _30fps;
+            this.renderFps = _30fps;
         }
-        this.renderFps = _renderFps;
 
-        // requestAnimationFrame(() => this._onAnimationFrame());
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
@@ -279,8 +277,5 @@ export class TimelineService {
             this._animationStep = 0;
         }
         this._emit();
-        // setTimeout(() => {
-        //     requestAnimationFrame(() => this._onAnimationFrame());
-        // }, this.renderFps);
     }
 }

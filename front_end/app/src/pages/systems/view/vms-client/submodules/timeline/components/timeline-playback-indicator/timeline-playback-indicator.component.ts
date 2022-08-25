@@ -1,12 +1,11 @@
 import {
     Component,
     OnInit,
-    OnDestroy,
     ElementRef,
     HostListener,
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
-import { Subscription } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import {
@@ -27,14 +26,13 @@ const MARGIN = 5;
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
 
+@UntilDestroy()
 @Component({
     selector: 'timeline-playback-indicator',
     templateUrl: './timeline-playback-indicator.component.html',
     styleUrls: ['./timeline-playback-indicator.component.scss']
 })
-export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
-    protected playbackSubscription: Subscription;
-    protected timelineSubscription: Subscription;
+export class TimelinePlaybackIndicatorComponent implements OnInit {
     public visible: boolean = false;
     public timeMs: ms;
     public date: string;
@@ -50,8 +48,6 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         public playback: PlaybackService
     ) {
         languageService.loadTimelineTranslations();
-        this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
-        this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }
 
     @HostListener('click', ['$event'])
@@ -66,17 +62,17 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.playbackSubscription = this.playback.subject.subscribe(
-            this.onPlaybackSubjectChange
-        );
-        this.timelineSubscription = this.timeline.subject.subscribe(
-            this.onTimelineSubjectChange
-        );
-    }
+        this.playback.subject
+            .pipe(untilDestroyed(this))
+            .subscribe(s => {
+                this.onPlaybackSubjectChange(s);
+            });
 
-    public ngOnDestroy(): void {
-        this.playbackSubscription.unsubscribe();
-        this.timelineSubscription.unsubscribe();
+        this.timeline.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: TimelineServiceStatus) => {
+                this.onTimelineSubjectChange(s);
+            });
     }
 
     public get edgeCaseClasses(): Record<string, boolean> {

@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { animationFrameScheduler, interval, Subscription } from 'rxjs';
+import { animationFrameScheduler, interval } from 'rxjs';
 
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
@@ -20,9 +20,7 @@ type signType = int; // -1 | 0 | 1
     templateUrl: './zoom-controls.component.html',
     styleUrls: ['./zoom-controls.component.scss']
 })
-export class ZoomControlsComponent implements OnInit, OnDestroy {
-    protected timelineSubscription: Subscription;
-    protected vmsSubscription: Subscription;
+export class ZoomControlsComponent implements OnInit {
     protected state: TimelineServiceStatus;
     public disabled: boolean = true;
     public canZoomIn: boolean = false;
@@ -33,42 +31,30 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         public vms: VideoManagementSystemService,
         public playback: PlaybackService
     ) {
-        this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
-        this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
     }
-
-    // protected _animationFrameRequestHandler: number;
 
     private _onAnimationFrame(): void {
         this.performZoomingStep();
-        // setTimeout(() => {
-        //     this._animationFrameRequestHandler = requestAnimationFrame(() =>
-        //         this.onAnimationFrame()
-        //     );
-        // }, this.timeline.renderFps);
     }
 
     public ngOnInit(): void {
-        this.timelineSubscription = this.timeline.subject.subscribe(
-            this.onTimelineSubjectChange
-        );
-        this.vmsSubscription = this.vms.subject.subscribe(
-            this.onVmsSubjectChange
-        );
-        // this._animationFrameRequestHandler = requestAnimationFrame(() =>
-        //     this.onAnimationFrame()
-        // );
+        this.timeline.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: TimelineServiceStatus) => {
+                this.onTimelineSubjectChange(s);
+            });
+
+        this.vms.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: VmsState) => {
+                this.onVmsSubjectChange(s);
+            });
+
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 this._onAnimationFrame();
             });
-    }
-
-    public ngOnDestroy(): void {
-        this.timelineSubscription.unsubscribe();
-        this.vmsSubscription.unsubscribe();
-        // cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     public onTimelineSubjectChange(state: TimelineServiceStatus): void {
@@ -107,8 +93,8 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this._zoomingSign = 0;
     }
 
-    @HostListener('document:mouseup')
-    public onMouseUp(): void {
+    @HostListener('mouseleave')
+    public onMouseLeave(): void {
         this.stopZooming();
     }
 
