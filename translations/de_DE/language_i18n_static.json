@@ -183,6 +183,17 @@
             "expires": "Läuft ab",
             "key": "Schlüssel"
         },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated"
+        },
         "notUsedWarning": "Der Cloud-Speicher wird nicht für die Aufzeichnung verwendet. Gehen Sie zu \"<a href=\"{serverSettings}\">Server-Einstellungen</a>, um ihn zu konfigurieren."
     },
     "common": {
