@@ -184,15 +184,23 @@
             "key": "Nyckel"
         },
         "fromServer": {
-            "ACTIVE": "Active",
-            "INACTIVE": "Inactive",
-            "Unassigned": "Unassigned",
-            "until": "{size} until {expires}",
-            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
-            "License key is already activated": "License key is already activated",
-            "Maximum number of items is 10000": "Maximum number of items is 10000",
-            "This Cloud license does not exist": "This Cloud license does not exist",
-            "This license is already activated": "This license is already activated"
+            "ACTIVE": "Aktiv",
+            "INACTIVE": "Inaktiv",
+            "Unassigned": "Ej tilldelad",
+            "until": "{size} till {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Denna licens avaktiverades mer än en gång OCH återaktiverades för mindre än 24 timmar sedan",
+            "License key is already activated": "Licensen är redan aktiverad",
+            "Maximum number of items is 10000": "Maximalt antal artiklar är 10 000",
+            "This Cloud license does not exist": "Denna molnlicens finns inte",
+            "This license is already activated": "Licensen är redan aktiverad",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
         },
         "notUsedWarning": "Molnlagringen används inte för inspelning. Gå till <a href=\"{serverSettings}\">Servers inställningar</a> för att konfigurera den."
     },

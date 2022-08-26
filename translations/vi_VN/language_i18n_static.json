@@ -192,7 +192,15 @@
             "License key is already activated": "License key is already activated",
             "Maximum number of items is 10000": "Maximum number of items is 10000",
             "This Cloud license does not exist": "This Cloud license does not exist",
-            "This license is already activated": "This license is already activated"
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
         },
         "notUsedWarning": "Bộ nhớ đám mây không được sử dụng để ghi. Đi tới <a href=\"{serverSettings}\">Cài đặt Máy chủ</a> để định cấu hình."
     },

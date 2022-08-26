@@ -184,15 +184,23 @@
             "key": "キー"
         },
         "fromServer": {
-            "ACTIVE": "Active",
-            "INACTIVE": "Inactive",
-            "Unassigned": "Unassigned",
-            "until": "{size} until {expires}",
-            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
-            "License key is already activated": "License key is already activated",
-            "Maximum number of items is 10000": "Maximum number of items is 10000",
-            "This Cloud license does not exist": "This Cloud license does not exist",
-            "This license is already activated": "This license is already activated"
+            "ACTIVE": "有効",
+            "INACTIVE": "無効",
+            "Unassigned": "未割り当て",
+            "until": "{expires} まで {size}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "このライセンスは24時間以内に複数回無効化され、かつ再度有効化されました",
+            "License key is already activated": "ライセンスキーはすでに有効化されています",
+            "Maximum number of items is 10000": "アイテムの最大数は10000です",
+            "This Cloud license does not exist": "このクラウドライセンスは存在しません",
+            "This license is already activated": "このライセンスはすでに有効化されています",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
         },
         "notUsedWarning": "クラウドストレージは録画に使用されていません。<a href=\"{serverSettings}\">サーバー設定</a>に移動して設定してください。"
     },
