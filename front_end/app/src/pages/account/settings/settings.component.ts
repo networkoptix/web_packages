@@ -94,6 +94,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden: true
         }).then(() => {
+            this.accountService.accountSubject.next(this.accountService.accountSubject.value);
             // account info was changed successful (local and on server)
             // really no need to force update -- TT
             // this.accountService.get(true);

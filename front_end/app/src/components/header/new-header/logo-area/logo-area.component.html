@@ -23,7 +23,7 @@
         >
             <div
                 class="arrow-btn"
-                *ngIf="!isMobile"
+                *ngIf="!isMobile && !singleSystem"
                 (click)="
                     headerService.handleNav({ url: '/systems', new_window: false }, $event);
                     emitClick('systems-list')

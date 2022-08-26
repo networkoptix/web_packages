@@ -28,13 +28,17 @@ export class NxNewHeaderComponent {
     loggedIn = false;
     isMobile$ = new Subject<boolean>();
 
-    constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router, private scrollMechanicsService: NxScrollMechanicsService) {
+    constructor(public headerService: NxHeaderService,
+        menusService: NxMenusService,
+        accountService: NxAccountService,
+        router: Router,
+        private scrollMechanicsService: NxScrollMechanicsService) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
             if (event.url === '/') {
                 this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
                 return;
             }
-            if (event.url.includes('/systems/') && !menusService.currentSystemNode$.value) {
+            if (event.url.includes('/systems/')) {
                 menusService.updateActiveSystemMenu(this.headerService.activeSystem || this.headerService.lastActive$.value);
             }
             this.headerService.setLocation(event.url);

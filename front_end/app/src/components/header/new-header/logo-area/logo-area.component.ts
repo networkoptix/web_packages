@@ -6,6 +6,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
 
 import { logoAreaState, logoClickType } from '../new-header-types';
@@ -25,13 +26,18 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     logoState = logoAreaState.LOGO;
     systemListText: string;
+    singleSystem = false;
     constructor(public headerService: NxHeaderService,
         configService: NxConfigService,
-        languageService: NxLanguageProviderService) {
+        languageService: NxLanguageProviderService,
+        systemsService: NxSystemsService) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.checkLogoState(currentLocation);
+        });
+        systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
+            this.singleSystem = systems.length === 1;
         });
     }
 

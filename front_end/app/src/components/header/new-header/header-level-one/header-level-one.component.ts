@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+import { NxMenusService } from '@services/menus.service';
 import type { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -18,7 +19,7 @@ export class NxHeaderLevelOneComponent {
     CONFIG: IConfig;
     profileDropdownOpen = false;
 
-    constructor(public headerService: NxHeaderService, configService: NxConfigService) {
+    constructor(public headerService: NxHeaderService, configService: NxConfigService, private menusService: NxMenusService) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -29,7 +30,13 @@ export class NxHeaderLevelOneComponent {
     handleNavigation(node: MenuNode, event: MouseEvent): void {
         const firstNodeWithURL = node.nodes.find(subNode => (subNode.url && !subNode.new_window));
         if (firstNodeWithURL) {
-            this.headerService.handleNav(firstNodeWithURL, event);
+            let navNode = firstNodeWithURL;
+            if (firstNodeWithURL.url === '/systems') {
+                if (this.menusService.currentSystemNode$.value) {
+                    navNode = this.menusService.currentSystemNode$.value;
+                }
+            }
+            this.headerService.handleNav(navNode, event);
         }
     }
 }
