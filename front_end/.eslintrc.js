@@ -524,6 +524,30 @@ module.exports = {
             },
         },
         {
+            // Temporary override for applying @angular-eslint rules
+            files: ['*.ts'],
+            excludedFiles: [
+                'app/src/components/**/*.ts',
+                'app/src/pages/**/*.ts',
+            ],
+            rules: {
+                '@angular-eslint/component-selector': ['error', {
+                    type: 'element',
+                    prefix: 'nx',
+                    style: 'kebab-case'
+                }]
+            }
+        },
+        {
+            // Don't need to enforce naming on sandbox components
+            files: ['app/src/pages/sandbox/**/*.ts'],
+            rules: {
+                '@angular-eslint/component-class-suffix': 'off',
+                '@angular-eslint/component-selector': 'off',
+                '@angular-eslint/directive-class-suffix': 'off',
+            }
+        },
+        {
             files: ['*.ts'],
             plugins: ['rxjs'],
             extends: ['plugin:rxjs/recommended'],

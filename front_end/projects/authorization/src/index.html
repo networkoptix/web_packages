@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="static/fonts/fonts.css"/>
     </head>
     <body>
-        <app-root></app-root>
+        <nx-auth-app-root></nx-auth-app-root>
         <script>
             const viewType = new URLSearchParams(window.location.search).get('view_type') ?? 'web';
             if (viewType !== 'web' && ['desktop', 'mobile'].includes(viewType)) {

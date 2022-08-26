@@ -16,7 +16,7 @@ import { pickFrom } from '@utils/general';
 import { NxToastService } from '../toast.service';
 
 @Component({
-    selector: 'mandatory-2fa',
+    selector: 'nx-mandatory-2fa',
     templateUrl: 'mandatory-2fa.component.html',
     styleUrls: []
 })

@@ -42,7 +42,7 @@ import { T_FA_STEPS } from './two-fa.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'two-fa-modal-content',
+    selector: 'nx-two-fa-modal-content',
     templateUrl: 'two-fa.component.html',
     styleUrls: ['two-fa.component.scss']
 })

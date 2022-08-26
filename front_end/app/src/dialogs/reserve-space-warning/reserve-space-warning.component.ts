@@ -9,7 +9,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
 @Component({
-    selector: 'reserve-space-warning',
+    selector: 'nx-reserve-space-warning',
     templateUrl: 'reserve-space-warning.component.html',
     styleUrls: ['reserve-space-warning.component.scss']
 })

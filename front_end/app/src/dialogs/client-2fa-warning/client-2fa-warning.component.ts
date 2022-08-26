@@ -5,7 +5,7 @@ import { DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
-    selector: 'client-2fa-warning',
+    selector: 'nx-client-2fa-warning',
     templateUrl: 'client-2fa-warning.component.html',
     styleUrls: []
 })

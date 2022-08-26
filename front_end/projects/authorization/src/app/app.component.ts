@@ -4,7 +4,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxThemeService } from '@services/theme.service';
 
 @Component({
-    selector: 'app-root',
+    selector: 'nx-auth-app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None

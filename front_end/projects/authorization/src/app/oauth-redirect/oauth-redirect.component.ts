@@ -17,7 +17,7 @@ import { AuthorizeParams, ClientType } from '../components/authorize.component.t
 /* eslint-disable camelcase */
 @UntilDestroy()
 @Component({
-    selector: 'oauth-redirect-component',
+    selector: 'nx-oauth-redirect-component',
     templateUrl: './oauth-redirect.component.html',
     styleUrls: ['./oauth-redirect.component.scss']
 })
