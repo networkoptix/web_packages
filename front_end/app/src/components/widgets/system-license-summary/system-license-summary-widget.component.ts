@@ -80,7 +80,8 @@ export class NxSystemLicenseSummaryWidget extends FirstPartyWidget<typeof NxSyst
     );
 
     updateName = (newName: string) => (size: WidgetSize) => {
-        size.name = size.name.replace(NxSystemLicenseSummaryWidget.NAME, newName);
+        const dimensions = `${size.value.cols} x ${size.value.rows}`;
+        size.name = `${newName}(${dimensions})`;
         return size.name;
     };
 

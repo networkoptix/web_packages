@@ -108,7 +108,8 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
     system$ = defer(() => this.getSystem(this.card.config.selectedSystem));
 
     updateName = (newName: string) => (size: WidgetSize) => {
-        size.name = size.name.replace(NxServerLoggerWidgetComponent.NAME, newName);
+        const dimensions = `${size.value.cols} x ${size.value.rows}`;
+        size.name = `${newName}(${dimensions})`;
         return size.name;
     };
 
