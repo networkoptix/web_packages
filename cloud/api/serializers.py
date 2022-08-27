@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.cache import caches
 from datetime import datetime
 from math import log2
+from urllib.parse import quote
 import functools
 import json
 import re
@@ -62,9 +63,7 @@ class VerificationSerializer(serializers.Serializer):
 
     @staticmethod
     def validate_verification_code(value):
-        if not value.isnumeric():
-            raise APIInternalException('Wrong totp', error_code='invalidTotp')
-        return value
+        return quote(value)
 
 
 class TransferSystemActionSerializer(serializers.Serializer):
