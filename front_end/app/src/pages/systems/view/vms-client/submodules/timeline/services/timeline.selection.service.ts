@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { Injectable } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { BehaviorSubject } from 'rxjs';
 
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -18,15 +18,6 @@ import { SELECTION_DRAG_MODE } from './timeline.services.types';
 
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
-
-// const EAR_WIDTH = 120;
-
-enum EDGE_SCROLLING_SPEED {
-    NONE = 0,
-    SLOW = 1,
-    MEDIUM = 2,
-    FAST = 3,
-}
 
 @UntilDestroy()
 @Injectable({
@@ -47,13 +38,6 @@ export class TimelineSelectionService {
         protected scroll: TimelineScrollbarRelativeService,
         protected vms: VideoManagementSystemService
     ) {
-        // this.handleTimelineChange = this.handleTimelineChange.bind(this)
-        // timeline.subject.subscribe(this.handleTimelineChange)
-        interval(0, animationFrameScheduler)
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this._onAnimationFrame();
-            });
     }
 
     public get exportUrlParams(): Object {
@@ -113,12 +97,6 @@ export class TimelineSelectionService {
             right: this.timeline.timeToDomOffsetX(this.range.end)
         };
     }
-
-    // public handleTimelineChange () {
-    //     this._selectedRange.start = this.timeline.domOffsetXtoTime(this._pixelRange.left)
-    //     this._selectedRange.end = this.timeline.domOffsetXtoTime(this._pixelRange.right)
-    //     this._emit()
-    // }
 
     protected _leftEar: HTMLElement;
     public set leftEar(e: HTMLElement) {
@@ -195,17 +173,6 @@ export class TimelineSelectionService {
         this._emit();
     }
 
-    public handleSelectedRangeMouseDown(e: MouseEvent): void {
-        e.preventDefault();
-        e.stopPropagation();
-        this.playback.pause();
-        if (this._dragMode === SELECTION_DRAG_MODE.NO_DRAGGING) {
-            this._dragMode = SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE;
-            this._dragAnchorPx = e.offsetX;
-            this._dragAnchorMs = this._selectedRange.start;
-        }
-    }
-
     public handleLeftEarMouseDown(e: MouseEvent): void {
         e.preventDefault();
         e.stopPropagation();
@@ -242,6 +209,7 @@ export class TimelineSelectionService {
             if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND) {
                 const offsetPx = this._getOffsetPx(e);
                 const time = this.timeline.domOffsetXtoTime(offsetPx);
+
                 if (time < this._dragAnchorMs) {
                     this._selectedRange.start = time;
                     this._selectedRange.end = this._dragAnchorMs;
@@ -249,48 +217,12 @@ export class TimelineSelectionService {
                     this._selectedRange.end = time;
                     this._selectedRange.start = this._dragAnchorMs;
                 }
-                this._emit();
-            } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
-                // if (this.leftEdgeScrollingSpeed && this.scroll.canScrollLeft) {
-                //     return
-                // }
-                // if (this.rightEdgeScrollingSpeed && this.scroll.canScrollRight) {
-                //     return
-                // }
-                const offsetPx = this._getOffsetPx(e) - this._dragAnchorPx;
-                const timeUnderMouse = this.timeline.domOffsetXtoTime(offsetPx);
-                const leftEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse);
-                const rightEdgeFits = this.timeline.archiveRange.contains(
-                    timeUnderMouse + this._selectedRange.duration
-                );
-                if (offsetPx < 0) {
-                    if (leftEdgeFits) {
-                        this._selectedRange.moveStartTo(timeUnderMouse);
-                    } else {
-                        this._selectedRange.moveStartTo(
-                            this.timeline.archiveRange.start
-                        );
-                    }
-                } else if (offsetPx > 0) {
-                    if (rightEdgeFits) {
-                        this._selectedRange.moveStartTo(timeUnderMouse);
-                    } else {
-                        this._selectedRange.moveStartTo(
-                            this.timeline.archiveRange.end - this._selectedRange.duration
-                        );
-                    }
-                }
+
                 this._emit();
             } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR) {
-                if (this.leftEdgeScrollingSpeed && this.scroll.canScrollLeft) {
-                    return;
-                }
-                const pxDelta = this._dragAnchorPx - e.clientX;
-                // // console.log('left ear progress', e.clientX, e.offsetX, e.target, e)
-                // const pxDelta = this.leftEarClientRight - e.clientX - (EAR_WIDTH - this._dragAnchorPx);
-                // console.log('left px delta', pxDelta, this.leftEarClientRight, e.clientX, (EAR_WIDTH - this._dragAnchorPx), '|', EAR_WIDTH, this._dragAnchorPx)
-                const msDelta = this.timeline.domWidthToDuration(pxDelta);
-                const newStart = this._dragAnchorMs - msDelta;
+                const offsetPx = this._getOffsetPx(e);
+                const newStart = this.timeline.domOffsetXtoTime(offsetPx);
+
                 if (newStart < this._selectedRange.end) {
                     this._selectedRange.start = newStart;
                 } else {
@@ -299,18 +231,12 @@ export class TimelineSelectionService {
                     this._selectedRange.end = newStart;
                     this._selectedRange.start = oldEnd;
                 }
+
                 this._emit();
             } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_RIGHT_EAR) {
-                if (this.rightEdgeScrollingSpeed && this.scroll.canScrollRight) {
-                    return;
-                }
-                const pxDelta = e.clientX - this._dragAnchorPx;
-                const msDelta = this.timeline.domWidthToDuration(pxDelta);
-                // this._selectedRange.end = Math.max(
-                //     this._selectedRange.start,
-                //     this._dragAnchorMs + msDelta
-                // );
-                const newEnd = this._dragAnchorMs + msDelta;
+                const offsetPx = this._getOffsetPx(e);
+                const newEnd = this.timeline.domOffsetXtoTime(offsetPx);
+
                 if (newEnd > this._selectedRange.start) {
                     this._selectedRange.end = newEnd;
                 } else {
@@ -319,6 +245,7 @@ export class TimelineSelectionService {
                     this._selectedRange.start = newEnd;
                     this._selectedRange.end = oldStart;
                 }
+
                 this._emit();
             }
             return true;
@@ -391,150 +318,5 @@ export class TimelineSelectionService {
         this._deactivate();
         this._selectedRange = new TimeRange(0, 0);
         this._emit();
-    }
-
-    private _onAnimationFrame(): void {
-        let speed, offset;
-        const STEP = 0.2;
-        switch (this._dragMode) {
-            case SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE:
-                if (
-                    !(this.leftEdgeScrollingSpeed && this.scroll.canScrollLeft) &&
-                    !(this.rightEdgeScrollingSpeed && this.scroll.canScrollRight)
-                ) {
-                    return;
-                }
-                if (this.leftEdgeScrollingSpeed) {
-                    speed = this.leftEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    this.timeline.stepScrollToStartTime(
-                        this.timeline.visibleRange.start - offset,
-                        STEP
-                    );
-                }
-                if (this.rightEdgeScrollingSpeed) {
-                    speed = this.rightEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    this.timeline.stepScrollToStartTime(
-                        this.timeline.visibleRange.start + offset,
-                        STEP
-                    );
-                }
-                this.handleMouseMove(this._lastMouseMove);
-                break;
-            case SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR:
-                // false-positively buggy =(
-                if (this.leftEdgeScrollingSpeed && !this.scroll.canScrollLeft) {
-                    return;
-                }
-                if (this.leftEdgeScrollingSpeed) {
-                    speed = this.leftEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    // console.log('left', speed, offset, this.timeline.durationToDomWidth(offset))
-                    if (
-                        this.timeline.stepScrollToStartTime(
-                            this.timeline.visibleRange.start - offset,
-                            STEP
-                        )
-                    ) {
-                        this._selectedRange.start -= offset * STEP;
-                        this._dragAnchorMs = this._selectedRange.start;
-                        this._dragAnchorPx = this._lastMouseMove.clientX;
-                        // // this._dragAnchorPx += this.timeline.durationToDomWidth(offset) * STEP
-                        this._emit();
-                    }
-                    // this.handleLeftEarMouseDown(this._lastMouseMove)
-                } else if (this.rightEdgeScrollingSpeed) {
-                    speed = this.rightEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    if (
-                        this.timeline.stepScrollToStartTime(
-                            (this.timeline.visibleRange.start + offset),
-                            STEP
-                        )
-                    ) {
-                        this._selectedRange.start += offset * STEP;
-                        this._dragAnchorMs = this._selectedRange.start;
-                        this._dragAnchorPx = this._lastMouseMove.clientX;
-                        this._emit();
-                    }
-                }
-                break;
-            case SELECTION_DRAG_MODE.DRAGGING_RIGHT_EAR:
-                if (this.rightEdgeScrollingSpeed && !this.scroll.canScrollRight) {
-                    return;
-                }
-                if (this.rightEdgeScrollingSpeed) {
-                    speed = this.rightEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    // console.log('right', speed, offset, this.timeline.durationToDomWidth(offset))
-                    if (
-                        this.timeline.stepScrollToStartTime(
-                            this.timeline.visibleRange.start + offset,
-                            STEP
-                        )
-                    ) {
-                        this._selectedRange.end += offset * STEP;
-                        this._dragAnchorMs = this._selectedRange.end;
-                        this._dragAnchorPx = this._lastMouseMove.clientX;
-                        // this._dragAnchorPx -= this.timeline.durationToDomWidth(offset) * STEP
-                        this._emit();
-                    }
-                    // this.handleRightEarMouseDown(this._lastMouseMove)
-                } else if (this.leftEdgeScrollingSpeed) {
-                    speed = this.leftEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    if (
-                        this.timeline.stepScrollToStartTime(
-                            this.timeline.visibleRange.start - offset,
-                            STEP
-                        )
-                    ) {
-                        this._selectedRange.end -= offset * STEP;
-                        this._dragAnchorMs = this._selectedRange.end;
-                        this._dragAnchorPx = this._lastMouseMove.clientX;
-                        this._emit();
-                    }
-                }
-                break;
-        }
-    }
-
-    public get mouseFromLeftEdge(): px {
-        if (!this.isActive) {
-            return Infinity;
-        }
-        return this._lastMouseMove.clientX - this._$background.getBoundingClientRect().left;
-        // return this.timeline.timeToDomOffsetX(this._selectedRange.start) - EAR_WIDTH
-    }
-
-    public get mouseFromRightEdge(): px {
-        if (!this.isActive) {
-            return Infinity;
-        }
-        return this._$background.getBoundingClientRect().right - this._lastMouseMove.clientX;
-        // return this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr -
-        //     (this.timeline.timeToDomOffsetX(this._selectedRange.end) + EAR_WIDTH * 2)
-    }
-
-    protected _distanceToScrollingSpeed(distanceFromEdge: px): EDGE_SCROLLING_SPEED {
-        if (distanceFromEdge > 80) {
-            return EDGE_SCROLLING_SPEED.NONE;
-        }
-        if (distanceFromEdge > 40) {
-            return EDGE_SCROLLING_SPEED.SLOW;
-        }
-        if (distanceFromEdge > 20) {
-            return EDGE_SCROLLING_SPEED.MEDIUM;
-        }
-        return EDGE_SCROLLING_SPEED.FAST;
-    }
-
-    public get rightEdgeScrollingSpeed(): EDGE_SCROLLING_SPEED {
-        return this._distanceToScrollingSpeed(this.mouseFromRightEdge);
-    }
-
-    public get leftEdgeScrollingSpeed(): EDGE_SCROLLING_SPEED {
-        return this._distanceToScrollingSpeed(this.mouseFromLeftEdge);
     }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, Input } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -7,13 +7,13 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
 import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
+@UntilDestroy()
 @Component({
     selector: 'playback-state-indicator',
     templateUrl: './playback-state-indicator.component.html',
     styleUrls: ['./playback-state-indicator.component.scss']
 })
-export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
-    protected subscription: Subscription;
+export class PlaybackStateIndicatorComponent implements OnInit {
     public state: PlaybackState;
 
     @Input() enabled: boolean;
@@ -35,15 +35,14 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
         public playback: PlaybackService,
         public vms: VideoManagementSystemService
     ) {
-        this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     public ngOnInit(): void {
-        this.subscription = this.playback.subject.subscribe(this.onSubjectChange);
-    }
-
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.playback.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: PlaybackState) => {
+                this.onSubjectChange(s);
+            });
     }
 
     public onSubjectChange(s: PlaybackState): void {

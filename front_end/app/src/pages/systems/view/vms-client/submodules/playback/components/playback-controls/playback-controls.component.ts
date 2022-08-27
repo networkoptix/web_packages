@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ import { PlaybackService } from '../../services/playback.service';
 
 type BtnClassesEnum = 'play' | 'pause';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'playback-controls',
     templateUrl: './playback-controls.component.html',
@@ -58,14 +58,16 @@ export class PlaybackControlsComponent implements OnInit {
 
     public ngOnInit(): void {
         this.subscription = this.playback.subject
-            .pipe(distinctUntilChanged((prev, curr) => {
-                // we're only interested in state mode ... avoiding useless chatter
-                // this.state is used instead of "prev" because when in ARCHIVE mode "pause" is
-                // same for both objects (weird) ... hence -> this.state = { ...s };
-                // not using function reference as I need "this" -- TT
-                // @ts-expect-error
-                return this.state?.mode === curr.mode && (curr.paused === undefined || this.state?.paused === curr.paused);
-            }))
+            .pipe(
+                distinctUntilChanged((prev, curr) => {
+                    // we're only interested in state mode ... avoiding useless chatter
+                    // this.state is used instead of "prev" because when in ARCHIVE mode "pause" is
+                    // same for both objects (weird) ... hence -> this.state = { ...s };
+                    // not using function reference as I need "this" -- TT
+                    // @ts-expect-error
+                    return this.state?.mode === curr.mode && (curr.paused === undefined || this.state?.paused === curr.paused);
+                }),
+                untilDestroyed(this))
             .subscribe(state => {
                 this.onSubjectChange(state);
             });

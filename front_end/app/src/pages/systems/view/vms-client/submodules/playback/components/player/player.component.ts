@@ -3,12 +3,11 @@ import {
     Component,
     OnInit,
     AfterViewInit,
-    OnDestroy,
     Output,
     EventEmitter,
     ElementRef,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -26,13 +25,14 @@ import {
 } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
+@UntilDestroy()
 @Component({
     selector: 'player',
     templateUrl: './player.component.html',
     styleUrls: ['./player.component.scss']
 })
 @LoggerDecorator('PLAYER (WRAPPER) ::', true)
-export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlayerComponent implements OnInit, AfterViewInit {
     _log: Function;
     _warn: Function;
 
@@ -45,8 +45,6 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Output() videoDblClick = new EventEmitter<boolean>();
 
-    protected playbackSubscription: Subscription;
-    protected vmsSubscription: Subscription;
     public transport: PlaybackTransport;
 
     public showOverlay: boolean = false;
@@ -73,8 +71,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         protected self: ElementRef
     ) {
         this.LANG = translateService.translations;
-        this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
-        this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
+
         this.handleClick = generateClickDubleClickPair(
             e => this.onClick(e),
             e => this.onDblClick(e)
@@ -87,17 +84,17 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.playbackSubscription = this.playback.subject.subscribe(
-            this.onPlaybackSubjectChange
-        );
-        this.vmsSubscription = this.vms.subject.subscribe(
-            this.onVmsSubjectChange
-        );
-    }
+        this.playback.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: PlaybackState) => {
+                this.onPlaybackSubjectChange(s);
+            });
 
-    public ngOnDestroy(): void {
-        this.playbackSubscription.unsubscribe();
-        this.vmsSubscription.unsubscribe();
+        this.vms.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: VmsState) => {
+                this.onVmsSubjectChange(s);
+            });
     }
 
     public onPlaybackSubjectChange(s: PlaybackState | ArchivePlaybackState): void {
@@ -177,6 +174,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
                 return;
             }
             this.http.get(player.src())
+                .pipe(untilDestroyed(this))
                 .subscribe((response: any) => {
                     switch (response?.error) {
                         case '4':

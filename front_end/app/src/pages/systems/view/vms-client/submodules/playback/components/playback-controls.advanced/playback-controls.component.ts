@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
@@ -6,12 +7,13 @@ import { TimelineSelectionService } from '@vms-client/submodules/timeline/servic
 import { PlaybackState } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
+@UntilDestroy()
 @Component({
     selector: 'playback-controls',
     templateUrl: './playback-controls.component.html',
     styleUrls: ['./playback-controls.component.scss']
 })
-export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
+export class PlaybackAdvControlsComponent implements OnInit {
     protected subscription: Subscription;
     protected state: PlaybackState;
 
@@ -19,15 +21,14 @@ export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
         public playback: PlaybackService,
         protected selection: TimelineSelectionService
     ) {
-        this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     public ngOnInit(): void {
-        this.subscription = this.playback.subject.subscribe(this.onSubjectChange);
-    }
-
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.playback.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: PlaybackState) => {
+                this.onSubjectChange(s);
+            });
     }
 
     public onSubjectChange(s: PlaybackState): void {

@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Subscription } from 'rxjs';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -11,14 +11,15 @@ import { MediaServer } from '../../datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '../../datatypes/VmsState';
 import { VideoManagementSystemService } from '../../services/vms.service';
 
+@UntilDestroy()
 @Component({
     selector: 'media-server-list',
     templateUrl: 'media-server-list.component.html',
     styleUrls: ['media-server-list.component.scss']
 })
-export class MediaServerListComponent implements OnInit, OnDestroy {
+export class MediaServerListComponent implements OnInit {
     CONFIG: IConfig;
-    protected _vmsStateSubscription: Subscription;
+
     protected _mediaservers: Array<MediaServer>;
     public showIP: boolean = false;
     public token: string = '';
@@ -47,18 +48,15 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         private vms: VideoManagementSystemService,
         configService: NxConfigService
     ) {
-        this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
         this.CONFIG = configService.config;
     }
 
     public ngOnInit(): void {
-        this._vmsStateSubscription = this.vms.subject.subscribe(
-            this._onVmsSubjectChange
-        );
-    }
-
-    public ngOnDestroy(): void {
-        this._vmsStateSubscription.unsubscribe();
+        this.vms.subject
+            .pipe(untilDestroyed(this))
+            .subscribe((s: VmsState) => {
+                this._onVmsSubjectChange(s);
+            });
     }
 
     protected _onVmsSubjectChange(s: VmsState) {

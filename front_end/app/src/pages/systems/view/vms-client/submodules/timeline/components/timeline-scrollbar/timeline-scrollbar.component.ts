@@ -70,6 +70,14 @@ export class TimelineScrollbarComponent implements AfterViewInit {
     public honestBarLeftPx: px = 0;
     public honestBarWidthPx: px = 0;
 
+    public disabled: boolean = false;
+    public isPlaying: boolean = false;
+    public playbackLeftPixel: px = -1;
+
+    public isSelected: boolean = false;
+    public selectionLeftPixel: px = -1;
+    public selectionWidthPixel: px = 0;
+
     constructor(
         protected timeline: TimelineService,
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
@@ -132,13 +140,6 @@ export class TimelineScrollbarComponent implements AfterViewInit {
         this._magnification = s.magnification;
     }
 
-    public isPlaying: boolean = false;
-    public playbackLeftPixel: px = -1;
-
-    public isSelected: boolean = false;
-    public selectionLeftPixel: px = -1;
-    public selectionWidthPixel: px = 0;
-
     public onPlaybackSubjectChange(s: PlaybackState): void {
         if (s.mode === PLAYBACK_MODE.STOPPED) {
             this.isPlaying = false;
@@ -191,6 +192,8 @@ export class TimelineScrollbarComponent implements AfterViewInit {
             this.selectionLeftPixel = -1;
             this.selectionWidthPixel = 0;
         }
+
+        this.disabled = (s.dragMode as unknown as boolean) || s.hoverMode;
     }
 
     public barDblClickHandler(e: MouseEvent | TouchEvent): void {

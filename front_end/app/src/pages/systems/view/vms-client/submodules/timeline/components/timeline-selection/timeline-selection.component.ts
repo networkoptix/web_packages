@@ -8,11 +8,16 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
+import { animationFrameScheduler, interval } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import {
+    TimelineScrollbarRelativeService
+} from '@vms-client/submodules/timeline/services/timeline.scrollbarRelative.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
+import { px } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineSelectionService,
@@ -29,6 +34,25 @@ const DATE_FORMAT_STRING = 'dd mmmm yyyy';
 const TIME_FORMAT_STRING = 'HH:MM:ss';
 
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
+const EDGE_SCROLL_STEP = 0.2;
+
+enum EDGE_SCROLLING_DIRECTION {
+    RIGHT,
+    LEFT,
+}
+
+enum EDGE_SCROLLING_SPEED {
+    NONE = 0,
+    SLOW = 1,
+    MEDIUM = 2,
+    FAST = 3,
+}
+
+enum EDGE_SCROLLING_SPEED_POS {
+    FAR = 80,
+    MID = 40,
+    NEAR = 20,
+}
 
 @UntilDestroy()
 @Component({
@@ -49,6 +73,12 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     rightDate: string = '';
     rightTime: string = '';
     host: HTMLElement;
+
+    left: number;
+    right: number;
+    duration: number;
+    offset: number;
+    _lastMouseMoveEvent: MouseEvent;
 
     @ViewChild('selectedRange')
     protected selectedRangeView: ElementRef<HTMLDivElement>;
@@ -80,6 +110,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         private vms: VideoManagementSystemService,
         protected timeline: TimelineService,
         protected selection: TimelineSelectionService,
+        private scroll: TimelineScrollbarRelativeService,
         protected playback: PlaybackService,
         protected wheel: TimelineWheelHandlerService,
         protected timeUnderMouse: TimelineTimeUnderMouseService
@@ -98,6 +129,96 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             .subscribe((s: TimelineServiceStatus) => {
                 this.onTimelineSubjectChange(s);
             });
+
+        interval(0, animationFrameScheduler)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this._onAnimationFrame();
+            });
+    }
+
+    private scrollTimeline(pos, direction) {
+        const speed = this.edgeScrollingSpeed(pos);
+        const offset = this.timeline.domWidthToDuration((1 << speed) * 10);
+        let target = this.timeline.visibleRange.start;
+
+        target = (direction === EDGE_SCROLLING_DIRECTION.LEFT)
+            ? target - offset
+            : target + offset;
+
+        if (
+            this.timeline.stepScrollToStartTime(
+                target,
+                EDGE_SCROLL_STEP
+            )
+        ) {
+            this.updateMouseMoveEvent(this._lastMouseMoveEvent);
+        }
+    }
+
+    private _onAnimationFrame() {
+        // @ts-expect-error classname does not exist in EventTarget
+        const direction = this._lastMouseMoveEvent?.target.className === 'right-draggable'
+            ? EDGE_SCROLLING_DIRECTION.RIGHT
+            : EDGE_SCROLLING_DIRECTION.LEFT;
+
+        const canScroll = (direction === EDGE_SCROLLING_DIRECTION.LEFT)
+            ? this.scroll.canScrollLeft
+            : this.scroll.canScrollRight;
+
+        if (!(this.selectionMode && canScroll)) {
+            return;
+        }
+
+        if (direction === EDGE_SCROLLING_DIRECTION.LEFT) {
+            // left going left
+            if (this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
+                this.scrollTimeline(
+                    this.left,
+                    EDGE_SCROLLING_DIRECTION.LEFT
+                );
+            }
+            // left going right
+            if (this.timeline.canvasGeometry.width - this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
+                this.scrollTimeline(
+                    this.timeline.canvasGeometry.width - this.left,
+                    EDGE_SCROLLING_DIRECTION.RIGHT)
+                ;
+            }
+        }
+
+        if (direction === EDGE_SCROLLING_DIRECTION.RIGHT) {
+            this.right = this.timeline.canvasGeometry.width - (this.left + this.duration);
+            if (this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
+                this.scrollTimeline(
+                    this.right,
+                    EDGE_SCROLLING_DIRECTION.RIGHT
+                );
+            }
+            if (this.timeline.canvasGeometry.width - this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
+                this.scrollTimeline(
+                    this.timeline.canvasGeometry.width - this.right,
+                    EDGE_SCROLLING_DIRECTION.LEFT
+                );
+            }
+        }
+    }
+
+    private distanceToScrollingSpeed(distanceFromEdge: px): EDGE_SCROLLING_SPEED {
+        if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.FAR) {
+            return EDGE_SCROLLING_SPEED.NONE;
+        }
+        if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.MID) {
+            return EDGE_SCROLLING_SPEED.SLOW;
+        }
+        if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.NEAR) {
+            return EDGE_SCROLLING_SPEED.MEDIUM;
+        }
+        return EDGE_SCROLLING_SPEED.FAST;
+    }
+
+    private edgeScrollingSpeed(pos): EDGE_SCROLLING_SPEED {
+        return this.distanceToScrollingSpeed(pos);
     }
 
     public ngAfterViewInit(): void {
@@ -107,17 +228,18 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         this.host = this.selectedRangeView.nativeElement.parentElement;
     }
 
-    protected _updateCss(): void {
+    private _updateCss(): void {
         if (this.selectedRangeView && this.selectionStatus.isActive) {
             this.selectedRangeView.nativeElement.classList.add('active');
-            const left = this.timeline.timeToDomOffsetX(
+            this.left = this.timeline.timeToDomOffsetX(
                 this.selectionStatus.range.start
             );
-            const width = this.timeline.durationToDomWidth(
+            this.duration = this.timeline.durationToDomWidth(
                 this.selectionStatus.range.duration
             );
-            this.selectedRangeView.nativeElement.style.left = `${left}px`;
-            this.selectedRangeView.nativeElement.style.width = `${width}px`;
+
+            this.selectedRangeView.nativeElement.style.left = `${this.left}px`;
+            this.selectedRangeView.nativeElement.style.width = `${this.duration}px`;
             this.leftEarView?.nativeElement.classList.toggle(
                 'playback',
                 this._leftEarOverPlayback
@@ -150,8 +272,10 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     public onSelectionSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.selectionStatus = s;
-        this._updateCss();
-        this.dateStrings();
+        if (this.selectionStatus.dragMode) {
+            this._updateCss();
+            this.dateStrings();
+        }
     }
 
     public onTimelineSubjectChange(s: TimelineServiceStatus): void {
@@ -190,6 +314,11 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     @HostListener('mousemove', ['$event'])
     public mouseMoveHandler(e: MouseEvent): void {
+        this._lastMouseMoveEvent = e;
+        this.updateMouseMoveEvent(e);
+    }
+
+    private updateMouseMoveEvent(e: MouseEvent) {
         // @ts-expect-error
         this.timeUnderMouse.handleMouseMove({
             offsetX:
@@ -215,11 +344,13 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     public leftEarMouseDownHandler(e: MouseEvent): void {
         this.selection.handleLeftEarMouseDown(e);
         this.hideLeftEar = false;
+        this.selectionMode = true;
     }
 
     public rightEarMouseDownHandler(e: MouseEvent): void {
         this.selection.handleRightEarMouseDown(e);
         this.hideRightEar = false;
+        this.selectionMode = true;
     }
 
     public rightEarMouseInOutHandler(status: boolean): void {
