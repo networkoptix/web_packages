@@ -4,9 +4,10 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import decorators, serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from urllib.parse import quote
 
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params, APIInternalException
+from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
 
 
 class TwoFactorPermissionsMixin:
@@ -44,9 +45,7 @@ class VerificationSerializer(serializers.Serializer):
 
     @staticmethod
     def validate_verification_code(value):
-        if not value.isnumeric():
-            raise APIInternalException('Wrong totp', error_code='invalidTotp')
-        return value
+        return quote(value)
 
 
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
