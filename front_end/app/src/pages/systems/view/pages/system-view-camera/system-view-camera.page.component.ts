@@ -6,7 +6,7 @@ import {
     ElementRef,
     AfterViewInit,
     HostListener,
-    Inject,
+    Inject, Renderer2,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -95,9 +95,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unsub$ = new Subject();
 
     constructor(
-        private configService: NxConfigService,
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         deviceService: DeviceDetectorService,
+        private renderer: Renderer2,
         protected location: Location,
         protected self: ElementRef,
         protected route: ActivatedRoute,
@@ -127,7 +128,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.onPlaybackChange = this.onPlaybackChange.bind(this);
 
-        this.archiveSelectionEnabled = this.configService.flagsEnabled(
+        this.archiveSelectionEnabled = configService.flagsEnabled(
             'archiveSelection'
         );
 
@@ -179,6 +180,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         );
     }
 
+    private unListenMouseMove: () => void;
+    private unListenTouch: () => void;
+    private unListenTouchMove: () => void;
+
     protected onFullScreenChange = (e): void => {
         const fse = fullscreen.getElement();
         this._log('fullscreenchange', e, fse);
@@ -187,9 +192,29 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.onShowElements = setTimeout(() => {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
+
+            this.unListenMouseMove = this.renderer
+                .listen(this.$self, 'mousemove', (event: MouseEvent) => {
+                    this.onEvent(event);
+                });
+
+            this.unListenTouch = this.renderer
+                .listen(this.$self, 'touch', (event: MouseEvent) => {
+                    this.onEvent(event);
+                });
+
+            this.unListenTouchMove = this.renderer
+                .listen(this.$self, 'touchmove', (event: MouseEvent) => {
+                    this.onEvent(event);
+                });
         } else {
             clearTimeout(this.onShowElements);
             clearTimeout(this.onMoveShowElements);
+
+            this.unListenMouseMove();
+            this.unListenTouch();
+            this.unListenTouchMove();
+
             this.showElementsInFSM = true;
         }
 
@@ -199,6 +224,16 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     };
 
+    private onEvent(event: Event): void {
+        if (this.fullscreenMode && !this.showElementsInFSM) {
+            this.showElementsInFSM = true;
+            clearTimeout(this.onMoveShowElements);
+            this.onMoveShowElements = setTimeout(() => {
+                this.showElementsInFSM = false;
+            }, fullscreenInactivityCfg.delayMs);
+        }
+    }
+
     public handleControlsTogglingEarClick(): void {
         this.ux.isTimelineShown = !this.ux.state.isTimelineShown;
     }
@@ -206,6 +241,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public get $self(): HTMLElement {
         return this.self.nativeElement as HTMLElement;
     }
+
+    private unListenFullScreenChange: () => void;
+    private unListenWebkitFSChange: () => void;
+    private unListenMozFSChange: () => void;
 
     public ngOnInit(): void {
         this.playback.subject
@@ -240,18 +279,20 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this._onAnimationFrame();
             });
 
-        this.document.addEventListener(
-            'fullscreenchange',
-            this.onFullScreenChange
-        );
-        this.document.addEventListener(
-            'webkitfullscreenchange',
-            this.onFullScreenChange
-        );
-        this.document.addEventListener(
-            'mozfullscreenchange',
-            this.onFullScreenChange
-        );
+        this.unListenFullScreenChange = this.renderer
+            .listen('document', 'fullscreenchange', (event: MouseEvent) => {
+                this.onFullScreenChange(event);
+            });
+
+        this.unListenWebkitFSChange = this.renderer
+            .listen('document', 'webkitfullscreenchange', (event: MouseEvent) => {
+                this.onFullScreenChange(event);
+            });
+
+        this.unListenMozFSChange = this.renderer
+            .listen('document', 'mozfullscreenchange', (event: MouseEvent) => {
+                this.onFullScreenChange(event);
+            });
 
         this._updateAvailableTransportsAndResolutions();
 
@@ -634,18 +675,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public ngOnDestroy(): void {
         this.unsub$.next('done');
-        this.document.removeEventListener(
-            'fullscreenchange',
-            this.onFullScreenChange
-        );
-        this.document.removeEventListener(
-            'webkitfullscreenchange',
-            this.onFullScreenChange
-        );
-        this.document.removeEventListener(
-            'mozfullscreenchange',
-            this.onFullScreenChange
-        );
+
+        this.unListenFullScreenChange();
+        this.unListenWebkitFSChange();
+        this.unListenMozFSChange();
     }
 
     protected _onUxStateChange(s: WebClientUxState): void {
@@ -862,18 +895,5 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     @HostListener('document:click', ['$event'])
     public clickOutside($event): void {
         this.hideSettings();
-    }
-
-    @HostListener('mousemove', ['$event'])
-    @HostListener('touch', ['$event'])
-    @HostListener('touchmove', ['$event'])
-    onEvent(event: Event): void {
-        if (this.fullscreenMode && !this.showElementsInFSM) {
-            this.showElementsInFSM = true;
-            clearTimeout(this.onMoveShowElements);
-            this.onMoveShowElements = setTimeout(() => {
-                this.showElementsInFSM = false;
-            }, fullscreenInactivityCfg.delayMs);
-        }
     }
 }

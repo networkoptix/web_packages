@@ -3,7 +3,7 @@ import {
     OnInit,
     OnDestroy,
     ElementRef,
-    HostListener,
+    HostListener, Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -90,19 +90,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             : [];
     }
 
-    @HostListener('mousemove', ['$event'])
-    @HostListener('touch', ['$event'])
-    @HostListener('touchmove', ['$event'])
-    onEvent(event: Event): void {
-        if (this.fullscreenMode && !this.showElementsInFSM) {
-            this.showElementsInFSM = true;
-            clearTimeout(this.onMoveShowElements);
-            this.onMoveShowElements = setTimeout(() => {
-                this.showElementsInFSM = false;
-            }, fullscreenInactivityCfg.delayMs);
-        }
-    }
-
     protected _windowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
@@ -130,6 +117,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private self: ElementRef,
+        private renderer: Renderer2,
         protected router: Router,
         protected route: ActivatedRoute,
         protected accountService: NxAccountService,
@@ -212,6 +200,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     }
 
+    private unListenMouseMove: () => void;
+    private unListenTouch: () => void;
+    private unListenTouchMove: () => void;
+
     protected _onUxStateChange(s: WebClientUxState): void {
         if (s.isSidebarShown) {
             this.$self.classList.add('sidebarShown');
@@ -228,9 +220,29 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this.onShowElements = setTimeout(() => {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
+
+            this.unListenMouseMove = this.renderer
+                .listen(this.$self, 'mousemove', (event: MouseEvent) => {
+                    this.onEvent(event);
+                });
+
+            this.unListenTouch = this.renderer
+                .listen(this.$self, 'touch', (event: MouseEvent) => {
+                    this.onEvent(event);
+                });
+
+            this.unListenTouchMove = this.renderer
+                .listen(this.$self, 'touchmove', (event: MouseEvent) => {
+                    this.onEvent(event);
+                });
         } else {
             clearTimeout(this.onShowElements);
             clearTimeout(this.onMoveShowElements);
+
+            this.unListenMouseMove();
+            this.unListenTouch();
+            this.unListenTouchMove();
+
             this.fullscreenMode = false;
             this.showElementsInFSM = true;
 
@@ -238,6 +250,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 this.ux.isSidebarShown = false;
             }
             this.fullscreenToggle = false;
+        }
+    }
+
+    private onEvent(event: Event): void {
+        if (this.fullscreenMode && !this.showElementsInFSM) {
+            this.showElementsInFSM = true;
+            clearTimeout(this.onMoveShowElements);
+            this.onMoveShowElements = setTimeout(() => {
+                this.showElementsInFSM = false;
+            }, fullscreenInactivityCfg.delayMs);
         }
     }
 
