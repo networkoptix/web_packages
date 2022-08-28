@@ -193,14 +193,14 @@
             "Maximum number of items is 10000": "Maksimalt antall produkter er 10000",
             "This Cloud license does not exist": "Denne Cloud lisensen finnes ikke",
             "This license is already activated": "Denne lisensen er allerede aktivert",
-            "This license is not activated": "This license is not activated",
-            "This license has already expired": "This license has already expired",
-            "Already has a cloud storage license active": "Already has a cloud storage license active",
-            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
-            "Not Authorized for cloud system": "Not Authorized for cloud system",
-            "This license is not currently activated": "This license is not currently activated",
-            "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
+            "This license is not activated": "Denne lisensen er ikke aktivert",
+            "This license has already expired": "Denne lisensen har allerede utløpt",
+            "Already has a cloud storage license active": "Har allerede en aktiv skylagringslisens",
+            "Cloud System ID does not match credentials used": "Cloud system ID samsvarer ikke med legitimasjonen som er brukt",
+            "Not Authorized for cloud system": "Ikke autorisert for skysystem",
+            "This license is not currently activated": "Denne lisensen er ikke aktivert for øyeblikket",
+            "This license has no deactivations remaining": "Denne lisensen har ingen deaktiveringer igjen",
+            "Cloud system Id does not match license activation": "Skysystem-ID samsvarer ikke med lisensaktivering"
         },
         "notUsedWarning": "Skylagringen brukes ikke til opptak. Gå til <a href=\"{serverSettings}\">Serverinnstillinger</a> for å konfigurere den."
     },

@@ -193,14 +193,14 @@
             "Maximum number of items is 10000": "Maximalt antal artiklar är 10 000",
             "This Cloud license does not exist": "Denna molnlicens finns inte",
             "This license is already activated": "Licensen är redan aktiverad",
-            "This license is not activated": "This license is not activated",
-            "This license has already expired": "This license has already expired",
-            "Already has a cloud storage license active": "Already has a cloud storage license active",
-            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
-            "Not Authorized for cloud system": "Not Authorized for cloud system",
-            "This license is not currently activated": "This license is not currently activated",
-            "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
+            "This license is not activated": "Denna licens är inte aktiverad",
+            "This license has already expired": "Denna licens har redan löpt ut",
+            "Already has a cloud storage license active": "Har redan en aktiv molnlagringslicens",
+            "Cloud System ID does not match credentials used": "Cloud System ID matchar inte inloggningsuppgifter som används",
+            "Not Authorized for cloud system": "Ej auktoriserad för molnsystem",
+            "This license is not currently activated": "Denna licens är för närvarande inte aktiverad",
+            "This license has no deactivations remaining": "Denna licens har inga avaktiveringar kvar",
+            "Cloud system Id does not match license activation": "Molnsystem-Id matchar inte licensaktivering"
         },
         "notUsedWarning": "Molnlagringen används inte för inspelning. Gå till <a href=\"{serverSettings}\">Servers inställningar</a> för att konfigurera den."
     },
