@@ -170,6 +170,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             return;
         }
 
+        const timelineWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
         if (direction === EDGE_SCROLLING_DIRECTION.LEFT) {
             // left going left
             if (this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
@@ -179,7 +180,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 );
             }
             // left going right
-            if (this.timeline.canvasGeometry.width - this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
+            if (timelineWidth - this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
                 this.scrollTimeline(
                     this.timeline.canvasGeometry.width - this.left,
                     EDGE_SCROLLING_DIRECTION.RIGHT)
@@ -188,16 +189,16 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         }
 
         if (direction === EDGE_SCROLLING_DIRECTION.RIGHT) {
-            this.right = this.timeline.canvasGeometry.width - (this.left + this.duration);
+            this.right = timelineWidth - (this.left + this.duration);
             if (this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
                 this.scrollTimeline(
                     this.right,
                     EDGE_SCROLLING_DIRECTION.RIGHT
                 );
             }
-            if (this.timeline.canvasGeometry.width - this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
+            if (timelineWidth - this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
                 this.scrollTimeline(
-                    this.timeline.canvasGeometry.width - this.right,
+                    timelineWidth - this.right,
                     EDGE_SCROLLING_DIRECTION.LEFT
                 );
             }
