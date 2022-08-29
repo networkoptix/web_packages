@@ -9,9 +9,11 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig } from '@dialogs/dialog-ref';
+import { RefreshSessionModalContent } from '@dialogs/refresh-session/refresh-session';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem } from '@services/system.service/system';
 
 import { GenericModalContent } from './generic/generic.component';
 import { NxToastService } from './toast.service';
@@ -91,5 +93,15 @@ export class NxSimpleDialogsService extends DialogBase {
             this.LANG.dialogs.renewAuth.title(),
             this.LANG.dialogs.buttons.ok()
         );
+    }
+
+    public refreshSession(system: NxSystem) {
+        const config: Partial<DialogConfig> = {
+            data: {
+                system
+            }
+        };
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(RefreshSessionModalContent, dialogConfig).afterClosed();
     }
 }

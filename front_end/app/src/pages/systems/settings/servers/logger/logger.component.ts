@@ -10,6 +10,7 @@ import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -53,6 +54,7 @@ export class NxServerLoggerComponent implements OnChanges {
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
+        private simpleDialogService: NxSimpleDialogsService,
         private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
@@ -71,26 +73,29 @@ export class NxServerLoggerComponent implements OnChanges {
             help: this.LANG.system.loggers[level].help()
         }));
 
-        this.saveLoggers = this.processService.createProcess(() => {
-            return this.system.serverManager
+        this.saveLoggers = this.processService.createProcess(
+            () => this.system.serverManager
                 .setLogLevels(
                     this.serverId,
                     this.systemLoggers.filter(logger =>
                         logger.value !== logger.originalValue
                     )
-                )
-                .then(() => {
-                    this.systemLoggers.forEach(logger => {
-                        logger.originalValue = logger.value;
+                ),
+            { ignoreError: true },
+            () => {
+                this.systemLoggers.forEach(logger => {
+                    logger.originalValue = logger.value;
+                });
+                this.dialogsService
+                    .alert(
+                        this.LANG.dialogs.message.logLevelsSaved(),
+                        this.LANG.dialogs.titles.success()
+                    ).catch(error => {
+                        console.error(error);
                     });
-                    this.dialogsService
-                        .alert(
-                            this.LANG.dialogs.message.logLevelsSaved(),
-                            this.LANG.dialogs.titles.success()
-                        ).catch(error => {
-                            console.error(error);
-                        });
-                }, () => {
+            },
+            err => {
+                const handleError = (): void => {
                     this.dialogsService
                         .alert(
                             this.LANG.dialogs.message.logLevelsNotSaved(),
@@ -98,8 +103,19 @@ export class NxServerLoggerComponent implements OnChanges {
                         ).catch(error => {
                             console.error(error);
                         });
-                });
-        });
+                };
+                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    this.simpleDialogService.refreshSession(this.system).then(res => {
+                        if (res) {
+                            this.saveLoggers.run();
+                        } else {
+                            handleError();
+                        }
+                    }, error => console.error(error));
+                } else {
+                    handleError();
+                }
+            });
     }
 
     ngOnChanges(changes: NgChanges<NxServerLoggerComponent>): void {

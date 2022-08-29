@@ -7,6 +7,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -74,7 +75,7 @@ export class NxSystemService {
                 systemId,
                 serverId,
                 undefined,
-                cloudSystemInfo?.useRest
+                cloudSystemInfo?.version
             );
             this.systemsCache[id] = system;
         }
@@ -103,7 +104,7 @@ export class NxSystemService {
         return this.system;
     }
 
-    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = ''): NxSystem {
+    createLocalSystem(mediaServer: NxSystemRestAPI | NxSystemRestAPI2, userId: string, userEmail = ''): NxSystem {
         if (this.system === undefined) {
             this.system = new NxSystem(
                 this.CONFIG,
@@ -119,7 +120,7 @@ export class NxSystemService {
                 '',
                 '',
                 userId,
-                true,
+                5.1, // TODO: Add a way to get the version from the server.
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;

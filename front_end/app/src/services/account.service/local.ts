@@ -70,7 +70,7 @@ export class LocalAccount extends BaseAccount {
             bootstrapProviderService
         );
         this.mediaServerApi = this.nxSystemAPIService
-            .createConnection(undefined, undefined, undefined, () => of(''), true);
+            .createConnection(undefined, undefined, undefined, () => of(''), 5.1);
     }
 
     async get(forceUpdate = false): Promise<Account | undefined> {

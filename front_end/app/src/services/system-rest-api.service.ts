@@ -40,12 +40,12 @@ import { NxUriCacheService } from './uri-cache.service';
  * Ideally, methods on NxSystemAPI with be labeled as deprecated with the last supported version noted.
  */
 export class NxSystemRestAPI extends NxSystemAPI {
-    static readonly supportedVersion = 4.3;
+    readonly version: number;
     public readonly requiresPassword: boolean = false;
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
-    private injector: Injector;
+    protected injector: Injector;
 
     #vmsToken: string;
 
@@ -76,6 +76,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             healthService,
             appState
         );
+        this.version = 5.0;
         this.injector = injector;
     }
 
@@ -407,6 +408,34 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
         return this.http
             .put<ResponseType>(fullUrl, data, { params, headers })
+            .pipe(
+                retryWhen(request => this.retryHandler(request)),
+                timeout(customTimeout)
+            );
+    }
+
+    protected patch<ResponseType = any>(
+        url: string,
+        data?: any,
+        paramsToAdd = {},
+        customTimeout = 60000
+    ) {
+        data = data || {};
+
+        const headers = this.buildHeader();
+        if (this.requiresWeb(url)) {
+            url = `/web${url}`;
+        }
+
+        let params = new HttpParams();
+        Object.keys(paramsToAdd).forEach(key => {
+            params = params.append(key, paramsToAdd[key]);
+        });
+
+        const fullUrl = `${this.urlBase}${url}`;
+
+        return this.http
+            .patch<ResponseType>(fullUrl, data, { params, headers })
             .pipe(
                 retryWhen(request => this.retryHandler(request)),
                 timeout(customTimeout)
@@ -777,7 +806,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/layouts/', data);
     }
 
-    getLicenseSummaries() {
+    getLicenseSummaries(): Observable<any> {
         const params = {
             _keepDefault: true
         };
@@ -846,5 +875,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     createEvent(params: t.EventParams) {
         return this.post('/api/createEvent', params).toPromise();
+    }
+
+    /** Not Implemented functions **/
+    updateLogLevel(logLevel: unknown): Observable<unknown> {
+        throw new Error('should only be using rest v2 version');
     }
 }

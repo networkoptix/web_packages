@@ -31,7 +31,6 @@ export class CameraManager {
             const response = await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
             const [moduleInfo, servers, serverTimes, cameras] = response;
             this.moduleInfo = moduleInfo;
-            this.system.version = +this.moduleInfo.version.split('.').slice(0, 2).join('.');
             this.servers = servers.sort(
                 paramSortFunc((server: any) => server.name)
             );

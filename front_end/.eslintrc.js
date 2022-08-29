@@ -233,6 +233,7 @@ const typeLintBlacklist = [
     'app/src/services/system-groups-data.service.ts',
     'app/src/services/system-legacy-api.service.ts',
     'app/src/services/system-rest-api.service.ts',
+    'app/src/services/system-rest-api-v2.service.ts',
     'app/src/services/system.service/camera-manager/camera-manager-types.ts',
     'app/src/services/system.service/camera-manager/camera-manager.ts',
     'app/src/services/system.service/server-manager/server-manager.ts',

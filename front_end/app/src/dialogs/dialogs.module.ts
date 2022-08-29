@@ -43,6 +43,7 @@ import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.componen
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
+import { RefreshSessionModalContent } from './refresh-session/refresh-session';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
@@ -113,7 +114,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         CreateSystemGroupModalContent,
         NewFeatureInformationModalContent,
         CloudStorageActivateModalContent,
-        CloudStorageModifyModalContent
+        CloudStorageModifyModalContent,
+        RefreshSessionModalContent
     ],
     providers: [],
     exports: [

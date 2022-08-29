@@ -12,6 +12,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
+import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -107,7 +108,7 @@ export class NxSystem extends System {
     activeSubscription: Subscription;
     show404 = false;
     currentUserEmail: string;
-    mediaserver: NxSystemAPI | NxSystemRestAPI;
+    mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
     systemIdInit: string;
@@ -178,13 +179,14 @@ export class NxSystem extends System {
         systemId?: string,
         serverId?: string,
         userId?: string,
-        useRest?: boolean,
+        version?: number,
     ) {
         super();
 
         this.CONFIG = CONFIG;
         this.LANG = LANG;
-        this.useRest = useRest;
+        this.useRest = Math.floor(version) > 4;
+        this.version = version;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
@@ -222,7 +224,7 @@ export class NxSystem extends System {
         */
         const unauthorizedCallback = this.useRest ? force => this.updateToken(force) : force => this.updateSystemAuth(force);
         if (!this.mediaserver) {
-            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.useRest);
+            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.version);
         }
         // Handling promise to satisfy the linter.
         if (!this.useRest || !(<NxSystemRestAPI> this.mediaserver)?.accessToken) {
@@ -525,7 +527,7 @@ export class NxSystem extends System {
     }
 
     getLicenseSummaries() {
-        return (<NxSystemRestAPI> this.mediaserver)
+        return this.mediaserver
             .getLicenseSummaries()
             .toPromise();
     }
@@ -633,7 +635,6 @@ export class NxSystem extends System {
                         r => {
                             this.attempts = 0;
                             const now = Date.now();
-                            // @ts-expect-error
                             return r.reply.map(i => ({
                                 vmsTime: parseInt(i.vmsTime),
                                 vmsTimeOffset: now - parseInt(i.vmsTime),
@@ -917,17 +918,6 @@ export class NxSystem extends System {
     }
 
     /**
-     * TODO: Refactor to allow for accessing straight from serverManager
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    updateOrGetSystemStorage<_T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
-        if (!updateParams?.serverId) {
-            return this.mediaserver.updateStorages(updateParams, customTimeout);
-        }
-        return this.serverManager.getStorages(updateParams.serverId, useCache, customTimeout);
-    }
-
-    /**
      * Methods and properties below are deprecated.
      *
      * They should instead be accessed from their respective manager classes.
@@ -1092,17 +1082,7 @@ export class NxSystem extends System {
      * TODO: Need to update this method once better license information is available from server with details on license types.
      */
     getLicenseChannels(): Promise<{ total: number; used: number; available: number; }> {
-        return this.serverManager.getLicenses().then(({ licenses, hwids }: any) => {
-            const parsedLicenses = licenses.map(this.serverManager.parseLicense);
-            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                EXPIRATION = EXPIRATION && (EXPIRATION.replace(' ', 'T') + 'Z'); // for Safari compatibility
-                const activeLicense = hwids.includes(HWID) && (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
-                return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
-            }, 0);
-            const used = this.cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled).length; // count all cameras - not just ONLINE ones
-            const available = total - used;
-            return { total, used, available };
-        });
+        return this.serverManager.getLicenseChannels(this.cameraManager.cameras);
     }
 
     /**

@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '@environments/environment';
 import { NxHealthService } from '@pages/health/health.service';
+import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { IConfig } from './nx-config/config-types';
@@ -35,12 +36,12 @@ export class NxSystemAPIService {
         // this.systemConnections = {};
     }
 
-    createConnection<S extends NxSystemAPI | NxSystemRestAPI = NxSystemAPI | NxSystemRestAPI>(
+    createConnection<S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 = NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2>(
         user: string,
         systemId: string,
         serverId: string,
         unauthorizedCallback: (...params: any) => any,
-        useRest = false
+        version = 0
     ): S {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {
@@ -58,26 +59,45 @@ export class NxSystemAPIService {
         if (environment.isLocal && this.localApi && !(user || systemId || serverId)) {
             return this.localApi as S;
         }
+        const useRest = Math.floor(version) > 4;
         if (useRest || environment.isLocal) {
-            const serverApi = new NxSystemRestAPI(
-                this.http,
-                this.CONFIG,
-                this.location,
-                user,
-                systemId,
-                serverId,
-                unauthorizedCallback,
-                this.cacheService,
-                this.cookieService,
-                this.healthService,
-                this.appState,
-                this.injector
-            ) as S;
+            let serverApi;
+            if (version > 5.0) {
+                serverApi = new NxSystemRestAPI2(
+                    this.http,
+                    this.CONFIG,
+                    this.location,
+                    user,
+                    systemId,
+                    serverId,
+                    unauthorizedCallback,
+                    this.cacheService,
+                    this.cookieService,
+                    this.healthService,
+                    this.appState,
+                    this.injector
+                ) as S;
+            } else {
+                serverApi = new NxSystemRestAPI(
+                    this.http,
+                    this.CONFIG,
+                    this.location,
+                    user,
+                    systemId,
+                    serverId,
+                    unauthorizedCallback,
+                    this.cacheService,
+                    this.cookieService,
+                    this.healthService,
+                    this.appState,
+                    this.injector
+                ) as S;
+            }
             if (environment.isLocal) {
                 if (!this.localApi) {
                     this.localApi = serverApi;
                 } else {
-                    (serverApi as NxSystemRestAPI).setVmsToken((this.localApi as NxSystemRestAPI)?.vmsToken);
+                    (serverApi as NxSystemRestAPI)?.setVmsToken((this.localApi as NxSystemRestAPI)?.vmsToken);
                 }
             }
             return serverApi;

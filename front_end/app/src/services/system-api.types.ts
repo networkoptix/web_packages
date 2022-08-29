@@ -178,6 +178,7 @@ export interface ModuleInformationReply {
     cloudSystemId: string,
     customization: string,
     ecDbReadOnly: boolean,
+    hardwareIds?: string[],
     hwPlatform: string,
     id: string,
     localSystemId: string,
@@ -187,6 +188,7 @@ export interface ModuleInformationReply {
         variant: string,
         variantVersion: string
     },
+    osTimeMs?: number,
     port: number,
     protoVersion: number,
     realm?: string,
@@ -195,11 +197,18 @@ export interface ModuleInformationReply {
     serverFlags: string,
     sslAllowed: true,
     status?: string,
+    synchronizedTimeMs?: number,
     systemName: string,
+    timeZoneOffsetMs?: number,
     type: string,
     version: string
 }
 export type ModuleInformation = NormalResponse<ModuleInformationReply>;
+
+export interface HardwareIds {
+    hardwareIds: string[],
+    serverId: string
+}
 
 export interface LogLevelReply {
     EC2_TRAN: string,
@@ -209,6 +218,13 @@ export interface LogLevelReply {
     PERMISSIONS: string
 }
 export interface LogLevel extends NormalResponse<LogLevelReply> {}
+
+export interface ServerTime {
+    osTime: string,
+    serverId: string,
+    timeZoneOffset: string,
+    vmsTime: string,
+}
 
 interface PredefinedRoles {
     isOwner: boolean,

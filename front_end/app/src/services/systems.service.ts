@@ -221,7 +221,9 @@ export class NxSystemsService implements OnDestroy {
             (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
-            system.useRest = parseInt(system.version[0] || '0') > 4;
+            const version = system.version.toString().match(/(\d*\.\d*)\.\d*\.\d*/);
+            system.version = parseFloat(version[1] ?? '0');
+            system.useRest = Math.floor(system.version) > 4;
 
             this.checkMerge(system);
         });

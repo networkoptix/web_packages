@@ -55,15 +55,17 @@ export const currentStorageStateFactory = (
     const storageStats = (stats?.reply?.storages || []).reduce((
         storagesStats, {
             storageId,
+            id,
             isUsedForWriting,
             ...storageStats
         }) => ({
         ...storagesStats,
-        [storageId !== '{00000000-0000-0000-0000-000000000000}'
-            ? cleanId(storageId)
+        [(storageId || id) !== '{00000000-0000-0000-0000-000000000000}'
+            ? cleanId(storageId || id)
             : storageStats.url
         ]: {
-            ...storageStats
+            ...storageStats,
+            isOnline: storageStats?.isOnline || storageStats?.status === 'Online',
         }
     }), {});
 

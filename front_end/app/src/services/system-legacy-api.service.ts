@@ -66,7 +66,7 @@ export class NxSystemAPI {
     authGet: string;
     authPost: string;
     protected authPlay: string;
-
+    readonly version: number;
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
     protected readonly forbiddenMsg = 'Using legacy API calls for owner actions are forbidden.';
     private readonly notImplementedMsg = 'Not implemented in the legacy api.';
@@ -101,6 +101,7 @@ export class NxSystemAPI {
         healthService: NxHealthService,
         appState: NxAppStateService
     ) {
+        this.version = 0;
         this.http = http;
         this.CONFIG = configService;
         this.location = location;
@@ -600,10 +601,6 @@ export class NxSystemAPI {
         return this.get('/api/statistics', { salt: Date.now() });
     }
 
-    getTimeZones() {
-        return this.get('/api/getTimeZones').toPromise();
-    }
-
     /**
         @deprecated
      */
@@ -688,8 +685,8 @@ export class NxSystemAPI {
     /* End of Authentication  */
 
     /* Server settings */
-    public getServerTimes() {
-        return this.get<t.SystemTime>('/ec2/getTimeOfServers', '', {});
+    public getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
+        return this.get<t.NormalResponse<t.ServerTime[]>>('/ec2/getTimeOfServers', '', {});
     }
 
     protected getSystemTime() {
@@ -801,12 +798,6 @@ export class NxSystemAPI {
 
     getCameraHistoryItems() {
         return this.get('/ec2/getCameraHistoryItems');
-    }
-
-    getRecordStats(useCache = false) {
-        return this.get('/api/recStats', undefined, {
-            [useCache ? 'cache-request' : 'reset-cache']: 'true'
-        });
     }
 
     getServerStats(useCache = false) {
@@ -1460,4 +1451,13 @@ export class NxSystemAPI {
      * Alias removeResource which is used for deleting event rules.
      */
     removeEventRule = this.removeResource;
+
+    /** Not Implemented functions **/
+    getLicenseSummaries(): Observable<unknown> {
+        throw new Error('should only be using rest');
+    }
+
+    updateLogLevel(logLevel: unknown): Observable<unknown> {
+        throw new Error('should only be using rest v2 version');
+    }
 }
