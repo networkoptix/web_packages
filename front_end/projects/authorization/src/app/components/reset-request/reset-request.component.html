@@ -42,7 +42,7 @@
                 type="email"
                 id="resetPasswordEmail"
                 name="resetPasswordEmail"
-                class="fs-mask"
+                class="fs-mask form-control"
                 [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) }"
                 [(ngModel)]="resetEmail"
                 [disabled]="resetRequestProcess.processing"
