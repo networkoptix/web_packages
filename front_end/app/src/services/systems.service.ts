@@ -222,7 +222,7 @@ export class NxSystemsService implements OnDestroy {
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
             const version = system.version.toString().match(/(\d*\.\d*)\.\d*\.\d*/);
-            system.version = parseFloat(version[1] ?? '0');
+            system.version = parseFloat(version?.[1] ?? '0');
             system.useRest = Math.floor(system.version) > 4;
 
             this.checkMerge(system);
