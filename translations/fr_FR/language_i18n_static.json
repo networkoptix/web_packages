@@ -184,23 +184,23 @@
             "key": "Clé"
         },
         "fromServer": {
-            "ACTIVE": "Active",
-            "INACTIVE": "Inactive",
-            "Unassigned": "Unassigned",
-            "until": "{size} until {expires}",
-            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
-            "License key is already activated": "License key is already activated",
-            "Maximum number of items is 10000": "Maximum number of items is 10000",
-            "This Cloud license does not exist": "This Cloud license does not exist",
-            "This license is already activated": "This license is already activated",
-            "This license is not activated": "This license is not activated",
-            "This license has already expired": "This license has already expired",
-            "Already has a cloud storage license active": "Already has a cloud storage license active",
-            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
-            "Not Authorized for cloud system": "Not Authorized for cloud system",
-            "This license is not currently activated": "This license is not currently activated",
-            "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
+            "ACTIVE": "Actif",
+            "INACTIVE": "Inactif",
+            "Unassigned": "Non assigné",
+            "until": "{size} jusqu'au {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Cette licence a été désactivée plus d'une fois ET a été réactivée il y a moins de 24 heures",
+            "License key is already activated": "La clé de licence est déjà activée",
+            "Maximum number of items is 10000": "Le nombre maximum d'éléments est de 10000",
+            "This Cloud license does not exist": "Cette licence Cloud n'existe pas",
+            "This license is already activated": "Cette licence est déjà activée",
+            "This license is not activated": "Cette licence n'est pas activée",
+            "This license has already expired": "Cette licence a déjà expiré",
+            "Already has a cloud storage license active": "Vous avez déjà une licence de stockage cloud active",
+            "Cloud System ID does not match credentials used": "L'ID du système Cloud ne correspond pas aux identifiants utilisés",
+            "Not Authorized for cloud system": "Non autorisé pour le système cloud",
+            "This license is not currently activated": "Cette licence n'est pas actuellement activée",
+            "This license has no deactivations remaining": "Cette licence n'a aucune désactivation restante",
+            "Cloud system Id does not match license activation": "L'Id du système cloud ne correspond pas à l'activation de la licence"
         },
         "notUsedWarning": "Le stockage cloud n'est pas utilisé pour l'enregistrement. Allez dans les <a href=\"{serverSettings}\">paramètres des serveurs</a> pour le configurer."
     },
@@ -307,7 +307,7 @@
     },
     "components": {
         "widgets": {
-            "lastUpdated": "Last Updated { date }",
+            "lastUpdated": "Dernière mise à jour { date }",
             "updatingIn": "Updating in { time } seconds"
         }
     },
