@@ -400,6 +400,7 @@ html[data-theme="dark"] {
     --dropdown-item-hover-color : #A5B7C0; //$light10
     --dropdown-item-selected-bg    : #35464F; //dark11;
     --dropdown-item-selected-color : #E1E7EA; //$light4;
+    --dropdown-item-error-color : #C22626; //$red_main;
 
     // part of drop-menu
     --system-tile-icon-offline-color : #AA1E1D; //$red_d1
@@ -470,8 +471,8 @@ html[data-theme="dark"] {
     --card-body-bg   : #121517; //$dark4;
     --card-hover-bg : #263137; //$dark8;
 
-    --card-simple-info-bg           : var(--brand_d3_darker);
-    --card-simple-info-border-color : var(--brand_d3_darker);
+    --card-simple-info-bg           : var(--bluez);
+    --card-simple-info-border-color : var(--bluez);
     --card-simple-info-color        : #E1E7EA; //$light4;
     --card-simple-info-svg-color    : #E1E7EA; //$light4;
 

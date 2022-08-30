@@ -2,6 +2,8 @@
 @use "../../native-theme/_theme_palette.scss" as *;
 
 :root {
+	@include generateVarAndRgb(--bluez-light, $bluez-light);
+	@include generateVarAndRgb(--bluez, $bluez);
 	@include generateVarAndRgb(--blue8, $blue8);
 	@include generateVarAndRgb(--blue9, $blue9);
 	@include generateVarAndRgb(--blue10, $blue10);

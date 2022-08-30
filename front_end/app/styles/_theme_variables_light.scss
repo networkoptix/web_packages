@@ -398,6 +398,7 @@ html {
     --dropdown-item-hover-color : #{$dark9};
     --dropdown-item-selected-bg : #{$light16};
     --dropdown-item-selected-color : #{$light1};
+    --dropdown-item-error-color : #{$error};
 
     // part of drop-menu
     --system-tile-icon-offline-color : #{$red_l2};
@@ -468,10 +469,10 @@ html {
     --card-body-bg : #{$light1};
     --card-hover-bg : #{$light1};
 
-    --card-simple-info-bg           : rgba(var(--brand_core--rgb), .1);
-    --card-simple-info-border-color : rgba(var(--brand_core--rgb), .3);
+    --card-simple-info-bg           : rgba(var(--bluez-light--rgb), .3);
+    --card-simple-info-border-color : rgba(var(--bluez-light--rgb), .1);
     --card-simple-info-color        : #{$dark9};
-    --card-simple-info-svg-color    : var(--brand-core);
+    --card-simple-info-svg-color    : var(--bluez-light);
 
     --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
