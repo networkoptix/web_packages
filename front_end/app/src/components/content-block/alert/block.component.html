@@ -1,13 +1,16 @@
 <div class="card simple-{{ type }}">
     <nx-section [nonPadded]="isNotDefaultType">
         <div
-            class="d-flex row alert-block m-0 py-2 px-3 justify-content-between"
+            class="d-flex row alert-block m-0 justify-content-between"
             [ngClass]="{ 'warning-error-padding': isNotDefaultType }"
         >
-            <div class="d-flex flex-row alert-block-text align-items-center">
+            <div
+                class="d-flex flex-row alert-block-text"
+                [ngClass]="!line2 ? 'align-items-center' : 'align-items-start'"
+            >
                 <div
                     class="d-flex"
-                    [ngClass]="isNotDefaultType ? 'align-items-center h20' : 'align-items-start'"
+                    [ngClass]="!line2 ? 'align-items-center h20' : 'align-items-start'"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -16,7 +19,10 @@
                     ></svg-icon>
                 </div>
                 <div [ngClass]="isNotDefaultType ? 'warning-margin' : 'ml-2'">
-                    <span [innerHtml]="line1"></span><br />
+                    <div
+                        [ngClass]="line2 ? 'mb-2' : ''"
+                        [innerHtml]="line1"
+                    ></div>
                     <span
                         *ngIf="line2"
                         [innerHtml]="line2"

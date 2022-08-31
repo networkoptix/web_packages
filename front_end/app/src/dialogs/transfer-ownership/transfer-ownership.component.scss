@@ -9,26 +9,3 @@
     @include typography.medium16nocolor;
     color: var(--body-text-color); // dark9
 }
-
-.warning-block {
-    border: 1px solid var(--card-simple-warning-border-color);
-    border-radius: 1px;
-    background-color: var(--card-simple-warning-bg);
-    padding: 10px;
-
-    h5 {
-        display: flex;
-        align-items: center;
-        gap: 0.2rem;
-
-        svg path.error {
-           fill: var(--badge-warning-bright-bg)
-        }
-    }
-
-    p {
-        @include typography.medium14nocolor;
-        color: var(--body-text-color);
-        margin-bottom: 0 !important;
-    }
-}

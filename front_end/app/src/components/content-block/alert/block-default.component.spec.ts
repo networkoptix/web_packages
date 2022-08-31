@@ -102,12 +102,12 @@ describe('NxAlertBlockComponent (default)', () => {
         });
 
         it('should set divs', () => {
-            expect(body.className).toContain('d-flex row alert-block m-0 py-2 px-3 justify-content-between');
-            expect(bodyElements.length).toBe(4);
+            expect(body.className).toContain('d-flex row alert-block m-0 justify-content-between');
+            expect(bodyElements.length).toBe(5);
         });
 
         it('should set left section', () => {
-            expect(leftSection.className).toContain('d-flex flex-row alert-block-text align-items-center');
+            expect(leftSection.className).toContain('d-flex flex-row alert-block-text');
         });
 
         it('should set icon', () => {
@@ -118,14 +118,13 @@ describe('NxAlertBlockComponent (default)', () => {
         it('should set text', () => {
             expect(leftSectionText.className).toContain('ml-2');
             expect(leftSectionText.innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
-                .toBe('<span>Settings displayed below are advanced.</span><br><span>Changing them may cause server to work incorrectly.</span>');
+                .toBe('<div ng-reflect-ng-class="mb-2" class="mb-2">Settings displayed below are advanced.</div><span>Changing them may cause server to work incorrectly.</span>');
         });
 
-        it('should set right section', () => {
-            expect(rightSection.className).toContain('d-flex alert-block-button align-items-start');
+        xit('should set right section', () => {
+            expect(rightSection.className).toContain('mb-2');
 
             const rightSectionButton = rightSection.querySelector('button');
-            expect(rightSectionButton.querySelector('svg-icon')).toBeDefined();
             expect(rightSectionButton.querySelector('span').className).toBe('ml-1');
             expect(rightSectionButton.querySelector('span').innerHTML).toBe('Hide Advanced Settings');
         });

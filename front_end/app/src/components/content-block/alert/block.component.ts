@@ -38,7 +38,7 @@ export class NxAlertBlockComponent implements OnInit {
     isNotDefaultType = false;
 
     ngOnInit(): void {
-        this.isNotDefaultType = this.type !== 'default';
+        this.isNotDefaultType = this.type !== 'default' && this.line2 === undefined;
     }
 
     onClick(): void {
