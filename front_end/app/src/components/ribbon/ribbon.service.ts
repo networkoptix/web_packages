@@ -7,17 +7,15 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import type { RibbonAction } from './ribbon.types';
+import type { RibbonAction, RibbonContext } from './ribbon.types';
 
 @Injectable({ providedIn: 'root' })
 export class NxRibbonService {
     LANG: LanguageI18NStaticTypes;
-    context = {
+    context: RibbonContext = {
         visibility: false,
         message: '',
         actions: [],
-        type: '',
-        updateFunction: ''
     };
 
     contextSubject = new BehaviorSubject(this.context);
@@ -31,14 +29,14 @@ export class NxRibbonService {
     }
 
     show(
-        message,
+        message: string,
         actions: RibbonAction[],
-        type?,
-        updateFunction?,
+        type?: string,
+        updateFunction?: () => void,
         systemOnly = false
-    ) {
+    ): void {
         if (
-            message === this.LANG.ribbon.systemOffline?.() &&
+            message === this.LANG.ribbon.systemOffline() &&
             environment.isLocal
         ) {
             return;
@@ -52,11 +50,10 @@ export class NxRibbonService {
         ) {
             return;
         }
-        const msg = (typeof message === 'function') ? message() : message;
 
         this.context = {
             visibility: true,
-            message: msg,
+            message,
             actions,
             type,
             updateFunction
@@ -70,8 +67,8 @@ export class NxRibbonService {
             visibility: false,
             message: '',
             actions: [],
-            type: '',
-            updateFunction: ''
+            type: undefined,
+            updateFunction: undefined
         };
         this.contextSubject.next(this.context);
         this.appStateService.ribbonVisibility = false;

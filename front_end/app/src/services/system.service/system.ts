@@ -451,7 +451,13 @@ export class NxSystem extends System {
                 .catch(error => {
                     if (error?.offline) {
                         this.isOnline = false;
-                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                        this.ribbonService.show(
+                            this.LANG.ribbon.systemOffline(),
+                            [],
+                            'alert',
+                            undefined,
+                            true
+                        );
                         this.isAvailable = false;
                         this.systemInfo = this;
                     }

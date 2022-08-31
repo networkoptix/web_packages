@@ -163,7 +163,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                     const preview = this.plugin.pending || this.plugin.draft;
                                     this.ribbonService.show(
-                                        preview ? this.LANG.ribbon.integration.previewRibbon?.() : this.LANG.ribbon.integration.publishedRibbon?.(),
+                                        preview ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
                                         ribbonActions
                                     );
                                 }

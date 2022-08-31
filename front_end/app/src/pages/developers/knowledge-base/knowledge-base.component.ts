@@ -366,10 +366,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         const ribbonActions = reviewId
             ? this.addReviewActions(reviewId, draftActions)
             : draftActions;
-        this.ribbonService.show(
-            message,
-            ribbonActions
-        );
+        this.ribbonService.show(message, ribbonActions);
     }
 
     private acceptedReviewRedirect = (): void => {
@@ -382,7 +379,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     };
 
-    private addReviewActions(reviewId: any, draftActions: RibbonAction[]) {
+    private addReviewActions(
+        reviewId: number,
+        draftActions: RibbonAction[]
+    ): RibbonAction[] {
         const process = this.processService.createProcess(() => {
             return this.cloudApi.acceptReview(reviewId);
         }, {
@@ -397,16 +397,16 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         ];
     }
 
-    private getReviewActions(process: Process, reviewId: any): RibbonAction[] {
+    private getReviewActions(process: Process, reviewId: number): RibbonAction[] {
         return [
             {
                 type: 'process-button',
-                text: this.LANG.ribbon.integration.accept?.(),
+                text: this.LANG.ribbon.integration.accept(),
                 value: process
             },
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.reject?.(),
+                text: this.LANG.ribbon.integration.reject(),
                 value: `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
                 external: true
             }

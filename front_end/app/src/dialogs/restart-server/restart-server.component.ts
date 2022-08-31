@@ -78,7 +78,7 @@ export class RestartServerModalContent {
                     );
                 if (!haveOnlineServers) {
                     this.ribbonService.show(
-                        this.LANG.ribbon.systemOffline?.(),
+                        this.LANG.ribbon.systemOffline(),
                         [],
                         'alert',
                         undefined,
@@ -160,7 +160,7 @@ export class RestartServerModalContent {
                                 .then(() => {
                                     if (!this.system.isOnline) {
                                         this.ribbonService.show(
-                                            this.LANG.ribbon.systemOffline?.(),
+                                            this.LANG.ribbon.systemOffline(),
                                             [],
                                             'alert',
                                             undefined,

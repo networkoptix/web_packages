@@ -1,6 +1,5 @@
 import {
     Component,
-    OnDestroy,
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
@@ -20,25 +19,13 @@ import type { RibbonAction } from './ribbon.types';
     styleUrls: ['ribbon.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxRibbonComponent implements OnInit, OnDestroy {
+export class NxRibbonComponent implements OnInit {
     CONFIG: IConfig;
-    message: string;
-    actions: RibbonAction[];
-    visibility: boolean;
-    type: string;
-    updateFunction;
-
-    private setupDefaults(): void {
-        this.visibility = false;
-        this.message = '';
-        this.actions = [];
-        this.type = '';
-        this.updateFunction = '';
-    }
-
-    get showRibbon() {
-        return this.visibility;
-    }
+    message: string = '';
+    actions: RibbonAction[] = [];
+    visibility: boolean = false;
+    type?: string;
+    updateFunction?: () => void;
 
     constructor(
         configService: NxConfigService,
@@ -46,21 +33,17 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
         public headerService: NxHeaderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.setupDefaults();
-    }
-
-    ngOnDestroy(): void {
     }
 
     ngOnInit(): void {
         this.ribbonService.contextSubject
             .pipe(untilDestroyed(this))
             .subscribe(context => {
-                this.visibility = context.visibility || false;
-                this.message = context.message || '';
-                this.actions = context.actions || [];
-                this.type = context.type || '';
-                this.updateFunction = context.updateFunction || '';
+                this.visibility = context.visibility;
+                this.message = context.message;
+                this.actions = context.actions;
+                this.type = context.type;
+                this.updateFunction = context.updateFunction;
             });
     }
 }

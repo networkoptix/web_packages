@@ -399,7 +399,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 this.ribbonService.hide();
                             } else {
                                 this.ribbonService.show(
-                                    this.LANG.ribbon.systemOffline?.(),
+                                    this.LANG.ribbon.systemOffline(),
                                     [],
                                     'alert',
                                     undefined,

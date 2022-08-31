@@ -7,7 +7,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxRibbonService } from './ribbon.service';
-import type { RibbonAction } from './ribbon.types';
+import type { RibbonAction, RibbonContext } from './ribbon.types';
 
 describe('NxRibbonService', () => {
     let ribbonService: NxRibbonService;
@@ -59,12 +59,12 @@ describe('NxRibbonService', () => {
             text: 'Go back',
             value: '/admin/cms/asset'
         }];
-        const context = {
+        const context: RibbonContext = {
             visibility: true,
             message: 'Alcohol! Because no great story started with someone eating a salad.',
             actions,
-            type: '',
-            updateFunction: ''
+            type: undefined,
+            updateFunction: undefined
         };
         ribbonService.contextSubject = new BehaviorSubject(context);
 
@@ -81,12 +81,12 @@ describe('NxRibbonService', () => {
     });
 
     it('hide() should emit data to contextSubject', () => {
-        const context = {
+        const context: RibbonContext = {
             visibility: false,
             message: '',
             actions: [],
-            type: '',
-            updateFunction: ''
+            type: undefined,
+            updateFunction: undefined
         };
         ribbonService.contextSubject = new BehaviorSubject(context);
 

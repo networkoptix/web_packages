@@ -612,8 +612,8 @@ export class MergeModalContent {
                     if (this.environment.isLocal) {
                         const template =
                         `<div class="my-1">
-                            <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
-                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake?.()}</div>
+                            <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.LANG.ribbon.beingMerged.to()}</div>
+                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake()}</div>
                         </div>`;
                         this.ribbonService.hide();
                         this.ribbonService.show(template, [], 'alert');

@@ -64,10 +64,10 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     private showRibbon(): void {
         this.ribbonService.show(
-            this.LANG.ribbon.integration.previewRibbon?.(),
+            this.LANG.ribbon.integration.previewRibbon(),
             [{
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText?.(),
+                text: this.LANG.ribbon.integration.backToEditText(),
                 value: this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
             }]
         );

@@ -41,8 +41,6 @@ const typeLintBlacklist = [
     'app/src/components/password-input/password.component.ts',
     'app/src/components/process-button/process-button.component.ts',
     'app/src/components/radio/radio.component.ts',
-    'app/src/components/ribbon/ribbon.component.ts',
-    'app/src/components/ribbon/ribbon.service.ts',
     'app/src/components/summary/summary.component.ts',
     'app/src/components/switch/switch.component.ts',
     'app/src/components/systems-list/list.component.ts',
