@@ -148,7 +148,7 @@ form.form-horizontal {
 .reindex-container {
     p {
         @include typography.regular13nocolor;
-        color : var(--label-color);
+        color : var(--body-text-color);
     }
 
     .tooltip-text {
