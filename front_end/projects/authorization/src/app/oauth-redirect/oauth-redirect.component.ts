@@ -80,7 +80,7 @@ export class NxOAuthRedirectComponent implements OnInit {
         const { client_id, client_type, view_type } = this.initialData || {};
         this.router.navigate(['/'], {
             queryParams: {
-                client_id: client_id || this.deviceService.isMobile ? 'mobile' : 'desktop',
+                client_id: client_id || this.deviceService.isMobile() ? 'mobile' : 'desktop',
                 client_type: client_type || 'loginSystem',
                 redirect_uri: '/redirect-oauth',
                 view_type: view_type || 'desktop',
