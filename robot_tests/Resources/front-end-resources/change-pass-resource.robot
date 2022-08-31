@@ -23,7 +23,7 @@ Discard Changes and Log Out
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element Is Visible    ${LOG OUT BUTTON}
     Click Link    ${LOG OUT BUTTON}
-    Wait until Elements are Visible    ${MODAL DIALOG}    ${DISCARD CHANGES BUTTON}
+    Wait until Elements are Visible    ${MODAL APPLY DIALOG}    ${DISCARD CHANGES BUTTON}
     Click Button    ${DISCARD CHANGES BUTTON}
     Validate Log Out
 

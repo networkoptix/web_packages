@@ -11,7 +11,7 @@
     "PRIVACY POLICY URL FULL"    :    "https://www.networkoptix.com/privacy-policy",
     "SUPPORT URL"                :    "https://support.networkoptix.com",
     "WEBSITE URL"                :    "https://www.networkoptix.com",
-    "RELEASE NOTES URL"	         :	  "https://www.networkoptix.com/all-nx-witness-release-notes/",
+    "RELEASE NOTES URL"	         :	  "https://www.networkoptix.com/all-nx-witness-release-notes",
     "RELEASE NOTES LATEST"       :	  "//*[contains(text(),'%version%')]",
     "ABOUT URL"                  :    "/content/about",
     "KNOWN LIMITATIONS URL"      :    "/content/faq",

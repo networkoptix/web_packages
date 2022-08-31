@@ -18,6 +18,7 @@ ${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 
 ${BACKDROP}                           //ngb-modal-backdrop
 ${MODAL DIALOG}                       //nx-modal-generic-content
+${MODAL APPLY DIALOG}                 //nx-modal-apply-content
 
 ${COMBO TEXT}                         Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이
 ${CYRILLIC TEXT}                      Кенгшщзх

@@ -29,9 +29,9 @@ ${DELETE ACCOUNT PASSWORD INPUT}      ${DELTE ACCOUNT DIALOG}//form[@name="delet
 ${DELETE ACCOUNT PASSWORD LABEL}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/preceding-sibling::label[@for="password" and contains(text(),"${DELETE ACCOUNT PASSWORD LABEL TEXT}")]
 ${DELETE ACCOUNT PASSWORD ERROR}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
 
-${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
-${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
-${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL BUTTON TEXT}')]
+${APPLY CHANGES BUTTON}               ${MODAL APPLY DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
+${DISCARD CHANGES BUTTON}             ${MODAL APPLY DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
+${CANCEL CHANGES BUTTON}              ${MODAL APPLY DIALOG}//button[contains(text(), '${CANCEL BUTTON TEXT}')]
 ${APPLY CHANGES QUESTION}             //h1[contains(text(), '${APPLY CHANGES QUESTION TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
-${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
+${APPLY CHANGES CLOSE BUTTON}         ${MODAL APPLY DIALOG}//button[@class="close"]

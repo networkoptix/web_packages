@@ -443,7 +443,7 @@ Restore Password using API
     [Arguments]    ${email}    ${new password}
     ${resp}=   API Restore Password    ${email}    None    None
     Should Be Equal As Strings    ${resp}    200
-    ${code}=   Get Code From Email    ${email}    restore_password
+    ${code}=   Get Code From API    ${email}    restore_password
     ${code}=   Convert Code    ${code}
     ${resp}=   API Restore Password    ${email}    ${code}   ${new password}
     Should Be Equal As Strings    ${resp}    200

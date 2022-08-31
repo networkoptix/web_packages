@@ -41,7 +41,9 @@ class CloudPortalAPI(object):
         with requests.session() as s:
             s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
+            s.headers.update({'Referer': self.env})
             r = s.post(f'{self.env}/api/account/logout')
+            logger.trace(r.content)
             assert 200 == r.status_code, 'Log out failed.'
             return r.status_code
 
@@ -105,6 +107,7 @@ class CloudPortalAPI(object):
     @keyword
     def set_account_language(self, email, password, new_language='en_US'):
         with CloudSession(self.env, email, password) as s:
+            s.headers.update({"Referer":self.env})
             r = s.post(f'{self.env}/api/utils/language/', json={'language': new_language})
             assert 200 == r.status_code, f"api/utils/language failed: {r.status_code}"
             return r.json()

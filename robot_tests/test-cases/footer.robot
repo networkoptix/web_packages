@@ -71,6 +71,7 @@ Force Tags    threaded
 7. Supported devices leads to the proper page
     [Tags]    Threaded    C57509    cloud    smoke
     Wait Until Element is Visible    ${FOOTER SUPPORTED DEVICES LINK}
+    Sleep    1
     Click Link    ${FOOTER SUPPORTED DEVICES LINK}
     Wait Until Location Is    ${ENV}/ipvd
 
