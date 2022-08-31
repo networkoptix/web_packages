@@ -287,7 +287,7 @@
                     background-color: var(--input-bg);
 
                     &:focus {
-                        border: 1px solid var(--brand-core);
+                        border: 1px solid var(--brand-core) !important;
                     }
                 }
 

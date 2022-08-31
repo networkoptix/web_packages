@@ -136,6 +136,10 @@ input.hide-errors {
                 border-color     : transparent;
                 background-color : transparent;
             }
+            
+            &:focus {
+                border : var(--input-focus-border-color) !important;
+            }
         }
     }
 }

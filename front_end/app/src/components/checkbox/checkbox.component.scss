@@ -150,7 +150,7 @@ nx-checkbox {
             input ~ .tick {
                 svg polygon.box,
                 svg polyline.box {
-                    stroke : $error;
+                    stroke : var(--error-label);
                 }
             }
         }

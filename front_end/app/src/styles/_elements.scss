@@ -53,7 +53,7 @@ svg {
 
 .error-label {
     @include typography.regular13nocolor;
-    color : $error !important;
+    color : var(--error-label) !important;
 }
 
 .disabled-label {

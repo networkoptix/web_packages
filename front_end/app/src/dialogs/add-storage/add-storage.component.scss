@@ -1,6 +1,6 @@
 @use "../../../styles/theme_variables_common" as *;
 
 .login-error {
-    border-color : $error !important;
-    color        : $error !important;
+    border-color : var(--error-label) !important;
+    color        : var(--error-label) !important;
 }

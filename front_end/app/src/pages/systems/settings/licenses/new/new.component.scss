@@ -37,7 +37,7 @@
             }
 
             .offline {
-                background-color : $error;
+                background-color : var(--error-label);
             }
 
             .checking {

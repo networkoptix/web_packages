@@ -62,7 +62,7 @@
         }
         
         &.error-label {
-            color : $error !important;
+            color : var(--error-label) !important;
         }
         
         .async-wrapper, .async-error-wrapper {
@@ -101,10 +101,10 @@
         }
         
         .async-error-wrapper {
-            color : $error !important;
+            color : var(--error-label) !important;
             
             .st0 {
-                fill : $error !important;
+                fill : var(--error-label) !important;
             }
         }
         

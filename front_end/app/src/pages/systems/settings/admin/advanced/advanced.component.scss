@@ -38,7 +38,7 @@
                 }
 
                 .offline {
-                    background-color : theme_vars.$error;
+                    background-color : var(--error-label);
                 }
 
                 .checking {

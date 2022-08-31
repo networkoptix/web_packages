@@ -202,7 +202,7 @@
                 word-break  : break-all;
 
                 &.error {
-                    color : $error;
+                    color : var(--error-label);
                 }
             }
         }

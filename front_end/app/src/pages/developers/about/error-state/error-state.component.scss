@@ -8,13 +8,13 @@
     background: white;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 0 6px 0 rgba($dark1, 0.25), 0 0 14px 0 rgba($error, 0.75);
+    box-shadow: 0 0 6px 0 rgba($dark1, 0.25), 0 0 14px 0 rgba(var(--error-label), 0.75);
     .heading {
         color: $error;
         font-size: 24px;
         padding: 16px;
         align-self: stretch;
-        border-bottom: 4px solid $error;
+        border-bottom: 4px solid var(--error-label);
     }
 }
 
@@ -38,7 +38,7 @@
 
 .error-text {
     font-weight: 100;
-    color: $error;
+    color: var(--error-label);
     font-size: 0.75em;
     padding: 0 24px;
 }

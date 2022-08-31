@@ -98,7 +98,7 @@
             }
 
             .offline {
-                background-color : theme_vars.$error;
+                background-color : var(--error-label);
             }
 
             .checking {
@@ -160,7 +160,7 @@
 
 .help-block {
     @include typography.regular11error;
-    color            : theme_vars.$error;
+    color            : var(--error-label);
     padding          : .25rem 0 .5rem;
     background-color : transparent;
 }

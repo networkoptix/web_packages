@@ -76,8 +76,8 @@
     }
 
     .disclaimer {
-        @include typography.regular12dark9;
-        color: theme_vars.$error !important;
+        @include typography.regular12nocolor;
+        color: var(--error-label) !important;
     }
 
     header {

@@ -50,5 +50,5 @@
 }
 
 .invalid-state {
-    border-color: $error;
+    border-color: var(--error-label);
 }
