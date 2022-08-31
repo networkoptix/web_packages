@@ -8,10 +8,7 @@ TODO: For 21.1 drop TTF, SVG fonts as not needed
 @font-face {
     font-family : 'robotolight';
     src         : local('Roboto Light'), local('Roboto-Light-webfont'),
-    url('./roboto/roboto_light/Roboto-Light-webfont.woff2') format('woff2'),
-    url('./roboto/roboto_light/Roboto-Light-webfont.woff') format('woff'),
-    url('./roboto/roboto_light/Roboto-Light-webfont.ttf') format('truetype'),
-    url('./roboto/roboto_light/Roboto-Light-webfont.svg#robotolight') format('svg');
+    url('./roboto/roboto_light/Roboto-Light-webfont.woff2') format('woff2');
     font-weight : 300 !important;
     font-style  : normal;
     font-display: swap;
@@ -20,10 +17,7 @@ TODO: For 21.1 drop TTF, SVG fonts as not needed
 @font-face {
     font-family : 'robotoregular';
     src: local('Roboto Regular'), local('Roboto-Regular-webfont'),
-    url('./roboto/roboto_regular/Roboto-Regular-webfont.woff2') format('woff2'),
-    url('./roboto/roboto_regular/Roboto-Regular-webfont.woff') format('woff'),
-    url('./roboto/roboto_regular/Roboto-Regular-webfont.ttf') format('truetype'),
-    url('./roboto/roboto_regular/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    url('./roboto/roboto_regular/Roboto-Regular-webfont.woff2') format('woff2');
     font-weight : 400 !important;
     font-style  : normal;
     font-display: swap;
@@ -32,10 +26,7 @@ TODO: For 21.1 drop TTF, SVG fonts as not needed
 @font-face {
     font-family : 'robotomedium';
     src         : local('Roboto Medium'), local('Roboto-Medium-webfont'),
-    url('./roboto/roboto_medium/Roboto-Medium-webfont.woff2') format('woff2'),
-    url('./roboto/roboto_medium/Roboto-Medium-webfont.woff') format('woff'),
-    url('./roboto/roboto_medium/Roboto-Medium-webfont.ttf') format('truetype'),
-    url('./roboto/roboto_medium/Roboto-Medium-webfont.svg#robotomedium') format('svg');
+    url('./roboto/roboto_medium/Roboto-Medium-webfont.woff2') format('woff2');
     font-weight : 500 !important;
     font-style  : normal;
     font-display: swap;
@@ -45,10 +36,7 @@ TODO: For 21.1 drop TTF, SVG fonts as not needed
 @font-face {
     font-family : 'robotobold';
     src         : local('Roboto Bold'), local('Roboto-Bold-webfont'),
-    url('./roboto/roboto_bold/Roboto-Bold-webfont.woff2') format('woff2'),
-    url('./roboto/roboto_bold/Roboto-Bold-webfont.woff') format('woff'),
-    url('./roboto/roboto_bold/Roboto-Bold-webfont.ttf') format('truetype'),
-    url('./roboto/roboto_bold/Roboto-Bold-webfont.svg#robotobold') format('svg');
+    url('./roboto/roboto_bold/Roboto-Bold-webfont.woff2') format('woff2');
     font-weight : 700 !important;
     font-style  : normal;
     font-display: swap;
@@ -57,9 +45,7 @@ TODO: For 21.1 drop TTF, SVG fonts as not needed
 @font-face {
     font-family : 'robotomonoregular';
     src         : local('RobotoMono Regular'), local('RobotoMono-Regular'),
-    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff2') format('woff2'),
-    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff') format('woff'),
-    url('./roboto/roboto_mono_regular/RobotoMono-Regular.ttf') format('truetype');
+    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff2') format('woff2');
     font-weight : 400 !important;
     font-style  : normal;
     font-display: swap;
