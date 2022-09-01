@@ -90,6 +90,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     get canSendTransferRequest(): boolean {
         return this.ownershipTransferEnabled &&
             this.system.userManager.isMine &&
+            this.system.useRest &&
             !this.transferInfo &&
             !!this.system.userManager.nonOwners({ cloud: true }).length;
     }
