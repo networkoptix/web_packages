@@ -211,9 +211,6 @@ export interface FromServer {
     "This license is not currently activated":                                                (params?: Record<string, string | number>) => string;
     "This license has no deactivations remaining":                                            (params?: Record<string, string | number>) => string;
     "Cloud system Id does not match license activation":                                      (params?: Record<string, string | number>) => string;
-    used:                                                                                     (params?: Record<string, string | number>) => string;
-    available:                                                                                (params?: Record<string, string | number>) => string;
-    usedSpace:                                                                                (params?: Record<string, string | number>) => string;
 }
 
 export interface KeyTableFields {

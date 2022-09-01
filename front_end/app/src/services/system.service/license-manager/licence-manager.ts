@@ -3,17 +3,16 @@ import { chunk } from 'lodash-es';
 import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, catchError } from 'rxjs';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
+import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-cloud-api/license-server-api.types';
 import { NxSystemsService } from '@services/systems.service';
-import { Destroyable } from '@utils/Destroyable';
 
-import { LicenseServerAPI } from '../../nx-cloud-api/cloud-services/license-server/license-server-api';
+import { LicenseServerAPI } from '../../nx-cloud-api/license-server-api';
 import { NxSystem } from '../system';
 
 import { mapLicenseKeyInfo, processLicenseKeys } from './license-manager-utils';
 import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo } from './license-manager.types';
 
-export class LicenseManager extends Destroyable {
+export class LicenseManager {
     #systemsService: NxSystemsService;
     #translateService: TranslateService;
 
@@ -31,8 +30,7 @@ export class LicenseManager extends Destroyable {
         filter(licenses => !!licenses),
         map(mapLicenseKeyInfo),
         switchMap(licenses => processLicenseKeys(this.#systemsService, this.translateMessage, licenses, filterState)),
-        shareReplay({ bufferSize: 1, refCount: true }),
-        this.onDestroyed
+        shareReplay({ bufferSize: 1, refCount: true })
     );
 
     /** LicenseManager State */
@@ -65,8 +63,7 @@ export class LicenseManager extends Destroyable {
         map(systems => systems.filter(({ id, isMine }) => isMine && id !== excludeSystemId && !this.userLicenses$.value.find(({ state: { cloudSystemId, licenseState } }) => cloudSystemId === id && licenseState === LicenseState.ACTIVE)).map(({ id }) => id)),
         switchMap(cloudSystemIds => this.licenseServerApi.getStorageActivations({ cloudSystemIds }).pipe(map(storages => ({ storages, cloudSystemIds })))),
         map(({ storages, cloudSystemIds }) => cloudSystemIds.filter(id => !storages.find(({ systemId }) => systemId === id)?.activations?.length)),
-        switchMap(systemIds => this.#systemsService.systemsSubject.pipe(map(systems => systemIds.map(value => ({ name: systems.find(({ id }) => id === value)?.name || value, value }))))),
-        this.onDestroyed
+        switchMap(systemIds => this.#systemsService.systemsSubject.pipe(map(systems => systemIds.map(value => ({ name: systems.find(({ id }) => id === value)?.name || value, value })))))
     );
 
     /**
@@ -77,8 +74,7 @@ export class LicenseManager extends Destroyable {
      */
     public readonly getLicenseTagInfo = (licenseState?: LicenseState): Observable<LicenseTagInfo[]> => this.userKeys$.pipe(
         map(keys => keys.filter(({ state }) => !licenseState || state === licenseState)),
-        map(keys => keys.map(this.#toTagInfo)),
-        this.onDestroyed
+        map(keys => keys.map(this.#toTagInfo))
     );
 
     static normalizeKey = (key: string): string => chunk(key.toUpperCase().replace(/-/g, '').split(''), 4).map(chunk => chunk.join('')).join('-');
@@ -99,8 +95,7 @@ export class LicenseManager extends Destroyable {
 
     public readonly activate = (key: string): Observable<LicenseInfo> => {
         return this.licenseServerApi.activateLicense(this.#generateUpdateParams(key)).pipe(
-            tap(() => this.#updateLicense()),
-            this.onDestroyed
+            tap(() => this.#updateLicense())
         );
     };
 
@@ -109,8 +104,7 @@ export class LicenseManager extends Destroyable {
         return this.licenseServerApi.verify(password).pipe(
             catchError(async () => ({ password: ['Invalid Password'] })),
             switchMap((res: Record<string, unknown>) => res?.password ? Promise.reject(res) : this.licenseServerApi.deactivateLicense(this.#generateUpdateParams(key))),
-            tap(() => this.#updateLicense()),
-            this.onDestroyed
+            tap(() => this.#updateLicense())
         );
     };
 
@@ -118,8 +112,7 @@ export class LicenseManager extends Destroyable {
         const licenseKey = LicenseManager.normalizeKey(key || this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey);
         const sourceCloudSystemId = this.system.id;
         return this.licenseServerApi.changeLicense({ targetCloudSystemId, licenseKey, sourceCloudSystemId }).pipe(
-            tap(() => this.#updateLicense()),
-            this.onDestroyed
+            tap(() => this.#updateLicense())
         );
     };
 
@@ -130,26 +123,22 @@ export class LicenseManager extends Destroyable {
                 this.#generateUpdateParams(originalKey)).pipe(
                 map(() => licenseInfo)
             )),
-            tap(() => this.#updateLicense()),
-            this.onDestroyed
+            tap(() => this.#updateLicense())
         );
     };
 
     constructor(private licenseServerApi: LicenseServerAPI, private system: NxSystem, systemsService: NxSystemsService, translateService: TranslateService) {
-        super();
         this.#systemsService = systemsService;
         this.#translateService = translateService;
 
         this.#updater$.pipe(
             filter(updates => updates.includes('system')),
-            switchMap(() => this.licenseServerApi.getLicenses(this.system.id)),
-            this.onDestroyed
+            switchMap(() => this.licenseServerApi.getLicenses(this.system.id))
         ).subscribe(this.systemLicenses$);
 
         this.#updater$.pipe(
             filter(updates => updates.includes('user')),
-            switchMap(() => this.licenseServerApi.getLicenses()),
-            this.onDestroyed
+            switchMap(() => this.licenseServerApi.getLicenses())
         ).subscribe(this.userLicenses$);
     }
 }

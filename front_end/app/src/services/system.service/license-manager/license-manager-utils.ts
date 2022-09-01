@@ -1,6 +1,6 @@
 import { map, Observable } from 'rxjs';
 
-import { LicenseInfo, LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
+import { LicenseInfo, LicenseState } from '@services/nx-cloud-api/license-server-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { bytesToString } from '@utils/bits-to-string';
 
@@ -38,6 +38,5 @@ export const processLicenseKeys = (systemsService: NxSystemsService, translate: 
             state: licenseState,
             system: licenseState === LicenseState.ACTIVE ? systems.find(({ id }) => id === cloudSystemId)?.name || cloudSystemId : translate('Unassigned'),
             expires: new Date(expirationDate).toLocaleDateString(),
-            key: licenseKey,
-            sizeBytes: +cloudStorageSizeBytes
+            key: licenseKey
         }))));

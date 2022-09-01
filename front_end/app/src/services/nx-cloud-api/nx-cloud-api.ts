@@ -26,9 +26,8 @@ import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
 
-import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
-import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
 import { CustomClientAPI } from './custom-client-api';
+import { LicenseServerAPI } from './license-server-api';
 import * as t from './nx-cloud-api.types';
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
@@ -103,7 +102,6 @@ export class NxCloudApiService {
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
     public licenseServerApiFactory: (licenseServer: string, cloudHost: string) => LicenseServerAPI;
-    public cloudStorageApi: CloudStorageAPI;
 
     constructor(
         private configService: NxConfigService,
@@ -120,7 +118,6 @@ export class NxCloudApiService {
         this.CONFIG = configService.getConfig();
         this.customClient = new CustomClientAPI(this.CONFIG, this.http, this.consoleService);
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
-        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)();
     }
 
     getSubAPI(route: ConsoleSection) {
@@ -512,7 +509,7 @@ export class NxCloudApiService {
                     this.currentAccount = account;
                     return account;
                 },
-                    tap(this.logRocketIdentifyUser))
+                tap(this.logRocketIdentifyUser))
             );
     };
 

@@ -2,10 +2,9 @@ import { map, Observable } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
+import { LicenseState } from '@services/nx-cloud-api/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { Process, ProcessSettings } from '@services/process.service/process';
-import { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { LicenseTagInfo } from '@services/system.service/license-manager/license-manager.types';
 import { pickFrom } from '@utils/general';
@@ -23,7 +22,6 @@ export class BaseCloudStorageActionModalContent {
     actionProcess: Process;
     actionType: CloudStorageActionType;
     licenseManager: LicenseManager;
-    cloudStorageManager: CloudStorageManager;
     protected dialogData: Record<string, unknown>;
     close: () => void;
     targetSystem: DropdownItem<string>;
@@ -140,7 +138,7 @@ export class BaseCloudStorageActionModalContent {
     };
 
     init = (): void => {
-        pickFrom(this.dialogData, ['licenseManager', 'cloudStorageManager'], this);
+        pickFrom(this.dialogData, ['licenseManager'], this);
         this.targetSystems$ = this.licenseManager.getTargetSystems();
         this.licenses$ = this.licenseManager.getLicenseTagInfo(LicenseState.INACTIVE);
         if ([CloudStorageActionType.DELETE, CloudStorageActionType.MOVE].includes(this.actionType)) {

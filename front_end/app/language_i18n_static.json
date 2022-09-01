@@ -200,10 +200,7 @@
             "Not Authorized for cloud system": "Not Authorized for cloud system",
             "This license is not currently activated": "This license is not currently activated",
             "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
-            "used": "{used} of {total} ({percent}%) is used",
-            "available": "Available",
-            "usedSpace": "{usageSpace} ({percentage}%)"
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
         },
         "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },

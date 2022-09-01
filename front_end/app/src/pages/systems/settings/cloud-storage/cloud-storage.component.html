@@ -19,9 +19,7 @@
     </div>
     <div class="default-buttons">
         <button
-            (click)="
-                dialogService.cloudStorageActivate(this.licenseManager, this.cloudStorageManager)
-            "
+            (click)="dialogService.cloudStorageActivate(this.licenseManager)"
             class="btn btn-primary"
             translate
         >
@@ -80,7 +78,7 @@
 <ng-template #usageBlock>
     <div class="usage-info-block">
         <h4>
-            <span *ngIf="(usages$ | async).length; else notUsed">{{ usageMessage$ | async }}</span>
+            <span *ngIf="usages.length; else notUsed">{{ usageMessage }}</span>
         </h4>
         <ng-template #activateNotice>
             <div class="usage-popover">
@@ -95,10 +93,10 @@
         <div
             #usageChart
             class="usage-bar"
-            (mouseenter)="showPopover(activateNotice, usageChart)"
+            (mouseenter)="!usages.length && showPopover(activateNotice, usageChart)"
             (mouseout)="closePopover()"
         >
-            <ng-container *ngFor="let usage of usages$ | async">
+            <ng-container *ngFor="let usage of usages">
                 <ng-template #usageTooltip>
                     <div class="usage-popover">
                         <div
@@ -106,7 +104,7 @@
                             class="legend"
                         ></div>
                         <div class="description">{{ usage.title }}</div>
-                        <div class="size">{{ usage.sizeText }}</div>
+                        <div class="size">{{ usage.size }}</div>
                     </div>
                 </ng-template>
                 <div
@@ -146,7 +144,7 @@
 
 <!-- Main Block-->
 <nx-block
-    *ngIf="licenseManager && cloudStorageManager; else preloader"
+    *ngIf="licenseManager; else preloader"
     [type]="this.type === 'servers' ? 'mt-3' : ''"
 >
     <header class="with-child">
@@ -178,11 +176,7 @@
         </button>
     </header>
     <nx-section
-        *ngIf="
-            (licenseManager?.state$ | async) !== CLOUD_STORAGE_STATES.LOADING &&
-                (cloudStorageManager?.systemStorages$ | async);
-            else preloader
-        "
+        *ngIf="(licenseManager?.state$ | async) !== CLOUD_STORAGE_STATES.LOADING; else preloader"
     >
         <ng-container [ngSwitch]="licenseManager?.state$ | async">
             <ng-container
