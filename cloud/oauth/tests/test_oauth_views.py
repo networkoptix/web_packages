@@ -24,6 +24,7 @@ class TestOauthViews:
         assert response.data['errorText'] == 'Parameters are missing'
 
     # Test helper functions
+    @pytest.mark.skip(reason="Removed signature in develop. Temp fix for hotfix. Ticket is VMS-35545")
     def test_check_signature(self, mocker):
         mock_validate_signature = mocker.patch('api.controllers.cloud_api.System.validate_signature', return_value='validate signature')
         system_id = '00000000-0000-0000-0000-000000000000'
