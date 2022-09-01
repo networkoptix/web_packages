@@ -32,9 +32,8 @@ module.exports = (0, utils_2.createRule)({
                 if (typeAnnotation) {
                     return;
                 }
-                const isInputOrOutput = decorators
-                    ?.some((d) => d.expression.callee.name === 'Input' ||
-                    d.expression.callee.name === 'Output');
+                const isInputOrOutput = decorators?.some((d) => (0, utils_2.decoratorHasCall)(d) && ((0, utils_2.decoratorName)(d) === 'Input' ||
+                    (0, utils_2.decoratorName)(d) === 'Output'));
                 if (isInputOrOutput) {
                     return;
                 }

@@ -6,8 +6,8 @@
 
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import { createRule } from './utils';
-import type { AngularDecorator } from './utils';
+import { createRule, decoratorName, decoratorHasCall } from './utils';
+import type { Decorator } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -38,8 +38,8 @@ export = createRule({
     create(context) {
         return {
             'PropertyDefinition[decorators]'(node: TSESTree.PropertyDefinition) {
-                const isInput = node.decorators.some((d: AngularDecorator) =>
-                    d.expression.callee.name === 'Input'
+                const isInput = node.decorators.some((d: Decorator) =>
+                    decoratorHasCall(d) && decoratorName(d) === 'Input'
                 );
                 if (isInput && !node.typeAnnotation) {
                     const { value } = node;
@@ -74,8 +74,8 @@ export = createRule({
                     return;
                 }
 
-                const isOutput = node.decorators.some((d: AngularDecorator) =>
-                    d.expression.callee.name === 'Output'
+                const isOutput = node.decorators.some((d: Decorator) =>
+                    decoratorHasCall(d) && decoratorName(d) === 'Output'
                 );
                 if (isOutput) {
                     const typeAnnotation = node.typeAnnotation as TypeAnnotation;

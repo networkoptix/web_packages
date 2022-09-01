@@ -11,8 +11,8 @@
 
 import { TSESTree } from '@typescript-eslint/utils';
 
-import { createRule } from './utils';
-import type { AngularDecorator } from './utils';
+import { createRule, decoratorName, decoratorHasCall } from './utils';
+import type { Decorator } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -67,8 +67,9 @@ export = createRule({
 
                 const { decorators } =
                     node.declaration as TSESTree.ClassDeclaration;
-                const isInjectable = decorators?.some((d: AngularDecorator) =>
-                    injectableDecorators.includes(d.expression.callee.name)
+                const isInjectable = decorators?.some((d: Decorator) =>
+                    decoratorHasCall(d) &&
+                    injectableDecorators.includes(decoratorName(d))
                 );
 
                 if (isInjectable) {

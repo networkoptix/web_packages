@@ -17,9 +17,27 @@ export function isUntypedValue(expression: TSESTree.Expression): boolean {
     return isNull || isUndefined || isEmptyArray || isEmptyObject;
 }
 
-/** Type assuming that all decorators have calls (e.g. `Input()`). */
-export type AngularDecorator = TSESTree.Decorator & {
-    expression: TSESTree.CallExpression & {
-        callee: TSESTree.Identifier;
-    };
-};
+export interface DecoratorCall extends TSESTree.Decorator {
+    expression: TSESTree.CallExpression & { callee: TSESTree.Identifier };
+}
+
+export interface DecoratorNoCall extends TSESTree.Decorator {
+    expression: TSESTree.Identifier
+}
+
+/** Type for decorator with or without call */
+export type Decorator = DecoratorCall | DecoratorNoCall;
+
+export function decoratorName(decorator: Decorator): string {
+    return decorator.expression.type === AST_NODE_TYPES.CallExpression
+        ? decorator.expression.callee.name
+        : decorator.expression.name;
+}
+
+// Angular decorators (e.g. Input, Output, Component) should always have
+// calls afaik
+export function decoratorHasCall(
+    decorator: Decorator
+): decorator is DecoratorCall {
+    return decorator.expression.type === AST_NODE_TYPES.CallExpression;
+}

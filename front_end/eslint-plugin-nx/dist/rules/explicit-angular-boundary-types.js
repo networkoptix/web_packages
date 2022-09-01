@@ -17,7 +17,7 @@ module.exports = (0, utils_2.createRule)({
     create(context) {
         return {
             'PropertyDefinition[decorators]'(node) {
-                const isInput = node.decorators.some((d) => d.expression.callee.name === 'Input');
+                const isInput = node.decorators.some((d) => (0, utils_2.decoratorHasCall)(d) && (0, utils_2.decoratorName)(d) === 'Input');
                 if (isInput && !node.typeAnnotation) {
                     const { value } = node;
                     if (value !== null && value.type === utils_1.AST_NODE_TYPES.Literal) {
@@ -49,7 +49,7 @@ module.exports = (0, utils_2.createRule)({
                     }
                     return;
                 }
-                const isOutput = node.decorators.some((d) => d.expression.callee.name === 'Output');
+                const isOutput = node.decorators.some((d) => (0, utils_2.decoratorHasCall)(d) && (0, utils_2.decoratorName)(d) === 'Output');
                 if (isOutput) {
                     const typeAnnotation = node.typeAnnotation;
                     const value = node.value;

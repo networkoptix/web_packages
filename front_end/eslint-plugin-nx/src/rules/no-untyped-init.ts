@@ -10,8 +10,13 @@
 
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import { createRule, isUntypedValue } from './utils';
-import type { AngularDecorator } from './utils';
+import {
+    createRule,
+    isUntypedValue,
+    decoratorName,
+    decoratorHasCall,
+} from './utils';
+import type { Decorator } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -61,11 +66,12 @@ export = createRule({
 
                 /* Inputs and outputs are handled
                 by explicit-angular-boundary-types rule */
-                const isInputOrOutput = decorators
-                    ?.some((d: AngularDecorator) =>
-                        d.expression.callee.name === 'Input' ||
-                        d.expression.callee.name === 'Output'
-                    );
+                const isInputOrOutput = decorators?.some((d: Decorator) =>
+                    decoratorHasCall(d) && (
+                        decoratorName(d) === 'Input' ||
+                        decoratorName(d) === 'Output'
+                    )
+                );
                 if (isInputOrOutput) {
                     return;
                 }

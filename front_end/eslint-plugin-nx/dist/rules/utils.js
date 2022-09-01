@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isUntypedValue = exports.createRule = void 0;
+exports.decoratorHasCall = exports.decoratorName = exports.isUntypedValue = exports.createRule = void 0;
 const utils_1 = require("@typescript-eslint/utils");
 exports.createRule = utils_1.ESLintUtils.RuleCreator.withoutDocs;
 function isUntypedValue(expression) {
@@ -14,3 +14,13 @@ function isUntypedValue(expression) {
     return isNull || isUndefined || isEmptyArray || isEmptyObject;
 }
 exports.isUntypedValue = isUntypedValue;
+function decoratorName(decorator) {
+    return decorator.expression.type === utils_1.AST_NODE_TYPES.CallExpression
+        ? decorator.expression.callee.name
+        : decorator.expression.name;
+}
+exports.decoratorName = decoratorName;
+function decoratorHasCall(decorator) {
+    return decorator.expression.type === utils_1.AST_NODE_TYPES.CallExpression;
+}
+exports.decoratorHasCall = decoratorHasCall;

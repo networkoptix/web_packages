@@ -39,7 +39,8 @@ module.exports = (0, utils_1.createRule)({
                     return;
                 }
                 const { decorators } = node.declaration;
-                const isInjectable = decorators?.some((d) => injectableDecorators.includes(d.expression.callee.name));
+                const isInjectable = decorators?.some((d) => (0, utils_1.decoratorHasCall)(d) &&
+                    injectableDecorators.includes((0, utils_1.decoratorName)(d)));
                 if (isInjectable) {
                     injectableFile = true;
                     nonInjectables.forEach(node => {
