@@ -40,12 +40,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
 
-    public get exportUrl(): string {
-        // return this.selection.exportUrl
-        return this.system
-            ? this.system.getExportUrl(this.selection.exportUrlParams)
-            : '';
-    }
+    export: string;
 
     constructor(
         configService: NxConfigService,
@@ -92,6 +87,25 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
 
     public ngAfterViewInit(): void {
         this.selection.$background = this.self.nativeElement;
+    }
+
+    public exportUrl(): void {
+        let transport = this.selection.transport;
+
+        if (!['mp4', 'mkv'].includes(transport)) {
+            transport = 'mkv';
+        }
+        this.export = this.system
+            ? this.system.getExportUrl(this.selection.exportUrlParams)
+            : '';
+
+        const e = document.createElement('a');
+        const href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(this.export);
+        e.setAttribute('href', href);
+        e.setAttribute('download', `${this.selection.cameraId}.${transport}`);
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
     }
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {

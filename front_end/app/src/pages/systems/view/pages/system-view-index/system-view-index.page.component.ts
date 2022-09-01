@@ -239,9 +239,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             clearTimeout(this.onShowElements);
             clearTimeout(this.onMoveShowElements);
 
-            this.unListenMouseMove();
-            this.unListenTouch();
-            this.unListenTouchMove();
+            this.unListenMouseMove?.();
+            this.unListenTouch?.();
+            this.unListenTouchMove?.();
 
             this.fullscreenMode = false;
             this.showElementsInFSM = true;

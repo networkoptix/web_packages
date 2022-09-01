@@ -211,9 +211,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             clearTimeout(this.onShowElements);
             clearTimeout(this.onMoveShowElements);
 
-            this.unListenMouseMove();
-            this.unListenTouch();
-            this.unListenTouchMove();
+            this.unListenMouseMove?.();
+            this.unListenTouch?.();
+            this.unListenTouchMove?.();
 
             this.showElementsInFSM = true;
         }

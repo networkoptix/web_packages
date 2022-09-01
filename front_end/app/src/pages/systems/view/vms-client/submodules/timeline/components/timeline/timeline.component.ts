@@ -39,7 +39,7 @@ const MOUSE_HIDE_UNTIL_PX = 8;
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
-const CLICK_AND_HOLD_TIMEOUT = 150;
+const CLICK_AND_HOLD_TIMEOUT = 250;
 
 @UntilDestroy()
 @Component({

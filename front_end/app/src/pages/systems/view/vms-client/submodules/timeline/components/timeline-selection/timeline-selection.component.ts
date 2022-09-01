@@ -16,6 +16,7 @@ import {
     TimelineScrollbarRelativeService
 } from '@vms-client/submodules/timeline/services/timeline.scrollbarRelative.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
+import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import type { ms } from '@vms-client/utils/type-aliases';
 import { px } from '@vms-client/utils/type-aliases';
 
@@ -35,6 +36,7 @@ const TIME_FORMAT_STRING = 'HH:MM:ss';
 
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
 const EDGE_SCROLL_STEP = 0.2;
+const CLICK_AND_HOLD_TIMEOUT = 250;
 
 enum EDGE_SCROLLING_DIRECTION {
     RIGHT,
@@ -79,6 +81,8 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     duration: number;
     offset: number;
     _lastMouseMoveEvent: MouseEvent;
+
+    clickAndHoldHandler;
 
     @ViewChild('selectedRange')
     protected selectedRangeView: ElementRef<HTMLDivElement>;
@@ -283,14 +287,42 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         this._updateCss();
     }
 
+    private play(offsetX): void {
+        const time = this.timeline.domOffsetXtoTime(offsetX);
+        this.playback.playArchive(time);
+
+        const edgeWidth: px = 80;
+        const edgeFixWidth: px = 160;
+        const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth);
+        if (offsetX < edgeWidth) {
+            this.timeline.jumpScrollTo(time - offset, true);
+        } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
+            this.timeline.jumpScrollTo(
+                time - this.timeline.visibleRange.duration + offset,
+                true
+            );
+        }
+    }
+
     @HostListener('mousedown', ['$event'])
     public mouseSelectionDownHandler(e: MouseEvent): void {
-        this.selectionMode = true;
-        this.selection.handleBackgroundMouseDown(e);
+        this.clickAndHoldHandler = setTimeout(() => {
+            this.selectionMode = true;
+            this.selection.handleBackgroundMouseDown(e);
+            clearTimeout(this.clickAndHoldHandler);
+        }, CLICK_AND_HOLD_TIMEOUT);
     }
 
     @HostListener('mouseup', ['$event'])
     public mouseSelectionUpHandler(e: MouseEvent): void {
+        if (!this.selectionMode) {
+            this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
+            // short click
+            const offsetX = calcOffsetX(e);
+            this.play(offsetX);
+            return;
+        }
+        this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
         this.selectionMode = false;
         this.hideLeftEar = this.selectionStatus.isActive;
         this.hideRightEar = this.selectionStatus.isActive;

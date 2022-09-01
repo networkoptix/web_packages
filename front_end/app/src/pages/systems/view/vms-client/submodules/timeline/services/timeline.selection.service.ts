@@ -40,7 +40,7 @@ export class TimelineSelectionService {
     ) {
     }
 
-    public get exportUrlParams(): Object {
+    public get exportUrlParams(): {} {
         return {
             transport: this.playback.state.transport,
             cameraId: this.vms.selectedCamera.id,
@@ -59,6 +59,14 @@ export class TimelineSelectionService {
             hoverMode: false,
         }
     );
+
+    public get cameraId() {
+        return this.vms.selectedCamera.id;
+    }
+
+    public get transport() {
+        return this.playback.state.transport;
+    }
 
     public get subject() {
         return this._subject;
