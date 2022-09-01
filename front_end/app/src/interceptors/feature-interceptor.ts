@@ -34,7 +34,8 @@ export class FeatureInterceptor implements HttpInterceptor {
         }).filter(val => !!val);
 
         return next.handle(
-            overrides.length
+            // Prevent feature flag headers from being used with external cloud services. Causes issues in preflight when the header isn't expected.
+            overrides.length && request.url.startsWith('/')
                 ? request.clone({ headers: overrides.reduce((headers, [feature, val]) => headers.set(`FEATURE_${feature.toUpperCase()}`, val), request.headers) })
                 : request
         );

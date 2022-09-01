@@ -2,8 +2,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, switchMap } from 'rxjs';
 
 import { environment } from '@environments/environment';
+import { staticImplements } from '@utils/general';
 
-import { WithFreshSession } from './nx-cloud-api.types';
+import { WithFreshSession } from '../nx-cloud-api.types';
 
 interface BaseRequestOptions {
     headers?: HttpHeaders | {
@@ -19,14 +20,28 @@ interface PostRequestOptions extends BaseRequestOptions {
     body?: unknown;
 }
 
-export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: string) => ApiType;
+export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl?: string, cloudHost?: string) => ApiType;
 
 /**
- * Static methods required for using BaseCloudServiceAPI abstract class.
+ * Static properties methods required for using BaseCloudServiceAPI abstract class.
  */
-export interface CloudServiceAPI {
+interface CloudServiceAPI {
     API_BASE: string
-    createApiFactory: CreateApiFactory
+    createApiFactory: CreateApiFactory,
+}
+
+/**
+ * Decorator to ensure that cloud services extended from the abstract BaseCloudServiceAPI have the correct static properties and methods.
+ */
+export const implementsCloudServiceApi = staticImplements<CloudServiceAPI>();
+
+/**
+ * Decorator to mark method as disabled.
+ */
+export function disabledMethod(target: unknown, name: string, descriptor: PropertyDescriptor): void {
+    descriptor.value = function () {
+        throw new Error('This method is not currently enabled');
+    };
 }
 
 /**
@@ -38,10 +53,10 @@ export interface CloudServiceAPI {
  */
 export abstract class BaseCloudServiceAPI {
     constructor(
-        private serverUrl: string,
+        protected serverUrl: string,
         private apiBase: string,
         public cloudHost: string,
-        private http: HttpClient,
+        protected http: HttpClient,
         private withFreshSession: WithFreshSession
     ) {
         if (this.serverUrl.endsWith('/') && this.apiBase.startsWith('/')) {
@@ -55,13 +70,15 @@ export abstract class BaseCloudServiceAPI {
 
     protected put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.put<T>(url, body, options), this.#processOptionsFactory(options));
 
+    protected delete = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.delete<T>(url, { ...options, body }), this.#processOptionsFactory(options));
+
     #processOptionsFactory = <T extends BaseRequestOptions>(baseOptions?: T) => (accessToken: string): T | BaseRequestOptions => {
         const options = baseOptions || <BaseRequestOptions>{};
         options.headers ||= new HttpHeaders();
 
         const additionalHeaders = {
             Authorization: `Bearer ${accessToken}`,
-            'cloud-host': this.cloudHost || environment.cloudHostDev
+            'cloud-host': this.cloudHost || environment.cloudHostDev || environment.cloudHost || ''
         };
 
         const updateHeading = ([key, value]: [string, string]): void => {

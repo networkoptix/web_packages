@@ -1,5 +1,5 @@
 import { KeyTableFields } from '@app/language_i18n_static_types';
-import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/license-server-api.types';
+import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 
 export enum CLOUD_STORAGE_STATES {
     LOADING = 'loading',
@@ -13,6 +13,8 @@ export interface LicenseKeyInfo extends Pick<LicenseStateInfo, 'expirationDate' 
 
 export type ProcessedLicenseKey = {
     [key in LicenseKeyFields]: string;
+} & {
+    sizeBytes: number
 };
 
 export interface LicenseTagInfo {
