@@ -75,7 +75,7 @@ jsonfield==2.0.2
 jwcrypto==1.0
 kombu==4.6.11
 libsass==0.20.1
-lxml==4.9.1
+lxml==4.6.5
 MarkupSafe==1.1.1
 # IMPORTANT: meilisearch doesn't use semantic versioning while it's pre version 1
 # If the minor version changes there could be breaking changes
