@@ -637,8 +637,13 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async createSystemGroup(): Promise<void> {
-        const config: Partial<DialogConfig> = {};
+    // eslint-disable-next-line camelcase
+    public async createSystemGroup(target_id?: string): Promise<void> {
+        const config: Partial<DialogConfig> = {
+            data: {
+                target_id
+            }
+        };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
         await this.preloadDialogsModule();

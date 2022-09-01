@@ -526,6 +526,10 @@
             "message": "Please log in again.",
             "title": "Your session has expired"
         },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },

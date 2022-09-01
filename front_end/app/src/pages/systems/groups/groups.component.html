@@ -8,6 +8,7 @@
             <button
                 class="btn btn-default mr-2"
                 (click)="newGroupDialog()"
+                [disabled]="(currentIndexes$ | async) === undefined"
                 translate
             >
                 New group

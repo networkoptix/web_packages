@@ -72,6 +72,7 @@ export interface OutgoingData {
     create_group: {
         action: WebSocketAction.CREATE_GROUP;
         name: string;
+        target_id: string | undefined;
     };
     delete_group: {
         action: WebSocketAction.DELETE_GROUP;

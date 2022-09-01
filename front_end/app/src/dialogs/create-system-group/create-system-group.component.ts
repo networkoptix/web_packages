@@ -1,19 +1,14 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-// import { Store } from '@ngrx/store';
-// import { Observable } from 'rxjs';
 
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
-// import { selectGroupState } from '@pages/systems/groups.bak/store/groups/groups.selectors';
-// import { GroupsState } from '@pages/systems/groups.bak/store/groups/groups.state';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
-type GroupNameOption = DropdownItem<string>;
+// type GroupNameOption = DropdownItem<string>;
 
 @Component({
     selector: 'nx-modal-create-system-group-content',
@@ -21,46 +16,37 @@ type GroupNameOption = DropdownItem<string>;
     styleUrls: []
 })
 export class CreateSystemGroupModalContent implements OnInit {
+    LANG: LanguageI18NStaticTypes;
+
     @ViewChild('createSystemGroupForm') form: NgForm;
 
-    // _groups$: Observable<GroupsState> = this.store.select(selectGroupState);
-
     newGroupName: string;
-    groupNames: string[];
+    // groupNames: string[];
     // parentOptions: GroupNameOption[];
-    selectedParent: GroupNameOption;
+    // selectedParent: GroupNameOption;
+
+    target_id: string | undefined;
 
     createSystemGroupProcess: Process;
 
     constructor(
+        language: NxLanguageProviderService,
         private processService: NxProcessService,
         public dialogRef: DialogRef,
         // private store: Store,
-        @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
+        @Inject(DIALOG_DATA) dialogData: {
+            target_id?: string;
+        },
         private groupsService: NxSystemGroupsService,
     ) {
-        // this._groups$.subscribe(groups => {
-        //     const { groupNames } = groups;
-        //     this.parentOptions = [
-        //         { name: 'None (root)', value: null },
-        //         ...Object.entries(groupNames).map(([id, name]) => ({
-        //             name,
-        //             value: id
-        //         })),
-        //     ];
-        //     // Currently selected parent was removed in update
-        //     const selectedRemoved = this.selectedParent &&
-        //         !(this.selectedParent.value in groupNames);
-        //     if (!this.selectedParent || selectedRemoved) {
-        //         this.selectedParent = { name: 'None (root)', value: null };
-        //     }
-        // });
+        this.LANG = language.translations;
+        this.target_id = dialogData.target_id;
     }
 
     ngOnInit(): void {
         this.createSystemGroupProcess = this.processService.createProcess(
             () => {
-                this.groupsService.createGroup(this.newGroupName);
+                this.groupsService.createGroup(this.newGroupName, this.target_id);
                 return Promise.resolve();
             },
             {},

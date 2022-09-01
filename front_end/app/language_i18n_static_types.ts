@@ -54,7 +54,7 @@ export interface LanguageI18NStaticTypes {
     servers:               Servers;
     serverTabTitles:       ServerTabTitles;
     system:                LanguageI18NStaticTypesSystem;
-    systemGroups:          SystemGroups;
+    systemGroups:          LanguageI18NStaticTypesSystemGroups;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
     healthMonitor:         HealthMonitor;
@@ -379,6 +379,7 @@ export interface Dialogs {
     message:           DialogsMessage;
     removeSystem:      RemoveSystem;
     renewAuth:         RemoveSystem;
+    systemGroups:      DialogsSystemGroups;
     transferOwnership: TransferOwnership;
     titles:            DialogsTitles;
     tooltips:          Tooltips;
@@ -584,6 +585,11 @@ export interface RemoveSystem {
     action:  (params?: Record<string, string | number>) => string;
     message: (params?: Record<string, string | number>) => string;
     title:   (params?: Record<string, string | number>) => string;
+}
+
+export interface DialogsSystemGroups {
+    createdInRoot:         (params?: Record<string, string | number>) => string;
+    createdInCurrentGroup: (params?: Record<string, string | number>) => string;
 }
 
 export interface DialogsTitles {
@@ -1218,7 +1224,7 @@ export interface Users {
     localDelete: (params?: Record<string, string | number>) => string;
 }
 
-export interface SystemGroups {
+export interface LanguageI18NStaticTypesSystemGroups {
     root:               (params?: Record<string, string | number>) => string;
     groupCount:         (params?: Record<string, string | number>) => string;
     systemCount:        (params?: Record<string, string | number>) => string;

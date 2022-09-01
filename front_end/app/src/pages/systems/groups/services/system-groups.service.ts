@@ -178,8 +178,8 @@ export class NxSystemGroupsService {
         }
     }
 
-    createGroup(name: string): void {
-        this.send({ action: WebSocketAction.CREATE_GROUP, name });
+    createGroup(name: string, target_id?: string): void {
+        this.send({ action: WebSocketAction.CREATE_GROUP, name, target_id });
     }
 
     deleteGroup(group_id: string): void {

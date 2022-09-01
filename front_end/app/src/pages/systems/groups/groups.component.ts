@@ -41,6 +41,8 @@ export class NxSystemGroupsComponent implements OnInit {
     );
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
 
+    private groupId: string;
+
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
@@ -52,6 +54,7 @@ export class NxSystemGroupsComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
+            this.groupId = params.groupId;
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
                     currentGroupId: params.groupId
@@ -69,7 +72,7 @@ export class NxSystemGroupsComponent implements OnInit {
     }
 
     newGroupDialog(): void {
-        this.dialogsService.createSystemGroup();
+        this.dialogsService.createSystemGroup(this.groupId);
     }
 
     __crash(): void {
