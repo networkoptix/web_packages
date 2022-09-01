@@ -13,6 +13,10 @@
         min-width: 20rem;
 
         border-right: gray 1px solid;
+
+        .buttons {
+            display: flex;
+        }
     }
 
     .cards {

@@ -4,6 +4,11 @@ import type {
     SystemInfo,
 } from '../groups.types';
 
+export interface Connected {
+    action: 'connected';
+    data: Record<string, never>;
+}
+
 // From cloud_portal/systems/server.py ActionEnum
 export enum WebSocketAction {
     // AGGREGATE_SYSTEMS_REQUEST = 'aggregate_systems_request',
@@ -38,7 +43,7 @@ export interface IncomingData {
     }
     update_group: {
         action: WebSocketAction.UPDATE_GROUP;
-        data: unknown;
+        data: never; // TODO
     };
     move_group: {
         action: WebSocketAction.MOVE_GROUP;
@@ -54,13 +59,13 @@ export interface IncomingData {
     };
 }
 
-// TODO: Add error handling
-// interface WebSocketError {
-//     error: number;
-//     msg: string;
-//     // e.g. You can only move systems that you own
-// }
-// Can be returned in place of data
+export interface ErrorData {
+    action: WebSocketAction;
+    data: {
+        error: number;
+        msg: string;
+    };
+}
 
 // Not an actual type, just collecting to avoid exporting each one
 export interface OutgoingData {
@@ -90,3 +95,10 @@ export interface OutgoingData {
     }
     systems: { action: WebSocketAction.SYSTEMS };
 }
+
+export type WebSocketIncoming =
+    Connected |
+    IncomingData[WebSocketAction] |
+    ErrorData;
+
+export type WebSocketOutgoing = OutgoingData[WebSocketAction];

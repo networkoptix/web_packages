@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -22,7 +22,7 @@ import {
     templateUrl: 'groups.component.html',
     styleUrls: ['groups.component.scss']
 })
-export class NxSystemGroupsComponent {
+export class NxSystemGroupsComponent implements OnInit {
     rootGroups$ = this.store.select<GroupItem[] | undefined>(
         selectRootGroupItems
     );
@@ -65,16 +65,15 @@ export class NxSystemGroupsComponent {
     }
 
     moveToRoot(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
-        const dragged = event.item.data;
-
-        if (dragged.type === 'group') {
-            this.groupsService.moveGroup(dragged.id, null);
-        } else if (dragged.type === 'system') {
-            this.groupsService.moveSystem(dragged.id, null);
-        }
+        this.groupsService.onDrop(event.item.data, null);
     }
 
     newGroupDialog(): void {
         this.dialogsService.createSystemGroup();
+    }
+
+    __crash(): void {
+        // @ts-expect-error Deliberately crash the backend for testing
+        this.groupsService.moveGroup(['foo'], ['bar']);
     }
 }

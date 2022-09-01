@@ -39,18 +39,10 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
     onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
         const dragged = event.item.data;
         const droppedOn = event.container.data;
-        if (
-            !event.isPointerOverContainer ||
-            dragged.id === droppedOn.id ||
-            droppedOn.type === 'system'
-        ) {
+        if (!event.isPointerOverContainer) {
             return;
         }
 
-        if (dragged.type === 'group') {
-            this.groupsService.moveGroup(dragged.id, droppedOn.id);
-        } else if (dragged.type === 'system') {
-            this.groupsService.moveSystem(dragged.id, droppedOn.id);
-        }
+        this.groupsService.onDrop(dragged, droppedOn);
     }
 }

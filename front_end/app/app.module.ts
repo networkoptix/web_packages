@@ -17,7 +17,7 @@ import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 // import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, Title } from '@angular/platform-browser';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
@@ -69,6 +69,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         StoreModule.forRoot({ systems: systemsReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,

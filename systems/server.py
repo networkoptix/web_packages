@@ -385,7 +385,7 @@ class GroupView:
             dst = Group.query.get(dst_group_id)
 
             if dst.parent_group_id == src_group_id:
-                return {'msg': 'You cannot add a parent group to it\'s child.', 'error': 403}
+                return {'msg': 'You cannot add a parent group to its child.', 'error': 403}
             if src.owner_account_email != dst.owner_account_email:
                 return {'msg': 'You can only move groups that you own.', 'error': 403}
             root = dst.find_root()

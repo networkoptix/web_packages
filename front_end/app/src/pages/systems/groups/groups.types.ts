@@ -5,7 +5,7 @@ export interface BaseGroupItem {
     id: string;
     name: string;
     owner_account_email: string;
-    parent_group_id: string;
+    parent_group_id: string | null;
     systems: BaseSystemItem[];
     systemsCount: number;
     type: 'group';
@@ -15,7 +15,7 @@ export interface BaseGroupItem {
 export interface BaseSystemItem {
     type: 'system';
     id: string;
-    group_id: string;
+    group_id: string | null;
 }
 
 // Should probably be NxSystemWithUserInfo once that's fixed

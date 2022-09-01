@@ -4,13 +4,17 @@
     cdkDropListGroup
 >
     <div class="sidebar">
-        <button
-            class="btn btn-default mr-2"
-            (click)="newGroupDialog()"
-            translate
-        >
-            New group
-        </button>
+        <div class="buttons">
+            <button
+                class="btn btn-default mr-2"
+                (click)="newGroupDialog()"
+                translate
+            >
+                New group
+            </button>
+            <!-- eslint-disable-next-line nx/template/no-untranslated -->
+            <!-- <button (click)="__crash()">Crash!</button> -->
+        </div>
         <div
             class="group-drop-list"
             cdkDropList

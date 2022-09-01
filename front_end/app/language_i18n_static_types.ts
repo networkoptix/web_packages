@@ -1219,8 +1219,28 @@ export interface Users {
 }
 
 export interface SystemGroups {
-    groupCount:  (params?: Record<string, string | number>) => string;
-    systemCount: (params?: Record<string, string | number>) => string;
+    root:               (params?: Record<string, string | number>) => string;
+    groupCount:         (params?: Record<string, string | number>) => string;
+    systemCount:        (params?: Record<string, string | number>) => string;
+    connectionLost:     (params?: Record<string, string | number>) => string;
+    connectionRestored: (params?: Record<string, string | number>) => string;
+    couldNotReconnect:  (params?: Record<string, string | number>) => string;
+    noConnection:       (params?: Record<string, string | number>) => string;
+    groupAlreadyIn:     (params?: Record<string, string | number>) => string;
+    systemAlreadyIn:    (params?: Record<string, string | number>) => string;
+    addGroupToSelf:     (params?: Record<string, string | number>) => string;
+    errorMsg:           ErrorMsg;
+}
+
+export interface ErrorMsg {
+    "You can only delete groups that you own":                     (params?: Record<string, string | number>) => string;
+    "You can only move systems that you own.":                     (params?: Record<string, string | number>) => string;
+    "You can only move systems into groups that you own.":         (params?: Record<string, string | number>) => string;
+    "You cannot add a group to itself":                            (params?: Record<string, string | number>) => string;
+    "You cannot add a parent group to its child.":                 (params?: Record<string, string | number>) => string;
+    "You can only move groups that you own.":                      (params?: Record<string, string | number>) => string;
+    "Adding src group to dst group would create a cycle in tree.": (params?: Record<string, string | number>) => string;
+    "User does not exist in group":                                (params?: Record<string, string | number>) => string;
 }
 
 export interface SystemStatuses {
