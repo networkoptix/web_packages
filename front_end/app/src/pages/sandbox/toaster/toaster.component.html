@@ -2,7 +2,7 @@
     style="margin-top: 150px"
     class="row"
 >
-    <div class="col-6">
+    <div class="col-9">
         <h4>Toaster</h4>
         <div class="form-group">
             <nx-checkbox
@@ -41,7 +41,7 @@
             </button>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-3">
         <h4>Ribbon</h4>
         <div class="form-group">
             <nx-radio
@@ -50,7 +50,16 @@
                 value="alert"
                 label="Alert"
                 [(ngModel)]="ribbonType"
-                (change)="showRibbon()"
+                (change)="showAlertRibbon()"
+            >
+            </nx-radio>
+            <nx-radio
+                name="ribbon"
+                componentId="ribbon-info"
+                value="info"
+                label="Info"
+                [(ngModel)]="ribbonType"
+                (change)="showInfoRibbon()"
             >
             </nx-radio>
         </div>

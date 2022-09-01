@@ -8,6 +8,7 @@ import { NxRibbonService } from '../../../components/ribbon/ribbon.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
 import { NxConfigService } from '../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxProcessService } from '../../../services/process.service';
 
 @Component({
     selector: 'toaster',
@@ -27,6 +28,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private ribbonService: NxRibbonService,
+        private processService: NxProcessService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -41,7 +43,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     }
 
-    showRibbon():void {
+    showAlertRibbon():void {
         this.ribbonService.hide();
         if (this.ribbonType) {
             this.ribbonService.show(
@@ -50,6 +52,21 @@ export class ToasterComponent implements OnInit, OnDestroy {
                 this.ribbonType,
                 this.refreshHealth
             );
+        }
+    }
+
+    showInfoRibbon():void {
+        this.ribbonService.hide();
+        if (this.ribbonType) {
+            this.ribbonService.show(
+                this.LANG.ribbon.newVersionAvailable.notification(),
+                [{
+                    type: 'process-button',
+                    text: this.LANG.ribbon.newVersionAvailable.installButton(),
+                    value: this.processService.createProcess(() => {
+                        return Promise.resolve();
+                    })
+                }]);
         }
     }
 
