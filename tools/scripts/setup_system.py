@@ -29,7 +29,7 @@ def setup_system(address, port, system_password, connect_to_cloud=False, disable
             }
         }
         s.post(f"{host}/rest/v1/system/setup", json=body)
-        s.delete(f"{host}/res/v1/login/sessions")
+        s.delete(f"{host}/rest/v1/login/sessions")
         logger.info(f"{system_name} has been setup on {host}")
 
         if connect_to_cloud:
