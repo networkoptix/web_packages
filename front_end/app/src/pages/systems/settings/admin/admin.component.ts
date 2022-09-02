@@ -310,25 +310,28 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     initProcesses(): void {
-        this.systemNameProcess = this.processService.createProcess(() => {
-            if (/^\s+$/.test(this.systemName)) {
-                return Promise.resolve();
-            }
-            return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService)
-                .renameSystem(this.system.id, this.systemName.trim())
-                .then(() => {
-                    this.pageService.pageTitle = this.systemName;
-                    return this.system.update();
-                }).catch(() => {
-                    this.toastService.notify(
-                        this.LANG.toastMessage.nameFail().replace(
-                            '{type}',
-                            this.LANG.common.system()
-                        ),
-                        this.CONFIG.toast.warning,
-                    );
-                });
-        });
+        this.systemNameProcess = this.processService.createProcess(
+            () => {
+                if (this.systemName.trim()) {
+                    return;
+                }
+                return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService)
+                    .renameSystem(this.system.id, this.systemName.trim());
+            },
+            { ignoreError: true },
+            () => {
+                this.pageService.pageTitle = this.systemName;
+                this.systemsService.forceUpdateSystems().subscribe();
+            },
+            () => {
+                this.toastService.notify(
+                    this.LANG.toastMessage.nameFail().replace(
+                        '{type}',
+                        this.LANG.common.system()
+                    ),
+                    this.CONFIG.toast.warning,
+                );
+            });
     }
 
     syncMergeAlerts(): void {
