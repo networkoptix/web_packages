@@ -9,7 +9,8 @@ const BYTE_UNITS = [
     'ZB',
     'YB',
 ] as const;
-type Byte = typeof BYTE_UNITS[number];
+
+export type Byte = typeof BYTE_UNITS[number];
 
 const BIT_UNITS = [
     'b',

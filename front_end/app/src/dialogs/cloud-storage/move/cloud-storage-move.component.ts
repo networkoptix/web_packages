@@ -3,7 +3,7 @@ import {
     Renderer2,
     Inject
 } from '@angular/core';
-import { defer } from 'rxjs';
+import { defer, switchMap } from 'rxjs';
 
 import {
     DIALOG_DATA,
@@ -36,7 +36,14 @@ export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalCon
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
-        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.move(this.targetSystem.value, this.license)), this.processConfig, this.showSuccess, this.showErrors);
+        this.actionProcess = this.processService.createProcess(
+            defer(() => this.cloudStorageManager.move(this.targetSystem.value)).pipe(
+                switchMap(() => this.licenseManager.move(this.targetSystem.value, this.license))
+            ),
+            this.processConfig,
+            this.showSuccess,
+            this.showErrors
+        );
     }
 
     close = (): void => this.dialogRef.close();

@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -29,6 +30,7 @@ import { NxSystemsService } from '../systems.service';
 
 import { CameraManager } from './camera-manager/camera-manager';
 import type { ICamera, ITask } from './camera-manager/camera-manager-types';
+import { CloudStorageManager } from './cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from './license-manager/licence-manager';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
@@ -677,6 +679,10 @@ export class NxSystem extends System {
         return this.getLicenseServerApi().pipe(
             map(licenseServerApi => new LicenseManager(licenseServerApi, this, this.systemsService, this.translateService)
             ));
+    }
+
+    public getCloudStorageManager(cloudStorageApi: CloudStorageAPI) {
+        return new CloudStorageManager(cloudStorageApi, this, this.systemsService, this.translateService);
     }
 
     /**

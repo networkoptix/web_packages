@@ -2,8 +2,8 @@ import {
     Component, Input, OnInit, TemplateRef, ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { startCase } from 'lodash';
-import { BehaviorSubject, combineLatest, filter, map, shareReplay, switchMap, take } from 'rxjs';
+import { startCase, isEqual } from 'lodash-es';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { POS_STRATEGY } from '@components/popover/popover-config';
@@ -14,17 +14,13 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { CLOUD_STORAGE_STATES, LicenseKeyFields, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
+import { NxSystem } from '@services/system.service/system';
 import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
-
-// const mockLicenses = [
-//     { size: '100gb', state: 'Active', system: 'Some System', expires: '20 Apr 2023', key: 'abcd1234efgh5678' },
-//     { size: '42gb', state: 'Active', system: 'The Answer', expires: '20 Apr 2023', key: 'abcd1234efg69420' },
-//     { size: 'urMom', state: 'Inactive', system: 'Huge', expires: '20 Apr 2023', key: 'abcd1234efg69420' }
-// ];
 
 @UntilDestroy()
 @Component({
@@ -49,22 +45,26 @@ export class NxCloudStorageComponent implements OnInit {
     sortBy = '';
     serverSettings = '';
     licenseManager: LicenseManager;
+    cloudStorageManager: CloudStorageManager;
 
     #sort$ = new BehaviorSubject<LicenseKeyFields>(null);
     systemLicenses$ = new BehaviorSubject<ProcessedLicenseKey[]>(null);
     userLicenses$ = new BehaviorSubject<ProcessedLicenseKey[]>(null);
 
-    // Mock state
-    cloudStorageNotUsed = true;
+    // Need to figure out how how we'll get this info and also when server storage settings will be updated
+    cloudStorageNotUsed = false;
 
-    // Mock Usage Info
-    usageMessage = '28 GB of 50 GB (56%) is used';
-    usages = [
-        { size: 5, color: 'blue', title: 'Blue usage description' },
-        { size: 12, color: 'green', title: 'Green usage description' },
-        { size: 18, color: 'yellow', title: 'Yellow usage description' },
-        { size: 29, color: 'orange', title: 'Orange usage description' }
-    ];
+    #totalSize$ = this.systemLicenses$.pipe(
+        map(([license]) => license ? license.sizeBytes : 0)
+    );
+
+    usageMessage$ = this.#totalSize$.pipe(
+        switchMap(sizeBytes => this.cloudStorageManager.getUsageMessage(sizeBytes))
+    );
+
+    usages$ = this.#totalSize$.pipe(
+        switchMap(sizeBytes => this.cloudStorageManager.getUsages(sizeBytes))
+    );
 
     sort(column: LicenseKeyFields): void {
         if (this.sortBy === column) {
@@ -77,10 +77,10 @@ export class NxCloudStorageComponent implements OnInit {
         this.#sort$.next(column);
     }
 
-    perform = (actionId: string) => this.dialogService[`cloudStorage${startCase(actionId)}`](this.licenseManager);
+    perform = (actionId: string) => this.dialogService[`cloudStorage${startCase(actionId)}`](this.licenseManager, this.cloudStorageManager);
 
     showPopover = <T>(template: TemplateRef<T>, target: HTMLElement): void => {
-        this.popoverService.open(
+        this.usages$.subscribe(usages => usages.length && this.popoverService.open(
             template,
             target,
             {
@@ -89,7 +89,7 @@ export class NxCloudStorageComponent implements OnInit {
                 positionStrategy: POS_STRATEGY.BOTTOM
             },
             this.viewContainerRef
-        );
+        ));
     };
 
     closePopover = () => this.popoverService.close();
@@ -115,12 +115,19 @@ export class NxCloudStorageComponent implements OnInit {
                 this.serverSettings = `/systems/${system.id}/servers`;
             });
         }
+
         settingsService.systemSubject.pipe(
             filter(system => !!system),
+            tap(this.initCloudStorageManager),
             switchMap(system => system.getLicenseManager()),
+            tap(this.initLicenseManager),
             untilDestroyed(this)
-        ).subscribe(this.initLicenseManager);
+        ).subscribe();
     }
+
+    initCloudStorageManager = (system: NxSystem) => {
+        this.cloudStorageManager = system.getCloudStorageManager(this.cloudApi.cloudStorageApi);
+    };
 
     initLicenseManager = (licenseManager: LicenseManager) => {
         this.licenseManager = licenseManager;
@@ -139,7 +146,11 @@ export class NxCloudStorageComponent implements OnInit {
             shareReplay({ bufferSize: 1, refCount: true }),
             untilDestroyed(this)
         ).subscribe(this.userLicenses$);
-        this.licenseManager.systemKeys$.pipe(untilDestroyed(this)).subscribe(this.systemLicenses$);
+        this.licenseManager.systemKeys$.pipe(
+            untilDestroyed(this)
+        ).subscribe(this.systemLicenses$);
+
+        this.systemLicenses$.pipe(distinctUntilChanged(isEqual), untilDestroyed(this)).subscribe(() => this.cloudStorageManager.updateState(CloudStorageUpdate.SYSTEM));
     };
 
     ngOnInit(): void {
@@ -148,5 +159,10 @@ export class NxCloudStorageComponent implements OnInit {
             this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
             this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
         }
+    }
+
+    ngOnDestroy(): void {
+        this.cloudStorageManager.destroy();
+        this.licenseManager.destroy();
     }
 }
