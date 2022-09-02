@@ -464,7 +464,7 @@
             "serversRestart": "是否重啟此伺服器&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "請先登入%CLOUD_NAME%介面，並將您所有的系統與%CLOUD_NAME%脫離，才能將您的帳號自%CLOUD_NAME%刪除"
         },
         "twoFactor": {
             "action": "登入帳號",
@@ -796,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "有新版本的 %CLOUD_NAME% 可以安裝",
-            "installButton": "Install Now"
+            "installButton": "立即安裝"
         },
         "systemOffline": "系統離線。某些設定可能無法使用。",
         "systemsMerging": "此系統正在合併中。"
