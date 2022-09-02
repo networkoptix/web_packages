@@ -80,6 +80,43 @@
             stroke : var(--timeline-selection-panel-color);
         }
     }
+    
+    .close {
+        position         : relative;
+        width            : auto;
+        cursor           : pointer;
+        display          : block;
+        float            : none;
+        border-radius    : 2px 2px 0 0;
+        background-color : var(--timeline-selection-panel-close-bg);
+        
+        &:hover {
+            opacity: 1;
+            background-color: var(--timeline-selection-panel-close-hover-bg);
+        }
+      
+        &:active {
+            background-color: var(--timeline-selection-panel-close-active-bg);
+        }
+    }
+    
+    .close:before, .close:after {
+        position         : absolute;
+        left             : 50%;
+        top              : 4px;
+        content          : " ";
+        height           : 12px;
+        width            : 2px;
+        background-color : var(--timeline-selection-panel-color);
+    }
+    
+    .close:before {
+        transform : rotate(45deg);
+    }
+    
+    .close:after {
+        transform : rotate(-45deg);
+    }
 }
 
 ::ng-deep .hint-popover {

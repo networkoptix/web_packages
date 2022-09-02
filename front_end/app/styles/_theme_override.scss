@@ -273,15 +273,3 @@ select {
 .overflow-x-auto {
     overflow-x: auto;
 }
-
-.modal-header .close {
-
-    &:before,
-    &:after {
-        content: none;
-    }
-    
-    &:hover {
-        opacity: 0.75 !important;
-    }
-}
