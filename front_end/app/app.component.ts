@@ -5,7 +5,8 @@ import {
     ViewEncapsulation,
     ViewChild,
     ElementRef,
-    ViewContainerRef
+    ViewContainerRef,
+    AfterViewInit
 } from '@angular/core';
 import {
     ActivationEnd,
@@ -76,7 +77,7 @@ require('what-input');
     encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
     // isInIframe: boolean;
@@ -395,5 +396,11 @@ export class AppComponent {
             this.applyService.showDialog().catch(() => {
             });
         }
+    }
+
+    ngAfterViewInit(): void {
+        fromEvent(this.mainContainer.nativeElement, 'scroll').pipe().subscribe(() => {
+            this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
+        });
     }
 }

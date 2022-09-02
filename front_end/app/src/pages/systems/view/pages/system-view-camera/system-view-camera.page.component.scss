@@ -459,12 +459,12 @@ $border-color: var(--light6);
           box-shadow      : 0 2px 0 0 rgba(var(--dark1--rgb), 0.1);
           cursor          : pointer;
           opacity         : 0.8;
-  
+
           svg-icon {
             position : absolute;
             top      : -2px;
             left     : 10px;
-    
+
             svg .st0 {
               transform        : rotate(180deg);
               transform-origin : center;

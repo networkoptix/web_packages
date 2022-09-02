@@ -4,6 +4,7 @@ import {
     OnDestroy,
     ElementRef,
     HostListener, Renderer2,
+    HostBinding,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -46,6 +47,7 @@ import { sidebarLayout } from '../sidebarLayout.cfg';
 })
 @LoggerDecorator('SYSTEM VIEW INDEX PAGE ::', true)
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
+    @HostBinding('class.new-header') newHeader: boolean;
     _log: Function;
     _warn: Function;
     private systemsSubscription: Subscription;
@@ -138,6 +140,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
     }
 
     private setSystemSubscription(): void {
