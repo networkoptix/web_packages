@@ -105,7 +105,7 @@ p {
 
 // REGULAR
 @mixin regular11error {
-    @include font-source($font-family-regular, $font-size-ssm, $red_l2);
+    @include font-source($font-family-regular, $font-size-ssm, $red_main);
 }
 
 @mixin regular11dark9 {

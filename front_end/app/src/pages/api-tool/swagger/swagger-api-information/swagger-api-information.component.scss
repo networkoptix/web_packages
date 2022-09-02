@@ -62,8 +62,8 @@ markdown {
             .removal {
                 span {
                     @extend .symbol-span;
-                    border: .7px solid $red_l2;
-                    background-color: $red_l2;
+                    border: .7px solid $red_main;
+                    background-color: $red_main;
                     &:first-of-type {
                         transform: rotate(-45deg);
                     }

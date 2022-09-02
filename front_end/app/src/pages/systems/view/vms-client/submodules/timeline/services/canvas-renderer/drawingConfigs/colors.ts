@@ -34,7 +34,7 @@ export const colors = {
     red_d6: '#330909',
     red_d7: '#1d0505',
 
-    error: '#f02c2c',
+    error: '#c22626',
 
     dark1: '#000000',
     dark2: '#080707',
