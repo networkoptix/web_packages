@@ -33,6 +33,7 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
 // import { DirectivesModule } from '@directives/directives.module';
@@ -99,6 +100,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         CdkScrollableModule,
         HoverPreloadModule,
         PreLoaderModule,
+        NavFooterModule,
         ResizeModule,
         NgxMaskModule.forRoot()
     ],

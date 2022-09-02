@@ -61,6 +61,7 @@ require('what-input');
             >
                 <ng-template #cookieBanner></ng-template>
                 <router-outlet></router-outlet>
+                <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
             </div>
         </div>
         <ng-container *ngIf="!reauthorizing">
@@ -80,6 +81,7 @@ export class AppComponent {
     browserBlacklist: Record<string, number>;
     // isInIframe: boolean;
     newSystem: boolean;
+    newHeader: boolean = false;
     loading: boolean;
     reauthorizing: boolean;
     headerHeight: number;
@@ -145,6 +147,7 @@ export class AppComponent {
     ) {
         this.CONFIG = configService.getConfig();
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
 
         if (!this.CONFIG.browserNotSupported) {
             if (environment.isLocal || this.appStateService.ready) {

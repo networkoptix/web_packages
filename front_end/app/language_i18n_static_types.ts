@@ -41,6 +41,7 @@ export interface LanguageI18NStaticTypes {
     ipvdDisclaimer:        (params?: Record<string, string | number>) => string;
     menu:                  Menu;
     tableHeaders:          TableHeaders;
+    appFooter:             AppFooter;
     pages:                 Pages;
     pageTitles:            PageTitles;
     pageDescriptions:      PageDescriptions;
@@ -115,6 +116,10 @@ export interface AlertFilters {
     all:     (params?: Record<string, string | number>) => string;
     warning: (params?: Record<string, string | number>) => string;
     error:   (params?: Record<string, string | number>) => string;
+}
+
+export interface AppFooter {
+    copyright: (params?: Record<string, string | number>) => string;
 }
 
 export interface AppHeader {

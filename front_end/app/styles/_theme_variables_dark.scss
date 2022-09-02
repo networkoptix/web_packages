@@ -229,6 +229,11 @@ html[data-theme="dark"] {
    --header-profile-active-color         : #{$light4};
    --header-profile-active-bg            : #{$dark9};
 
+    // Footer
+    --footer-bg                           : #{$dark4};
+    --footer-text-color                   : #{$dark9};
+    --footer-link-color                   : #{$dark15};
+
     // View tab ********************************
     --view-bg                    : #171C1F; //$dark5;
     --view-search-bg             : #171C1F; //$dark5;

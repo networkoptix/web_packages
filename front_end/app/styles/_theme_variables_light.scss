@@ -226,6 +226,11 @@ html {
     --header-profile-active-color         : #{$light4};
     --header-profile-active-bg            : #{$dark9};
 
+    // Footer
+    --footer-bg                           : #{$dark4};
+    --footer-text-color                   : #{$dark9};
+    --footer-link-color                   : #{$dark15};
+
     // View tab ********************************
     --view-bg                    : #{$additional_light2};
     --view-search-bg             : #{$additional_light2};

@@ -26,6 +26,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     copyrightYear: string;
     footerItems: MenuNode[];
     viewFooter: boolean;
+    visible = true;
 
     // options
     @Input() center: boolean;
@@ -38,6 +39,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         private menusService: NxMenusService
     ) {
         this.CONFIG = configService.getConfig();
+        this.visible = !this.CONFIG.featureFlags.newHeader;
     }
 
     ngOnDestroy(): void {}
