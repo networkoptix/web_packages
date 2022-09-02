@@ -21,6 +21,11 @@
             cdkDropList
             (cdkDropListDropped)="moveToRoot($event)"
         >
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'folder.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            ></svg-icon>
             <h3>
                 <a
                     routerLink="/systems/groups/"

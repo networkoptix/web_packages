@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import type { GroupItem, GroupsItem, SystemItem, Crumb } from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
@@ -23,6 +25,7 @@ import {
     styleUrls: ['groups.component.scss']
 })
 export class NxSystemGroupsComponent implements OnInit {
+    CONFIG: IConfig;
     rootGroups$ = this.store.select<GroupItem[] | undefined>(
         selectRootGroupItems
     );
@@ -44,11 +47,13 @@ export class NxSystemGroupsComponent implements OnInit {
     private groupId: string;
 
     constructor(
+        configService : NxConfigService,
         private store: Store,
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
     ) {
+        this.CONFIG = configService.getConfig();
         this.groupsService.connect();
     }
 

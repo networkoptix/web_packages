@@ -558,4 +558,9 @@ html {
 
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
+
+    // System groups
+    --folder-svg: #{$dark12};
+    --opened-triangle-svg: #{$dark12};
+    --closed-triangle-svg: #{$dark12};
 }

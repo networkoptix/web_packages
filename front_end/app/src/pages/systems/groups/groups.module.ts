@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 // import { AngularSvgIconModule } from 'angular-svg-icon';
 import { StoreModule } from '@ngrx/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -19,7 +20,7 @@ import { groupsReducer } from './store/groups.reducer';
 
 @NgModule({
     imports: [
-        // AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot(),
         ComponentsCoreModule,
         DragDropModule,
         RouterModule.forChild([
