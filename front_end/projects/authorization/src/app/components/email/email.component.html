@@ -65,6 +65,7 @@
                 [readonly]="emailProcess.processing"
                 email
                 nxFocusMe
+                [setFocus]="true"
             />
             <div
                 *ngIf="email.invalid && email.dirty && email.touched"
@@ -153,6 +154,7 @@
                 [readonly]="emailProcess.processing"
                 required
                 nxFocusMe
+                [setFocus]="true"
             />
             <ng-container *ngIf="login.invalid && login.dirty && login.touched">
                 <p
