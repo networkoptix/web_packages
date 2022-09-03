@@ -12,7 +12,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PlaybackTransport } from '@view/view.types';
-import { LoggerDecorator } from '@view/vms-client/utils';
 import { VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { generateClickDubleClickPair } from '@vms-client/utils/generateClickDubleClickPair';
@@ -31,11 +30,7 @@ import { PlaybackService } from '../../services/playback.service';
     templateUrl: './player.component.html',
     styleUrls: ['./player.component.scss']
 })
-@LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, AfterViewInit {
-    _log: Function;
-    _warn: Function;
-
     LANG: LanguageI18NStaticTypes;
 
     // Coercing playback state to ArchivePlaybackState
@@ -102,11 +97,11 @@ export class PlayerComponent implements OnInit, AfterViewInit {
             this.transport = s.transport;
         }
 
-        this.errorPlayback = (<ArchivePlaybackState> s).error?.length > 0;
+        this.errorPlayback = (<ArchivePlaybackState>s).error?.length > 0;
         // No translation at this time ... we should re-jigger error messages
-        this.errorPlaybackDescription = (<ArchivePlaybackState> s).error;
+        this.errorPlaybackDescription = (<ArchivePlaybackState>s).error;
 
-        this.errorEncryption = (<ArchivePlaybackState> s).encrypted;
+        this.errorEncryption = (<ArchivePlaybackState>s).encrypted;
         this.showOverlay = !this.errorEncryption && !this.errorPlayback
             ? this.showOverlay
             : false;
@@ -123,7 +118,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         s === 1 means we started playing.
         s > 1 means the player fired a waiting event and we need to move the time back by that much.
          */
-        this._log('on buffering change', s, this.playback.state);
         setTimeout(() => { this.showOverlay = s === 0; }, 0);
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
@@ -139,7 +133,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                         !this.playback.state.started &&
                         !(<ArchivePlaybackState> this.playback.state).paused
                     ) {
-                        this._log('triggering handle started');
                         this.playback.handleStarted();
                     }
                     break;

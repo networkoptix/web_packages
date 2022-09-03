@@ -5,7 +5,7 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
-    selector: 'merge-component',
+    selector: 'nx-merge-component',
     templateUrl: 'merge.component.html',
     // styleUrls: ['merge.component.scss']
 })

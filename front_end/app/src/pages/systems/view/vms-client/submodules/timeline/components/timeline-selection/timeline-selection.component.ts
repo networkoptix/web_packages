@@ -82,7 +82,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     offset: number;
     _lastMouseMoveEvent: MouseEvent;
 
-    clickAndHoldHandler;
+    private clickAndHoldHandler;
 
     @ViewChild('selectedRange')
     protected selectedRangeView: ElementRef<HTMLDivElement>;

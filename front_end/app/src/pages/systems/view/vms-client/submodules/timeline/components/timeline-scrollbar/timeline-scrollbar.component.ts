@@ -11,7 +11,6 @@ import { animationFrameScheduler, interval } from 'rxjs';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { LoggerDecorator } from '@view/vms-client/utils';
 import {
     PlaybackState,
     PLAYBACK_MODE
@@ -40,11 +39,7 @@ import type {
     templateUrl: './timeline-scrollbar.component.html',
     styleUrls: ['./timeline-scrollbar.component.scss']
 })
-@LoggerDecorator('TIMELINE SCROLLBAR ::', true)
 export class TimelineScrollbarComponent implements AfterViewInit {
-    _log: Function;
-    _warn: Function;
-
     CONFIG: IConfig;
 
     @ViewChild('background') backgroundView: ElementRef<HTMLDivElement>;

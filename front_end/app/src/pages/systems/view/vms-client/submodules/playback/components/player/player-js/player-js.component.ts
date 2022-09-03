@@ -13,7 +13,6 @@ import type videojs from 'video.js';
 
 import { NgChanges } from '@utils/ng-changes';
 import {
-    LoggerDecorator,
     BASE64_SINGLE_TRANSPARENT_PIXEL
 } from '@vms-client/utils';
 
@@ -25,7 +24,6 @@ import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
     styleUrls: ['player-js.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-@LoggerDecorator('JS PLAYER ::', true)
 export class PlayerJsComponent implements OnDestroy, OnChanges {
     _log: Function;
     _warn: Function;
@@ -97,7 +95,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('ended', () => {
-            this._log('video ended');
             this.videoEnded.emit(true);
         });
 
@@ -161,7 +158,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                 if (this.hasPlayed && !isPaused) {
                     this.player.pause();
                 }
-                this._log('react on stopped');
                 this.bufferingChange.emit(1);
                 break;
             case PLAYBACK_MODE.LIVE:
@@ -174,7 +170,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                 if (this.mode === PLAYBACK_MODE.ARCHIVE && this.paused) {
                     if (this.hasPlayed && !isPaused) {
                         this.player.pause();
-                        this._log('react on pause');
                         this.bufferingChange.emit(1);
                     }
                 }
@@ -185,8 +180,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     }
 
     protected _startPlayback(): void {
-        this._log(`starting playback source: ${this.sourceUrl}\t poster: ${this.posterUrl}`);
-
         const sourceUrl = this.sourceUrl || null;
         let posterUrl = BASE64_SINGLE_TRANSPARENT_PIXEL;
 
@@ -195,12 +188,10 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
 
         if (!sourceUrl) {
-            this._warn('ordered start playback request with empty sourceUrl');
             return;
         }
 
         if (!['m3u8', 'webm'].some(transport => sourceUrl.includes(transport))) {
-            this._warn('wrong source format', sourceUrl);
             return;
         }
 
@@ -208,14 +199,10 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         if (sourceUrl.includes('m3u8')) {
             source.type = 'application/x-mpegURL';
         }
-        this._log('correct source format', sourceUrl);
         if ([1, 2].includes(this.mode)) {
-            this._log('setting source (1-ARCHIVE, 2-LIVE)', this.mode);
             this.bufferingChange.emit(0);
             this.player.src(source);
             this.player.poster(posterUrl);
-        } else {
-            this._warn('playback requested in wrong mode');
         }
     }
 }

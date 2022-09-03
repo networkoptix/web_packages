@@ -3501,7 +3501,7 @@
             "path": "cloud_portal/front_end/node_modules/@mark.probst/unicode-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/@mark.probst/unicode-properties/readme.md"
         },
-        "@ngneat/until-destroy@9.2.1": {
+        "@ngneat/until-destroy@9.2.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ngneat/until-destroy",
             "path": "cloud_portal/front_end/node_modules/@ngneat/until-destroy",

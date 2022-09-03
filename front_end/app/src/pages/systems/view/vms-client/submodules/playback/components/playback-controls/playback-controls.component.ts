@@ -5,7 +5,6 @@ import { distinctUntilChanged } from 'rxjs/operators';
 
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { LoggerDecorator } from '@view/vms-client/utils';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
@@ -19,11 +18,7 @@ type BtnClassesEnum = 'play' | 'pause';
     templateUrl: './playback-controls.component.html',
     styleUrls: ['./playback-controls.component.scss']
 })
-@LoggerDecorator('PLAYBACK CONTROLS ::', true)
 export class PlaybackControlsComponent implements OnInit {
-    _log: Function;
-    _warn: Function;
-
     @Input() enabled: boolean;
 
     CONFIG: IConfig;
@@ -37,7 +32,6 @@ export class PlaybackControlsComponent implements OnInit {
         if (!this.enabled) {
             return;
         }
-        this._log('handle click');
         switch (this.btnClass) {
             case 'pause':
                 this.togglePause() || this.stop();
@@ -123,7 +117,6 @@ export class PlaybackControlsComponent implements OnInit {
         if (!this.canStop) {
             return false;
         }
-        this._log('playback.stop');
         this.playback.stop();
         return true;
     }
@@ -133,17 +126,14 @@ export class PlaybackControlsComponent implements OnInit {
             return false;
         }
         this.selection.reset();
-        this._log('playback.pause');
         this.playback.pause();
         return true;
     }
 
     protected unpause() {
-        this._log('upnause', this.playback.state);
         switch (this.playback.state.mode) {
             case PLAYBACK_MODE.ARCHIVE:
                 if (this.canUnpause) {
-                    this._log('unpause -> archive unpause');
                     this.playback.unpause();
                     return true;
                 } else {
@@ -152,7 +142,6 @@ export class PlaybackControlsComponent implements OnInit {
             case PLAYBACK_MODE.STOPPED:
             case PLAYBACK_MODE.LIVE:
                 if (this.playback.canPlayLive || this.playback.livePaused) {
-                    this._log('unpause -> play Live');
                     this.playLive();
                     this.playback.livePaused = false;
                     return true;

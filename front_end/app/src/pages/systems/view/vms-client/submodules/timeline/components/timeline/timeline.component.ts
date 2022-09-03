@@ -98,7 +98,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngOnInit(): void {
         this.timeline.subject
-            .pipe(takeUntil(this.unsub$))
+            .pipe(untilDestroyed(this))
             .subscribe(() => this._onTimelineStatusChange);
 
         this._animationFrameRequestHandler =

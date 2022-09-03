@@ -1,13 +1,13 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
 
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { assertNever } from '@vms-client/utils';
 import { ms, percentage } from '@vms-client/utils/type-aliases';
 
+import { assertNever } from '../../../utils';
 import {
     PLAYBACK_MODE,
     PlaybackState,
@@ -22,23 +22,6 @@ import {
     providedIn: 'root'
 })
 export class PlaybackService {
-    protected _logPrefix: string = 'PLAYBACK_SERVICE ::';
-    protected _logDisable: boolean = true;
-
-    protected _log(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.log.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
-    protected _warn(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.warn.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
     protected extractDimensions(): number[] {
         let { quality, transport } = this._state;
 
@@ -84,7 +67,7 @@ export class PlaybackService {
         this.handleAnimationFrame();
     }
 
-    protected _subject = new BehaviorSubject<PlaybackState>(
+    public _subject = new BehaviorSubject<PlaybackState>(
         createInitialStoppedState()
     );
 
@@ -152,12 +135,7 @@ export class PlaybackService {
             this._state.transport,
             this.vms.selectedCamera.getPosterUrl(undefined, width, height)
         );
-        this._log(
-            'started live',
-            this._state.quality,
-            this._state.currentTime,
-            this._state.sourceUrl
-        );
+
         this._emit();
     }
 
@@ -205,14 +183,7 @@ export class PlaybackService {
             )
         );
         this._state.paused = paused;
-        this._log(
-            'archive playback initiated',
-            t,
-            paused,
-            this._state.quality,
-            this._state.currentTime,
-            this._state.sourceUrl
-        );
+
         this._emit();
     }
 
@@ -227,7 +198,6 @@ export class PlaybackService {
     }
 
     public stop(withError: string = ''): void {
-        this._log('PLAYBACK.STOP()', withError);
         this._state = createInitialStoppedState(
             this._state.quality,
             this._state.transport
@@ -239,17 +209,14 @@ export class PlaybackService {
     public pause(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this._warn('PAUSE request while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
                 if (
                     this.vms.selectedCamera.isRecording ||
                     this.vms.selectedCamera.hasArchive
                 ) {
-                    this._log('camera is recording, transition to archive playback');
                     this.playArchive(Date.now(), true);
                 } else {
-                    this._log('camera is not recording, playback stop');
                     this.stop();
                 }
                 break;
@@ -257,8 +224,6 @@ export class PlaybackService {
                 if (!this._state.paused) {
                     this._state.paused = true;
                     this._emit();
-                } else {
-                    this._warn('PAUSE request while already paused');
                 }
                 break;
             default:
@@ -269,19 +234,14 @@ export class PlaybackService {
     public unpause(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this._warn('UNPAUSE request while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                this._warn('UNPAUSE request while playback mode is LIVE');
                 break;
             case PLAYBACK_MODE.ARCHIVE:
                 if (this._state.paused) {
                     // this._state.paused = false
                     // this._emit()
-                    this._log('UNPAUSE archive normal attempt');
                     this.playArchive(this._state.currentTime);
-                } else {
-                    this._warn('UNPAUSE request while already unpaused');
                 }
                 break;
             default:
@@ -292,7 +252,6 @@ export class PlaybackService {
     public handleStarted(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this._warn('playback STARTED while playback mode is STOPPED'); // ; this is probably LIVE')
                 // this._state = createInitialLiveState(
                 //   this.vms.selectedCamera.getLiveVideoUrl(this._state.transport, this._state.quality),
                 //   this._state.quality,
@@ -339,7 +298,6 @@ export class PlaybackService {
                 this._jumpOverTheGapIfNeeded();
 
                 if (this._state.started && !this._state.paused) {
-                    // this._log('started', diff, this._state.currentTime)
                     this._state.currentTime += diff;
 
                     if (!this.isBeyondVisibleRange) {
@@ -356,8 +314,6 @@ export class PlaybackService {
                     }
 
                     this._emit();
-                } else {
-                    // this._log('not started')
                 }
         }
 
@@ -395,10 +351,8 @@ export class PlaybackService {
     public handlePaused(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this._warn('playback pause while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                this._warn('playback pause while playback mode is LIVE');
                 break;
             case PLAYBACK_MODE.ARCHIVE:
                 this._state.paused = true;
@@ -412,10 +366,8 @@ export class PlaybackService {
     public handleUnpaused(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this._warn('playback unpause while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                this._warn('playback unpause while playback mode is LIVE');
                 break;
             case PLAYBACK_MODE.ARCHIVE:
                 this._state.paused = true;
@@ -479,31 +431,14 @@ export class PlaybackService {
                 );
                 if (nextChunk) {
                     const wasVisible = !this.isBeyondVisibleRange;
-
-                    const was = this._state.currentTime;
                     const nextChunkStart = nextChunk.start;
-                    const diff = nextChunkStart -
-                        (this._state).currentTime;
+                    const diff = nextChunkStart - (this._state).currentTime;
                     this._state.currentTime = nextChunkStart;
                     this._state.startTime += diff;
-                    this._log(
-                        'jump',
-                        diff,
-                        'was',
-                        was,
-                        'diff',
-                        diff,
-                        new Date(diff + this.timeline.visibleRange.start)
-                    );
 
                     // TODO: request scroll jump animation
                     // this.timeline.jumpScrollTo(this._state.currentTime)
                     if (wasVisible) {
-                        this._log(
-                            'jumbScroll',
-                            diff,
-                            diff + this.timeline.visibleRange.start
-                        );
                         this.timeline.jumpScrollTo(
                             diff + this.timeline.visibleRange.start,
                             false
@@ -550,7 +485,6 @@ export class PlaybackService {
         if (this._state.quality === q) {
             return;
         }
-        this._log('changeQuality', this._state.quality, '->', q);
         this._state.quality = q;
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
@@ -571,16 +505,12 @@ export class PlaybackService {
 
     public save(): void {
         this._prevState = { ...this.state };
-        this._log('PLAYBACK STATE SAVED', { ...this.state });
     }
 
     public restore(hasArchive = false): void {
-        this._log('PLAYBACK SAVE RESTORE', hasArchive, { ...this._prevState });
         if (hasArchive && this._prevState.mode === PLAYBACK_MODE.ARCHIVE) {
-            this._log('trying to start archive from the same place');
             this.playArchive(this._prevState.currentTime, this._prevState.paused);
         } else {
-            this._log('trying to play live');
             this.playLive();
         }
     }

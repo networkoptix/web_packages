@@ -25,7 +25,6 @@ import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datat
 import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { LoggerDecorator } from '@vms-client/utils';
 import type { ms } from '@vms-client/utils/type-aliases';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
@@ -45,17 +44,11 @@ import { sidebarLayout } from '../sidebarLayout.cfg';
     templateUrl: 'system-view-index.page.component.html',
     styleUrls: ['system-view-index.page.component.scss']
 })
-@LoggerDecorator('SYSTEM VIEW INDEX PAGE ::', true)
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
-    _log: Function;
-    _warn: Function;
     private systemsSubscription: Subscription;
 
-    protected _state: VmsState;
-    protected _vmsStateSubscription: Subscription;
-    protected _routerParamsSubscription: Subscription;
-    protected _uxStateSubscription: Subscription;
+    private _state: VmsState;
 
     public systemId: string;
     public system: NxSystem;
@@ -92,7 +85,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             : [];
     }
 
-    protected _windowWidth = 1024; // should be larger than the threshold
+    private _windowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
     public onResize(event): void {
@@ -107,11 +100,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this._windowWidth = newWidth;
     }
 
-    protected _handleMovingFromWideInterfaceToNarrow(): void {
+    private _handleMovingFromWideInterfaceToNarrow(): void {
         this.ux.isSidebarShown = false;
     }
 
-    protected _handleMovingFromNarrowInterfaceToWide(): void {
+    private _handleMovingFromNarrowInterfaceToWide(): void {
         this.ux.isSidebarShown = true;
     }
 
@@ -120,23 +113,20 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         languageService: NxLanguageProviderService,
         private self: ElementRef,
         private renderer: Renderer2,
-        protected router: Router,
-        protected route: ActivatedRoute,
-        protected accountService: NxAccountService,
-        protected systemService: NxSystemService,
-        protected systemsService: NxSystemsService,
-        protected vms: VideoManagementSystemService,
-        protected timeline: TimelineService,
-        protected ux: WebClientUxService,
+        private router: Router,
+        private route: ActivatedRoute,
+        private accountService: NxAccountService,
+        private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
+        private vms: VideoManagementSystemService,
+        private timeline: TimelineService,
+        private ux: WebClientUxService,
         private deviceService: DeviceDetectorService,
         private ribbonService: NxRibbonService,
         private settingsService: NxSettingsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
-        this._onRouteChange = this._onRouteChange.bind(this);
-        this._onUxStateChange = this._onUxStateChange.bind(this);
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
@@ -155,7 +145,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 }
                 setTimeout(() => {
                     if (!this.system) {
-                        this._log('systemsService -> initSystem', [...systems]);
                         this._initSystem();
                     }
                 });
@@ -164,15 +153,25 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.vms.reset();
-        this._vmsStateSubscription = this.vms.subject
+
+        this.vms.subject
             .pipe(untilDestroyed(this))
-            .subscribe(this._onVmsSubjectChange);
-        this._routerParamsSubscription = this.route.params
+            .subscribe((s: VmsState) => {
+                this._onVmsSubjectChange(s);
+            });
+
+        this.route.params
             .pipe(untilDestroyed(this))
-            .subscribe(this._onRouteChange);
-        this._uxStateSubscription = this.ux.subject
+            .subscribe(s => {
+                this._onRouteChange(s);
+            });
+
+        this.ux.subject
             .pipe(untilDestroyed(this))
-            .subscribe(this._onUxStateChange);
+            .subscribe((s: WebClientUxState) => {
+                this._onUxStateChange(s);
+            });
+
         this.onResize({ target: { innerWidth: window.innerWidth } });
 
         // Handles the case where you are on the view tab and get redirected back to /view
@@ -207,13 +206,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     private unListenTouch: () => void;
     private unListenTouchMove: () => void;
 
-    protected _onUxStateChange(s: WebClientUxState): void {
+    private _onUxStateChange(s: WebClientUxState): void {
         if (s.isSidebarShown) {
             this.$self.classList.add('sidebarShown');
         } else {
             this.$self.classList.remove('sidebarShown');
         }
-        // this._log('ux state change sidebar visibility', s.isSidebarShown)
+
         this.isSidebarShown = s.isSidebarShown;
         setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
 
@@ -266,12 +265,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected _onVmsSubjectChange(s: VmsState): void {
+    private _onVmsSubjectChange(s: VmsState): void {
         this._state = s;
     }
 
-    protected _setInitializationState(initialized, initializedWithError): void {
-        // this._log('_setInitializationState', initialized, initializedWithError)
+    private _setInitializationState(initialized, initializedWithError): void {
         this.initialized = initialized;
         this.$self.classList[initialized ? 'add' : 'remove']('initialized');
         this.initializedWithError = initializedWithError;
@@ -280,7 +278,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         ]('initialization-error');
     }
 
-    protected _onRouteChange(params): void {
+    private _onRouteChange(params): void {
         // cancel pool for the previous system
         this.cancelPoll$.next('cancel');
         this.systemId = params.systemId || null;
@@ -293,14 +291,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.setSystemSubscription();
     }
 
-    protected _initSystem() {
-        this._log('initSystem entered');
+    private _initSystem() {
         this.vms.reset();
 
         const createSystem = () => {
             return this.accountService.get().then(account => {
                 if (!account) {
-                    this._warn('accountService returned no account');
                     return Promise.reject();
                 }
 
@@ -311,7 +307,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         account.email
                     );
                     this.settingsService.system = this.system;
-                    this._log('local system created', this.system);
                     return Promise.resolve();
                 }
 
@@ -334,7 +329,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
-            this._log(`system ${this.system.id} view initialized`, this.hasCameras);
             this._setInitializationState(true, !this.system.isOnline);
             if (!this.route.snapshot.children.length) {
                 this._tryToRedirectToCamera();
@@ -500,16 +494,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     firstLoad.next(true);
                 });
         }).catch(e => {
-            this._warn(
-                `system ${this.system?.id || this.systemId} view initialization failed`,
-                e
-            );
             processingMediaServers = false;
             setTimeout(() => this._setInitializationState(true, true));
         });
     }
 
-    protected _tryToRedirectToCamera(): void {
+    private _tryToRedirectToCamera(): void {
         const cid = this.vms.getLastAccessedCameraId();
         if (cid) {
             this.router.navigate([cid], {
