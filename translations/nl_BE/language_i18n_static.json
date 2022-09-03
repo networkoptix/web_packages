@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
-            "installButton": "Refresh to Update"
+            "installButton": "Vernieuwen om te updaten"
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."
