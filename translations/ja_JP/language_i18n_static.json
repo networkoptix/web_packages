@@ -200,7 +200,10 @@
             "Not Authorized for cloud system": "クラウドシステムで認証されていません",
             "This license is not currently activated": "このライセンスは現在有効化されていません",
             "This license has no deactivations remaining": "このライセンスは無効化回数上限に達しています",
-            "Cloud system Id does not match license activation": "クラウドシステムIDがライセンスの有効化と一致しません"
+            "Cloud system Id does not match license activation": "クラウドシステムIDがライセンスの有効化と一致しません",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "クラウドストレージは録画に使用されていません。<a href=\"{serverSettings}\">サーバー設定</a>に移動して設定してください。"
     },
@@ -527,8 +530,8 @@
             "title": "セッションの期限が切れました"
         },
         "systemGroups": {
-            "createdInRoot": "New group will be created in root",
-            "createdInCurrentGroup": "New group will be created in current group"
+            "createdInRoot": "ルートに新しいグループが作成されます",
+            "createdInCurrentGroup": "現在のグループに新しいグループが作成されます"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } はシステム内のユーザーではありません"
@@ -783,6 +786,9 @@
         "server": "サーバー",
         "alert": "アラート"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
     "pages": {
         "developers": {
             "menuNodeContainsErrors": "メニューノード <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> にエラーが含まれています"
@@ -1019,25 +1025,25 @@
         "transferTo": "<strong>{ newOwnerName } ({ newOwnerEmail })</strong> に所有権を譲渡"
     },
     "systemGroups": {
-        "root": "root",
+        "root": "ルート",
         "groupCount": "{count, plural, =0{# グループ} one{# グループ} other{# グループ}}",
         "systemCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}",
-        "connectionLost": "Connection lost, reconnecting...",
-        "connectionRestored": "Connection restored",
-        "couldNotReconnect": "Could not restore connection",
-        "noConnection": "No connection",
-        "groupAlreadyIn": "Group { srcName } is already in { destName }",
-        "systemAlreadyIn": "System { srcName } is already in { destName }",
-        "addGroupToSelf": "You cannot add a group to itself",
+        "connectionLost": "切断されました。再接続しています…",
+        "connectionRestored": "接続が復旧しました",
+        "couldNotReconnect": "接続を復旧できませんでした",
+        "noConnection": "接続なし",
+        "groupAlreadyIn": "グループ { srcName } はすでに { destName } に含まれています",
+        "systemAlreadyIn": "システム { srcName } はすでに { destName } に含まれています",
+        "addGroupToSelf": "グループをそれ自体に追加することはできません",
         "errorMsg": {
-            "You can only delete groups that you own": "You can only delete groups that you own",
-            "You can only move systems that you own.": "You can only move systems that you own.",
-            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
-            "You cannot add a group to itself": "You cannot add a group to itself",
-            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
-            "You can only move groups that you own.": "You can only move groups that you own.",
-            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
-            "User does not exist in group": "User does not exist in group"
+            "You can only delete groups that you own": "自身が所有するグループのみ削除できます。",
+            "You can only move systems that you own.": "自身が所有するシステムのみ移動できます。",
+            "You can only move systems into groups that you own.": "自身が所有するグループにのみシステムを移動できます。",
+            "You cannot add a group to itself": "グループをそれ自体に追加することはできません",
+            "You cannot add a parent group to its child.": "親グループを子グループに追加することはできません。",
+            "You can only move groups that you own.": "自身が所有するグループのみ移動できます。",
+            "Adding src group to dst group would create a cycle in tree.": "移動対象グループを移動先グループに追加すると、ツリーにループが発生します。",
+            "User does not exist in group": "グループ内にユーザーが存在しません"
         }
     },
     "systemStatuses": {

@@ -200,7 +200,10 @@
             "Not Authorized for cloud system": "Nicht autorisiert für Cloud-System",
             "This license is not currently activated": "Diese Lizenz ist derzeit nicht aktiviert",
             "This license has no deactivations remaining": "Diese Lizenz hat keine verbleibenden Deaktivierungen",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "Der Cloud-Speicher wird nicht für die Aufzeichnung verwendet. Gehen Sie zu \"<a href=\"{serverSettings}\">Server-Einstellungen</a>, um ihn zu konfigurieren."
     },
@@ -782,6 +785,9 @@
         "type": "Typ",
         "server": "Server",
         "alert": "Alarm"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
     },
     "pages": {
         "developers": {

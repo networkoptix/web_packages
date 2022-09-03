@@ -200,7 +200,10 @@
             "Not Authorized for cloud system": "Not Authorized for cloud system",
             "This license is not currently activated": "This license is not currently activated",
             "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "Bộ nhớ đám mây không được sử dụng để ghi. Đi tới <a href=\"{serverSettings}\">Cài đặt Máy chủ</a> để định cấu hình."
     },
@@ -782,6 +785,9 @@
         "type": "Kiểu",
         "server": "May chủ",
         "alert": "Cảnh báo"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
     },
     "pages": {
         "developers": {

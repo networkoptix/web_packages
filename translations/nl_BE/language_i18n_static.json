@@ -200,7 +200,10 @@
             "Not Authorized for cloud system": "Not Authorized for cloud system",
             "This license is not currently activated": "This license is not currently activated",
             "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation"
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "De cloudopslag die niet wordt gebruikt voor opnamen. Ga naar <a href=\"{serverSettings}\">Servers instellingen</a> om deze te configureren."
     },
@@ -783,6 +786,9 @@
         "server": "Server",
         "alert": "Waarschuwing"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
     "pages": {
         "developers": {
             "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
@@ -898,7 +904,7 @@
         },
         "newVersionAvailable": {
             "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
-            "installButton": "Refresh to Update"
+            "installButton": "Vernieuwen om te updaten"
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."
@@ -918,7 +924,7 @@
         "vendors": "Fabrikanten",
         "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
         "noMatches": "Geen overeenkomsten",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "userNotFound": "<span class=\"error\">Gebruiker niet gevonden</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
@@ -1015,13 +1021,13 @@
             "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wil het eigendom van dit systeem aan u overdragen",
+        "transferTo": "Eigendom overdragen aan – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
+        "systemCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1132,7 +1138,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Health Report For System {systemName}"
+        "healthReportForSystem": "Gezondheidsrapport voor systeem {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

@@ -200,7 +200,10 @@
             "Not Authorized for cloud system": "Ikke autorisert for skysystem",
             "This license is not currently activated": "Denne lisensen er ikke aktivert for øyeblikket",
             "This license has no deactivations remaining": "Denne lisensen har ingen deaktiveringer igjen",
-            "Cloud system Id does not match license activation": "Skysystem-ID samsvarer ikke med lisensaktivering"
+            "Cloud system Id does not match license activation": "Skysystem-ID samsvarer ikke med lisensaktivering",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "Skylagringen brukes ikke til opptak. Gå til <a href=\"{serverSettings}\">Serverinnstillinger</a> for å konfigurere den."
     },
@@ -527,8 +530,8 @@
             "title": "Økten din har utløpt"
         },
         "systemGroups": {
-            "createdInRoot": "New group will be created in root",
-            "createdInCurrentGroup": "New group will be created in current group"
+            "createdInRoot": "Ny gruppe vil bli opprettet i toppnivå",
+            "createdInCurrentGroup": "Ny gruppe vil bli opprettet i gjeldende gruppe"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
@@ -783,6 +786,9 @@
         "server": "Server",
         "alert": "Alarm"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
     "pages": {
         "developers": {
             "menuNodeContainsErrors": "Menynode <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> inneholder feil"
@@ -1019,25 +1025,25 @@
         "transferTo": "Overfør eierskap til – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
-        "root": "root",
+        "root": "toppnivå",
         "groupCount": "{count, plural, =0{# grupper} one{# Gruppe} other{# grupper}}",
         "systemCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}}",
-        "connectionLost": "Connection lost, reconnecting...",
-        "connectionRestored": "Connection restored",
-        "couldNotReconnect": "Could not restore connection",
-        "noConnection": "No connection",
-        "groupAlreadyIn": "Group { srcName } is already in { destName }",
-        "systemAlreadyIn": "System { srcName } is already in { destName }",
-        "addGroupToSelf": "You cannot add a group to itself",
+        "connectionLost": "Tilkoblingen mistet, kobler til på nytt...",
+        "connectionRestored": "Forbindelse gjenopprettet",
+        "couldNotReconnect": "Kunne ikke gjenopprette tilkoblingen",
+        "noConnection": "Ingen tilkobling",
+        "groupAlreadyIn": "Gruppen { srcName } er allerede i { destName }",
+        "systemAlreadyIn": "System { srcName } er allerede i { destName }",
+        "addGroupToSelf": "Du kan ikke legge til en gruppe i seg selv",
         "errorMsg": {
-            "You can only delete groups that you own": "You can only delete groups that you own",
-            "You can only move systems that you own.": "You can only move systems that you own.",
-            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
-            "You cannot add a group to itself": "You cannot add a group to itself",
-            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
-            "You can only move groups that you own.": "You can only move groups that you own.",
-            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
-            "User does not exist in group": "User does not exist in group"
+            "You can only delete groups that you own": "Du kan bare slette grupper du eier",
+            "You can only move systems that you own.": "Du kan bare flytte systemer du eier.",
+            "You can only move systems into groups that you own.": "Du kan bare flytte systemer inn i grupper du eier.",
+            "You cannot add a group to itself": "Du kan ikke legge til en gruppe i seg selv",
+            "You cannot add a parent group to its child.": "Du kan ikke legge til en overordnet gruppe til dens underordnede gruppe.",
+            "You can only move groups that you own.": "Du kan bare flytte grupper du eier.",
+            "Adding src group to dst group would create a cycle in tree.": "Å legge til src-gruppen til dst-gruppen ville opprette en syklus i treet.",
+            "User does not exist in group": "Bruker eksisterer ikke i gruppen"
         }
     },
     "systemStatuses": {
