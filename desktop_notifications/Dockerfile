@@ -27,7 +27,7 @@ COPY ["cloud.py", "poetry.lock", "pyproject.toml", "/app/app/"]
 COPY notification_provider /app/app/notification_provider
 COPY notification_receiver /app/app/notification_receiver
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 WORKDIR /app/app
 
