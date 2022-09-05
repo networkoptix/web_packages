@@ -201,8 +201,8 @@
             "This license is not currently activated": "このライセンスは現在有効化されていません",
             "This license has no deactivations remaining": "このライセンスは無効化回数上限に達しています",
             "Cloud system Id does not match license activation": "クラウドシステムIDがライセンスの有効化と一致しません",
-            "used": "{used} of {total} ({percent}%) is used",
-            "available": "Available",
+            "used": "{used} / {total} ({percent}%) が使用されています",
+            "available": "利用可能",
             "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "クラウドストレージは録画に使用されていません。<a href=\"{serverSettings}\">サーバー設定</a>に移動して設定してください。"
