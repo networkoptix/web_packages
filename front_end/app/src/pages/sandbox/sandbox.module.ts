@@ -18,10 +18,13 @@ import {
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
+import { NxAccountSettingsModule } from '../account/settings/settings.module';
 import { NxGridLayoutComponent } from '../layout/layout.component';
 import { NxGridLayoutModule } from '../layout/layout.module';
 
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
+import { NxBasicColorsComponent } from './basic-colors/colors.component';
+import { NxCustomColorsComponent } from './custom-colors/colors.component';
 import {
     DynamicFormApplyExampleComponent
 } from './dynamic-form-apply-example/dynamic-form-apply-example.component';
@@ -29,6 +32,7 @@ import {
     FormApplyExampleComponent
 } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
+import { NxHSLThemeColorsComponent } from './hsl-theme-colors/theme-colors.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';
@@ -38,6 +42,7 @@ import {
     SectionApplyExampleComponent
 } from './section-apply-example/section-apply-example.component';
 import { TagsComponent } from './tags/tags.component';
+import { NxThemeColorsComponent } from './theme-colors/colors.component';
 import { ToasterComponent } from './toaster/toaster.component';
 import { ValidationComponent } from './validation/validation.component';
 import { WebsocketComponent } from './websocket/websocket.component';
@@ -51,6 +56,25 @@ const appRoutes: Routes = [
             {
                 path: '',
                 component: FormElementsComponent,
+            },
+            {
+                path: 'basic-colors',
+                component: NxBasicColorsComponent,
+                canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'custom-colors',
+                component: NxCustomColorsComponent,
+                canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'theme-colors',
+                component: NxThemeColorsComponent,
+                canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'hsl-theme',
+                component: NxHSLThemeColorsComponent
             },
             {
                 path: 'apply-service-form',
@@ -127,7 +151,8 @@ const appRoutes: Routes = [
         SearchModule,
         SearchableModule,
         AlertBlockModule,
-        ContentBlockModule
+        ContentBlockModule,
+        NxAccountSettingsModule,
     ],
     providers: [
     ],
@@ -145,6 +170,10 @@ const appRoutes: Routes = [
         ValidationComponent,
         WebsocketComponent,
         NxArchSvgComponent,
+        NxBasicColorsComponent,
+        NxCustomColorsComponent,
+        NxThemeColorsComponent,
+        NxHSLThemeColorsComponent,
     ],
     bootstrap: [
     ],

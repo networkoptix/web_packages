@@ -32,13 +32,21 @@ export class NxSandboxComponent {
                     path: '',
                     level3: [
                         {
-                            id: 'themeLight',
-                            label: 'Light theme',
-                            path: ''
+                            id: 'basicColors',
+                            label: 'Basic',
+                            path: '/basic-colors'
                         }, {
-                            id: 'themeDark',
-                            label: 'Dark theme',
-                            path: ''
+                            id: 'customColors',
+                            label: 'Customizations',
+                            path: '/custom-colors'
+                        }, {
+                            id: 'themeColors',
+                            label: 'Themes',
+                            path: '/theme-colors'
+                        }, {
+                            id: 'themeHSL',
+                            label: 'HSL colors',
+                            path: '/hsl-theme'
                         }
                     ]
                 }, {
