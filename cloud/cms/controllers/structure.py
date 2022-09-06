@@ -184,10 +184,9 @@ def read_menu_structure(filename):
         for menu in menu_structure:
             menu_obj = Menu.objects.filter(name=menu['name']).first()
             if not menu_obj:
-                menu_obj = Menu(name=menu['name'], depth=menu['depth'])
+                menu_obj = Menu.objects.create(name=menu['name'], depth=menu['depth'])
             else:
-                menu_obj.depth = max(menu_obj.depth, menu['depth'])
-            menu_obj.save()
+                continue
 
             for node_structure in menu.get('nodes', []):
                 node_obj = menu_obj.nodes.filter(name=node_structure['name']).first()
