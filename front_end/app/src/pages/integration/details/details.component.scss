@@ -32,6 +32,10 @@ a {
     @include ellipsis;
 }
 
+.card--body-info .section img {
+    overflow: hidden;
+}
+
 #info- {
     &support-, &developer- {
         &email, &name, &url, &phone, &terms {
