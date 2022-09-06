@@ -5,17 +5,19 @@ FROM python:3.8-alpine3.12
 COPY docker/entrypoint.sh /app/
 
 ARG CACHE_DATE
-#COPY stage/cloud/requirements.txt /app/requirements.txt
+ARG ARTIFACTORY_HOST
+ARG ARTIFACTORY_URL
+ENV PIP_INDEX_URL "$ARTIFACTORY_URL/api/pypi/pypi-python3.8-alpine3.12/simple"
+ENV PIP_EXTRA_INDEX_URL "$ARTIFACTORY_URL/api/pypi/pypi-remote/simple"
+ENV PIP_TRUSTED_HOST $ARTIFACTORY_HOST
 
 RUN set -ex \
     apk update \
     && apk add --no-cache bash ca-certificates gettext libwebp openjpeg tini wget gcc musl-dev \
         libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt musl openjpeg tiff yaml zlib \
         curl jq netcat-openbsd
-#    && pip install --prefer-binary -r /app/requirements.txt
 
-#ENV CLOUD_PORTAL_BASE_CONF_DIR /app/app/static
-#ENV C_FORCE_ROOT true
+
 ENV VERSION=$VERSION \
     POETRY_VERSION="1.1.13" \
     POETRY_HOME="/opt/poetry"
