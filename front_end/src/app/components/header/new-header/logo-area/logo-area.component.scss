@@ -6,8 +6,8 @@
     width: 256px;
     .logo {
         @include typography.regular20nocolor;
-        color: var(--light4) !important;
-        border-right: 1px solid var(--dark11);
+        color: var(--header-logo-text-color) !important;
+        border-right: 1px solid var(--header-logo-border);
         height: 26px;
         margin: 15px 0px;
         svg-icon {
@@ -19,7 +19,7 @@
             display: flex;
             justify-content: center;
             svg-icon .system-icon {
-                fill: var(--light4) !important;
+                fill: var(--header-logo-text-color) !important;
             }
         }
 

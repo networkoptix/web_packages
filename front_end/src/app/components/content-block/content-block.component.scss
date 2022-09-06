@@ -40,7 +40,7 @@
                 margin : 0;
                 color: var(--card-header-text) !important;
             }
-            
+
             .close {
                 color           : var(--card-header-text) !important;
                 opacity         : 1 !important;
@@ -54,7 +54,7 @@
                 padding         : 0 !important;
                 border-radius   : 25px !important;
                 outline         : none !important; // Fix for mobile ios to remove blue circle.
-    
+
                 &:before, &:after {
                     position         : absolute;
                     content          : " ";
@@ -62,17 +62,17 @@
                     width            : 1px;
                     background-color : var(--card-header-text);
                 }
-    
+
                 .close-content {
                     border-radius : 25px !important;
                 }
-    
+
                 &:hover,
                 &:active,
                 &:focus {
                     box-shadow : none !important;
                 }
-    
+
                 &:hover {
                     &:before, &:after {
                         background-color : var(--btn-close-hover-color);
@@ -81,7 +81,7 @@
                         background-color : var(--btn-close-hover-bg) !important;
                     }
                 }
-    
+
                 &:active {
                     &:before, &:after {
                         background-color : var(--btn-close-active-color);
@@ -90,14 +90,14 @@
                         background-color : var(--btn-close-active-bg) !important;
                     }
                 }
-    
+
                 &-content {
                     width           : 40px !important;
                     height          : 40px !important;
                     display         : flex !important;
                     align-items     : center !important;
                     justify-content : center !important;
-    
+
                     .close-icon {
                         margin : 0 !important;
                     }

@@ -209,6 +209,10 @@ html[data-theme="dark"] {
    --header-nav-arrow-bg                 : #{$dark7};
    --header-logout-action-color          : #{$light16};
 
+    // Logo;
+    --header-logo-text-color              : #{$light4};
+    --header-logo-border                  : #{$dark11};
+
    // Mobile header
    --mobile-header-bg                    : #{$dark4};
    --mobile-level-one-color              : #{$dark15};
@@ -506,7 +510,7 @@ html[data-theme="dark"] {
     --support-lang-wrapper-bg    : #121517; //$dark4
     --support-lang-wrapper-color : #A5B7C0; //$light10;
     --support-tech-apple-color : #E1E7EA; //$light4;
-    
+
     --error-label : #C22626; //$red_main;
     --error : #C22626; //$red_main;
 

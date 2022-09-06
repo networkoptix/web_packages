@@ -184,10 +184,6 @@ p {
     @include font-source($font-family-regular, $font-size-base, $light16);
 }
 
-@mixin regular13nocolor {
-    @include font-source($font-family-regular, $font-size-base, false, 400);
-}
-
 @mixin regular14light10 {
     @include font-source($font-family-regular, $h5-font-size, $light10);
 }
@@ -269,7 +265,7 @@ p {
 }
 
 @mixin regular20nocolor {
-    @include font-source($font-family-regular, $font-size-20, $light16, false, 400);
+    @include font-source($font-family-regular, $font-size-20, false, 400);
 }
 
 @mixin regular24dark9 {
@@ -358,10 +354,6 @@ p {
     @include font-source($font-family-medium, $h5-font-size, $dark9);
 }
 
-@mixin medium14nocolor {
-    @include font-source($font-family-medium, $h5-font-size, false, 500);
-}
-
 @mixin medium14dark10 {
     @include font-source($font-family-medium, $h5-font-size, $dark10);
 }
@@ -408,10 +400,6 @@ p {
 
 @mixin medium18dark1 {
     @include font-source($font-family-medium, $h3-font-size, $dark1);
-}
-
-@mixin medium18nocolor {
-    @include font-source($font-family-medium, $h3-font-size, false, 500);
 }
 
 @mixin medium18dark9 {
