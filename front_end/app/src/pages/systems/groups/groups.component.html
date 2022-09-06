@@ -1,69 +1,69 @@
 <div
-    *ngIf="(currentIndexes$ | async) !== null"
     id="groups"
     cdkDropListGroup
 >
     <div class="sidebar">
-        <div class="buttons">
-            <button
-                class="btn btn-default mr-2"
-                (click)="newGroupDialog()"
-                [disabled]="(currentIndexes$ | async) === undefined"
-                translate
+        <nx-pre-loader
+            *ngIf="(loadingState$ | async) === LoadingState.LOADING; else sideBarContent"
+        ></nx-pre-loader>
+        <ng-template #sideBarContent>
+            <div class="buttons">
+                <button
+                    class="btn btn-default mr-2"
+                    (click)="newGroupDialog()"
+                    [disabled]="(loadingState$ | async) === LoadingState.NOT_FOUND"
+                    translate
+                >
+                    New group
+                </button>
+                <!-- eslint-disable-next-line nx/template/no-untranslated -->
+                <!-- <button (click)="__crash()">Crash!</button> -->
+            </div>
+            <div
+                class="group-drop-list"
+                cdkDropList
+                (cdkDropListDropped)="moveToRoot($event)"
             >
-                New group
-            </button>
-            <!-- eslint-disable-next-line nx/template/no-untranslated -->
-            <!-- <button (click)="__crash()">Crash!</button> -->
-        </div>
-        <div
-            class="group-drop-list"
-            cdkDropList
-            (cdkDropListDropped)="moveToRoot($event)"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'folder.svg'"
-                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-            ></svg-icon>
-            <h3>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'folder.svg'"
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                ></svg-icon>
+                <h3>
+                    <a
+                        routerLink="/systems/groups/"
+                        translate
+                        >(root)</a
+                    >
+                </h3>
+            </div>
+            <nx-sidebar-level
+                [groups]="rootGroups$ | async"
+                [systems]="rootSystems$ | async"
+            ></nx-sidebar-level>
+        </ng-template>
+    </div>
+    <div class="cards">
+        <nx-pre-loader *ngIf="(loadingState$ | async) === LoadingState.LOADING"></nx-pre-loader>
+        <ng-container *ngIf="(loadingState$ | async) === LoadingState.LOADED">
+            <div class="crumbs">
                 <a
                     routerLink="/systems/groups/"
                     translate
                     >(root)</a
                 >
-            </h3>
-        </div>
-        <nx-sidebar-level
-            [groups]="rootGroups$ | async"
-            [systems]="rootSystems$ | async"
-        ></nx-sidebar-level>
+                <ng-container *ngFor="let crumb of crumbs$ | async; trackBy: trackItem">
+                    {{ ' / ' }}
+                    <a [routerLink]="'/systems/groups/' + crumb.id">{{ crumb.name }}</a>
+                </ng-container>
+            </div>
+            <nx-groups-cards
+                [groups]="currentGroups$ | async"
+                [systems]="currentSystems$ | async"
+            ></nx-groups-cards>
+        </ng-container>
+        <!-- TODO: Replace with actual placeholder -->
+        <!-- eslint-disable-next-line nx/template/no-untranslated -->
+        <div *ngIf="(loadingState$ | async) === LoadingState.NOT_FOUND">No group found</div>
     </div>
-    <div
-        class="cards"
-        *ngIf="!!(currentIndexes$ | async)"
-    >
-        <div class="crumbs">
-            <a
-                routerLink="/systems/groups/"
-                translate
-                >(root)</a
-            >
-            <ng-container *ngFor="let crumb of crumbs$ | async; trackBy: trackItem">
-                {{ ' / ' }}
-                <a [routerLink]="'/systems/groups/' + crumb.id">{{ crumb.name }}</a>
-            </ng-container>
-        </div>
-        <nx-groups-cards
-            [groups]="currentGroups$ | async"
-            [systems]="currentSystems$ | async"
-        ></nx-groups-cards>
-    </div>
-    <!-- TODO: Replace with actual placeholder -->
-    <!-- eslint-disable-next-line nx/template/no-untranslated -->
-    <div *ngIf="(currentIndexes$ | async) === undefined">No group found</div>
 </div>
-<nx-pre-loader
-    *ngIf="(currentIndexes$ | async) === null"
-    type="page"
-></nx-pre-loader>

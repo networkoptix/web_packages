@@ -8,13 +8,14 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import type { GroupItem, GroupsItem, SystemItem, Crumb } from './groups.types';
+import { LoadingState } from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {
     selectCrumbs,
     selectCurrentGroupItems,
-    selectCurrentIndexes,
     selectCurrentSystemItems,
+    selectLoadingState,
     selectRootGroupItems,
     selectRootSystemItems,
 } from './store/groups.selectors';
@@ -26,6 +27,9 @@ import {
 })
 export class NxSystemGroupsComponent implements OnInit {
     CONFIG: IConfig;
+
+    loadingState$ = this.store.select<LoadingState>(selectLoadingState);
+
     rootGroups$ = this.store.select<GroupItem[] | undefined>(
         selectRootGroupItems
     );
@@ -39,12 +43,12 @@ export class NxSystemGroupsComponent implements OnInit {
     currentSystems$ = this.store.select<SystemItem[] | null>(
         selectCurrentSystemItems
     );
-    currentIndexes$ = this.store.select<number[] | null | undefined>(
-        selectCurrentIndexes
-    );
+
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
 
     private groupId: string;
+
+    LoadingState = LoadingState;
 
     constructor(
         configService : NxConfigService,

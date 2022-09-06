@@ -40,3 +40,9 @@ export interface Crumb {
     id: string;
     name: string;
 }
+
+export enum LoadingState {
+    LOADING = 0,
+    LOADED = 1,
+    NOT_FOUND = 404,
+}

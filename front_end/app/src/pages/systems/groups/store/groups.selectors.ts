@@ -8,6 +8,7 @@ import type {
     SystemItem,
     Crumb,
 } from '../groups.types';
+import { LoadingState } from '../groups.types';
 
 import { GroupsState } from './groups.state';
 
@@ -129,6 +130,19 @@ export const selectCurrentIndexes = createSelector(
         } else {
             return findTargetAddress(groupId, rootGroups);
             // undefined: No matching group
+        }
+    }
+);
+
+export const selectLoadingState = createSelector(
+    selectCurrentIndexes,
+    indexes => {
+        if (indexes === null) {
+            return LoadingState.LOADING;
+        } else if (indexes === undefined) {
+            return LoadingState.NOT_FOUND;
+        } else {
+            return LoadingState.LOADED;
         }
     }
 );
