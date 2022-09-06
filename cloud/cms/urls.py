@@ -1,5 +1,4 @@
-from django.conf.urls import url
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from cms.views import integration, article, agreement, asset, documentation, menu, release_notes, utils, portal_notifications, readonly_api
 
@@ -12,9 +11,9 @@ router.register(r'asset_cms', asset.AssetViewSet, basename='asset')
 
 urlpatterns = [
     path('', include(router.urls)),
-    url(r'^integration/(?P<asset_id>.+?)/?$',
+    re_path(r'^integration/(?P<asset_id>.+?)/?$',
         integration.get_integration, name="get_integration"),
-    url(r'^integrations$', integration.get_integrations, name="get_integrations"),
+    re_path(r'^integrations$', integration.get_integrations, name="get_integrations"),
     path('integration_count', integration.get_integrations_count,
          name='integration_count'),
     path('article/<url_param>/', article.get_article, name='get_article'),

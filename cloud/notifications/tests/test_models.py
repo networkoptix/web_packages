@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from model_bakery import baker
 
 from notifications.models import *
+from cms import forms
 
 
 class TestMessageTypes:

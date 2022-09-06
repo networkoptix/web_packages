@@ -5,12 +5,11 @@ from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
 from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import SEARCH_VAR
-from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q, Case, When, Value, BooleanField, Max
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.urls import reverse, path
+from django.urls import reverse, path, re_path
 from django.utils.html import format_html
 
 import nested_admin
@@ -475,11 +474,11 @@ class AssetAdmin(CMSAdmin):
     def get_urls(self):
         urls = super(AssetAdmin, self).get_urls()
         my_urls = [
-            url(r'^(?P<asset_id>.+?)/pages/$', self.admin_site.admin_view(self.page_list_view), name='pages'),
-            url(r'^(?P<asset_id>.+?)/pages/(?P<context_id>.+?)/change/$',
+            re_path(r'^(?P<asset_id>.+?)/pages/$', self.admin_site.admin_view(self.page_list_view), name='pages'),
+            re_path(r'^(?P<asset_id>.+?)/pages/(?P<context_id>.+?)/change/$',
                 self.admin_site.admin_view(self.change_page),
                 name='change_page'),
-            url(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
+            re_path(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
         ]
 
         return my_urls + urls

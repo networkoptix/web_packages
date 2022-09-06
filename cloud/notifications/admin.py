@@ -163,7 +163,7 @@ class CloudNotificationAdmin(admin.ModelAdmin):
 @admin.register(TaskResult)
 class TaskResultAdmin(NotificationAdmin):
     list_display = ('task_id', 'date_done', 'status')
-    readonly_fields = ('date_done', 'result', 'hidden', 'meta')
+    readonly_fields = ('date_done', 'result', 'meta')
     list_filter = ('date_done', 'status')
     search_fields = ('date_done', 'meta', 'result', 'task_id')
     actions = ['clean_old_tasks']
@@ -182,7 +182,6 @@ class TaskResultAdmin(NotificationAdmin):
                 'result',
                 'date_done',
                 'traceback',
-                'hidden',
                 'meta',
             ),
             'classes': ('extrapretty', 'wide')

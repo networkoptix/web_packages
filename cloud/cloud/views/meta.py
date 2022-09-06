@@ -232,13 +232,13 @@ def app_view(request):
         open_graph_crawler = re.match(SHARE_CRAWLER_REGEX, user_agent)
 
         if open_graph_crawler:
-            return shortcuts.render_to_response("cms/sharing_meta.html", context)
+            return shortcuts.render(request, "cms/sharing_meta.html", context)
 
         return TemplateView.as_view(
             template_name="static/index.mustache.html",
             extra_context=context)(request)
 
-    return shortcuts.render_to_response("static/index.html")
+    return shortcuts.render(request, "static/index.html")
 
 
 def robots_txt(request):

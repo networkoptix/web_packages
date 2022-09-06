@@ -5,16 +5,17 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 Examples:
 Function views
     1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+    2. Add a URL to urlpatterns:  re_path(r'^$', views.home, name='home')
 Class-based views
     1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+    2. Add a URL to urlpatterns:  re_path(r'^$', Home.as_view(), name='home')
 Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
-    2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
+    2. Add a URL to urlpatterns:  re_path(r'^blog/', include(blog_urls))
 """
 
-from django.conf.urls import include, url
+from django.conf.urls import include
+from django.urls import re_path
 from django.contrib import admin
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView, RedirectView
@@ -61,27 +62,27 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui(), name='swagger'),
-    url(r'^health/', health_check),
-    url(r'^admin/login/', redirect_login),
-    url(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),
-    url(r'^admin/cms/', include('cms.admin_urls')),
-    url(r'^admin/notifications/', include('notifications.admin_urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('api.urls')),
-    url(r'^api/cms/', include('cms.urls')),
-    url(r'^api/upload/', include('upload.urls')),
-    url(r'^api/notifications/', include(notifications_urls.public_patterns)),
-    url(r'^notifications/', include('notifications.urls')),
-    url(r'^oauth/', include('oauth.urls')),
-    url(r'^admin_tools/', include('admin_tools.urls')),
-    url(r'^zapier/', include('zapier.urls')),
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^swagger/$', schema_view.with_ui(), name='swagger'),
+    re_path(r'^health/', health_check),
+    re_path(r'^admin/login/', redirect_login),
+    re_path(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),
+    re_path(r'^admin/cms/', include('cms.admin_urls')),
+    re_path(r'^admin/notifications/', include('notifications.admin_urls')),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^api/', include('api.urls')),
+    re_path(r'^api/cms/', include('cms.urls')),
+    re_path(r'^api/upload/', include('upload.urls')),
+    re_path(r'^api/notifications/', include(notifications_urls.public_patterns)),
+    re_path(r'^notifications/', include('notifications.urls')),
+    re_path(r'^oauth/', include('oauth.urls')),
+    re_path(r'^admin_tools/', include('admin_tools.urls')),
+    re_path(r'^zapier/', include('zapier.urls')),
 
-    url(r'^apple-app-site-association',
+    re_path(r'^apple-app-site-association',
         TemplateView.as_view(template_name="static/apple-app-site-association",
                              content_type='application/json')),
-    url(r'^\.well-known/apple-app-site-association',
+    re_path(r'^\.well-known/apple-app-site-association',
         TemplateView.as_view(template_name="static/apple-app-site-association",
                              content_type='application/json')),
 
@@ -89,25 +90,25 @@ urlpatterns = [
     # Since we have no good way to serve a js file at the root without adding a url pattern or nginx conf,
     # we check for it here
     # TODO: Remove when we have a more convenient way to route to static files in new angular
-    url(r'^firebase-messaging-sw.js$',
+    re_path(r'^firebase-messaging-sw.js$',
         TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
                              content_type='application/javascript')),
 
-    url(r'^ngsw.json$',
+    re_path(r'^ngsw.json$',
         TemplateView.as_view(template_name='static/ngsw.json',
                              content_type='application/json')),
 
-    url(r'^ngsw-worker.js$',
+    re_path(r'^ngsw-worker.js$',
         TemplateView.as_view(template_name='static/scripts/ngsw-worker.js',
                              content_type='application/javascript')),
-    url(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
-    url(r'^robots.txt', robots_txt),
-    url(r'^serve/(?P<static_path>.+?)/?$', serve_static, name="serve_static"),
-    url(r'^(?!static|preview|admin).*', app_view)
+    re_path(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
+    re_path(r'^robots.txt', robots_txt),
+    re_path(r'^serve/(?P<static_path>.+?)/?$', serve_static, name="serve_static"),
+    re_path(r'^(?!static|preview|admin).*', app_view)
 ]
 
 if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
-    urlpatterns.insert(0, url(r'^profiler/', include('silk.urls')))
+    urlpatterns.insert(0, re_path(r'^profiler/', include('silk.urls')))
 
 handler404 = 'cloud.urls.view_404'

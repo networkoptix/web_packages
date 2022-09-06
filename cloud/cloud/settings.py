@@ -117,8 +117,8 @@ INSTALLED_APPS = (
     'corsheaders',
     'push_notifications',
     'api',
-    'notifications',
     'cms',
+    'notifications',
     'zapier',
     'tinymce',
     'nested_admin',
@@ -228,6 +228,8 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 REDIS_CACHE = {
     "BACKEND": "django_redis.cache.RedisCache",

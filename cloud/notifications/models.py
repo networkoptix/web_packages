@@ -20,7 +20,6 @@ from rest_framework import serializers
 import botocore
 
 from cms.models import Customization, Asset, DataStructure
-from cms import forms
 from api.models import Account
 from .conf import get_sns_client
 
@@ -483,7 +482,8 @@ def check_urls(known_urls, sub_val=''):
 
 
 def clean_content_factory():
-    _branding, hidden_branding = forms.get_branding_shortcuts()
+    from cms.forms import get_branding_shortcuts
+    _branding, hidden_branding = get_branding_shortcuts()
     known_urls = [val.split('//')[-1] for _, val in _branding + hidden_branding if re.search(URL_REGEX, val)]
 
     def _clean_content(to_clean):

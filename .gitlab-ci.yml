@@ -72,7 +72,9 @@ no-changes:
 
 .backend-changes:
   extends: .retries
-  needs: []
+  needs:
+    - job: docker:build-django-python
+      optional: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -144,6 +146,9 @@ no-changes:
 .django-python:
   extends: .backend-changes
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  needs:
+    - job: docker:build-django-python
+      optional: true
   services:
     - name: mysql:5.7
       alias: mysql
@@ -527,7 +532,9 @@ y-u-no-review:
 check-python-licenses:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   stage: check
-  needs: []
+  needs:
+    - job: docker:build-django-python
+      optional: true
   artifacts:
     paths:
       - cloud/ci-license.json
@@ -538,7 +545,7 @@ check-python-licenses:
         - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
   script:
-    - /usr/local/bin/python -m pip install -r cloud/requirements.txt
+#    - /usr/local/bin/python -m pip install -r cloud/requirements.txt
     - /usr/local/bin/python -m pip install pip-licenses
     - ./cloud_helper.sh update_requirements_licenses
 

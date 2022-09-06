@@ -130,6 +130,9 @@ function setup_robot_env() {
 function setup_or_activate_virtualenv() {
     [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.8
 
+    # Copy necessary config for virutalenv
+    cp etc/virtual_env_template/* env
+
     printf "Activating python3.8 env\n\n"
     . ./env/bin/activate
 }
@@ -287,7 +290,7 @@ function update_requirements_licenses() {
         LICENSE_OUTPUT_FILE=$UPDATE_OUTPUT
     fi
 
-    echo "results will be output to $CI_OUTPUT"
+    echo "results will be output to $LICENSE_OUTPUT_FILE"
 
     check_licenses > "$LICENSE_OUTPUT_FILE"
 

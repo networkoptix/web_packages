@@ -1071,7 +1071,7 @@ def test_download_file(mocker, arf, account_factory, db):
         'cms.controllers.filldata.read_customized_file', return_value=file)
     res = download_file(mock_request, path)
     assert res.content == file.encode()
-    assert res._headers['content-type'] == ('Content-Type', 'image/png')
+    assert res.headers['content-type'] == 'image/png'
     mock_read_customized_file.assert_called_once_with(
         path, asset, language.code, version_id, draft)
 
@@ -1175,7 +1175,7 @@ def test_download_async_package(arf, account_factory, db):
     PACKAGES_CACHE[cache_key] = {'is_ready': True, 'file': expected_file}
     res = download_async_package(mock_request, mock_asset.id)
     assert res.content == expected_file.encode()
-    assert res._headers['content-type'] == ('Content-Type', 'application/zip')
+    assert res.headers['content-type'] == 'application/zip'
 
 
 def test_upload_image(mocker, arf, account_factory, db):

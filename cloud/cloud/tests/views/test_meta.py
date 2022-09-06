@@ -282,10 +282,10 @@ def test_app_view(arf, mocker):
     mocker.patch('cloud.views.meta.get_meta', return_value=mock_context)
 
     def check_app_view(agent, switch_active):
-        def mock_render(template,  context=None):
+        def mock_render(request, template,  context=None):
             return template, context
 
-        mocker.patch.object(shortcuts, 'render_to_response', mock_render)
+        mocker.patch.object(shortcuts, 'render', mock_render)
         request.META['HTTP_USER_AGENT'] = agent
         mock_as_view = mocker.patch.object(TemplateView, 'as_view')
         res = app_view(request)
