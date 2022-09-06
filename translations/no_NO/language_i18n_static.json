@@ -201,8 +201,8 @@
             "This license is not currently activated": "Denne lisensen er ikke aktivert for øyeblikket",
             "This license has no deactivations remaining": "Denne lisensen har ingen deaktiveringer igjen",
             "Cloud system Id does not match license activation": "Skysystem-ID samsvarer ikke med lisensaktivering",
-            "used": "{used} of {total} ({percent}%) is used",
-            "available": "Available",
+            "used": "{used} av {total} ({percent}%) er brukt",
+            "available": "Tilgjengelig",
             "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "Skylagringen brukes ikke til opptak. Gå til <a href=\"{serverSettings}\">Serverinnstillinger</a> for å konfigurere den."
@@ -787,7 +787,7 @@
         "alert": "Alarm"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. Alle rettigheter reservert"
     },
     "pages": {
         "developers": {
