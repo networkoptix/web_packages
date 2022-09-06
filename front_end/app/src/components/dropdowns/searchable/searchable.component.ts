@@ -9,6 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { escapeRegExp } from 'lodash-es';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -90,7 +91,7 @@ export class NxSearchableDropdown extends BaseDropdown {
 
         // long strings may produce line break when deleted
         this.filter = this.filter.replace(/\n/g, '');
-        const regex = new RegExp(this.filter, 'gi');
+        const regex = new RegExp(escapeRegExp(this.filter), 'gi');
 
         if (this.filter) {
             this._items = this.items
