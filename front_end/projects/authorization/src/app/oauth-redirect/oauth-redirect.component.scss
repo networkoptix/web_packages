@@ -32,7 +32,7 @@
     .oauth-text {
         color: $light1 !important;
         &.oauth-error {
-            background-color: $error;
+            background-color: var(--error);
         }
         &:not(.oauth-error) {
             background-color: var(--brand-core);

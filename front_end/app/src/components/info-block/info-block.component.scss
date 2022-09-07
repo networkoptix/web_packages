@@ -77,7 +77,7 @@
                 align-items: flex-end;
                 line-height: 16px;
                 &.error {
-                    color: $red_main !important;
+                    color: var(--error) !important;
                 }
                 &.warning {
                     color: $yellow_d1 !important;

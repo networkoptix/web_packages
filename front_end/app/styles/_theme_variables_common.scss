@@ -19,7 +19,7 @@ $brand-success        : $green_main;
 $brand-success-bright : $green_l2;
 $brand-warning        : $yellow_d1;
 $brand-warning-bright : $yellow_main;
-$brand-danger         : $red_main;
+$brand-danger         : var(--error);
 
 // Brand colors
 // -------------------------

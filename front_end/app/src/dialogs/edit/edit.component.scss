@@ -2,8 +2,8 @@
 @use "../../styles/typography";
 
 .login-error {
-    border-color : var(--error-label) !important;
-    color        : var(--error-label) !important;
+    border-color : var(--error) !important;
+    color        : var(--error) !important;
 }
 
 section {

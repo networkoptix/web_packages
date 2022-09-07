@@ -94,8 +94,8 @@
     }
 
     .invalid-state {
-        border-color: $error !important;
-        color: $error !important;
+        border-color: var(--error) !important;
+        color: var(--error) !important;
     }
 
     .fake-link {

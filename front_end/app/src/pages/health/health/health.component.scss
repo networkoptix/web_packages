@@ -76,7 +76,7 @@ nx-system-health-component {
 
   .error {
     font-family: $font-family-medium;
-    color: $red_main;
+    color: var(--error);
   }
 
   .warning {

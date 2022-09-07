@@ -208,11 +208,11 @@
                                 height: 10px;
                                 background: transparent;
                                 border-radius: 5px;
-                                border: 2px solid theme_vars.$red_main !important;
+                                border: 2px solid var(--error) !important;
                             }
                             &.recording {
                                 > .preview:after {
-                                    background: theme_vars.$red_main;
+                                    background: var(--error);
                                 }
                             }
                         }
@@ -251,7 +251,7 @@
                                 width: 10px;
                                 height: 10px;
                                 border-radius: 5px;
-                                border: 2px solid theme_vars.$red_main !important;
+                                border: 2px solid var(--error) !important;
                             }
                         }
 

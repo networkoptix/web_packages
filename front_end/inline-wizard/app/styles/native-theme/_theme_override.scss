@@ -46,7 +46,7 @@ These hacks are to make header and dialog have a bit different colors
 }
 
 .has-error .form-control {
-  border-color : $error !important;
+  border-color : var(--error) !important;
 }
 
 .help-block {

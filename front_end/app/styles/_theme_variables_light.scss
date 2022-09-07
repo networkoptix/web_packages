@@ -403,7 +403,7 @@ html {
     --dropdown-item-hover-color : #{$dark9};
     --dropdown-item-selected-bg : #{$light16};
     --dropdown-item-selected-color : #{$light1};
-    --dropdown-item-error-color : #{$error};
+    --dropdown-item-error-color : #{$red_l2};
 
     // part of drop-menu
     --system-tile-icon-offline-color : #{$red_l2};
@@ -505,13 +505,14 @@ html {
     --support-lang-wrapper-color : #{$light16};
     --support-tech-apple-color : #{$dark1};
     
-    --error-label : #{$error};
+    --error-label : #{$red-l2};
+    --error : #{$red-l2};
 
     --input-bg                 : #{$light1};
     --input-color              : #{$dark9};
     --input-border-color       : #{$light6};
-    --input-error-color        : #{$error};
-    --input-error-border-color : #{$error};
+    --input-error-color        : #{$red_l2};
+    --input-error-border-color : #{$red_l2};
     --input-hover-color        : #{$dark9};
     --input-hover-border-color : #{$light8};
     --input-focus-color        : #{$dark9};
@@ -536,7 +537,7 @@ html {
     --badge-color : #{$light1};
     --badge-selected-color : #{$light1};
     --badge-danger-bg    : #{$red_main};
-    --badge-danger-bright-bg    : #{$error};
+    --badge-danger-bright-bg    : #{$red_l2};
     --badge-danger-bright-color : #{$light1};
     --badge-warning-bg        : #{$yellow_d1};
     --badge-warning-bright-bg : #{$yellow_main};
