@@ -223,14 +223,14 @@ Force Tags        Threaded
     ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register Account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and text()="${ACCOUNT ALREADY EXISTS}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and contains(text(),"${ACCOUNT ALREADY EXISTS}")]
 
 20 Cannot register email that is already activated
     [tags]    C41563
     ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register and activate account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and text()="${ACCOUNT ALREADY EXISTS}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and contains(text(),"${ACCOUNT ALREADY EXISTS}")]
 
 21. Check registration email links, colors, cloud name, and user name
     [tags]    C24211    C43021    Customizations    smoke

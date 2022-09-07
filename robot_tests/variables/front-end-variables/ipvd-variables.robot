@@ -59,7 +59,7 @@ ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/a[con
 ${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[1]
 ${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[2]
-${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//button[contains(@class, "detailsClose")]
 ${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
 ${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[contains(@class,'active-camera-info')]
 ${IPVD DEVICE INFO PARAMETER}                ${IPVD DEVICE INFO}/div
@@ -99,7 +99,7 @@ ${IPVD FEEDBACK EMAIL}                ${IPVD FEEDBACK FORM}//input[@id='user_ema
 ${IPVD FEEDBACK MESSAGE}              ${IPVD FEEDBACK FORM}//textarea[@id='message']
 ${IPVD FEEDBACK PRIVACY POLICY}       ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
 ${IPVD FEEDBACK SEND BUTTON}          ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
-${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
+${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[contains(@class,'close')]
 
 ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]

@@ -255,7 +255,7 @@ Force Tags        account
     Click Button    //nx-apply//nx-process-button//button
     Sleep    1
     Verify in Account Page
-    Wait Until Element is Visible    //header/span[text()='${ACCOUNT INFORMATION}']
+    Wait Until Element is Visible    //header/span[contains(text(),'${ACCOUNT INFORMATION}')]
 
 16. Language change affects emails
     [Tags]    C41575

@@ -72,9 +72,9 @@ Force Tags
     # Failing due to CLOUD-8434
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
-    ${code}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
+    ${restore url}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
 
-    Go To    ${url}/authorize/restore_password/${code}
+    Go To    ${restore url}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}     ${RESET NEXT BUTTON}
     Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${RESET NEXT BUTTON}

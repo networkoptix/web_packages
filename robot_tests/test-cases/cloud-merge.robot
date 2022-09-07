@@ -383,7 +383,7 @@ Force Tags        merge
 
     Log   Step 5
     # Servers don't appear in the list if page is not reloaded
-    Reload Page
+    #Reload Page
     Sleep    95
     Wait Until Element Is Visible    ${SERVERS LINK}
 
