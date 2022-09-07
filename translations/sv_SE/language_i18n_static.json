@@ -201,8 +201,8 @@
             "This license is not currently activated": "Denna licens är för närvarande inte aktiverad",
             "This license has no deactivations remaining": "Denna licens har inga avaktiveringar kvar",
             "Cloud system Id does not match license activation": "Molnsystem-Id matchar inte licensaktivering",
-            "used": "{used} of {total} ({percent}%) is used",
-            "available": "Available",
+            "used": "{used} av {total} ({percent}%) används",
+            "available": "Tillgänglig",
             "usedSpace": "{usageSpace} ({percentage}%)"
         },
         "notUsedWarning": "Molnlagringen används inte för inspelning. Gå till <a href=\"{serverSettings}\">Servers inställningar</a> för att konfigurera den."
@@ -787,7 +787,7 @@
         "alert": "Varning"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. Alla rättigheter förbehållna"
     },
     "pages": {
         "developers": {

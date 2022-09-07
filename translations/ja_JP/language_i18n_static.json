@@ -54,7 +54,7 @@
             "label": "ライブビューアー"
         },
         "Owner": {
-            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "共有する権利とシステムがクラウドから接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "Viewer": {
@@ -86,7 +86,7 @@
             "label": "ライブビューアー"
         },
         "owner": {
-            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "共有する権利とシステムがクラウドから接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "viewer": {
@@ -655,7 +655,7 @@
         "accountNotActivated": "このアカウントはまだ有効化されていません。 <a href=\"/activate\"> 有効化リンクを再送信</a>",
         "accountNotActivatedAlternate": "アカウントが有効化されていません。 <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> にログインし、画面の指示に従ってください。",
         "alreadyExists": "このアカウントは既に存在します",
-        "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
+        "brokenAccount": "このアカウントが予期しない問題が発生しました。 <a href=\"/restore_password\">アカウントを復元</a>",
         "cantActivatePrefix": "アカウントを有効化できません",
         "cantAddYourOwnEmail": "自分のメールアドレスを追加することはできません",
         "cantChangeAccountPrefix": "変更を保存できません",
