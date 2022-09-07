@@ -4,7 +4,7 @@
             <header>
                 <div class="tfauth-status-switch-wrapper">
                     <nx-switch
-                        [checked]="account2faEnabled || totpExistsForAccount"
+                        [checked]="totpExistsForAccount"
                         (onSwitch)="switchToggle($event)"
                         id="2fa-active-status"
                         name="2fa-active-status"
