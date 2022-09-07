@@ -21,8 +21,10 @@ ${BROWSER}                            Chrome
 
 ${MODE}                               cloud
 
-${QA BURBANK SYSTEM IP}                10.1.5.106
-${QA BURBANK SYSTEM ID}                032c7c41-0ddd-48d7-ab09-616bfad7b5cc
+${THEME}                              light
+
+${QA BURBANK SYSTEM IP}               10.1.5.106
+${QA BURBANK SYSTEM ID}               032c7c41-0ddd-48d7-ab09-616bfad7b5cc
 
 #Emails
 ${BASE EMAIL}                         ${TEST EMAIL}+sendemail@gmail.com

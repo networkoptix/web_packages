@@ -502,3 +502,8 @@ class CloudPortalAPI(object):
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")
             return backupCode
+
+    @keyword
+    def set_user_theme(self, email, password, theme):
+        with CloudSession(self.env, email, password) as s:
+            s.post(f'{self.env}/api/custom-properties/theme/{email}', data={"theme": f"{theme}"})

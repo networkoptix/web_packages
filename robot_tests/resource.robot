@@ -49,6 +49,7 @@ Open Browser and go to URL
     Run Keyword If    ${check language}    Run Keywords
        ...    Go To    ${ENV}    AND
        ...    Check Language Anonymous
+    Execute Javascript    window.localStorage.setItem("ngx-webstorage|theme", '"${THEME}"')
     Go To    ${url}
 
 Regular Open Browser
@@ -131,6 +132,7 @@ Log In Cloud
     IF    '${validate}' == 'True' and '${2fa}' == 'False'    # adding 2fa to conditions as workaround since if 2fa active Get Account Language is failing on 401
         Check Language Logged In    ${email}    ${password}
     END
+    Set User Theme    ${email}    ${password}    ${THEME}
     IF    '''${button}''' != "None"
         Click Element    ${button}
     END
