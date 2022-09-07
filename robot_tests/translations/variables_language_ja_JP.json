@@ -344,7 +344,7 @@
     "ENABLE AUDIT TRAIL TEXT": "操作履歴を有効にする",
     "ENABLE AUDIT TRAIL DESCRIPTION TEXT": "すべてのユーザーアクションを追跡して記録します。",
     "ALLOW ONLY SECURE TEXT": "暗号化された接続のみを受け入れるようサーバーに強制する",
-    "ENCRYPT VIDEO TRAFFIC TEXT": "デスクトップおよびモバイルクライアントへの映像トラフィックを暗号化",
+    "ENCRYPT VIDEO TRAFFIC TEXT": "デスクトップおよびモバイルクライアントへの映像トラフィックを暗号化する",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "RTSPトラフィックの暗号化を有効にします。",
     "LIMIT SESSION DURATION TEXT": "セッション期間を制限",
     "RELEASES TAB TEXT": "リリース",
