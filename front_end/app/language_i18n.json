@@ -237,6 +237,7 @@
     "Failed to merge {primarySystem} and {secondarySystem}.": "Failed to merge {primarySystem} and {secondarySystem}.",
     "Failed to reset server.": "Failed to reset server.",
     "Failed to the check current system's password.": "Failed to the check current system's password.",
+    "Failed to transfer ownership.": "Failed to transfer ownership.",
     "Features": "Features",
     "Fetching Results...": "Fetching Results...",
     "Fill in all required fields": "Fill in all required fields",

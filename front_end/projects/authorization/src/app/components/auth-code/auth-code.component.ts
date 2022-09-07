@@ -155,6 +155,11 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
                 subHeader,
                 subHeaderSuffix: auth.passwordDetach()
             },
+            confirmPasswordTransfer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordTransfer()
+            },
             connectSystemToCloud: connect,
             setupWizard: connect,
             renewSessionDesktop: renew,

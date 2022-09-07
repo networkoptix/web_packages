@@ -51,6 +51,7 @@ export enum ClientType {
     passwordReset = 'confirmPasswordResetServer',
     passwordRestart = 'confirmPasswordRestartServer',
     passwordDetach = 'confirmPasswordDetachServer',
+    passwordTransfer = 'confirmPasswordTransfer',
     create = 'createAccount',
     connect = 'connectSystemToCloud',
     setup = 'setupWizard',

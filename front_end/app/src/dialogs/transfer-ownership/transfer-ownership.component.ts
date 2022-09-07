@@ -6,6 +6,7 @@ import type {
     SearchableDropdownItem
 } from '@components/dropdowns/searchable/searchable.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -37,6 +38,7 @@ export class TransferOwnershipModalContent implements OnInit {
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;
+    updateSession: boolean = false;
 
     userItems: UserItem[];
     selectedUser: UserItem;
@@ -46,7 +48,8 @@ export class TransferOwnershipModalContent implements OnInit {
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
-        private dialogRef: DialogRef,
+        private loginService: NxLoginService,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: {
             system: NxSystem,
         },
@@ -82,17 +85,25 @@ export class TransferOwnershipModalContent implements OnInit {
         this.transferOwnership = this.processService.createProcess(
             async () => {
                 const newOwnerEmail = this.selectedUser.value;
-
                 return this.cloudService
                     .startTransfer(this.system.id, newOwnerEmail)
                     .toPromise();
             },
-            { errorCodes },
+            { errorCodes, ignoreError: true },
             (res: SystemTransferInfo) => {
                 this.transferComplete = true;
                 this.transferInfo = res;
             },
-            () => {},
+            err => {
+                if (err?.resultCode === 'userPasswordRequired' || err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    this.updateSession = true;
+                    this.loginService.currentSystem = this.system;
+                    this.loginService.updateSession('transfer')
+                        .then(ready => {
+                            this.updateSession = !ready;
+                        });
+                }
+            },
         );
     }
 

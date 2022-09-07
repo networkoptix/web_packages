@@ -79,6 +79,7 @@ describe('NxAuthorizeComponent', () => {
                 passwordReset: () => 'to reset server',
                 passwordRestart: () => 'to restart server',
                 passwordDetach: () => 'to detach server',
+                passwordTransfer: () => 'to transfer system',
                 createAccountHeader: () => 'Create %CLOUD_NAME% Account',
                 loginErrorAdditional: () => 'Please try again or login to the system directly with your local account.',
                 connectErrorAdditional: () => 'Please try again later.',

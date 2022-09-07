@@ -147,6 +147,7 @@ export interface Authorize {
     passwordReset:              (params?: Record<string, string | number>) => string;
     passwordRestart:            (params?: Record<string, string | number>) => string;
     passwordDetach:             (params?: Record<string, string | number>) => string;
+    passwordTransfer:           (params?: Record<string, string | number>) => string;
     expiredAccountSubheader:    (params?: Record<string, string | number>) => string;
     createAccountHeader:        (params?: Record<string, string | number>) => string;
     activateHeader:             (params?: Record<string, string | number>) => string;
