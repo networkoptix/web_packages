@@ -312,11 +312,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     initProcesses(): void {
         this.systemNameProcess = this.processService.createProcess(
             () => {
-                if (this.systemName.trim()) {
-                    return;
+                const trimmedName = this.systemName.trim();
+                if (!trimmedName) {
+                    return Promise.reject();
                 }
                 return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService)
-                    .renameSystem(this.system.id, this.systemName.trim());
+                    .renameSystem(this.system.id, trimmedName);
             },
             { ignoreError: true },
             () => {
@@ -325,10 +326,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             },
             () => {
                 this.toastService.notify(
-                    this.LANG.toastMessage.nameFail().replace(
-                        '{type}',
-                        this.LANG.common.system()
-                    ),
+                    this.LANG.toastMessage.nameFail({ type: this.LANG.common.system() }),
                     this.CONFIG.toast.warning,
                 );
             });
