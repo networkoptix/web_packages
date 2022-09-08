@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '../pages/health/health.service';
@@ -28,6 +28,61 @@ interface LogV2 {
 
 interface LogLevelV2Response {
     [key: string]: LogV2;
+}
+
+interface PeerInfo {
+    id: string;
+    persistentId: string;
+    instanceId: string;
+    peerType: string;
+    dataFormat?: string;
+}
+
+interface OsInfo {
+    platform: string;
+    variant: string;
+    variantVersion: string;
+}
+
+interface RuntimeData {
+    activeAnalyticsEngines: string[];
+    brand: string;
+    customization: string;
+    flags: string;
+    hardwareIds: string[];
+    peer: PeerInfo;
+    platform: string;
+    publicIP: string;
+    version: number;
+    box?: string;
+    nx1mac?: string;
+    nx1serial?: string;
+    prematureLicenseExpirationDate?: string;
+    prematureVideoWallLicenseExpirationDate?: string;
+    updateStarted?: boolean;
+    userId?: string;
+    videoWallInstanceGuid?: string;
+    videoWallControlSession?: string;
+}
+
+interface RuntimeInfo {
+    port: number;
+    id: string;
+    osInfo: OsInfo;
+    osTimeMs: number;
+    timeZoneOffsetMs?: number;
+    timeZoneId: string;
+    runtimeData: RuntimeData;
+}
+
+interface ServerTimes {
+    serversRunTimeInfo: RuntimeInfo[];
+    serversInfo: t.ModuleInformationReply[];
+}
+
+interface ModuleInfoRest extends t.ModuleInformationReply {
+    osTimeMs: number;
+    timeZoneOffsetMs: number;
 }
 
 export class NxSystemRestAPI2 extends NxSystemRestAPI {
@@ -124,22 +179,43 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     //         { [useCache ? 'cache-request' : 'reset-cache']: 'true' })
     //         .pipe(map(res => this.responseWrapper(res)));
     // }
+    private getRuntimeInfo(serverId: '*'): Observable<RuntimeInfo[]>;
+    private getRuntimeInfo(serverId: string): Observable<RuntimeInfo>;
+    private getRuntimeInfo(serverId: string) {
+        return this.get(`/rest/v2/servers/${serverId}/runtimeInfo`);
+    }
+
+    // TODO: Clean up once VMS-35650 is implemented
+    private getServerTimesHelper(): Observable<ModuleInfoRest[]> {
+        return forkJoin({
+            serversInfo: this.getServerInfo('*'),
+            serversRunTimeInfo: this.getRuntimeInfo('*')
+        }).pipe(
+            map(({ serversInfo, serversRunTimeInfo }: ServerTimes): ModuleInfoRest[] => (
+                serversInfo.map(serverInfo => {
+                    const runTimeInfo = serversRunTimeInfo.find(({ id }) => id === serverInfo.id);
+                    return { ...serverInfo, osTimeMs: runTimeInfo.osTimeMs, timeZoneOffsetMs: runTimeInfo?.timeZoneOffsetMs || 0 };
+                })
+            ))
+        );
+    }
 
     getHardwareIdsOfServers(): Observable<t.NormalResponse<t.HardwareIds>> {
-        return this.getServerInfo('*')
+        return this.getRuntimeInfo('*')
             .pipe(map(servers => this.responseWrapper(
-                servers.map(({ hardwareIds, id }) => ({ hardwareIds, serverId: id })))
+                servers.map(({ runtimeData: { hardwareIds }, id }) => ({ hardwareIds, serverId: id })))
             ));
     }
 
     getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
-        return this.getServerInfo('*')
+        const timeToString = time => time?.toString() || '0';
+        return this.getServerTimesHelper()
             .pipe(map(servers => this.responseWrapper(
                 servers.map(({ id, osTimeMs, synchronizedTimeMs, timeZoneOffsetMs }) => ({
                     serverId: id,
-                    osTime: osTimeMs.toString(),
-                    vmsTime: synchronizedTimeMs.toString(),
-                    timeZoneOffset: timeZoneOffsetMs.toString()
+                    osTime: timeToString(osTimeMs),
+                    vmsTime: timeToString(synchronizedTimeMs),
+                    timeZoneOffset: timeToString(timeZoneOffsetMs)
                 }))
             )));
     }
