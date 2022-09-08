@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, switchMap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -37,6 +38,7 @@ export class NxSystemGroupsService {
         language: NxLanguageProviderService,
         private store: Store,
         private http: HttpClient,
+        private router: Router,
         private toastService: NxToastService,
         @Inject(WINDOW) private window: Window,
     ) {
@@ -58,7 +60,7 @@ export class NxSystemGroupsService {
                         // Also causes groups data response
                     }
                     return this.connection$;
-                })
+                }),
             )
             .subscribe({
                 next: value => this.receive(value as WebSocketIncoming),
@@ -67,10 +69,13 @@ export class NxSystemGroupsService {
                     this.reconnect();
                 },
                 complete: () => {
-                    // Assuming that we never want to deliberately close
-                    // the socket so if it does close we try to reconnect
+                    // Assuming that we never want to deliberately close the
+                    // socket while in the component so if it does close we
+                    // try to reconnect
                     console.log('WebSocket connection closed');
-                    this.reconnect();
+                    if (this.router.url.startsWith('/systems/groups')) {
+                        this.reconnect();
+                    }
                 }
             });
     }
@@ -79,7 +84,7 @@ export class NxSystemGroupsService {
         if (this.reconnectInterval) {
             this.resetReconnect();
         }
-        this.connection$ = undefined;
+        this.disconnect();
         this.toastService.show(
             this.LANG.systemGroups.connectionLost(),
             this.CONFIG.toast.danger,
@@ -102,6 +107,11 @@ export class NxSystemGroupsService {
     private resetReconnect(): void {
         clearInterval(this.reconnectInterval);
         this.reconnectInterval = undefined;
+    }
+
+    disconnect(): void {
+        this.connection$?.complete();
+        this.connection$ = undefined;
     }
 
     private send(data: WebSocketOutgoing): void {

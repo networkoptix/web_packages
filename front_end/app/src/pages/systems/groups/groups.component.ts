@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -25,7 +25,7 @@ import {
     templateUrl: 'groups.component.html',
     styleUrls: ['groups.component.scss']
 })
-export class NxSystemGroupsComponent implements OnInit {
+export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
 
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
@@ -70,6 +70,10 @@ export class NxSystemGroupsComponent implements OnInit {
                 })
             );
         });
+    }
+
+    ngOnDestroy(): void {
+        this.groupsService.disconnect();
     }
 
     trackItem(_index: number, item: Crumb): string {
