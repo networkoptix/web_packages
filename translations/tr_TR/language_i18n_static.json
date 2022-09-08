@@ -133,6 +133,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "%CLOUD_NAME% hesabı oluştur",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -1022,7 +1023,7 @@
             "cloud": "Bulut"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "root",

@@ -133,6 +133,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Crear cuenta %CLOUD_NAME%",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -1022,7 +1023,7 @@
             "cloud": "Nube"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> quiere transferirle la propiedad de este sistema a usted",
-        "transferTo": "Transferir propiedad a – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "root",

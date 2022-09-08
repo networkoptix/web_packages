@@ -78,7 +78,7 @@
             "label": "カスタムロール"
         },
         "disabled": {
-            "description": "ユーザーが無効の為にシステムにログインできません",
+            "description": "ユーザーは無効になっており、システムにログインできません",
             "label": "無効"
         },
         "liveViewer": {
@@ -133,6 +133,7 @@
         "passwordReset": "サーバーをリセットするために",
         "passwordRestart": "サーバーを再起動するために",
         "passwordDetach": "サーバーを切り離すために",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "再度ログインしてください",
         "createAccountHeader": "%CLOUD_NAME% アカウントを作成",
         "activateHeader": "%CLOUD_NAME% アカウントを有効化",
@@ -326,7 +327,7 @@
     },
     "dialogs": {
         "twoFa": {
-            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}  にログインできなくなります:",
+            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Adminから {count, plural, =0{# システム} other{# システム}}にログインできなくなります:",
             "wizardWarningDescr": "古いバージョンの %VMS_NAME% クライアントおよび Web Adminは、二要素認証をサポートしていません。",
             "installAuthApp": "認証アプリをまだお持ちでない場合は、モバイル端末に認証アプリをインストールしてください。 %CLOUD_NAME% は <strong>Google Authenticator</strong>、 <strong>Microsoft Authenticator</strong> および <strong>Duo Mobile</strong> に対応しています。",
             "nowEnabled": "二要素認証が %CLOUD_NAME% アカウントで <strong>有効</strong> になりました！"
@@ -1022,12 +1023,12 @@
             "cloud": "クラウド"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> がこのシステムの所有権をあなたに譲渡しようとしています",
-        "transferTo": "<strong>{ newOwnerName } ({ newOwnerEmail })</strong> に所有権を譲渡"
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "ルート",
-        "groupCount": "{count, plural, =0{# グループ} one{# グループ} other{# グループ}}",
-        "systemCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}",
+        "groupCount": "{count, plural, =0{# グループ}  other{# グループ}}",
+        "systemCount": "{count, plural, =0{# システム} other{# システム}}",
         "connectionLost": "切断されました。再接続しています…",
         "connectionRestored": "接続が復旧しました",
         "couldNotReconnect": "接続を復旧できませんでした",
