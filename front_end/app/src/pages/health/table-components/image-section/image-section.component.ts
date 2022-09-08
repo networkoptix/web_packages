@@ -54,7 +54,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
             return;
         }
         this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
-        this.fromEventSubscription = fromEvent<FocusEvent>(this.window, 'resize')
+        this.fromEventSubscription = fromEvent<Event>(this.window, 'resize')
             .pipe(debounceTime(10))
             .subscribe(() => {
                 this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;

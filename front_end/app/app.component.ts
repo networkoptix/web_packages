@@ -11,7 +11,7 @@ import {
 import {
     ActivationEnd,
     ActivationStart,
-    Event,
+    Event as RouterEvent,
     GuardsCheckEnd,
     GuardsCheckStart,
     Router,
@@ -345,7 +345,7 @@ export class AppComponent implements AfterViewInit {
         // Updates query params for components without routes.
         this.router.events
             .pipe(
-                filter((event: Event) => event instanceof ActivationStart ||
+                filter((event: RouterEvent) => event instanceof ActivationStart ||
                     event instanceof ActivationEnd ||
                     event instanceof GuardsCheckStart ||
                     event instanceof GuardsCheckEnd
@@ -374,7 +374,7 @@ export class AppComponent implements AfterViewInit {
                 }
             });
 
-        fromEvent<FocusEvent>(this.window, 'resize')
+        fromEvent<Event>(this.window, 'resize')
             .pipe(debounceTime(100))
             .subscribe(event => {
                 const { innerHeight, innerWidth } = event.target as Window;
@@ -399,7 +399,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        fromEvent(this.mainContainer.nativeElement, 'scroll').pipe().subscribe(() => {
+        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe().subscribe(() => {
             this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
         });
     }

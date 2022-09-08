@@ -10,7 +10,7 @@ import {
 import {
     ActivatedRoute,
     NavigationEnd,
-    Event,
+    Event as RouterEvent,
     Router,
     RoutesRecognized
 } from '@angular/router';
@@ -161,7 +161,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 this.headerService.setLocation(this.window.location.pathname);
             });
         // Updates windowWidth$ behavior subject on window resize
-        fromEvent<FocusEvent>(this.window, 'resize')
+        fromEvent<Event>(this.window, 'resize')
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerWidth),
@@ -328,7 +328,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         this.router.events
             .pipe(untilDestroyed(this))
-            .subscribe((event: Event) => {
+            .subscribe((event: RouterEvent) => {
                 if (event instanceof RoutesRecognized) {
                     this.systemId = event.state.root.firstChild.params.systemId || '';
                     this.storageService.systemId = this.systemId;

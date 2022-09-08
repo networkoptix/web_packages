@@ -168,7 +168,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             });
 
-        fromEvent<FocusEvent>(this.window, 'resize')
+        fromEvent<Event>(this.window, 'resize')
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerHeight),

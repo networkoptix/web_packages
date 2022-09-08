@@ -221,7 +221,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
             this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= 355;
-            fromEvent<FocusEvent>(this.window, 'resize')
+            fromEvent<Event>(this.window, 'resize')
                 .pipe(debounceTime(100))
                 .subscribe(event => {
                     const { innerHeight, innerWidth } = event.target as Window;

@@ -84,7 +84,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
                 : this.LANG.authorize.authCode.login()
         });
 
-        fromEvent<FocusEvent>(this.window, 'resize')
+        fromEvent<Event>(this.window, 'resize')
             .pipe(debounceTime(100))
             .subscribe(() => {
                 this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;

@@ -75,7 +75,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
             this.codeChange.emit(this.code);
         };
 
-        fromEvent<FocusEvent>(this.window, 'resize')
+        fromEvent<Event>(this.window, 'resize')
             .pipe(debounceTime(100))
             .subscribe(() => {
                 this.needLargerFooter = this.backToAuthSpan.nativeElement.offsetHeight > 32;
