@@ -5,28 +5,32 @@
     .menu {
         background-color : var(--light5);
         padding          : .5rem 0 0;
-        
+
         .menu-level-2 {
             border-radius : 2px;
         }
     }
-    
+
     .right-menu {
         position : absolute;
-        
+
         @include bootstrap.media-breakpoint-down(md) {
             position : inherit;
         }
     }
-    
+
     a {
         cursor : pointer;
     }
-    
+
     .add-ellipsis {
         @include ellipsis;
     }
-    
+
+    .card--body-info .section img {
+        overflow : hidden;
+    }
+
     #info- {
         &support-, &developer- {
             &email, &name, &url, &phone, &terms {
@@ -35,7 +39,7 @@
             }
         }
     }
-    
+
     .platform-icons {
         svg-icon {
             margin-right: 4px;
