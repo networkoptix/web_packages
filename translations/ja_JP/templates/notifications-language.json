@@ -3,7 +3,7 @@
     "emailSubject": "アカウントの有効化"
   },
   "cloud_invite": {
-    "emailSubject": "%CLOUD_NAME% に登録されました"
+    "emailSubject": "%CLOUD_NAME%に招待されました"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"

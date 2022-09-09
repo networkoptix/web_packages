@@ -1145,7 +1145,7 @@
         "forceLiveCacheForPrimaryStream": "Có nên lưu trữ một số khung cho luồng chính. Giá trị: \"có\" - luôn được bật (có thể sử dụng nhiều RAM), \"không\" - luôn bị tắt trừ khi được yêu cầu phát lại (ví dụ: HLS), \"tự động\" - tương tự như \"không\", nhưng được bật khi cải thiện trải nghiệm người dùng (ví dụ: khi một số plugin Analytics hoạt động trên máy ảnh)."
     },
     "result": "{count, plural, =0{# kết quả} one{# kết quả} other{# kết quả}}",
-    "additionalSystems": "{count, plural, =0{+ # Hệ thống} one{+ # Hệ thống} other{+ # Hệ thống}}",
+    "additionalSystems": "{count, plural, =0{+ # Hệ thống} other{+ # Hệ thống}}",
     "security": {
         "twoFa": {
             "twoFADescription": "Hiện tại bạn có <span id=\"target2FaSystems\">{count, plural, =0{# hệ thống như vậy} other{# hệ thống như vậy}}</span>.",

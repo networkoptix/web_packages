@@ -42,7 +42,7 @@
             "label": "管理者"
         },
         "Advanced Viewer": {
-            "description": "ライブ表示、アーカイブ表示、PTZコントロール 等",
+            "description": "ライブ映像を閲覧、錄像を閲覧、PTZコントロールなどを行うことができます",
             "label": "上位ビューアー"
         },
         "Custom": {
@@ -1145,13 +1145,13 @@
         "forceLiveCacheForPrimaryStream": "プライマリストリーム用にフレームをキャッシュするかどうか。値: \"yes\" - 常に有効 (RAMを多く消費する可能性あり)、 \"no\" - 再生時に要求される場合 (HLS等) を除いて常に無効、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上するとオンになります (分析プラグインがカメラで動作しているとき等)。"
     },
     "result": "{count, plural, =0{# 件の結果} one{# 件の結果} other{# 件の結果}}",
-    "additionalSystems": "{count, plural, =0{+ # システム} one{+ # システム} other{+ # システム}}",
+    "additionalSystems": "{count, plural, =0{+ # システム}  other{+ # システム}}",
     "security": {
         "twoFa": {
             "twoFADescription": "現在、<span id=\"target2FaSystems\">{count, plural, =0{# システム} one{# システム} other{# システム}}</span>が該当します。",
             "systemsRemainder": "さらに {count} 件...",
-            "v5Warning": "<span id=\"targetV5\">{count, plural, =0{# システム} one{# システム} other{# システム}}</span>のソフトウェアバージョンが5.0未満です。以前のバージョンの%VMS_NAME%クライアントは二要素認証をサポートしていないため、{count, plural, =0{該当システム} one{該当システム} other{該当システム}}には<strong>%VMS_NAME%クライアント</strong>でアクセスできなくなります。",
-            "v5WarningExplanation": "{count, plural, =0{これらのシステム} one{このシステム} other{これらのシステム}} へのアクセスを可能にするには、{count, plural, =0{システム} one{システム} other{システム}}をバージョン5.0に更新するか、チェックボックスを外してください。",
+            "v5Warning": "<span id=\"targetV5\">{count, plural, =0{# システム} other{# システム}}</span>のソフトウェアバージョンが5.0未満です。以前のバージョンの%VMS_NAME%クライアントは二要素認証をサポートしていないため、{count, plural, =0{該当システム} other{該当システム}}には<strong>%VMS_NAME%クライアント</strong>でアクセスできなくなります。",
+            "v5WarningExplanation": "{count, plural, =0{これらのシステム} other{これらのシステム}}へのアクセスを可能にするには、{count, plural, =0{システム} other{システム}}をバージョン5.0に更新するか、チェックボックスを外してください。",
             "disableWarning": "二要素認証を必要とするシステムが {count, plural,other{# 個}} あります。\n{count, plural, other{当該システム}}にログインできなくなります。"
         }
     },
