@@ -28,9 +28,9 @@ class BaseCache(object):
         self.lookup_key = lookup_key
 
     @staticmethod
-    def generate_lookup_key(language, state, identifier='', version='latest'):
+    def generate_lookup_key(language, state, identifier='', version='latest', customization_name=settings.CUSTOMIZATION):
         draft = state == "draft"
-        return f'{settings.CUSTOMIZATION}-{language.code}-{identifier}-{state}-{version if not draft else "latest"}'
+        return f'{customization_name}-{language.code}-{identifier}-{state}-{"latest" if draft else version}'
 
     @classmethod
     def clear_global_cache(cls):

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from functools import wraps
 from bs4 import BeautifulSoup
 from bs4.element import Tag
@@ -105,7 +106,7 @@ class SearchableCache(BaseCache):
 
     # @ignore_index_not_found
     def check_and_update_custom_settings(self):
-        if self.custom_settings:
+        if not settings.CELERY_WORKER and self.custom_settings:
             try:
                 self.current_settings = self.search_index.get_settings()
                 if self.check_if_settings_changed():
@@ -242,7 +243,7 @@ def apply_replacements(html, replacements):
     return html
 
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False):
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False, customization_name=settings.CUSTOMIZATION):
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
     REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
@@ -260,13 +261,13 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
     docs_json = []
 
     # Get global contexts and fill any matching variables in datarecords
-    cloud_portal = get_cloud_portal_asset()
+    cloud_portal = get_cloud_portal_asset(customization_name)
 
     for doc in docs:
         version = None
         doc_id = doc if type(doc) is int else doc.id
-        cache_key = f'{settings.CUSTOMIZATION}-{language.code}-{doc_id}-{state}'
-        doc_dict = DOC_CACHE[cache_key]
+        cache_key = f'{customization_name}-{language.code}-{doc_id}-{state}'
+        doc_dict = DOC_CACHE[cache_key] or {}
 
         # Check if we need to query for the asset and version
         if not doc_dict or not trust_cache or review or draft:
@@ -274,13 +275,13 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
                 doc = Asset.objects.filter(
                     id=doc, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
             if doc:
-                version = doc.version_id()
+                version = doc.version_id(customization=customization_name)
             else:
                 continue
 
         pending_review = None
         if review:
-            pending_review = get_review_matching_current_version(doc, version)
+            pending_review = get_review_matching_current_version(doc, version, customization_name)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -300,9 +301,9 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
             # Get values of article for this version
             values = DataStructure.find_actual_values(
-                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=settings.CUSTOMIZATION
+                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=customization_name
             )
-            values = {ds.name: val for ds, val in values.items()}
+            values = defaultdict(str, values)
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']

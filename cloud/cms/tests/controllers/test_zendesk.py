@@ -584,13 +584,13 @@ class TestZendeskMapper:
             'children': []
         }
 
-    def test_get_article_admin_url(self, mocker, get_mapper_instance, db):
+    def test_get_article_admin_url(self, mocker, get_mapper_instance, asset_type_factory, db):
         menu_node_name, asset_name, mock_asset_admin_url = [
             str(uuid4()) for _ in range(3)]
         site = baker.make(ZendeskSite)
         mocker.patch.object(Asset, 'admin_link', mock_asset_admin_url)
         article = baker.make(
-            ZendeskArticle, article_id=randint(1, 1000), menu_node__name=menu_node_name, asset__name=asset_name, site=site)
+            ZendeskArticle, article_id=randint(1, 1000), menu_node__name=menu_node_name, asset=baker.make(Asset, name=asset_name, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)), site=site)
         mapper = get_mapper_instance(site.customization.name)
 
         # Test only handles articles
@@ -834,12 +834,12 @@ def get_exporter_instance(mocker):
 
 class TestExporter:
 
-    def test_check_and_get_zenpy_article(self, mocker, get_exporter_instance, db):
+    def test_check_and_get_zenpy_article(self, mocker, get_exporter_instance, asset_type_factory, db):
         site = baker.make(ZendeskSite)
         exporter = get_exporter_instance(
             site.customization.name)
         new_zd_article = baker.make(
-            ZendeskArticle, site=site, sync=False)
+            ZendeskArticle, site=site, asset=baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)), sync=False)
         sync_log = baker.make(
             ZendeskSyncLog, zendesk_site=site)
 
@@ -858,7 +858,7 @@ class TestExporter:
         mock_articles = mocker.patch.object(
             exporter.zen_client.help_center, 'articles', return_value=expected_zenpy_article)
         existing_zd_article = baker.make(
-            ZendeskArticle, site=site, article_id=article_id)
+            ZendeskArticle, site=site, article_id=article_id, asset=baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)))
         assert exporter._check_and_get_zenpy_article(
             existing_zd_article, sync_log, False).id == article_id
         assert not existing_zd_article.needs_sync
@@ -876,8 +876,9 @@ class TestExporter:
             existing_zd_article, sync_log, False).id
         assert not existing_zd_article.article_id
 
-    def test_update_zenpy_from_zd_article(self, mocker, get_exporter_instance, db):
+    def test_update_zenpy_from_zd_article(self, mocker, get_exporter_instance, asset_type_factory, db):
         updated_zenpy_article = str(uuid4())
+        new_title = str(uuid4())
         site = baker.make(ZendeskSite)
         exporter = get_exporter_instance(
             site.customization.name)
@@ -889,7 +890,7 @@ class TestExporter:
         mock_section = baker.make(ZendeskSection, section_id=randint(1, 1000))
         zenpy_article = mocker.MagicMock()
         new_zd_article = baker.make(
-            ZendeskArticle, site=site, section=mock_section, permission_group_id=randint(1, 1000))
+            ZendeskArticle, site=site, section=mock_section, permission_group_id=randint(1, 1000), title=new_title, asset=baker.make(Asset, name=new_title, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)))
 
         # Test that update and create attempted
         assert exporter._update_zenpy_from_zd_article(
@@ -1402,7 +1403,7 @@ class TestExporter:
         assert exporter.sync_category(zd_category) is zenpy_category
 
 
-def test_sync_article(get_exporter_instance, mocker, db):
+def test_sync_article(get_exporter_instance, mocker, asset_type_factory, db):
     doc_json = str(uuid4())
     exporter = get_exporter_instance()
     customization = Customization.objects.filter(
@@ -1413,12 +1414,11 @@ def test_sync_article(get_exporter_instance, mocker, db):
         ZendeskCategory, site=site, category_id=randint(1, 1000))
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000))
-    asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first())
+    asset = baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation))
     review = baker.make(
         AssetCustomizationReview, customization=site.customization, version__asset=asset, state=AssetCustomizationReview.REVIEW_STATES.accepted)
     article = baker.make(
-        ZendeskArticle, site=site, section=section, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization])
+        ZendeskArticle, site=site, section=section, menu_node__asset=asset, asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization])
     mock_exporter_sync = mocker.patch.object(exporter, 'sync_article')
     sync_article(article, doc_json, site, exporter)
 
@@ -1433,7 +1433,7 @@ def test_sync_article(get_exporter_instance, mocker, db):
     assert created_sync_item.state == ZendeskSyncItem.SYNC_STATES.success
 
 
-def test_push_accepted_article_to_zendesk(mocker, db):
+def test_push_accepted_article_to_zendesk(mocker, asset_type_factory, db):
     exporter, *doc_json = [
         str(uuid4()) for _ in range(2)]
     customization = Customization.objects.filter(
@@ -1448,7 +1448,7 @@ def test_push_accepted_article_to_zendesk(mocker, db):
     mocker.patch('cms.controllers.zendesk.Exporter', return_value=exporter)
     mock_sync_article = mocker.patch('cms.controllers.zendesk.sync_article')
     asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first())
+        Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation))
     article = baker.make(
         ZendeskArticle, asset=asset)
 
@@ -1490,7 +1490,7 @@ def test_update_zd_section(mocker, get_exporter_instance, db):
     assert not delete
 
 
-def test_update_zd_article(mocker, get_exporter_instance, db):
+def test_update_zd_article(mocker, get_exporter_instance, asset_type_factory, db):
     exporter = get_exporter_instance()
     position = randint(1, 1000)
     customization = Customization.objects.filter(
@@ -1502,11 +1502,11 @@ def test_update_zd_article(mocker, get_exporter_instance, db):
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000))
     asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first(), customizations=[customization])
+        Asset, asset_type=asset_type_factory(type=AssetType.ASSET_TYPES.documentation), customizations=[customization])
     review = baker.make(
         AssetCustomizationReview, customization=site.customization, version__asset=asset, state=AssetCustomizationReview.REVIEW_STATES.accepted)
     article = baker.make(
-        ZendeskArticle, site=site, section=section, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization], needs_sync=True, sync=True)
+        ZendeskArticle, site=site, section=section, asset=asset, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization], needs_sync=True, sync=True)
     mock_sync_article = mocker.patch.object(exporter, 'sync_article')
 
     state = update_zd_article(article.menu_node, site,
@@ -1532,7 +1532,7 @@ def test_update_zd_article(mocker, get_exporter_instance, db):
     )
 
 
-def test_check_if_article_can_sync(mocker, db):
+def test_check_if_article_can_sync(mocker, asset_type_factory, db):
     mocker.patch('cms.controllers.zendesk.Exporter')
     customization = Customization.objects.filter(
         name=settings.CUSTOMIZATION).first()
@@ -1544,17 +1544,17 @@ def test_check_if_article_can_sync(mocker, db):
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000))
     asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first())
+        Asset, asset_type=asset_type_factory(type=AssetType.ASSET_TYPES.documentation))
     review = baker.make(
         AssetCustomizationReview, customization=site.customization, version__asset=asset, state=AssetCustomizationReview.REVIEW_STATES.accepted)
     article = baker.make(
-        ZendeskArticle, site=site, section=section, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization])
+        ZendeskArticle, site=site, section=section, asset=asset, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization])
 
     sync = check_if_article_can_sync(sync_log, article.menu_node)
     assert sync == (article, review)
 
 
-def test_process_asset(mocker, db):
+def test_process_asset(mocker, asset_type_factory, db):
     mocker.patch('cms.controllers.zendesk.Exporter')
     parent_enabled, force_update, position, node_name, * \
         nodes_list = [str(uuid4()) for _ in range(randint(10, 15))]
@@ -1570,11 +1570,11 @@ def test_process_asset(mocker, db):
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000))
     asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first())
+        Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation))
     review = baker.make(
         AssetCustomizationReview, customization=site.customization, version__asset=asset, state=AssetCustomizationReview.REVIEW_STATES.accepted)
     article = baker.make(
-        ZendeskArticle, site=site, section=section, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization], menu_node__name=node_name)
+        ZendeskArticle, site=site, section=section, menu_node__asset=asset, asset=baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)), menu_node__parent_menu__zendesk_sync_enabled=[customization], menu_node__name=node_name)
     mocker.patch('cms.controllers.zendesk.check_if_article_can_sync',
                  return_value=(article, review))
     mocker.patch(
@@ -1594,7 +1594,7 @@ def test_process_asset(mocker, db):
     assert updated_sync_item.state == ZendeskSyncItem.SYNC_STATES.success
 
 
-def test_process_nodes(mocker, db):
+def test_process_nodes(mocker, asset_type_factory, db):
     mock_exporter = mocker.patch(
         'cms.controllers.zendesk.Exporter').return_value
     mock_process_node = mocker.patch('cms.controllers.zendesk.process_node')
@@ -1604,12 +1604,14 @@ def test_process_nodes(mocker, db):
     ) or baker.make(ZendeskSite, customization=customization)
     category = baker.make(
         ZendeskCategory, site=site, category_id=randint(1, 1000))
+    sync_log = baker.make(ZendeskSyncLog, zendesk_site=site, zendesk_category=category)
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000), position=100)
     child_section = baker.make(
         ZendeskSection, site=site, name=str(uuid4()), parent_section=section, section_id=randint(1, 1000), position=100)
+    asset = baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation))
     article = baker.make(
-        ZendeskArticle, site=site, title=str(uuid4()), section=section, article_id=randint(1, 1000))
+        ZendeskArticle, site=site, asset=asset, title=str(uuid4()), section=section, article_id=randint(1, 1000))
     nodes = [article.menu_node]
 
     unwrap(process_nodes)(nodes, section)
@@ -1621,9 +1623,9 @@ def test_process_nodes(mocker, db):
     assert updated_article.title == article.title
 
 
-def test_process_node(mocker, db):
+def test_process_node(mocker, asset_type_factory, db):
     assets = [
-        baker.make(Asset)
+        baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation))
         for _ in range(5, 15)]
     nodes_list = [
         mocker.MagicMock(asset=asset)
@@ -1639,12 +1641,12 @@ def test_process_node(mocker, db):
     setattr(node, 'nodes_list', nodes_list)
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
-    sync_log = baker.make(ZendeskSyncLog, zendesk_site=site)
     category = baker.make(
         ZendeskCategory, site=site, category_id=randint(1, 1000))
+    sync_log = baker.make(ZendeskSyncLog, zendesk_site=site, zendesk_category=category)
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000), position=100)
-    article = baker.make(ZendeskArticle, site=site, section=section)
+    article = baker.make(ZendeskArticle, site=site, section=section, asset=baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)))
     node.zendeskarticle_set.add(article)
     mock_update_section = mocker.patch(
         'cms.controllers.zendesk.update_zd_section', return_value=section)
@@ -1661,9 +1663,9 @@ def test_process_node(mocker, db):
         article, delete=True, sync_log=sync_log)
 
 @pytest.mark.slow
-def test_process_general_section_node(mocker, get_exporter_instance, db):
+def test_process_general_section_node(mocker, get_exporter_instance, asset_type_factory, db):
     top_level_assets = [
-        baker.make(Asset)
+        baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation))
         for _ in range(5, 15)]
     nodes_list = [
         mocker.MagicMock(asset=asset)
@@ -1688,7 +1690,7 @@ def test_process_general_section_node(mocker, get_exporter_instance, db):
 
     # Test update removed articles
     removed_articles = [
-        baker.make(ZendeskArticle, site=site, article_id=randint(1, 1000))
+        baker.make(ZendeskArticle, site=site, article_id=randint(1, 1000), asset=baker.make(Asset, asset_type=asset_type_factory(AssetType.ASSET_TYPES.documentation)))
         for _ in range(randint(5, 15))]
     created_general_section.zendeskarticle_set.set(removed_articles)
     expected_sync_article_calls = [

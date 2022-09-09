@@ -61,7 +61,7 @@ class Event(models.Model):
     def __str__(self):
         return f'{self.object} - {self.type}'
 
-    def send(self):
+    def send(self, customization_name=settings.CUSTOMIZATION):
         self.save()
         # 1. Get all subscriptions for this event
         subscriptions = Subscription.objects.filter(Q(type=self.type, object='') |
@@ -92,7 +92,7 @@ class Event(models.Model):
             message = Message(
                 message=self.data,
                 user_email=subscription.user_email,
-                customization=user.customization if user else settings.CUSTOMIZATION,
+                customization=user.customization if user else customization_name,
                 type=self.type,
                 event=self
             )
@@ -178,7 +178,7 @@ class Feedback(models.Model):
     def __str__(self):
         return f'{self.asset_name} - {self.type}'
 
-    def send(self):
+    def send(self, customization_name=settings.CUSTOMIZATION):
         self.save()
         data = {
             'sender_name': self.sender_name,
@@ -205,7 +205,7 @@ class Feedback(models.Model):
         msg = Message.objects.create(
             user_email=json.dumps(emails),
             type=self.type,
-            customization=settings.CUSTOMIZATION,
+            customization=customization_name,
             message=data,
             event=event
         )

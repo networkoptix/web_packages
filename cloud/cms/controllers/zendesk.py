@@ -322,11 +322,11 @@ class Importer:
                 section['sections'], parent_section=zd_section, parent_menu_node=menu_node
             )
 
-    def import_knowledgebase(self, menu, category_name):
+    def import_knowledgebase(self, menu, category_name, customization_name=settings.CUSTOMIZATION):
         self.menu = menu
         self.category_name = category_name
         self.customization = Customization.objects.get(
-            name=settings.CUSTOMIZATION)
+            name=customization_name)
         self.site = ZendeskSite.objects.get_or_create(
             customization=self.customization)[0]
         self.branding = generate_branding_dict()
@@ -587,6 +587,8 @@ class ZendeskMapper(ZendeskBase):
 
 
 class Exporter(ZendeskBase):
+    debug = False
+
     def _check_and_get_zenpy_article(self, zd_article, sync_log, delete):
         zenpy_article = None
         if not zd_article.latest_sync(sync_log):
@@ -609,7 +611,7 @@ class Exporter(ZendeskBase):
                 zd_article.article_id = None
 
             if delete:
-                if zenpy_article:
+                if zenpy_article and not self.debug:
                     try:
                         self.zen_client.help_center.articles.archive(
                             zenpy_article)
@@ -633,7 +635,10 @@ class Exporter(ZendeskBase):
         zenpy_article.permission_group_id = zd_article.permission_group_id or self.default_permission_group_id
         zenpy_article.user_segment_id = zd_article.user_segment_id
         zenpy_article.draft = zd_article.draft
-        zenpy_article.title = zd_article.title
+        zenpy_article.title = zd_article.title or zd_article.asset.name
+
+        if self.debug:
+            return zenpy_article
 
         if not zenpy_article.id:
             try:
@@ -674,7 +679,7 @@ class Exporter(ZendeskBase):
             zenpy_translation = Translation(
                 source_id=zenpy_article.id, locale='en-us', source_type='Article')
         zenpy_translation.draft = zd_article.draft
-        zenpy_translation.title = zd_article.title
+        zenpy_translation.title = zd_article.title or zd_article.asset.name
         return zenpy_translation
 
     def _get_update_attachment_handler(self, existing_attachments, zenpy_article, portal_url, asset):
@@ -686,7 +691,7 @@ class Exporter(ZendeskBase):
 
             if attachment:
                 existing_attachments.remove(attachment)
-            else:
+            elif not self.debug:
                 try:
                     attachment = self.zen_client.help_center.attachments.create(
                         zenpy_article, external_file.file.file, inline=True, file_name=file_info['external_file_name'])
@@ -704,7 +709,7 @@ class Exporter(ZendeskBase):
             replacement = attachment.relative_path if getattr(
                 attachment, 'id', False) else f"{portal_url}{original}"
 
-            if original not in body:
+            if not self.debug and original not in body:
                 try:
                     self.zen_client.help_center.attachments.delete(attachment)
                 except RecordNotFoundException as exception:
@@ -731,6 +736,9 @@ class Exporter(ZendeskBase):
         return existing_attachments, body, attachments_changed
 
     def _clean_attachments(self, existing_attachments):
+        if self.debug:
+            return
+
         for attachment in existing_attachments:
             self.zen_client.help_center.attachments.delete(attachment)
 
@@ -759,13 +767,19 @@ class Exporter(ZendeskBase):
             new_labels = set(zenpy_article.label_names).difference(existing_labels)
             for new_label in new_labels:
                 label = Label(name=new_label)
-                self.zen_client.help_center.labels.create(zenpy_article, label)
-        if labels_changed or attachments_changed:
+                if not self.debug:
+                    self.zen_client.help_center.labels.create(zenpy_article, label)
+        if not self.debug and (labels_changed or attachments_changed):
             self.zen_client.help_center.articles.update(zenpy_article)
 
-        return updated_body, zd_article.title
+        title = zd_article.title or zd_article.asset.name
+
+        return updated_body, title
 
     def _update_or_create_article_translation(self, zenpy_article, zenpy_translation):
+        if self.debug:
+            return
+
         if zenpy_translation.id:
             self.zen_client.help_center.articles.update_translation(
                 zenpy_article, zenpy_translation)
@@ -825,12 +839,14 @@ class Exporter(ZendeskBase):
                 zd_section.section_id = None
                 zd_section.save()
 
-            if delete:
+            if delete and not self.debug:
                 if zenpy_section.id:
                     self.zen_client.help_center.sections.delete(zenpy_section)
                 zd_section.needs_sync = False
                 zd_section.save()
                 return
+        elif general_title := getattr(zd_section.parent_category, 'general_section_title', None):
+            return next(filter(lambda section: section.category_id == zd_section.parent_category.category_id and section.name == general_title, self.zen_client.help_center.sections()), zenpy_section)
 
         return zenpy_section
 
@@ -844,15 +860,16 @@ class Exporter(ZendeskBase):
 
         if zenpy_section.id:
             try:
-                zenpy_section = self.zen_client.help_center.sections.update(
-                    zenpy_section)
+                if not self.debug:
+                    zenpy_section = self.zen_client.help_center.sections.update(
+                        zenpy_section)
                 return self._update_zd_and_return_zenpy(zenpy_section, zd_section)
 
             except RecordNotFoundException:
                 zenpy_section.id = None
-
-        zenpy_section = self.zen_client.help_center.sections.create(
-            zenpy_section)
+        if not self.debug:
+            zenpy_section = self.zen_client.help_center.sections.create(
+                zenpy_section)
         return self._update_zd_and_return_zenpy(zenpy_section, zd_section)
 
     def _update_zd_and_return_zenpy(self, zenpy_section, zd_section):
@@ -870,16 +887,18 @@ class Exporter(ZendeskBase):
         if zenpy_translation:
             zenpy_translation.title = zd_section.name
             try:
-                self.zen_client.help_center.sections.update_translation(
-                    zenpy_section, zenpy_translation)
+                if not self.debug:
+                    self.zen_client.help_center.sections.update_translation(
+                        zenpy_section, zenpy_translation)
                 return zenpy_translation
 
             except RecordNotFoundException:
                 pass
 
         zenpy_translation = Translation(title=zd_section.name)
-        self.zen_client.help_center.sections.create_translation(
-            zenpy_section, zenpy_translation)
+        if not self.debug:
+            self.zen_client.help_center.sections.create_translation(
+                zenpy_section, zenpy_translation)
 
         return zenpy_translation
 
@@ -911,7 +930,7 @@ class Exporter(ZendeskBase):
             zenpy_category = self.zen_client.help_center.categories(
                 id=zd_category.category_id)
             if delete:
-                if zenpy_category:
+                if not self.debug and zenpy_category:
                     self.zen_client.help_center.categories.delete(
                         zenpy_category)
                 return
@@ -921,17 +940,19 @@ class Exporter(ZendeskBase):
     def _update_or_create_zenpy_category(self, zenpy_category, zd_category):
         if zenpy_category.id:
             try:
-                zenpy_category = self.zen_client.help_center.categories.update(
-                    zenpy_category)
+                if not self.debug:
+                    zenpy_category = self.zen_client.help_center.categories.update(
+                        zenpy_category)
 
                 return zenpy_category
 
             except RecordNotFoundException:
                 zenpy_category.id = None
+        if not self.debug:
+            zenpy_category = self.zen_client.help_center.categories.create(
+                zenpy_category)
+            zd_category.category_id = zenpy_category.id
 
-        zenpy_category = self.zen_client.help_center.categories.create(
-            zenpy_category)
-        zd_category.category_id = zenpy_category.id
         zd_category.save()
 
         return zenpy_category
@@ -946,8 +967,9 @@ class Exporter(ZendeskBase):
         if zenpy_translation:
             zenpy_translation.title = zd_category.name
             try:
-                self.zen_client.help_center.categories.update_translation(
-                    zenpy_category, zenpy_translation)
+                if not self.debug:
+                    self.zen_client.help_center.categories.update_translation(
+                        zenpy_category, zenpy_translation)
 
                 return zenpy_translation
 
@@ -955,8 +977,9 @@ class Exporter(ZendeskBase):
                 zd_category.category_id = None
 
         zenpy_translation = Translation(title=zd_category.name)
-        self.zen_client.help_center.categories.create_translation(
-            zenpy_category, zenpy_translation)
+        if not self.debug:
+            self.zen_client.help_center.categories.create_translation(
+                zenpy_category, zenpy_translation)
 
         return zenpy_translation
 
@@ -1014,7 +1037,7 @@ def push_accepted_article_to_zendesk(asset, customization_name=settings.CUSTOMIZ
         return
 
     lang = Language.objects.filter(code='en_US').first()
-    doc_json = documentation.generate_doc_json([asset], lang, external_link=True)[0]
+    doc_json = documentation.generate_doc_json([asset], lang, external_link=True, customization_name=customization_name)[0]
     try:
         exporter = Exporter(customization_name=customization_name,
                             cloud_portal=cloud_portal, verify_auth=True)
@@ -1089,7 +1112,7 @@ def update_zd_article(node: MenuNode, site: ZendeskSite, parent_section: Zendesk
         lang = Language.objects.filter(code='en_US').first()
         if publish:
             doc_json = documentation.generate_doc_json(
-                [node.asset], lang, external_link=True)[0]
+                [node.asset], lang, external_link=True, customization_name=customization.name)[0]
             doc_json['title'] = custom_name or doc_json.get('title', '')
         zd_article.title = doc_json.get('title') or node.name or node.asset.name
 
@@ -1154,7 +1177,7 @@ def process_asset(parent_zd, parent_enabled, zendesk_sync_log, force_update, pos
 
 @background
 def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk_sync_log: ZendeskSyncLog = None, force_update=False, verify_auth=False):
-    site = parent_zd.site
+    site = zendesk_sync_log.zendesk_category.site if zendesk_sync_log else parent_zd.site
     try:
         exporter = Exporter(customization_name=site.customization.name, verify_auth=verify_auth)
     except ZendeskInvalidConfiguration:
@@ -1185,7 +1208,7 @@ def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk
 
 
 def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, position, node):
-    site = parent_zd.site
+    site = zendesk_sync_log.zendesk_category.site
     customization = site.customization
     exporter = Exporter(customization_name=site.customization.name)
     enabled = parent_enabled and next(
@@ -1200,7 +1223,7 @@ def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, posi
         zd_section = zd_section or isinstance(
             parent_zd, ZendeskSection) and parent_zd
         if not zd_section:
-            zd_section = parent_zd.general_section
+            zd_section = zendesk_sync_log.zendesk_category.general_section
         process_asset(zd_section, parent_enabled,
                       zendesk_sync_log, force_update, position, node)
     else:

@@ -3318,8 +3318,11 @@ class Flag(AbstractUserFlag):
                 if group_ids.intersection(user_groups):
                     return True
 
-        if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
-            return True
+        try:
+            if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
+                return True
+        except:
+            pass
 
         return None
 
