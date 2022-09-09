@@ -9,11 +9,11 @@ Force Tags        storage
 *** Test Cases ***
 1. Loading State of Storage Locations Block
     [Tags]    C81803
-    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}     ${STORAGE ITEM}
     Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Should Be Equal As Integers    ${height}    259
+    Should Be Equal As Integers    ${height}    273
 
 2. Detailed Info in Storage Locations block
     [Tags]    C81534

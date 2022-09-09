@@ -122,9 +122,9 @@ ${STORAGE MODE COLUMN}              ${STORAGE SCROLLBAR}//th[contains(text(),"${
 ${STORAGE SPACE COLUMN}             ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS SPACE TEXT}")]
 ${STORAGE SIZE CHART}               //td[@class="size-chart"]
 
-${DELETE STORAGE MODAL}             //div[@class="modal-body"]
+${DELETE STORAGE MODAL}             //div[contains(@class, "modal-body")]
 ${DELETE STORAGE CLOSE BUTTON}      //button[@aria-label="Close"]
-${DELETE STORAGE CANCEL BUTTON}     //div[@class="modal-footer"]//button/span/parent::button
+${DELETE STORAGE CANCEL BUTTON}     //div[contains(@class, "modal-footer")]//button/span/parent::button
 ${DELETE STORAGE DELETE BUTTON}     //button[contains(text(), "${DELETE BUTTON TEXT}")]
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
