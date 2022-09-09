@@ -191,8 +191,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             .selectedDetailsSection
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                if (this.content) {
+                    this.content.selectedDetailsSection = selection;
+                    this.content = { ...this.content }; // trigger onChange
+                }
             });
 
         this.accountService.get().then(account => {

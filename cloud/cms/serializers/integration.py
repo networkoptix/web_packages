@@ -69,7 +69,7 @@ class IntegrationSerializer(serializers.Serializer):
     downloadFiles = serializers.DictField(required=False)
     downloadFilesOrder = serializers.DictField(
         child=serializers.IntegerField(), required=False)
-    requirementsAndCompatability = RequirementsAndCompatibilitySerializer(
+    requirementsAndCompatibility = RequirementsAndCompatibilitySerializer(
         required=False)
     versionDetails = serializers.DictField(required=False)
     lastModified = serializers.CharField(required=False)
