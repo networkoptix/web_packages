@@ -246,7 +246,7 @@ export class NxSystem extends System {
     }
 
     canUserViewCloudStorage() {
-        if (environment.isLocal) {
+        if (environment.isLocal || !this.CONFIG.featureFlags.cloudStorage) {
             return false;
         }
         return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||

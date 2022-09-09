@@ -180,7 +180,8 @@ const FeatureFlagKeys = [
     'cloudOwnershipTransfer',
     'viewCameraDetails',
     'logRocket',
-    'fullStory'
+    'fullStory',
+    'cloudStorage'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
