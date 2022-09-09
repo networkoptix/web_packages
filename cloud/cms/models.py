@@ -3170,8 +3170,11 @@ class Flag(AbstractUserFlag):
         if super().is_active(request):
             return True
 
-        if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
-            return True
+        try:
+            if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
+                return True
+        except:
+            pass
 
         return False
 

@@ -430,7 +430,7 @@ def handle_publish_single_customization(request, asset_review, can_publish, has_
 
     manage_release_note_notification(asset_review)
 
-    return publish_review(request, asset_review, settings.CUSTOMIZATION)
+    return publish_review(request, asset_review, asset_review.customization)
 
 
 @defer_handler

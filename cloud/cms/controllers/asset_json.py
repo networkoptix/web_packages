@@ -78,17 +78,17 @@ def generate_asset_dictionary(show_pending, show_drafts, asset, current_version,
     return asset_dict
 
 
-def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts):
+def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, customization_name=settings.CUSTOMIZATION):
     records = DataStructure.find_actual_values(data_structures, asset=asset, version_id=current_version,
-                                               draft=show_pending or show_drafts, customization_name=settings.CUSTOMIZATION)
+                                               draft=show_pending or show_drafts, customization_name=customization_name)
     return {ds.id: actual_value for ds, actual_value in records.items()}
 
 
-def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, asset, current_version):
+def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, asset, current_version, customization_name=settings.CUSTOMIZATION):
     records = find_actual_values(
-        data_structures, asset, current_version, show_pending, show_drafts)
+        data_structures, asset, current_version, show_pending, show_drafts, customization_name)
     for context in contexts:
-        context_dict = {} 
+        context_dict = {}
         for datastructure in context.datastructure_set.all():
             ds_name = datastructure.name
             if not datastructure.public:
@@ -108,16 +108,16 @@ def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, a
 
 def process_asset_global_contexts(language, cloud_portal, global_contexts, current_version, asset_dict, global_contexts_dict=None):
     context_processor = ContextProcessor(
-        asset=cloud_portal, version_id=current_version, 
-        preview=False, global_contexts=global_contexts, 
+        asset=cloud_portal, version_id=current_version,
+        preview=False, global_contexts=global_contexts,
         global_contexts_dict=global_contexts_dict
     )
     context_processor.process_global_contexts(
         content=asset_dict, language=language)
 
 
-def get_review_matching_current_version(asset, current_version):
+def get_review_matching_current_version(asset, current_version, customization_name=settings.CUSTOMIZATION):
     return AssetCustomizationReview.objects.filter(version__id__gt=current_version,
                                                    version__asset=asset,
-                                                   customization__name=settings.CUSTOMIZATION,
+                                                   customization__name=customization_name,
                                                    state=PENDING).last()
