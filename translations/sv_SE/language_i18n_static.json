@@ -133,7 +133,7 @@
         "passwordReset": "att återställa servern",
         "passwordRestart": "för att starta om servern",
         "passwordDetach": "att koppla från servern",
-        "passwordTransfer": "to transfer system",
+        "passwordTransfer": "att överföra systemet",
         "expiredAccountSubheader": "Logga in igen som",
         "createAccountHeader": "Skapa %CLOUD_NAME% konto",
         "activateHeader": "Aktivera %CLOUD_NAME% konto",
@@ -1023,7 +1023,7 @@
             "cloud": "Moln"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> vill överföra äganderätten till detta system till dig",
-        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "transferTo": "Överför äganderätten till – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "rot",
