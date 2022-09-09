@@ -49,6 +49,10 @@ export function strSplice(
     return text.slice(0, index) + replacement + text.slice(index);
 }
 
+export function caseInsenstiveSearch(text: string, search: string): boolean {
+    return text.toLowerCase().includes(search.toLowerCase());
+}
+
 /* Number */
 export function mod(n: number, m: number): number {
     return ((n % m) + m) % m;

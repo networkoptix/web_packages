@@ -13,6 +13,7 @@ import { escapeRegExp } from 'lodash-es';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
@@ -55,7 +56,7 @@ export class NxSearchableDropdown extends BaseDropdown {
     @Output() onClickElsewhere = new EventEmitter<string>();
 
     dropdownType: string = 'default';
-    filter: string = '';
+    filter: RegExp;
     _items: Item[];
     helpText: string = '';
 
@@ -86,25 +87,21 @@ export class NxSearchableDropdown extends BaseDropdown {
     }
 
     onSearchInput(_event: Event): void {
-        this.filter = this.searchInput.nativeElement.innerText;
+        let filter = this.searchInput.nativeElement.innerText;
         this.helpText = '';
 
         // long strings may produce line break when deleted
-        this.filter = this.filter.replace(/\n/g, '');
-        const regex = new RegExp(escapeRegExp(this.filter), 'gi');
+        filter = filter.replace(/\n/g, '');
 
-        if (this.filter) {
-            this._items = this.items
-                .filter(item =>
-                    regex.test(item.name) ||
-                    item.help && regex.test(item.help)
-                ).map(item => this.highlighted(item, regex));
+        if (filter) {
+            this.filter = new RegExp(`(${escapeRegExp(filter)})`, 'i');
+            this._items = this.items.filter(item =>
+                caseInsenstiveSearch(item.name, filter) ||
+                item.help && caseInsenstiveSearch(item.help, filter)
+            );
         } else {
-            this.resetHighlighting();
-        }
-
-        if (!this._items.length) {
-            this._items = [{ name: this.noMatchMsg, value: undefined, disabled: true }];
+            this.filter = undefined;
+            this._items = [...this.items];
         }
 
         this.show = true;
@@ -112,8 +109,7 @@ export class NxSearchableDropdown extends BaseDropdown {
 
     selectItem(item: Item): void {
         this.show = false;
-        this.filter = '';
-        this.resetHighlighting();
+        this.filter = undefined;
         this._selectedItem = item;
         this.searchInput.nativeElement.innerText = item.name;
         this.helpText = item?.help;
@@ -123,7 +119,7 @@ export class NxSearchableDropdown extends BaseDropdown {
 
     clearSelectedItem(): void {
         this._selectedItem = { name: '', value: undefined };
-        this.filter = '';
+        this.filter = undefined;
         this.helpText = '';
         this.searchInput.nativeElement.innerText = '';
         this._items = [...this.items];
@@ -138,19 +134,11 @@ export class NxSearchableDropdown extends BaseDropdown {
         }
     }
 
-    private resetHighlighting(): void {
-        this._items = this.items.map(item => {
-            delete item.highlightedName;
-            delete item.highlightedHelp;
-            return item;
-        });
-    }
-
     handleSearchEnter(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             event.preventDefault();
             // Don't allow newline
-            if (this._items.length === 1 && this._items[0].value !== undefined) {
+            if (this._items.length === 1) {
                 this.selectItem(this._items[0]);
             }
         }
@@ -171,20 +159,6 @@ export class NxSearchableDropdown extends BaseDropdown {
             this.show = false;
             this.selectItem(item);
         }
-    }
-
-    private highlighted(item: Item, regex: RegExp): Item {
-        item.highlightedName = item.name.replace(
-            regex,
-            match => `<span class="highlighted">${match}</span>`
-        );
-
-        item.highlightedHelp = item.help?.replace(
-            regex,
-            match => `<span class="highlighted">${match}</span>`
-        );
-
-        return item;
     }
 
     clickedElsewhere(): void {

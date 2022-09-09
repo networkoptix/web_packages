@@ -67,7 +67,10 @@
         }"
         [attr.aria-labelledby]="id"
     >
-        <ul class="dropdown-menu--list">
+        <ul
+            *ngIf="_items.length; else noMatches"
+            class="dropdown-menu--list"
+        >
             <li
                 class="dropdown-item-container"
                 *ngFor="let item of _items; trackBy: trackItem"
@@ -89,12 +92,21 @@
                     </ng-container>
                 </ng-template>
                 <ng-template #itemText>
-                    <span [innerHTML]="item.highlightedName || item.name | safe: 'html'"></span>
+                    <span>
+                        <nx-search-highlight
+                            [text]="item.name"
+                            [search]="filter"
+                        ></nx-search-highlight>
+                    </span>
                     <span
                         *ngIf="item.help"
                         class="additional-help"
-                        [innerHTML]="item.highlightedHelp || item.help"
-                    ></span>
+                    >
+                        <nx-search-highlight
+                            [text]="item.help"
+                            [search]="filter"
+                        ></nx-search-highlight>
+                    </span>
                 </ng-template>
                 <ng-template #enabledItem>
                     <a
@@ -123,5 +135,19 @@
                 </ng-template>
             </li>
         </ul>
+        <ng-template #noMatches>
+            <ul class="dropdown-menu--list">
+                <li class="dropdown-item-container">
+                    <span
+                        class="dropdown-item inset disabled"
+                        tabindex="0"
+                    >
+                        <span class="disabled">
+                            <span [innerHTML]="noMatchMsg"> </span>
+                        </span>
+                    </span>
+                </li>
+            </ul>
+        </ng-template>
     </div>
 </div>
