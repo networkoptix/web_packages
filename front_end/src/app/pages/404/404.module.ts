@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { Nx404Component } from './404.component';
 

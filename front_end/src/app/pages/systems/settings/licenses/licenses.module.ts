@@ -7,13 +7,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { LicenseSummaryModule } from '@components/summary/summary.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxLicenseDetailComponent } from './license-details/license.component';
 import { NxSystemLicensesComponent } from './licenses.component';

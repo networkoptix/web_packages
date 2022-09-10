@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
@@ -16,8 +18,6 @@ import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
 import { NxSystemAlertCardComponent } from './card/card.component';

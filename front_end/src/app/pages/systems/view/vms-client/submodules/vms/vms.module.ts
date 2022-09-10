@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@app/pipes/pipes.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { ComponentsModule } from '../../../../../../components/components.module';
 

@@ -10,9 +10,9 @@ import {
 } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { Auth, MenuNode } from '@services/menus.service.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';

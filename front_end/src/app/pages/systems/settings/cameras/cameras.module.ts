@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
@@ -13,7 +14,6 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxCamerasComponent } from './cameras.component';
 import {

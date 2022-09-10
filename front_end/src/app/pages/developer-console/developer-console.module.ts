@@ -5,12 +5,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ConsoleTableModule } from '@components/console-table/console-table.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxDevConsoleComponent } from './console/console.component';
 import { NxDevConsoleEditComponent } from './console/edit/console-edit.component';

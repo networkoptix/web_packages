@@ -5,9 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { ComponentsModule } from '../../../components/components.module';
 import { DirectivesModule } from '../../../directives/directives.module';

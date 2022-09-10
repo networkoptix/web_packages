@@ -1,5 +1,5 @@
-import { KeyTableFields } from '@src/language_i18n_static_types';
 import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
+import { KeyTableFields } from '@src/language_i18n_static_types';
 
 export enum CLOUD_STORAGE_STATES {
     LOADING = 'loading',

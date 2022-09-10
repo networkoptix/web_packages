@@ -6,12 +6,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { NxLayoutViewComponent } from '@components/layout-view/layout-view.component';
 import { LayoutViewModule } from '@components/layout-view/layout-view.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {

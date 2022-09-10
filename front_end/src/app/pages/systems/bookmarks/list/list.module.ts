@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { ClipModule } from '../../../../components/clip/clip.module';
 

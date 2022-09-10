@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxLandingComponent } from './landing.component';
 

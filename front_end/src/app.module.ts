@@ -33,6 +33,7 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { systemsReducer } from '@app/store/systems/systems.reducer';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -58,7 +59,6 @@ import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 // import { PipesModule } from '@app/pipes/pipes.module';
-import { systemsReducer } from '@app/store/systems/systems.reducer';
 
 import { AppComponent } from './app.component';
 

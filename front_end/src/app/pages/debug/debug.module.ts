@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ClientButtonModule } from '@components/open-client/open-client.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxDebugComponent } from './debug.component';
 

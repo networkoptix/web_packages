@@ -6,9 +6,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';

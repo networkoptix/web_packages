@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -15,8 +17,6 @@ import { NxAccountSecurityComponent } from '@pages/account/security/security.com
 import { NxAccountSecurityModule } from '@pages/account/security/security.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { TypeResolver } from './type-resolver';
 

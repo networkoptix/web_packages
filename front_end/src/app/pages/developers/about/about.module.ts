@@ -5,10 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { DevelopersGuard } from '@guards/developersGuard';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxDevToolsComponent } from '../dev-tools/dev-tools.component';
 

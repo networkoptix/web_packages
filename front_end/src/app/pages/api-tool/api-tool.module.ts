@@ -7,10 +7,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 import { MarkdownModule } from 'ngx-markdown';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
 import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';

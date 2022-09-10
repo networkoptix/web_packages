@@ -5,13 +5,13 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -11,7 +12,6 @@ import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {

@@ -8,13 +8,13 @@ import {
 import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxPollService } from '../poll.service';

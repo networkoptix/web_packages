@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './settings/admin/admin.component';
 import { NxSystemAdminModule } from './settings/admin/admin.module';

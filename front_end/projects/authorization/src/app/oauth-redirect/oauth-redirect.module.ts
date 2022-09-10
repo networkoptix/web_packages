@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxOAuthRedirectComponent } from './oauth-redirect.component';
 

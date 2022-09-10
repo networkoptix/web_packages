@@ -3,14 +3,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';

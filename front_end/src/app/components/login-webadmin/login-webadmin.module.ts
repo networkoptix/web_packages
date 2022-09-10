@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { LoginWebadminModalContent } from './login-webadmin.component';
 

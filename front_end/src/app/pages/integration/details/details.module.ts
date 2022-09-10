@@ -4,11 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { TagModule } from '@components/tag/tag.module';
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { DirectivesModule } from '../../../directives/directives.module';
 

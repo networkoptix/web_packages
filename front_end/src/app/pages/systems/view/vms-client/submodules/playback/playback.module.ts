@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
 import { PipesModule } from '@app/pipes/pipes.module';
+import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
 
 import { ComponentsModule } from '../../../../../../components/components.module';
 

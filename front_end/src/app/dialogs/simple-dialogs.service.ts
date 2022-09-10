@@ -5,7 +5,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig } from '@dialogs/dialog-ref';
@@ -14,6 +13,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { GenericModalContent } from './generic/generic.component';
 import { NxToastService } from './toast.service';

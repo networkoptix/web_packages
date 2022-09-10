@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 // import { NxDebugModule } from './debug/debug.module';
 

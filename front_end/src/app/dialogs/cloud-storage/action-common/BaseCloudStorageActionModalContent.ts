@@ -1,6 +1,5 @@
 import { map, Observable } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';
@@ -8,6 +7,7 @@ import { Process, ProcessSettings } from '@services/process.service/process';
 import { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { LicenseTagInfo } from '@services/system.service/license-manager/license-manager.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 export enum CloudStorageActionType {

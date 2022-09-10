@@ -7,7 +7,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     LoginWebadminModalContent
 } from '@components/login-webadmin/login-webadmin.component';
@@ -18,6 +17,7 @@ import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import type { NxAccountService } from '@services/account.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import type { IConfig } from './nx-config/config-types';

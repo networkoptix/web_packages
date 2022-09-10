@@ -9,6 +9,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
@@ -17,7 +18,6 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { TagModule } from '@components/tag/tag.module';
 import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';

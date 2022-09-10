@@ -18,6 +18,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { of } from 'rxjs';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
@@ -30,7 +31,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';

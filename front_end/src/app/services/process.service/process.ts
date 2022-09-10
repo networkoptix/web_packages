@@ -6,8 +6,8 @@ import {
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';

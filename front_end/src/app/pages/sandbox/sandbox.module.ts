@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
@@ -15,8 +17,6 @@ import { AuthGuard } from '@guards/authGuard';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
 import { NxGridLayoutComponent } from '../layout/layout.component';
