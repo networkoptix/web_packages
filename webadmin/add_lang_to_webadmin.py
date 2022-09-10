@@ -1,7 +1,7 @@
 import json
 
-description_path = "app/customization/description.json"
-config_path = "app/customization/webadmin_config.json"
+description_path = "src/customization/description.json"
+config_path = "src/customization/webadmin_config.json"
 
 
 def adding_lang_to_webadmin_config():

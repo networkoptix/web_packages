@@ -1,7 +1,7 @@
 import json, sys, os
 
 skins_path = os.path.abspath('../skins')
-description_path = "app/customization/description.json"
+description_path = "src/customization/description.json"
 
 with open(description_path) as description:
     customization_skin_name = json.load(description).get('skin')
@@ -10,4 +10,3 @@ with open(description_path) as description:
             print(name)
             sys.exit()
     print('blue')
-    
