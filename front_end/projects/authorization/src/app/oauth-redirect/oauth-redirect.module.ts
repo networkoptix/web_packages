@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxOAuthRedirectComponent } from './oauth-redirect.component';
 

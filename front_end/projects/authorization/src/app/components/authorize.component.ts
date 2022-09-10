@@ -17,7 +17,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -29,6 +28,7 @@ import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import {
     AuthorizeParams,

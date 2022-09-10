@@ -30,7 +30,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
