@@ -2,7 +2,7 @@
 
 @use "../../../../styles/typography";
 @use "../../../../../styles/theme_variables_common" as *;
-@use "app/src/styles/_bootstrap_utils" as bootstrap;
+@use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 $tablet-breakpoint: 609px;
 $large-tablet-breakpoint: 1049px;
@@ -15,16 +15,16 @@ $large-desktop-breakpoint: 1477px;
         color         : var(--body-text-color);
         margin-bottom : 48px;
     }
-    
+
     .heading-link {
         @extend .heading-non-link;
         cursor : pointer;
-        
+
         &:hover {
             text-decoration : underline;
         }
     }
-    
+
     .integrations {
         display        : flex;
         align-items    : center;
@@ -32,15 +32,15 @@ $large-desktop-breakpoint: 1477px;
         margin         : 36px auto;
         padding        : 0;
         //color          : $dark10;
-        
+
         @media screen and (min-width : $tablet-breakpoint) {
             padding : 0 8px;
             margin  : 96px auto !important;
         }
-        
+
         &-wrapper {
             display         : flex;
-            
+
             justify-content : center;
             flex-direction  : row;
             margin          : 0 -1rem -1rem 0;
@@ -49,38 +49,38 @@ $large-desktop-breakpoint: 1477px;
                 width : 100%;
             }
         }
-        
+
         button {
             font-size : 14px !important;
         }
     }
-    
+
     .info-block {
         display        : flex;
         flex-direction : column;
         flex           : 1 0 275px;
         padding        : 1.25rem;
-        
+
         @media screen and (min-width : $tablet-breakpoint) {
             max-width : 275px;
         }
-        
+
         p {
             line-height   : 1rem;
             margin-bottom : 1rem;
         }
     }
-    
+
     .info-block {
         margin : 0 1rem 1rem 0;
-        
+
         h3 {
             @include typography.medium15nocolor;
             margin-top    : 0;
             margin-bottom : 16px;
         }
     }
-    
+
     .integrations-block {
         position  : relative;
         margin    : 56px 0 1rem 0;
@@ -89,16 +89,16 @@ $large-desktop-breakpoint: 1477px;
         @media screen and (min-width : $tablet-breakpoint) {
             margin : 0 1rem 1rem 0;
         }
-        
+
         h3 {
             @include typography.medium15nocolor;
         }
-        
+
         .store-button {
             margin : 0 auto 20px 20px
         }
     }
-    
+
     // TODO: Remove - not used
     //.preloader-overlay {
     //    position         : absolute;
@@ -111,22 +111,22 @@ $large-desktop-breakpoint: 1477px;
     //    align-items      : center;
     //    background-color : $light1;
     //}
-    
+
     .integrations-blocks-wrapper {
         display               : grid;
         grid-template-columns : repeat(1, 1fr);
         grid-gap              : 4px;
         margin                : 20px;
-        
+
         @media screen and (min-width : $tablet-breakpoint) {
             grid-template-columns : repeat(2, 1fr);
         }
-        
+
         @media screen and (min-width : $desktop-breakpoint) {
             grid-template-columns : repeat(4, 1fr);
         }
     }
-    
+
     .integration-block {
         cursor           : pointer;
         position         : relative;
@@ -137,40 +137,40 @@ $large-desktop-breakpoint: 1477px;
         border           : 1px solid var(--border-color);
         border-radius    : 2px;
         background-color : transparent;
-        
+
         &:hover {
             border-color : var(--border-hover-color);
         }
-        
+
         &:active {
             border-color : var(--border-active-color);
         }
-        
+
         img {
             max-height : 54px;
             max-width  : calc(100% - 24px);
         }
     }
-    
+
     .integrations-block {
         @media screen and (max-width : $tablet-breakpoint) {
             width : 100%;
         }
-        
+
         & > h3 {
             margin : 20px 20px 0 20px;
         }
     }
-    
+
     .more-span {
         display         : flex;
         justify-content : center;
         align-items     : center;
-        
+
         p {
             margin : 0 !important;
         }
-        
+
         @for $start from 1 through 5 {
             &-#{$start} {
                 grid-column : list.slash(-#{$start + 1}, -1);

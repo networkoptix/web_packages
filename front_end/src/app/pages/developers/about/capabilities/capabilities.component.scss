@@ -1,22 +1,22 @@
 @use "../../../../styles/typography";
 @use "../../../../../styles/theme_variables_common" as *;
-@use "app/src/styles/_bootstrap_utils" as bootstrap;
+@use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 :host {
     .heading-non-link {
         @include typography.regular24nocolor;
         color : var(--body-text-color);
     }
-    
+
     .heading-link {
         @extend .heading-non-link;
         cursor : pointer;
-        
+
         &:hover {
             text-decoration : underline;
         }
     }
-    
+
     .capabilities {
         display        : flex;
         align-items    : center;
@@ -25,38 +25,38 @@
         padding        : 0 16px;
         max-width      : 896px;
         color          : var(--body-text-color);
-        
+
         @include bootstrap.media-breakpoint-down(xs) {
             margin-bottom : 24px !important;
         }
     }
-    
+
     .detail-blocks {
         margin          : 30px -16px 0 0;
         display         : flex;
         flex-wrap       : wrap;
         justify-content : center;
-        
+
         @include bootstrap.media-breakpoint-down(xs) {
             margin : 8px -16px 0 0;
         }
     }
-    
+
     .capability-card {
         height    : 280px;
         flex      : 1 0 30%;
         min-width : 228px;
         margin    : 0 16px 16px 0;
         cursor    : pointer;
-        
+
         &:hover {
             box-shadow : var(--card-shadow);
         }
-        
+
         &:active {
             box-shadow : var(--card-active-shadow);
         }
-        
+
         & header {
             background-color : var(--card-capability-header-bg);
             background-image : none !important;
@@ -65,17 +65,17 @@
             justify-content   : stretch;
             padding           : 16px;
             min-height        : 115px;
-            
+
             svg-icon svg {
                 height : 30px;
-                
+
                 .st0 {
                     fill-rule : evenodd;
                     clip-rule : evenodd;
                     //fill      : var(--card-capability-h3);
                 }
             }
-            
+
             & > .intro-line {
                 @include typography.medium14nocolor;
                 color : var(--card-capability-intro-color);
@@ -85,13 +85,13 @@
                 flex-grow       : 0;
                 margin-bottom   : 3px;
             }
-            
+
             & > h3 {
                 @include typography.medium24nocolor;
                 margin : 0;
             }
         }
-        
+
         & > .capability-detail {
             color : var(--card-capability-intro-color);
             padding : 16px;

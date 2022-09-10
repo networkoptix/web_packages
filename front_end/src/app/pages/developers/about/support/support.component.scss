@@ -1,6 +1,6 @@
 @use "../../../../../styles/theme_variables_common" as *;
 @use "../../../../styles/typography";
-@use "app/src/styles/_bootstrap_utils" as bootstrap;
+@use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 :host {
     .support-footer {
@@ -67,7 +67,7 @@
         &:after {
             margin-left : -64px;
         }
-        
+
         .left-image, .right-image {
             svg-icon svg .about-svg {
                 fill : var(--card-support-svg-elem-bg);
@@ -96,7 +96,7 @@
 
             ::ng-deep .support-body {
                 line-height : 1.23;
-                
+
                 p {
                     color : var(--card-support-color);
                 }
@@ -116,17 +116,17 @@
                         color            : var(--btn-primary-color) !important;
                         background-color : var(--btn-primary-bg) !important;
                         box-shadow       : var(--btn-primary-shadow);
-                    
+
                         &:hover:not([disabled]):not(.disabled) {
                             background-color : var(--btn-primary-hover-bg) !important;
                             box-shadow       : var(--btn-primary-hover-shadow);
                         }
-                    
+
                         &:focus,
                         &.focus {
-                    
+
                         }
-                    
+
                         &:active,
                         &.active {
                             color            : var(--btn-primary-active-color) !important;

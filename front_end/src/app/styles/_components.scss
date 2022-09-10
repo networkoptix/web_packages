@@ -1,6 +1,6 @@
 @use "../../styles/theme_variables_common" as *;
 @use "../styles/typography";
-@use "../../src/components/content-block/content-block.component";
+@use "../../app/components/content-block/content-block.component";
 @use "bootstrap_utils" as bootstrap;
 
 .section-placeholder {
@@ -142,15 +142,15 @@
         //        background-image : url("/static/images/promo/landing_promo_#{$i}.svg");
         //    }
         //}
-    
+
         &:nth-of-type(1) h2 {
             background-image : var(--promo-tile-img-1-path);
         }
-    
+
         &:nth-of-type(2) h2 {
             background-image : var(--promo-tile-img-2-path);
         }
-    
+
         &:nth-of-type(3) h2 {
             background-image : var(--promo-tile-img-3-path);
         }
@@ -209,23 +209,23 @@ landing-display-component {
 
 .ngx-charts-outer {
     display : flex;
-    
+
     .ngx-charts {
         float  : none !important;
         height : 500px;
-        
+
         .tick text {
             fill : var(--body-text-color) !important;
         }
     }
-    
+
     .chart-legend .legend-labels {
         background-color : var(--svg-legend-bg);
         border           : 1px solid var(--svg-legend-border-color);
-        
+
         .legend-label {
             color : var(--body-text-color);
-    
+
             .active .legend-label-text {
                 color : var(--body-text-color);
             }

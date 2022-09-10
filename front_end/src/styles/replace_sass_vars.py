@@ -23,18 +23,19 @@ from pathlib import Path
 from typing import Generator, Dict, Callable, Union, List
 
 TARGET_DIRS: List[Path] = [
-    "../src/pages/account",
-    "../src/pages/download",
-    "../src/pages/download-history",
-    "../src/pages/ipvd",
-    "../src/pages/integration",
-    "../src/pages/health",
-    "../src/pages/systems"
+    "../app/pages/account",
+    "../app/pages/download",
+    "../app/pages/download-history",
+    "../app/pages/ipvd",
+    "../app/pages/integration",
+    "../app/pages/health",
+    "../app/pages/systems"
 ]
 # Point this to your target directories
 
 VAR_NAME_RE_STR = r"[\w\-]+"
-CSS_VAR_NAME_REGEX =  re.compile(fr"--({VAR_NAME_RE_STR})")
+CSS_VAR_NAME_REGEX = re.compile(fr"--({VAR_NAME_RE_STR})")
+
 
 def get_var_names(file: Path) -> Generator[str, None, None]:
     return (
@@ -42,6 +43,7 @@ def get_var_names(file: Path) -> Generator[str, None, None]:
             file.read_text(encoding="utf-8")
         )
     )
+
 
 def main():
     global TARGET_DIRS
@@ -112,6 +114,7 @@ def main():
         "rgba": rgba_sub_func,
         "transparentize": transparentize_sub_func
     }
+
     def var_sub_re_func(match: re.Match) -> str:
         groupdict: groupdict_type = match.groupdict()
         target_match = is_target_var(groupdict["var_name"])
@@ -152,6 +155,7 @@ def main():
 
             with file.open("w", encoding="utf-8", newline="\n") as f:
                 f.write(contents)
+
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 @use "../../../styles/typography";
 @use "../../../../styles/theme_variables_common" as *;
-@use "app/src/styles/_bootstrap_utils" as bootstrap;
+@use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 .about-heading {
     padding: 0 16px;
@@ -8,7 +8,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    
+
     @include bootstrap.media-breakpoint-down(xs) {
         margin: 44px 0 16px 0;
     }
