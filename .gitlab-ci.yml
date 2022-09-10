@@ -217,7 +217,7 @@ frontend-lint-check:
   script:
     - cd front_end
     - npm ci
-    - npm run lint:ci app
+    - npm run lint:ci src
 
 fe-lint-tests-check:
   extends: .frontend-test
@@ -225,7 +225,7 @@ fe-lint-tests-check:
   script:
     - cd front_end
     - npm ci
-    - npm run lint:ci:tests app
+    - npm run lint:ci:tests src
 
 auth-lint-check:
   extends: .authorization-node
