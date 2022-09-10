@@ -98,8 +98,8 @@ export class AppComponent implements AfterViewInit {
     @ViewChild('cookieBanner', { read: ViewContainerRef }) cookieBanner: ViewContainerRef;
 
     lazyLoadHeader = async (): Promise<void> => {
-        await import('./src/components/header/header.module').then(m => m.HeaderModule);
-        const { NxHeaderComponent } = await import('./src/components/header/header.component');
+        await import('@components/header/header.module').then(m => m.HeaderModule);
+        const { NxHeaderComponent } = await import('@components/header/header.component');
         this.header.createComponent(NxHeaderComponent);
     };
 
@@ -107,24 +107,24 @@ export class AppComponent implements AfterViewInit {
         const idle = (): Promise<unknown> => new Promise(resolve => requestIdleCallback(resolve));
 
         await idle();
-        await import('./src/components/toast/toast-container.module').then(m => m.ToastContainerModule);
-        const { NxToastsContainer } = await import('./src/components/toast/toast.container');
+        await import('@components/toast/toast-container.module').then(m => m.ToastContainerModule);
+        const { NxToastsContainer } = await import('@components/toast/toast.container');
         this.appToast.createComponent(NxToastsContainer);
 
         await idle();
-        await import('./src/components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
-        const { NxCookieBannerComponent } = await import('./src/components/cookie-banner/cookie-banner.component');
+        await import('@components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
+        const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
         this.cookieBanner.createComponent(NxCookieBannerComponent);
 
         await idle();
-        await import('./src/components/ribbon/ribbon.module').then(m => m.RibbonModule);
-        const { NxRibbonComponent } = await import('./src/components/ribbon/ribbon.component');
+        await import('@components/ribbon/ribbon.module').then(m => m.RibbonModule);
+        const { NxRibbonComponent } = await import('@components/ribbon/ribbon.component');
         this.ribbon.createComponent(NxRibbonComponent);
 
         if (environment.isLocal) {
             await idle();
-            await import('./src/components/overlay-modal/overlay-modal.module').then(m => m.OverlayModalModule);
-            const { NxOverlayModalComponent } = await import('./src/components/overlay-modal/overlay-modal.component');
+            await import('@components/overlay-modal/overlay-modal.module').then(m => m.OverlayModalModule);
+            const { NxOverlayModalComponent } = await import('@components/overlay-modal/overlay-modal.component');
             this.overlayModalRef.createComponent(NxOverlayModalComponent);
         }
     };
