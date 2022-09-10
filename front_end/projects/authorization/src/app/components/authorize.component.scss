@@ -1,9 +1,9 @@
-@use "../../../../../app/src/styles/typography";
-@use "../../../../../app/src/styles/mixins";
-@use "../../../../../app/styles/theme_variables_common" as *;
-@use "../../../../../app/styles/css-variables/native-theme/theme_palette" as *;
-@use "../../../../../app/styles/css-variables/theme_palette" as *;
-@use "../../../../../app/styles/css-variables/theme_variables" as *;
+@use "../../../../../src/app/styles/typography";
+@use "../../../../../src/app/styles/mixins";
+@use "../../../../../src/styles/theme_variables_common" as *;
+@use "../../../../../src/styles/css-variables/native-theme/theme_palette" as *;
+@use "../../../../../src/styles/css-variables/theme_palette" as *;
+@use "../../../../../src/styles/css-variables/theme_variables" as *;
 
 @media only screen and (max-width: 355px)  {
     body {
