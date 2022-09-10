@@ -10,13 +10,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 
+import { NxSafePipe } from '@app/pipes/nx-safe';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSearchService } from '@services/search.service';
 import { WINDOW } from '@services/window-provider';
-import { NxSafePipe } from '@app/pipes/nx-safe';
 
 import { NxLevel1ItemComponent } from './level-1/level-1-item.component';
 import { NxLevel3ItemComponent } from './level-3/level-3-item.component';

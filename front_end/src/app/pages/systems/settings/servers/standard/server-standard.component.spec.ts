@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockProvider, MockDirective } from 'ng-mocks';
 import { of } from 'rxjs';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxAccountService } from '@services/account.service';
@@ -16,7 +17,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '@app/menu/menu.service';
 
 import { NxSystemStandardServerComponent } from './server-standard.component';
 import type { DropdownStorage } from './server-standard.component.types';

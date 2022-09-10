@@ -2,11 +2,11 @@ import { waitForAsync, TestBed } from '@angular/core/testing';
 import { Router, RouterEvent } from '@angular/router';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 
+import { headerNodes } from '@app/_mocks/nodesMock';
+import { setupTest41System } from '@app/_mocks/system.test';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
-import { headerNodes } from '@app/_mocks/nodesMock';
-import { setupTest41System } from '@app/_mocks/system.test';
 
 const eventSubject = new ReplaySubject<RouterEvent>(1);
 const routerMock = {

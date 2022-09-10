@@ -10,18 +10,18 @@ import { RouterLink } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockDirective } from 'ng-mocks';
 
-import { DirectivesModule } from '@directives/directives.module';
-import { NxAccountService } from '@services/account.service';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { WINDOW } from '@services/window-provider';
 import {
     getMockTranslations,
     HelperMockProvider,
     sanitizerMock
 } from '@app/_mocks/helpers.test';
 import { supportNode } from '@app/_mocks/knowledge_base_landing.mock';
+import { DirectivesModule } from '@directives/directives.module';
+import { NxAccountService } from '@services/account.service';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { WINDOW } from '@services/window-provider';
 
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { NxErrorStateComponent } from '../error-state/error-state.component';

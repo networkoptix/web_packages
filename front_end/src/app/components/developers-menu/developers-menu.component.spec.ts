@@ -7,14 +7,14 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockComponent, MockDirective, MockModule } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
+import { HelperMockProvider } from '@app/_mocks/helpers.test';
+import { PipesModule } from '@app/pipes/pipes.module';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxSearchComponent } from '@components/search/search.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { HelperMockProvider } from '@app/_mocks/helpers.test';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
 

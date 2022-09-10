@@ -12,6 +12,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 
+import { NxUnsafePipe } from '@app/pipes/nx-unsafe';
 import {
     NxAccountSettingsDropdown
 } from '@components/dropdowns/account-settings/account-settings.component';
@@ -31,7 +32,6 @@ import { NxStorageService } from '@services/storage.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { NxUnsafePipe } from '@app/pipes/nx-unsafe';
 
 import { NxHeaderComponent } from './header.component';
 import { NxNavDropdownComponent } from './nav-dropdown/nav-dropdown.component';

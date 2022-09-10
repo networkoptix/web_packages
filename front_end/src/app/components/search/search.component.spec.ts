@@ -13,13 +13,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockModule } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
+import { HelperMockProvider } from '@app/_mocks/helpers.test';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
-import { HelperMockProvider } from '@app/_mocks/helpers.test';
 
 import { NxSearchComponent } from './search.component';
 

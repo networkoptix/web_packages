@@ -2,17 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { MockProvider } from 'ng-mocks';
 
+import {
+    getCloudSettings,
+    getLocalSettings,
+    getModuleInformation
+} from '@app/_mocks/getSettings.mock';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
-import {
-    getCloudSettings,
-    getLocalSettings,
-    getModuleInformation
-} from '@app/_mocks/getSettings.mock';
 
 describe('Bootstrap Provider', () => {
     let bootstrapService: NxBootstrapProvider;

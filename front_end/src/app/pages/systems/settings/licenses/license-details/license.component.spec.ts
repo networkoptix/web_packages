@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import {
     NxContentBlockComponent
 } from '@components/content-block/content-block.component';
@@ -17,7 +18,6 @@ import {
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxLicenseDetailComponent } from './license.component';
 

@@ -14,6 +14,7 @@ import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -29,7 +30,6 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOW } from '@services/window-provider';
-import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxConsoleTableComponent } from './console-table.component';
 import {
