@@ -11,7 +11,7 @@ import { NxLayoutViewComponent } from '@components/layout-view/layout-view.compo
 import { LayoutViewModule } from '@components/layout-view/layout-view.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {

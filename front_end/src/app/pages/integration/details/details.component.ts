@@ -6,7 +6,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
+import type { Content } from '@app/menu/menu.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -22,8 +23,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu/menu.service';
-import type { Content } from '@src/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { IntegrationService } from '../integration.service';
 

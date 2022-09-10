@@ -9,7 +9,6 @@ import { curveBasis } from 'd3-shape';
 import { Subject, timer } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -18,6 +17,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE

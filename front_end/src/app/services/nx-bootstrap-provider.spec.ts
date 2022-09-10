@@ -12,7 +12,7 @@ import {
     getCloudSettings,
     getLocalSettings,
     getModuleInformation
-} from '@src/_mocks/getSettings.mock';
+} from '@app/_mocks/getSettings.mock';
 
 describe('Bootstrap Provider', () => {
     let bootstrapService: NxBootstrapProvider;

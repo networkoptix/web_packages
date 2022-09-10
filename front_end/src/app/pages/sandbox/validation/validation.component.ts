@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'validation',

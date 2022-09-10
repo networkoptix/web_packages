@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 /* Usage
  <nx-section-placeholder

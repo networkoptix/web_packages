@@ -10,7 +10,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { ComponentsModule } from '@components/components.module';
 import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
 import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';

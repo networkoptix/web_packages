@@ -10,13 +10,13 @@ import {
 } from '@ngneat/until-destroy';
 import { debounceTime, filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxAPIToolSystemService } from './services/api-tool-system.service';
 import { NxOpenAPIJSONService } from './services/openapi-json.service';

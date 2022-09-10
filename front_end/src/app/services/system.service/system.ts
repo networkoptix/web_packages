@@ -8,7 +8,7 @@ import {
 import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';

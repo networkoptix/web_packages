@@ -8,7 +8,6 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -19,6 +18,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

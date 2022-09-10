@@ -10,7 +10,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAccountSecurityComponent } from './security.component';
 

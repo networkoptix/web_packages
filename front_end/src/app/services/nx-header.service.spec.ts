@@ -5,8 +5,8 @@ import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
-import { headerNodes } from '@src/_mocks/nodesMock';
-import { setupTest41System } from '@src/_mocks/system.test';
+import { headerNodes } from '@app/_mocks/nodesMock';
+import { setupTest41System } from '@app/_mocks/system.test';
 
 const eventSubject = new ReplaySubject<RouterEvent>(1);
 const routerMock = {

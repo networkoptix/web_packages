@@ -16,7 +16,6 @@ import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -35,6 +34,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     paramSortFunc,
     addPseudoAnchor,

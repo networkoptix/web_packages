@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -18,6 +17,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type {
     NxSystemUser
 } from '@services/system.service/user-manager/user-manager-types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @Component({

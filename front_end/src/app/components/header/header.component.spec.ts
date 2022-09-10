@@ -31,7 +31,7 @@ import { NxStorageService } from '@services/storage.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { NxUnsafePipe } from '@src/pipes/nx-unsafe';
+import { NxUnsafePipe } from '@app/pipes/nx-unsafe';
 
 import { NxHeaderComponent } from './header.component';
 import { NxNavDropdownComponent } from './nav-dropdown/nav-dropdown.component';

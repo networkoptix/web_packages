@@ -8,9 +8,9 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { getMockTranslations } from '@src/_mocks/helpers.test';
-import { headerNodes } from '@src/_mocks/nodesMock';
-import { setupTest41System } from '@src/_mocks/system.test';
+import { getMockTranslations } from '@app/_mocks/helpers.test';
+import { headerNodes } from '@app/_mocks/nodesMock';
+import { setupTest41System } from '@app/_mocks/system.test';
 
 import { NxSessionService } from './session.service';
 import { WINDOW } from './window-provider';

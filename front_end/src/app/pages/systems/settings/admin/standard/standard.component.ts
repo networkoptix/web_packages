@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -28,7 +28,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
-import { NxMenuService } from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { delayInitial } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

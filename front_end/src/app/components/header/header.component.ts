@@ -24,7 +24,6 @@ import {
 } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
@@ -40,6 +39,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 class CombinedWidths {
     constructor(

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';
@@ -19,6 +18,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import type { LinkSettings } from '@services/url-protocol.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-debug',

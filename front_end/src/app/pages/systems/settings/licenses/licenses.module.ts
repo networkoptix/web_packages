@@ -13,7 +13,7 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { LicenseSummaryModule } from '@components/summary/summary.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxLicenseDetailComponent } from './license-details/license.component';
 import { NxSystemLicensesComponent } from './licenses.component';

@@ -11,7 +11,6 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -22,6 +21,7 @@ import type { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

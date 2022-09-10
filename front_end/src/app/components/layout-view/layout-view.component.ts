@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode } from '@components/layout-grid/layout-grid.types';
 import { NxAccountService } from '@services/account.service';
@@ -17,6 +16,7 @@ import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId, paramSortFunc } from '@utils/general';
 
 interface Resource {

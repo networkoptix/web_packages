@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { NxMenuService } from '@src/menu/menu.service';
+import { NxMenuService } from '@app/menu/menu.service';
 
 import type {
     AspectRatioDropdownItem,

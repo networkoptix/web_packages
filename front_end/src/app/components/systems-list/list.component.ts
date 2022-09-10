@@ -11,7 +11,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
@@ -27,6 +26,7 @@ import type {
 } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { htmlToEntity } from '@utils/general';
 
 type Endpoint = Partial<{

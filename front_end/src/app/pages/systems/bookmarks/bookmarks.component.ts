@@ -5,7 +5,6 @@ import { cloneDeep } from 'lodash-es';
 import { combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, delay, filter, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
     SearchTag,
     SearchFilter
@@ -18,6 +17,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { BookmarkService } from './bookmark.service';
 import type { Bookmark } from './bookmark.types';

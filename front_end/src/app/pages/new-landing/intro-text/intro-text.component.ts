@@ -12,7 +12,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -21,6 +20,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({

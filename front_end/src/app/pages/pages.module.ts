@@ -11,7 +11,7 @@ import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {

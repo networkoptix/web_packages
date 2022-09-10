@@ -15,8 +15,8 @@ import { NxAccountSecurityComponent } from '@pages/account/security/security.com
 import { NxAccountSecurityModule } from '@pages/account/security/security.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
-import { MenuModule } from '@src/menu/menu.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { TypeResolver } from './type-resolver';
 

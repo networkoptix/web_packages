@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig } from '@dialogs/dialog-ref';

@@ -15,7 +15,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
     InfoBlockLine,
     InfoBlockSection,
@@ -36,6 +35,7 @@ import type {
 } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { htmlToEntity, pickFrom } from '@utils/general';
 
 import { T_FA_STEPS } from './two-fa.component.types';

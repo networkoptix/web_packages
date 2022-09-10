@@ -16,8 +16,8 @@ import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
-import { MenuModule } from '@src/menu/menu.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
 import { NxSystemAlertCardComponent } from './card/card.component';

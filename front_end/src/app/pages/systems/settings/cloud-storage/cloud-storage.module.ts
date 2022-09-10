@@ -11,7 +11,7 @@ import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxCloudStorageComponent } from './cloud-storage.component';
 

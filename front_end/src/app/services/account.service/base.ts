@@ -7,7 +7,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, take } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';

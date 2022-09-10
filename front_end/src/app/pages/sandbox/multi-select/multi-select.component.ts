@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';
-import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'multi-select',

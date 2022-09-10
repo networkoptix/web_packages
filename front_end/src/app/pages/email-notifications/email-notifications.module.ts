@@ -9,7 +9,7 @@ import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { StepperModule } from '@components/stepper/stepper.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { EmailNotificationsComponent } from './email-notifications.component';
 

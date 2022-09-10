@@ -9,7 +9,6 @@ import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -19,6 +18,7 @@ import { Process } from '@services/process.service/process';
 import {
     StorageManager
 } from '@services/system.service/storage-manager/storage-manager';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId, pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';

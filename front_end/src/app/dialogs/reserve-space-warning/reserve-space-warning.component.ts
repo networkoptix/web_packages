@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import type { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-reserve-space-warning',

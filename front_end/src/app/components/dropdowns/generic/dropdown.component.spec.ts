@@ -18,7 +18,7 @@ import {
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxGenericDropdown } from './dropdown.component';
 import type { DropdownItem } from './dropdown.component.types';

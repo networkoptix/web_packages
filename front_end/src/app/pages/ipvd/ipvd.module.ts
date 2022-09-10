@@ -11,7 +11,7 @@ import { ContentBlockModule } from '@components/content-block/content-block.modu
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { BoolIconComponent } from './cam-components/bool-icon/bool-icon.component';
 import { CamTableComponent } from './cam-components/cam-table/cam-table.component';

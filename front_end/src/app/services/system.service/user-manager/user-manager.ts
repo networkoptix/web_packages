@@ -1,6 +1,6 @@
 import { isEqual, cloneDeep } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';

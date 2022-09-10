@@ -11,7 +11,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
 import { environment } from '@environments/environment';
 import { NxApplyService } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -21,7 +21,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 

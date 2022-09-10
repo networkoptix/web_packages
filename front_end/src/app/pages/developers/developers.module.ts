@@ -11,7 +11,7 @@ import { DevelopersMenuModule } from '@components/developers-menu/developers-men
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { DevelopersGuard } from '@guards/developersGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { Nx404Component } from '../404/404.component';
 

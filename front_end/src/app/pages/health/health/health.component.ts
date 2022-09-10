@@ -13,7 +13,8 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
+import type { Content } from '@app/menu/menu.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -30,8 +31,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu/menu.service';
-import type { Content } from '@src/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxHealthService } from '../health.service';
 

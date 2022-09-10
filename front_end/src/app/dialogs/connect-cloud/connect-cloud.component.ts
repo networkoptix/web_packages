@@ -6,7 +6,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -17,6 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })

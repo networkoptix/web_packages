@@ -18,7 +18,6 @@ import { isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -29,6 +28,7 @@ import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import type { NgChanges } from '@utils/ng-changes';
 
 import { NxMenuService } from './menu.service';

@@ -14,7 +14,8 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
+import type { Content } from '@app/menu/menu.types';
 import { Account } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -26,8 +27,7 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu/menu.service';
-import type { Content } from '@src/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxHealthService } from '../health.service';
 

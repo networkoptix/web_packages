@@ -10,7 +10,7 @@ import { ContentBlockModule } from '@components/content-block/content-block.modu
 import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 @NgModule({
     imports: [

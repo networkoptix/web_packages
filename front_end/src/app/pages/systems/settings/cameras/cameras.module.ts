@@ -13,7 +13,7 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxCamerasComponent } from './cameras.component';
 import {

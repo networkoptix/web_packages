@@ -19,7 +19,7 @@ import { SystemLicenseSummaryModule } from '@components/widgets/system-license-s
 import { SystemListWidgetModule } from '@components/widgets/systems-list/systems-list-widget.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxDashboardComponent } from './dashboard.component';
 

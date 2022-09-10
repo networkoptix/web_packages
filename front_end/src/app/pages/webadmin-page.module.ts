@@ -6,7 +6,7 @@ import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.m
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 // import { NxDebugModule } from './debug/debug.module';
 

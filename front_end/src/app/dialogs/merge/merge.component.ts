@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
     DropdownItem,
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -24,6 +23,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';

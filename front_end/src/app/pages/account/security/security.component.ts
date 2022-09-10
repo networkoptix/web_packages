@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
@@ -24,7 +24,7 @@ import type {
     NxSystemWithUserInfo
 } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
-import { NxMenuService } from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     htmlToEntity,
     addPseudoAnchor,

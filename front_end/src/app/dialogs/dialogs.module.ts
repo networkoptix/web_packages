@@ -17,7 +17,7 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { TagModule } from '@components/tag/tag.module';
 import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';

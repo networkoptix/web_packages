@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
+import type { Content } from '@app/menu/menu.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
-import { NxMenuService } from '@src/menu/menu.service';
-import type { Content } from '@src/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import { IConfig } from '@services/nx-config/config-types';
-import { NxMenuService } from '@src/menu/menu.service';
 
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { NxRibbonService } from '../../../components/ribbon/ribbon.service';

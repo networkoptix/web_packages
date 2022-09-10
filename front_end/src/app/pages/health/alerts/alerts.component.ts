@@ -14,11 +14,11 @@ import { isEqual, cloneDeep } from 'lodash-es';
 import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '@src/menu/menu.service';
 import { paramSortFunc } from '@utils/general';
 
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';

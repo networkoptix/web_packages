@@ -12,7 +12,7 @@ import { ComponentsModule } from '@components/components.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxGroupListDumbComponent } from './components/group-list-dumb/group-list-dumb.component';
 import { NxSystemGroupTreeComponent } from './components/system-group-tree/system-group-tree.component';

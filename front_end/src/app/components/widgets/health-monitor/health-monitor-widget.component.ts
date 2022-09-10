@@ -4,7 +4,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -16,6 +15,7 @@ import type {
     NxSystemWithUserInfo
 } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { FirstPartyWidget } from '../helper-classes';
 

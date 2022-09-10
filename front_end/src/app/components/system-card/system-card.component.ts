@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
+import type { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'system-card',

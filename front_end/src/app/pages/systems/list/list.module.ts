@@ -15,7 +15,7 @@ import { NxSystemsListComponent } from '@components/systems-list/list.component'
 import { SystemListModule } from '@components/systems-list/list.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {

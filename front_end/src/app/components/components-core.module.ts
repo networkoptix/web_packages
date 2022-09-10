@@ -16,7 +16,7 @@ import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
 

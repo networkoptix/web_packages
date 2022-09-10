@@ -24,7 +24,7 @@ import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
-import { setupTest50System, setupTest41System } from '@src/_mocks/system.test';
+import { setupTest50System, setupTest41System } from '@app/_mocks/system.test';
 
 import { NxLicenseSummaryComponent } from './summary.component';
 

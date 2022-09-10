@@ -1,6 +1,7 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -13,7 +14,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'form-apply-example',

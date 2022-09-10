@@ -57,8 +57,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
-// import { PipesModule } from '@src/pipes/pipes.module';
-import { systemsReducer } from '@src/store/systems/systems.reducer';
+// import { PipesModule } from '@app/pipes/pipes.module';
+import { systemsReducer } from '@app/store/systems/systems.reducer';
 
 import { AppComponent } from './app.component';
 

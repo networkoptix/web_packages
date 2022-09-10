@@ -1,4 +1,4 @@
-import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 
 export interface DynamicLicense {

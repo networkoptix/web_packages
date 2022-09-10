@@ -26,7 +26,6 @@ import {
     catchError
 } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
     ClickEvent,
     MenuNodeWithParent,
@@ -49,6 +48,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { highlight } from '@utils/general';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';

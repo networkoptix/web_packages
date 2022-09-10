@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { WidgetCard } from '@components/widgets/helper-classes';
@@ -17,6 +16,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom, delayInitial } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;

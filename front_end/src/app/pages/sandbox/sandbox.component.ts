@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { NxMenuService } from '@src/menu/menu.service';
-import type { Content } from '@src/menu/menu.types';
+import { NxMenuService } from '@app/menu/menu.service';
+import type { Content } from '@app/menu/menu.types';
 
 @UntilDestroy()
 @Component({

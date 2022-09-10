@@ -10,7 +10,7 @@ import { ConsoleTableModule } from '@components/console-table/console-table.modu
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxDevConsoleComponent } from './console/console.component';
 import { NxDevConsoleEditComponent } from './console/edit/console-edit.component';

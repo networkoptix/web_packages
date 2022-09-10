@@ -15,8 +15,8 @@ import { AuthGuard } from '@guards/authGuard';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
-import { MenuModule } from '@src/menu/menu.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { MenuModule } from '@app/menu/menu.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
 import { NxGridLayoutComponent } from '../layout/layout.component';

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
 import { processLanguageFactory } from '@utils/general';

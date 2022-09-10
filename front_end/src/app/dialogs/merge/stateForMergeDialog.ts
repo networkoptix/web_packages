@@ -1,4 +1,4 @@
-import { DialogsMerge } from '@app/language_i18n_static_types';
+import { DialogsMerge } from '@src/language_i18n_static_types';
 
 export const State: {
     [state: string]: {

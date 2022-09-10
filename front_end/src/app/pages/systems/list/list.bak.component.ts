@@ -6,7 +6,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 // import { NxModalGenericComponent } from '@dialogs/generic/generic.component';
 import { NxAccountService } from '@services/account.service';

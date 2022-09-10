@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ConfigType, ConsoleSection } from '@components/console-table/console-table.component.types';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -15,6 +14,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import { ConsoleMode } from '../console.types';

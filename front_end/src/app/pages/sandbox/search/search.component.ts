@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
+import { NxMenuService } from '@app/menu/menu.service';
 import type { SearchFilter } from '@components/search/search.component.types';
-import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'search',

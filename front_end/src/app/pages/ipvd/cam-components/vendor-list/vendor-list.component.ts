@@ -13,13 +13,13 @@ import { ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import type { Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

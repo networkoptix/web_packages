@@ -8,7 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ComponentsModule } from '@components/components.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxAlertCounter } from './alert-counter/alert-counter.component';
 import { NxLevel1ItemComponent } from './level-1/level-1-item.component';

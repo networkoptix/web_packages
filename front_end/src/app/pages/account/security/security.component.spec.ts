@@ -34,8 +34,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
-import { NxMenuService } from '@src/menu/menu.service';
-import { NxSafePipe } from '@src/pipes/nx-safe';
+import { NxMenuService } from '@app/menu/menu.service';
+import { NxSafePipe } from '@app/pipes/nx-safe';
 
 import { NxAccountSecurityComponent } from './security.component';
 

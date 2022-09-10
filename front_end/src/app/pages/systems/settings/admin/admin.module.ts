@@ -11,7 +11,7 @@ import { ContentBlockModule } from '@components/content-block/content-block.modu
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';

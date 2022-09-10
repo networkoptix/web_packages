@@ -20,8 +20,8 @@ import {
     getMockTranslations,
     HelperMockProvider,
     sanitizerMock
-} from '@src/_mocks/helpers.test';
-import { supportNode } from '@src/_mocks/knowledge_base_landing.mock';
+} from '@app/_mocks/helpers.test';
+import { supportNode } from '@app/_mocks/knowledge_base_landing.mock';
 
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { NxErrorStateComponent } from '../error-state/error-state.component';

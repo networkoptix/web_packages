@@ -3,13 +3,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { forkJoin, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import type { License, NxSystemServer } from '@services/system.service/system-types';
-import { NxMenuService } from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';

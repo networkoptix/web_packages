@@ -10,13 +10,13 @@ import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'r
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { BaseResourceNode, LayoutRenderConfig, LayoutResourceTree, NewPosition, ParsedLayout, ParsedLayoutItem, ParsedLayoutItems, Point, Position, ResourceNode, Setting, Size } from './layout-grid.types';

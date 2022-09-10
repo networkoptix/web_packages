@@ -1,12 +1,12 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import type { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';

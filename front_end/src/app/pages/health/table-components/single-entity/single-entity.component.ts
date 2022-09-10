@@ -5,14 +5,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import {
     InfoBlockLine,
     InfoBlockSection
-} from '@src/components/info-block/info-block.component.types';
+} from '@app/components/info-block/info-block.component.types';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxHealthService } from '../../health.service';
 

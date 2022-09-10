@@ -14,7 +14,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
+import type { ContentToggle, Content, Level3Item } from '@app/menu/menu.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
@@ -40,8 +41,7 @@ import type {
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '@src/menu/menu.service';
-import type { ContentToggle, Content, Level3Item } from '@src/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId, htmlToEntity, paramSortFunc } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 

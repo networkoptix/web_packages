@@ -13,8 +13,8 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { HelperMockProvider } from '@src/_mocks/helpers.test';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { HelperMockProvider } from '@app/_mocks/helpers.test';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
 

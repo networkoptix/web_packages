@@ -5,7 +5,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxMenuService } from '@app/menu/menu.service';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -18,7 +18,7 @@ import { CloudStorageManager, CloudStorageUpdate } from '@services/system.servic
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { CLOUD_STORAGE_STATES, LicenseKeyFields, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
 import { NxSystem } from '@services/system.service/system';
-import { NxMenuService } from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxSettingsService } from '../settings.service';
 

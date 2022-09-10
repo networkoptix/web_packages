@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 import {
     TimelineSelectionService
