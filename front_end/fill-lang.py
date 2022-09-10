@@ -44,11 +44,11 @@ def parse_menus(nodes, parsed_menu=None):
 
 
 def add_menu_to_i18n():
-    dynamic_i18n_path = "./app/language_i18n.json"
+    dynamic_i18n_path = "./src/language_i18n.json"
     with open(dynamic_i18n_path, 'r') as language:
         json_data = json.load(language)
 
-    with open('./app/customization/menus.json') as cms_static_menus:
+    with open('./src/customization/menus.json') as cms_static_menus:
         menus = json.load(cms_static_menus)
         json_data.update(parse_menus(menus))
 

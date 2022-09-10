@@ -8,30 +8,30 @@ front_end/config.json
 front_end/.tmp
 front_end/.idea
 front_end/.sass-cache
-front_end/app/customization/webadmin_logo.png
-front_end/app/customization/webadmin_config.json
+front_end/src/customization/webadmin_logo.png
+front_end/src/customization/webadmin_config.json
 front_end/test/visual
 front_end/yarn.lock
 front_end/pnpm-lock.yaml
-front_end/app/images/promo
-front_end/app/images/favicon.ico
-front_end/app/images/logo.png
-front_end/app/images/dark_logo.png
-front_end/app/images/logo_small.png
-front_end/app/styles/custom
-front_end/app/styles/*.css
+front_end/src/images/promo
+front_end/src/images/favicon.ico
+front_end/src/images/logo.png
+front_end/src/images/dark_logo.png
+front_end/src/images/logo_small.png
+front_end/src/styles/custom
+front_end/src/styles/*.css
 front_end/**/*.js.map
-front_end/app/src/**/*.js
-front_end/app/language_compiled.json
-front_end/app/supported_languages.json
+front_end/src/app/**/*.js
+front_end/src/language_compiled.json
+front_end/src/supported_languages.json
 front_end/coverage
 front_end/reports
 translations/**/language_compiled.json
 
 
-front_end/app/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
-front_end/app/scripts/downgraded-providers.js
-front_end/app/{main,polyfills,vendor,overrides.d,app.module,app.component,ajs-upgraded-providers}.js
+front_end/src/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
+front_end/src/scripts/downgraded-providers.js
+front_end/src/{main,polyfills,vendor,overrides.d,app.module,app.component,ajs-upgraded-providers}.js
 
 subinclude:robot_tests/.hgignore
 

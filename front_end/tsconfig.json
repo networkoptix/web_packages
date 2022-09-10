@@ -30,9 +30,9 @@
       "@guards/*": ["app/routeGuards/*"],
       "@services/*": ["app/services/*"],
       "@utils/*": ["app/utils/*"],
-      "@src/*": ["*"],
+      "@src/*": ["app/*"],
       "@lib/*": ["lib/*"],
-      "@app/*": ["app/*"],
+      "@app/*": ["*"],
       "@authorization/*": ["../projects/authorization/*"]
     },
     "typeRoots": [
@@ -48,13 +48,13 @@
     "strictTemplates": true
   },
   "include": [
-    "app/main.ts",
-    "app/polyfills.ts"
+    "src/main.ts",
+    "src/polyfills.ts"
   ],
   "exclude": [
     "node_modules",
-    "app/**/*.spec.ts",
-    "app/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
     ".eslintrc.js"
   ]
 }
