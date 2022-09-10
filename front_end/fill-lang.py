@@ -22,7 +22,6 @@ def filter_extracted_static(json_key):
     return dot_access or camelcase
 
 
-
 def replace_empty(json_elem):
     if isinstance(json_elem, list):
         return [replace_empty(elem) for elem in json_elem]
