@@ -133,7 +133,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
-        "passwordTransfer": "to transfer system",
+        "passwordTransfer": "å overføre systemet",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Opprett %CLOUD_NAME% konto",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -1023,7 +1023,7 @@
             "cloud": "Cloud"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> ønsker å overføre eierskapet til dette systemet til deg",
-        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "transferTo": "Overfører eierskap til – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "toppnivå",
