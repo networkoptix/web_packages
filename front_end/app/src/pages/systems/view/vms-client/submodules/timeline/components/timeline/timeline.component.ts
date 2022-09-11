@@ -5,13 +5,14 @@ import {
     ViewChild,
     AfterViewInit,
     OnDestroy,
-    HostListener
+    HostListener, Inject
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { fromEvent, Subject } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { WINDOW } from '@services/window-provider';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import {
     calcScreenX,
@@ -55,7 +56,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     protected _mouseNotReleasedYet: boolean = false;
 
     private updateCanvas = new Subject();
-    private unsub$ = new Subject();
     private _animationTimeout;
 
     public hideTimeUnderMouse: boolean = false;
@@ -69,7 +69,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         protected canvasRenderer: TimelineCanvasRendererService,
         protected wheelHandler: TimelineWheelHandlerService,
         public timeUnderMouse: TimelineTimeUnderMouseService,
-        protected selection: TimelineSelectionService
+        protected selection: TimelineSelectionService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.archiveSelectionEnabled = this.configService.flagsEnabled(
             'archiveSelection'
@@ -100,9 +101,44 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timeline.subject
             .pipe(untilDestroyed(this))
             .subscribe(() => this._onTimelineStatusChange);
+    }
 
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(() => this.onAnimationFrame());
+    public ngAfterViewInit(): void {
+        fromEvent<Event>(this.window, 'resize')
+            .pipe(untilDestroyed(this))
+            .subscribe(() => this.updateCanvas.next(true));
+
+        this.updateCanvas
+            .pipe(
+                startWith(true),
+                debounceTime(50),
+                untilDestroyed(this)
+            ).subscribe(() => {
+                this._updateCanvasGeometry();
+                if (!this._animationFrameRequestHandler) {
+                    // allow CanvasGeometry to be updated
+                    setTimeout(() => {
+                        this._animationFrameRequestHandler =
+                                requestAnimationFrame(() => this.onAnimationFrame());
+                    }, 250);
+                }
+            });
+        this.updateCanvas.next(true);
+
+        this._pinchDestructor = onPinch(
+            this.canvasView.nativeElement,
+            ({ newScale, scaleChange, offset }) => {
+                const durationDelta =
+                    (scaleChange - 1) * this.timeline.fullRange.duration;
+                this.timeline.zoom(durationDelta, offset);
+            }
+        );
+    }
+
+    public ngOnDestroy(): void {
+        clearTimeout(this._animationTimeout);
+        this._animationFrameRequestHandler && cancelAnimationFrame(this._animationFrameRequestHandler);
+        this._pinchDestructor && this._pinchDestructor();
     }
 
     public onAnimationFrame(): void {
@@ -116,35 +152,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             this._animationFrameRequestHandler =
                 requestAnimationFrame(() => this.onAnimationFrame());
         }, this.timeline.renderFps);
-    }
-
-    public ngOnDestroy(): void {
-        this.unsub$.next(true);
-        clearTimeout(this._animationTimeout);
-        this._animationFrameRequestHandler && cancelAnimationFrame(this._animationFrameRequestHandler);
-        this._pinchDestructor && this._pinchDestructor();
-    }
-
-    public ngAfterViewInit(): void {
-        window.addEventListener(
-            'resize',
-            () => this.updateCanvas.next(true)
-        );
-
-        setTimeout(() => this.updateCanvas.next(true));
-        this.updateCanvas.pipe(
-            debounceTime(50),
-            takeUntil(this.unsub$)
-        ).subscribe(() => this._updateCanvasGeometry());
-
-        this._pinchDestructor = onPinch(
-            this.canvasView.nativeElement,
-            ({ newScale, scaleChange, offset }) => {
-                const durationDelta =
-                    (scaleChange - 1) * this.timeline.fullRange.duration;
-                this.timeline.zoom(durationDelta, offset);
-            }
-        );
     }
 
     protected _updateCanvasGeometry(): void {

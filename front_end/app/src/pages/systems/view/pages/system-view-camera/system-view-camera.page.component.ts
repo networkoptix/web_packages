@@ -605,32 +605,32 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public startPollingForNewlyRecordedChunks(): void {
-        timer(0, 10 * 1000).pipe(takeUntil(this.unsub$)).subscribe(() => {
-            const since = this.vms.selectedCamera.archiveRange.end;
-            const now = Date.now();
-            const cameraId = this.id;
-            this.system.getCameraRecords(this.id, since, now, 1).then(async ar => {
-                const records = this._extractPeriodsFromServerResponse(ar);
-                if (!ar.error || ar.error !== '0' || !records.length) {
-                    console.info('no newly recorded', ar);
-                } else {
-                    const prepared = records.map(r => {
-                        // the server has a weird habit of sending strings instead of numbers every now and then
-                        const start = Math.max(parseInt(r.startTimeMs), since);
-                        const duration = parseInt(r.durationMs);
-                        return new SimpleTimeRange(
-                            start,
-                            r.durationMs < 0
-                                ? now
-                                : start + duration
-                        );
-                    }).filter(tr => tr.duration > 0);
-                    if (prepared.length > 0) {
-                        this.vms.addRecordsToSelectedCamera(cameraId, prepared);
+        timer(0, 10 * 1000)
+            .pipe(takeUntil(this.unsub$))
+            .subscribe(() => {
+                const since = this.vms.selectedCamera.archiveRange.end;
+                const now = Date.now();
+                const cameraId = this.id;
+                this.system.getCameraRecords(this.id, since, now, 1).then(async ar => {
+                    const records = this._extractPeriodsFromServerResponse(ar);
+                    if ((!ar.error || ar.error === '0') && records.length) {
+                        const prepared = records.map(r => {
+                            // the server has a weird habit of sending strings instead of numbers every now and then
+                            const start = Math.max(parseInt(r.startTimeMs), since);
+                            const duration = parseInt(r.durationMs);
+                            return new SimpleTimeRange(
+                                start,
+                                r.durationMs < 0
+                                    ? now
+                                    : start + duration
+                            );
+                        }).filter(tr => tr.duration > 0);
+                        if (prepared.length > 0) {
+                            this.vms.addRecordsToSelectedCamera(cameraId, prepared);
+                        }
                     }
-                }
+                });
             });
-        });
     }
 
     private _extractPeriodsFromServerResponse(response) {
