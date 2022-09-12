@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/systems-page-resource.robot
 Suite Setup       Systems Page Suite Setup
-Test Setup        Run Keywords    QA Video Recording Start      Common Restart Logout    ${ENV}
-Test Teardown     Run Keywords    QA Video Recording Stop
+Test Setup        Systems Page Test Setup
+Test Teardown     QA Video Recording Stop
 Suite Teardown    Run Keyword and Ignore Error    Systems Page Suite Teardown
 Force Tags        system    cloud
 
