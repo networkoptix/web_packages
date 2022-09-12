@@ -113,6 +113,14 @@ class CloudPortalAPI(object):
             return r.json()
 
     @keyword
+    def set_user_theme(self, email, password, theme):
+        with CloudSession(self.env, email, password) as s:
+            s.headers.update({"Referer":self.env})
+            r = s.post(f'{self.env}/api/custom-properties/theme/{email}', auth=HTTPBasicAuth(email, password), data={"theme": f"{theme}"})
+            assert r.status_code==201
+            return r.json()
+
+    @keyword
     def set_account_name(self, email, password, first_name, last_name):
         with CloudSession(self.env, email, password) as s:
             r = s.post(f'{self.env}/api/account/', json={'first_name': first_name, 'last_name': last_name})
