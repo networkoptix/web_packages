@@ -131,8 +131,8 @@ Log In Cloud
     END
     IF    '${validate}' == 'True' and '${2fa}' == 'False'    # adding 2fa to conditions as workaround since if 2fa active Get Account Language is failing on 401
         Check Language Logged In    ${email}    ${password}
+        Set User Theme    ${email}    ${password}    ${THEME}
     END
-    Set User Theme    ${email}    ${password}    ${THEME}
     IF    '''${button}''' != "None"
         Click Element    ${button}
     END
