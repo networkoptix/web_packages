@@ -19,7 +19,7 @@ export class NxHSLThemeColorsComponent implements OnInit {
     @ViewChild('frmTheme', { static: true }) public frmTheme: NgForm;
 
     constructor(
-        private self: ElementRef,
+        private self: ElementRef<HTMLElement>,
         private menuService: NxMenuService,
     ) {}
 
@@ -27,28 +27,25 @@ export class NxHSLThemeColorsComponent implements OnInit {
         this.menuService.section = 'colors';
         this.menuService.detail = 'themeHSL';
 
-        this.rs = getComputedStyle(this.self.nativeElement as HTMLElement);
+        this.rs = getComputedStyle(this.self.nativeElement);
 
         this.brand.hue = this.rs.getPropertyValue('--color-h');
         this.brand.saturation = this.rs.getPropertyValue('--color-s');
         this.brand.luminosity = this.rs.getPropertyValue('--color-l');
     }
 
-    setHue(event: Event): void {
-        // @ts-expect-error value not part
-        this.brand.hue = event.target.value;
+    setHue(event: KeyboardEvent): void {
+        this.brand.hue = (event.target as HTMLInputElement).value;
         this.self.nativeElement.style.setProperty('--color-h', this.brand.hue);
     }
 
-    setSaturation(event: Event): void {
-        // @ts-expect-error value not part
-        this.brand.saturation = event.target.value;
+    setSaturation(event: KeyboardEvent): void {
+        this.brand.saturation = (event.target as HTMLInputElement).value;
         this.self.nativeElement.style.setProperty('--color-s', this.brand.saturation);
     }
 
-    setLuminosity(event: Event): void {
-        // @ts-expect-error value not part
-        this.brand.luminosity = event.target.value;
+    setLuminosity(event: KeyboardEvent): void {
+        this.brand.luminosity = (event.target as HTMLInputElement).value;
         this.self.nativeElement.style.setProperty('--color-l', this.brand.luminosity);
     }
 }
