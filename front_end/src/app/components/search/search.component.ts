@@ -109,17 +109,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
-
-        // TODO: remove if no issues found post 21.1 QA (soon)
-        // Causing issues with routing when manually input params into url
-        // Removing doesn't seem to effect functionality of search component, though
-        // this.location.subscribe((event: (PopStateEvent | any)) => {
-        //     // force search component update
-        //     setTimeout(() => {
-        //         this.updateFilter(this.uri.getParams());
-        //         this.modelChanged(false);
-        //     });
-        // });
     }
 
     ngOnInit(): void {
@@ -174,13 +163,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.modelUpdated.next();
     }
 
-    // See TODO in constructor, remove params argument at that time
-    // eslint-disable-next-line nx/no-untyped-arg
-    updateFilter(params?): void {
-        if (params?.value) {
-            this.params = params.value;
-        }
-
+    updateFilter(): void {
         this.localFilter.query = this.localFilter.search || '';
 
         if (this.params.search?.length) {
