@@ -291,10 +291,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return !url.includes('swagger-ui');
     }
 
-    private buildHeader(customHttpHeaders: IParams<string> = {}) {
+    // Legacy api requires runtime in the header of the request.
+    private requiresToken(url) {
+        return !url.includes('rest');
+    }
+
+    private buildHeader(customHttpHeaders: IParams<string> = {}, useToken = false) {
         const accessToken = this.accessToken;
         let headers = new HttpHeaders();
-        headers = headers.set(this.token, accessToken || this.#vmsToken || '');
+        if (useToken) {
+            headers = headers.set(this.token, accessToken || this.#vmsToken || '');
+        }
 
         // Not used for the time being.
         // headers = headers.set('Authorization', `Bearer ${accessToken}`);
@@ -341,7 +348,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         params = params || {};
 
-        const headers = this.buildHeader(customHttpHeaders);
+        const headers = this.buildHeader(customHttpHeaders, this.requiresToken(url));
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
@@ -366,7 +373,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         data = data || {};
 
-        const headers = this.buildHeader();
+        const headers = this.buildHeader({}, this.requiresToken(url));
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
