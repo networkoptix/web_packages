@@ -32,6 +32,10 @@ Systems Page Suite Setup
 
     Go to    ${ENV}
 
+Systems Page Test Setup
+    QA Video Recording Start
+    Common Restart Logout    ${ENV}
+
 Systems Page Suite Teardown
     FOR    ${sys}    IN    @{offline systems}    ${system}    ${extra system}
         Delete Base System    ${sys}

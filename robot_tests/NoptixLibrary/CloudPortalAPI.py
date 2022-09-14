@@ -113,14 +113,24 @@ class CloudPortalAPI(object):
             return r.json()
 
     @keyword
+    def set_user_theme(self, email, password, theme):
+        with CloudSession(self.env, email, password) as s:
+            s.headers.update({"Referer":self.env})
+            r = s.post(f'{self.env}/api/custom-properties/theme/{email}', auth=HTTPBasicAuth(email, password), data={"theme": f"{theme}"})
+            assert r.status_code==201
+            return r.json()
+
+    @keyword
     def set_account_name(self, email, password, first_name, last_name):
         with CloudSession(self.env, email, password) as s:
+            s.headers.update({"Referer": self.env})
             r = s.post(f'{self.env}/api/account/', json={'first_name': first_name, 'last_name': last_name})
             return r.json()
 
     @keyword
     def disconnect(self, email, password, system_id):
         with CloudSession(self.env, email, password) as s:
+            s.headers.update({"Referer": self.env})
             r = s.post(f'{self.env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
             assert r.status_code == 200
             return r.json()
@@ -145,6 +155,7 @@ class CloudPortalAPI(object):
         """Doesn't completely remove user from system users, but sets their role to none instead.
         Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
         with CloudSession(self.env, email, password) as s:
+            s.headers.update({"referer": f"{self.env}/authorize"})
             r = s.post(f'{self.env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
 
