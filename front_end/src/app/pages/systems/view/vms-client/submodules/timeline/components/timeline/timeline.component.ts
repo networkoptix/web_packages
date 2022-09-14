@@ -218,7 +218,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             ) {
                 this.selection.handleBackgroundMouseDown(e as MouseEvent);
             } else {
-                this.selection.reset();
                 this._mouseDownScreenX = calcScreenX(e);
                 this.timeUnderMouse.handleMouseDown();
             }

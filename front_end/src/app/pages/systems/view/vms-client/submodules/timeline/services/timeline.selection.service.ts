@@ -213,7 +213,8 @@ export class TimelineSelectionService {
 
     public handleMouseMove(e: MouseEvent) {
         this._lastMouseMove = e;
-        if (this._isActive) {
+
+        if (this._isActive && this._dragMode) {
             if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND) {
                 const offsetPx = this._getOffsetPx(e);
                 const time = this.timeline.domOffsetXtoTime(offsetPx);
