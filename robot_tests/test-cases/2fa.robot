@@ -10,7 +10,7 @@ Force Tags        Threaded
 
 *** Test Cases ***
 1. Enable and perform login with 2fa
-    [tags]    C93778
+    [tags]    smoke
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA SWITCH ENABLED}
@@ -18,7 +18,7 @@ Force Tags        Threaded
     Log In    ${login user}    ${password}    2fa=${True}
 
 2. 2fa login with random backup code
-    [Tags]    C94848
+    [Tags]    smoke
     Log In    ${login user}    ${password}
     ${random one time backup code}=    Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA SWITCH ENABLED}
@@ -36,27 +36,18 @@ Force Tags        Threaded
     Log Out
     Log In    ${login user}    ${password}    2fa=${True}
 
-4. Log in by existing user
-    [Tags]    C94717
-    Log In    ${login user}    ${password}
-    #Assigning random value to 2fa key value
-    Set Test Variable    ${2fa key value}        MUYDIYZQGE4GKZDC
-    Turn off 2fa Functionality
-    Log Out
-    Log In    ${login user}    ${password}
-    Wait Until Element Is Visible    ${CLOUD BLOCK}
-
 5. Successful disabling 2FA for user with enabled 2FA for specific systems
-    [Tags]    C93784
+    [Tags]    smoke
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality
     Check or uncheck 2fa ask for verification checkbox
     Turn off 2fa Functionality
     Wait Until Element Is Visible    ${2FA SWITCH}
     Element Should Be Visible    ${2FA SWITCH DISABLED}
+    Api Log In    email=${login user}    password=${password}    verification_code=3r3wr
 
 6. Successful disabling 2FA for user with enabled 2FA for the whole account
-    [Tags]    C93782
+    [Tags]    smoke
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA VERIFICATION CHECKBOX}
@@ -76,6 +67,7 @@ Force Tags        Threaded
     Checkbox Should Not Be Selected    ${2FA VERIFICATION CHECKBOX ID}
     Page Should Not Contain    ${2FA SETTINGS MODAL APPLY BTN}
     Page Should Not Contain    ${2FA SETTINGS MODAL CANCEL BTN}
+    Check or uncheck 2fa ask for verification checkbox
 
 
 8. Successfully changing 2FA mode for user to the whole account

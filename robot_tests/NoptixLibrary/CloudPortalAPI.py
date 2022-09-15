@@ -31,7 +31,7 @@ class CloudPortalAPI(object):
         self.baseEmail = email
 
     @keyword
-    def api_log_in(self, email, password, env=None, backup_code=None, verification_code=None):
+    def api_log_in(self, email, password, backup_code=None, verification_code=None, env=None,):
         cloud_session = CloudSession(self.env, email, password, backup_code, verification_code)
         cloud_session.login()
         return cloud_session
@@ -123,14 +123,12 @@ class CloudPortalAPI(object):
     @keyword
     def set_account_name(self, email, password, first_name, last_name):
         with CloudSession(self.env, email, password) as s:
-            s.headers.update({"Referer": self.env})
             r = s.post(f'{self.env}/api/account/', json={'first_name': first_name, 'last_name': last_name})
             return r.json()
 
     @keyword
     def disconnect(self, email, password, system_id):
         with CloudSession(self.env, email, password) as s:
-            s.headers.update({"Referer": self.env})
             r = s.post(f'{self.env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
             assert r.status_code == 200
             return r.json()
@@ -155,7 +153,6 @@ class CloudPortalAPI(object):
         """Doesn't completely remove user from system users, but sets their role to none instead.
         Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
         with CloudSession(self.env, email, password) as s:
-            s.headers.update({"referer": f"{self.env}/authorize"})
             r = s.post(f'{self.env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
 
@@ -477,6 +474,7 @@ class CloudPortalAPI(object):
     @keyword
     def toggle_2fa_on_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            s.headers.update({'Referer': self.env})
             verificationRes = s.post(f'{self.env}/api/2fa/verification', data=None)
             dataString = str(verificationRes.json().get("keyUrl"))
             splitString = dataString.split("secret=")
@@ -491,12 +489,19 @@ class CloudPortalAPI(object):
     @keyword
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
-            body = {"action": "deactivate", "mfaCode": verification_code}
-            securityRes = s.post(f'{self.env}/api/account/security', data=body)
+            r = s.get(f'{self.env}/api/account')
+            logger.trace(r.json())
+            if r.json()['account2faEnabled'] == True or r.json()['totpExistsForAccount'] == True:
+                s.headers.update({'Referer': self.env})
+                body = {"action": "deactivate", "mfaCode": verification_code}
+                securityRes = s.post(f'{self.env}/api/account/security', data=body)
+                logger.trace(securityRes.status_code)
+                assert securityRes.status_code == 200, 'Turning off 2fa failed'
 
     @keyword
     def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            s.headers.update({'Referer': self.env})
             backupPostRes = s.post(f'{self.env}/api/2fa/backup', data={"count": "8"})
             assert backupPostRes.status_code == 200, 'Generate backup codes failed'
             backupList = backupPostRes.json()
@@ -507,13 +512,10 @@ class CloudPortalAPI(object):
     @keyword
     def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            s.headers.update({'Referer': self.env})
             backupGetRes = s.get(f'{self.env}/api/2fa/backup/codes', data=None)
             assert backupGetRes.status_code == 200, 'Get backup codes failed'
             backupList = backupGetRes.json()
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")
             return backupCode
-
-    @keyword
-    def set_user_theme(self, email, password, theme):
-        r = requests.post(f'{self.env}/api/custom-properties/theme/{email}', auth=HTTPBasicAuth(email, password), data={"theme": f"{theme}"})

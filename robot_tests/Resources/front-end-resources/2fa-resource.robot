@@ -61,7 +61,7 @@ Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA COPY ALL BTN}
     # Get random login code from the list and save to variable
     ${random integer}=    Evaluate    random.randint(1,8)
-    ${random one time backup code}=    Get Text    //two-fa-modal-content//span[text()="${random integer}"]/..
+    ${random one time backup code}=    Get Text    //nx-two-fa-modal-content//span[text()="${random integer}"]/..
     ${random one time backup code}=    Get Substring    ${random one time backup code}    1
     Click Element    ${2FA OK BTN}
     Set Test Variable    ${2fa key value}        ${key}
@@ -104,8 +104,8 @@ Attempt login with used backup code
 
 
 Scan QR and decode to key
-    Wait Until Element Is Visible    //two-fa-modal-content//qr-code
-    ${qr screenshot}=    Capture Element Screenshot    //two-fa-modal-content//qr-code
+    Wait Until Element Is Visible    //nx-two-fa-modal-content//qr-code
+    ${qr screenshot}=    Capture Element Screenshot    //nx-two-fa-modal-content//qr-code
     ${key}=    decode_qr    ${qr screenshot}
     Click Element    ${2FA KEY MODAL NEXT BTN}
     [return]    ${key}
