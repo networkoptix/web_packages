@@ -19,9 +19,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
+// import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
@@ -48,7 +49,7 @@ export class MergeModalContent {
 
     user;
     system;
-    systems: NxSystem[];
+    systems: NxSystemInfo[];
     account: NxAccountService;
     checkMergeabilityFunction;
     checkMergeabilityProcess: Process;
@@ -709,7 +710,7 @@ export class MergeModalContent {
                 this.systems = systems;
             })
             .finally(() => {
-                const system: any = this.systems.find(system => system.id === this.primarySystem.id);
+                const system = this.systems.find(system => system.id === this.primarySystem.id);
                 const stateOfHealth = system?.stateOfHealth || this.primarySystem.stateOfHealth;
                 err.failedSystemName = stateOfHealth === 'online'
                     ? err.secondarySystemName

@@ -1,7 +1,4 @@
 import type { Params, GetStorages } from '../system-api.types';
-// import type { NxSystemWithUserInfo } from '../systems.service';
-
-import type { NxSystem } from './system';
 
 export interface IParams<Value = any> {
     [key: string]: Value;
@@ -36,22 +33,6 @@ export interface NxSystemServer {
     typeId: string;
     url: string;
     version: string;
-}
-/**
- * This type needs to be defined
- */
-interface IMergeInfo {
-    [key: string]: any;
-}
-export class SystemInterface {
-    canMerge: boolean;
-    cloudStorageCapable: boolean;
-    id: string;
-    info: Partial<NxSystemWithUserInfo>;
-    isOnline: boolean;
-    mergeInfo: IMergeInfo;
-    stateMessage: string;
-    servers: NxSystemServer[];
 }
 
 export interface ModuleInfo {
@@ -186,34 +167,6 @@ export interface CameraAdvancedParams {
     // eslint-disable-next-line camelcase
     unique_id: string;
     version: string;
-}
-
-export class System extends SystemInterface {
-    protected _isAvailable = false;
-    cloudStorageSystemEnabled = false;
-    canMerge = false;
-    id = '';
-    info = undefined;
-    isOnline = false;
-    mergeInfo = undefined;
-    stateMessage = '';
-
-    mediaservers: NxMediaServer[] = null;
-    resourceTypes: any[] = null;
-}
-
-/* TODO: Fix NxSystemWithUserInfo parent type (shouldn't be NxSystem) */
-export interface NxSystemWithUserInfo extends NxSystem {
-    ownerAccountEmail: string;
-    ownerFullName: string;
-    name: string;
-    systemName: string;
-    isMine: boolean;
-    capabilities: IParams;
-    state: string;
-    stateOfHealth: string;
-    system2faEnabled: boolean;
-    version: number;
 }
 
 export interface License {

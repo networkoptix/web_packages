@@ -131,7 +131,9 @@ export class NxSystemService {
         }
 
         if (!this.systemsService.systems) {
-            // @ts-expect-error FIXME: type mismatch
+            // @ts-expect-error: [NxSystem] when local, should be fine for now
+            // since systems service is used a lot more on cloud-only pages
+            // but this might need fixing in the future
             this.systemsService.systems = [this.system];
         }
         return this.system;

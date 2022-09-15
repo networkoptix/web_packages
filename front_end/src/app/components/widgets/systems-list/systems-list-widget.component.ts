@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemInfo } from '@services/systems.service.types';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -36,7 +37,7 @@ export class NxSystemsListWidgetComponent extends FirstPartyWidget<
         return Object.entries(this.card.config.systems || {}).map(([key, { show }]: [string, any]) => show ?? true ? key : null).filter(val => val);
     }
 
-    updateSystems(availableSystems): void {
+    updateSystems(availableSystems: NxSystemInfo[]): void {
         for (const systemId in this.card.config.systems) {
             this.card.config.systems[systemId].available = false;
         }

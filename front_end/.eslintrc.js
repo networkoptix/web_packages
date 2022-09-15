@@ -242,7 +242,6 @@ const typeLintBlacklist = [
     'src/app/services/system.service/system-types.ts',
     'src/app/services/system.service/system.ts',
     'src/app/services/system.service/user-manager/user-manager.ts',
-    'src/app/services/systems.service.ts',
     'src/app/services/uri.service.ts',
     'src/app/services/url-protocol.service.ts',
     'src/app/services/url-protocol.service.types.ts',

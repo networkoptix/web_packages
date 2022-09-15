@@ -1,14 +1,12 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
+import type { NxSystemInfo } from '@services/systems.service.types';
 
 export const selectSystems =
-    createFeatureSelector<Array<NxSystemWithUserInfo>>('systems');
+    createFeatureSelector<Array<NxSystemInfo>>('systems');
 
 export const selectSystem = createSelector(
     selectSystems,
-    (systems: Array<NxSystemWithUserInfo>, systemId: string) =>
+    (systems: Array<NxSystemInfo>, systemId: string) =>
         systems.find(s => s.id === systemId)
 );

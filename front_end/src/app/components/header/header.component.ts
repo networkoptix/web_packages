@@ -38,6 +38,7 @@ import { NxStorageService } from '@services/storage.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
@@ -81,7 +82,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     userEmail: string;
     canSeeInfo: boolean;
     system: NxSystem;
-    systems: any;
+    systems: NxSystemInfo[] | [NxSystem];
     systemId: any;
     active: any = {};
     singleSystem: any = {};
@@ -478,9 +479,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (this.singleSystem || this.environment.isLocal) { // Special case for a single system - it always active
             this.headerService.activeSystem = this.systems[0];
         } else if (this.systemId) {
-            this.headerService.activeSystem = this.systems.find(system => {
-                return this.systemId === system.id;
-            });
+            // Will only have multiple systems on cloud
+            this.headerService.activeSystem = (this.systems as NxSystemInfo[])
+                .find(system => {
+                    return this.systemId === system.id;
+                });
         } else {
             this.headerService.activeSystem = undefined;
         }

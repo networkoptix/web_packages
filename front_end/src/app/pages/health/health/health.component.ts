@@ -46,7 +46,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: Account;
-    system: NxSystem | any;
+    system: NxSystem;
     server: NxSystemAPI;
 
     menu: Content;
@@ -145,7 +145,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.importedData = {};
             const systemId = params.systemId;
             // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
-            let infoPromise = Promise.resolve();
+            let infoPromise: Promise<void | NxSystem> = Promise.resolve();
             this.accountService.get().then(account => {
                 this.healthService.ready = false;
                 this.hasServerError = false;
@@ -162,7 +162,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     this.menu.base = this.sourceService.getMenuBase(this.system);
                     infoPromise = this.system.getInfo();
                 } else {
-                    // Create a mock system. All we need is the mediaserver.
+                    // @ts-expect-error Create a mock system. All we need is the mediaserver.
                     this.system = {
                         id: '',
                         info: {

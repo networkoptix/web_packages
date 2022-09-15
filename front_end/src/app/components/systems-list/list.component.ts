@@ -21,10 +21,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { htmlToEntity } from '@utils/general';
@@ -52,8 +50,8 @@ export class NxSystemsListComponent implements OnInit {
     fetchComplete: boolean;
     search: { value: string };
     gettingSystems: Process;
-    systems: NxSystemWithUserInfo[];
-    filteredSystems: NxSystemWithUserInfo[];
+    systems: NxSystemInfo[];
+    filteredSystems: NxSystemInfo[];
     account: Account;
     endpoint: Endpoint = {};
     hasOneSystem: boolean;
@@ -67,7 +65,7 @@ export class NxSystemsListComponent implements OnInit {
     @Input() systemsToShow: string[];
     @Input() linkHandler: Function;
 
-    @Output() availableSystems = new EventEmitter<NxSystemWithUserInfo[]>();
+    @Output() availableSystems = new EventEmitter<NxSystemInfo[]>();
 
     get showCompact(): boolean {
         return this.base !== NxSystemsListComponent.SYSTEMS_BASE;
@@ -161,7 +159,7 @@ export class NxSystemsListComponent implements OnInit {
         this.search.value = this.route.snapshot.queryParams.search;
     }
 
-    trackItem(index: number, item: NxSystemWithUserInfo): string | undefined {
+    trackItem(index: number, item: NxSystemInfo): string | undefined {
         return item?.id;
     }
 
@@ -207,7 +205,7 @@ export class NxSystemsListComponent implements OnInit {
             !this.isActive('/health');
     }
 
-    openSystem = (system: NxSystemWithUserInfo): void => {
+    openSystem = (system: NxSystemInfo): void => {
         if (this.linkHandler) {
             this.linkHandler({
                 url: this.menusService.getUrl(system.id, this.endpoint),

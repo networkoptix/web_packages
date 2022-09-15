@@ -143,7 +143,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     }
 
     isUserASystemOwner(): void {
-        this.systemsService.systemsSubject.subscribe((systems: any[]) => {
+        this.systemsService.systemsSubject.subscribe(systems => {
             this.isSystemOwner = systems.some(system => {
                 return system.accessRole === 'owner';
             });

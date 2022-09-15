@@ -104,7 +104,6 @@ export class NxSystemCardComponent implements OnInit {
 
     getSystemOwnerName(): string {
         return this.systemsService.getSystemOwnerName(
-            // @ts-expect-error Don't need full system data, just owner email/name
             this.system,
             this.account?.email
         );

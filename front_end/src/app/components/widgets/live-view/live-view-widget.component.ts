@@ -9,10 +9,8 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';
@@ -65,7 +63,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
 
     CUSTOM_LABELS = ['Select System', 'Select Camera', 'Auto Update'];
 
-    static systems$ = new BehaviorSubject<NxSystemWithUserInfo[]>([]);
+    static systems$ = new BehaviorSubject<NxSystemInfo[]>([]);
     updater$ = new Subject();
     system: NxSystem;
     selectedSystem: SystemDropdownItem;

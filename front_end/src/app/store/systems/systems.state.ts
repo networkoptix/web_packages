@@ -1,5 +1,3 @@
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
+import type { NxSystemInfo } from '@services/systems.service.types';
 
-export type SystemsState = Array<NxSystemWithUserInfo>;
+export type SystemsState = Array<NxSystemInfo>;

@@ -20,7 +20,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { StoreModule } from '@ngrx/store';
+// import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
@@ -33,7 +33,7 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
-import { systemsReducer } from '@app/store/systems/systems.reducer';
+// import { systemsReducer } from '@app/store/systems/systems.reducer';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -71,7 +71,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot({ systems: systemsReducer }),
+        // StoreModule.forRoot({ systems: systemsReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({

@@ -12,8 +12,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystem } from '@services/system.service/system';
-import { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';
@@ -51,7 +51,7 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
     };
 
     static cloudApi: NxCloudApiService;
-    static systems$ = new BehaviorSubject<NxSystemWithUserInfo[]>([]);
+    static systems$ = new BehaviorSubject<NxSystemInfo[]>([]);
 
     system: NxSystem;
     selectedSystem: SystemDropdownItem;

@@ -17,6 +17,7 @@ import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
@@ -52,7 +53,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     public systemId: string;
     public system: NxSystem;
-    public systems: NxSystem[];
+    public systems: NxSystemInfo[];
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

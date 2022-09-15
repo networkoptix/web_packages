@@ -1,11 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 
-import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
+import type { NxSystemInfo } from '@services/systems.service.types';
 
 import * as SystemsActions from './systems.actions';
 import type { SystemsState } from './systems.state';
 
-export const initialState: NxSystemWithUserInfo[] = [];
+export const initialState: NxSystemInfo[] = [];
 
 export const systemsReducer = createReducer(
     initialState,

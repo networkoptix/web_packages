@@ -12,20 +12,15 @@ export interface BaseGroupItem {
     users: unknown[];
 }
 
+export type SystemInfo = System;
+
 export interface BaseSystemItem {
     type: 'system';
     id: string;
     group_id: string | null;
 }
 
-// Should probably be NxSystemWithUserInfo once that's fixed
-export interface SystemInfo extends System {
-    authKeyHash: string;
-    system2faEnabled: boolean;
-    version: string;
-}
-
-export type SystemItem = BaseSystemItem & SystemInfo;
+export type SystemItem = BaseSystemItem & System;
 
 export interface GroupItem extends BaseGroupItem {
     groups: GroupItem[];

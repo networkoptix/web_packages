@@ -10,6 +10,7 @@ import { isAccount } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -22,7 +23,7 @@ export class PushComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
 
     notification;
-    systems;
+    systems: NxSystemInfo[];
     devices;
     newDevice;
     deviceSubscriptions;

@@ -20,10 +20,8 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     htmlToEntity,
@@ -47,8 +45,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     account2faEnabledCheck: boolean;
     totpExistsForAccount: boolean;
 
-    twoFaSystems: NxSystemWithUserInfo[] = [];
-    subV5Systems: NxSystemWithUserInfo[] = [];
+    twoFaSystems: NxSystemInfo[] = [];
+    subV5Systems: NxSystemInfo[] = [];
 
     targets: PseudoAnchorTarget[] = [];
 
@@ -89,14 +87,14 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
-            .subscribe((systems: NxSystemWithUserInfo[]) => {
-                const twoFaSystems: NxSystemWithUserInfo[] = [];
-                const subV5Systems: NxSystemWithUserInfo[] = [];
+            .subscribe(systems => {
+                const twoFaSystems: NxSystemInfo[] = [];
+                const subV5Systems: NxSystemInfo[] = [];
                 systems.forEach(system => {
                     system = {
                         ...system,
                         name: htmlToEntity(system.name),
-                    } as NxSystemWithUserInfo;
+                    };
 
                     if (system.system2faEnabled) {
                         twoFaSystems.push(system);

@@ -14,9 +14,6 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
@@ -42,7 +39,7 @@ export class TwofaGuard implements CanActivate {
         this.accountService.get(true).then((account: Account) => {
             this.systemsService.systemsSubject
                 .pipe(take(1))
-                .subscribe((systems: NxSystemWithUserInfo[]) => {
+                .subscribe(systems => {
                     const { systemId } = route.params;
                     const systemInfo = systems.find(system => system.id === systemId);
                     if (systemInfo?.system2faEnabled && !account.sessionVerified) {

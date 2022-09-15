@@ -34,8 +34,7 @@ import { CloudStorageManager } from './cloud-storage-manager/cloud-storage-manag
 import { LicenseManager } from './license-manager/licence-manager';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
-import { System } from './system-types';
-import type { NxSystemWithUserInfo, ServerTimeInfo } from './system-types';
+import type { NxMediaServer, ServerTimeInfo } from './system-types';
 import { UserManager } from './user-manager/user-manager';
 import type {
     NxSystemUser,
@@ -94,7 +93,19 @@ function trimIds(o) {
  * TODO: Cleanup references to deprecated methods when you come accross them.
  * If there are only a few references left to that method, then remove those references and delete the deprecated method.
  */
-export class NxSystem extends System {
+export class NxSystem {
+    id: string = '';
+    canMerge: boolean = false;
+
+    private _isAvailable: boolean = false;
+    stateMessage: string = '';
+    isOnline: boolean = false;
+    info: Record<string, any>;
+    mergeInfo: Record<string, any>;
+    cloudStorageSystemEnabled: boolean = false;
+    cloudStorageCapable: boolean = false;
+    mediaservers: NxMediaServer[] = null;
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -111,14 +122,14 @@ export class NxSystem extends System {
     show404 = false;
     currentUserEmail: string;
     mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
-    currentServerNotBusy: boolean;
+    currentServerNotBusy: boolean = true;
     currentBusyServerIds = new Set();
     systemIdInit: string;
     serverIdInit: string;
     userIdInit: string;
     useRest: boolean;
 
-    infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
+    infoPromise: Promise<this>;
     updatePromise: Promise<any>;
     usersPromise: Promise<void>;
     systemPoll: Subscription | Observable<string | NxSystem>;
@@ -183,8 +194,6 @@ export class NxSystem extends System {
         userId?: string,
         version?: number,
     ) {
-        super();
-
         this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.useRest = Math.floor(version) > 4;
@@ -208,14 +217,10 @@ export class NxSystem extends System {
         this.serverIdInit = serverId;
         this.userIdInit = userId;
         this.id = systemId || serverId;
-        this.isAvailable = false;
-        this.isOnline = false;
-        this.currentServerNotBusy = true;
         this.info = { name: '' };
         this.mergeInfo = {};
-        this.cloudStorageSystemEnabled = false;
-
         this.currentUserEmail = currentUserEmail;
+
         /* Unauthorised request handler
            Some options here:
             - Access was revoked
@@ -300,7 +305,7 @@ export class NxSystem extends System {
         return this.cloudApi.systems(this.id);
     }
 
-    getInfoAndPermissions(useCache = true, suppressUpdate = false) {
+    getInfoAndPermissions(useCache = true, suppressUpdate = false): Promise<this> {
         const parseSettings = ({
             cloudAccountName: ownerAccountEmail,
             systemName,
@@ -317,7 +322,7 @@ export class NxSystem extends System {
         };
 
         if (environment.isLocal) {
-            const systemPromise = Promise.resolve(this as Partial<NxSystemWithUserInfo>);
+            const systemPromise = Promise.resolve(this);
             return this.mediaserver.getSystemSettings()
                 .then((res: any) => {
                     let parsedSettings: any = {};
@@ -360,7 +365,7 @@ export class NxSystem extends System {
 
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
-            .then(async (response: any) => {
+            .then(async response => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
                     return Promise.reject(error);
@@ -385,6 +390,8 @@ export class NxSystem extends System {
                     // this.cloudStorageSystemEnabled = await this.cloudApi.getCloudStorageUsage(this.info.id).then(() => true, () => false);
                     this.cloudStorageSystemEnabled = false;
                 }
+
+                // @ts-expect-error TODO: Check if property appears when merge in progress
                 this.mergeInfo = response.mergeInfo;
 
                 if (!suppressUpdate) {
@@ -393,13 +400,13 @@ export class NxSystem extends System {
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;
                 }
-                return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
+                return Promise.resolve(this);
             }).catch(_ => {
                 return Promise.reject();
             });
     }
 
-    getInfo(force?, useCache = true, suppressUpdate = false): Promise<Partial<NxSystemWithUserInfo | any>> {
+    getInfo(force?, useCache = true, suppressUpdate = false): Promise<this> {
         if (force) {
             this.infoPromise = undefined;
         }
@@ -1100,7 +1107,6 @@ export class NxSystem extends System {
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    // @ts-expect-error
     get servers() {
         return this.serverManager.servers;
     }

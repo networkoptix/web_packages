@@ -14,12 +14,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
-import type {
-    NxSystemServer,
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
 import { processLanguageFactory } from '@utils/general';
 
@@ -35,9 +33,9 @@ export class NxAPIToolSystemService {
     _currentSystem: NxSystem;
     currentSystemId$ = new BehaviorSubject<string>(null);
     systemVersion$ = new BehaviorSubject<string>(null);
-    systemEmitter$ = new Subject<EmitInfo<NxSystem>>();
+    systemEmitter$ = new Subject<EmitInfo<NxSystemInfo | NxSystem>>();
     systemManifest$ = new BehaviorSubject<MenuManifest>(null);
-    validSystems: NxSystemWithUserInfo[] = []; // Used for trying all possible systems before showing an error
+    validSystems: NxSystemInfo[] = []; // Used for trying all possible systems before showing an error
     manualSystemChange = false;
     systemChangeLockout = false;
 
@@ -52,7 +50,7 @@ export class NxAPIToolSystemService {
     serversLoading$ = new BehaviorSubject(true);
     private serverSubscription: Subscription;
 
-    emitSystem(system: NxSystem, disabled = false, error = ''): void {
+    emitSystem(system: NxSystemInfo | NxSystem, disabled = false, error = ''): void {
         this.systemEmitter$.next({ info: system, disabled, error });
     }
 
@@ -136,7 +134,7 @@ export class NxAPIToolSystemService {
         });
     }
 
-    async initSystems(systems: NxSystemWithUserInfo[]): Promise<void> {
+    async initSystems(systems: NxSystemInfo[]): Promise<void> {
         this.emitAllSystems(systems);
         if (!environment.isLocal) {
             await this.readonlyAPIService.getReadonlyAPIs();
@@ -310,7 +308,7 @@ export class NxAPIToolSystemService {
         });
     }
 
-    findOnlineSystem = (systems: NxSystemWithUserInfo[]) => {
+    findOnlineSystem = (systems: NxSystemInfo[]) => {
         const onlineSystem = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
             ? this.headerService.lastActive : systems.find(system => this.systemIsOnline(system));
 
@@ -333,7 +331,7 @@ export class NxAPIToolSystemService {
         }
     }
 
-    emitAllSystems(systems: NxSystemWithUserInfo[]): void {
+    emitAllSystems(systems: NxSystemInfo[]): void {
         systems.forEach(system => {
             const isDisabled = !this.systemIsOnline(system);
             const error = isDisabled ? 'Offline' : '';
@@ -406,7 +404,7 @@ export class NxAPIToolSystemService {
         this.getServers.errorCount = 0;
     }
 
-    systemIsOnline = (system: NxSystemWithUserInfo) => system.stateOfHealth === 'online';
+    systemIsOnline = (system: NxSystemInfo) => system.stateOfHealth === 'online';
 
     private getAPIDoc(type: APIDocType) {
         return this.currentSystem.serverManager

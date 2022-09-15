@@ -34,10 +34,7 @@ import type {
     ICamera
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import type {
-    NxSystemServer,
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
@@ -392,7 +389,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
                 this.systemInfoSubscription = this.system.infoSubject
                     .pipe(
-                        filter((system: any) => system !== undefined),
+                        filter(system => system !== undefined),
                         tap(({ isOnline }) => {
                             this.applyService.isOnline$.next(!!isOnline);
                             if (isOnline) {
@@ -824,7 +821,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         this.mergeTargetSystem = undefined;
         this.systemsService.getSystem(this.systemId, false)
-            .subscribe((system: NxSystemWithUserInfo) => {
+            .subscribe(system => {
                 this.systemNoAccess = system === undefined;
                 if (this.systemNoAccess) {
                     this.system.stopPoll();

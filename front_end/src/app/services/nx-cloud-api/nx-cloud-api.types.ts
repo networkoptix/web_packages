@@ -146,9 +146,8 @@ export interface RegisterUser {
 export interface System {
     accessRole: string,
     authKey: string,
-    capabilities: {
-        [capability: string]: string
-    },
+    authKeyHash: string;
+    capabilities: Record<string, number>;
     cloudConnectionSubscriptionStatus: boolean,
     customization: string,
     id: string,
@@ -161,8 +160,10 @@ export interface System {
     sharingPermissions: { accessRole: string }[],
     stateOfHealth: string,
     status: string,
+    system2faEnabled: boolean;
     systemSequence: string,
-    usageFrequency: number
+    usageFrequency: number;
+    version: string;
 }
 
 export interface CloudUser {
