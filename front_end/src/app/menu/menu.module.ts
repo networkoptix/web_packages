@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -26,10 +25,9 @@ import { NxMenuComponent } from './menu.component';
         AngularSvgIconModule.forRoot(),
         TranslateModule,
 
-        ComponentsModule,
         DirectivesModule,
-        PipesModule,
-        SearchModule
+        SearchModule,
+        NxSearchHighlightModule,
     ],
     declarations: [
         NxMenuComponent,

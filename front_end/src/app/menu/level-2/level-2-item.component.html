@@ -23,8 +23,7 @@
             *ngIf="item.additionalLabel"
             class="menu-level-2-additional"
         >
-            <span class="ml-1 mr-1">&ndash;</span>
-            <span [outerHTML]="item.additionalLabel | safe: 'html'"></span>
+            <span class="ml-1 mr-1">&ndash;</span> {{ item.additionalLabel }}
         </span>
     </div>
 </a>

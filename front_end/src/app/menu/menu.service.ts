@@ -4,14 +4,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import { NxSearchService } from '@services/search.service';
 import type { SearchModel } from '@services/search.service.types';
-import { htmlToEntity } from '@utils/general';
 
-import type {
-    Level1Item,
-    SanitizedLevel1Item,
-    Level2Item,
-    SanitizedLevel3Item,
-} from './menu.types';
+import type { Level1Item, Level2Item, Level3Item } from './menu.types';
 
 @Injectable({
     providedIn: 'root'
@@ -20,20 +14,20 @@ export class NxMenuService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject<string>('');
     selectedSubSectionSubject = new BehaviorSubject<string>('');
     selectedDetailsSection = new BehaviorSubject<string>('');
-    contentSubject = new BehaviorSubject<SanitizedLevel1Item[]>([]);
+    contentSubject = new BehaviorSubject<Level1Item[]>([]);
     navItemSubject = new BehaviorSubject<string>('');
+    searchRegexSubject = new BehaviorSubject<RegExp>(null);
 
-    private regex: RegExp;
     private _hoverItemId: string;
 
     constructor(private searchService: NxSearchService) {
     }
 
-    set content(content: SanitizedLevel1Item[]) {
+    set content(content: Level1Item[]) {
         this.contentSubject.next(content);
     }
 
-    get content(): SanitizedLevel1Item[] {
+    get content(): Level1Item[] {
         return this.contentSubject.getValue();
     }
 
@@ -84,7 +78,7 @@ export class NxMenuService implements OnDestroy {
         this.contentSubject.complete();
     }
 
-    getItemBy(id: string): SanitizedLevel3Item | undefined {
+    getItemBy(id: string): Level3Item | undefined {
         for (const node of this.content) {
             if (node.level3?.length) {
                 const match = node.level3.find(item => item.id === id);
@@ -98,8 +92,8 @@ export class NxMenuService implements OnDestroy {
     filterItemsBy(
         model: SearchModel,
         searchSubMenus: boolean = false
-    ): SanitizedLevel1Item[] {
-        let filteredContent: SanitizedLevel1Item[] = [];
+    ): Level1Item[] {
+        let filteredContent: Level1Item[] = [];
         if (model.query) {
             this.setHighlightPattern(model);
 
@@ -137,6 +131,7 @@ export class NxMenuService implements OnDestroy {
                 }
             });
         } else {
+            this.searchRegexSubject.next(null);
             filteredContent = [...this.content];
         }
 
@@ -156,10 +151,10 @@ export class NxMenuService implements OnDestroy {
 
     filterNodesIntoHaveNode(
         model: SearchModel,
-        filteredContent: SanitizedLevel1Item[],
-        node: SanitizedLevel1Item,
+        filteredContent: Level1Item[],
+        node: Level1Item,
         subNode?: Level2Item
-    ): SanitizedLevel1Item {
+    ): Level1Item {
         let haveNode = filteredContent.find(filtered =>
             filtered.id === (subNode || node).id
         );
@@ -182,7 +177,7 @@ export class NxMenuService implements OnDestroy {
                     const filteredItem = cloneDeep(item);
                     filteredItem.subNode = subNode || node;
                     filteredItem.query = { search: model.query };
-                    haveNode.level3.push(this.highlighted(filteredItem));
+                    haveNode.level3.push(filteredItem);
                 }
             } else {
                 haveNode?.level3.push(item);
@@ -192,26 +187,6 @@ export class NxMenuService implements OnDestroy {
             haveNode.label = `${haveNode.label} - ${subNode.label}`;
         }
         return haveNode;
-    }
-
-    /**
-     * Sanitizes unsafe HTML in content.
-     * @param content Content with potentially unsafe HTML
-     * @returns Sanitized content
-     */
-    sanitizeContent(content: Level1Item[]): SanitizedLevel1Item[] {
-        const clean = cloneDeep(content);
-        return clean.map(node => {
-            node.level3?.forEach(item => {
-                if (item.label) {
-                    item.label = htmlToEntity(item.label);
-                }
-                if (item.additionalLabel) {
-                    item.additionalLabel = htmlToEntity(item.additionalLabel);
-                }
-            });
-            return node;
-        });
     }
 
     /**
@@ -242,24 +217,6 @@ export class NxMenuService implements OnDestroy {
             model.queryAndMatch
         ].find(m => Array.isArray(m)) as string[];
 
-        this.regex = new RegExp(match.join('|'), 'gi');
-    }
-
-    private highlighted(item: SanitizedLevel3Item): SanitizedLevel3Item {
-        if (item.label) {
-            item.label = item.label.replace(
-                this.regex,
-                match => `<span class="highlighted">${match}</span>`
-            );
-        }
-
-        if (item.additionalLabel) {
-            item.additionalLabel = item.additionalLabel.replace(
-                this.regex,
-                match => `<span class="highlighted">${match}</span>`
-            );
-        }
-
-        return item;
+        this.searchRegexSubject.next(new RegExp(`(${match.join('|')})`, 'i'));
     }
 }

@@ -30,15 +30,11 @@ interface Alert {
     type: string;
 }
 
-// NxMenuService.sanitizeContent()
-// After HTML has been sanitized
-export type SanitizedLevel1Item = Level1Item;
-
 export interface Level2Item {
     id: string;
     label?: string;
     items: Level2Button[]
-    level3?: SanitizedLevel3Item[];
+    level3?: Level3Item[];
 
     path?: string;
     disabled?: boolean;
@@ -70,7 +66,3 @@ export interface Level3Item {
     horizontal?: true;
     // Used to get a horizontal divider (See menu.component.html)
 }
-
-// NxMenuService.sanitizeContent()
-// After HTML has been sanitized
-export type SanitizedLevel3Item = Level3Item;

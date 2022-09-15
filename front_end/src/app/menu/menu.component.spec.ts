@@ -5,12 +5,14 @@ import {
     TestBed,
     waitForAsync
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 
 import { NxSafePipe } from '@app/pipes/nx-safe';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -279,6 +281,7 @@ describe('NxMenuComponent', () => {
                     MockModule(AngularSvgIconModule),
                     RouterTestingModule,
                     TranslateModule.forRoot(),
+                    MockModule(FormsModule)
                 ],
                 declarations: [
                     NxMenuComponent,
@@ -286,6 +289,7 @@ describe('NxMenuComponent', () => {
                     NxLevel3ItemComponent,
                     NxSafePipe,
                     MockComponent(NxSearchComponent),
+                    NxSearchHighlightComponent,
                 ],
                 providers: [
                     MockProvider(Renderer2),
@@ -390,7 +394,8 @@ describe('NxMenuComponent', () => {
                     expect(label).toBe('Licenses');
                 });
 
-                it('should filter items',
+                it(
+                    'should filter items',
                     inject([NxSearchService], (searchService: NxSearchService) => {
                         component.searchable = true;
                         component.menuModel.query = '192.168.5.10';
@@ -398,13 +403,23 @@ describe('NxMenuComponent', () => {
                         component.searchable = true;
                         searchService.getMatchPatterns(component.menuModel);
                         component.modelChanged(component.menuModel);
+                        fixture.detectChanges();
 
                         expect(component.menuContent.length).toBe(1);
                         expect(component.menuContent[0].id).toBe('cameras');
                         expect(component.menuContent[0].level3.length).toBe(1);
                         expect(component.menuContent[0].level3[0].additionalLabel)
-                            .toBe('<span class="highlighted">192.168.5.10</span>0');
-                    }));
+                            .toBe('192.168.5.100');
+
+                        const searchHighlight = el.nativeElement
+                            .querySelector<HTMLSpanElement>(
+                                '.menu-level-3-additional nx-search-highlight'
+                            );
+                        expect(searchHighlight.innerText).toBe('192.168.5.100');
+                        expect(searchHighlight.querySelector<HTMLSpanElement>('span').innerText)
+                            .toBe('192.168.5.10');
+                    })
+                );
             });
         });
     });

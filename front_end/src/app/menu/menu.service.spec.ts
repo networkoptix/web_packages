@@ -3,10 +3,10 @@ import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NxSearchService } from '@services/search.service';
 
 import { NxMenuService } from './menu.service';
-import type { SanitizedLevel1Item, SanitizedLevel3Item } from './menu.types';
+import type { Level1Item, Level3Item } from './menu.types';
 
 describe('NxMenuService', () => {
-    const menuContent: SanitizedLevel1Item[] = [
+    const menuContent: Level1Item[] = [
         {
             id: 'admin',
             svg: 'systems',
@@ -124,7 +124,7 @@ describe('NxMenuService', () => {
                     path: 'users/fed50f90-c3a1-4178-9786-9e10a64d3eb6',
                     svgIcon: 'user'
                 },
-                { horizontal: true } as SanitizedLevel3Item,
+                { horizontal: true } as Level3Item,
                 {
                     additionalLabel: 'Administrator',
                     id: 'a7e2631e-389d-01e7-131f-9ecdee4e0aad',
@@ -264,13 +264,6 @@ describe('NxMenuService', () => {
             expect(filtered.length).toBe(1);
             expect(filtered[0].id).toBe('cameras');
             expect(filtered[0].level3.length).toBe(1);
-            expect(filtered[0].level3[0].additionalLabel)
-                .toBe('<span class="highlighted">192.168.5.10</span>0');
+            expect(filtered[0].level3[0].additionalLabel).toBe('192.168.5.100');
         }));
-
-    it('should sanitize content', () => {
-        const clean = menuService.sanitizeContent(menuContent);
-        expect(clean[0].level3[0].label).toBe('&lt;b&gt;General&lt;/b&gt;');
-        // <b>General</b>
-    });
 });

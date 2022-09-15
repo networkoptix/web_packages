@@ -30,17 +30,24 @@
         ></svg-icon>
         <span
             class="fs-mask menu-level-3-label user"
-            [innerHTML]="item.label | safe: 'html'"
             [ngClass]="{
                 indent: item.indent && !item.icon && !item.svgIcon
             }"
-        ></span>
+        >
+            <nx-search-highlight
+                [text]="item.label"
+                [search]="search"
+            ></nx-search-highlight>
+        </span>
         <span
             *ngIf="item.additionalLabel"
             class="menu-level-3-additional"
         >
             <span class="ml-1 mr-1">&ndash;</span>
-            <span [innerHTML]="item.additionalLabel | safe: 'html'"></span>
+            <nx-search-highlight
+                [text]="item.additionalLabel"
+                [search]="search"
+            ></nx-search-highlight>
         </span>
     </div>
 </a>

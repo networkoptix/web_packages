@@ -34,6 +34,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
 
     itemPath: string;
     menuNavItemId: string;
+    search: RegExp;
 
     constructor(
         configService: NxConfigService,
@@ -47,6 +48,12 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 this.menuNavItemId = this.menuService.navItemId;
+            });
+
+        this.menuService.searchRegexSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(search => {
+                this.search = search;
             });
     }
 

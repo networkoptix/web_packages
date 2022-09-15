@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -203,11 +203,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
     ngOnChanges(changes: NgChanges<NxMenuComponent>): void {
         const currentContent = changes.content.currentValue;
         if (currentContent) {
-            const sanitizedContent = this.menuService.sanitizeContent(
-                currentContent.level1
-            );
-            if (!isEqual(sanitizedContent, this.menuService.content)) {
-                this.menuService.content = sanitizedContent;
+            if (!isEqual(currentContent.level1, this.menuService.content)) {
+                this.menuService.content = cloneDeep(currentContent.level1);
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
