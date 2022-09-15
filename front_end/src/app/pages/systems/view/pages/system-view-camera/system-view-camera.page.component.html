@@ -201,7 +201,7 @@
                 </div>
             </ng-template>
             <timeline-selection-action-panel
-                *ngIf="archiveSelectionEnabled"
+                *ngIf="archiveSelectionEnabled && ux.state.isTimelineShown"
             ></timeline-selection-action-panel>
         </div>
 

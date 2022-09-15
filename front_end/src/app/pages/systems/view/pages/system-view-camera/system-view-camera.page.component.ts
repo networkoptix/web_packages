@@ -104,10 +104,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         private selection: TimelineSelectionService,
         public timelineExtendToNow: TimelineExtendToNowService,
         private fpsMeter: FpsMeterService,
-        private ux: WebClientUxService,
         private cameraQualityStorage: CameraQualityStorageService,
         private cameraTransportStorage: CameraTransportStorageService,
         private settingsService: NxSettingsService,
+        public ux: WebClientUxService,
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();

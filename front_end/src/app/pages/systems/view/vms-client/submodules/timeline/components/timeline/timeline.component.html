@@ -18,6 +18,12 @@
     ></canvas>
     <time-under-mouse *ngIf="!isDragging && !hideTimeUnderMouse"></time-under-mouse>
     <timeline-scrollbar></timeline-scrollbar>
-    <timeline-playback-indicator></timeline-playback-indicator>
-    <timeline-selection *ngIf="archiveSelectionEnabled"></timeline-selection>
+    <timeline-playback-indicator
+        *ngIf="ux.state.isTimelineShown"
+        [ngStyle]="{ visibility: ux.state.isTimelineShown ? 'visible' : 'hidden' }"
+    ></timeline-playback-indicator>
+    <timeline-selection
+        *ngIf="archiveSelectionEnabled"
+        [ngStyle]="{ visibility: ux.state.isTimelineShown ? 'visible' : 'hidden' }"
+    ></timeline-selection>
 </div>

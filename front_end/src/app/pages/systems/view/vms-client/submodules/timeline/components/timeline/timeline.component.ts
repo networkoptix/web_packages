@@ -13,6 +13,7 @@ import { debounceTime, startWith } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
+import { WebClientUxService } from '@view/services/webclient-ux.service';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import {
     calcScreenX,
@@ -70,6 +71,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         protected wheelHandler: TimelineWheelHandlerService,
         public timeUnderMouse: TimelineTimeUnderMouseService,
         protected selection: TimelineSelectionService,
+        public ux: WebClientUxService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.archiveSelectionEnabled = this.configService.flagsEnabled(
