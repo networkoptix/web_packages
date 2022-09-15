@@ -285,7 +285,7 @@ frontend-unit-test:
     - cd front_end
     - npm ci
     - npm run lang
-    - npm run test:ci front-end
+    - npm run test:ci-front-end
   artifacts:
     reports:
       junit: front_end/reports/*.xml
@@ -302,7 +302,7 @@ authorization-unit-test:
     - cd front_end
     - npm ci
     - npm run lang
-    - npm run test:ci authorization
+    - npm run test:ci-authorization
   artifacts:
     reports:
       junit: authorization/reports/*.xml

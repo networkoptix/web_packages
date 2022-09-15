@@ -120,7 +120,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "deployUrl": "static/",
+              "baseHref": "static/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -188,7 +188,7 @@
                 "input": "src/index.tagless.html",
                 "output": "index.html"
               },
-              "deployUrl": "static/",
+              "baseHref": "static/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -342,7 +342,7 @@
           },
           "configurations": {
             "production": {
-              "deployUrl": "static/authorization/",
+              "baseHref": "static/authorization/",
               "fileReplacements": [
                 {
                   "replace": "projects/authorization/src/environments/environment.ts",
