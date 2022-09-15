@@ -84,8 +84,6 @@
     border-spacing: 0 0.5rem;
     padding: 6px 0 6px 8px;
     .user-form-labels {
-        width: 1px;
-        margin-right: 0.5rem;
         color: var(--dark9);
     }
     input:disabled {
@@ -100,4 +98,24 @@
 
 .password-change-required {
     line-height: 2rem;
+}
+
+.control-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    width: 33px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: start;
+        margin: 0 0.5rem 0.5rem 0;
+    }
+}
+
+.form-group {
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }

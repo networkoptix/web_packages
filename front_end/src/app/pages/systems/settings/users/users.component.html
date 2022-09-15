@@ -118,10 +118,10 @@
                     class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
                     novalidate
                 >
-                    <div class="form-group d-md-table-row d-flex flex-column">
+                    <div class="form-group d-flex">
                         <label
                             for="fullName"
-                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
                                 'disabled-input-label':
                                     !(environment.isLocal && selectedUser.isMe) &&
@@ -143,10 +143,10 @@
                             maxlength="255"
                         />
                     </div>
-                    <div class="form-group d-md-table-row d-flex flex-column">
+                    <div class="form-group d-flex">
                         <label
                             for="email"
-                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
                                 'disabled-input-label':
                                     !(environment.isLocal && selectedUser.isMe) &&
