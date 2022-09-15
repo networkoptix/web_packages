@@ -40,7 +40,7 @@ export class NxOverlayModalComponent implements OnInit {
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
     oneCheckAtATime = false;
-    showOverlay = false;
+    showOverlay = true;
     refreshMessage: string;
 
     timeoutUntilRefresh$ = new BehaviorSubject(5);
@@ -69,15 +69,15 @@ export class NxOverlayModalComponent implements OnInit {
             setTimeout(() => window.location.reload(), 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
-            if (!state && this.system?.serverManager.servers.length > 1) {
+            if (!state || this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available
                 !this.showOverlay && await this.checkIfOnline().catch(
                     () => {
                         this.showOverlay = true;
                     });
-            } else {
-                this.showOverlay = !state;
+            } else if (this.showOverlay && state) {
+                this.showOverlay = false;
             }
         });
 
