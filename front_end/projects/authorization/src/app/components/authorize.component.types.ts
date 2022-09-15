@@ -38,7 +38,8 @@ export enum AuthorizeState {
     error = 'error',
     auth = 'authCode',
     backup = 'backupCode',
-    notSecure = 'notSecure'
+    notSecure = 'notSecure',
+    show404 = 'show404'
 }
 
 export enum ClientType {
