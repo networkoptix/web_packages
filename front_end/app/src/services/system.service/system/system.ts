@@ -229,9 +229,10 @@ export class NxSystem extends System {
         }
 
         return this.cloudApi.getSystemToken(this.id).toPromise().then((tokens) => {
-            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
-                .subscribe(() => {});
-            return Promise.resolve(true);
+            return (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
+                .toPromise()
+                .then(() => tokens.access_token)
+                .catch(() => tokens.access_token);
         }).catch(() => {
             this.lostConnection = true;
         });

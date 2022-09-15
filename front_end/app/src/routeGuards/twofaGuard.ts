@@ -64,13 +64,15 @@ export class TwofaGuard implements CanActivate {
                                 true
                             );
                             canActivateSubject.complete();
-                            this.oauthService.redirectOauth(
-                                'system2faAuth',
-                                account.email,
-                                undefined,
-                                (system.mediaserver as NxSystemRestAPI).accessToken,
-                                Location.joinWithSlash(this.window.location.origin, state.url)
-                            );
+                            system.updateToken(true).then(token => {
+                                this.oauthService.redirectOauth(
+                                    'system2faAuth',
+                                    account.email,
+                                    undefined,
+                                    token,
+                                    Location.joinWithSlash(this.window.location.origin, state.url)
+                                );
+                            });
                         }
                     } else {
                         canActivateSubject.next(true);
