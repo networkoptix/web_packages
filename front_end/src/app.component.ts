@@ -162,10 +162,6 @@ export class AppComponent implements AfterViewInit {
             this.lazyLoadComponents();
         }
 
-        if (this.CONFIG.featureFlags.themesEnabled) {
-            this.themeService.initTheme();
-        }
-
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
 
@@ -380,6 +376,10 @@ export class AppComponent implements AfterViewInit {
                 const { innerHeight, innerWidth } = event.target as Window;
                 this.scrollMechanicsService.setWindowSize(innerHeight, innerWidth);
             });
+
+        if (this.CONFIG.featureFlags.themesEnabled) {
+            this.themeService.initTheme().then();
+        }
     }
 
     headerResize(size: { width: number, height: number }): void {

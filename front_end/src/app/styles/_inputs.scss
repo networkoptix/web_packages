@@ -74,11 +74,11 @@ input.hide-errors {
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
         color        : var(--input-error-color) !important;
+        -webkit-text-fill-color: var(--input-error-color);
 
         &:not(:focus) {
             border-color : var(--input-error-border-color) !important;
             outline      : none !important;
-            box-shadow   : none !important;
         }
 
 
