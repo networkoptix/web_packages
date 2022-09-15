@@ -33,7 +33,7 @@
       "@app/*": ["app/*"],
       "@lib/*": ["lib/*"],
       "@src/*": ["*"],
-      "@authorization/*": ["../projects/authorization/*"]
+      "@authorization/*": ["../apps/authorization/*"]
     },
     "typeRoots": [
       "node_modules/@types"

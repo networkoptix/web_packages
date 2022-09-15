@@ -99,7 +99,7 @@ no-changes:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - front_end/projects/authorization/src/**/*
+        - front_end/apps/authorization/src/**/*
         - front_end/eslint-plugin-nx/**/*
 
 .nx-lint-changes:
@@ -233,7 +233,7 @@ auth-lint-check:
   script:
     - cd front_end
     - npm ci
-    - npm run lint:ci:auth projects/authorization/src
+    - npm run lint:ci:auth apps/authorization/src
 
 nx-lint-build-check:
   extends: .nx-lint-node
@@ -433,7 +433,7 @@ on-auth-lint:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - front_end/projects/authorization/src/**/*
+        - front_end/apps/authorization/src/**/*
       when: on_failure
 
 on-nx-lint-build-check:

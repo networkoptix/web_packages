@@ -1,6 +1,6 @@
 {
   "affected": {
-    "defaultBase": "main"
+    "defaultBase": "develop"
   },
   "implicitDependencies": {
     "package.json": {
@@ -31,7 +31,7 @@
     }
   },
   "workspaceLayout": {
-    "appsDir": "projects",
-    "libsDir": "projects"
+    "appsDir": "apps",
+    "libsDir": "libs"
   }
 }
