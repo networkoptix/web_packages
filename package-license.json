@@ -7616,6 +7616,15 @@
             "path": "cloud_portal/front_end/node_modules/gettext-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/gettext-parser/LICENSE"
         },
+        "glob-hash@1.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/roccivic/glob-hash",
+            "publisher": "Rouslan Placella",
+            "email": "rouslan@placella.com",
+            "url": "https://github.com/roccivic",
+            "path": "cloud_portal/front_end/node_modules/glob-hash",
+            "licenseFile": "cloud_portal/front_end/node_modules/glob-hash/LICENSE.txt"
+        },
         "glob-parent@5.1.2": {
             "licenses": "ISC",
             "repository": "https://github.com/gulpjs/glob-parent",

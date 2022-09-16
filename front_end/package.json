@@ -10,7 +10,11 @@
   "nx": {
     "targets": {
       "build": {
-        "outputs": ["dist/authorization", "dist/front_end", "{projectRoot}/dist"]
+        "outputs": [
+          "dist/authorization",
+          "dist/front_end",
+          "{projectRoot}/dist"
+        ]
       }
     }
   },
@@ -68,7 +72,7 @@
     "esprint": "node esprintLimiter.js",
     "esprint4": "esprint check --fix --workers=4",
     "esprint8": "esprint check --fix --workers=8",
-    "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang; npm run test-lang",
+    "lang": "node checkIfLangNeedsUpdate.mjs && npm run update-lang && npm run fill-lang && npm run compile-lang && npm run test-lang || exit 0",
     "removeDeadCss": "node deadCss.mjs",
     "buildSkins": "node buildSkins.mjs",
     "setSkin": "node setSkin.mjs --skin",
@@ -177,6 +181,7 @@
     "eslint-plugin-rxjs": "^5.0.2",
     "esprint": "^3.6.0",
     "fs-extra": "^10.1.0",
+    "glob-hash": "^1.0.5",
     "jasmine-core": "4.0.1",
     "jasmine-spec-reporter": "7.0.0",
     "karma": "6.3.17",
