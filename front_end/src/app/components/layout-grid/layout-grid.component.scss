@@ -181,6 +181,12 @@ cdk-tree,
         border: 2px solid var(--brand-core);
     }
 
+    ::ng-deep {
+        .parent-hover {
+            visibility: hidden;
+        }
+    }
+
     &:hover {
         header {
             display: flex;
@@ -190,6 +196,12 @@ cdk-tree,
 
             svg-icon {
                 cursor: pointer;
+            }
+        }
+
+        ::ng-deep {
+            .parent-hover {
+                visibility: visible;
             }
         }
     }

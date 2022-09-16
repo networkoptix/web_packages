@@ -749,297 +749,6 @@
             "path": "cloud_portal/cloud_helper"
         }
     },
-    "/front_end/app/lib/dashboard-widget-state/": {
-        "balanced-match@1.0.2": {
-            "licenses": "MIT",
-            "repository": "https://github.com/juliangruber/balanced-match",
-            "publisher": "Julian Gruber",
-            "email": "mail@juliangruber.com",
-            "url": "http://juliangruber.com",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/balanced-match",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/balanced-match/LICENSE.md"
-        },
-        "brace-expansion@1.1.11": {
-            "licenses": "MIT",
-            "repository": "https://github.com/juliangruber/brace-expansion",
-            "publisher": "Julian Gruber",
-            "email": "mail@juliangruber.com",
-            "url": "http://juliangruber.com",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/brace-expansion",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/brace-expansion/LICENSE"
-        },
-        "concat-map@0.0.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/substack/node-concat-map",
-            "publisher": "James Halliday",
-            "email": "mail@substack.net",
-            "url": "http://substack.net",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/concat-map",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/concat-map/LICENSE"
-        },
-        "dashboard-widget-state@0.4.2": {
-            "licenses": "ISC",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/README.md"
-        },
-        "esbuild-linux-64@0.14.21": {
-            "licenses": "MIT",
-            "repository": "https://github.com/evanw/esbuild",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/esbuild-linux-64",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/esbuild-linux-64/README.md"
-        },
-        "esbuild@0.14.21": {
-            "licenses": "MIT",
-            "repository": "https://github.com/evanw/esbuild",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/esbuild",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/esbuild/README.md"
-        },
-        "fs.realpath@1.0.0": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/fs.realpath",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/fs.realpath",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/fs.realpath/LICENSE"
-        },
-        "glob@7.2.0": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/node-glob",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/glob",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/glob/LICENSE"
-        },
-        "inflight@1.0.6": {
-            "licenses": "ISC",
-            "repository": "https://github.com/npm/inflight",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/inflight",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/inflight/LICENSE"
-        },
-        "inherits@2.0.4": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/inherits",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/inherits",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/inherits/LICENSE"
-        },
-        "minimatch@3.0.5": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/minimatch",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/minimatch",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/minimatch/LICENSE"
-        },
-        "once@1.4.0": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/once",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/once",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/once/LICENSE"
-        },
-        "path-is-absolute@1.0.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/path-is-absolute",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "sindresorhus.com",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/path-is-absolute",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/path-is-absolute/license"
-        },
-        "rimraf@3.0.2": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/rimraf",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/rimraf",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/rimraf/LICENSE"
-        },
-        "rxjs@7.5.4": {
-            "licenses": "Apache-2.0",
-            "repository": "https://github.com/reactivex/rxjs",
-            "publisher": "Ben Lesh",
-            "email": "ben@benlesh.com",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/rxjs",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/rxjs/LICENSE.txt"
-        },
-        "tsc@2.0.4": {
-            "licenses": "MIT",
-            "repository": "https://github.com/basarat/tsc",
-            "publisher": "basaratali@gmail.com",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/tsc",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/tsc/README.md"
-        },
-        "tslib@2.3.1": {
-            "licenses": "0BSD",
-            "repository": "https://github.com/Microsoft/tslib",
-            "publisher": "Microsoft Corp.",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/tslib",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/tslib/LICENSE.txt"
-        },
-        "typescript@4.5.5": {
-            "licenses": "Apache-2.0",
-            "repository": "https://github.com/Microsoft/TypeScript",
-            "publisher": "Microsoft Corp.",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/typescript",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/typescript/LICENSE.txt"
-        },
-        "wrappy@1.0.2": {
-            "licenses": "ISC",
-            "repository": "https://github.com/npm/wrappy",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/wrappy",
-            "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/wrappy/LICENSE"
-        }
-    },
-    "/front_end/app/lib/lib-template/": {
-        "balanced-match@1.0.2": {
-            "licenses": "MIT",
-            "repository": "https://github.com/juliangruber/balanced-match",
-            "publisher": "Julian Gruber",
-            "email": "mail@juliangruber.com",
-            "url": "http://juliangruber.com",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/balanced-match",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/balanced-match/LICENSE.md"
-        },
-        "brace-expansion@1.1.11": {
-            "licenses": "MIT",
-            "repository": "https://github.com/juliangruber/brace-expansion",
-            "publisher": "Julian Gruber",
-            "email": "mail@juliangruber.com",
-            "url": "http://juliangruber.com",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/brace-expansion",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/brace-expansion/LICENSE"
-        },
-        "concat-map@0.0.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/substack/node-concat-map",
-            "publisher": "James Halliday",
-            "email": "mail@substack.net",
-            "url": "http://substack.net",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/concat-map",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/concat-map/LICENSE"
-        },
-        "esbuild-linux-64@0.14.21": {
-            "licenses": "MIT",
-            "repository": "https://github.com/evanw/esbuild",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/esbuild-linux-64",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/esbuild-linux-64/README.md"
-        },
-        "esbuild@0.14.21": {
-            "licenses": "MIT",
-            "repository": "https://github.com/evanw/esbuild",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/esbuild",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/esbuild/README.md"
-        },
-        "fs.realpath@1.0.0": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/fs.realpath",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/fs.realpath",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/fs.realpath/LICENSE"
-        },
-        "glob@7.2.0": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/node-glob",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/glob",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/glob/LICENSE"
-        },
-        "inflight@1.0.6": {
-            "licenses": "ISC",
-            "repository": "https://github.com/npm/inflight",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/inflight",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/inflight/LICENSE"
-        },
-        "inherits@2.0.4": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/inherits",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/inherits",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/inherits/LICENSE"
-        },
-        "lib-template@0.1.0": {
-            "licenses": "UNLICENSED",
-            "private": [],
-            "path": "cloud_portal/front_end/app/lib/lib-template"
-        },
-        "minimatch@3.0.5": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/minimatch",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/minimatch",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/minimatch/LICENSE"
-        },
-        "once@1.4.0": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/once",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/once",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/once/LICENSE"
-        },
-        "path-is-absolute@1.0.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/path-is-absolute",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "sindresorhus.com",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/path-is-absolute",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/path-is-absolute/license"
-        },
-        "rimraf@3.0.2": {
-            "licenses": "ISC",
-            "repository": "https://github.com/isaacs/rimraf",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/rimraf",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/rimraf/LICENSE"
-        },
-        "tsc@2.0.4": {
-            "licenses": "MIT",
-            "repository": "https://github.com/basarat/tsc",
-            "publisher": "basaratali@gmail.com",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/tsc",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/tsc/README.md"
-        },
-        "typescript@4.5.5": {
-            "licenses": "Apache-2.0",
-            "repository": "https://github.com/Microsoft/TypeScript",
-            "publisher": "Microsoft Corp.",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/typescript",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/typescript/LICENSE.txt"
-        },
-        "wrappy@1.0.2": {
-            "licenses": "ISC",
-            "repository": "https://github.com/npm/wrappy",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
-            "path": "cloud_portal/front_end/app/lib/lib-template/node_modules/wrappy",
-            "licenseFile": "cloud_portal/front_end/app/lib/lib-template/node_modules/wrappy/LICENSE"
-        }
-    },
     "/front_end/eslint-plugin-nx/": {
         "@cspotcode/source-map-support@0.8.1": {
             "licenses": "MIT",
@@ -3903,6 +3612,12 @@
             "path": "cloud_portal/front_end/node_modules/@types/hast",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/hast/LICENSE"
         },
+        "@types/hoist-non-react-statics@3.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/hoist-non-react-statics",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/hoist-non-react-statics/LICENSE"
+        },
         "@types/http-proxy@1.17.9": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
@@ -4182,12 +3897,6 @@
             "email": "raynos2@gmail.com",
             "path": "cloud_portal/front_end/node_modules/@videojs/xhr",
             "licenseFile": "cloud_portal/front_end/node_modules/@videojs/xhr/LICENCE"
-        },
-        "@vime/angular@5.3.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/vime-js/vime",
-            "path": "cloud_portal/front_end/node_modules/@vime/angular",
-            "licenseFile": "cloud_portal/front_end/node_modules/@vime/angular/README.md"
         },
         "@vime/core@5.3.1": {
             "licenses": "MIT",
@@ -12734,6 +12443,297 @@
             "publisher": "Brian Ford",
             "path": "cloud_portal/front_end/node_modules/zone.js",
             "licenseFile": "cloud_portal/front_end/node_modules/zone.js/LICENSE"
+        }
+    },
+    "/front_end/src/lib/dashboard-widget-state/": {
+        "balanced-match@1.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/juliangruber/balanced-match",
+            "publisher": "Julian Gruber",
+            "email": "mail@juliangruber.com",
+            "url": "http://juliangruber.com",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/balanced-match",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/balanced-match/LICENSE.md"
+        },
+        "brace-expansion@1.1.11": {
+            "licenses": "MIT",
+            "repository": "https://github.com/juliangruber/brace-expansion",
+            "publisher": "Julian Gruber",
+            "email": "mail@juliangruber.com",
+            "url": "http://juliangruber.com",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/brace-expansion",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/brace-expansion/LICENSE"
+        },
+        "concat-map@0.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/substack/node-concat-map",
+            "publisher": "James Halliday",
+            "email": "mail@substack.net",
+            "url": "http://substack.net",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/concat-map",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/concat-map/LICENSE"
+        },
+        "dashboard-widget-state@0.4.2": {
+            "licenses": "ISC",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/README.md"
+        },
+        "esbuild-linux-64@0.14.21": {
+            "licenses": "MIT",
+            "repository": "https://github.com/evanw/esbuild",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/esbuild-linux-64",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/esbuild-linux-64/README.md"
+        },
+        "esbuild@0.14.21": {
+            "licenses": "MIT",
+            "repository": "https://github.com/evanw/esbuild",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/esbuild",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/esbuild/README.md"
+        },
+        "fs.realpath@1.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/fs.realpath",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/fs.realpath",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/fs.realpath/LICENSE"
+        },
+        "glob@7.2.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/node-glob",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/glob",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/glob/LICENSE"
+        },
+        "inflight@1.0.6": {
+            "licenses": "ISC",
+            "repository": "https://github.com/npm/inflight",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/inflight",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/inflight/LICENSE"
+        },
+        "inherits@2.0.4": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/inherits",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/inherits",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/inherits/LICENSE"
+        },
+        "minimatch@3.0.5": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/minimatch",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/minimatch",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/minimatch/LICENSE"
+        },
+        "once@1.4.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/once",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/once",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/once/LICENSE"
+        },
+        "path-is-absolute@1.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/path-is-absolute",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/path-is-absolute",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/path-is-absolute/license"
+        },
+        "rimraf@3.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/rimraf",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/rimraf",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/rimraf/LICENSE"
+        },
+        "rxjs@7.5.4": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/reactivex/rxjs",
+            "publisher": "Ben Lesh",
+            "email": "ben@benlesh.com",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/rxjs",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/rxjs/LICENSE.txt"
+        },
+        "tsc@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/basarat/tsc",
+            "publisher": "basaratali@gmail.com",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/tsc",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/tsc/README.md"
+        },
+        "tslib@2.3.1": {
+            "licenses": "0BSD",
+            "repository": "https://github.com/Microsoft/tslib",
+            "publisher": "Microsoft Corp.",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/tslib",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/tslib/LICENSE.txt"
+        },
+        "typescript@4.5.5": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/Microsoft/TypeScript",
+            "publisher": "Microsoft Corp.",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/typescript",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/typescript/LICENSE.txt"
+        },
+        "wrappy@1.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/npm/wrappy",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/wrappy",
+            "licenseFile": "cloud_portal/front_end/src/lib/dashboard-widget-state/node_modules/wrappy/LICENSE"
+        }
+    },
+    "/front_end/src/lib/lib-template/": {
+        "balanced-match@1.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/juliangruber/balanced-match",
+            "publisher": "Julian Gruber",
+            "email": "mail@juliangruber.com",
+            "url": "http://juliangruber.com",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/balanced-match",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/balanced-match/LICENSE.md"
+        },
+        "brace-expansion@1.1.11": {
+            "licenses": "MIT",
+            "repository": "https://github.com/juliangruber/brace-expansion",
+            "publisher": "Julian Gruber",
+            "email": "mail@juliangruber.com",
+            "url": "http://juliangruber.com",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/brace-expansion",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/brace-expansion/LICENSE"
+        },
+        "concat-map@0.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/substack/node-concat-map",
+            "publisher": "James Halliday",
+            "email": "mail@substack.net",
+            "url": "http://substack.net",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/concat-map",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/concat-map/LICENSE"
+        },
+        "esbuild-linux-64@0.14.21": {
+            "licenses": "MIT",
+            "repository": "https://github.com/evanw/esbuild",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/esbuild-linux-64",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/esbuild-linux-64/README.md"
+        },
+        "esbuild@0.14.21": {
+            "licenses": "MIT",
+            "repository": "https://github.com/evanw/esbuild",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/esbuild",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/esbuild/README.md"
+        },
+        "fs.realpath@1.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/fs.realpath",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/fs.realpath",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/fs.realpath/LICENSE"
+        },
+        "glob@7.2.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/node-glob",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/glob",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/glob/LICENSE"
+        },
+        "inflight@1.0.6": {
+            "licenses": "ISC",
+            "repository": "https://github.com/npm/inflight",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/inflight",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/inflight/LICENSE"
+        },
+        "inherits@2.0.4": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/inherits",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/inherits",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/inherits/LICENSE"
+        },
+        "lib-template@0.1.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/front_end/src/lib/lib-template"
+        },
+        "minimatch@3.0.5": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/minimatch",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/minimatch",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/minimatch/LICENSE"
+        },
+        "once@1.4.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/once",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/once",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/once/LICENSE"
+        },
+        "path-is-absolute@1.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/path-is-absolute",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/path-is-absolute",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/path-is-absolute/license"
+        },
+        "rimraf@3.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/rimraf",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/rimraf",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/rimraf/LICENSE"
+        },
+        "tsc@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/basarat/tsc",
+            "publisher": "basaratali@gmail.com",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/tsc",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/tsc/README.md"
+        },
+        "typescript@4.5.5": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/Microsoft/TypeScript",
+            "publisher": "Microsoft Corp.",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/typescript",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/typescript/LICENSE.txt"
+        },
+        "wrappy@1.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/npm/wrappy",
+            "publisher": "Isaac Z. Schlueter",
+            "email": "i@izs.me",
+            "url": "http://blog.izs.me/",
+            "path": "cloud_portal/front_end/src/lib/lib-template/node_modules/wrappy",
+            "licenseFile": "cloud_portal/front_end/src/lib/lib-template/node_modules/wrappy/LICENSE"
         }
     }
 }

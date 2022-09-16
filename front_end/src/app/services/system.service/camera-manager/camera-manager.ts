@@ -107,7 +107,7 @@ export class CameraManager {
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.serverManager.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(id, 'hls');
-            const webRtcUrl = this.system.version >= 5.1 ? this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc') : '';
+            const webRtcUrl = this.system.version >= 5.1 ? (): string => this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc') : null;
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define

@@ -96,7 +96,6 @@
     "@ngx-translate/http-loader": "7.0.0",
     "@swimlane/ngx-charts": "20.1.0",
     "@tinymce/tinymce-angular": "6.0.1",
-    "@vime/angular": "^5.3.1",
     "@vime/core": "^5.3.1",
     "angular-svg-icon": "14.0.0",
     "bootstrap": "4.5.2",

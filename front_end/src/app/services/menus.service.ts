@@ -310,7 +310,8 @@ export class NxMenusService {
             nodes.push(monitoringNode);
         }
 
-        if (activeSystem.useRest && this.CONFIG.featureFlags.layouts) {
+        // Layouts only usable with webRTC
+        if (activeSystem.version >= '5.1' && this.CONFIG.featureFlags.layouts) {
             const layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),

@@ -52,7 +52,7 @@ export interface ICamera {
     userDefinedGroupName: string;
     vendor: string;
     previewUrl: string;
-    webRtcUrl: string;
+    webRtcUrl: () => string;
     liveUrl: string;
     recordingSettings: IRecordingSettings;
     isStream: boolean;

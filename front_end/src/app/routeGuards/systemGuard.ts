@@ -47,7 +47,8 @@ export class SystemGuard implements CanActivate {
             'licenses',
             'servers',
             'advanced',
-            'monitoring'
+            'monitoring',
+            'layouts'
         ];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = environment.isLocal ||
@@ -65,6 +66,7 @@ export class SystemGuard implements CanActivate {
                 advanced: permissions.isAdmin || isOwner,
                 servers: permissions.isAdmin || isOwner,
                 monitoring: permissions.isAdmin || isOwner,
+                layouts: (system.version || parseFloat(system.info.version)) >= 5.1
             };
 
             return canViewChecks[currentRoute] || this.router.navigate(
