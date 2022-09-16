@@ -4,7 +4,7 @@ import fs from 'fs';
 const hashFile = 'language_hash'
 
 const include = [
-    "src/**/*.html",
+    "./src/**/*.html",
     "./src/language_i18n_static.json",
     "./src/customization/*.json",
     "../cloud/cms/menus.json"
