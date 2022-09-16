@@ -1,6 +1,7 @@
 #!/bin/bash
 IS_WEBADMIN=$1
 
+mv ./dist/front_end/* ./dist/
 rm ./dist/styles/*.scss;
 [ -e ./dist/styles/native-theme ] && rm -rf ./dist/styles/native-theme
 # target only main style

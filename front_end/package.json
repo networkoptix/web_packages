@@ -10,7 +10,7 @@
   "nx": {
     "targets": {
       "build": {
-        "outputs": ["dist", "{projectRoot}/dist"]
+        "outputs": ["dist/authorization", "dist/front_end", "{projectRoot}/dist"]
       }
     }
   },
@@ -32,7 +32,7 @@
     "serve:auth": "npm run setVarSkin && npm run lang && npm run update-lang-types && npx nx serve authorization --configuration development --proxy-config proxy.conf.auth.js",
     "serve:cloud": "npm run setVarSkin && npm run lang && npm run update-lang-types && npx nx serve front-end -c $CLOUD_TARGET --proxy-config proxy.conf.front_end.js",
     "serve:webadmin": "npm run lang && npm run update-lang-types && npx nx serve front-end  -c webadmin --proxy-config proxy.conf.webadmin.js",
-    "build": "npm run build:cloud && npm run build:auth",
+    "build": "([ -e ./dist ] && rm -rf ./dist); npm run lang && nx run-many --target=build --projects=front-end,authorization --configuration=production",
     "build:auth": "npx nx build authorization --configuration production",
     "build:cloud": "npm run lang && npx nx build front-end --configuration production",
     "build-webadmin": "npm run lang && npx nx build front-end -c webadmin-prod",

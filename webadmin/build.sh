@@ -52,7 +52,12 @@ npm ci
 # Build webadmin.
 echo -e "\nBuild webadmin" >&2
 npm run build-webadmin
-mv dist static
+
+pushd dist
+    mv front_end/* .
+popd
+
+mv dist/front_end static
 cp -R static/scripts/. static/
 
 # Build skins
@@ -79,7 +84,6 @@ do
         npm run build
         # Removed these files because it overrode webadmins version of them
         rm -rf dist/{fonts,robots.txt,languages.json}
-        mv dist static
 
         ./translation/localize.sh
 
