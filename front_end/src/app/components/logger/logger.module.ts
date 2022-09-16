@@ -5,13 +5,11 @@ import { ContentBlockModule } from '@components/content-block/content-block.modu
 import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
 
 import { NxLoggerComponent } from './logger.component';
 
 @NgModule({
     imports: [
-        SharedComponentsModule,
         ComponentsCoreModule,
         ContentBlockModule,
         ContentBlockSectionModule,

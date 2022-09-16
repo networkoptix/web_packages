@@ -5,7 +5,6 @@ import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { NumericModule } from '@components/numeric-input/numeric.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
 import { StepperModule } from '@components/stepper/stepper.module';
 
 import { NxHealthMonitorWidgetComponent } from './health-monitor-widget.component';
@@ -13,7 +12,6 @@ import { NxHealthMonitorWidgetComponent } from './health-monitor-widget.componen
 @NgModule({
     imports: [
         AngularSvgIconModule.forRoot(),
-        SharedComponentsModule,
         ComponentsCoreModule,
         CheckboxModule,
         NumericModule,

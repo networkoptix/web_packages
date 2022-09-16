@@ -3,7 +3,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
-// import { SharedComponentsModule } from '@components/shared-components.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { TagModule } from '@components/tag/tag.module';
 
@@ -13,7 +12,6 @@ import { SystemCardComponent } from './system-card.component';
     imports: [
         AngularSvgIconModule.forRoot(),
         ComponentsCoreModule,
-        // SharedComponentsModule,
         ClientButtonModule,
         TagModule,
         PipesModule,

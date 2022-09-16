@@ -6,7 +6,6 @@ import { ComponentsCoreModule } from '@components/components-core.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
 
 import { ContentBlockModule } from '../content-block/content-block.module';
 import { ContentBlockSectionModule } from '../content-block/section/section.module';
@@ -19,7 +18,6 @@ import { NxConsoleTableComponent } from './console-table.component';
         AngularSvgIconModule.forRoot(),
         ContentBlockSectionModule,
         ContentBlockModule,
-        SharedComponentsModule,
         ComponentsCoreModule,
         PaginatorModule,
         PreLoaderModule,

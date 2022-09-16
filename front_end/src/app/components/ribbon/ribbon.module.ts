@@ -3,14 +3,12 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
 
 import { NxRibbonComponent } from './ribbon.component';
 
 @NgModule({
     imports: [
         AngularSvgIconModule.forRoot(),
-        SharedComponentsModule,
         ComponentsCoreModule,
         ProcessButtonModule,
     ],

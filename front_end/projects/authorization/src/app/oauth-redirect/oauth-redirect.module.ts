@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxOAuthRedirectComponent } from './oauth-redirect.component';
@@ -17,9 +17,9 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         TranslateModule,
-        SharedComponentsModule,
         DirectivesModule,
         PipesModule,
+        PreLoaderModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [],

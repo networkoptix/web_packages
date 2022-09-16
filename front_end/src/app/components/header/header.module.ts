@@ -8,7 +8,6 @@ import { DropMenuModule } from '@components/dropdowns/drop-menu/drop-menu.module
 import { NavigationTileModule } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.module';
 import { SystemTileModule } from '@components/dropdowns/drop-menu/system-tile/system-tile.module';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
 
 import { NxHeaderComponent } from './header.component';
 import { MainButtonModule } from './main-button/main-button.module';
@@ -18,7 +17,6 @@ import { TabsModule } from './tabs/tabs.module';
 @NgModule({
     imports: [
         AngularSvgIconModule.forRoot(),
-        SharedComponentsModule,
         ComponentsCoreModule,
         AccountSettingsModule,
         LanguageModule,

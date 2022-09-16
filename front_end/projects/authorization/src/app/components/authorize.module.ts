@@ -39,11 +39,11 @@ export const authorizedRoutes: Routes = [
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule,
-        SharedComponentsModule,
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule.forRoot(),
         DirectivesModule,
         PipesModule,
+        SharedComponentsModule
     ],
     providers: [
     ],
