@@ -22,7 +22,6 @@ front_end/src/styles/custom
 front_end/src/styles/*.css
 front_end/**/*.js.map
 front_end/src/app/**/*.js
-front_end/src/language_compiled.json
 front_end/src/supported_languages.json
 front_end/coverage
 front_end/reports

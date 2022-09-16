@@ -39,7 +39,7 @@
     "build": "([ -e ./dist ] && rm -rf ./dist); npm run lang && nx run-many --target=build --projects=front-end,authorization --configuration=production",
     "build:auth": "npx nx build authorization --configuration production",
     "build:cloud": "npm run lang && npx nx build front-end --configuration production",
-    "build-webadmin": "npm run lang && npx nx build front-end -c webadmin-prod",
+    "build-webadmin": "([ -e ./dist ] && rm -rf ./dist); npm run lang && npx nx build front-end -c webadmin-prod",
     "bundle-report": "npm run lang && npx nx build front-end --configuration production --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
     "bundle-report:auth": "npm run lang && npx nx build authorization --configuration production --stats-json && webpack-bundle-analyzer dist/authorization/stats.json -s gzip",
     "explore:js": "source-map-explorer ./dist/*.js",
