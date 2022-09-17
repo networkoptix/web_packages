@@ -270,32 +270,6 @@
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/app/dialogs/dialogs.scss",
-              "src/styles/main.scss"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules/",
-                "src/app/styles",
-                "src/styles"
-              ]
-            },
-            "scripts": [],
-            "codeCoverage": true
-          }
-        },
-        "test-ci": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.ci.js",
             "assets": [
               "src/favicon.ico",

@@ -80,7 +80,7 @@ module.exports = function(config) {
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['progress'],
         coverageReporter: {
-            dir: require('path').join(__dirname, './coverage/test-karma'),
+            dir: require('path').join(__dirname, './coverage/front-end'),
             subdir: '.',
             reporters: [
                 { type: 'html' },
