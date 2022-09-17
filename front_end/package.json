@@ -15,6 +15,12 @@
           "dist/front_end",
           "{projectRoot}/dist"
         ]
+      },
+      "test": {
+        "outputs": [
+          "coverage",
+          "reports"
+        ]
       }
     }
   },
@@ -36,7 +42,7 @@
     "serve:auth": "npm run setVarSkin && npm run update-lang-files && npx nx run authorization:serve:development --proxy-config proxy.conf.auth.js",
     "serve:cloud": "npm run setVarSkin && npm run update-lang-files && npx nx run front-end:serve:$CLOUD_TARGET --proxy-config proxy.conf.front_end.js",
     "serve:webadmin": "npm run update-lang-files && npx nx run serve front-end:serve:webadmin --proxy-config proxy.conf.webadmin.js",
-    "build": "npm run cleardist && npm run lang && npx nx run-many --target=build --projects=front-end,authorization --configuration=production",
+    "build": "npm run cleardist && npm run lang && npx nx run-many --target=build --all --configuration=production",
     "build:auth": "npx nx run authorization:build:production",
     "build:cloud": "npm run lang && npx nx run front-end:build:production",
     "build-webadmin": "npm run cleardist && npm run lang && npx nx run front-end:build:webadmin-prod",
@@ -49,9 +55,8 @@
     "postbuild-webadmin": "./cloud-portal-postbuild.sh true",
     "set-node-version": "npx n 16.13.1",
     "postinstall": "ngcc && node setSkin.mjs --skin blue && node ./decorate-angular-cli.js",
-    "test": "npx nx run front-end:test:production",
-    "test:ci-front-end": "npx nx run front-end:test-ci:production",
-    "test:ci-authorization": "npx nx run authorization:test-ci:production",
+    "test:local": "npx nx run-many --target test --all --parallel=16 --configuration production",
+    "test:ci": "npx nx run-many --target test --all --parallel=4 --configuration production",
     "test:watch": "npx nx run test front-end --karma-config karma.conf.watch.js",
     "test:chrome": "npx nx run test front-end --browsers Chrome --karma-config karma.conf.watch.js",
     "test:safari": "npx nx run test front-end --browsers Safari --karma-config karma.conf.watch.js",
@@ -60,16 +65,8 @@
     "test:components": "npx nx run test front-end --include=src/app/components",
     "test:components:watch": "npx nx run test front-end --include=src/app/components --karma-config karma.conf.watch.js",
     "e2e": "ng e2e",
-    "lint": "eslint src --ext .ts --ignore-pattern *.spec.ts --fix",
-    "lint:ci": "eslint --ext .ts --ignore-pattern *.spec.ts --max-warnings 0",
-    "lint:ci:tests": "eslint --ext .spec.ts --max-warnings 0",
-    "lint:ci:auth": "eslint --ext .ts --max-warnings 0",
-    "lint:tests": "eslint src --ext .spec.ts --fix",
-    "lint:all": "eslint src --ext .ts --fix",
-    "lint:auth": "eslint apps/authorization/src --ext .ts --ignore-pattern *.spec.ts",
-    "lint:auth:all": "eslint apps/authorization/src --ext .ts --fix",
-    "lint-templates": "eslint . --ext .component.html --fix",
-    "lint-templates:ci": "eslint --ext .component.html",
+    "lint": "npx nx run-many --target=lint --parallel=16 --all --fix --skip-nx-cache",
+    "lint:ci": "npx nx run-many --target=lint --all --parallel=4 --maxWarnings 0",
     "esprint": "node esprintLimiter.js",
     "esprint4": "esprint check --fix --workers=4",
     "esprint8": "esprint check --fix --workers=8",

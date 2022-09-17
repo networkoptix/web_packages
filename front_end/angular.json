@@ -214,6 +214,13 @@
           },
           "defaultConfiguration": ""
         },
+        "lint": {
+            "builder": "@nrwl/linter:eslint",
+            "options":{
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": ["**/*.ts", "**/*.component.html"]
+            }
+        },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
@@ -425,6 +432,34 @@
           },
           "defaultConfiguration": ""
         },
+        "lint": {
+            "builder": "@nrwl/linter:eslint",
+            "options":{
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": ["**/*.ts"]
+            }
+        },
+        "lint-tests": {
+            "builder": "@nrwl/linter:eslint",
+            "options":{
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": ["**/*.ts"]
+            }
+        },
+        "lint-templates": {
+            "builder": "@nrwl/linter:eslint",
+            "options":{
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": ["**/*.component.html"]
+            }
+        },
+        "lint-all": {
+            "builder": "@nrwl/linter:eslint",
+            "options":{
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": ["**/*.ts", "**/*.component.html"]
+            }
+        },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
@@ -447,7 +482,7 @@
             "browserTarget": "authorization:build"
           }
         },
-        "test": {
+        "test-headed": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "apps/authorization/src/test.ts",
@@ -464,7 +499,7 @@
             "scripts": []
           }
         },
-        "test-ci": {
+        "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "apps/authorization/src/test.ts",

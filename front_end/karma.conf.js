@@ -79,7 +79,6 @@ module.exports = function(config) {
         // possible values: 'dots', 'progress', 'coverage-istanbul', 'kjhtml', 'spec'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['progress'],
-    
         coverageReporter: {
             dir: require('path').join(__dirname, './coverage/test-karma'),
             subdir: '.',

@@ -217,23 +217,7 @@ frontend-lint-check:
   script:
     - cd front_end
     - npm ci
-    - npm run lint:ci src
-
-fe-lint-tests-check:
-  extends: .frontend-test
-  stage: check
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lint:ci:tests src
-
-auth-lint-check:
-  extends: .authorization-node
-  stage: check
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lint:ci:auth apps/authorization/src
+    - npm run lint:ci
 
 nx-lint-build-check:
   extends: .nx-lint-node
@@ -243,14 +227,6 @@ nx-lint-build-check:
     - npm ci
     - cd eslint-plugin-nx
     - npm run build-check
-
-templates-lint-check:
-  extends: .templates-node
-  stage: check
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lint-templates:ci .
 
 django-unit-test-slow:
   extends: .django-unit-test
@@ -285,30 +261,13 @@ frontend-unit-test:
     - cd front_end
     - npm ci
     - npm run lang
-    - npm run test:ci-front-end
+    - npm run test:ci
   artifacts:
     reports:
       junit: front_end/reports/*.xml
       coverage_report:
         coverage_format: cobertura
-        path: front_end/coverage/test-karma/cobertura-coverage.xml
-
-authorization-unit-test:
-  extends: .frontend-node
-  stage: test
-  variables:
-    CHROME_BIN: /usr/bin/google-chrome
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lang
-    - npm run test:ci-authorization
-  artifacts:
-    reports:
-      junit: authorization/reports/*.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: authorization/coverage/test-karma/cobertura-coverage.xml
+        path: front_end/coverage/**/cobertura-coverage.xml
 
 nx-lint-test:
   extends: .nx-lint-node
@@ -418,24 +377,6 @@ on-frontend-lint:
   extends: .fail-on-frontend
   needs: ["frontend-lint-check"]
 
-on-test-lint:
-  extends: .fail-on-frontend-test
-  needs: ["fe-lint-tests-check"]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*.spec.ts
-      when: on_failure
-
-on-auth-lint:
-  extends: .fail-on-frontend
-  needs: ["auth-lint-check"]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/apps/authorization/src/**/*
-      when: on_failure
-
 on-nx-lint-build-check:
   extends: .fail-on-frontend
   needs:
@@ -445,15 +386,6 @@ on-nx-lint-build-check:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - front_end/eslint-plugin-nx/**/*
-      when: on_failure
-
-on-templates-lint:
-  extends: .fail-on-frontend
-  needs: ["templates-lint-check"]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*.component.html
       when: on_failure
 
 on-language-check:
@@ -472,19 +404,9 @@ on-webadmin-build:
   extends: .fail-on-frontend
   needs: ["webadmin"]
 
-on-authorization-test:
-  extends: .fail-on-frontend
-  needs: ["authorization-unit-test"]
-
 on-frontend-test:
   extends: .fail-on-frontend
   needs: ["frontend-unit-test"]
-
-on-nx-lint-test:
-  extends: .fail-on-frontend
-  needs:
-    - job: nx-lint-test
-      optional: true
 
 on-django-checks:
   extends: .fail-on-backend
