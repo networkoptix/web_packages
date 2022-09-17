@@ -6,6 +6,7 @@ import os
 import shutil
 import re
 import inlinestyler
+from concurrent import futures
 assert inlinestyler.VERSION == (0, 2, 1), "Setup correct version of inlinestyler! Try \"pip install inlinestyler==0.2.1\" and change requirements.txt accordingly"
 
 cssutils.log.setLevel(logging.ERROR)
@@ -46,12 +47,17 @@ css_content = read_branding(css_content)
 
 container_html = container_html.replace("{{>style_css}}", css_content)
 
-for file in os.listdir("."):
+executor = futures.ThreadPoolExecutor(None)
+
+def process_file(file):
     if file.endswith(".mustache.html"):
         write_html(file)
 
     if file.endswith(".mustache.txt"):
         write_text(file)
+
+futures = [executor.submit(process_file, file) for file in os.listdir(".")]
+futures.wait(futures)
 
 
 shutil.copyfile("notifications-language.json", "../notifications-language.json")

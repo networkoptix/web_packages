@@ -302,15 +302,21 @@ nx-lint-test:
     - npm ci
     - npm run test
 
-webadmin:
+all-builds:
   extends: .frontend-changes
   stage: build
   image: nx/ci
   tags:
   - ru-moscow
+  artifacts:
+    paths:
+      - logs/**/*
   secrets:
     JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
   script:
+    - mkdir logs
+    - SOME_BUILD_FAILED=false
+    - echo "Running webadmin and frontend builds in parallel"
     - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
@@ -318,17 +324,7 @@ webadmin:
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL"
-
-frontend:
-  extends: .frontend-changes
-  stage: build
-  image: nx/ci
-  tags:
-  - ru-moscow
-  secrets: !reference [.tokens, secrets]
-  script:
-    - !reference [.get_target_branch_script, script]
+      "GITLAB_JOB_URL=$CI_JOB_URL" 1> logs/webadmin.log 2>&1  & WEBADMIN_EXIT="$?"
     - runJenkinsJob.sh gitlab.cloud.frontend
       "PUSH_TO_ARTIFACTORY=true"
       "BRANCH=$TARGET_BRANCH_NAME"
@@ -339,7 +335,19 @@ frontend:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA"
+      "REVISION=$CI_COMMIT_SHORT_SHA" 1> logs/frontend.log 2>&1 & FRONTEND_EXIT="$?"
+    - wait -n
+    - if "$WEBADMIN_EXIT" == "0"; then
+    -     SOME_BUILD_FAILED=true
+    -     echo "Webadmin build failed $WEBADMIN_EXIT"
+    - fi
+    - if "$FRONTEND_EXIT" == "0"; then
+    -     SOME_BUILD_FAILED=true
+    -     echo "Frontend build failed $FRONTEND_EXIT"
+    - fi
+    - if $SOME_BUILD_FAILED ;then
+    -     exit 1
+    - fi
 
 wheel-uploader:
   extends: .retries
@@ -430,13 +438,9 @@ on-nx-mentions:
   extends: .fail-on-frontend
   needs: ["nx-mentions-check"]
 
-on-frontend-build:
+on-all-builds:
   extends: .fail-on-frontend
-  needs: ["frontend"]
-
-on-webadmin-build:
-  extends: .fail-on-frontend
-  needs: ["webadmin"]
+  needs: ["all-builds"]
 
 on-frontend-test:
   extends: .fail-on-frontend
