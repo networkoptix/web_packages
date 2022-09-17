@@ -45,6 +45,7 @@ export class NxSystemsService implements OnDestroy {
         primary: undefined,
         secondary: undefined
     };
+    systemsInPool: number;
 
     private _userDisconnectSystem: boolean = false;
 
@@ -84,9 +85,7 @@ export class NxSystemsService implements OnDestroy {
     // }
 
     get isPolling(): boolean {
-        // https://rxjs.dev/api/index/class/Subscriber#properties
-        // @ts-expect-error FIXME: Observable.destination has been removed
-        return this.systemsPoll?.destination?.observers?.length > 0;
+        return this.systemsInPool > 0;
     }
 
     processMerge(mergeInfo: MergeInfo): void {
@@ -207,7 +206,10 @@ export class NxSystemsService implements OnDestroy {
         }
         this.activeSubscription = this.systemsPoll
             .pipe(
-                tap(systems => this.processSystems(systems)),
+                tap(systems => {
+                    this.systemsInPool = systems.length;
+                    this.processSystems(systems);
+                }),
                 distinctUntilChanged((a, b) => isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
