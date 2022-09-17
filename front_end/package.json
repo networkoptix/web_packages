@@ -11,8 +11,8 @@
     "targets": {
       "build": {
         "outputs": [
-          "dist/authorization",
-          "dist/front_end",
+          "dist",
+          "dist/{projectRoot}",
           "{projectRoot}/dist"
         ]
       },
@@ -41,11 +41,11 @@
     "serve-webadmin-amir2": "export WEBADMIN_TARGET=amir2 && npm run serve:webadmin",
     "serve:auth": "npm run setVarSkin && npm run update-lang-files && npx nx run authorization:serve:development --proxy-config proxy.conf.auth.js",
     "serve:cloud": "npm run setVarSkin && npm run update-lang-files && npx nx run front-end:serve:$CLOUD_TARGET --proxy-config proxy.conf.front_end.js",
-    "serve:webadmin": "npm run update-lang-files && npx nx run serve front-end:serve:webadmin --proxy-config proxy.conf.webadmin.js",
-    "build": "npm run cleardist && npm run lang && npx nx run-many --target=build --all --configuration=production",
-    "build:auth": "npx nx run authorization:build:production",
-    "build:cloud": "npm run lang && npx nx run front-end:build:production",
-    "build-webadmin": "npm run cleardist && npm run lang && npx nx run front-end:build:webadmin-prod",
+    "serve:webadmin": "npm run update-lang-files && npx nx run webadmin:serve:development --proxy-config proxy.conf.webadmin.js",
+    "build": "npm run cleardist && npm run lang && npx nx run-many --target=build --projects=front-end,authorization --configuration=production",
+    "build:auth": "npm run cleardist && npx nx run authorization:build:production",
+    "build:cloud": "npm run cleardist && npm run lang && npx nx run front-end:build:production",
+    "build-webadmin": "npm run cleardist && npm run lang && npx nx run webadmin:build:production",
     "bundle-report": "npm run lang && npx nx run front-end:build:production --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
     "bundle-report:auth": "npm run lang && npx nx run authorization:build:production --stats-json && webpack-bundle-analyzer dist/authorization/stats.json -s gzip",
     "cleardist": "([ -e ./dist ] && rm -rf ./dist) && echo 'Cleared dist folder' || echo 'No Dist to clear' ",
@@ -65,8 +65,8 @@
     "test:components": "npx nx run test front-end --include=src/app/components",
     "test:components:watch": "npx nx run test front-end --include=src/app/components --karma-config karma.conf.watch.js",
     "e2e": "ng e2e",
-    "lint": "npx nx run-many --target=lint --parallel=16 --all --fix --skip-nx-cache",
-    "lint:ci": "npx nx run-many --target=lint --all --parallel=4 --maxWarnings 0",
+    "lint": "npx nx run-many --target=lint --parallel=16 --all --exclude=webadmin --fix --skip-nx-cache",
+    "lint:ci": "npx nx run-many --target=lint --all  --exclude=webadmin --parallel=4 --maxWarnings 0",
     "esprint": "node esprintLimiter.js",
     "esprint4": "esprint check --fix --workers=4",
     "esprint8": "esprint check --fix --workers=8",

@@ -1,7 +1,10 @@
 #!/bin/bash
 IS_WEBADMIN=$1
 
-mv ./dist/front_end/* ./dist/
+if [ -d ./dist/front_end ]; then
+    mv ./dist/front_end/* ./dist/
+fi
+
 rm ./dist/styles/*.scss;
 [ -e ./dist/styles/native-theme ] && rm -rf ./dist/styles/native-theme
 # target only main style
@@ -15,8 +18,7 @@ sed -i -e 's/type="text\/javascript"//g' dist/index.html;  # remove extra type a
 
 # Webadmin specific actions
 if [ $IS_WEBADMIN ]; then
-    echo "skipping"
-    # cp ./src/customization/webadmin_logo.png ./dist/images/logo.png
+    cp ./src/customization/webadmin_logo.png ./dist/images/logo.png
 else
     cp ./dist/index.html ./dist/index.mustache.html
     sed -i -d 's/<title><\/title>/<title>{{title}}<\/title>/' ./dist/index.mustache.html

@@ -6,7 +6,7 @@ const hashFile = 'language_hash'
 const include = [
     "./src/**/*.html",
     "./src/language_i18n_static.json",
-    "./src/customization/*.json",
+    "./src/customization/menus.json",
     "../cloud/cms/menus.json"
 ]
 

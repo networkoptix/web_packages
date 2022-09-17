@@ -51,6 +51,19 @@ stages:
       changes:
         - front_end/**/*
 
+.frontend-language-changes:
+  extends: .retries
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/src/**/*.html
+        - front_end/src/language_i18n_static.json
+        - front_end/src/customization/menus.json
+        - cloud/cms/menus.json
+
 .get_target_branch_script:
   script:
   - set -e
@@ -66,6 +79,12 @@ stages:
 
 no-changes:
   extends: .retries
+  rules:
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        changes:
+            - cloud/**/*
+            - front_end/**/*
+        when: never
   stage: check
   script:
     - echo "If this is the only job that runs then no changes were made that requires the pipeline"
@@ -125,6 +144,10 @@ no-changes:
 
 .frontend-node:
   extends: .frontend-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.frontend-language:
+  extends: .frontend-language-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .frontend-test:
@@ -204,7 +227,7 @@ nx-mentions-check:
   script: ci/nx_mentions.sh
 
 language-check:
-  extends: .frontend-node
+  extends: .frontend-language
   stage: check
   script:
     - cd front_end
@@ -349,6 +372,17 @@ wheel-uploader:
     - echo "Canceling jobs still running on pipeline"
     - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
 
+.fail-on-language:
+  extends: .fail-on
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/src/**/*.html
+        - front_end/src/language_i18n_static.json
+        - front_end/src/customization/menus.json
+        - cloud/cms/menus.json
+      when: on_failure
+
 .fail-on-frontend:
   extends: .fail-on
   rules:
@@ -389,7 +423,7 @@ on-nx-lint-build-check:
       when: on_failure
 
 on-language-check:
-  extends: .fail-on-frontend
+  extends: .fail-on-language
   needs: ["language-check"]
 
 on-nx-mentions:

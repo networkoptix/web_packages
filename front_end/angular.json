@@ -152,64 +152,6 @@
                   "with": "src/environments/environment.stage.ts"
                 }
               ]
-            },
-            "webadmin": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.webadmin.ts"
-                },
-                {
-                  "replace": "src/app/services/account.service/index.ts",
-                  "with": "src/app/services/account.service/index.webadmin.ts"
-                },
-                {
-                  "replace": "src/app/routeGuards/authGuard.ts",
-                  "with": "src/app/routeGuards/authGuard.webadmin.ts"
-                }
-              ],
-              "index": {
-                "input": "src/index.tagless.html",
-                "output": "index.html"
-              }
-            },
-            "webadmin-prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.webadmin-prod.ts"
-                },
-                {
-                  "replace": "src/app/services/account.service/index.ts",
-                  "with": "src/app/services/account.service/index.webadmin.ts"
-                }
-              ],
-              "index": {
-                "input": "src/index.tagless.html",
-                "output": "index.html"
-              },
-              "baseHref": "static/",
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractLicenses": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "3mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "200kb",
-                  "maximumError": "280kb"
-                },
-                {
-                  "type": "anyScript",
-                  "maximumWarning": "1mb",
-                  "maximumError": "2mb"
-                }
-              ]
             }
           },
           "defaultConfiguration": ""
@@ -250,11 +192,6 @@
             },
             "stage": {
               "browserTarget": "front-end:build:stage"
-            },
-            "webadmin": {
-              "port": 9001,
-              "publicHost": "localhost:9001",
-              "browserTarget": "front-end:build:webadmin"
             }
           }
         },
@@ -304,6 +241,164 @@
         }
       }
     },
+    "webadmin": {
+        "projectType": "application",
+        "schematics": {
+          "@schematics/angular:component": {
+            "style": "scss"
+          }
+        },
+        "root": "",
+        "sourceRoot": "src",
+        "prefix": "app",
+        "architect": {
+          "build": {
+            "builder": "@angular-devkit/build-angular:browser",
+            "options": {
+              "allowedCommonJsDependencies": [
+                "md5",
+                "uuid",
+                "ng2-trim-directive",
+                "qrcode",
+                "@firebase/util",
+                "@firebase/component",
+                "dateformat",
+                "@videojs/xhr",
+                "videojs-vtt.js",
+                "global/document",
+                "mux.js/lib/mp4/probe",
+                "mux.js/lib/tools/ts-inspector.js",
+                "swagger-ui"
+              ],
+              "outputPath": "dist",
+              "index": "src/index.html",
+              "main": "src/main.ts",
+              "polyfills": "src/polyfills.ts",
+              "tsConfig": "tsconfig.json",
+              "assets": [
+                { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" },
+                "src/customization",
+                "src/images",
+                "src/fonts",
+                "src/styles",
+                "src/views",
+                "src/scripts",
+                "src/503.html",
+                "src/downloads.json",
+                "src/apple-app-site-association",
+                "src/language_compiled.json",
+                "src/language_i18n_static.json",
+                "src/language_i18n.json",
+                "src/language.json",
+                "src/languages.json",
+                "src/supported_languages.json",
+                "src/robots.txt"
+              ],
+              "styles": [
+                "src/app/dialogs/dialogs.scss",
+                "src/styles/main.scss"
+              ],
+              "scripts": [
+                "node_modules/marked/marked.min.js"
+              ],
+              "stylePreprocessorOptions": {
+                "includePaths": [
+                  "src/app/styles",
+                  "src/styles"
+                ]
+              },
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": {
+                "scripts": true,
+                "styles": false,
+                "vendor": false
+              },
+              "aot":true,
+              "optimization": false,
+              "namedChunks": true
+            },
+            "configurations": {
+              "development": {
+                "fileReplacements": [
+                  {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.webadmin.ts"
+                  },
+                  {
+                    "replace": "src/app/services/account.service/index.ts",
+                    "with": "src/app/services/account.service/index.webadmin.ts"
+                  },
+                  {
+                    "replace": "src/app/routeGuards/authGuard.ts",
+                    "with": "src/app/routeGuards/authGuard.webadmin.ts"
+                  }
+                ],
+                "index": {
+                  "input": "src/index.tagless.html",
+                  "output": "index.html"
+                }
+              },
+              "production": {
+                "fileReplacements": [
+                  {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.webadmin-prod.ts"
+                  },
+                  {
+                    "replace": "src/app/services/account.service/index.ts",
+                    "with": "src/app/services/account.service/index.webadmin.ts"
+                  }
+                ],
+                "index": {
+                  "input": "src/index.tagless.html",
+                  "output": "index.html"
+                },
+                "baseHref": "static/",
+                "optimization": true,
+                "outputHashing": "all",
+                "sourceMap": false,
+                "extractLicenses": true,
+                "budgets": [
+                  {
+                    "type": "initial",
+                    "maximumWarning": "2mb",
+                    "maximumError": "3mb"
+                  },
+                  {
+                    "type": "anyComponentStyle",
+                    "maximumWarning": "200kb",
+                    "maximumError": "280kb"
+                  },
+                  {
+                    "type": "anyScript",
+                    "maximumWarning": "1mb",
+                    "maximumError": "2mb"
+                  }
+                ]
+              }
+            },
+            "defaultConfiguration": ""
+          },
+          "serve": {
+            "builder": "@angular-devkit/build-angular:dev-server",
+            "options": {
+              "publicHost": "localhost:9000",
+              "host": "0.0.0.0",
+              "port": 9000,
+              "browserTarget": "front-end:build",
+              "sslKey": "ssl_keys/server.key",
+              "sslCert": "ssl_keys/server.crt",
+              "ssl": true
+            },
+            "configurations": {
+              "production": {
+                "browserTarget": "front-end:build:webadmin"
+              }
+            }
+          }
+        }
+      },
     "authorization": {
       "projectType": "application",
       "schematics": {
@@ -407,27 +502,6 @@
           "defaultConfiguration": ""
         },
         "lint": {
-            "builder": "@nrwl/linter:eslint",
-            "options":{
-                "eslintConfig": ".eslintrc.js",
-                "lintFilePatterns": ["**/*.ts"]
-            }
-        },
-        "lint-tests": {
-            "builder": "@nrwl/linter:eslint",
-            "options":{
-                "eslintConfig": ".eslintrc.js",
-                "lintFilePatterns": ["**/*.ts"]
-            }
-        },
-        "lint-templates": {
-            "builder": "@nrwl/linter:eslint",
-            "options":{
-                "eslintConfig": ".eslintrc.js",
-                "lintFilePatterns": ["**/*.component.html"]
-            }
-        },
-        "lint-all": {
             "builder": "@nrwl/linter:eslint",
             "options":{
                 "eslintConfig": ".eslintrc.js",
