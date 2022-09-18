@@ -336,18 +336,10 @@ all-builds:
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHORT_SHA" 1> logs/frontend.log 2>&1 & FRONTEND_EXIT="$?"
-    - wait -n
-    - if "$WEBADMIN_EXIT" == "0"; then
-    -     SOME_BUILD_FAILED=true
-    -     echo "Webadmin build failed $WEBADMIN_EXIT"
-    - fi
-    - if "$FRONTEND_EXIT" == "0"; then
-    -     SOME_BUILD_FAILED=true
-    -     echo "Frontend build failed $FRONTEND_EXIT"
-    - fi
-    - if $SOME_BUILD_FAILED ;then
-    -     exit 1
-    - fi
+    - wait
+    - if [ "$WEBADMIN_EXIT" != "0" ]; then SOME_BUILD_FAILED=true && echo "Webadmin build failed $WEBADMIN_EXIT"; else echo "Webadmin build successful"; fi
+    - if [ "$FRONTEND_EXIT" != "0" ]; then SOME_BUILD_FAILED=true && echo "Frontend build failed $FRONTEND_EXIT"; else echo "Frontend build successful"; fi
+    - if $SOME_BUILD_FAILED; then exit 1; fi
 
 wheel-uploader:
   extends: .retries

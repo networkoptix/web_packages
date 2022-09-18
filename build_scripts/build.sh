@@ -109,9 +109,8 @@ build_frontend
 move_fonts_and_help
 echo -e "\nBuilding front_end finished"
 
-echo -e "\nIterate all skins"
-for dir in ../skins/*/
-do
+process_skin() {
+    dir="$1"
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
 
@@ -122,10 +121,18 @@ do
     cp -R $SOURCE_DIR/$SKIN/static/scripts/. $SOURCE_DIR/$SKIN/static/
 
     ./build_skin.sh $SKIN $PORTAL_REPOSITORY
+}
+
+echo -e "\nIterate all skins"
+for dir in ../skins/*/
+do
+    process_skin "$dir" &
     if [ -n "$LOCAL_ENV" ]; then
       break
     fi
 done
+
+wait
 
 cp ../cloud/cloud/cloud_portal.yaml $SOURCE_DIR
 
