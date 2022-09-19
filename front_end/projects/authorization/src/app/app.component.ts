@@ -15,7 +15,7 @@ export class AppComponent {
         private themeService: NxThemeService,
     ) {
         if (this.configService.getConfig().featureFlags.themesEnabled) {
-            this.themeService.initTheme();
+            this.themeService.initTheme().then();
         }
     }
 }

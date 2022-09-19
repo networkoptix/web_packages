@@ -5,7 +5,7 @@ import { isEqual } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, filter, take } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
@@ -109,12 +109,6 @@ export abstract class BaseAccount implements OnDestroy {
                         .then(account => {
                             // prevent stale loginState
                             if (account) {
-                                this.cloudApi.getCustomAccountProperty('theme', account.email)
-                                    .pipe(
-                                        take(1))
-                                    .subscribe(result => {
-                                        themeService.setTheme(result.theme, account.email);
-                                    });
                                 this.startAccountPoll();
                             } else {
                                 this.clearLoginState();

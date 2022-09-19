@@ -55,7 +55,10 @@ const PROXY_CONFIG = [
         target: proxyTargetConfig[target],
         changeOrigin: true,
         secure: false,
-        pathRewrite: rewriteLegacy ? rewritePaths : {}
+        pathRewrite: rewriteLegacy ? rewritePaths : {},
+        bypass: function (req, res, proxyOptions) {
+            req.headers.origin = proxyTargetConfig[target];
+        }
     },
     {
         context: [

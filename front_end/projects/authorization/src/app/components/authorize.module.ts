@@ -22,9 +22,11 @@ import { NxAuthorizeNotSecureComponent } from './not-secure/not-secure.component
 import { NxAuthorizePasswordComponent } from './password/password.component';
 import { NxAuthorizeResetPasswordComponent } from './reset-password/reset-password.component';
 import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.component';
+import { NxAuthorizeShow404Component } from './show-404/show-404.component';
 
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
+    { path: 'activate', component: NxAuthorizeComponent, data: { action: '404' } },
     { path: 'restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } },
     { path: 'restore_password', component: NxAuthorizeComponent, data: { action: 'reset_request' } }, // for systems < 5.0, desktop password reset request
     { path: 'register/:code', component: NxAuthorizeComponent, data: { action: 'register' } },
@@ -59,7 +61,8 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeResetRequestComponent,
         NxAuthorizeConnectErrorComponent,
         NxAuthorizeAuthCodeComponent,
-        NxAuthorizeBackupCodeComponent
+        NxAuthorizeBackupCodeComponent,
+        NxAuthorizeShow404Component
     ],
     exports: []
 })

@@ -23,7 +23,7 @@ class CloudSession:
 
     def __exit__(self, logout, *args, **kwargs):
         if logout:
-            self.logout()
+            self.logout_session()
         pass
 
     def _request_wrapper(self, url, method='get', query=None, data=None):
@@ -85,7 +85,7 @@ class CloudSession:
         self.session.headers.update({'X-CSRFToken': self.session.cookies['csrftoken']})
         return self.session
 
-    def logout(self):
+    def logout_session(self):
         self._request_wrapper("/api/account/logout", method='post')
 
 #  Below is an example of use of the CloudSession class above.

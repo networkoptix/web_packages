@@ -125,6 +125,11 @@
             [window]="window"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-backup-code-component>
+        <nx-show-404-authorize-component
+            *ngSwitchCase="AuthorizeState.show404"
+            [viewType]="viewType"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-show-404-authorize-component>
     </div>
     <div
         class="auth-overlay"

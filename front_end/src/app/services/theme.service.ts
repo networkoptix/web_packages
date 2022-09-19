@@ -12,6 +12,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 export class NxThemeService {
     darkThemeMq: MediaQueryList;
     themeSelected: string;
+    userTheme: string;
 
     constructor(
         private localStorageService: LocalStorageService,
@@ -20,8 +21,10 @@ export class NxThemeService {
     ) {
     }
 
-    initTheme(username: string = 'undefined'): void {
+    async initTheme(): Promise<void> {
+        const loginState = this.localStorageService.retrieve('loginstate');
         this.themeSelected = this.localStorageService.retrieve('theme');
+
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
 
         this.darkThemeMq.addEventListener('change', e => {
@@ -37,7 +40,18 @@ export class NxThemeService {
             }
         });
 
-        this.setTheme(this.themeSelected, username);
+        if (loginState) {
+            await this.cloudApi.getCustomAccountProperty('theme', loginState)
+                .toPromise()
+                .then(result => {
+                    this.userTheme = result.name;
+                    this.themeSelected = result.theme;
+                });
+        } else {
+            this.themeSelected = 'auto';
+        }
+
+        this.setTheme(this.themeSelected, loginState);
     }
 
     getTheme(): string {
@@ -45,9 +59,12 @@ export class NxThemeService {
     }
 
     setTheme(themeSelected: string, username:string): void {
+        const docTheme = this.window.document.documentElement.getAttribute('data-theme');
+
         if (
             themeSelected === 'auto' ||
-            themeSelected === null
+            !themeSelected ||
+            !username
         ) {
             this.localStorageService.store('theme', 'auto');
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
@@ -56,6 +73,9 @@ export class NxThemeService {
                 NxConfigService.isDarkTheme ? 'dark' : 'light'
             );
         } else {
+            if (docTheme === this.userTheme) {
+                return; // avoid reloading if same theme is set
+            }
             this.localStorageService.store('theme', themeSelected);
             NxConfigService.isDarkTheme = themeSelected === 'dark';
             this.window.document.documentElement.setAttribute(
@@ -64,7 +84,9 @@ export class NxThemeService {
             );
         }
 
-        username !== 'undefined' && this.cloudApi.saveCustomAccountProperty(
+        username &&
+        this.userTheme !== themeSelected &&
+        this.cloudApi.saveCustomAccountProperty(
             { theme: themeSelected },
             'theme',
             username
