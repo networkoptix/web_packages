@@ -19,7 +19,7 @@ ${PASSWORD IS REQUIRED}               //div[contains(@class,'input-error') and c
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
 ${CHANGE PASS NO CHANGES}             //div[contains(@class, "placeholder-text-no-changes")]
-${PASSWORD HEADLINE}                  //nx-account-password-component//nx-block//span[contains(text(), "${PASSWORD TEXT}")]
+${PASSWORD HEADLINE}                  //nx-account-password-component//nx-block//h4[contains(text(), "${PASSWORD TEXT}")]
 
 
 

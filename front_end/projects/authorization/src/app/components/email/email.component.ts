@@ -53,6 +53,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             subHeader?: string
         }
     };
+    emailAutoFilled = false;
 
     constructor(
         language: NxLanguageProviderService,
@@ -77,6 +78,9 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.setupText();
         this.setText();
         this.sendEmail = () => {
+            if (this.emailAutoFilled && this.errorCode) {
+                this.emailForm?.controls?.email.setErrors(null);
+            }
             this.loginEmailChange.emit(this.loginEmail);
         };
         this.isMobile = this.deviceService.isMobile();
@@ -96,6 +100,11 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
         if (!changes.clientType?.firstChange) {
             this.setText();
+        }
+
+        const email = changes?.loginEmail;
+        if (email?.firstChange && !email.previousValue && email.currentValue) {
+            this.emailAutoFilled = true;
         }
     }
 

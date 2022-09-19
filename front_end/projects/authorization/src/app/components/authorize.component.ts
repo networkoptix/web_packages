@@ -66,7 +66,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     checkEmailProcess: Process;
     loginCode: string;
     emailLocked = false;
-    action: 'restore_password' | 'activate' | 'register' | 'reset_request';
+    action: 'restore_password' | 'activate' | 'register' | 'reset_request' | '404';
 
     // email
     loginEmail: string;
@@ -203,7 +203,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (this.action) {
             this.loginCode = this.route.snapshot.params.code;
             if (this.loginCode) {
-                this.loginEmail = atob(this.loginCode).split(':')[1];
+                if (atob(this.loginCode).split(':').length === 2) {
+                    this.loginEmail = atob(this.loginCode).split(':')[1];
+                } else if (this.action === 'activate') {
+                    this.action = '404';
+                }
                 this.fromInvite = this.action === 'register';
             }
         }
@@ -252,6 +256,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.loginCode = access_token || access_code || code;
                 this.redirectLink = redirect_uri;
                 this.currentState = AuthorizeState.auth;
+            } else if (this.action === '404') {
+                this.currentState = AuthorizeState.show404;
             } else if (this.action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (this.action === 'activate') {
