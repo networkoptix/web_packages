@@ -17,6 +17,7 @@ import {
     Router,
 } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -41,6 +42,7 @@ import { WINDOW } from '@services/window-provider';
 
 require('what-input');
 
+@UntilDestroy()
 @Component({
     selector: 'nx-app',
     template: `
@@ -345,7 +347,8 @@ export class AppComponent implements AfterViewInit {
                     event instanceof ActivationEnd ||
                     event instanceof GuardsCheckStart ||
                     event instanceof GuardsCheckEnd
-                )
+                ),
+                untilDestroyed(this)
             ).subscribe((event: ActivationStart |
                 ActivationEnd |
                 GuardsCheckStart |
@@ -371,7 +374,7 @@ export class AppComponent implements AfterViewInit {
             });
 
         fromEvent<Event>(this.window, 'resize')
-            .pipe(debounceTime(100))
+            .pipe(debounceTime(100), untilDestroyed(this))
             .subscribe(event => {
                 const { innerHeight, innerWidth } = event.target as Window;
                 this.scrollMechanicsService.setWindowSize(innerHeight, innerWidth);
@@ -399,8 +402,15 @@ export class AppComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe().subscribe(() => {
+        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe(untilDestroyed(this)).subscribe(() => {
             this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
+        });
+
+        this.scrollMechanicsService.windowScrollSubject.pipe(untilDestroyed(this)).subscribe(scroll => {
+            const prevScroll = this.mainContainer.nativeElement.scrollTop;
+            if (prevScroll !== scroll) { // Only triggers on programatically set scroll
+                this.mainContainer.nativeElement.scrollTop = scroll;
+            }
         });
     }
 }

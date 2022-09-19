@@ -20,6 +20,9 @@
         <div class="copyright">
             <span>{{ copyright }}</span>
             <div
+                [ngClass]="{
+                    invisible: (scrollMechanicsService.windowScrollSubject | async) === 0
+                }"
                 class="return-to-top"
                 *ngIf="returnToTopVisible$ | async"
                 (click)="scrollToTop()"

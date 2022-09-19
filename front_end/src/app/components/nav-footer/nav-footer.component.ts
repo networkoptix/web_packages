@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
@@ -9,7 +9,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy()
 @Component({
@@ -24,7 +23,7 @@ export class NxNavFooterComponent implements OnInit {
     returnToTopVisible$ = new BehaviorSubject(true);
     copyright: string;
 
-    constructor(private menusService: NxMenusService, config: NxConfigService, @Inject(WINDOW) private window: Window, private scrollMechanicsService: NxScrollMechanicsService, languageService: NxLanguageProviderService) {
+    constructor(private menusService: NxMenusService, config: NxConfigService, public scrollMechanicsService: NxScrollMechanicsService, languageService: NxLanguageProviderService) {
         this.CONFIG = config.getConfig();
         this.copyright = languageService.translations.appFooter.copyright({ currentYear: new Date().getFullYear().toString() });
 
@@ -49,6 +48,6 @@ export class NxNavFooterComponent implements OnInit {
     }
 
     scrollToTop(): void {
-        this.window.scrollTo({ top: 0 });
+        this.scrollMechanicsService.windowScrollSubject.next(0);
     }
 }
