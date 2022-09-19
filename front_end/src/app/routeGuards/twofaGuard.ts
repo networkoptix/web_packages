@@ -13,7 +13,6 @@ import { take } from 'rxjs/operators';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { OauthService } from '@services/oauth.service';
-import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type {
     NxSystemWithUserInfo
 } from '@services/system.service/system-types';
@@ -68,13 +67,15 @@ export class TwofaGuard implements CanActivate {
                                 true
                             );
                             canActivateSubject.complete();
-                            this.oauthService.redirectOauth(
-                                'system2faAuth',
-                                account.email,
-                                undefined,
-                                (system.mediaserver as NxSystemRestAPI).accessToken,
-                                Location.joinWithSlash(this.window.location.origin, state.url)
-                            );
+                            system.updateToken(true).then(token => {
+                                this.oauthService.redirectOauth(
+                                    'system2faAuth',
+                                    account.email,
+                                    undefined,
+                                    token,
+                                    Location.joinWithSlash(this.window.location.origin, state.url)
+                                );
+                            });
                         }
                     } else {
                         canActivateSubject.next(true);
