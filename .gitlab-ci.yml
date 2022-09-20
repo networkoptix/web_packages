@@ -51,19 +51,6 @@ stages:
       changes:
         - front_end/**/*
 
-.frontend-language-changes:
-  extends: .retries
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/src/**/*.html
-        - front_end/src/language_i18n_static.json
-        - front_end/src/customization/menus.json
-        - cloud/cms/menus.json
-
 .get_target_branch_script:
   script:
   - set -e
@@ -98,73 +85,6 @@ no-changes:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - cloud/**/*
-
-.frontend-test-changes:
-  extends: .retries
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*.spec.ts
-        - front_end/eslint-plugin-nx/**/*
-
-.authorization-changes:
-  extends: .retries
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/apps/authorization/src/**/*
-        - front_end/eslint-plugin-nx/**/*
-
-.nx-lint-changes:
-  extends: .retries
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/eslint-plugin-nx/**/*
-
-.templates-changes:
-  extends: .retries
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*.component.html
-        - front_end/eslint-plugin-nx/**/*
-
-.frontend-node:
-  extends: .frontend-changes
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-
-.frontend-language:
-  extends: .frontend-language-changes
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-
-.frontend-test:
-  extends: .frontend-test-changes
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-
-.authorization-node:
-  extends: .authorization-changes
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-
-.nx-lint-node:
-  extends: .nx-lint-changes
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-
-.templates-node:
-  extends: .templates-changes
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .django-python:
   extends: .backend-changes
@@ -221,36 +141,6 @@ django-checks:
     - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
     - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
 
-nx-mentions-check:
-  extends: .frontend-changes
-  stage: check
-  script: ci/nx_mentions.sh
-
-language-check:
-  extends: .frontend-language
-  stage: check
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lang-ci-check
-
-frontend-lint-check:
-  extends: .frontend-node
-  stage: check
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lint:ci
-
-nx-lint-build-check:
-  extends: .nx-lint-node
-  stage: check
-  script:
-    - cd front_end
-    - npm ci
-    - cd eslint-plugin-nx
-    - npm run build-check
-
 django-unit-test-slow:
   extends: .django-unit-test
   artifacts:
@@ -275,32 +165,90 @@ django-unit-test-fast:
   script:
     - pytest -m "not integration" -m "not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
 
-frontend-unit-test:
-  extends: .frontend-node
-  stage: test
-  variables:
-    CHROME_BIN: /usr/bin/google-chrome
-  script:
-    - cd front_end
-    - npm ci
-    - npm run lang
-    - npm run test:ci
-  artifacts:
-    reports:
-      junit: front_end/reports/*.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: front_end/coverage/**/cobertura-coverage.xml
+# frontend-unit-test:
+#   extends: .frontend-node
+#   stage: test
+#   variables:
+#     CHROME_BIN: /usr/bin/google-chrome
+#   script:
+#     - cd front_end
+#     - npm ci
+#     - npm run lang
+#     - npm run test:ci
+#   artifacts:
+#     reports:
+#       junit: front_end/reports/*.xml
+#       coverage_report:
+#         coverage_format: cobertura
+#         path: front_end/coverage/**/cobertura-coverage.xml
 
-nx-lint-test:
-  extends: .nx-lint-node
-  stage: test
+.frontend-node:
+  extends: .frontend-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+all-frontend-checks:
+  extends: .frontend-node
+  stage: check
+  artifacts:
+    paths:
+      - logs/**/*
   script:
-    - cd front_end
-    - npm ci
-    - cd eslint-plugin-nx
-    - npm ci
-    - npm run test
+   - |
+    echo "Running all frontend checks"
+    log_folder="$PWD/logs"
+    status_codes=()
+    exit_code="0"
+
+    mkdir -p "$log_folder"
+
+    run_background_task() {
+        echo "Starting $2: $1"
+        $1 1> "$log_folder/$2.log" 2>&1 & status_codes+=("$2 exit code: $?")
+    }
+
+    # Start background tasks
+    echo "Starting tasks in the background"
+
+    run_background_task "npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true" "license_check"
+
+    pushd "ci"
+        run_background_task "./nx_mentions.sh" "nx_mentions"
+    popd
+
+    pushd "front_end"
+        echo "Installing node_modules"
+        npm ci
+        pushd "eslint-plugin-nx"
+            npm ci
+        popd
+        run_background_task "npm run lang-ci-check" "lang_check"
+        run_background_task "npm run lint:ci" "lint_ci"
+        run_background_task "npm run test:ci" "test_ci"
+        pushd "eslint-plugin-nx"
+            npm ci
+            run_background_task "npm run build-check" "eslint_plugin_build_check"
+            echo "Installing eslint-plugin-nx node_modules"
+            run_background_task "npm run test" "eslint_plugin_test"
+        popd
+    popd
+
+    echo "Waiting for background tasks to complete"
+
+    wait
+
+    # Display results
+    for status in "${status_codes[@]}"; do
+      echo "$status"
+
+      code=${status##*:}
+
+      if [ ! "$code" = ' 0' ]; then
+        exit_code="1"
+      fi
+    done
+
+
+    exit "$exit_code"
 
 all-builds:
   extends: .frontend-changes
@@ -372,15 +320,12 @@ wheel-uploader:
     - echo "Canceling jobs still running on pipeline"
     - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
 
-.fail-on-language:
+.fail-on-backend:
   extends: .fail-on
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - front_end/src/**/*.html
-        - front_end/src/language_i18n_static.json
-        - front_end/src/customization/menus.json
-        - cloud/cms/menus.json
+        - cloud/**/*
       when: on_failure
 
 .fail-on-frontend:
@@ -391,52 +336,9 @@ wheel-uploader:
         - front_end/**/*
       when: on_failure
 
-.fail-on-frontend-test:
-  extends: .fail-on
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*.spec.ts
-      when: on_failure
-
-.fail-on-backend:
-  extends: .fail-on
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - cloud/**/*
-      when: on_failure
-
-on-frontend-lint:
-  extends: .fail-on-frontend
-  needs: ["frontend-lint-check"]
-
-on-nx-lint-build-check:
-  extends: .fail-on-frontend
-  needs:
-    - job: nx-lint-build-check
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/eslint-plugin-nx/**/*
-      when: on_failure
-
-on-language-check:
-  extends: .fail-on-language
-  needs: ["language-check"]
-
-on-nx-mentions:
-  extends: .fail-on-frontend
-  needs: ["nx-mentions-check"]
-
 on-all-builds:
   extends: .fail-on-frontend
   needs: ["all-builds"]
-
-on-frontend-test:
-  extends: .fail-on-frontend
-  needs: ["frontend-unit-test"]
 
 on-django-checks:
   extends: .fail-on-backend
@@ -509,32 +411,4 @@ fail-on-python-license-check:
       changes:
         - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
-      when: on_failure
-
-check-node-licenses:
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-  stage: check
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  artifacts:
-    paths:
-      - ci-package-license.json
-    when: on_failure
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - cloud/**/package-lock.json
-        - front_end/**/package-lock.json
-  script:
-    - npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true
-
-fail-on-license-check:
-  extends: .fail-on
-  needs: [check-node-licenses]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - cloud/**/package-lock.json
-        - front_end/**/package-lock.json
       when: on_failure
