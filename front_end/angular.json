@@ -603,7 +603,7 @@
             "main": "apps/authorization/src/test.ts",
             "polyfills": "apps/authorization/src/polyfills.ts",
             "tsConfig": "apps/authorization/tsconfig.spec.json",
-            "karmaConfig": "karma.conf.ci.js",
+            "karmaConfig": "apps/authorization/karma.conf.ci.js",
             "codeCoverage": true,
             "assets": [
               "apps/authorization/src/favicon.ico",

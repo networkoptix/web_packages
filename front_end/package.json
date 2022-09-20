@@ -18,8 +18,8 @@
       },
       "test": {
         "outputs": [
-          "coverage",
-          "reports"
+          "coverage/{projectRoot}",
+          "reports/{projectRoot}"
         ]
       }
     }

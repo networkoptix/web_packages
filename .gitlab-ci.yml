@@ -40,7 +40,7 @@ stages:
       - runner_system_failure
       - stuck_or_timeout_failure
       - scheduler_failure
-
+#
 .frontend-changes:
   extends: .retries
   needs:
@@ -165,33 +165,24 @@ django-unit-test-fast:
   script:
     - pytest -m "not integration" -m "not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
 
-# frontend-unit-test:
-#   extends: .frontend-node
-#   stage: test
-#   variables:
-#     CHROME_BIN: /usr/bin/google-chrome
-#   script:
-#     - cd front_end
-#     - npm ci
-#     - npm run lang
-#     - npm run test:ci
-#   artifacts:
-#     reports:
-#       junit: front_end/reports/*.xml
-#       coverage_report:
-#         coverage_format: cobertura
-#         path: front_end/coverage/**/cobertura-coverage.xml
-
 .frontend-node:
   extends: .frontend-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 all-frontend-checks:
   extends: .frontend-node
+  variables:
+    CHROME_BIN: /usr/bin/google-chrome
   stage: check
   artifacts:
     paths:
       - logs/**/*
+    reports:
+      junit:
+        - front_end/reports/*/*.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/cobertura-coverage.xml
   script:
    - |
     echo "Running all frontend checks"
@@ -247,6 +238,24 @@ all-frontend-checks:
       fi
     done
 
+    # TODO: Merge coverage
+    # pushd "front_end"
+    #   pushd "coverage"
+    #     merge_coverage_reports="npx -y cobertura-merge -o cobertura-coverage.xml"
+
+    #     echo "merging coverage reports"
+
+    #     for coverage_file in **/cobertura-coverage.xml; do
+    #         dir="$(dirname $coverage_file)""
+    #         project=$(echo "$dir" | cut -d "/" -f1)
+    #         moved_coverage="$project.xml"
+    #         cp "$coverage_file" "$moved_coverage"
+    #         merge_coverage_reports+=" $project=$moved_coverage"
+    #     done
+
+    #     eval "$merge_coverage_reports"
+    #   popd
+    # popd
 
     exit "$exit_code"
 
@@ -335,6 +344,10 @@ wheel-uploader:
       changes:
         - front_end/**/*
       when: on_failure
+
+on-all-frontend-checks:
+  extends: .fail-on-frontend
+  needs: ["all-frontend-checks"]
 
 on-all-builds:
   extends: .fail-on-frontend
