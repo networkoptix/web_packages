@@ -1,60 +1,44 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom",
-      "DOM.Iterable"
-    ],
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "removeComments": true,
-    "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "baseUrl": "src",
-    "paths": {
-      "@components/*": ["app/components/*"],
-      "@decorators/*": ["app/decorators/*"],
-      "@directives/*": ["app/directives/*"],
-      "@dialogs/*": ["app/dialogs/*"],
-      "@environments/*": ["environments/*"],
-      "@interceptors/*": ["app/interceptors/*"],
-      "@pages/*": ["app/pages/*"],
-      "@view/*": ["app/pages/systems/view/*"],
-      "@vms-client/*": ["app/pages/systems/view/vms-client/*"],
-      "@guards/*": ["app/routeGuards/*"],
-      "@services/*": ["app/services/*"],
-      "@utils/*": ["app/utils/*"],
-      "@app/*": ["app/*"],
-      "@lib/*": ["lib/*"],
-      "@src/*": ["*"],
-      "@authorization/*": ["../apps/authorization/*"]
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "es2020",
+        "lib": ["es2020", "dom", "DOM.Iterable"],
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "noImplicitAny": false,
+        "noUnusedLocals": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "baseUrl": "",
+        "paths": {
+            "@components/*": ["src/app/components/*"],
+            "@decorators/*": ["src/app/decorators/*"],
+            "@directives/*": ["src/app/directives/*"],
+            "@dialogs/*": ["src/app/dialogs/*"],
+            "@environments/*": ["src/environments/*"],
+            "@interceptors/*": ["src/app/interceptors/*"],
+            "@pages/*": ["src/app/pages/*"],
+            "@view/*": ["src/app/pages/systems/view/*"],
+            "@vms-client/*": ["src/app/pages/systems/view/vms-client/*"],
+            "@guards/*": ["src/app/routeGuards/*"],
+            "@services/*": ["src/app/services/*"],
+            "@utils/*": ["src/app/utils/*"],
+            "@src/app/*": ["src/app/*"],
+            "@app/*": ["src/app/*"],
+            "@lib/*": ["src/lib/*"],
+            "@src/*": ["src/*"],
+            "@authorization/*": ["apps/authorization/*"]
+        },
+        "typeRoots": ["node_modules/@types"],
+        "types": ["jasmine", "node"]
     },
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "jasmine",
-      "node"
-    ]
-  },
-  "angularCompilerOptions": {
-    "enableIvy": true,
-    "strictTemplates": true
-  },
-  "include": [
-    "src/main.ts",
-    "src/polyfills.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    ".eslintrc.js"
-  ]
+    "angularCompilerOptions": {
+        "enableIvy": true,
+        "strictTemplates": true
+    },
+    "include": ["**/main.ts", "**/polyfills.ts", "**/*.spec.ts", "**/*.d.ts"],
+    "exclude": ["node_modules", ".eslintrc.js"]
 }
