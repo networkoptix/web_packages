@@ -230,7 +230,6 @@ Modify Local Users via Cloud UI
     Verify In Local Users UI    ${local users}    ${email}
     &{local users limited}=    Create Dictionary    &{local users}
     Pop From Dictionary    ${local users limited}    cloudAdmin
-
     FOR    ${user}    IN    @{local users limited}
 # commented out because of CLOUD-6854
         #Click Element    //span[text()="Local+${user}"]
@@ -252,16 +251,14 @@ Modify Local Users via Cloud UI
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email}
         #Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
-
         Log    Change password for ${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        Wait Until Elements Are Visible    //input[@id="newPassword"]    ${LOCAL USER CHANGE PASSWORD SAVE}
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
         Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
         Wait Until Element is Not Visible    //input[@id="newPassword"]
-
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}    permissions=${permissions}[${reverse permission}]
-
         Append To List    ${new locals}    ${new local}
         #Append To List    @{old locals}    &{old local}
     END
@@ -470,7 +467,8 @@ Change All Local User Password
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
-        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
+        Wait Until Elements Are Visible   //input[@id="newPassword"]
+        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}    ${LOCAL USER CHANGE PASSWORD SAVE}
         Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         Sleep    5

@@ -35,18 +35,42 @@
             &,
             * {
                 // overwrite whatinput's focus outline
-                background-color: var(--left-menu-l3-bg) !important;
+                background-color: var(--left-menu-l3-hover-bg) !important;
+                color: var(--left-menu-l3-hover-color);
                 outline: none !important;
                 box-shadow: none !important;
+            }
+            
+            .menu-level-3-svg-icon {
+                svg {
+                    .icon-with-fill {
+                        fill: var(--left-menu-l3-hover-color) !important;
+                    }
+                    .st0 {
+                        stroke: var(--left-menu-l3-hover-color) !important;
+                    }
+                }
             }
         }
         &:focus {
             &,
             * {
                 // overwrite whatinput's focus outline
-                background-color: var(--left-menu-l3-bg);
+                background-color: var(--left-menu-l3-hover-bg);
+                color: var(--left-menu-l3-hover-color);
                 outline: none !important;
                 box-shadow: none !important;
+            }
+            
+            .menu-level-3-svg-icon {
+                svg {
+                    .icon-with-fill {
+                        fill: var(--left-menu-l3-hover-color) !important;
+                    }
+                    .st0 {
+                        stroke: var(--left-menu-l3-hover-color) !important;
+                    }
+                }
             }
         }
     }

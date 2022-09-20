@@ -267,13 +267,14 @@ export class NxSystem extends System {
     updateToken(force = true) {
         const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
         if (environment.isLocal || !force && accessToken) {
-            return Promise.resolve(true);
+            return Promise.resolve(accessToken);
         }
 
         return this.cloudApi.getSystemToken(this.id).toPromise().then(tokens => {
-            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
-                .subscribe(() => { });
-            return Promise.resolve(true);
+            return (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
+                .toPromise()
+                .then(() => tokens.access_token)
+                .catch(() => tokens.access_token);
         }).catch(() => {
             this.lostConnection = true;
         });

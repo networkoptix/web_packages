@@ -301,13 +301,13 @@ ${COMMON PASSWORD}      qweasd123
 ${LOCAL USER LOGIN}                  //h2
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
-${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
-${LOCAL USER CHANGE PASSWORD SAVE}    //form[@name="changePasswordForm"]//button[text()="${SAVE BUTTON TEXT}"]
+${LOCAL USER CHANGE PASSWORD BUTTON}     //button[contains(text(), "${CHANGE PASSWORD BUTTON TEXT}")]
+${LOCAL USER CHANGE PASSWORD SAVE}    //form[@name="changePasswordForm"]//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${LOCAL USER CHANGE PASSWORD CANCEL}    //form[@name="changePasswordForm"]//button[text()="${CANCEL BUTTON TEXT}"]
 ${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
-${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
-${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="${CANCEL BUTTON TEXT}"]
+${LOCAL USER DELETE CONFIRM BUTTON}   //div[@class="process-button"]/button
+${LOCAL USER DELETE CANCEL BUTTON}    //button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${USER CANCEL}                        //nx-apply//nx-cancel-button/button[@type="reset"]
 ${ACCOUNT CREATION EMAIL SUCCESS}     //nx-authorize-component//nx-authorize-activate-account-component//main//h3
 ${ACTIVATE MODAL LOGIN BTN}           //nx-authorize-component//nx-authorize-activate-account-component//main//nx-process-button//button[@type="submit"]

@@ -1429,7 +1429,7 @@ Force Tags        system    Threaded
         ...    userId=${id}    
         ...    isCloud=${False}
         ...    patch=${True}
-        Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
+        Wait Until Element is Visible    //nx-permissions-select/div/button/span[text()="${VIEWER TEXT}"]    timeout=45
         Log    Step 7
         Save User    
         ...    ${server 1}[local auth]    

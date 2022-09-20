@@ -400,7 +400,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         // give the user chance to read the toaster
                         setTimeout(() => this.window.location.reload(), 2000);
                     } else {
-                        this.updateAndGoToSystems();
+                        this.router
+                            .navigate([this.CONFIG.redirect.authorised])
+                            .catch(error => {
+                                console.error(error);
+                            });
                     }
                 }
             }).catch(_ => _);
@@ -438,7 +442,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     // give the user chance to read the toaster
                                     setTimeout(() => this.window.location.reload(), 2000);
                                 } else {
-                                    this.updateAndGoToSystems();
+                                    this.router
+                                        .navigate([this.CONFIG.redirect.authorised])
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
                                 }
                             }
                         }

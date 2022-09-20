@@ -16,6 +16,7 @@ import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
+import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
@@ -33,6 +34,7 @@ export class DisconnectModalContent {
     CONFIG: IConfig;
     needsUpdate: boolean;
     disconnect: Process;
+    disconnectInterval: number;
     account: NxAccountService;
     system: NxSystem;
     // password: string;
@@ -54,6 +56,7 @@ export class DisconnectModalContent {
         private simpleDialogService: NxSimpleDialogsService,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
+        private systemsService: NxSystemsService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: {
             account: NxAccountService;
@@ -91,7 +94,22 @@ export class DisconnectModalContent {
             if (this.environment.isLocal) {
                 return this.disconnectLocal();
             }
-            return this.account.disconnect(this.system.id);
+            clearInterval(this.disconnectInterval);
+            return new Promise<void>((resolve, reject) => {
+                this.account.disconnect(this.system.id).then(() => {
+                    this.systemsService.userDisconnectSystem = true;
+                    this.disconnectInterval = this.window.setInterval(() => {
+                        this.systemsService
+                            .forceUpdateSystemsAsPromise()
+                            .then(systems => {
+                                if (!systems.find(sys => sys.id === this.system.id)) {
+                                    clearInterval(this.disconnectInterval);
+                                    resolve();
+                                }
+                            });
+                    }, 2000);
+                }).catch(e => reject(e));
+            });
         }, {
             ignoreError: true,
             ignoreUnauthorized: true
@@ -124,6 +142,7 @@ export class DisconnectModalContent {
     }
 
     close = (msg?: boolean): void => {
+        clearInterval(this.disconnectInterval);
         this.dialogRef.close(msg);
     };
 
