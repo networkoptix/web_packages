@@ -17,7 +17,6 @@ import metaDefaults from '../../../scripts/metaDefaults.json';
 import { IConfig } from './config-types';
 
 // Swapped with BUILD env during cloud portal build
-const buildSubstituted = !''.includes('BUILD');
 const buildSubstituted = !'{{BUILD}}'.includes('BUILD');
 const staticBase = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
 
