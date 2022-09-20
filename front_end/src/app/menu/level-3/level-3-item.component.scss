@@ -35,7 +35,7 @@
             &,
             * {
                 // overwrite whatinput's focus outline
-                background-color: var(--left-menu-l3-bg) !important;
+                background-color: var(--left-menu-l3-hover-bg) !important;
                 outline: none !important;
                 box-shadow: none !important;
             }
@@ -44,7 +44,7 @@
             &,
             * {
                 // overwrite whatinput's focus outline
-                background-color: var(--left-menu-l3-bg);
+                background-color: var(--left-menu-l3-hover-bg);
                 outline: none !important;
                 box-shadow: none !important;
             }
