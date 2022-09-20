@@ -45,7 +45,7 @@ const CLICK_AND_HOLD_TIMEOUT = 250;
 
 @UntilDestroy()
 @Component({
-    selector: 'timeline',
+    selector: 'nx-timeline',
     templateUrl: './timeline.component.html',
     styleUrls: ['./timeline.component.scss']
 })

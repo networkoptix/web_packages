@@ -26,7 +26,7 @@ import { PlaybackService } from '../../services/playback.service';
 
 @UntilDestroy()
 @Component({
-    selector: 'player',
+    selector: 'nx-player',
     templateUrl: './player.component.html',
     styleUrls: ['./player.component.scss']
 })

@@ -13,7 +13,7 @@ import { IntegrationService } from '../../integration.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'setup-component',
+    selector: 'nx-setup-component',
     templateUrl: 'setup.component.html',
     styleUrls: ['setup.component.scss']
 })

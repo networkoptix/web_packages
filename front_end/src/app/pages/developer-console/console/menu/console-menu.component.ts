@@ -14,7 +14,7 @@ import type { ConsoleMenuNode } from './console-menu.component.types';
 
 @UntilDestroy()
 @Component({
-    selector: 'console-menu',
+    selector: 'nx-console-menu',
     templateUrl: 'console-menu.component.html',
     styleUrls: ['console-menu.component.scss']
 })

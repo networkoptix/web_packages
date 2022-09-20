@@ -14,7 +14,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxDevConsoleComponent } from './console.component';
 
 @Component({
-    selector: 'console-menu',
+    selector: 'nx-console-menu',
     template: '<div></div>'
 })
 class MockConsoleMenu {
@@ -25,7 +25,7 @@ class MockConsoleMenu {
 }
 
 @Component({
-    selector: 'console-edit',
+    selector: 'nx-console-edit',
     template: '<div></div>'
 })
 class MockConsoleEdit {
@@ -34,7 +34,7 @@ class MockConsoleEdit {
 }
 
 @Component({
-    selector: 'console-table',
+    selector: 'nx-console-table',
     template: '<div></div>'
 })
 class MockConsoleTable {
@@ -145,30 +145,30 @@ describe('NxDevConsoleComponent', () => {
 
     it('should always render menu component', () => {
         expect(el.nativeElement.querySelector(
-            'console-menu')).toBeTruthy();
+            'nx-console-menu')).toBeTruthy();
     });
 
     it('should render edit component when in edit mode', () => {
         expect(el.nativeElement.querySelector(
-            'console-edit')).toBeTruthy();
+            'nx-console-edit')).toBeTruthy();
     });
 
     it('should not render table component when in edit mode', () => {
         expect(el.nativeElement.querySelector(
-            'console-table')).toBeFalsy();
+            'nx-console-table')).toBeFalsy();
     });
 
     it('should not render edit component when not in edit mode', () => {
         component.selectedMode = null;
         fixture.detectChanges();
         expect(el.nativeElement.querySelector(
-            'console-edit')).toBeFalsy();
+            'nx-console-edit')).toBeFalsy();
     });
 
     it('should render table component when not in edit mode', () => {
         component.selectedMode = null;
         fixture.detectChanges();
         expect(el.nativeElement.querySelector(
-            'console-table')).toBeTruthy();
+            'nx-console-table')).toBeTruthy();
     });
 });

@@ -47,7 +47,7 @@ import { TableDataSource } from './table-data-source';
 
 @UntilDestroy()
 @Component({
-    selector: 'console-table',
+    selector: 'nx-console-table',
     templateUrl: 'console-table.component.html',
     styleUrls: ['console-table.component.scss']
 })

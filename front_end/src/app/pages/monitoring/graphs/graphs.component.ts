@@ -7,7 +7,7 @@ import { NxSystem } from '@services/system.service/system';
 
 @UntilDestroy()
 @Component({
-    selector: 'graphs',
+    selector: 'nx-graphs',
     templateUrl: 'graphs.component.html',
     styleUrls: ['graphs.component.scss']
 })

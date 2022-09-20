@@ -30,7 +30,7 @@ type ssRange = { start: number, end: number };
 
 @UntilDestroy()
 @Component({
-    selector: 'timeline-selection-action-panel',
+    selector: 'nx-timeline-selection-action-panel',
     templateUrl: './timeline-selection-action-panel.component.html',
     styleUrls: ['./timeline-selection-action-panel.component.scss']
 })

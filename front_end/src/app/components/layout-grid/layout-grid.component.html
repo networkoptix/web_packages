@@ -194,11 +194,11 @@
                             </nx-video-player>
                         </ng-container>
                         <ng-container *ngSwitchCase="'server'">
-                            <monitoring-graph
+                            <nx-monitoring-graph
                                 [systemId]="layout.systemId"
                                 [noFrame]="true"
                                 [selectedServerId]="itemDetail.details.id"
-                            ></monitoring-graph>
+                            ></nx-monitoring-graph>
                         </ng-container>
                         <iframe
                             *ngSwitchCase="'webPage'"

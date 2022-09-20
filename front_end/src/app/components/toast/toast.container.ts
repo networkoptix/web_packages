@@ -13,7 +13,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import type { Toast } from './toast.types';
 
 @Component({
-    selector: 'app-toasts',
+    selector: 'nx-app-toasts',
     templateUrl: 'toast.container.html',
     styleUrls: ['toast.container.scss'],
     animations: [

@@ -35,7 +35,7 @@ import type {
 
 @UntilDestroy()
 @Component({
-    selector: 'timeline-scrollbar',
+    selector: 'nx-timeline-scrollbar',
     templateUrl: './timeline-scrollbar.component.html',
     styleUrls: ['./timeline-scrollbar.component.scss']
 })

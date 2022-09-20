@@ -15,7 +15,7 @@ import { Process } from '@services/process.service/process';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
-    selector: 'content-component',
+    selector: 'nx-content-component',
     templateUrl: 'content.component.html',
     styleUrls: ['content.component.scss']
 })

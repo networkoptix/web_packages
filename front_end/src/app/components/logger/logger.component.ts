@@ -19,7 +19,7 @@ type LoggerDropdownItem = DropdownItem<string>;
 
 @UntilDestroy()
 @Component({
-    selector: 'logger',
+    selector: 'nx-logger',
     templateUrl: './logger.component.html'
 })
 export class NxLoggerComponent implements OnChanges {

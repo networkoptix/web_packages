@@ -11,7 +11,7 @@ import { IntegrationService } from '../../integration.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'overview-component',
+    selector: 'nx-overview-component',
     templateUrl: 'overview.component.html',
     styleUrls: ['overview.component.scss']
 })

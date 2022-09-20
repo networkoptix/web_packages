@@ -14,7 +14,7 @@ import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
-    selector: 'integrations-list-component',
+    selector: 'nx-integrations-list-component',
     templateUrl: 'list.component.html',
     styleUrls: ['list.component.scss']
 })

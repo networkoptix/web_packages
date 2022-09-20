@@ -19,7 +19,7 @@ import {
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
 
 @Component({
-    selector: 'player-js',
+    selector: 'nx-player-js',
     templateUrl: 'player-js.component.html',
     styleUrls: ['player-js.component.scss'],
     encapsulation: ViewEncapsulation.None

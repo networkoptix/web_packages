@@ -24,7 +24,7 @@ import type { Bookmark } from './bookmark.types';
 
 @UntilDestroy()
 @Component({
-    selector: 'bookmarks-component',
+    selector: 'nx-bookmarks-component',
     templateUrl: 'bookmarks.component.html',
     styleUrls: ['bookmarks.component.scss']
 })

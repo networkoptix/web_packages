@@ -58,7 +58,7 @@ enum EDGE_SCROLLING_SPEED_POS {
 
 @UntilDestroy()
 @Component({
-    selector: 'timeline-selection',
+    selector: 'nx-timeline-selection',
     templateUrl: './timeline-selection.component.html',
     styleUrls: ['./timeline-selection.component.scss']
 })

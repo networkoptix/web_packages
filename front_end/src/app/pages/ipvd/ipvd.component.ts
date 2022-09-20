@@ -47,7 +47,7 @@ import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'ipvd',
+    selector: 'nx-ipvd',
     templateUrl: 'ipvd.component.html',
     styleUrls: ['ipvd.component.scss'],
     encapsulation: ViewEncapsulation.None

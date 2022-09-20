@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Component({
-    selector: 'clip',
+    selector: 'nx-clip',
     templateUrl: 'clip.component.html',
     styleUrls: ['./clip.component.scss']
 })

@@ -3,7 +3,7 @@ import { Component, ViewEncapsulation, Input } from '@angular/core';
 import type { DropdownItem } from '../dropdown.component.types';
 
 @Component({
-    selector: 'item-icon',
+    selector: 'nx-item-icon',
     template: `
         <svg-icon
             *ngIf="item.icon"

@@ -10,7 +10,7 @@ import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
-    selector: 'cloud-owner-authorization',
+    selector: 'nx-cloud-owner-authorization',
     template: ''
 })
 export class CloudOwnerAuthorizationComponent implements OnInit {

@@ -21,12 +21,12 @@ import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
- <monitoring-graph [system]="system" [selectedServerId]="selectedServerId"></monitoring-graph>
+ <nx-monitoring-graph [system]="system" [selectedServerId]="selectedServerId"></monitoring-graph>
 */
 
 @UntilDestroy()
 @Component({
-    selector: 'monitoring-graph',
+    selector: 'nx-monitoring-graph',
     templateUrl: 'graph.component.html',
     styleUrls: ['graph.component.scss']
 })

@@ -56,11 +56,11 @@
             <span class="fs-mask date">{{ bookmark.startTimeMs | date: 'medium' }}</span>
         </header>
         <main>
-            <clip
+            <nx-clip
                 class="fs-exclude video"
                 [sourceUrl]="bookmark.src"
                 [posterUrl]="bookmark.isVisible ? bookmark.thumbnail : ''"
-            ></clip>
+            ></nx-clip>
         </main>
         <footer class="tags-compact">
             <ng-container *ngFor="let tag of bookmark.tagsFormatted">

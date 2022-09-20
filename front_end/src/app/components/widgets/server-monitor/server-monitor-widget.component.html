@@ -63,12 +63,12 @@
                 Unable to connect to selected system
             </h2>
         </ng-template>
-        <monitoring-graph
+        <nx-monitoring-graph
             *ngIf="isOnline; else offlinePlaceholder"
             [system]="system"
             [noFrame]="true"
             [refreshInterval]="card.config.refreshInterval || 1000"
             [selectedServerId]="card.config.selectedServer"
-        ></monitoring-graph>
+        ></nx-monitoring-graph>
     </ng-container>
 </div>

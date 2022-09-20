@@ -16,7 +16,7 @@ type signType = int; // -1 | 0 | 1
 
 @UntilDestroy()
 @Component({
-    selector: 'zoom-controls',
+    selector: 'nx-zoom-controls',
     templateUrl: './zoom-controls.component.html',
     styleUrls: ['./zoom-controls.component.scss']
 })

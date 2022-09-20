@@ -525,8 +525,6 @@ module.exports = {
             // Temporary override for applying @angular-eslint rules
             files: ['*.ts'],
             excludedFiles: [
-                'src/app/components/**/*.ts',
-                'src/app/pages/**/*.ts',
             ],
             rules: {
                 '@angular-eslint/component-selector': ['error', {

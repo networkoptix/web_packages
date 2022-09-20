@@ -28,7 +28,7 @@ import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'download-component',
+    selector: 'nx-download-component',
     templateUrl: 'download.component.html',
     styleUrls: ['download.component.scss']
 })

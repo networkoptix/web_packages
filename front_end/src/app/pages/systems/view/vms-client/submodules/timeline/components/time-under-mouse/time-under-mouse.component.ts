@@ -22,7 +22,7 @@ const PRIMARY_WIDTH = 140;
 
 @UntilDestroy()
 @Component({
-    selector: 'time-under-mouse',
+    selector: 'nx-time-under-mouse',
     templateUrl: './time-under-mouse.component.html',
     styleUrls: ['./time-under-mouse.component.scss']
 })

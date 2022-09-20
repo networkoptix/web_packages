@@ -24,7 +24,7 @@ interface SystemDropdownItem extends DropdownItem<string> {
 
 @UntilDestroy()
 @Component({
-    selector: 'event-generator-widget',
+    selector: 'nx-event-generator-widget',
     templateUrl: './event-generator.component.html',
     styleUrls: ['./event-generator.component.scss']
 })

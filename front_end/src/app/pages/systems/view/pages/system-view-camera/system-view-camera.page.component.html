@@ -153,11 +153,11 @@
         [ngClass]="{ slim: !canViewArchives }"
     >
         <div class="player-wrapper">
-            <player
+            <nx-player
                 *ngIf="camera && showPlayerSection; else noPlayer"
                 (videoDblClick)="onVideoDblClick($event)"
                 class="fs-exclude"
-            ></player>
+            ></nx-player>
             <ng-template #noPlayer>
                 <div
                     class="offline-message"
@@ -200,9 +200,9 @@
                     </ng-template>
                 </div>
             </ng-template>
-            <timeline-selection-action-panel
+            <nx-timeline-selection-action-panel
                 *ngIf="archiveSelectionEnabled && ux.state.isTimelineShown"
-            ></timeline-selection-action-panel>
+            ></nx-timeline-selection-action-panel>
         </div>
 
         <div class="controls-wrapper">
@@ -226,9 +226,9 @@
                 </div>
             </div>
             <div class="controls">
-                <playback-controls [enabled]="enableControls"></playback-controls>
-                <zoom-controls *ngIf="camera.hasArchive && canViewArchives"></zoom-controls>
-                <timeline *ngIf="showTimeline; else noArchiveYet"></timeline>
+                <nx-playback-controls [enabled]="enableControls"></nx-playback-controls>
+                <nx-zoom-controls *ngIf="camera.hasArchive && canViewArchives"></nx-zoom-controls>
+                <nx-timeline *ngIf="showTimeline; else noArchiveYet"></nx-timeline>
                 <ng-template #noArchiveYet>
                     <nx-pre-loader
                         class="loading-archive-indicator"
@@ -244,7 +244,9 @@
                         </div>
                     </ng-template>
                 </ng-template>
-                <playback-state-indicator [enabled]="enableControls"></playback-state-indicator>
+                <nx-playback-state-indicator
+                    [enabled]="enableControls"
+                ></nx-playback-state-indicator>
             </div>
         </div>
     </div>

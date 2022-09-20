@@ -9,7 +9,7 @@ import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import type { Bookmark } from '../bookmark.types';
 
 @Component({
-    selector: 'bookmarks-list-component',
+    selector: 'nx-bookmarks-list-component',
     templateUrl: 'list.component.html',
     styleUrls: ['list.component.scss']
 })

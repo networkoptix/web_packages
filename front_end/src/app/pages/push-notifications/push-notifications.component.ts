@@ -14,7 +14,7 @@ import { NxSystemInfo } from '@services/systems.service.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'push-notifications-component',
+    selector: 'nx-push-notifications-component',
     templateUrl: 'push-notifications.component.html',
     styleUrls: ['push-notifications.component.scss']
 })

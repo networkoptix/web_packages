@@ -8,7 +8,7 @@ import { FirstPartyWidget } from '../helper-classes';
 
 @UntilDestroy()
 @Component({
-    selector: 'systems-list-widget',
+    selector: 'nx-systems-list-widget',
     templateUrl: './systems-list-widget.component.html',
     styleUrls: ['./systems-list-widget.component.scss']
 })

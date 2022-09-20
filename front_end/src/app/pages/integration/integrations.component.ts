@@ -15,7 +15,7 @@ import { IntegrationService } from './integration.service';
 
 @UntilDestroy()
 @Component({
-    selector: 'integrations-component',
+    selector: 'nx-integrations-component',
     templateUrl: 'integrations.component.html',
     styleUrls: ['integrations.component.scss']
 })

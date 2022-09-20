@@ -28,7 +28,7 @@ const PRIMARY_WIDTH = 140;
 
 @UntilDestroy()
 @Component({
-    selector: 'timeline-playback-indicator',
+    selector: 'nx-timeline-playback-indicator',
     templateUrl: './timeline-playback-indicator.component.html',
     styleUrls: ['./timeline-playback-indicator.component.scss']
 })

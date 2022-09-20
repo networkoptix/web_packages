@@ -7,7 +7,7 @@ import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ })
 @Component({
-    selector: 'src-twofa-required',
+    selector: 'nx-src-twofa-required',
     templateUrl: './twofa-required.component.html',
     styleUrls: ['./twofa-required.component.scss']
 })

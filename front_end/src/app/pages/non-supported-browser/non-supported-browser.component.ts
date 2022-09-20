@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'non-supported-browser',
+    selector: 'nx-non-supported-browser',
     templateUrl: 'non-supported-browser.component.html'
 })
 

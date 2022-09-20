@@ -80,7 +80,7 @@ const getTestEvents = (systemId?: string): NotificationDropdownItem[] => [
 
 @UntilDestroy()
 @Component({
-    selector: 'email-notifications-component',
+    selector: 'nx-email-notifications-component',
     templateUrl: 'email-notifications.component.html',
     styleUrls: ['email-notifications.component.scss']
 })

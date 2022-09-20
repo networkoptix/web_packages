@@ -11,7 +11,7 @@ import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({
-    selector: 'account',
+    selector: 'nx-account',
     templateUrl: 'account.component.html',
     styleUrls: ['account.component.scss']
 })

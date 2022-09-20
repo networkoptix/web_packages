@@ -9,7 +9,7 @@ import type { NxSystemInfo } from '@services/systems.service.types';
 import type { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
-    selector: 'system-card',
+    selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',
     styleUrls: ['system-card.component.scss']
 })

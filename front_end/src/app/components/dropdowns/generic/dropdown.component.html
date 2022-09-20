@@ -24,11 +24,11 @@
                 <span class="dot3"></span>
             </div>
         </div>
-        <item-icon
+        <nx-item-icon
             *ngIf="_selectedItem?.icon && !stillLoading"
             [item]="_selectedItem"
             marginLeft="4"
-        ></item-icon>
+        ></nx-item-icon>
         <span
             *ngIf="!stillLoading"
             [ngClass]="{
@@ -128,11 +128,11 @@
                         }"
                         (click)="show = false; change(item)"
                     >
-                        <item-icon
+                        <nx-item-icon
                             *ngIf="item.icon"
                             [item]="item"
                             marginLeft="15"
-                        ></item-icon>
+                        ></nx-item-icon>
                         <span>
                             <ng-container [ngTemplateOutlet]="itemText"></ng-container>
                         </span>
@@ -143,11 +143,11 @@
                         class="dropdown-item inset disabled"
                         (click)="show = false"
                     >
-                        <item-icon
+                        <nx-item-icon
                             *ngIf="item.icon"
                             [item]="item"
                             marginLeft="15"
-                        ></item-icon>
+                        ></nx-item-icon>
                         <span class="disabled">
                             <ng-container [ngTemplateOutlet]="itemText"></ng-container>
                         </span>

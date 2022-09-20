@@ -7,7 +7,7 @@ import { NxSystem } from '@services/system.service/system';
 
 @UntilDestroy()
 @Component({
-    selector: 'logs',
+    selector: 'nx-logs',
     templateUrl: 'logs.component.html',
     styleUrls: ['logs.component.scss']
 })

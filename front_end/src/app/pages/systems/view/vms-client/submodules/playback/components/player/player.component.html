@@ -25,7 +25,7 @@
     >
         <nx-pre-loader></nx-pre-loader>
     </div>
-    <player-js
+    <nx-player-js
         *ngIf="playback.subject | async | as: PlaybackStateTemp as playbackState"
         (click)="handleClick($event)"
         (videoEnded)="videoEnded($event)"
@@ -37,5 +37,5 @@
         [rotation]="rotateDeg"
         [sourceUrl]="playbackState.sourceUrl"
     >
-    </player-js>
+    </nx-player-js>
 </ng-template>

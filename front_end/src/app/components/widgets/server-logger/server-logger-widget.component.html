@@ -67,12 +67,12 @@
                 Unable to connect to selected system
             </h2>
         </ng-template>
-        <logger
+        <nx-logger
             *ngIf="isOnline; else offlinePlaceholder"
             [system]="system"
             [noFrame]="true"
             [refreshInterval]="card.config.autoRefresh ? card.config.refreshInterval || 1000 : 0"
             [selectedServerId]="card.config.selectedServer"
-        ></logger>
+        ></nx-logger>
     </ng-container>
 </div>

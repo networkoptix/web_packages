@@ -13,7 +13,7 @@
             class="nx-view-sidebar"
             *ngIf="hasCameras; else noCameras"
         >
-            <media-server-list></media-server-list>
+            <nx-media-server-list></nx-media-server-list>
             <div
                 class="sidebar-toggling-ear--wrapper"
                 [ngClass]="{ shown: isSidebarShown, visible: isSidebarShown || showElementsInFSM }"

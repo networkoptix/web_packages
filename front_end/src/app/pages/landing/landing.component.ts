@@ -12,7 +12,7 @@ import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
-    selector: 'landing-component',
+    selector: 'nx-landing-component',
     templateUrl: 'landing.component.html',
     styleUrls: ['landing.component.scss']
 })

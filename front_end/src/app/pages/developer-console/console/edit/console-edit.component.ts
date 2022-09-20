@@ -21,7 +21,7 @@ import { ConsoleMode } from '../console.types';
 
 @UntilDestroy()
 @Component({
-    selector: 'console-edit',
+    selector: 'nx-console-edit',
     templateUrl: 'console-edit.component.html',
     styleUrls: ['console-edit.component.scss']
 })

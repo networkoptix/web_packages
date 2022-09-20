@@ -9,7 +9,7 @@ import { PlaybackService } from '../../services/playback.service';
 
 @UntilDestroy()
 @Component({
-    selector: 'playback-state-indicator',
+    selector: 'nx-playback-state-indicator',
     templateUrl: './playback-state-indicator.component.html',
     styleUrls: ['./playback-state-indicator.component.scss']
 })

@@ -27,7 +27,7 @@ import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'download-history',
+    selector: 'nx-download-history',
     templateUrl: 'download-history.component.html',
     styleUrls: ['download-history.component.scss']
 })

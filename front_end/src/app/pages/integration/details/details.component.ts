@@ -29,7 +29,7 @@ import { IntegrationService } from '../integration.service';
 
 @UntilDestroy()
 @Component({
-    selector: 'integration-detail-component',
+    selector: 'nx-integration-detail-component',
     templateUrl: 'details.component.html',
     styleUrls: ['details.component.scss']
 })
