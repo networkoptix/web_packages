@@ -18,7 +18,8 @@ import { IConfig } from './config-types';
 
 // Swapped with BUILD env during cloud portal build
 const buildSubstituted = !''.includes('BUILD');
-const staticBase = buildSubstituted && !environment.isLocal ? 'static/' : 'static';
+const buildSubstituted = !'{{BUILD}}'.includes('BUILD');
+const staticBase = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
 
 export const nxConfig: IConfig = {
     alertTimeout: 3 * 1000, // Alerts are shown for 3 seconds,
