@@ -12,7 +12,7 @@ CI_MERGE_REQUEST_IID = os.getenv('CI_MERGE_REQUEST_IID')
 SAD_MR = f'{CI_PROJECT_URL}/-/merge_requests/{CI_MERGE_REQUEST_IID}'
 TARGET_USER = user_lookup.get(GITLAB_USER_EMAIL.split('@')[0])
 
-client = discord.Client()
+client = discord.Client(intents=discord.Intents.all())
 
 
 @client.event
