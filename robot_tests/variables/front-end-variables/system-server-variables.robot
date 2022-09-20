@@ -224,8 +224,8 @@ ${PERMISSIONS LOG LEVEL DROPDOWN}   //button[@id="PERMISSIONS"]
 ...    ${DEBUG TEXT}
 ...    ${VERBOSE TEXT}
 
-${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${SAVE BUTTON TEXT}']
-${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${CANCEL BUTTON TEXT}']
+${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[contains(text(), '${SAVE BUTTON TEXT}')]
+${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[contains(text(), '${CANCEL BUTTON TEXT}')]
 ${LOG SAVE BUTTON}                 ${LOG SETTINGS TITLE}//ancestor::div[@class='card']//button[text()='${SAVE BUTTON TEXT}']
 
-${ADVANCED SAVE MODAL CLOSE BUTTON}    //nx-modal-generic-content//button[text()="${CLOSE TEXT}"]
+${ADVANCED SAVE MODAL CLOSE BUTTON}    //nx-modal-generic-content//button[contains(text(), "${CLOSE TEXT}")]

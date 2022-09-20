@@ -566,8 +566,8 @@ class SystemEmail(models.Model):
         self.save()
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
-            queue_name = settings.NOTIFICATIONS_CONFIG[SystemEmail.MSG_TYPE].get('queue', '')
+            kwargs['queue'] = settings.NOTIFICATIONS_CONFIG[SystemEmail.MSG_TYPE].get('queue', '')
             send_email.apply_async(
-                args=[self.id, queue_name], kwargs=kwargs, queue=queue_name)
+                args=[self.id], kwargs=kwargs)
         else:
             send_email(self.id, **kwargs)
