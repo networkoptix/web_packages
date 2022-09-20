@@ -3,10 +3,13 @@ import fs from 'fs';
 
 const hashFile = 'language_hash'
 
+const update = process.argv.pop() === 'update'
+
 const include = [
-    "./src/**/*.html",
-    "./src/language_i18n_static.json",
+    "./src/**/*.component.html",
+    "./src/language_i18n*.json",
     "./src/customization/menus.json",
+    "./src/language_i18n_static_types.ts",
     "../cloud/cms/menus.json"
 ]
 
@@ -21,12 +24,12 @@ console.log(`Current Language Hash: ${currentHash} \n`)
 globHash({
     include
 })
-    .then( (hash) => {
+    .then((hash) => {
         if (hash === currentHash) {
             console.log('Hash is unchanged. Skipping language scripts.')
             process.exitCode = 1
-        } else {
-            console.log('Hash has changed. Updating hash and running language scripts')
+        } else if (update) {
+            console.log('Hash has changed. Updating hash')
             fs.writeFileSync(hashFile, hash)
         }
     }, function (error) {

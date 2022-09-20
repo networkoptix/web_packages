@@ -120,7 +120,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "baseHref": "static/",
+              "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -354,7 +354,7 @@
                   "input": "src/index.tagless.html",
                   "output": "index.html"
                 },
-                "baseHref": "static/",
+                "deployUrl": "static/",
                 "optimization": true,
                 "outputHashing": "all",
                 "sourceMap": false,
