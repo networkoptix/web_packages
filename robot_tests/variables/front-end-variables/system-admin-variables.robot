@@ -166,7 +166,7 @@ ${ADVANCED SETTINGS}                    ?advanced
 ${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
 ${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and contains(@data-src, "images/icons/standard/eye_closed.svg")]
 ${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and contains(@data-src, "images/icons/error.svg")]
-${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
+${ADVANCED SETTINGS ALERT}              //div[text()='${ADVANCED SETTINGS ALERT TEXT}']
 ${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
 @{ADVANCED SETTINGS ALERT BAR}
 ...    ${HIDE ADVANCED SETTINGS BUTTON}
