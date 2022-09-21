@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <h3 class="modal-title">El servidor esta desconectado</h3>
+    <h3 class="modal-title">Server is offline</h3>
 </div>
 <form class="form" role="form" id="restartDialog">
     <div class="modal-body">
-        <p>El servidor no puede manejar las solicitudes ahora. Tratando de alcanzar otra vez.</p>
+        <p>Server can't handle requests now. Trying to reach it again.</p>
         <uib-progressbar class="progress-striped active" type="info" value="100" id="restartingProgress">{{state}}</uib-progressbar>
-        <p>Si no ocurre nada durante un tiempo, puede comprobar la condición del servidor manualmente o actualizar la página</p>
+        <p>If nothing happens for a while - you could check server condition manually or refresh the page</p>
     </div>
 </form>
