@@ -15,6 +15,7 @@ import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
 import { IConfig } from '@services/nx-config/config-types';
@@ -22,7 +23,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { paramSortFunc } from '@utils/general';
 
 import { NxHealthLayoutService } from '../health-layout.service';

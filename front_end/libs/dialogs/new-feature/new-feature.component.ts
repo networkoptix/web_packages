@@ -3,8 +3,8 @@ import {
     Inject,
     TemplateRef
 } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogRef, DIALOG_DATA } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';

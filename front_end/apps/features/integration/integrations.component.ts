@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -9,7 +10,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { IntegrationService } from './integration.service';
 

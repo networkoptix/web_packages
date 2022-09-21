@@ -34,6 +34,7 @@ import {
     skip,
 } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -63,7 +64,6 @@ import {
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cleanId, cleanSmbUrl } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

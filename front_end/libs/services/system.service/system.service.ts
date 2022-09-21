@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxLanguageProviderService } from '../nx-language-provider';

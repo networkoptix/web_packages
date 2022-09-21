@@ -6,8 +6,8 @@ import {
     Output,
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

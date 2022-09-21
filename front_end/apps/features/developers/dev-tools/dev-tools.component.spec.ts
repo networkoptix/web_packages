@@ -7,16 +7,16 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { HelperMockProvider } from '@mocks/helpers.test';
-import {
-    devToolsNode,
-    docMenuMap
-} from '@mocks/knowledge_base_landing.mock';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockDirective, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
+import { HelperMockProvider } from '@mocks/helpers.test';
+import {
+    devToolsNode,
+    docMenuMap
+} from '@mocks/knowledge_base_landing.mock';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';

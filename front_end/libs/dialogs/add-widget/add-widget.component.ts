@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { WidgetCard } from '@components/widgets/helper-classes';

@@ -8,12 +8,12 @@ import {
     Inject,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';

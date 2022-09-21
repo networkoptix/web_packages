@@ -14,7 +14,6 @@ import {
     Router,
     RoutesRecognized
 } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
@@ -25,6 +24,7 @@ import {
 } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';

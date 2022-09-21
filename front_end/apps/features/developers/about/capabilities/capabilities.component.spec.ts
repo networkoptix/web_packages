@@ -3,14 +3,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement, ElementRef } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterLink } from '@angular/router';
-import { HelperMockProvider } from '@mocks/helpers.test';
-import { capabilitiesNode } from '@mocks/knowledge_base_landing.mock';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { last } from 'lodash-es';
 import { MockDirective } from 'ng-mocks';
 
 import { NxSafePipe } from '@app/pipes/nx-safe';
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
+import { HelperMockProvider } from '@mocks/helpers.test';
+import { capabilitiesNode } from '@mocks/knowledge_base_landing.mock';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';

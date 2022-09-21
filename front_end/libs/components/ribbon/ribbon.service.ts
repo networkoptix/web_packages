@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { BehaviorSubject } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';

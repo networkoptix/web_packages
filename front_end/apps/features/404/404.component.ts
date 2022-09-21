@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { TranslateService } from '@ngx-translate/core';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { RouteCheckTuple } from '@services/nx-config/base-config';

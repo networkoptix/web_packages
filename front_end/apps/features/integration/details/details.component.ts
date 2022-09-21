@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -23,7 +24,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { IntegrationService } from '../integration.service';
 

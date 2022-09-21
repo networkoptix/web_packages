@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxAccountService } from '@services/account.service';
@@ -67,7 +67,7 @@ export class NxAboutComponent {
             ) => `${rest}"${cur}"${arr.length === 1
                     ? ''
                     : ind === arr.length - 2 ? ', and ' : ', '}`,
-                'Valid templates are ')
+            'Valid templates are ')
         };
     }
 

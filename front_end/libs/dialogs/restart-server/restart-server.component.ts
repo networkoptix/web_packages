@@ -1,5 +1,4 @@
 import { Component, Input, Injector, Inject } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { timer } from 'rxjs';
 import {
     delayWhen,
@@ -9,6 +8,7 @@ import {
     mergeMap
 } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';

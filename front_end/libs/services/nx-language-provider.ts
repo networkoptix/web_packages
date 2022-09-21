@@ -5,10 +5,10 @@ import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxSessionService } from './session.service';
 import { WINDOW } from './window-provider';

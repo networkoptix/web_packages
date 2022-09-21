@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     InfoBlockLine,
     InfoBlockSection,
@@ -18,7 +19,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import { getDynamicLicense } from '../dynamic-license';

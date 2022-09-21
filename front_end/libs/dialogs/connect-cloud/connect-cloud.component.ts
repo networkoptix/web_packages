@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';

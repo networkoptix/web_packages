@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { filter } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -10,7 +11,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import type { SystemItem } from '../../groups.types';
 

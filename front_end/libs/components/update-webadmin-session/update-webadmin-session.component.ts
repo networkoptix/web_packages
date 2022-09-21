@@ -8,8 +8,8 @@ import {
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';

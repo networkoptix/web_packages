@@ -1,5 +1,4 @@
 import metaDefaults from '@common/scripts/metaDefaults.json';
-
 import {
     ActionType,
     ConfigType,

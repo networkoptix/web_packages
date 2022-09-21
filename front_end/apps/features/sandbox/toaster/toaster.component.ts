@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 @Component({
     selector: 'toaster',

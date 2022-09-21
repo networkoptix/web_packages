@@ -1,4 +1,3 @@
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     Observable,
     Subject,
@@ -7,6 +6,7 @@ import {
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 
 import type { IConfig } from '../nx-config/config-types';

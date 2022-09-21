@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { FirstPartyWidget, WidgetCard, WidgetSize } from '@components/widgets/helper-classes';
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
@@ -28,7 +29,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { DashboardConfiguration } from './dashboard-configuration';
 

@@ -5,10 +5,10 @@ import {
     HttpRequest
 } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { throwError, timer, Observable } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

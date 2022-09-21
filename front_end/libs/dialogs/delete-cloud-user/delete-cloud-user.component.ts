@@ -1,7 +1,7 @@
 import { Component, Inject, Input, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';

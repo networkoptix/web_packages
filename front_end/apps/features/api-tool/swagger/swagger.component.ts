@@ -15,6 +15,7 @@ import type SwaggerUI from 'swagger-ui';
 import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     MenuNodeWithParent
 } from '@components/developers-menu/developers-menu-types';
@@ -25,7 +26,6 @@ import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

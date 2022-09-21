@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

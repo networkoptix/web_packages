@@ -13,6 +13,7 @@ import { of, SubscriptionLike, Subject } from 'rxjs';
 import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     InfoBlockSection,
     InfoBlockLine
@@ -33,7 +34,6 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cleanId, htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

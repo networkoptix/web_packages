@@ -6,8 +6,8 @@ import {
     ViewChild
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';

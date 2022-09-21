@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, Inject } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { ClipboardService } from 'ngx-clipboard';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 

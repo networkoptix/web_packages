@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     ConsoleSection,
     ModalContent,

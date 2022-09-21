@@ -1,9 +1,9 @@
 import { NestedTreeControl } from '@angular/cdk/tree'; import { ChangeDetectorRef, Component } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';

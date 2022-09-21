@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     ConfigType,
     ModalManifest,

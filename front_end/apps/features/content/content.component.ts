@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { SessionStorageService } from 'ngx-webstorage';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';

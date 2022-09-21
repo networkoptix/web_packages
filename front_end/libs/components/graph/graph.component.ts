@@ -3,13 +3,13 @@ import {
     Input,
     OnChanges,
 } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
 import { Subject, timer } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';

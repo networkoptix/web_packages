@@ -8,13 +8,13 @@ import {
 import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxPollService } from '../poll.service';
@@ -234,7 +234,7 @@ export class NxSystem {
             this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.version);
         }
         // Handling promise to satisfy the linter.
-        if (!this.useRest || !(<NxSystemRestAPI>this.mediaserver)?.accessToken) {
+        if (!this.useRest || !(<NxSystemRestAPI> this.mediaserver)?.accessToken) {
             unauthorizedCallback(true).then(() => { });
         }
 
@@ -270,13 +270,13 @@ export class NxSystem {
     }
 
     updateToken(force = true) {
-        const accessToken = (<NxSystemRestAPI>this.mediaserver).accessToken;
+        const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
         if (environment.isLocal || !force && accessToken) {
             return Promise.resolve(accessToken);
         }
 
         return this.cloudApi.getSystemToken(this.id).toPromise().then(tokens => {
-            return (<NxSystemRestAPI>this.mediaserver).setTokens(tokens, true)
+            return (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
                 .toPromise()
                 .then(() => tokens.access_token)
                 .catch(() => tokens.access_token);
@@ -423,7 +423,7 @@ export class NxSystem {
 
     startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
-            if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI>this.mediaserver).accessToken) {
+            if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable &&
                     this.systemPoll.pipe(auditTime(1000)).subscribe(() => {
@@ -559,7 +559,7 @@ export class NxSystem {
             return this.authPromise;
         }
 
-        if (!force && (this.mediaserver?.authGet || (<NxSystemRestAPI>this.mediaserver).accessToken)) {
+        if (!force && (this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken)) {
             return Promise.resolve(true);
         }
 

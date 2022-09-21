@@ -3,10 +3,10 @@ import {
     Component
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode } from '@components/layout-grid/layout-grid.types';
 import { NxAccountService } from '@services/account.service';
@@ -143,9 +143,9 @@ export class NxLayoutViewComponent {
                 }
             }
         }) => [
-                ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : []),
-                this.createNewLayout(systemId, userId)
-            ]),
+            ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : []),
+            this.createNewLayout(systemId, userId)
+        ]),
         shareReplay({
             bufferSize: 1,
             refCount: true

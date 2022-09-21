@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { auditTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -32,7 +33,6 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -507,7 +507,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             this.CONFIG.toast.danger,
                         );
                     },
-                        this.updateAndGoToSystems
+                    this.updateAndGoToSystems
                     );
                 }
             });

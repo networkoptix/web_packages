@@ -2,10 +2,10 @@ import { Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Injectable, Injector } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig } from '@dialogs/dialog-ref';

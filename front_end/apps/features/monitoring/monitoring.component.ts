@@ -2,7 +2,6 @@ import {
     Component, OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
@@ -11,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { Content } from '@app/menu/menu.types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';

@@ -3,6 +3,11 @@ import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { MockDirective, MockProvider } from 'ng-mocks';
+import { BehaviorSubject } from 'rxjs';
+
+import { PipesModule } from '@app/pipes/pipes.module';
 import {
     getMockTranslations,
     HelperMockProvider,
@@ -11,11 +16,6 @@ import {
 import {
     integrationsNode
 } from '@mocks/knowledge_base_landing.mock';
-import { TranslateModule } from '@ngx-translate/core';
-import { MockDirective, MockProvider } from 'ng-mocks';
-import { BehaviorSubject } from 'rxjs';
-
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

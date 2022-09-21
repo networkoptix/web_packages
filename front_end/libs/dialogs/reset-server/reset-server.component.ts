@@ -1,11 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';

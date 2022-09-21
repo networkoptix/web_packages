@@ -3,6 +3,7 @@ import {
     OnInit,
     Input
 } from '@angular/core';
+
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 @Component({

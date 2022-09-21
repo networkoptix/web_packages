@@ -5,10 +5,10 @@ import { isEqual } from 'lodash-es';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 

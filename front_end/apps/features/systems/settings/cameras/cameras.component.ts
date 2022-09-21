@@ -29,6 +29,7 @@ import {
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     InfoBlockColumns,
     InfoBlockSection,
@@ -57,7 +58,6 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -223,8 +223,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get canvasHeight() {
-        const aspect = <number>this.selectedAspect.value ||
-            <number>this.aspectRatios[1].value;
+        const aspect = <number> this.selectedAspect.value ||
+            <number> this.aspectRatios[1].value;
         return Math.min(
             Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight
         );
@@ -737,7 +737,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
         const RowsToRoundPixelsByMultiple = rotated ? 44 : 32;
         const defaultAspectRatio = 1.77778;
-        const aspect = <number>this.selectedAspect.value || defaultAspectRatio;
+        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
         const aspectWithRotation = rotated ? 1 / aspect : aspect;
         const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightInPixels;
         let height, width;
@@ -955,10 +955,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 ? this.selectedCamera.defaultRatio
                 : '';
             this.selectedAspect = this.aspectRatios.find(({ value: id }) =>
-                id === parseFloat(<string>this.selectedCamera.overrideAr)
+                id === parseFloat(<string> this.selectedCamera.overrideAr)
             ) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ value: id }) =>
-                id === parseInt(<string>this.selectedCamera.rotation)
+                id === parseInt(<string> this.selectedCamera.rotation)
             ) || this.rotations[0];
             this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;

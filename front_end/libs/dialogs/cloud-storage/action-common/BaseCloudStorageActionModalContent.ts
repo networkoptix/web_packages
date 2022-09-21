@@ -1,6 +1,6 @@
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { map, Observable } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';

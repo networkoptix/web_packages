@@ -16,12 +16,12 @@ import {
     ControlValueAccessor
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

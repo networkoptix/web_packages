@@ -1,10 +1,10 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, Inject, Input, OnChanges } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

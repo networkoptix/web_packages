@@ -11,12 +11,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -461,7 +461,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.filterModel = { ...this.filterModel };
                 this.searchVendor();
             },
-                ex => console.error(ex));
+            ex => console.error(ex));
     }
 
     // restrict the parameters to be passed and viewed for to cam-table (based on allowedParameters)

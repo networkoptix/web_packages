@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { CookieService } from 'ngx-cookie-service';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import type { NxAccountService } from '@services/account.service';

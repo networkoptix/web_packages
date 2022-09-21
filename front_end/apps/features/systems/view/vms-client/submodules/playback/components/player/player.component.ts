@@ -7,9 +7,9 @@ import {
     EventEmitter,
     ElementRef,
 } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PlaybackTransport } from '@view/view.types';
 import { VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
@@ -122,7 +122,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
             setTimeout(() => this.playback.playArchive(
-                (<ArchivePlaybackState | LivePlaybackState>this.playback.state).currentTime - s
+                (<ArchivePlaybackState | LivePlaybackState> this.playback.state).currentTime - s
             ));
         } else if (s === 1) {
             switch (this.playback.state.mode) {
@@ -131,7 +131,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                     this.transportChangeByError = false;
                     if (
                         !this.playback.state.started &&
-                        !(<ArchivePlaybackState>this.playback.state).paused
+                        !(<ArchivePlaybackState> this.playback.state).paused
                     ) {
                         this.playback.handleStarted();
                     }

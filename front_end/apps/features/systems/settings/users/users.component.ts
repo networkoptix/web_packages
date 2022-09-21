@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -31,7 +32,6 @@ import type {
     NxSystemUser
 } from '@services/system.service/user-manager/user-manager-types';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';

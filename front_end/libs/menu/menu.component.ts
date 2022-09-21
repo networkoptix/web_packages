@@ -13,12 +13,12 @@ import {
     Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';

@@ -14,7 +14,6 @@ import {
     NavigationEnd,
     Router
 } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
@@ -27,6 +26,7 @@ import {
     catchError
 } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     ClickEvent,
     MenuNodeWithParent,
@@ -388,7 +388,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }, {
             successMessage: this.LANG.toastMessage.reviewAccepted?.()
         },
-            this.acceptedReviewRedirect
+        this.acceptedReviewRedirect
         );
 
         return [

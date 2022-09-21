@@ -2,9 +2,9 @@ import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef, Inject
 } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cloneDeep } from 'lodash-es';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     DropdownItem,
 } from '@components/dropdowns/generic/dropdown.component.types';

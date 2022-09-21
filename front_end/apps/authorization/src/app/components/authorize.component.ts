@@ -11,13 +11,13 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

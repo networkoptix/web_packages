@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 

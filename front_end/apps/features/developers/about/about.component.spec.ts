@@ -4,6 +4,10 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
+
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { getMockTranslations, HelperMockProvider } from '@mocks/helpers.test';
 import {
     landingRoute,
@@ -13,10 +17,6 @@ import {
     introNode,
     routeLandingMock
 } from '@mocks/knowledge_base_landing.mock';
-import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
-
-import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';

@@ -10,6 +10,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -23,7 +24,6 @@ import {
     STORAGE_STATUS,
 } from '@services/system.service/storage-manager/storage';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
 

@@ -6,9 +6,9 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';

@@ -1,9 +1,9 @@
 import { ApplicationRef, Inject, Injectable, Injector } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { concat, interval, zip } from 'rxjs';
 import { first, tap, filter, take } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

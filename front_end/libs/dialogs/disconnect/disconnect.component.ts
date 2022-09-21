@@ -1,7 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { of } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';

@@ -7,11 +7,11 @@ import {
     Output
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';

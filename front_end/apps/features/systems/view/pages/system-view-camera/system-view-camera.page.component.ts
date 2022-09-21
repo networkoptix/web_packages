@@ -10,12 +10,12 @@ import {
     Renderer2,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, BehaviorSubject, interval, Subject, timer } from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -569,8 +569,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const now = Date.now();
                         const range = new SimpleTimeRange(
                             firstRecordStartTimeMs, showToLive
-                            ? now
-                            : (lastRecordStartTimeMs + lastRecordDuration)
+                                ? now
+                                : (lastRecordStartTimeMs + lastRecordDuration)
                         );
                         const archive = records.map(r => new SimpleTimeRange(
                             parseInt(r.startTimeMs),

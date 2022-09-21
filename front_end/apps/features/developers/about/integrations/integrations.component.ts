@@ -1,8 +1,8 @@
 import { Component, Input, HostListener, OnInit, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

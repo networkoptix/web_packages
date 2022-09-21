@@ -9,10 +9,10 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
