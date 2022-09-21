@@ -17,7 +17,7 @@
                 contentEditable="true"
                 [ngStyle]="{ display: _selectedItem.value ? 'initial' : 'block' }"
                 (input)="onSearchInput($event)"
-                (keypress)="handleSearchEnter($event)"
+                (keyup)="handleSearchEnter($event)"
             ></span>
             <span
                 *ngIf="helpText"
@@ -29,9 +29,8 @@
                 *ngIf="!show && !_selectedItem.value && !filter"
                 (click)="toggle()"
                 class="placeholder"
-                translate
             >
-                Email
+                {{ placeholder }}
             </p>
         </div>
 

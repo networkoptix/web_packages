@@ -27,8 +27,10 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
      [items]="accessRoles"
      [(ngModel)]="user.role.name"
      (ngModelChange)="onModelChange($event)"
-     required>
- </nx-select>
+     [placeholder]="'search' | translate" <- optional
+     [freeText]="true" <- optional
+ >
+ </nx-searchable-select>
  */
 
 @Component({
@@ -51,6 +53,8 @@ export class NxSearchableDropdown extends BaseDropdown {
     @Input() selected: Item | false;
     @Input() type: string;
     @Input() noMatchMsg: string;
+    @Input() placeholder: string;
+    @Input() freeText: boolean = false;
 
     @Output() onSelected = new EventEmitter<Item>();
     @Output() onClickElsewhere = new EventEmitter<string>();
@@ -102,6 +106,18 @@ export class NxSearchableDropdown extends BaseDropdown {
         } else {
             this.filter = undefined;
             this._items = [...this.items];
+        }
+
+        if (this.freeText) {
+            const freeTypeItem: Item = {
+                name: this.searchInput.nativeElement.innerText,
+                value: this.searchInput.nativeElement.innerText
+            };
+            this._selectedItem = freeTypeItem;
+            this.onSelected.emit(freeTypeItem);
+            this.onChangeCallback(freeTypeItem);
+            this.show = this._items.length !== 0;
+            return;
         }
 
         this.show = true;
