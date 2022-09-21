@@ -1,5 +1,5 @@
 variables:
-  NODE_JS_IMAGE: "nx/cloud_portal_node_js"
+  NODE_JS_IMAGE: "$DOCKER_REGISTRY/nx/cloud_portal_node_js"
   NODE_JS_IMAGE_TAG: "1.0"
 
 docker:build-node-chrome:
