@@ -53,14 +53,26 @@
                 "input": "common/images",
                 "output": "."
               },
-              "src/fonts",
+              {
+                "glob": "**/*",
+                "input": "common/fonts",
+                "output": "."
+              },
               {
                 "glob": "**/*",
                 "input": "common/styles",
                 "output": "."
               },
-              "src/views",
-              "src/scripts",
+              {
+                "glob": "**/*",
+                "input": "common/views",
+                "output": "."
+              },
+              {
+                "glob": "**/*",
+                "input": "common/scripts",
+                "output": "."
+              },
               {
                 "glob": "**/*",
                 "input": "common/static_assets",
@@ -314,7 +326,11 @@
                 "input": "common/images",
                 "output": "."
               },
-              "src/fonts",
+              {
+                "glob": "**/*",
+                "input": "common/fonts",
+                "output": "."
+              },
               {
                 "glob": "**/*",
                 "input": "common/styles",
@@ -325,11 +341,14 @@
                 "input": "common/static_assets",
                 "output": "."
               },
-              "src/views",
-              "src/scripts",
               {
                 "glob": "**/*",
-                "input": "common/static_assets",
+                "input": "common/views",
+                "output": "."
+              },
+              {
+                "glob": "**/*",
+                "input": "common/scripts",
                 "output": "."
               },
               {

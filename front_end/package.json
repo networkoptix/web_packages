@@ -83,8 +83,8 @@
     "test-lang": "node --experimental-specifier-resolution=node testCompiledLang.mjs",
     "update-lang": "ngx-translate-extract -i ./src/app ./apps ./libs -o ./common/language/language_i18n.json --clean --sort --format json",
     "update-lang-types": "quicktype ./common/language/language_i18n_static.json -o ./common/language/language_i18n_static_types.ts --just-types; sed -i -e 's/string;/TranslateFuncType;/g' common/language/language_i18n_static_types.ts; sed -i -e 's/string /TranslateFuncType /g' common/language/language_i18n_static_types.ts; sed -i -e 's/TranslateFuncType/(params?: Record<string, string | number>) => string/g' common/language/language_i18n_static_types.ts; rm -f common/language/language_i18n_static_types.ts-e",
-    "link-local-libs": "node src/lib/link-libs.js",
-    "publish-public-libraries": "node src/lib/publish-public-libs.js",
+    "link-local-libs": "node packages/link-libs.js",
+    "publish-public-libraries": "node packages/publish-public-libs.js",
     "node-modules": "rm -rf node_modules && npm i --legacy-peer-deps"
   },
   "private": true,

@@ -1,3 +1,5 @@
+import metaDefaults from '@common/scripts/metaDefaults.json';
+
 import {
     ActionType,
     ConfigType,
@@ -11,7 +13,6 @@ import {
     SortOptions
 } from '@pages/developer-console/console/edit/console-edit.component.types';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
-import metaDefaults from '@src/scripts/metaDefaults.json';
 
 import { IConfig } from './config-types';
 

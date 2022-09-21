@@ -25,6 +25,6 @@ src/app/**/*.js
 src/supported_languages.json
 coverage
 reports
-src/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
-src/scripts/downgraded-providers.js
+common/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
+common/scripts/downgraded-providers.js
 src/{main,polyfills,vendor,overrides.d,app.module,app.component,ajs-upgraded-providers}.js
