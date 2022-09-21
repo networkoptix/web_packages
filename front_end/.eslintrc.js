@@ -603,7 +603,7 @@ module.exports = {
                 'src/app/pages/email-notifications/email-notifications.component.html',
                 'src/app/pages/layout/layout.component.html',
                 'src/app/pages/push-notifications/push-notifications.component.html',
-                'src/app/pages/sandbox/**/*',
+                '**/sandbox/**/*',
                 // Not required for internal/testing components
             ],
             rules: {
