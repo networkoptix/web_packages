@@ -1,4 +1,5 @@
-@use "../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 svg-icon {
     stroke: #2B383F
@@ -25,7 +26,7 @@ svg-icon {
     min-height: 40px;
     padding: 10px 16px;
 
-    background-color : rgba($red_l2, .1);
+    background-color: rgba($red_l2, .1);
     border: 1px solid rgba($red_l2, .3);
     border-radius: 2px;
 
@@ -56,20 +57,20 @@ svg-icon {
 
 .separator::before,
 .separator::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px solid var(--horizontal-sep-color);
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid var(--horizontal-sep-color);
 }
 
 .separator:not(:empty)::before {
-  margin-right: 1em;
+    margin-right: 1em;
 }
 
 .separator:not(:empty)::after {
-  margin-left: 1em;
+    margin-left: 1em;
 }
 
-.webadmin-backdrop-login + .cdk-global-overlay-wrapper {
-    display  : flex !important;
-    position : absolute !important;
+.webadmin-backdrop-login+.cdk-global-overlay-wrapper {
+    display: flex !important;
+    position: absolute !important;
 }

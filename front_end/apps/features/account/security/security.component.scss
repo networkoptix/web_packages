@@ -1,20 +1,20 @@
-@use "../../../../styles/theme_variables_common" as theme_vars;
+@use "theme_variables_common" as theme_vars;
 @import "../account.component";
 
 :host {
-     .tfauth-status-switch-wrapper {
-         display : flex;
-     }
+    .tfauth-status-switch-wrapper {
+        display: flex;
+    }
 
-     .system-name {
-         font-family: theme_vars.$font-family-medium;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         white-space: nowrap;
-     }
+    .system-name {
+        font-family: theme_vars.$font-family-medium;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
     .reminder {
-        font-family : theme_vars.$font-family-medium;
+        font-family: theme_vars.$font-family-medium;
         color: var(--light16);
         margin-left: 28px;
     }
@@ -38,6 +38,7 @@ $body-blue: rgba(theme_vars.$blue10, 0.1);
         align-items: center;
         position: relative;
     }
+
     h4:before {
         content: "";
         position: absolute;

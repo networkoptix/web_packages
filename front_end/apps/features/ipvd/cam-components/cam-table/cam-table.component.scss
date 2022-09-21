@@ -1,94 +1,94 @@
-@use "../../../../../styles/theme_variables_common" as *;
-@use "../../../../components/tag/tag.component" as *;
-@use "../../../../styles/typography";
+@use "theme_variables_common" as *;
+@use "components/tag/tag.component" as *;
+@use "typography";
 @use "bootstrap_utils" as bootstrap;
 
 nx-cam-table {
-    .table-scroll-fixed {
-        position : fixed;
-        top      : 48px + 16px; // header + padding
+  .table-scroll-fixed {
+    position: fixed;
+    top: 48px + 16px; // header + padding
 
-        @include bootstrap.media-breakpoint-up(md) {
-            // calculate 7 columns grid to fit fixed positioned table
-            width : calc(((100% - (#{$grid-gutter-width} * 2)) / 12.16 * 7));
-        }
-
-        @include bootstrap.media-breakpoint-up(xl) {
-            // calculate 8 columns grid to fit fixed positioned table
-            width : calc(((100% - (#{$grid-gutter-width} * 2)) / 10.76 * 8));
-        }
+    @include bootstrap.media-breakpoint-up(md) {
+      // calculate 7 columns grid to fit fixed positioned table
+      width : calc(((100% - (#{$grid-gutter-width} * 2)) / 12.16 * 7));
     }
+
+    @include bootstrap.media-breakpoint-up(xl) {
+      // calculate 8 columns grid to fit fixed positioned table
+      width : calc(((100% - (#{$grid-gutter-width} * 2)) / 10.76 * 8));
+    }
+  }
 
   .nx-table-wrapper {
     margin-bottom: 40px;
 
     .csv {
-      float : right;
-      margin-top : 24px;
+      float: right;
+      margin-top: 24px;
 
       @include bootstrap.media-breakpoint-down(md) {
-        width         : 100%;
-        margin-top    : 0;
-        margin-bottom : 1rem;
+        width: 100%;
+        margin-top: 0;
+        margin-bottom: 1rem;
       }
     }
 
     .nx-table {
-      min-width : 1045px;
+      min-width: 1045px;
 
       .table-row-spacer {
-        height        : 4px;
-        border-bottom : 8px solid var(--card-body-bg);
+        height: 4px;
+        border-bottom: 8px solid var(--card-body-bg);
       }
 
       thead {
         th {
           // @include typography.medium11;
-          padding          : .5rem 0;
-          font-weight      : 500 !important;
-          text-transform   : none;
-          overflow-wrap    : break-word;
-          cursor           : pointer;
-          border           : none;
+          padding: .5rem 0;
+          font-weight: 500 !important;
+          text-transform: none;
+          overflow-wrap: break-word;
+          cursor: pointer;
+          border: none;
 
           &:first-of-type {
-            padding-left : .5rem;
+            padding-left: .5rem;
           }
 
           &.table-title {
             @include typography.regular24dark9;
 
             .text-placeholder {
-              color : var(--text-placeholder-color);
-              font-size : 1.25rem;
+              color: var(--text-placeholder-color);
+              font-size: 1.25rem;
             }
           }
 
           .caption {
             @include typography.medium13light;
-            position : relative;
-            height   : 2rem;
-            overflow-wrap : initial;
-            overflow      : hidden;
-            text-overflow : ellipsis;
+            position: relative;
+            height: 2rem;
+            overflow-wrap: initial;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
             .sort-dir {
               //top: 0;
-              right    : auto;
-              position : relative;
-              bottom   : 0;
+              right: auto;
+              position: relative;
+              bottom: 0;
             }
           }
 
           .arrow-flip {
-            height : 20px !important;
-            width  : 20px !important;
+            height: 20px !important;
+            width: 20px !important;
 
             svg-icon {
-              width  : 20px;
-              height : 20px;
-              left   : 0;
-              top    : 2px;
+              width: 20px;
+              height: 20px;
+              left: 0;
+              top: 2px;
             }
           }
         }
@@ -96,26 +96,28 @@ nx-cam-table {
 
       tbody {
         tr {
-          min-height : 24px;
+          min-height: 24px;
 
-          &.selected, &:active, &:focus {
+          &.selected,
+          &:active,
+          &:focus {
             td {
-              color : var(--light1) !important;
-              background-color : var(--light16);
+              color: var(--light1) !important;
+              background-color: var(--light16);
 
               .icon-negative {
-                color : var(--light1);
+                color: var(--light1);
               }
             }
           }
 
           td {
-            padding      : 4px 4px 4px 0;
-            line-height  : 1rem;
-            border       : none;
+            padding: 4px 4px 4px 0;
+            line-height: 1rem;
+            border: none;
 
             &:first-of-type {
-              padding-left : .25rem;
+              padding-left: .25rem;
             }
           }
         }
@@ -145,15 +147,15 @@ nx-cam-table {
 
       /*** overwrite bootstrap pagination style ***/
       .pagination {
-        margin : 0;
+        margin: 0;
 
         .page-item {
           cursor: pointer;
           margin: 0 3px;
-          height : auto;
+          height: auto;
 
           &:first-of-type {
-            margin-left : 0;
+            margin-left: 0;
           }
 
           .page-link {
@@ -162,7 +164,7 @@ nx-cam-table {
             border-radius: 2px;
             height: 32px;
             padding: 0 12px;
-            text-decoration : none;
+            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -176,14 +178,17 @@ nx-cam-table {
               span {
                 display: none;
               }
+
               &:after {
                 content: "Previous";
               }
             }
+
             &[aria-label="Next"] {
               span {
                 display: none;
               }
+
               &:after {
                 content: "Next";
               }
@@ -212,4 +217,3 @@ nx-cam-table {
     }
   }
 }
-

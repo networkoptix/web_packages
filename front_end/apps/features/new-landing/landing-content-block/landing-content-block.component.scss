@@ -1,14 +1,17 @@
-@use "../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
 
-.content-block-wide{
+
+.content-block-wide {
     @extend .content-block;
     display: flex;
     flex-flow: row wrap;
     padding: 28px 40px 40px 28px;
     margin-bottom: 21px;
-    &  .header {
+
+    & .header {
         flex: 2 0px;
         min-width: 320px;
+
         & .title {
             @extend .header-title;
             @extend .large-header-text;
@@ -17,24 +20,28 @@
             padding-right: 32px;
         }
     }
+
     & .body {
-            @extend .body-shared;
-            @extend .large-body-text;
-            flex: 3 0px;
-            & > p {
-                margin-top: 12px;
-                border-left: 2px solid;
-                border-color: var(--brand-core);
-                padding-left: 40px;
-            }
+        @extend .body-shared;
+        @extend .large-body-text;
+        flex: 3 0px;
+
+        &>p {
+            margin-top: 12px;
+            border-left: 2px solid;
+            border-color: var(--brand-core);
+            padding-left: 40px;
+        }
     }
 }
 
 .content-block-adaptive {
     @extend .content-block;
     padding: 28px 40px 40px 28px;
+
     & .header {
         margin-top: 0px;
+
         & .title {
             @extend .header-title;
             @extend .large-header-text;
@@ -43,6 +50,7 @@
             padding-bottom: 12px;
         }
     }
+
     & .body {
         @extend .body-shared;
         @extend .large-body-text;
@@ -54,8 +62,10 @@
     @extend .content-block;
     padding: 24px 28px 40px 24px;
     min-height: 270px;
+
     & .header {
         margin-top: 0px;
+
         & .title {
             @extend .header-title;
             @extend .small-header-text;
@@ -64,6 +74,7 @@
             padding-top: 12px;
         }
     }
+
     & .body {
         @extend .body-shared;
         @extend .small-body-text;
@@ -137,7 +148,7 @@
 }
 
 .title-text {
-    text-align: justify!important;
+    text-align: justify !important;
 }
 
 .body-shared {

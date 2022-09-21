@@ -1,5 +1,6 @@
-@use "../../../../../styles/theme_variables_common" as *;
-@use "../../../../styles/typography";
+@use "theme_variables_common" as *;
+@use "typography";
+
 
 :host {
     margin: 16px;
@@ -24,7 +25,8 @@ section {
         @include typography.regular14nocolor;
     }
 
-    input, div {
+    input,
+    div {
         flex: 0 0 100%;
     }
 

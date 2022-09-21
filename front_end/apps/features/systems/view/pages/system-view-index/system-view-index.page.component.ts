@@ -13,13 +13,19 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
@@ -30,12 +36,6 @@ import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsStat
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
 
-import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
-import { NxRibbonService } from '../../../../../components/ribbon/ribbon.service';
-import { IConfig } from '../../../../../services/nx-config/config-types';
-import { NxConfigService } from '../../../../../services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxSettingsService } from '../../../settings/settings.service';
 import { WebClientUxService } from '../../services/webclient-ux.service';
 import type { WebClientUxState } from '../../view.types';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';

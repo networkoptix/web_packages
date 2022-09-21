@@ -1,5 +1,6 @@
-@use "../../../../../styles/_theme_variables_common" as *;
-@use "../../../../styles/bootstrap_utils" as bootstrap;
+@use "_theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+
 
 img {
     max-height: 100%;
@@ -53,6 +54,7 @@ img {
     justify-content: center;
     height: 120px !important;
     background: var(--light2);
+
     @include bootstrap.media-breakpoint-down(xs) {
         height: 100% !important;
     }
@@ -81,6 +83,7 @@ img {
     justify-content: center;
     align-items: center;
     background: var(--dark1);
+
     img {
         width: 100%;
         height: auto;
@@ -89,7 +92,8 @@ img {
 
 #preloader-wrapper {
     width: 100% !important;
-    & > nx-pre-loader {
+
+    &>nx-pre-loader {
         z-index: 100;
         width: 100% !important;
     }

@@ -1,11 +1,12 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
-@use "../../../styles/bootstrap_utils" as bootstrap;
+@use "typography";
+@use "theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+
 
 .card {
-    box-shadow   : none;
-    border-color : var(--border-color);
-    background-color : var(--body-bg);
+    box-shadow: none;
+    border-color: var(--border-color);
+    background-color: var(--body-bg);
 
     .sticky1rem {
         box-shadow: 0 -14px 0 2px var(--body-bg);
@@ -21,40 +22,40 @@
     }
 
     &--header {
-        height           : 3rem;
-        display          : flex;
-        align-items      : center;
-        background-color : var(--card-header-bg);
-        padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid var(--border-color);
-        position         : relative;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        background-color: var(--card-header-bg);
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
 
         header h4 {
-            margin : 0;
-            width  : 100%;
-            color  : var(--card-header-text) !important;
+            margin: 0;
+            width: 100%;
+            color: var(--card-header-text) !important;
         }
 
         &-logo {
-            float               : left;
-            display             : flex;
-            align-items         : center;
-            height              : rem(48px);
-            max-width           : 160px;
-            background-size     : contain;
-            width               : 100%;
-            background-position : left center;
-            background-repeat   : no-repeat;
+            float: left;
+            display: flex;
+            align-items: center;
+            height: rem(48px);
+            max-width: 160px;
+            background-size: contain;
+            width: 100%;
+            background-position: left center;
+            background-repeat: no-repeat;
         }
     }
 
     &--body {
-        padding          : 1rem;
-        background-color : var(--card-body-bg);
+        padding: 1rem;
+        background-color: var(--card-body-bg);
 
         img {
-            max-width : 100%;
-            height    : auto;
+            max-width: 100%;
+            height: auto;
         }
 
         &-info {
@@ -62,21 +63,21 @@
                 margin-bottom: 1rem;
 
                 &.flat {
-                    display         : flex;
-                    justify-content : flex-start;
+                    display: flex;
+                    justify-content: flex-start;
                 }
 
                 &:last-of-type {
-                    margin-bottom : 0;
+                    margin-bottom: 0;
                 }
 
                 img {
-                    height      : 1rem;
-                    width       : 1rem;
-                    margin-left : .25rem;
-                    color       : $light12;
-                    font-size   : $font-size-sm;
-                    line-height : 1rem;
+                    height: 1rem;
+                    width: 1rem;
+                    margin-left: .25rem;
+                    color: $light12;
+                    font-size: $font-size-sm;
+                    line-height: 1rem;
                 }
 
                 p:last-of-type {
@@ -87,106 +88,107 @@
     }
 
     &--footer {
-        position         : absolute;
-        width            : 100%;
-        bottom           : 0;
-        padding          : .5rem 1rem 1rem;
-        background-color : var(--card-body-bg);
-        box-shadow       : 0px -22px 22px -6px var(--card-body-bg);
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        padding: .5rem 1rem 1rem;
+        background-color: var(--card-body-bg);
+        box-shadow: 0px -22px 22px -6px var(--card-body-bg);
 
         footer {
             // overwrite standard footer properties
-            position         : relative !important;
-            bottom           : 0;
-            width            : 100%;
-            border           : none;
-            padding          : 0;
-            background-color : var(--card-body-bg);
-            z-index          : 9;
+            position: relative !important;
+            bottom: 0;
+            width: 100%;
+            border: none;
+            padding: 0;
+            background-color: var(--card-body-bg);
+            z-index: 9;
         }
     }
 
     nx-section:first-of-type {
         .card--body {
-            border-top : none;
+            border-top: none;
         }
     }
 
     &.gray {
-        background-color : var(--grey-section-bg);
-        border           : 1px solid var(--grey-section-bg);
-        border-bottom    : none;
+        background-color: var(--grey-section-bg);
+        border: 1px solid var(--grey-section-bg);
+        border-bottom: none;
 
         .card--header {
-            background-color    : var(--grey-section-bg);
-            border-bottom-color : var(--grey-section-sep-color);
+            background-color: var(--grey-section-bg);
+            border-bottom-color: var(--grey-section-sep-color);
         }
 
         .card--body {
-            background-color : var(--grey-section-bg);
-            border-top       : 1px solid var(--grey-section-sep-color);
+            background-color: var(--grey-section-bg);
+            border-top: 1px solid var(--grey-section-sep-color);
         }
 
         .card--footer {
-            background-color : var(--grey-section-bg);
+            background-color: var(--grey-section-bg);
         }
     }
 
     &.simple-default {
-        color : var(--card-simple-error-color);
-        background-color : var(--card-simple-error-bg);
-        border           : 1px solid var(--card-simple-error-border-color);
+        color: var(--card-simple-error-color);
+        background-color: var(--card-simple-error-bg);
+        border: 1px solid var(--card-simple-error-border-color);
 
         button span {
-            color : var(--card-simple-error-color) !important;
+            color: var(--card-simple-error-color) !important;
         }
-        
+
         .card--header {
-            display : none;
+            display: none;
         }
 
         .card--body {
-            background-color : var(--card-simple-error-bg);
-            border-top       : 1px solid var(--card-simple-error-border-color);
-            
-            svg-icon svg .st0, svg-icon svg .error {
+            background-color: var(--card-simple-error-bg);
+            border-top: 1px solid var(--card-simple-error-border-color);
+
+            svg-icon svg .st0,
+            svg-icon svg .error {
                 stroke: none;
                 fill: var(--card-simple-error-color);
             }
         }
 
         .card--footer {
-            background-color : var(--card-simple-error-bg);
+            background-color: var(--card-simple-error-bg);
         }
     }
 
     &.simple-error {
         @include typography.regular13nocolor;
-        color : var(--card-simple-error-color);
-        background-color : var(--card-simple-error-bg);
-        border           : 1px solid var(--card-simple-error-border-color);
-        margin-bottom    : 8px;
-        line-height      : 18px;
-        
+        color: var(--card-simple-error-color);
+        background-color: var(--card-simple-error-bg);
+        border: 1px solid var(--card-simple-error-border-color);
+        margin-bottom: 8px;
+        line-height: 18px;
+
         button span {
-            color : var(--card-simple-error-color) !important;
+            color: var(--card-simple-error-color) !important;
         }
 
         .card--header {
-            display : none;
+            display: none;
         }
 
         .card--body {
-            background-color : var(--card-simple-error-bg);
-            border-top       : 1px solid var(--card-simple-error-border-color);
-            
+            background-color: var(--card-simple-error-bg);
+            border-top: 1px solid var(--card-simple-error-border-color);
+
             svg-icon svg .st0,
             svg-icon svg .error,
             svg-icon svg path {
                 stroke: none;
                 fill: var(--card-simple-error-svg-color);
             }
-            
+
             svg-icon svg .svg-ornament {
                 stroke: none;
                 fill: var(--card-simple-error-svg-ornament-color);
@@ -194,40 +196,40 @@
         }
 
         .card--footer {
-            background-color : var(--card-simple-error-bg);
+            background-color: var(--card-simple-error-bg);
         }
     }
 
     &.simple-warning {
         @include typography.regular13nocolor;
-        color : var(--card-simple-warning-color);
-        background-color : var(--card-simple-warning-bg);
-        border           : 1px solid var(--card-simple-warning-border-color);
-        margin-bottom    : 8px;
-        line-height      : 18px;
-        
+        color: var(--card-simple-warning-color);
+        background-color: var(--card-simple-warning-bg);
+        border: 1px solid var(--card-simple-warning-border-color);
+        margin-bottom: 8px;
+        line-height: 18px;
+
         svg-icon svg .st0,
         svg-icon svg .st1,
         svg-icon svg .error {
-            stroke : var(--card-simple-warning-color);
+            stroke: var(--card-simple-warning-color);
         }
-        
+
         a {
             color: var(--card-simple-warning-color);
         }
-        
+
         button span {
-            color : var(--card-simple-warning-color) !important;
+            color: var(--card-simple-warning-color) !important;
         }
 
         .card--header {
-            display : none;
+            display: none;
         }
 
         .card--body {
-            background-color : var(--card-simple-warning-bg);
-            border-top       : 1px solid var(--card-simple-warning-border-color);
-            
+            background-color: var(--card-simple-warning-bg);
+            border-top: 1px solid var(--card-simple-warning-border-color);
+
             svg-icon svg .st0,
             svg-icon svg path {
                 stroke: none;
@@ -236,30 +238,30 @@
         }
 
         .card--footer {
-            background-color : var(--card-simple-warning-bg);
+            background-color: var(--card-simple-warning-bg);
         }
     }
-    
+
     &.simple-info {
         @include typography.regular13nocolor;
-        color : var(--card-simple-info-color);
-        background-color : var(--card-simple-info-bg);
-        border           : 1px solid var(--card-simple-info-bg);
-        margin-bottom    : 8px;
-        line-height      : 18px;
-        
+        color: var(--card-simple-info-color);
+        background-color: var(--card-simple-info-bg);
+        border: 1px solid var(--card-simple-info-bg);
+        margin-bottom: 8px;
+        line-height: 18px;
+
         button span {
-            color : var(--card-simple-info-color) !important;
+            color: var(--card-simple-info-color) !important;
         }
 
         .card--header {
-            display : none;
+            display: none;
         }
 
         .card--body {
-            background-color : rgba(var(--brand-core--rgb), .1);
-            border-top       : 1px solid rgba(var(--brand-core--rgb), .3);
-            
+            background-color: rgba(var(--brand-core--rgb), .1);
+            border-top: 1px solid rgba(var(--brand-core--rgb), .3);
+
             svg-icon svg .st0,
             svg-icon svg path {
                 stroke: none;
@@ -268,42 +270,42 @@
         }
 
         .card--footer {
-            background-color : rgba(var(--brand-core--rgb), .1);
+            background-color: rgba(var(--brand-core--rgb), .1);
         }
     }
 
     &.menu {
-        background-color : $light5;
-        border           : 1px solid $light5;
-        border-bottom    : none;
+        background-color: $light5;
+        border: 1px solid $light5;
+        border-bottom: none;
 
         .card--header {
-            background-color    : $light5;
-            border-bottom-color : $light7;
+            background-color: $light5;
+            border-bottom-color: $light7;
         }
 
         .card--body {
-            background-color : $light5;
-            border-top       : 1px solid $light7;
+            background-color: $light5;
+            border-top: 1px solid $light7;
         }
 
         .card--footer {
-            background-color : $light5;
+            background-color: $light5;
         }
 
         &.top {
-            border-radius : 2px 2px 0 0;
+            border-radius: 2px 2px 0 0;
 
             .card--header {
-                border-bottom : none;
+                border-bottom: none;
             }
         }
     }
 
     &.fixed-height {
-        height   : rem(300px);
-        overflow : hidden;
-        margin   : 0;
+        height: rem(300px);
+        overflow: hidden;
+        margin: 0;
 
         .card--header {
             min-height: 81px;
@@ -316,23 +318,23 @@
 
     &.extended-header {
         .card--header {
-            height  : auto;
-            padding : 1rem;
+            height: auto;
+            padding: 1rem;
         }
     }
 
     &.slim-header {
         .card--header {
-            height  : auto;
-            padding : rem(12px);
+            height: auto;
+            padding: rem(12px);
 
             .title {
-                line-height : 15px;
+                line-height: 15px;
             }
 
             .minor-text {
                 @include typography.regular11light16;
-                margin-top : 5px;
+                margin-top: 5px;
             }
         }
     }
@@ -355,6 +357,7 @@
             margin: 0;
             padding-right: 16px;
         }
+
         &-button button {
             padding-left: 0 !important;
         }

@@ -1,4 +1,4 @@
-import type { MenuNode } from '../../services/menus.service.types';
+import type { MenuNode } from '@services/menus.service.types';
 
 export type MenuNodeWithParent = MenuNode & { parentNode?: MenuNode };
 

@@ -1,5 +1,5 @@
-@use "../../../../../styles/theme_variables_common" as *;
-@use "../../../../styles/typography";
+@use "theme_variables_common" as *;
+@use "typography";
 @use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 .get-started-heading {
@@ -24,7 +24,7 @@
     }
 }
 
-.get-started-section{
+.get-started-section {
     background: var(--alt-body-bg);
     display: flex;
     justify-content: center;
@@ -74,6 +74,7 @@
             color: var(--brand-core) !important;
         }
     }
+
     &:active {
         .step-text h3 {
             color: unset !important;
@@ -93,13 +94,14 @@
             width: 150px;
             height: 150px;
         }
+
         &:after {
             content: "";
             position: absolute;
             top: 85px;
             width: 85%;
             height: 100px;
-            background-image : var(--spot-gradient);
+            background-image: var(--spot-gradient);
             transition: all ease-out 0.25s;
 
             @include bootstrap.media-breakpoint-down(xs) {
@@ -122,7 +124,7 @@
             margin-top: 13px;
         }
 
-        & > h3 {
+        &>h3 {
             width: 170px;
             @include typography.medium18nocolor;
             margin-bottom: 2px;
@@ -131,7 +133,7 @@
 }
 
 .slide-up {
-    & > svg-icon {
+    &>svg-icon {
         transform: translate3d(0, -20px, 0);
     }
 

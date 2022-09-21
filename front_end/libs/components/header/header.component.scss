@@ -1,251 +1,256 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/mixins";
+@use "typography";
+@use "theme_variables_common" as *;
+@use "mixins";
 
-$logo-height               : 32px;
-$line-height               : 44px;
-$vertical-spacing          : 15px;
-$horizontal-spacing        : 16px;
-$active-border-width       : 3px;
-$max-dropdown-width        : 320px;
-$max-header-item-width     : 212px;
+$logo-height : 32px;
+$line-height : 44px;
+$vertical-spacing : 15px;
+$horizontal-spacing : 16px;
+$active-border-width : 3px;
+$max-dropdown-width : 320px;
+$max-header-item-width : 212px;
 
-$collapse-first-width      : 920px;
-$collapse-second-width     : 768px;
+$collapse-first-width : 920px;
+$collapse-second-width : 768px;
 
-$collapse-first-width-max  : $collapse-first-width - 1px;
+$collapse-first-width-max : $collapse-first-width - 1px;
 $collapse-second-width-max : $collapse-second-width - 1px;
 /* here we kill $grid-float-breakpoint-max to */
 $header-collapsing-width-1 : 1px;
 
 .app-header-left {
     flex-grow: 1;
-    & > ul {
+
+    &>ul {
         flex-wrap: nowrap;
         flex-shrink: 1;
     }
 }
 
 .navbar {
-    height        : $navbar-height;
-    border-top    : none;
-    border-left   : none;
-    border-right  : none;
-    border-radius : 0;
-    border-bottom : 1px solid var(--header-border-color);
-    padding-right : 1rem !important;
+    height: $navbar-height;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--header-border-color);
+    padding-right: 1rem !important;
     // Position relative and z-index are needed for the landing page, the expanding svgs on the landing page will not respect the stacking context of a position:static element.
     position: relative;
     z-index: 5;
     background-color: var(--header-bg) !important;
 
     &.navbar-default {
-        background-color : #fff;
-        padding          : 0;
-        z-index          : 100;
+        background-color: #fff;
+        padding: 0;
+        z-index: 100;
     }
 
     .dropdown .dropdown-toggle {
-        height : 32px !important;
-        border : none;
+        height: 32px !important;
+        border: none;
     }
 
     .app-header-right {
-        margin-top : -1px;
+        margin-top: -1px;
     }
 
     .navbar-nav {
-        flex-direction : row;
-        align-items    : center;
-        height         : $navbar-height;
-        line-height    : $line-height;
+        flex-direction: row;
+        align-items: center;
+        height: $navbar-height;
+        line-height: $line-height;
     }
 
     .navbar-brand {
-        font-size : $h3-font-size;
-        margin    : 0 $horizontal-spacing !important;
-        padding   : 0;
+        font-size: $h3-font-size;
+        margin: 0 $horizontal-spacing  !important;
+        padding: 0;
 
-        & > img {
-            height  : $logo-height;
-            display : inline-block;
-            margin  : (($navbar-height - $logo-height)*0.5) 0;
+        &>img {
+            height: $logo-height;
+            display: inline-block;
+            margin: (($navbar-height - $logo-height)*0.5) 0;
         }
     }
 
 
     .margin-right {
-        margin-right : $horizontal-spacing !important;
+        margin-right: $horizontal-spacing  !important;
     }
 
     .nav li {
-        margin      : 0;
-        padding     : 0;
-        font-size   : $font-size-lg;
-        display     : flex;
-        align-items : center;
-        height      : 100%;
+        margin: 0;
+        padding: 0;
+        font-size: $font-size-lg;
+        display: flex;
+        align-items: center;
+        height: 100%;
 
         &.vertical-bar {
-            border-right : 1px solid $light4;
-            height       : 25px;
+            border-right: 1px solid $light4;
+            height: 25px;
 
         }
 
-        & > span {
+        &>span {
             // display: inline-block;
-            margin-left : .5rem;
+            margin-left: .5rem;
         }
 
-        & > a {
+        &>a {
             @include typography.medium14dark9;
-            margin          : 0;
-            padding         : 0 $horizontal-spacing;
-            line-height     : 46px;
-            display         : flex;
-            flex-direction  : row;
-            align-items     : center;
-            position        : relative;
-            text-decoration : none;
+            margin: 0;
+            padding: 0 $horizontal-spacing;
+            line-height: 46px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            position: relative;
+            text-decoration: none;
 
-            & > span.ellipsis {
+            &>span.ellipsis {
                 @include mixins.ellipsis;
-                white-space    : nowrap;
-                display        : inline-block;
-                vertical-align : bottom;
-                line-height    : $line-height;
-                max-width      : $max-header-item-width;
+                white-space: nowrap;
+                display: inline-block;
+                vertical-align: bottom;
+                line-height: $line-height;
+                max-width: $max-header-item-width;
             }
 
             &:hover {
-                background-color : $light2;
-                text-decoration  : none;
+                background-color: $light2;
+                text-decoration: none;
             }
         }
 
-        &.no-hover > a:hover {
-            cursor           : default;
-            background-color : transparent !important;
+        &.no-hover>a:hover {
+            cursor: default;
+            background-color: transparent !important;
         }
 
         &.open {
-            border-bottom : 1px solid $navbar-default-bg;
-            margin-bottom : -1px;
+            border-bottom: 1px solid $navbar-default-bg;
+            margin-bottom: -1px;
 
-            & > a {
-                color         : $navbar-default-link-color !important;
+            &>a {
+                color: $navbar-default-link-color  !important;
 
-                margin-left   : -1px;
-                border-left   : 1px solid $dropdown-border;
+                margin-left: -1px;
+                border-left: 1px solid $dropdown-border;
 
-                margin-right  : -1px;
-                border-right  : 1px solid $dropdown-border;
+                margin-right: -1px;
+                border-right: 1px solid $dropdown-border;
 
-                height        : 58px;
-                margin-bottom : -2px;
+                height: 58px;
+                margin-bottom: -2px;
 
                 &::before {
-                    content       : "";
-                    position      : absolute;
-                    left          : $horizontal-spacing;
-                    right         : $horizontal-spacing;
-                    bottom        : 1px;
-                    border-bottom : 1px solid $navbar-default-border;
+                    content: "";
+                    position: absolute;
+                    left: $horizontal-spacing;
+                    right: $horizontal-spacing;
+                    bottom: 1px;
+                    border-bottom: 1px solid $navbar-default-border;
                 }
             }
         }
 
         &.active {
-            background-color : white !important;
+            background-color: white !important;
 
-            & > a {
-                color : var(--brand-core);
+            &>a {
+                color: var(--brand-core);
 
                 &:hover {
-                    background-color : transparent !important;
+                    background-color: transparent !important;
                 }
 
                 &::after {
-                    content          : "";
-                    position         : absolute;
-                    bottom           : 0;
-                    height           : $active-border-width;
-                    background-color : var(--brand-core);
-                    left             : 1rem;
-                    right            : 1rem;
+                    content: "";
+                    position: absolute;
+                    bottom: 0;
+                    height: $active-border-width;
+                    background-color: var(--brand-core);
+                    left: 1rem;
+                    right: 1rem;
                 }
             }
         }
 
-        & > a > span {
+        &>a>span {
             &.glyphicon {
-                margin-left  : -2px;
-                margin-right : 14px;
+                margin-left: -2px;
+                margin-right: 14px;
             }
 
             &.icon-caret {
-                margin-left   : 14px;
-                margin-right  : -2px;
-                margin-bottom : -2px;
+                margin-left: 14px;
+                margin-right: -2px;
+                margin-bottom: -2px;
             }
         }
     }
 
     /* This is to prevent top menu from collapsing */
-    & > div > .navbar-nav > li {
-        float : left;
+    &>div>.navbar-nav>li {
+        float: left;
     }
 
     .navbar-header {
-        float : left;
+        float: left;
     }
 
     .navbar-right {
-        float        : right !important;
-        margin-right : 0;
+        float: right !important;
+        margin-right: 0;
     }
 
     @media (max-width : $grid-float-breakpoint-max) {
         .open {
-            position : static; /* It was relative, but we remove it to allow dropdown to take the whole width of the screen*/
+            position: static;
+
+            /* It was relative, but we remove it to allow dropdown to take the whole width of the screen*/
             .dropdown-menu {
-                position         : absolute;
-                border           : 1px solid $navbar-default-bg;
-                background-color : $navbar-default-bg;
-                margin-top       : 2px;
+                position: absolute;
+                border: 1px solid $navbar-default-bg;
+                background-color: $navbar-default-bg;
+                margin-top: 2px;
             }
         }
     }
 
     .navbar-left {
-        float : left !important;
+        float: left !important;
     }
 
     /* / End of This is to prevent top menu from collapsing*/
 
     @media (max-width : $collapse-first-width-max) {
         .dropdown-menu-left {
-            right : 0;
-            left  : auto;
+            right: 0;
+            left: auto;
         }
     }
 
     @media (max-width : $grid-float-breakpoint-max) {
+
         .vertical-bar,
         .hidden-collapsed,
         .icon-caret,
         .ellipsis {
-            display : none !important;
+            display: none !important;
         }
     }
 }
 
 .login-button {
-        min-width: 80px;
+    min-width: 80px;
 }
 
 .nav-icon {
     display: block;
+
     &.collapsed {
         display: none;
     }
@@ -269,7 +274,8 @@ $header-collapsing-width-1 : 1px;
     max-width: 100vw !important;
     padding-right: 0px !important;
     flex-wrap: nowrap !important;
-    & > div {
+
+    &>div {
         flex-wrap: nowrap !important;
     }
 }
@@ -283,15 +289,18 @@ $header-collapsing-width-1 : 1px;
     margin-right: 20px;
     margin-top: 0 !important;
     position: relative;
-    & > svg-icon {
+
+    &>svg-icon {
         position: absolute;
         right: -18px;
         width: 20px;
         top: 3px;
         bottom: 0;
-        & > svg {
+
+        &>svg {
             vertical-align: top;
-            & > .st0{
+
+            &>.st0 {
                 fill-rule: evenodd;
                 clip-rule: evenodd;
                 fill: $light4;
@@ -304,18 +313,21 @@ $header-collapsing-width-1 : 1px;
     cursor: pointer;
     height: 48px !important;
     padding: 0 8px;
-    & > a {
-        font-family     : $font-family-medium;
-        color           : $font-color-medium;
-        font-size       : $h6-font-size;
-        text-decoration : none;
-        white-space     : nowrap;
-        line-height     : 48px;
+
+    &>a {
+        font-family: $font-family-medium;
+        color: $font-color-medium;
+        font-size: $h6-font-size;
+        text-decoration: none;
+        white-space: nowrap;
+        line-height: 48px;
     }
+
     &:hover {
         background: $light2;
         border-bottom: 1px solid $light5;
     }
+
     &:active {
         background: $light3;
         border-bottom: 1px solid $light6;
@@ -325,7 +337,7 @@ $header-collapsing-width-1 : 1px;
 .collapsed-breadcrumb {
     margin-left: -6px;
 
-    & > a {
+    &>a {
         font-size: 20px;
         line-height: 42px;
     }

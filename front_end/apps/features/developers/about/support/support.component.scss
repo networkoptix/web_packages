@@ -1,192 +1,193 @@
-@use "../../../../../styles/theme_variables_common" as *;
-@use "../../../../styles/typography";
+@use "theme_variables_common" as *;
+@use "typography";
 @use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 :host {
     .support-footer {
-        overflow       : hidden;
-        background     : var(--card-support-bg);
-        color          : var(--card-support-color);
-        margin-top     : 88px;
-        padding-top    : 48px;
-        display        : flex;
-        flex-direction : column;
-        align-items    : center;
+        overflow: hidden;
+        background: var(--card-support-bg);
+        color: var(--card-support-color);
+        margin-top: 88px;
+        padding-top: 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
         @include bootstrap.media-breakpoint-down(xs) {
-            margin-top : 48px !important;
+            margin-top: 48px !important;
         }
 
         & h2 {
             @include typography.regular24nocolor;
-            line-height : 28px;
+            line-height: 28px;
         }
     }
 
     a.heading-link {
-        text-decoration : none;
+        text-decoration: none;
     }
 
     .support-link {
-        cursor : pointer;
+        cursor: pointer;
 
 
         &:hover {
-            text-decoration : underline;
+            text-decoration: underline;
         }
     }
 
     .support-wrapper {
-        position        : relative;
-        display         : flex;
-        flex-direction  : row;
-        justify-content : center;
-        flex-wrap       : nowrap;
-        width           : 100%;
-        margin          : 16px 0 0 0;
-        flex-grow       : 1;
-        background     : var(--card-support-bg);
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin: 16px 0 0 0;
+        flex-grow: 1;
+        background: var(--card-support-bg);
 
         @include bootstrap.media-breakpoint-down(sm) {
-            background : var(--card-support-bg) !important;
+            background: var(--card-support-bg) !important;
         }
 
-        &:before, &:after {
-            content : "";
-            flex    : 1 2 30%;
+        &:before,
+        &:after {
+            content: "";
+            flex: 1 2 30%;
 
             @include bootstrap.media-breakpoint-down(sm) {
-                display : none;
+                display: none;
             }
         }
 
         &:before {
-            margin-right : -64px;
+            margin-right: -64px;
         }
 
         &:after {
-            margin-left : -64px;
+            margin-left: -64px;
         }
 
-        .left-image, .right-image {
+        .left-image,
+        .right-image {
             svg-icon svg .about-svg {
-                fill : var(--card-support-svg-elem-bg);
+                fill: var(--card-support-svg-elem-bg);
             }
         }
 
         .support-block {
-            position       : relative;
-            display        : flex;
-            flex-direction : column;
-            align-items    : center;
-            padding        : 6px 16px 32px 16px;
-            min-width      : 436px;
-            flex           : 0 3 50%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 16px 32px 16px;
+            min-width: 436px;
+            flex: 0 3 50%;
 
             @include bootstrap.media-breakpoint-down(sm) {
-                min-width  : unset;
-                max-width  : 436px;
-                flex-basis : 100%;
+                min-width: unset;
+                max-width: 436px;
+                flex-basis: 100%;
             }
 
-            & > * {
-                z-index    : 2;
-                text-align : center;
+            &>* {
+                z-index: 2;
+                text-align: center;
             }
 
             ::ng-deep .support-body {
-                line-height : 1.23;
+                line-height: 1.23;
 
                 p {
-                    color : var(--card-support-color);
+                    color: var(--card-support-color);
                 }
 
                 a {
-                    text-decoration : none;
+                    text-decoration: none;
 
-                    & > button {
+                    &>button {
                         @include typography.regular18nocolor;
-                        display        : block !important;
-                        letter-spacing : 0.3px;
-                        padding        : 22px 27px !important;
-                        height         : unset !important;
-                        max-width      : unset !important;
-                        margin         : 40px auto 31px;
-                        border-radius  : 5px !important;
-                        color            : var(--btn-primary-color) !important;
-                        background-color : var(--btn-primary-bg) !important;
-                        box-shadow       : var(--btn-primary-shadow);
+                        display: block !important;
+                        letter-spacing: 0.3px;
+                        padding: 22px 27px !important;
+                        height: unset !important;
+                        max-width: unset !important;
+                        margin: 40px auto 31px;
+                        border-radius: 5px !important;
+                        color: var(--btn-primary-color) !important;
+                        background-color: var(--btn-primary-bg) !important;
+                        box-shadow: var(--btn-primary-shadow);
 
                         &:hover:not([disabled]):not(.disabled) {
-                            background-color : var(--btn-primary-hover-bg) !important;
-                            box-shadow       : var(--btn-primary-hover-shadow);
+                            background-color: var(--btn-primary-hover-bg) !important;
+                            box-shadow: var(--btn-primary-hover-shadow);
                         }
 
                         &:focus,
-                        &.focus {
-
-                        }
+                        &.focus {}
 
                         &:active,
                         &.active {
-                            color            : var(--btn-primary-active-color) !important;
-                            background-color : var(--btn-primary-active-bg) !important;
-                            box-shadow       : var(--btn-primary-active-shadow) !important;
+                            color: var(--btn-primary-active-color) !important;
+                            background-color: var(--btn-primary-active-bg) !important;
+                            box-shadow: var(--btn-primary-active-shadow) !important;
                         }
                     }
                 }
             }
 
-            &:before, &:after {
-                content          : "";
-                z-index          : 1;
-                position         : absolute;
-                top              : 0;
-                bottom           : -4px;
-                width            : calc(50% + 64px);
-                background       : var(--card-support-bg);
-                transform-origin : bottom;
+            &:before,
+            &:after {
+                content: "";
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                bottom: -4px;
+                width: calc(50% + 64px);
+                background: var(--card-support-bg);
+                transform-origin: bottom;
             }
 
             &:before {
-                transform : skewX(23deg);
-                left      : 64px;
+                transform: skewX(23deg);
+                left: 64px;
             }
 
             &:after {
-                transform : skewX(-23deg);
-                right     : 64px;
+                transform: skewX(-23deg);
+                right: 64px;
             }
         }
     }
 
     .support-images {
-        display   : flex;
-        position  : absolute;
-        max-width : 50%;
-        top       : 0;
-        bottom    : 0;
-        width     : 100%;
-        overflow  : hidden;
+        display: flex;
+        position: absolute;
+        max-width: 50%;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        overflow: hidden;
 
         @include bootstrap.media-breakpoint-down(xs) {
-            display : none !important;
+            display: none !important;
         }
     }
 
     .left-image {
         @extend .support-images;
-        left            : 0;
-        justify-content : flex-start;
+        left: 0;
+        justify-content: flex-start;
     }
 
     .right-image {
         @extend .support-images;
-        right           : 0;
-        justify-content : flex-end;
+        right: 0;
+        justify-content: flex-end;
     }
 
     svg-icon #brand {
-        fill : var(--card-capability-icon);
+        fill: var(--card-capability-icon);
     }
 }

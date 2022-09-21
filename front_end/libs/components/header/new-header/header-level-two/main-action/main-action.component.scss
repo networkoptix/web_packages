@@ -1,5 +1,5 @@
-@use "../../../../../styles/typography";
-@use "../../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 
 
 .context-button-container {
@@ -15,6 +15,7 @@
         &:hover {
             cursor: pointer;
             color: var(--header-level-one-hover-color);
+
             svg-icon svg .logout {
                 stroke: var(--header-level-one-hover-color);
             }

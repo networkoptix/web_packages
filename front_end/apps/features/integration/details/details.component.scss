@@ -1,26 +1,27 @@
 @use "bootstrap_utils" as bootstrap;
-@use "../../../styles/mixins" as *;
+@use "mixins" as *;
+
 
 :host {
     .menu {
-        background-color : var(--light5);
-        padding          : .5rem 0 0;
+        background-color: var(--light5);
+        padding: .5rem 0 0;
 
         .menu-level-2 {
-            border-radius : 2px;
+            border-radius: 2px;
         }
     }
 
     .right-menu {
-        position : absolute;
+        position: absolute;
 
         @include bootstrap.media-breakpoint-down(md) {
-            position : inherit;
+            position: inherit;
         }
     }
 
     a {
-        cursor : pointer;
+        cursor: pointer;
     }
 
     .add-ellipsis {
@@ -28,14 +29,21 @@
     }
 
     .card--body-info .section img {
-        overflow : hidden;
+        overflow: hidden;
     }
 
     #info- {
-        &support-, &developer- {
-            &email, &name, &url, &phone, &terms {
-                word-break : break-word;
-                hyphens    : auto;
+
+        &support-,
+        &developer- {
+
+            &email,
+            &name,
+            &url,
+            &phone,
+            &terms {
+                word-break: break-word;
+                hyphens: auto;
             }
         }
     }

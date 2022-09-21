@@ -1,7 +1,7 @@
 @use "sass:list";
 
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 $tablet-breakpoint: 609px;
@@ -12,82 +12,84 @@ $large-desktop-breakpoint: 1477px;
 :host {
     .heading-non-link {
         @include typography.regular24nocolor;
-        color         : var(--body-text-color);
-        margin-bottom : 48px;
+        color: var(--body-text-color);
+        margin-bottom: 48px;
     }
 
     .heading-link {
         @extend .heading-non-link;
-        cursor : pointer;
+        cursor: pointer;
 
         &:hover {
-            text-decoration : underline;
+            text-decoration: underline;
         }
     }
 
     .integrations {
-        display        : flex;
-        align-items    : center;
-        flex-direction : column;
-        margin         : 36px auto;
-        padding        : 0;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin: 36px auto;
+        padding: 0;
         //color          : $dark10;
 
         @media screen and (min-width : $tablet-breakpoint) {
-            padding : 0 8px;
-            margin  : 96px auto !important;
+            padding: 0 8px;
+            margin: 96px auto !important;
         }
 
         &-wrapper {
-            display         : flex;
+            display: flex;
 
-            justify-content : center;
-            flex-direction  : row;
-            margin          : 0 -1rem -1rem 0;
-            width           : calc(100% - 1rem);
+            justify-content: center;
+            flex-direction: row;
+            margin: 0 -1rem -1rem 0;
+            width: calc(100% - 1rem);
+
             @media screen and (min-width : $tablet-breakpoint) {
-                width : 100%;
+                width: 100%;
             }
         }
 
         button {
-            font-size : 14px !important;
+            font-size: 14px !important;
         }
     }
 
     .info-block {
-        display        : flex;
-        flex-direction : column;
-        flex           : 1 0 275px;
-        padding        : 1.25rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 275px;
+        padding: 1.25rem;
 
         @media screen and (min-width : $tablet-breakpoint) {
-            max-width : 275px;
+            max-width: 275px;
         }
 
         p {
-            line-height   : 1rem;
-            margin-bottom : 1rem;
+            line-height: 1rem;
+            margin-bottom: 1rem;
         }
     }
 
     .info-block {
-        margin : 0 1rem 1rem 0;
+        margin: 0 1rem 1rem 0;
 
         h3 {
             @include typography.medium15nocolor;
-            margin-top    : 0;
-            margin-bottom : 16px;
+            margin-top: 0;
+            margin-bottom: 16px;
         }
     }
 
     .integrations-block {
-        position  : relative;
-        margin    : 56px 0 1rem 0;
-        width     : 100%;
-        max-width : 1200px;
+        position: relative;
+        margin: 56px 0 1rem 0;
+        width: 100%;
+        max-width: 1200px;
+
         @media screen and (min-width : $tablet-breakpoint) {
-            margin : 0 1rem 1rem 0;
+            margin: 0 1rem 1rem 0;
         }
 
         h3 {
@@ -95,7 +97,7 @@ $large-desktop-breakpoint: 1477px;
         }
 
         .store-button {
-            margin : 0 auto 20px 20px
+            margin: 0 auto 20px 20px
         }
     }
 
@@ -113,62 +115,62 @@ $large-desktop-breakpoint: 1477px;
     //}
 
     .integrations-blocks-wrapper {
-        display               : grid;
-        grid-template-columns : repeat(1, 1fr);
-        grid-gap              : 4px;
-        margin                : 20px;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 4px;
+        margin: 20px;
 
         @media screen and (min-width : $tablet-breakpoint) {
-            grid-template-columns : repeat(2, 1fr);
+            grid-template-columns: repeat(2, 1fr);
         }
 
         @media screen and (min-width : $desktop-breakpoint) {
-            grid-template-columns : repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 
     .integration-block {
-        cursor           : pointer;
-        position         : relative;
-        height           : 72px;
-        display          : flex;
-        justify-content  : center;
-        align-items      : center;
-        border           : 1px solid var(--border-color);
-        border-radius    : 2px;
-        background-color : transparent;
+        cursor: pointer;
+        position: relative;
+        height: 72px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--border-color);
+        border-radius: 2px;
+        background-color: transparent;
 
         &:hover {
-            border-color : var(--border-hover-color);
+            border-color: var(--border-hover-color);
         }
 
         &:active {
-            border-color : var(--border-active-color);
+            border-color: var(--border-active-color);
         }
 
         img {
-            max-height : 54px;
-            max-width  : calc(100% - 24px);
+            max-height: 54px;
+            max-width: calc(100% - 24px);
         }
     }
 
     .integrations-block {
         @media screen and (max-width : $tablet-breakpoint) {
-            width : 100%;
+            width: 100%;
         }
 
-        & > h3 {
-            margin : 20px 20px 0 20px;
+        &>h3 {
+            margin: 20px 20px 0 20px;
         }
     }
 
     .more-span {
-        display         : flex;
-        justify-content : center;
-        align-items     : center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         p {
-            margin : 0 !important;
+            margin: 0 !important;
         }
 
         @for $start from 1 through 5 {

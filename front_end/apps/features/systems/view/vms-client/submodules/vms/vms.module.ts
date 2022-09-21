@@ -6,9 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
-
-import { ComponentsModule } from '../../../../../../components/components.module';
 
 import { components } from './components';
 import { MediaServerListComponent } from './components/media-server-list/media-server-list.component';

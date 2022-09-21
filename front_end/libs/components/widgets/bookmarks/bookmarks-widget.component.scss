@@ -1,5 +1,6 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 .bookmarks-wrapper {
     overflow-y: auto;
@@ -10,6 +11,7 @@
 
 h4 svg {
     cursor: pointer;
+
     & * {
         fill: $blue10;
     }
@@ -27,6 +29,7 @@ h4 svg {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -34,8 +37,9 @@ h4 svg {
 
 a {
     color: inherit !important;
+
     &:hover {
-        color: $brand_core !important;
+        color: $brand_core  !important;
     }
 }
 
@@ -43,12 +47,14 @@ a {
     border: 1px solid $light3;
     border-radius: 4px;
     margin-bottom: 8px;
+
     &.active {
         border: 2px solid $brand_core;
     }
 }
 
-.bookmark-heading, .bookmark-content {
+.bookmark-heading,
+.bookmark-content {
     padding: 8px 4px;
 }
 
@@ -68,11 +74,14 @@ a {
 
 .bookmark-heading {
     cursor: pointer;
+
     &:hover {
-        background : $additional_light2;
+        background: $additional_light2;
     }
-    &:active, &.active {
-        background : $additional_light3 !important;
+
+    &:active,
+    &.active {
+        background: $additional_light3  !important;
     }
 }
 

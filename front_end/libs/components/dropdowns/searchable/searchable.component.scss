@@ -1,39 +1,41 @@
-@use "../../../styles/typography";
-@use "../../../styles/mixins";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
+
 
 nx-searchable-select {
     width: 100%;
     display: block;
-    
+
     .input-container {
-        display  : block;
-        position : relative;
-        overflow : hidden;
+        display: block;
+        position: relative;
+        overflow: hidden;
     }
-    
+
     .placeholder {
-        z-index     : 0;
-        margin      : 0;
-        position    : absolute;
-        top         : 2px;
-        left        : 12px;
-        color       : var(--btn-dropdown-toggle-color);
-        opacity     : 0.7;
-        font-size   : .75rem;
-        line-height : 1.7rem;
+        z-index: 0;
+        margin: 0;
+        position: absolute;
+        top: 2px;
+        left: 12px;
+        color: var(--btn-dropdown-toggle-color);
+        opacity: 0.7;
+        font-size: .75rem;
+        line-height: 1.7rem;
     }
-    
-    .arrow-flip, .search-clear {
-        position : absolute;
-        right    : 0;
-        top      : 0;
-    }
-    
+
+    .arrow-flip,
     .search-clear {
-        padding : 0 8px !important;
+        position: absolute;
+        right: 0;
+        top: 0;
     }
-    
+
+    .search-clear {
+        padding: 0 8px !important;
+    }
+
     .form-control {
         background-color: transparent !important;
         overflow: hidden;
@@ -60,6 +62,6 @@ nx-searchable-select {
     }
 
     .selected .additional-help {
-        color : $light1 !important;
+        color: $light1  !important;
     }
 }

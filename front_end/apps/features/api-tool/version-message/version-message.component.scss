@@ -1,5 +1,6 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 .system-message {
     border: 1px solid;

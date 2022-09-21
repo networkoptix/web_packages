@@ -1,4 +1,4 @@
-@use '../../styles/typography';
+@use 'typography';
 
 .foreground-messages-content {
   max-height: 800px;
@@ -27,7 +27,8 @@ tr {
   height: 44px;
 }
 
-th, td {
+th,
+td {
   display: table-cell !important;
 }
 
@@ -40,7 +41,8 @@ th, td {
   white-space: nowrap;
 }
 
-.devices th, .devices td{
+.devices th,
+.devices td {
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 70px;
@@ -55,7 +57,8 @@ th, td {
   width: 100%;
   white-space: nowrap;
 
-  th, td {
+  th,
+  td {
     max-width: 100px;
   }
 }

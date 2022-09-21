@@ -1,43 +1,43 @@
-//@use "../../../styles/theme_variables_common" as *;
+//@use "theme_variables_common" as *;
 
 .editable {
     &-initial {
-        position      : relative;
-        cursor        : pointer;
-        text-align    : left !important;
-        display       : block !important;
-        white-space   : nowrap !important;
-        overflow      : hidden !important;
-        text-overflow : ellipsis !important;
-        border        : 1px solid transparent; // avoid text jump
+        position: relative;
+        cursor: pointer;
+        text-align: left !important;
+        display: block !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        border: 1px solid transparent; // avoid text jump
 
         &:hover {
-            background    : var(--input-bg);
-            border-radius : 2px;
-            padding-left  : 4px;
-            margin-left   : -4px;
+            background: var(--input-bg);
+            border-radius: 2px;
+            padding-left: 4px;
+            margin-left: -4px;
         }
 
         &[disabled="true"] {
-            pointer-events : none;
+            pointer-events: none;
         }
     }
 
     &-edit {
-        position      : relative;
-        border-radius : 2px;
-        color         : var(--input-active-color);
-        background    : var(--input-active-bg);
-        padding-left  : 4px;
-        margin-left   : -4px;
-        border        : 1px solid var(--input-active-border-color);
-        text-align    : left !important;
-        overflow      : hidden;
-        white-space   : nowrap !important;
-        outline       : none;
+        position: relative;
+        border-radius: 2px;
+        color: var(--input-active-color);
+        background: var(--input-active-bg);
+        padding-left: 4px;
+        margin-left: -4px;
+        border: 1px solid var(--input-active-border-color);
+        text-align: left !important;
+        overflow: hidden;
+        white-space: nowrap !important;
+        outline: none;
     }
 
     &-error {
-        border : 1px solid var(--input-error-border-color);
+        border: 1px solid var(--input-error-border-color);
     }
 }

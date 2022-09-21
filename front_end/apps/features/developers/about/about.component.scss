@@ -1,5 +1,5 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 .about-heading {
@@ -12,18 +12,21 @@
     @include bootstrap.media-breakpoint-down(xs) {
         margin: 44px 0 16px 0;
     }
-    & > h1 {
+
+    &>h1 {
         font-family: $font-family-light;
         font-size: 64px !important;
         text-align: center;
+
         @include bootstrap.media-breakpoint-down(xs) {
-            font-family: $font-family-medium !important;
+            font-family: $font-family-medium  !important;
             font-size: 24px !important;
         }
     }
-    & > p {
+
+    &>p {
         @include typography.regular14nocolor;
-        color : var(--body-text-color);
+        color: var(--body-text-color);
         margin: 10px 0 25px 0;
         text-align: center;
         line-height: 18px;
@@ -33,6 +36,7 @@
 
 .heading-link {
     cursor: pointer;
+
     &:hover {
         text-decoration: underline;
         text-decoration-thickness: 0.06em;

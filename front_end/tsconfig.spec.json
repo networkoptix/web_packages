@@ -21,8 +21,14 @@
             "@environments/*": ["src/environments/*"],
             "@interceptors/*": ["src/app/interceptors/*"],
             "@pages/*": ["src/app/pages/*", "apps/features/*"],
-            "@view/*": ["src/app/pages/systems/view/*"],
-            "@vms-client/*": ["src/app/pages/systems/view/vms-client/*"],
+            "@view/*": [
+                "src/app/pages/systems/view/*",
+                "apps/features/systems/view/*"
+            ],
+            "@vms-client/*": [
+                "src/app/pages/systems/view/vms-client/*",
+                "apps/features/systems/view/vms-client/*"
+            ],
             "@guards/*": ["src/app/routeGuards/*"],
             "@services/*": ["src/app/services/*"],
             "@utils/*": ["src/app/utils/*"],
@@ -30,7 +36,8 @@
             "@app/*": ["src/app/*"],
             "@lib/*": ["src/lib/*"],
             "@src/*": ["src/*"],
-            "@authorization/*": ["apps/authorization/*"]
+            "@authorization/*": ["apps/authorization/*"],
+            "@pipes/*": ["src/app/pipes/*"]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]

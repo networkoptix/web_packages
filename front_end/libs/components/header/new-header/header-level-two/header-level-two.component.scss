@@ -1,5 +1,6 @@
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 .menu-level-two {
     position: relative;
@@ -12,7 +13,7 @@
     color: var(--light4) !important;
 
     .login {
-        margin : 14px 16px 13px auto;
+        margin: 14px 16px 13px auto;
         width: 75px !important;
         border-radius: 4px !important;
     }
@@ -22,26 +23,33 @@
         margin-left: 25px;
         display: flex;
         overflow-x: hidden;
+
         .outer-menu-item {
             white-space: nowrap;
             display: inline;
             width: auto;
             margin: 19px 32px 23px 0px;
+
             .inner-menu-item {
                 color: var(--light6);
+
                 &:hover {
                     cursor: pointer;
-                    border-bottom: 2px solid var( --header-level-two-hover-border-color);
+                    border-bottom: 2px solid var(--header-level-two-hover-border-color);
                 }
+
                 padding-bottom: 16px;
+
                 &.active {
                     color: var(--light4);
                     border-bottom: 2px solid var(--brand_core);
                 }
+
                 &.disable {
                     color: var(--header-item-disabled);
                 }
-                svg-icon svg{
+
+                svg-icon svg {
                     margin-bottom: 2px;
                 }
             }
@@ -57,30 +65,37 @@
         position: absolute;
         height: 100%;
         width: 48px;
+
         &:hover {
             cursor: pointer;
+
             .nav-arrow {
                 background-color: var(--header-arrow-hover);
             }
         }
+
         &:active {
             .nav-arrow {
                 background-color: var(--header-level-one-active-bg);
             }
         }
+
         .nav-arrow {
             width: 24px;
             height: 100%;
             z-index: 2;
             background-color: var(--header-nav-arrow-bg);
+
             svg-icon {
                 position: relative;
                 top: 16px;
                 left: 4px;
             }
+
             &.left svg-icon {
                 left: initial;
                 right: 4px;
+
                 svg {
                     transform: rotate(180deg);
                 }

@@ -1,6 +1,7 @@
-@use "../../styles/typography";
-@use "../../styles/mixins";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
+
 
 :host {
     background: $light1;
@@ -26,15 +27,19 @@ section {
 }
 
 button.btn.btn-default {
-    &.active, &:active, &.active:hover {
-        background: $light16 !important;
-        color: $light1 !important;
+
+    &.active,
+    &:active,
+    &.active:hover {
+        background: $light16  !important;
+        color: $light1  !important;
     }
 }
 
 .sort-button-wrapper {
     display: flex;
-    & > button:not(:first-child) {
+
+    &>button:not(:first-child) {
         margin-left: 8px;
     }
 }

@@ -1,4 +1,5 @@
-@use "../../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 .copy-button {
 	background-color: none !important;
@@ -8,10 +9,12 @@
 	right: 4px;
 	width: 25px;
 	height: 25px;
-    &:hover {
-        cursor: pointer;
-    }
+
+	&:hover {
+		cursor: pointer;
+	}
+
 	svg .st7 {
-		fill: $light16 !important;
+		fill: $light16  !important;
 	}
 }

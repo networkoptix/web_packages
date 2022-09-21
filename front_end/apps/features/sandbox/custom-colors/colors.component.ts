@@ -3,7 +3,7 @@ import {
     OnInit,
 } from '@angular/core';
 
-import { NxMenuService } from '../../../menu/menu.service';
+import { NxMenuService } from '@app/menu/menu.service';
 
 @Component({
     selector: 'nx-custom-colors',
@@ -44,7 +44,7 @@ export class NxCustomColorsComponent implements OnInit {
     ];
 
     constructor(
-            private menuService: NxMenuService,
+        private menuService: NxMenuService,
     ) {
     }
 

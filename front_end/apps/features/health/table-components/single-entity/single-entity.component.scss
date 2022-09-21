@@ -1,6 +1,6 @@
-@use '../../../../components/tag/tag.component' as *;
+@use 'components/tag/tag.component' as *;
 
-nx-single-entity{
+nx-single-entity {
     display: block;
 
     .row-name {

@@ -1,6 +1,6 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables_common' as *;
-@use '../../styles/mixins';
+@use 'typography';
+@use 'theme_variables_common' as *;
+@use 'mixins';
 
 .menu-level-3 {
     @include typography.medium13nocolor;
@@ -32,6 +32,7 @@
 
     &.alternative {
         &.focus {
+
             &,
             * {
                 // overwrite whatinput's focus outline
@@ -52,7 +53,9 @@
                 }
             }
         }
+
         &:focus {
+
             &,
             * {
                 // overwrite whatinput's focus outline
@@ -76,16 +79,18 @@
     }
 
     &.selected:hover {
+
         &,
         * {
-            color: $light1 !important;
-            fill: $light1 !important;
-            background-color: $light16 !important;
+            color: $light1  !important;
+            fill: $light1  !important;
+            background-color: $light16  !important;
             min-height: auto;
         }
     }
 
     &.selected {
+
         &,
         * {
             color: var(--left-menu-l3-selected-color) !important;
@@ -99,6 +104,7 @@
                 .icon-with-fill {
                     fill: var(--left-menu-l3-selected-color) !important;
                 }
+
                 .st0 {
                     stroke: var(--left-menu-l3-selected-color) !important;
                 }
@@ -111,6 +117,7 @@
     }
 
     &:hover {
+
         &,
         * {
             background-color: var(--left-menu-l3-hover-bg) !important;
@@ -122,6 +129,7 @@
                 .icon-with-fill {
                     fill: var(--left-menu-l3-hover-color) !important;
                 }
+
                 .st0 {
                     stroke: var(--left-menu-l3-hover-color) !important;
                 }
@@ -130,13 +138,14 @@
     }
 
     &:active {
+
         &,
         * {
             background-color: var(--left-menu-l3-hover-bg) !important;
         }
     }
 
-    & > div {
+    &>div {
         line-height: 26px;
     }
 

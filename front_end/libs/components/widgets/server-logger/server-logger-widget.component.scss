@@ -1,5 +1,6 @@
-@use '../../../styles/typography';
-@use "../../../../styles/theme_variables_common" as *;
+@use 'typography';
+@use "theme_variables_common" as *;
+
 
 .logger-wrapper {
     overflow-y: auto;
@@ -9,7 +10,8 @@
     display: flex;
 }
 
-logger, nx-pre-loader {
+logger,
+nx-pre-loader {
     width: 100%;
     height: 100%;
     display: flex;

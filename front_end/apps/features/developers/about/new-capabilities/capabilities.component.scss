@@ -1,127 +1,131 @@
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 :host {
     .flex-container {
-        display         : flex;
-        justify-content : center;
-        width           : 100%;
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
 
     .dev-capabilities {
         @extend .flex-container;
-        max-width : 1440px;
+        max-width: 1440px;
     }
 
     .bullet-point-text {
-        font-size   : 14px;
-        font-family : $font-family-regular;
-        text-align  : start;
+        font-size: 14px;
+        font-family: $font-family-regular;
+        text-align: start;
     }
 
     .card-grid-single {
-        width      : 100%;
-        margin-top : -50px;
+        width: 100%;
+        margin-top: -50px;
 
         & .bullet-points-single-card {
-            margin : 19px 0 5px 0;
+            margin: 19px 0 5px 0;
 
             @include bootstrap.media-breakpoint-up(md) {
-                display         : flex;
-                flex-wrap       : wrap;
-                justify-content : center;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             @include bootstrap.media-breakpoint-down(sm) {
-                margin-top : 6px;
+                margin-top: 6px;
             }
 
             & .bullet-item {
                 @extend .bullet-point-text;
-                padding-right : 36px;
-                flex          : 0 1 33%;
-                margin-bottom : 19px;
+                padding-right: 36px;
+                flex: 0 1 33%;
+                margin-bottom: 19px;
 
                 @include bootstrap.media-breakpoint-down(sm) {
-                    margin-top : 12px !important;
+                    margin-top: 12px !important;
                 }
             }
 
             & .bullet-item-alone {
-                flex : none !important;
+                flex: none !important;
             }
         }
     }
 
     .card-container-multi {
-        padding-left : 19px;
+        padding-left: 19px;
 
         & .bullet-points {
-            margin        : 6px 0 24px 0;
-            width         : 100%;
-            padding-right : 36px;
+            margin: 6px 0 24px 0;
+            width: 100%;
+            padding-right: 36px;
 
             @media screen and (max-width : 780px) and (min-width : 576px) {
-                margin-top    : 28px;
-                padding-right : 15px;
+                margin-top: 28px;
+                padding-right: 15px;
             }
 
             & .bullet-item {
                 @extend .bullet-point-text;
-                margin-top : 12px;
+                margin-top: 12px;
             }
         }
     }
 
     .card-grid-multi {
         @extend .card-grid-single;
-        margin-left : -19px;
+        margin-left: -19px;
     }
 
     .card-single {
         @media screen and (min-width : 768px) {
-            flex : 0 1 66% !important;
+            flex: 0 1 66% !important;
         }
+
         @media screen and (min-width : 576px) and (max-width : 767px) {
-            flex : 0 1 82% !important;
+            flex: 0 1 82% !important;
         }
+
         flex : 0 1 100% !important;
     }
 
     .card-only-two {
         @media screen and (min-width : 768px) {
-            flex : 0 1 33% !important;
+            flex: 0 1 33% !important;
         }
+
         @media screen and (min-width : 576px) and (max-width : 767px) {
-            flex : 0 1 41% !important;
+            flex: 0 1 41% !important;
         }
+
         flex : 0 1 100% !important;
     }
 
     .dev-capabilities-card {
-        margin-top : 50px;
-        min-height : 191px;
-        text-align : center;
+        margin-top: 50px;
+        min-height: 191px;
+        text-align: center;
 
-        & > .title {
-            margin-top  : 23px;
-            font-size   : 20px !important;
-            font-family : $font-family-medium;
-            text-align  : center;
-            height      : 24px;
-            padding     : 0 10px;
+        &>.title {
+            margin-top: 23px;
+            font-size: 20px !important;
+            font-family: $font-family-medium;
+            text-align: center;
+            height: 24px;
+            padding: 0 10px;
         }
 
-        & > .card-icon {
-            margin-top : -40px;
+        &>.card-icon {
+            margin-top: -40px;
 
             & .brand-path {
-                fill : var(--card-capability-icon);
+                fill: var(--card-capability-icon);
             }
 
             & .brand-path-O {
-                stroke : var(--card-capability-icon);
+                stroke: var(--card-capability-icon);
             }
         }
     }

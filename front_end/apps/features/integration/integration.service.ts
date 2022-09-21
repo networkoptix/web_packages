@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { htmlToEntity, paramSortFunc } from '@utils/general';
@@ -23,8 +24,8 @@ export class IntegrationService implements OnDestroy {
     CONFIG: IConfig;
     account: Account;
 
-    pluginsSubject = new BehaviorSubject(undefined);
-    pluginSubject = new BehaviorSubject({});
+    pluginsSubject = new BehaviorSubject<Partial<Integration>[]>(undefined);
+    pluginSubject = new BehaviorSubject<Partial<Integration>>({});
     haveCustomBuild: boolean;
     private integrationSubscription: Subscription;
 

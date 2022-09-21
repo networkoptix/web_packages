@@ -1,5 +1,5 @@
-@use '../../../styles/typography';
-@use '../../../styles/mixins';
+@use 'typography';
+@use 'mixins';
 
 // This prevents the svgs from overlapping with the scroll bar
 .root-container {
@@ -35,6 +35,7 @@
     from {
         transform: scale(1.4)
     }
+
     to {
         transform: scale(1);
     }

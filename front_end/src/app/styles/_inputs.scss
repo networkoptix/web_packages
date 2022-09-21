@@ -1,5 +1,5 @@
 @use "./typography";
-@use "../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
 @use "./mixins";
 @use "bootstrap_utils" as bootdtrap;
 
@@ -10,50 +10,56 @@
     border-color: var(--input-border-color) !important;
     color: var(--input-color) !important;
 }
+
 input.hide-errors {
     @extend .override-error-style;
 }
+
 .hide-errors {
     & .input-error {
         display: none;
     }
-    & .ng-invalid , & > input {
+
+    & .ng-invalid,
+    &>input {
         @extend .override-error-style;
     }
 }
 
 .form-control {
-    display          : block !important;
-    width            : 100% !important;
-    height           : 32px !important;
-    font-size        : rem(14px) !important;
-    line-height      : 1.428571429 !important;
-    color            : var(--input-color) !important;
-    background-color : var(--input-bg) !important;
-    background-image : none !important;
-    border           : 1px solid var(--input-border-color) !important;
-    border-radius    : 1px !important;
-    transition       : none !important;
-    box-shadow       : none !important;
-    padding          : $padding-base-vertical $padding-input-horizontal !important;
-    caret-color      : var(--input-color) !important;
+    display: block !important;
+    width: 100% !important;
+    height: 32px !important;
+    font-size: rem(14px) !important;
+    line-height: 1.428571429 !important;
+    color: var(--input-color) !important;
+    background-color: var(--input-bg) !important;
+    background-image: none !important;
+    border: 1px solid var(--input-border-color) !important;
+    border-radius: 1px !important;
+    transition: none !important;
+    box-shadow: none !important;
+    padding: $padding-base-vertical $padding-input-horizontal  !important;
+    caret-color: var(--input-color) !important;
 
     @include mixins.placeholder ();
-    
+
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
     &:-webkit-autofill:active {
-        -webkit-text-fill-color : var(--input-color);
-        -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+        -webkit-text-fill-color: var(--input-color);
+        -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
     }
 
-    &[disabled], &[readonly],
+    &[disabled],
+    &[readonly],
     fieldset[disabled] & {
-        opacity : .4;
+        opacity: .4;
 
-        &:hover, &:focus {
-            border-color : var(--input-border-color) !important;
+        &:hover,
+        &:focus {
+            border-color: var(--input-border-color) !important;
         }
     }
 
@@ -62,83 +68,85 @@ input.hide-errors {
     }
 
     &:hover {
-        border-color : var(--input-hover-border-color);
+        border-color: var(--input-hover-border-color);
     }
 
-    &:focus, &:active {
-        border-color   : var(--input-focus-border-color) !important;
-        outline        : 1px solid var(--input-focus-border-color) !important;
-        outline-offset : 0;
-        box-shadow     : 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
+    &:focus,
+    &:active {
+        border-color: var(--input-focus-border-color) !important;
+        outline: 1px solid var(--input-focus-border-color) !important;
+        outline-offset: 0;
+        box-shadow: 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
-        color        : var(--input-error-color) !important;
+        color: var(--input-error-color) !important;
         -webkit-text-fill-color: var(--input-error-color);
 
         &:not(:focus) {
-            border-color : var(--input-error-border-color) !important;
-            outline      : none !important;
+            border-color: var(--input-error-border-color) !important;
+            outline: none !important;
         }
 
 
-        + .input-group-addon {
-            border-color     : transparent;
-            background-color : transparent;
+        +.input-group-addon {
+            border-color: transparent;
+            background-color: transparent;
         }
     }
 }
 
 .form-component {
-    caret-color : var(--input-color) !important;
-    
+    caret-color: var(--input-color) !important;
+
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
     &:-webkit-autofill:active {
-        -webkit-text-fill-color : var(--input-color);
-        -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+        -webkit-text-fill-color: var(--input-color);
+        -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
     }
-    
+
     input {
         border: 1px solid var(--input-border-color);
-        caret-color : var(--input-color) !important;
-        
+        caret-color: var(--input-color) !important;
+
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
         &:-webkit-autofill:active {
-            -webkit-text-fill-color : var(--input-color);
-            -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+            -webkit-text-fill-color: var(--input-color);
+            -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
         }
-        
-        &:focus, &:active {
-            border-color   : var(--input-focus-border-color) !important;
-            outline        : 1px solid var(--input-focus-border-color) !important;
-            outline-offset : 0;
-            box-shadow     : 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
+
+        &:focus,
+        &:active {
+            border-color: var(--input-focus-border-color) !important;
+            outline: 1px solid var(--input-focus-border-color) !important;
+            outline-offset: 0;
+            box-shadow: 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
         }
     }
-    
+
     &.ng-untouched {
         input {
-            border : 1px solid var(--input-border-color);
-            color  : var(--input-color) !important;
+            border: 1px solid var(--input-border-color);
+            color: var(--input-color) !important;
         }
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched) {
         input {
-            border : 1px solid var(--input-error-border-color) !important;
-            color  : var(--input-error-color) !important;
+            border: 1px solid var(--input-error-border-color) !important;
+            color: var(--input-error-color) !important;
 
-            + .input-group-addon {
-                border-color     : transparent;
-                background-color : transparent;
+            +.input-group-addon {
+                border-color: transparent;
+                background-color: transparent;
             }
-            
+
             &:focus {
-                border : var(--input-focus-border-color) !important;
+                border: var(--input-focus-border-color) !important;
             }
         }
     }
@@ -146,67 +154,68 @@ input.hide-errors {
 
 .input-error {
     @include typography.regular13error;
-    line-height : 1rem;
+    line-height: 1rem;
 
     @include bootdtrap.media-breakpoint-down(sm) {
-        margin-top : .5rem;
+        margin-top: .5rem;
     }
 }
 
 .form-control-row {
-    height : 32px;
+    height: 32px;
 }
 
 .form-control-static {
-    min-height : 32px;
+    min-height: 32px;
 }
 
 .btn.form-control {
-    text-align : left !important;
+    text-align: left !important;
+
     .caret {
-        float      : right;
-        margin-top : 8px;
+        float: right;
+        margin-top: 8px;
     }
 }
 
 select.form-control {
-    -webkit-appearance : none;
-    -moz-appearance    : none;
-    background-color   : transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent;
 }
 
 .text-area-input {
-    display          : block !important;
-    width            : 100% !important;
-    font-size        : rem(14px) !important;
-    line-height      : 1.428571429 !important;
-    color            : var(--input-color) !important;
-    background-color : var(--input-bg) !important;
-    background-image : none !important;
-    border           : 1px solid var(--input-border-color) !important;
-    border-radius    : 1px !important;
-    transition       : none !important;
-    box-shadow       : none !important;
-    padding          : $padding-base-vertical $padding-input-horizontal !important;
-    caret-color      : var(--input-color) !important;
-    
+    display: block !important;
+    width: 100% !important;
+    font-size: rem(14px) !important;
+    line-height: 1.428571429 !important;
+    color: var(--input-color) !important;
+    background-color: var(--input-bg) !important;
+    background-image: none !important;
+    border: 1px solid var(--input-border-color) !important;
+    border-radius: 1px !important;
+    transition: none !important;
+    box-shadow: none !important;
+    padding: $padding-base-vertical $padding-input-horizontal  !important;
+    caret-color: var(--input-color) !important;
+
     @include mixins.placeholder ();
-    
+
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
     &:-webkit-autofill:active {
-        -webkit-text-fill-color : var(--input-color);
-        -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+        -webkit-text-fill-color: var(--input-color);
+        -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
-        border-color : var(--input-error-border-color) !important;
-        color        : var(--input-error-color) !important;
+        border-color: var(--input-error-border-color) !important;
+        color: var(--input-error-color) !important;
 
-        + .input-group-addon {
-            border-color     : transparent;
-            background-color : transparent;
+        +.input-group-addon {
+            border-color: transparent;
+            background-color: transparent;
         }
     }
 }

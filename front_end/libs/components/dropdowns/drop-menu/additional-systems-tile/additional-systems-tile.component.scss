@@ -1,8 +1,9 @@
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 .active {
-    background: $additional_light4 !important;
+    background: $additional_light4  !important;
 }
 
 .additional-systems-tile {

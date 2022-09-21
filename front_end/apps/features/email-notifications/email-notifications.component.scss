@@ -1,5 +1,6 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 nx-section {
   padding: 0.5rem;
@@ -18,7 +19,8 @@ nx-section {
   margin: 16px;
   display: flex;
   flex-wrap: wrap;
-  & > div {
+
+  &>div {
     width: 288px;
   }
 }
@@ -41,16 +43,17 @@ nx-select {
 
 .email-content-wrapper {
   display: flex;
-  & > label {
+
+  &>label {
     width: 180px;
   }
 
-  & > input,
-  & > textarea {
+  &>input,
+  &>textarea {
     width: 100%;
   }
 
-  & > textarea {
+  &>textarea {
     overflow: hidden;
   }
 }

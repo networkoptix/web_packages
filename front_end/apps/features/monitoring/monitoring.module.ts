@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MenuModule } from '@app/menu/menu.module';
 import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { MonitoringGraphModule } from '@components/graph/graph.module';
@@ -10,8 +11,6 @@ import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeh
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
-
-import { MenuModule } from '../../menu/menu.module';
 
 import { GraphsComponent } from './graphs/graphs.component';
 import { LogsComponent } from './logs/logs.component';

@@ -1,39 +1,37 @@
-@use "../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 /* Palette spec is here: http://4yppjt.axshare.com/#p=colors */
 $theme-map : null;
 
-$themes : (
-        default: (
-                backgroundColor: white,
-                textColor: #408bbd,
-                buttonTextColor: #408bbd,
-                buttonTextTransform: none,
-                buttonTextHoverColor: #61b0e7,
-                buttonColor: #fff,
-                buttonBorder: 2px solid #408bbd
-        ),
-        dark: (
-                backgroundColor: #222,
-                textColor: #ddd,
-                buttonTextColor: #aaa,
-                buttonTextTransform: uppercase,
-                buttonTextHoverColor: #ddd,
-                buttonColor: #333,
-                buttonBorder: 1px solid #333
-        )
-);
+$themes : (default: (backgroundColor: white,
+        textColor: #408bbd,
+        buttonTextColor: #408bbd,
+        buttonTextTransform: none,
+        buttonTextHoverColor: #61b0e7,
+        buttonColor: #fff,
+        buttonBorder: 2px solid #408bbd),
+    dark: (backgroundColor: #222,
+        textColor: #ddd,
+        buttonTextColor: #aaa,
+        buttonTextTransform: uppercase,
+        buttonTextHoverColor: #ddd,
+        buttonColor: #333,
+        buttonBorder: 1px solid #333));
 
 $theme-map : null;
 
 @mixin themify($themes: $themes) {
-    @each $theme, $map in $themes {
+
+    @each $theme,
+    $map in $themes {
 
         .theme-#{$theme} & {
             $theme-map : () !global;
-            @each $key, $submap in $map {
-                $value     : map-get(map-get($themes, $theme), "#{$key}");
+
+            @each $key,
+            $submap in $map {
+                $value : map-get(map-get($themes, $theme), "#{$key}");
                 $theme-map : map-merge($theme-map, ($key: $value)) !global;
             }
 
@@ -50,49 +48,46 @@ $theme-map : null;
 
 .theme-container {
     @include themify($themes) {
-        color            : themed("textColor");
-        background-color : themed("backgroundColor");
+        color: themed("textColor");
+        background-color: themed("backgroundColor");
     }
 
     h3 {
         @include themify($themes) {
-            color : themed("textColor");
+            color: themed("textColor");
         }
     }
 
     label {
         @include themify($themes) {
-            color : themed("buttonTextColor");
+            color: themed("buttonTextColor");
         }
     }
 
     nx-radio .nx-radio .check svg path.circle {
         @include themify($themes) {
-            color : themed("buttonColor");
+            color: themed("buttonColor");
         }
     }
 }
 
 .grid-container {
-    display               : grid;
-    grid-column-gap       : .5rem;
-    grid-row-gap          : .5rem;
-    grid-template-columns : max-content 240px;
+    display: grid;
+    grid-column-gap: .5rem;
+    grid-row-gap: .5rem;
+    grid-template-columns: max-content 240px;
 
     @include bootstrap.media-breakpoint-down(md) {
-        grid-template-columns : 1fr;
+        grid-template-columns: 1fr;
     }
 
     .grid-item {
-        display         : flex;
-        align-items     : center;
-        justify-content : flex-end;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
 
         @include bootstrap.media-breakpoint-down(md) {
-            justify-content : flex-start;
+            justify-content: flex-start;
         }
     }
 }
-
-
-

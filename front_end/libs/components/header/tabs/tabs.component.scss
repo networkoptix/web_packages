@@ -1,45 +1,46 @@
-@use "../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 :host {
     .tab-link {
-        height : 100%;
-        border : 1px solid transparent;
-        cursor : pointer;
-        
+        height: 100%;
+        border: 1px solid transparent;
+        cursor: pointer;
+
         &:hover {
-            background-color : var(--tab-link-hover-bg);
-            border-bottom    : 1px solid var(--tab-link-hover-bottom-color);
+            background-color: var(--tab-link-hover-bg);
+            border-bottom: 1px solid var(--tab-link-hover-bottom-color);
         }
-        
+
         &:active {
-            background-color : var(--tab-link-active-bg);
-            border-bottom    : 1px solid var(--tab-link-active-bottom-color);
+            background-color: var(--tab-link-active-bg);
+            border-bottom: 1px solid var(--tab-link-active-bottom-color);
         }
-        
-        & > * {
-            font-family     : $font-family-medium;
-            color           : var(--btn-header-main-color);
-            font-size       : $h6-font-size;
-            text-decoration : none;
-            white-space     : nowrap;
-            line-height     : 46px;
+
+        &>* {
+            font-family: $font-family-medium;
+            color: var(--btn-header-main-color);
+            font-size: $h6-font-size;
+            text-decoration: none;
+            white-space: nowrap;
+            line-height: 46px;
         }
-        
+
         &.active {
-            position : relative;
-            color    : var(--tab-link-selected-color);
-    
-            & > a {
-                color : var(--tab-link-selected-color);
+            position: relative;
+            color: var(--tab-link-selected-color);
+
+            &>a {
+                color: var(--tab-link-selected-color);
             }
-    
+
             &::after {
-                content       : "";
-                position      : absolute;
-                bottom        : 0;
-                left          : 16px;
-                right         : 16px;
-                border-bottom : 2px solid var(--tab-link-selected-color);
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 16px;
+                right: 16px;
+                border-bottom: 2px solid var(--tab-link-selected-color);
             }
         }
     }

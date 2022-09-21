@@ -1,20 +1,26 @@
-@use "../../../../../../src/app/styles/typography";
-@use "../../../../../../src/app/styles/mixins";
-@use "../../../../../../src/styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
 
 
 main form {
     .create-row {
         display: flex;
-        .email, .first-name, .last-name, .password {
+
+        .email,
+        .first-name,
+        .last-name,
+        .password {
             &:not(.hasError) {
                 margin-bottom: 16px;
             }
+
             &.hasError {
                 margin-bottom: 8px;
             }
 
             width: 100%;
+
             input {
                 width: 100%;
                 height: 32px !important;

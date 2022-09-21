@@ -1,5 +1,6 @@
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as theme_vars;
+@use "typography";
+@use "theme_variables_common" as theme_vars;
+
 
 :host {
     --cards-per-row: 4;
@@ -36,10 +37,13 @@
         align-items: center;
         justify-content: center;
     }
+
     footer {
         padding: 20px 20px 10px 20px;
+
         nx-tag {
             margin-right: 10px;
+
             &:last-of-type {
                 margin-right: 0 !important;
             }

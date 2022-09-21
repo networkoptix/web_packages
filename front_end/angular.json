@@ -70,7 +70,9 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/app/styles",
-                "src/styles"
+                "src/styles",
+                "src/app",
+                "libs"
               ]
             },
             "vendorChunk": true,
@@ -227,7 +229,8 @@
               "includePaths": [
                 "node_modules/",
                 "src/app/styles",
-                "src/styles"
+                "src/styles",
+                "src/app"
               ]
             },
             "scripts": [],
@@ -315,7 +318,9 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/app/styles",
-                "src/styles"
+                "src/styles",
+                "src/app",
+                "libs"
               ]
             },
             "vendorChunk": true,
@@ -437,7 +442,9 @@
               "includePaths": [
                 "node_modules/",
                 "src/app/styles",
-                "src/styles"
+                "src/styles",
+                "src/app",
+                "libs"
               ]
             },
             "scripts": [],

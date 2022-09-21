@@ -1,4 +1,5 @@
-@use "../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 nx-radio {
     label {
@@ -6,93 +7,95 @@ nx-radio {
             color: var(--radio-color) !important;
             opacity: 0.3 !important;
         }
+
         &:hover:not([disabled]) {
-            color : var(--radio-hover-color);
+            color: var(--radio-hover-color);
         }
-        
+
         &:active:not([disabled]) {
-            color : var(--radio-color) !important;
+            color: var(--radio-color) !important;
         }
     }
 
     .disabled {
         .nx-radio {
-            opacity : .3 !important;
+            opacity: .3 !important;
 
             .check {
-                cursor : default !important;
+                cursor: default !important;
             }
 
             svg .circle {
-                stroke : var(--radio-color) !important;
-                opacity : 0.3 !important;
+                stroke: var(--radio-color) !important;
+                opacity: 0.3 !important;
             }
         }
+
         .check {
             cursor: default !important;
         }
     }
 
-    & + label {
-        cursor : pointer;
+    &+label {
+        cursor: pointer;
     }
 
     .nx-radio {
-        display : flex;
-        margin  : 0;
+        display: flex;
+        margin: 0;
 
         input[type="radio"] {
-            position : absolute;
-            opacity  : 0;
+            position: absolute;
+            opacity: 0;
         }
-    
+
         svg .circle {
             stroke-width: 2;
         }
-    
-        input ~ .check {
+
+        input~.check {
             svg .circle {
-                stroke : var(--radio-color);
-                fill : none;
+                stroke: var(--radio-color);
+                fill: none;
             }
-            
-            & ~ .label-text {
-                color : var(--radio-color);
+
+            &~.label-text {
+                color: var(--radio-color);
             }
         }
 
-        input:hover ~ .check {
+        input:hover~.check {
             svg .circle {
-                stroke : var(--radio-hover-color);
-                fill : none;
+                stroke: var(--radio-hover-color);
+                fill: none;
             }
-    
+
             svg .dot {
-                fill : var(--radio-hover-check-color);
+                fill: var(--radio-hover-check-color);
             }
-    
-            & ~ .label-text {
-                color : var(--radio-hover-color);
+
+            &~.label-text {
+                color: var(--radio-hover-color);
             }
         }
 
-        input:active ~ .check {
+        input:active~.check {
             svg .circle {
-                stroke : var(--radio-active-color) !important;
-                fill : none;
+                stroke: var(--radio-active-color) !important;
+                fill: none;
             }
-    
-            & ~ .label-text {
-                color : var(--radio-active-color) !important;
+
+            &~.label-text {
+                color: var(--radio-active-color) !important;
             }
         }
-        
-        input:focus ~ .check {
+
+        input:focus~.check {
             svg .circle-focus {
-                stroke : var(--brand-d1) !important;
+                stroke: var(--brand-d1) !important;
                 stroke-width: 2;
-                fill : none;
-                
+                fill: none;
+
                 &.outer {
                     opacity: 0.3;
                     stroke-width: 1;
@@ -103,26 +106,26 @@ nx-radio {
 }
 
 .label-text {
-    font-family : $font-family-regular;
-    cursor      : pointer;
-    user-select : none;
-    margin-left : 2px;
-    margin-top  : 1px
+    font-family: $font-family-regular;
+    cursor: pointer;
+    user-select: none;
+    margin-left: 2px;
+    margin-top: 1px
 }
 
 .check {
-    cursor                      : pointer;
-    position                    : relative;
-    margin                      : -2px 0 0 0;
-    width                       : 24px;
-    height                      : 24px;
-    -webkit-tap-highlight-color : transparent;
+    cursor: pointer;
+    position: relative;
+    margin: -2px 0 0 0;
+    width: 24px;
+    height: 24px;
+    -webkit-tap-highlight-color: transparent;
 
     &.checked {
         svg {
             .dot {
-                fill    : var(--radio-check-color);
-                display : block;
+                fill: var(--radio-check-color);
+                display: block;
             }
         }
     }
@@ -130,13 +133,13 @@ nx-radio {
     &.tristate {
         svg {
             .dot {
-                fill    : rgba(var(--brand-core--rgb), .5);
-                display : block;
+                fill: rgba(var(--brand-core--rgb), .5);
+                display: block;
             }
         }
     }
 
     svg .dot {
-        display : none;
+        display: none;
     }
 }

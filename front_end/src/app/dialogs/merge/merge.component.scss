@@ -1,18 +1,23 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 
-.radio-group{
+
+.radio-group {
     margin-top: 5px;
 }
+
 .modal-body {
     .server-url {
         .server-url-label {
             margin-top: 12px;
         }
-        label:last-child, input:last-child {
+
+        label:last-child,
+        input:last-child {
             margin-bottom: 0 !important;
         }
     }
+
     .mb-merge {
         margin-bottom: 24px !important;
     }
@@ -22,7 +27,11 @@
     padding: 1rem;
     display: flex;
     justify-content: space-between !important;
-    &.next-button, nx-process-button, nx-process-button button, button.next-button {
+
+    &.next-button,
+    nx-process-button,
+    nx-process-button button,
+    button.next-button {
         margin-right: 0 !important;
     }
 }
@@ -32,6 +41,7 @@
         height: 24px;
         pointer-events: none;
     }
+
     &.next-button {
         svg {
             .st0 {

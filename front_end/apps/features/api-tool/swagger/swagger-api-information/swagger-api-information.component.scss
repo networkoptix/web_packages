@@ -1,5 +1,5 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables_common' as *;
+@use 'typography';
+@use 'theme_variables_common' as *;
 
 markdown {
     position: relative;
@@ -7,23 +7,29 @@ markdown {
     left: 16px;
 
     h3 {
-		margin-bottom: 16px;
-	}
-	h2 {
-		margin-bottom: 12px;
-	}
-	h1, h2, h3 {
+        margin-bottom: 16px;
+    }
+
+    h2 {
+        margin-bottom: 12px;
+    }
+
+    h1,
+    h2,
+    h3 {
         font-weight: 500;
     }
+
     p {
         @include typography.regular14nocolor;
         color: var(--body-text-color);
-		margin-bottom: 18px;
+        margin-bottom: 18px;
         line-height: 1.7;
     }
 
     code.changes-table table {
         margin-bottom: 18px;
+
         thead {
             tr {
                 th {
@@ -34,20 +40,25 @@ markdown {
                 }
             }
         }
+
         td {
             height: 25px !important;
             padding: 15px 8px 8px 24px;
         }
+
         code {
             overflow: hidden;
             white-space: nowrap;
             margin-bottom: 8px;
-            .addition, .removal {
+
+            .addition,
+            .removal {
                 position: relative;
                 width: 17px;
                 display: inline-block;
                 padding-right: 4px;
                 margin-right: 4px;
+
                 &:after {
                     position: absolute;
                     left: 0;
@@ -59,24 +70,29 @@ markdown {
                     width: 100%;
                 }
             }
+
             .removal {
                 span {
                     @extend .symbol-span;
                     border: .7px solid var(--error);
                     background-color: var(--error);
+
                     &:first-of-type {
                         transform: rotate(-45deg);
                     }
+
                     &:nth-of-type(2) {
                         transform: rotate(45deg);
                     }
                 }
             }
+
             .addition {
                 span {
                     @extend .symbol-span;
                     border: .8px solid $green_l1;
                     background-color: $green_l1;
+
                     &:first-of-type {
                         transform: rotate(90deg);
                     }
@@ -84,13 +100,15 @@ markdown {
             }
         }
     }
+
     div.highlight-code {
         margin-bottom: 16px;
     }
 
     li {
         margin-top: 5px;
-        p + ul {
+
+        p+ul {
             margin-top: -8px;
             margin-bottom: 14px;
         }

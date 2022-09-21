@@ -1,5 +1,6 @@
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 :host div {
     position: relative;
@@ -9,6 +10,7 @@
     &:hover {
         cursor: not-allowed;
     }
+
     .text-area {
         pointer-events: none;
         background-color: var(--input-bg);
@@ -21,14 +23,14 @@
 }
 
 .text-area {
-   width         : 100%;
-   min-height    : 60px;
-   max-height    : 300px;
-   overflow-y    : auto;
-   overflow-x    : hidden;
+    width: 100%;
+    min-height: 60px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-   &:focus {
-       outline: none;
-   }
+    &:focus {
+        outline: none;
+    }
 
 }

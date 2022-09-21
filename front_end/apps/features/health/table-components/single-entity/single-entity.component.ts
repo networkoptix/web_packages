@@ -8,7 +8,7 @@ import {
 import {
     InfoBlockLine,
     InfoBlockSection
-} from '@app/components/info-block/info-block.component.types';
+} from '@components/info-block/info-block.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

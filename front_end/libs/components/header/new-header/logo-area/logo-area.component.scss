@@ -1,15 +1,17 @@
-@use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 
 
 .logo-wrapper {
     width: 256px;
+
     .logo {
         @include typography.regular20nocolor;
         color: var(--header-logo-text-color) !important;
         border-right: 1px solid var(--header-logo-border);
         height: 26px;
         margin: 15px 0px;
+
         svg-icon {
             display: flex;
             justify-content: center;
@@ -18,6 +20,7 @@
         .system-list {
             display: flex;
             justify-content: center;
+
             svg-icon .system-icon {
                 fill: var(--header-logo-text-color) !important;
             }
@@ -25,6 +28,7 @@
 
         .current-system-display {
             display: flex;
+
             .system-name {
                 margin: 0 auto 4px auto;
                 white-space: nowrap;
@@ -32,23 +36,28 @@
                 overflow: hidden;
                 height: 39px;
                 max-width: 180px;
+
                 &:hover {
                     cursor: pointer;
                 }
             }
+
             .arrow-btn {
                 padding-top: 16px;
                 margin-top: -15px;
                 background-color: var(--header-profile-bg);
                 height: 58px;
                 width: 48px;
+
                 &:hover {
                     cursor: pointer;
                     background-color: var(--header-arrow-hover);
                 }
+
                 &:active {
                     background-color: var(--header-level-one-active-bg);
                 }
+
                 svg-icon .arrow {
                     stroke: var(--header-level-one-active-color) !important;
                 }
@@ -60,6 +69,7 @@
 .logo-mobile.logo-wrapper {
     margin: 6px auto;
     width: auto;
+
     .logo {
         margin: 0px auto;
         border-right: none;

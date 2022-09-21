@@ -1,23 +1,24 @@
-@use "../../../styles/typography";
+@use "typography";
+
 
 .card {
     height: 100%;
-    background-color : var(--card-body-bg);
+    background-color: var(--card-body-bg);
 }
 
 .card-header {
     @include typography.medium15nocolor;
-    color            : var(--card-header-text) !important;
-    padding          : 12px 16px;
-    background-color : var(--card-header-bg);
-    border-bottom    : 1px solid var(--border-color);
-    line-height      : 24px;
+    color: var(--card-header-text) !important;
+    padding: 12px 16px;
+    background-color: var(--card-header-bg);
+    border-bottom: 1px solid var(--border-color);
+    line-height: 24px;
 }
 
 .card-body {
     padding: 8px 16px;
-    color : var(--label-color);
-    background-color : var(--card-body-bg);
+    color: var(--label-color);
+    background-color: var(--card-body-bg);
 }
 
 .h-24 {

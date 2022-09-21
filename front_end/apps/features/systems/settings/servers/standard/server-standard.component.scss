@@ -1,21 +1,21 @@
-@use "../../../../../styles/typography";
-@use "../../../../../styles/mixins";
-@use "../../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 .server-info {
-    font-family : typography.$font-family-regular;
-    font-size   : typography.$font-size-base;
+    font-family: typography.$font-family-regular;
+    font-size: typography.$font-size-base;
     color: var(--dark9);
 
     .header-editable {
         display: flex;
-        flex-direction : column;
-        align-items    : flex-start;
+        flex-direction: column;
+        align-items: flex-start;
 
         @include bootstrap.media-breakpoint-up(lg) {
             flex-direction: row;
-            align-items : center;
+            align-items: center;
         }
 
         .server-buttons {
@@ -31,10 +31,12 @@
                 animation-iteration-count: infinite;
                 transform-origin: 50% 50%;
             }
+
             @keyframes rotate {
                 0% {
                     transform: rotate(0deg);
                 }
+
                 100% {
                     transform: rotate(360deg);
                 }
@@ -45,8 +47,10 @@
     .server-setting-buttons {
         display: flex;
         justify-content: space-between;
+
         .setting-buttons {
             display: flex;
+
             button:first-child {
                 margin-right: 8px;
             }
@@ -56,18 +60,23 @@
     @media (max-width: 870px) {
         .server-setting-buttons {
             flex-direction: column;
+
             .left button:not(:first-child) {
                 margin-top: 16px;
             }
+
             .right button {
                 margin-top: 16px;
             }
+
             .setting-buttons {
                 flex-direction: column;
+
                 button {
                     max-width: 100%;
                     width: fit-content;
                 }
+
                 button:first-child {
                     margin-right: 0;
                 }
@@ -87,31 +96,31 @@
     }
 
     .text-column {
-        text-align : right;
-        color      : var(--label-color);
+        text-align: right;
+        color: var(--label-color);
     }
 
     @include bootstrap.media-breakpoint-down(md) {
-        grid-template-columns : 100%; // vertical layout
+        grid-template-columns: 100%; // vertical layout
 
         .text-column {
-            text-align : left;
+            text-align: left;
         }
     }
 
     &-port {
-        display : flex;
+        display: flex;
         align-items: center;
 
         input {
-            height        : 30px;
-            width         : 80px;
-            border-radius : 2px;
-            border        : 1px solid var(--light6);
+            height: 30px;
+            width: 80px;
+            border-radius: 2px;
+            border: 1px solid var(--light6);
 
             &:disabled {
-                background-color : var(--light2);
-                border           : 1px solid var(--light4);
+                background-color: var(--light2);
+                border: 1px solid var(--light4);
             }
         }
     }

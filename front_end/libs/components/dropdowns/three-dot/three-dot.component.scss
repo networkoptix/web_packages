@@ -1,4 +1,5 @@
-@use "../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 nx-three-dot {
     display: inline-block;
@@ -13,6 +14,7 @@ nx-three-dot {
     width: 20px !important;
     height: 20px !important;
     background: transparent;
+
     &:after {
         content: "\22EE";
         font-size: 20px;
@@ -25,10 +27,10 @@ nx-three-dot {
     border-radius: 2px;
     border: none !important;
     transform: translateX(calc(20px - 100%));
+
     @media(max-width: $collapse-second-width) {
         left: auto;
         top: 40px;
         transform: translateX(-22px);
     }
 }
-

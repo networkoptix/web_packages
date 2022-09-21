@@ -1,47 +1,47 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/buttons" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+@use "buttons" as *;
 @use "bootstrap_utils" as bootstrap;
 
 .page-wrapper {
     min-height: 100%;
     background: var(--alt-body-bg) !important;
-    
+
     @include bootstrap.media-breakpoint-down(sm) {
         background: var(--body-bg) !important;
         overflow-x: hidden;
-	}
+    }
 }
 
 .fixed-sidebar {
     overflow-x: hidden;
     overflow-y: auto !important;
-	margin        : 0 !important;
-	padding-left  : 0 !important;
-	padding-right : 0 !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     background: var(--developer-menu-bg);
     height: 100% !important;
 
-	@include bootstrap.media-breakpoint-down(sm) {
-		height        : auto !important;
+    @include bootstrap.media-breakpoint-down(sm) {
+        height: auto !important;
         top: 0;
         left: 0;
-		padding-right : 1rem !important;
+        padding-right: 1rem !important;
         width: 100vw !important;
-	}
- 
-	@include bootstrap.media-breakpoint-up(md) {
-		position : fixed;
-		left     : 0;
-		width    : calc((100% - #{$scrollbar-height}) / 3)
-	}
+    }
 
-	@include bootstrap.media-breakpoint-up(xl) {
-		width     : calc((100% - #{$scrollbar-height}) / 4);
-		max-width : calc(#{$fluid-container-max-width} / 4);
-	}
+    @include bootstrap.media-breakpoint-up(md) {
+        position: fixed;
+        left: 0;
+        width : calc((100% - #{$scrollbar-height}) / 3)
+    }
 
-	nx-developers-menu {
+    @include bootstrap.media-breakpoint-up(xl) {
+        width : calc((100% - #{$scrollbar-height}) / 4);
+        max-width : calc(#{$fluid-container-max-width} / 4);
+    }
+
+    nx-developers-menu {
         position: sticky;
         word-break: break-word;
         background: var(--developer-menu-bg);
@@ -56,18 +56,20 @@
             margin: -8px 16px 0px 0px;
             grid-column: span 4;
         }
+
         @include bootstrap.media-breakpoint-up(xl) {
             grid-column: span 3;
         }
 
-        @include bootstrap.media-breakpoint-down(sm){
+        @include bootstrap.media-breakpoint-down(sm) {
             margin: 0 16px;
         }
 
-        div.left-menu-arrow > svg-icon > svg {
+        div.left-menu-arrow>svg-icon>svg {
             width: 16px !important;
             height: 16px !important;
-            > g > polyline  {
+
+            >g>polyline {
                 stroke: $light16;
             }
         }
@@ -79,14 +81,14 @@
 
     ::-webkit-scrollbar-track {
         background-color: transparent;
-      }
+    }
 }
 
 
 .swagger-container {
     margin-top: 22px;
     padding-left: 4px !important;
-    background : var(--alt-body-bg) !important;
+    background: var(--alt-body-bg) !important;
 }
 
 @include bootstrap.media-breakpoint-down(sm) {

@@ -5,36 +5,36 @@
 
 @import '_theme_override';
 
-@import '../app/styles/mixins';
-@import '../app/styles/typography';
-@import '../app/styles/visuals';
+@import 'mixins';
+@import 'typography';
+@import 'visuals';
 
 // Components
-@import '../app/components/placeholders/placeholders';
-@import '../app/components/dropdowns/dropdowns';
-//@import '../app/dialogs/dialogs'; // imported in angular.json <- here it's causing an error
-@import '../app/menu/menu.component';
-@import '../app/styles/anchor';
-@import '../app/styles/arrows';
-@import '../app/styles/buttons';
-@import '../app/styles/checkbox';
-@import '../app/styles/components';
-@import '../app/styles/elements';
-@import '../app/styles/elements';
-@import '../app/styles/forms';
-@import '../app/styles/icons';
-@import '../app/styles/inputs';
-@import '../app/styles/labels';
-@import '../app/styles/labels';
-@import '../app/styles/languages';
-@import '../app/styles/navs';
-@import '../app/styles/option';
-@import '../app/styles/page';
-@import '../app/styles/tables';
-@import '../app/styles/tabset';
-@import '../app/styles/whatinput';
-@import '../app/styles/popovers';
-@import '../app/styles/scrollbars';
+@import 'components/placeholders/placeholders';
+@import 'components/dropdowns/dropdowns';
+//@import 'dialogs/dialogs'; // imported in angular.json <- here it's causing an error
+@import 'menu/menu.component';
+@import 'anchor';
+@import 'arrows';
+@import 'buttons';
+@import 'checkbox';
+@import 'components';
+@import 'elements';
+@import 'elements';
+@import 'forms';
+@import 'icons';
+@import 'inputs';
+@import 'labels';
+@import 'labels';
+@import 'languages';
+@import 'navs';
+@import 'option';
+@import 'page';
+@import 'tables';
+@import 'tabset';
+@import 'whatinput';
+@import 'popovers';
+@import 'scrollbars';
 
 // Pages
-@import '../app/styles/faq';
+@import 'faq';

@@ -1,13 +1,13 @@
-@use '../../../styles/theme_palette' as *;
+@use 'theme_palette' as *;
 
 .carousel {
     background-color: $additional_light1;
-    border: 1px solid rgba(0,0,0,0.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .carousel-item {
     display: block;
-    height : 0;
+    height: 0;
     visibility: hidden;
 
     &.active {
@@ -16,7 +16,7 @@
     }
 
     &-caption {
-        margin-top : 1rem;
+        margin-top: 1rem;
     }
 }
 
@@ -36,6 +36,7 @@
 
 .carousel-preview {
     width: 100%;
+
     & {
         & {
             display: flex;
@@ -48,6 +49,7 @@
             height: 8px;
         }
     }
+
     &-wrapper {
         margin-top: 1rem;
         overflow: hidden;
@@ -95,25 +97,26 @@
         left: 20% !important;
 
         &:nth-child(odd) {
-            transform     : rotate(-65deg);
+            transform: rotate(-65deg);
             top: 30%;
         }
 
         &:nth-child(even) {
-            transform     : rotate(65deg);
+            transform: rotate(65deg);
             top: 59%;
         }
     }
+
     &.right span {
         left: 30% !important;
 
         &:nth-child(even) {
-            transform     : rotate(-65deg);
+            transform: rotate(-65deg);
             top: 59%;
         }
 
         &:nth-child(odd) {
-            transform     : rotate(65deg);
+            transform: rotate(65deg);
             top: 30%;
         }
     }

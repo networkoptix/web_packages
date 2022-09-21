@@ -1,26 +1,27 @@
-@use "../../../../styles/typography";
-@use "../../../../styles/mixins";
-@use "../../../../../styles/theme_variables_common" as theme_vars;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as theme_vars;
+
 
 .user-name {
     @include mixins.ellipsis;
     @include typography.regular13nocolor;
-    color : var(--card-header-text);
+    color: var(--card-header-text);
 }
 
 .header-users {
     display: flex;
     flex-direction: column;
     width: 100%;
-    
+
     h2 {
-        color : var(--card-header-text) !important;
+        color: var(--card-header-text) !important;
     }
-    
+
     .header-username {
         display: flex;
         align-items: center;
-        
+
         .heading-style {
             font-family: theme_vars.$font-family-medium;
             line-height: 40px;
@@ -32,11 +33,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .user-status-switch-wrapper {
             display: flex;
             align-items: center;
             margin-left: 8px;
+
             span {
                 white-space: nowrap;
             }
@@ -47,7 +49,7 @@
 .header-title {
     text-align: left !important;
     position: relative;
-    
+
     h2 {
         @extend .heading-style;
     }
@@ -63,29 +65,31 @@
 
 .user-role {
     @include mixins.ellipsis;
-    max-width : 120px;
+    max-width: 120px;
 }
 
 .button-cell {
-    padding-right : 6px !important;
-    padding-left  : 6px !important;
-    text-align    : center;
+    padding-right: 6px !important;
+    padding-left: 6px !important;
+    text-align: center;
 }
 
 .help-block {
-    display          : block;
-    background-color : transparent;
-    color            : var(--light16);
-    padding          : .5rem 0 0;
+    display: block;
+    background-color: transparent;
+    color: var(--light16);
+    padding: .5rem 0 0;
 }
 
 .user-settings-form {
     border-collapse: separate;
     border-spacing: 0 0.5rem;
     padding: 6px 0 6px 8px;
+
     .user-form-labels {
         color: var(--dark9);
     }
+
     input:disabled {
         background-color: var(--light2);
         border: 1px solid var(--light6);

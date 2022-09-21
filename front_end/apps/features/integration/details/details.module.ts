@@ -9,8 +9,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { TagModule } from '@components/tag/tag.module';
-
-import { DirectivesModule } from '../../../directives/directives.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxIntegrationDetailsComponent } from './details.component';
 import { NxOverviewComponent } from './overview/overview.component';

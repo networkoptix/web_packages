@@ -1,6 +1,7 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/bootstrap_utils" as bootstrap;
+@use "typography";
+@use "theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+
 
 :host {
     width: 100%;

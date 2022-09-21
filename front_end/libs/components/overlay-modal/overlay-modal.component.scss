@@ -1,5 +1,6 @@
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/typography";
+@use "theme_variables_common" as *;
+@use "typography";
+
 
 .modal-container {
     position: fixed;
@@ -35,7 +36,9 @@
                     height: 22px;
                     padding-top: 2px;
                     margin-left: -2px;
-                    svg g, path {
+
+                    svg g,
+                    path {
                         fill: $light1;
                     }
                 }
@@ -47,10 +50,12 @@
                 animation-iteration-count: infinite;
                 transform-origin: 50% 50%;
             }
+
             @keyframes rotate {
                 0% {
                     transform: rotate(0deg);
                 }
+
                 100% {
                     transform: rotate(360deg);
                 }
@@ -81,15 +86,19 @@
         width: 340px;
         padding: 40px;
         border-radius: 8px;
+
         &::-webkit-scrollbar {
             visibility: hidden;
         }
+
         &-body {
             .overlay-modal-title {
                 @include typography.regular13dark9;
             }
+
             .overlay-modal-servers {
                 list-style-type: none;
+
                 a {
                     background-color: $light1;
                     display: inline-flex;
@@ -100,7 +109,7 @@
                     text-decoration: none;
 
                     svg path.st0 {
-                        fill: $dark9 !important;
+                        fill: $dark9  !important;
                         fill-opacity: 1;
                     }
 

@@ -1,6 +1,6 @@
-@use "../../../../../../src/app/styles/typography";
-@use "../../../../../../src/app/styles/mixins";
-@use "../../../../../../src/styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
 
 
 main form {

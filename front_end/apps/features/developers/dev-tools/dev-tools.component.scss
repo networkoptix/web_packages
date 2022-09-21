@@ -1,10 +1,10 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "src/app/styles/_bootstrap_utils" as bootstrap;
 
 .heading {
     @include typography.regular24nocolor;
-    color : var(--body-text-color);
+    color: var(--body-text-color);
     margin-bottom: 48px;
 }
 
@@ -34,18 +34,21 @@
 .detail-blocks {
     gap: 16px;
     width: 100%;
+
     @include bootstrap.media-breakpoint-down(xs) {
-       gap: 8px;
+        gap: 8px;
     }
 }
 
 .tool-card {
     cursor: pointer;
     min-height: 242px;
-    & > header {
+
+    &>header {
         background-color: var(--card-header-bg);
         padding: 16px 0 18px 16px;
-        & > svg-icon > svg {
+
+        &>svg-icon>svg {
             height: 48px;
         }
     }
@@ -57,9 +60,11 @@
 
 .tool-detail {
     padding: 8px 16px;
+
     h3 {
         line-height: 32px;
     }
+
     p {
         line-height: 16px;
     }
@@ -71,12 +76,15 @@
     padding-left: 16px;
     justify-content: start;
     width: calc(100vw - 16px);
+
     @for $columns from 2 through 6 {
         @media screen and (min-width: $cardWidth * $columns + 32px) {
             width: $cardWidth * $columns;
+
             @if $columns is 2 {
                 padding-left: 0;
-                & > .tool-card {
+
+                &>.tool-card {
                     max-width: 275px;
                 }
             }

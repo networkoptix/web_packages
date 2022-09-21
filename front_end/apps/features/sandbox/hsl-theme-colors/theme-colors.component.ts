@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { NxMenuService } from '../../../menu/menu.service';
+import { NxMenuService } from '@app/menu/menu.service';
 
 @Component({
     selector: 'nx-hsl-theme-colors',
@@ -21,7 +21,7 @@ export class NxHSLThemeColorsComponent implements OnInit {
     constructor(
         private self: ElementRef<HTMLElement>,
         private menuService: NxMenuService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

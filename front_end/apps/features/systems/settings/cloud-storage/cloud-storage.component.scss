@@ -1,6 +1,6 @@
-@use "../../../../styles/typography";
-@use "../../../../styles/mixins";
-@use "../../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 header.with-child {
@@ -25,19 +25,20 @@ header.with-child {
     transition: .2s ease-in-out;
     cursor: pointer;
 
-    &.opened{
+    &.opened {
         transform: rotateX(180deg);
     }
 
     svg-icon svg g polyline.st0 {
         stroke: var(--btn-arrow-selected-color);
-        fill : none;
+        fill: none;
     }
 }
 
 .header-cell-content {
     display: flex;
-    & > .toggle {
+
+    &>.toggle {
         margin-left: 8px;
     }
 }
@@ -98,34 +99,35 @@ table {
 
 .cdk-header-cell {
     @include typography.bold13dark9nocolor;
-    color : var(--card-header-text);
-    background  : var(--card-header-bg);
+    color: var(--card-header-text);
+    background: var(--card-header-bg);
     // border      : 1px solid var(--border-color);
-    line-height : 16px;
-    padding     : 8px 8px 8px 16px;
-    white-space : nowrap;
-    border-top  : none;
+    line-height: 16px;
+    padding: 8px 8px 8px 16px;
+    white-space: nowrap;
+    border-top: none;
 
     &:not(:hover):not(.sorted) .toggle {
         opacity: 0;
     }
 }
 
-.cdk-cell, .cdk-header-cell {
-    border       : 1px none;
+.cdk-cell,
+.cdk-header-cell {
+    border: 1px none;
     // border-left  : 1px solid var(--border-color);
     // border-right : 1px solid var(--border-color);
-    white-space  : nowrap;
+    white-space: nowrap;
     height: 32px;
 }
 
 .cdk-row {
     &:nth-child(even) {
-        background : var(--table-alt-row-bg);
+        background: var(--table-alt-row-bg);
     }
 
     &:last-of-type {
-        border-bottom : 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
     }
 }
 
@@ -134,17 +136,18 @@ table {
 
     @include bootstrap.media-breakpoint-down(lg) {
         &:first-of-type {
-            padding-left : 0 !important;
+            padding-left: 0 !important;
         }
     }
 }
 
-th, td {
+th,
+td {
     padding-left: 16px;
 }
 
 .cdk-cell.cdk-column-state {
-    & > span {
+    &>span {
         &.ACTIVE {
             color: var(--active-license-text);
         }

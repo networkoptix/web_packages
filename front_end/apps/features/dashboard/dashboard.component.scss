@@ -1,395 +1,396 @@
-@use "../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 :host {
-    display               : grid;
-    grid-template-columns : auto 1fr;
-    grid-template-rows    : auto 1fr;
-    gap                   : 0 0;
-    min-height            : calc(100vh - 48px);
-    grid-template-areas   :
-    "Menu Heading"
-    "Menu Dashboard";
-    position              : sticky;
-    top                   : 0;
-    
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0 0;
+    min-height: calc(100vh - 48px);
+    grid-template-areas:
+        "Menu Heading"
+        "Menu Dashboard";
+    position: sticky;
+    top: 0;
+
     #dashboard-heading {
-        position    : relative;
-        grid-area   : Heading;
-        display     : flex;
-        height      : 56px;
-        align-items : center;
-        background  : var(--alt-body-bg);;
-        
-        & > nx-editable-heading {
-            margin-top  : 12px;
-            margin-left : 0;
+        position: relative;
+        grid-area: Heading;
+        display: flex;
+        height: 56px;
+        align-items: center;
+        background: var(--alt-body-bg);
+        ;
+
+        &>nx-editable-heading {
+            margin-top: 12px;
+            margin-left: 0;
         }
     }
-    
+
     #dashboard-menu {
-        position       : sticky;
-        top            : 0;
-        z-index        : 15;
-        box-shadow     : 6px 0 6px -6px $light7;
-        grid-area      : Menu;
-        width          : 360px;
-        display        : flex;
-        flex-direction : column;
-        padding-top    : 8px;
-        height         : calc(100vh - 48px);
-        align-self     : flex-start;
+        position: sticky;
+        top: 0;
+        z-index: 15;
+        box-shadow: 6px 0 6px -6px $light7;
+        grid-area: Menu;
+        width: 360px;
+        display: flex;
+        flex-direction: column;
+        padding-top: 8px;
+        height: calc(100vh - 48px);
+        align-self: flex-start;
     }
-    
+
     .dashboard-base {
-        position : relative;
-        display  : grid;
+        position: relative;
+        display: grid;
     }
-    
+
     .drag-background {
-        background : repeating-linear-gradient(
-                        135deg,
-                        #fff7,
-                        #fff7 12px,
-                        transparent 12px,
-                        transparent 24px
-        );
+        background: repeating-linear-gradient(135deg,
+                #fff7,
+                #fff7 12px,
+                transparent 12px,
+                transparent 24px);
     }
-    
+
     .dashboard-parent {
         @extend .dashboard-base;
-        grid-area      : Dashboard;
-        min-height     : 360px;
-        background     : var(--alt-body-bg);
-        padding-bottom : 12px !important;
+        grid-area: Dashboard;
+        min-height: 360px;
+        background: var(--alt-body-bg);
+        padding-bottom: 12px !important;
     }
-    
+
     .dashboard-card {
-        height     : 100%;
-        background : var(--alt-body-bg);;
-        outline    : 1px solid var(--border-color);
-        
+        height: 100%;
+        background: var(--alt-body-bg);
+        ;
+        outline: 1px solid var(--border-color);
+
         &.drag-enabled:not(.active-widget):hover {
-            outline-color : var(--dashboard-widget-hover-color) !important;
-            position      : relative;
-            z-index       : 5;
+            outline-color: var(--dashboard-widget-hover-color) !important;
+            position: relative;
+            z-index: 5;
         }
-        
+
         &:not(.drag-enabled):hover {
-            background : var(--body-bg);
+            background: var(--body-bg);
         }
     }
-    
+
     .heading {
-        border-bottom   : 1px solid transparent;
-        display         : flex;
-        justify-content : space-between;
-        border-radius   : 6px 6px 0 0;
-        
+        border-bottom: 1px solid transparent;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 6px 6px 0 0;
+
         & span {
-            padding : 8px;
-            color   : white !important;
+            padding: 8px;
+            color: white !important;
         }
-        
-        & > h3 {
-            margin-bottom : 0;
+
+        &>h3 {
+            margin-bottom: 0;
         }
-        
+
         &.drag-heading {
-            background    : var(--body-bg);
-            border-bottom : 1px solid var(--border-color);
+            background: var(--body-bg);
+            border-bottom: 1px solid var(--border-color);
         }
-        
+
         &:not(.drag-heading) {
-            min-height : 33px;
+            min-height: 33px;
         }
     }
-    
+
     .cdk-drag-preview,
     .cdk-drag-dragging {
-        box-sizing : border-box;
-        opacity    : 0.5;
+        box-sizing: border-box;
+        opacity: 0.5;
     }
-    
+
     .cdk-drag-handle {
-        cursor : grab;
-        
+        cursor: grab;
+
         &:active {
-            cursor : grabbing;
+            cursor: grabbing;
         }
     }
-    
+
     .cdk-drag-animating {
-        transition : none;
+        transition: none;
     }
-    
+
     .cdk-drag-placeholder {
-        display : none;
+        display: none;
     }
-    
+
     .size-update {
-        padding : 8px;
-        
+        padding: 8px;
+
         label {
-            width : 72px;
-            color : white !important;
+            width: 72px;
+            color: white !important;
         }
-        
+
         input {
-            width : 72px;
+            width: 72px;
         }
     }
-    
+
     input[type="file"] {
-        display : none;
-        margin  : 10px;
+        display: none;
+        margin: 10px;
     }
-    
+
     .active-widget {
-        position : relative;
-        outline  : 2px solid $brand_core;
-        z-index  : 10;
+        position: relative;
+        outline: 2px solid $brand_core;
+        z-index: 10;
         // box-shadow: 0 0 6px 2px $light7;
     }
-    
+
     h3 {
         @include typography.medium13nocolor;
-        margin : 9px 10px 11px 10px;
+        margin: 9px 10px 11px 10px;
     }
-    
+
     nx-select {
-        min-width : 0;
-        width     : auto;
+        min-width: 0;
+        width: auto;
     }
-    
+
     .active-action {
-        position      : fixed;
-        border-radius : 6px;
-        border        : 1px solid var(--dark9);
-        z-index       : 10000;
-        overflow      : hidden;
-        box-shadow    : 1px 1px 5px transparentize($dark4, 0.5);
-        
-        bottom        : 48px;
-        right         : 48px;
-        width         : 65vw;
-        height        : calc(100vh - 128px);
-        
+        position: fixed;
+        border-radius: 6px;
+        border: 1px solid var(--dark9);
+        z-index: 10000;
+        overflow: hidden;
+        box-shadow: 1px 1px 5px transparentize($dark4, 0.5);
+
+        bottom: 48px;
+        right: 48px;
+        width: 65vw;
+        height: calc(100vh - 128px);
+
         @media (orientation : portrait) {
-            bottom : 8px;
-            right  : 8px;
-            width  : calc(100vw - 16px);
-            height : calc(75vw - 48px);
+            bottom: 8px;
+            right: 8px;
+            width: calc(100vw - 16px);
+            height: calc(75vw - 48px);
         }
-        
+
         .action-header {
-            display         : flex;
-            justify-content : space-between;
-            align-items     : center;
-            background      : var(--brand_d4) !important;
-            border-bottom   : 2px solid var(--dark9);
-            height          : 48px;
-            padding         : 16px 8px 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--brand_d4) !important;
+            border-bottom: 2px solid var(--dark9);
+            height: 48px;
+            padding: 16px 8px 16px 16px;
         }
-        
+
         .action-header,
         .action-header-heading {
-            color  : var(--light1) !important;
-            margin : 0 !important;
+            color: var(--light1) !important;
+            margin: 0 !important;
         }
-        
+
         iframe {
-            background : var(--additional_light1);
-            border     : none;
-            width      : 100%;
-            height     : calc(100% - 48px);
+            background: var(--additional_light1);
+            border: none;
+            width: 100%;
+            height: calc(100% - 48px);
         }
     }
-    
+
     .window-actions {
-        cursor : pointer;
+        cursor: pointer;
     }
-    
+
     .buttons-wrapper {
-        display        : flex;
-        flex-direction : column;
-        padding        : 8px;
-        margin         : 16px auto;
-        
-        & > * {
-            margin-bottom : 8px;
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+        margin: 16px auto;
+
+        &>* {
+            margin-bottom: 8px;
         }
     }
-    
+
     .menu-item {
         @include typography.medium15nocolor;
-        color            : var(--left-menu-l3-color);
-        cursor      : pointer;
-        padding     : 8px 16px;
-        display     : flex;
-        align-items : center;
-        user-select : none;
-        height      : 40px;
-        
+        color: var(--left-menu-l3-color);
+        cursor: pointer;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        user-select: none;
+        height: 40px;
+
         &.active,
         &:active {
-            background : var(--left-menu-l3-selected-bg) !important;
-            color      : var(--left-menu-l3-selected-color) !important;
-            
+            background: var(--left-menu-l3-selected-bg) !important;
+            color: var(--left-menu-l3-selected-color) !important;
+
             &:hover {
-                color            : var(--left-menu-l3-hover-color) !important;
-                background-color : var(--left-menu-l3-hover-bg) !important;
+                color: var(--left-menu-l3-hover-color) !important;
+                background-color: var(--left-menu-l3-hover-bg) !important;
             }
         }
-        
+
         &:hover {
-            background-color : var(--left-menu-l3-hover-bg);
-            color            : var(--left-menu-l3-hover-color);
-            
+            background-color: var(--left-menu-l3-hover-bg);
+            color: var(--left-menu-l3-hover-color);
+
             & .remove-button.visible {
-                visibility : visible !important;
+                visibility: visible !important;
             }
         }
     }
-    
+
     .remove-button {
-        visibility    : hidden !important;
-        height        : auto !important;
-        padding       : 4px 12px !important;
-        margin-left   : auto !important;
-        border-radius : 100px !important;
-        background    : $light5;
+        visibility: hidden !important;
+        height: auto !important;
+        padding: 4px 12px !important;
+        margin-left: auto !important;
+        border-radius: 100px !important;
+        background: $light5;
     }
-    
+
     .add-dashboard {
-        color : var(--dashboard-add-widget-color) !important;
+        color: var(--dashboard-add-widget-color) !important;
     }
-    
+
     .drag-cursor {
-        cursor : grab;
-        
+        cursor: grab;
+
         &:active {
-            cursor : grabbing;
+            cursor: grabbing;
         }
     }
-    
+
     .dashboard-list {
-        overflow-y : auto;
+        overflow-y: auto;
     }
-    
+
     nx-editable-heading {
-        max-width     : calc(100% - 16px);
-        margin-left   : 12px;
-        margin-bottom : 12px;
+        max-width: calc(100% - 16px);
+        margin-left: 12px;
+        margin-bottom: 12px;
     }
-    
+
     .menu-heading {
-        display     : flex;
-        align-items : center;
+        display: flex;
+        align-items: center;
     }
-    
+
     .settings-icon {
-        cursor : pointer;
-        margin : 0 12px 12px 0;
+        cursor: pointer;
+        margin: 0 12px 12px 0;
     }
-    
+
     .settings-menu {
-        position   : absolute;
-        background : var(--dashboard-settings-menu-bg);
-        top        : 0;
-        left       : 100%;
-        height     : calc(100vh - 48px);
-        box-shadow : var(--dashboard-settings-menu-shadow);
-        overflow-x : hidden;
-        width      : 0;
-        opacity    : 0.5;
-        animation  : show-menu 50ms ease-out forwards;
-        
-        & > .settings-wrap {
-            min-width : 240px;
-            
-            & > .settings-heading {
-                display     : flex;
-                align-items : center;
-                padding-top : 8px;
-                
-                & > h3 {
+        position: absolute;
+        background: var(--dashboard-settings-menu-bg);
+        top: 0;
+        left: 100%;
+        height: calc(100vh - 48px);
+        box-shadow: var(--dashboard-settings-menu-shadow);
+        overflow-x: hidden;
+        width: 0;
+        opacity: 0.5;
+        animation: show-menu 50ms ease-out forwards;
+
+        &>.settings-wrap {
+            min-width: 240px;
+
+            &>.settings-heading {
+                display: flex;
+                align-items: center;
+                padding-top: 8px;
+
+                &>h3 {
                     @include typography.medium20nocolor;
-                    margin : 8px 0 16px 16px;
-                    width  : 100%;
+                    margin: 8px 0 16px 16px;
+                    width: 100%;
                 }
             }
-            
-            & > .dashboard-actions {
-                padding : 4px 0;
-                
-                & > .menu-item {
-                    text-decoration : none !important;
-                    
+
+            &>.dashboard-actions {
+                padding: 4px 0;
+
+                &>.menu-item {
+                    text-decoration: none !important;
+
                     &:hover,
                     &:active {
-                        background : $light7 !important;
-                        color      : $dark9 !important;
+                        background: $light7  !important;
+                        color: $dark9  !important;
                     }
                 }
             }
         }
     }
-    
+
     @keyframes show-menu {
         0% {
-            width   : 0;
-            opacity : 0.5;
+            width: 0;
+            opacity: 0.5;
         }
+
         100% {
-            width   : 240px;
-            opacity : 1;
+            width: 240px;
+            opacity: 1;
         }
     }
-    
+
     .sidebar-toggling-ear--wrapper {
-        position  : fixed;
-        top       : calc(50% - 40px / 2);
-        transform : translateX(-12px);
-        width     : 16px;
-        height    : 40px;
-        z-index   : 100;
-        
+        position: fixed;
+        top: calc(50% - 40px / 2);
+        transform: translateX(-12px);
+        width: 16px;
+        height: 40px;
+        z-index: 100;
+
         @include bootstrap.media-breakpoint-down(md) {
-            top    : calc(50% - 70px / 2);
-            width  : 50px;
-            height : 70px;
+            top: calc(50% - 70px / 2);
+            width: 50px;
+            height: 70px;
         }
-        
+
         &.open {
             .sidebar-toggling-ear {
-                transform     : rotate(0deg);
-                border-radius : 0 2px 2px 0;
+                transform: rotate(0deg);
+                border-radius: 0 2px 2px 0;
             }
         }
-        
+
         .sidebar-toggling-ear {
-            width               : 16px;
-            height              : 40px;
-            background-color    : var(--additional_light2);
-            background-image    : url("arrow-left.png");
-            background-position : center center;
-            background-repeat   : no-repeat;
-            background-size     : 16px 16px;
-            cursor              : pointer;
-            opacity             : 0.8;
-            
+            width: 16px;
+            height: 40px;
+            background-color: var(--additional_light2);
+            background-image: url("arrow-left.png");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            cursor: pointer;
+            opacity: 0.8;
+
             &:hover {
-                opacity : 1;
+                opacity: 1;
             }
-            
+
             @include bootstrap.media-breakpoint-down(md) {
-                margin-top : 15px;
+                margin-top: 15px;
             }
-            
-            transform           : rotate(180deg);
-            border-radius       : 2px 0 0 2px;
+
+            transform : rotate(180deg);
+            border-radius : 2px 0 0 2px;
         }
     }
 }

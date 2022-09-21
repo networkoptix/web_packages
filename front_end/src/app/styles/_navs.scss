@@ -1,4 +1,4 @@
-@use '../../styles/theme_palette' as *;
+@use 'theme_palette' as *;
 
 .arrow-flip {
     svg-icon {
@@ -9,10 +9,12 @@
         -moz-transition: .2s ease-in-out;
         -o-transition: .2s ease-in-out;
         transition: .2s ease-in-out;
+
         svg {
             width: 18px;
             height: 18px;
-            g polyline{
+
+            g polyline {
                 stroke: var(--btn-dropdown-toggle-color);
                 stroke-width: 2px;
                 fill: none;
@@ -21,8 +23,12 @@
     }
 }
 
-.dropdown-show, .multi-select-show, .cam-table-show,
-.permissions-show, .header-nav-show, .dynamic-table-show {
+.dropdown-show,
+.multi-select-show,
+.cam-table-show,
+.permissions-show,
+.header-nav-show,
+.dynamic-table-show {
     .arrow-flip svg-icon {
         -webkit-transform: rotateX(180deg);
         -moz-transform: rotateX(180deg);
@@ -70,7 +76,8 @@
         top: 0;
     }
 
-    & span:nth-child(2), & span:nth-child(3) {
+    & span:nth-child(2),
+    & span:nth-child(3) {
         top: 9px;
     }
 
@@ -110,27 +117,28 @@
 }
 
 .close {
-    position : absolute;
-    width    : 20px;
-    height   : 20px;
-    opacity  : 1;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 1;
 }
 
 .close:hover {
-    opacity : 1;
+    opacity: 1;
 }
 
-.close:before, .close:after {
-    position         : absolute;
-    content          : ' ';
-    height           : 16px;
-    width            : 1px;
+.close:before,
+.close:after {
+    position: absolute;
+    content: ' ';
+    height: 16px;
+    width: 1px;
 }
 
 .close:before {
-    transform : rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .close:after {
-    transform : rotate(-45deg);
+    transform: rotate(-45deg);
 }

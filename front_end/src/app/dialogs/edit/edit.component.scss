@@ -1,9 +1,10 @@
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/typography";
+@use "theme_variables_common" as *;
+@use "typography";
+
 
 .login-error {
-    border-color : var(--error) !important;
-    color        : var(--error) !important;
+    border-color: var(--error) !important;
+    color: var(--error) !important;
 }
 
 section {
@@ -19,7 +20,9 @@ section {
         @include typography.regular14nocolor;
     }
 
-    label, input, div {
+    label,
+    input,
+    div {
         flex: 0 0 100%;
     }
 

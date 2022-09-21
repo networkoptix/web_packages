@@ -1,5 +1,6 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 .hm-wrapper {
     overflow-y: auto;
@@ -29,7 +30,8 @@ h4 {
     flex-direction: row;
     align-items: stretch;
     gap: 8px;
-    & > div {
+
+    &>div {
         flex: 1;
         padding: 8px;
         background: $additional_light1;
@@ -49,13 +51,15 @@ h4 {
     background: $additional_light2;
 }
 
-.cdk-cell, .cdk-header-cell {
+.cdk-cell,
+.cdk-header-cell {
     border: 1px solid $light3;
     padding: 4px 8px;
 }
 
 h4 svg {
     cursor: pointer;
+
     & * {
         fill: $blue10;
     }
@@ -68,7 +72,8 @@ h4 svg {
     transform-origin: 50% 50%;
 }
 
-.health-monitor-age, .until-update {
+.health-monitor-age,
+.until-update {
     @include typography.regular12light16;
 }
 
@@ -81,6 +86,7 @@ h4 svg {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -89,7 +95,8 @@ h4 svg {
 a {
     color: inherit !important;
     cursor: pointer;
+
     &:hover {
-        color: $brand_core !important;
+        color: $brand_core  !important;
     }
 }

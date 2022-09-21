@@ -3,10 +3,10 @@ import md5 from 'md5';
 import {
     DataStructureMeta
 } from '@pages/developer-console/console/edit/console-edit.component.types';
-
 import {
     ContentSettings, ContextManifest
-} from '../../services/nx-cloud-api/nx-cloud-api.types';
+} from '@services/nx-cloud-api/nx-cloud-api.types';
+
 import {
     DropdownItem
 } from '../dropdowns/generic/dropdown.component.types';

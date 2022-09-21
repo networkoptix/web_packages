@@ -19,8 +19,10 @@ import { environment } from '@environments/environment';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { PLAYBACK_MODE, PlaybackState } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
@@ -35,8 +37,6 @@ import {
 import { VMS_MODE, VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSettingsService } from '../../../settings/settings.service';
 import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
@@ -569,8 +569,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const now = Date.now();
                         const range = new SimpleTimeRange(
                             firstRecordStartTimeMs, showToLive
-                                ? now
-                                : (lastRecordStartTimeMs + lastRecordDuration)
+                            ? now
+                            : (lastRecordStartTimeMs + lastRecordDuration)
                         );
                         const archive = records.map(r => new SimpleTimeRange(
                             parseInt(r.startTimeMs),

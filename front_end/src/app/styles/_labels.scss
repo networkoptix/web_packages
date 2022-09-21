@@ -1,13 +1,13 @@
-@use '../styles/typography';
+@use 'typography';
 
 label {
     @include typography.regular13nocolor;
-    color : var(--label-color) !important;
-    line-height   : 16px;
-    margin-bottom : 8px;
+    color: var(--label-color) !important;
+    line-height: 16px;
+    margin-bottom: 8px;
 
     &.disabled-input-label {
-        opacity : .4;
-        cursor  : default;
+        opacity: .4;
+        cursor: default;
     }
 }

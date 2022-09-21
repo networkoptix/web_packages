@@ -1,26 +1,27 @@
-@use "../../../../../../styles/theme_variables_common" as theme_vars;
-@use "../../../../../styles/_mixins";
+@use "theme_variables_common" as theme_vars;
+@use "_mixins";
+
 
 :host {
     .system-button {
-        user-select : none;
-        cursor      : pointer;
+        user-select: none;
+        cursor: pointer;
         // overflow    : hidden;
 
         h2 {
             @include mixins.ellipsis;
-            color : var(--card-header-text) !important;
+            color: var(--card-header-text) !important;
         }
 
         .old-h12 {
-            color : var(--card-header-text) !important;
+            color: var(--card-header-text) !important;
         }
 
         &.card-condensed {
             .card-body {
-                display          : flex;
-                flex-direction   : column;
-                background-color : var(--card-body-bg);
+                display: flex;
+                flex-direction: column;
+                background-color: var(--card-body-bg);
 
                 // &:hover {
                 //     background-color : var(--card-hover-bg);
@@ -30,7 +31,7 @@
     }
 
     .info-text {
-        font-size     : theme_vars.$h6-font-size;
+        font-size: theme_vars.$h6-font-size;
     }
 
     .system-owner {
@@ -40,7 +41,7 @@
 
     .system-list-bottom-bar {
         height: 2rem;
-        display : flex;
+        display: flex;
         flex-direction: column;
         justify-content: flex-end;
 

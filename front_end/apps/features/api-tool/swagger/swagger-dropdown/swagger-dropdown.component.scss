@@ -1,13 +1,18 @@
-@use "../../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 div.is-disabled {
     &:hover {
         cursor: not-allowed;
     }
-    nx-select, nx-multi-select {
+
+    nx-select,
+    nx-multi-select {
         pointer-events: none;
     }
 }
-nx-select, nx-multi-select {
+
+nx-select,
+nx-multi-select {
     width: 100%;
 }

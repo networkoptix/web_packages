@@ -1,11 +1,12 @@
-@use "../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 .placeholder-text {
-    color  : $light13;
+    color: $light13;
 
     &-no-changes {
         height: 32px;
-        display : flex;
+        display: flex;
     }
 }
 
@@ -20,6 +21,5 @@
 }
 
 .warning-text {
-    color : $red-l2;
+    color: $red-l2;
 }
-

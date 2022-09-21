@@ -1,66 +1,66 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 
 
 .menu-level-2 {
     @include typography.medium13dark9;
-    position         : relative;
-    background-color : $light4;
-    border-radius    : 0;
-    text-decoration  : none;
-    padding-left     : .75rem;
-    padding-right    : .75rem;
-    display          : block;
-    white-space      : nowrap;
-    overflow         : hidden;
-    line-height      : 26px;
+    position: relative;
+    background-color: $light4;
+    border-radius: 0;
+    text-decoration: none;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 26px;
 
     &:hover {
-        background-color : $light5;
+        background-color: $light5;
     }
 
     &:active {
-        background-color : $light6;
+        background-color: $light6;
     }
 
-    & > div {
+    &>div {
         line-height: 26px;
     }
 
     &-icon {
-        float           : left;
-        margin-right    : .5rem;
-        display         : flex;
-        align-items     : center;
-        justify-content : center;
-        width           : 18px;
-        height          : 26px;
+        float: left;
+        margin-right: .5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 26px;
     }
 
     &.selected {
-        background-color : $light16 !important;
-        color : $light1 !important;
+        background-color: $light16  !important;
+        color: $light1  !important;
 
         .user {
-            color : $light1 !important;
+            color: $light1  !important;
         }
 
         .menu-level-2-additional {
-            color       : $light1 !important;
-            font-family : $font-family-regular;
+            color: $light1  !important;
+            font-family: $font-family-regular;
         }
     }
 
     &.item-disabled {
-        color : $light16;
+        color: $light16;
 
         .menu-level-2-additional {
-            color : $light16;
+            color: $light16;
         }
     }
 }
 
 .menu-level-2-additional {
-    color : $light16;
+    color: $light16;
     font-family: $font-family-regular;
 }

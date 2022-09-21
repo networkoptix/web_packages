@@ -3,7 +3,7 @@ import {
     OnInit,
 } from '@angular/core';
 
-import { NxMenuService } from '../../../menu/menu.service';
+import { NxMenuService } from '@app/menu/menu.service';
 
 @Component({
     selector: 'nx-arch-svg',
@@ -12,7 +12,7 @@ import { NxMenuService } from '../../../menu/menu.service';
 })
 export class NxArchSvgComponent implements OnInit {
     constructor(
-            private menuService: NxMenuService,
+        private menuService: NxMenuService,
     ) {
     }
 

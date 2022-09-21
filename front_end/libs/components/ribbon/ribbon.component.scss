@@ -1,18 +1,20 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
 
 .ribbon {
     @include typography.regular13nocolor;
     color: var(--ribbon-color);
-    background-color : var(--ribbon-bg);
-    line-height      : 1rem;
-    border-bottom    : 1px solid var(--ribbon-border);
-    padding          : .5rem 1rem;
-    display          : flex;
-    align-items      : center;
+    background-color: var(--ribbon-bg);
+    line-height: 1rem;
+    border-bottom: 1px solid var(--ribbon-border);
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
 
     .message {
-        flex : 70%;
+        flex: 70%;
+
         &-content {
             position: relative;
             display: flex;
@@ -26,20 +28,20 @@
     }
 
     .action {
-        flex       : 30%;
-        text-align : right;
+        flex: 30%;
+        text-align: right;
 
         a {
             @include typography.regular13nocolor;
-            color : var(--ribbon-color);
-            text-decoration : underline;
+            color: var(--ribbon-color);
+            text-decoration: underline;
 
             &:hover {
-                opacity : .8;
+                opacity: .8;
             }
         }
 
-        & > * {
+        &>* {
             margin-left: 1rem;
         }
     }
@@ -52,28 +54,28 @@
     .message {
         color: var(--ribbon-alert-color);
         text-align: center;
-        
+
         .larger {
             @include typography.regular18nocolor;
         }
-        
+
         .action-link {
             span {
-                color : var(--ribbon-alert-color);
+                color: var(--ribbon-alert-color);
             }
-        
+
             &:hover {
                 span {
-                    color : var(--ribbon-alert-color);
+                    color: var(--ribbon-alert-color);
                 }
-            
+
                 svg * {
-                    stroke : var(--ribbon-alert-color);
+                    stroke: var(--ribbon-alert-color);
                 }
             }
-        
+
             svg * {
-                stroke : var(--ribbon-alert-color);
+                stroke: var(--ribbon-alert-color);
             }
         }
     }
@@ -86,7 +88,7 @@
 .message-content-wrapper {
     display: flex;
     align-items: center;
-    
+
     .action-link {
         display: flex;
         align-items: center;
@@ -104,6 +106,7 @@
             span {
                 color: $blue9;
             }
+
             svg * {
                 stroke: $blue9;
             }

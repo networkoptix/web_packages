@@ -1,4 +1,4 @@
-@use "../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
 @import "./main-button.component.scss";
 
 .st0 {
@@ -10,53 +10,54 @@
 .main-button {
     background: var(--btn-header-webadm-main-bg) !important;
     border: 1px solid transparent !important;
-    
-    & > .dropdown {
-        & > #systemsDropdown {
+
+    &>.dropdown {
+        &>#systemsDropdown {
             color: var(--btn-header-webadm-main-color) !important;
         }
 
-        &.show > #systemsDropdown{
+        &.show>#systemsDropdown {
             border: 1px solid var(--btn-header-webadm-main-hover-bg) !important;
             background: var(--btn-header-webadm-main-hover-bg) !important;
-            
+
             &:hover {
                 background: 1px var(--btn-header-webadm-main-hover-bg) !important;
                 border: 1px solid var(--btn-header-webadm-main-hover-bg) !important;
             }
+
             &:active {
                 background: var(--btn-header-webadm-main-hover-bg) !important;
                 border: 1px solid var(--btn-header-webadm-main-hover-bg) !important;
             }
         }
 
-        &:not(.show) > #systemsDropdown {
+        &:not(.show)>#systemsDropdown {
             background: var(--btn-header-webadm-main-bg) !important;
             color: var(--btn-header-webadm-main-color) !important;
             border: 1px solid transparent !important;
-            
+
             &:hover {
                 background: var(--btn-header-webadm-main-hover-bg) !important;
             }
-            
+
             &:active {
                 background: var(--btn-header-webadm-main-active-bg) !important;
             }
         }
-        
+
         &::after {
             content: "";
             background: var(--btn-header-webadm-main-bg) !important;
         }
     }
 
-    & > svg-icon > svg > .st0{
-        fill: $light16 !important;
-        stroke : none !important;
+    &>svg-icon>svg>.st0 {
+        fill: $light16  !important;
+        stroke: none !important;
     }
 }
 
 .icon-wrapper .st0 {
-    fill   : $additional_light1 !important;
-    stroke : none;
+    fill: $additional_light1  !important;
+    stroke: none;
 }

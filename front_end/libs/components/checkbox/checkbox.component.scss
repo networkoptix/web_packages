@@ -1,179 +1,184 @@
-@use "../../../styles/theme_variables_common";
-@use "../../../styles/theme_palette" as *;
+@use "theme_variables_common";
+@use "theme_palette" as *;
+
 
 @mixin checkboxSvgColor($box, $mark) {
     svg {
-        height : 24px;
-        width  : 24px;
+        height: 24px;
+        width: 24px;
 
         & polygon.box {
-            fill              : none;
-            stroke            : $box;
-            stroke-linecap    : round;
-            stroke-linejoin   : round;
-            stroke-miterlimit : 10;
+            fill: none;
+            stroke: $box;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-miterlimit: 10;
         }
 
         & polyline.box {
-            fill              : none;
-            stroke            : $box;
-            stroke-linecap    : round;
-            stroke-linejoin   : round;
-            stroke-miterlimit : 10;
-            stroke-width      : 1px;
-            display           : none;
+            fill: none;
+            stroke: $box;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-miterlimit: 10;
+            stroke-width: 1px;
+            display: none;
         }
 
         & polyline.tick {
-            fill              : none;
-            stroke            : $mark;
-            stroke-width      : 2px;
-            stroke-linecap    : round;
-            stroke-linejoin   : round;
-            stroke-miterlimit : 10;
-            display           : none;
+            fill: none;
+            stroke: $mark;
+            stroke-width: 2px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-miterlimit: 10;
+            display: none;
         }
-        
+
         & rect.focus {
-            display           : none;
+            display: none;
         }
 
         & line.tristate {
-            fill              : none;
-            stroke            : $mark;
-            stroke-width      : 2px;
-            stroke-linecap    : round;
-            stroke-linejoin   : round;
-            stroke-miterlimit : 10;
-            display           : none;
+            fill: none;
+            stroke: $mark;
+            stroke-width: 2px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-miterlimit: 10;
+            display: none;
         }
     }
 }
 
 @mixin checkboxSvgStateColors($hover, $checked, $checkedHover, $halfChecked, $checkHoverColor) {
-    input:hover ~ .tick {
+    input:hover~.tick {
+
         svg polygon.box,
         svg polyline.box {
-            stroke : $hover;
+            stroke: $hover;
         }
 
         svg polyline.tick {
-            stroke : $checkHoverColor;
+            stroke: $checkHoverColor;
         }
 
-        & ~ .labelText {
-            color : var(--checkbox-hover-color);
-        }
-    }
-
-    input:active ~ .tick {
-        svg polygon.box,
-        svg polyline.box {
-            stroke : $checked !important;
-        }
-
-        & ~ .labelText {
-            color : $checked !important;
+        &~.labelText {
+            color: var(--checkbox-hover-color);
         }
     }
 
-    input:hover ~ .tick.checked {
+    input:active~.tick {
+
         svg polygon.box,
         svg polyline.box {
-            stroke : $checkedHover !important;
+            stroke: $checked  !important;
+        }
+
+        &~.labelText {
+            color: $checked  !important;
+        }
+    }
+
+    input:hover~.tick.checked {
+
+        svg polygon.box,
+        svg polyline.box {
+            stroke: $checkedHover  !important;
         }
 
         svg polyline.tick {
-            stroke : $checkHoverColor !important;
+            stroke: $checkHoverColor  !important;
         }
 
-        & ~ .labelText {
-            color : $checkedHover !important;
+        &~.labelText {
+            color: $checkedHover  !important;
         }
     }
-    
-    input:focus ~ .tick {
+
+    input:focus~.tick {
         svg .focus {
-            display      : block;
-            stroke       : var(--brand-d1) !important;
-            stroke-width : 2;
-            fill         : none;
-            
+            display: block;
+            stroke: var(--brand-d1) !important;
+            stroke-width: 2;
+            fill: none;
+
             &.outer {
-                opacity : 0.3;
+                opacity: 0.3;
             }
         }
     }
 
     &[disabled] {
-        opacity : .3;
+        opacity: .3;
 
         .tick {
-            cursor : default;
+            cursor: default;
         }
 
-        input:hover ~ .tick {
+        input:hover~.tick {
+
             svg polygon.box,
             svg polyline.box {
-                stroke : $halfChecked !important;
+                stroke: $halfChecked  !important;
             }
         }
     }
 
     label {
         &:hover:not([disabled]) {
-            color : $hover;
+            color: $hover;
         }
 
         &:active:not([disabled]) {
-            color : $checked !important;
+            color: $checked  !important;
         }
     }
 }
 
 nx-checkbox {
-    & + label {
-        line-height : 24px;
-        margin-left : 2px;
+    &+label {
+        line-height: 24px;
+        margin-left: 2px;
     }
-    
-    & + label + div.input-error {
-        display : none;
+
+    &+label+div.input-error {
+        display: none;
     }
 
     &.ng-invalid:not(.ng-untouched) {
-        & + label + div.input-error {
-            display : block;
+        &+label+div.input-error {
+            display: block;
         }
 
         .nx-checkbox {
-            input ~ .tick {
+            input~.tick {
+
                 svg polygon.box,
                 svg polyline.box {
-                    stroke : var(--error);
+                    stroke: var(--error);
                 }
             }
         }
     }
 
     .nx-checkbox {
-        display : flex;
-        float   : left;
-        margin  : 0;
-        line-height : 24px;
+        display: flex;
+        float: left;
+        margin: 0;
+        line-height: 24px;
 
         input[type="checkbox"] {
-            position : absolute;
-            opacity  : 0;
-            
-            & + .tick + .labelText {
-                color : var(--checkbox-color),;
+            position: absolute;
+            opacity: 0;
+
+            &+.tick+.labelText {
+                color: var(--checkbox-color), ;
             }
         }
 
         &.desktop {
-            @include checkboxSvgStateColors(
-                $light8,
+            @include checkboxSvgStateColors($light8,
                 $light4,
                 $light1,
                 $light4,
@@ -182,8 +187,7 @@ nx-checkbox {
         }
 
         &:not(.desktop) {
-            @include checkboxSvgStateColors(
-                var(--checkbox-hover-color),
+            @include checkboxSvgStateColors(var(--checkbox-hover-color),
                 var(--checkbox-active-color),
                 var(--checkbox-active-hover-color),
                 var(--checkbox-active-color),
@@ -191,12 +195,12 @@ nx-checkbox {
             );
         }
 
-        & + label {
-            cursor        : pointer;
-            margin-bottom : 0;
+        &+label {
+            cursor: pointer;
+            margin-bottom: 0;
 
-            & + div.input-error {
-                display : none;
+            &+div.input-error {
+                display: none;
             }
         }
     }
@@ -210,27 +214,28 @@ nx-checkbox {
     }
 
     .tick {
-        cursor                      : pointer;
-        position                    : relative;
-        width                       : 24px;
-        height                      : 24px;
-        display                     : flex;
-        align-items                 : center;
-        -webkit-tap-highlight-color : transparent;
+        cursor: pointer;
+        position: relative;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        -webkit-tap-highlight-color: transparent;
 
         &.checked {
             svg {
+
                 polyline.box,
                 polyline.tick {
-                    display : block;
+                    display: block;
                 }
 
                 polyline.tick {
-                    stroke  : var(--checkbox-check-color);
+                    stroke: var(--checkbox-check-color);
                 }
 
                 polygon.box {
-                    display : none;
+                    display: none;
                 }
 
 

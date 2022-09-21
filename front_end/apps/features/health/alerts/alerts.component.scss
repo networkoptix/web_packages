@@ -1,5 +1,5 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 nx-system-alerts-component {
@@ -56,40 +56,43 @@ nx-system-alerts-component {
         }
     }
 
-    @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
+    @media screen and (-ms-high-contrast : active),
+    screen and (-ms-high-contrast : none) {
         .gridMetricContent {
-            display : flex;
+            display: flex;
 
             .gridMetricContentPanelComponent {
-                width       : 30%;
-                min-width   : 350px;
-                margin-left : 1rem;
+                width: 30%;
+                min-width: 350px;
+                margin-left: 1rem;
             }
 
             &.fixedLayout {
                 &--with-panel {
                     .gridMetricContentComponent {
-                        width         : 70%;
-                        padding-right : 1rem;
+                        width: 70%;
+                        padding-right: 1rem;
 
                         @include bootstrap.media-breakpoint-down(xxl) {
-                            width : 55%;
+                            width: 55%;
                         }
                     }
 
                     .gridMetricContentPanelComponent {
-                        width : 30%;
-                        margin-left : 0;
+                        width: 30%;
+                        margin-left: 0;
 
                         @include bootstrap.media-breakpoint-down(lg) {
-                            width : 100%;
+                            width: 100%;
                         }
                     }
                 }
 
                 &--no-panel {
-                    .gridMetricContentComponent, .gridMetricContentPanelComponent {
-                        width : 100%;
+
+                    .gridMetricContentComponent,
+                    .gridMetricContentPanelComponent {
+                        width: 100%;
                     }
                 }
             }
@@ -99,9 +102,11 @@ nx-system-alerts-component {
     .card-container {
         min-width: 135px;
         max-width: 165px;
+
         @include bootstrap.media-breakpoint-down(lg) {
             min-width: 165px;
         }
+
         // If grid-breakpoint sm is used at a width of 567px the bottom card takes entire row
         @media (max-width: 566px) {
             flex-grow: 1;
@@ -129,33 +134,33 @@ nx-system-alerts-component {
 
     .nx-search .drop-container {
         .drop {
-            max-width : none;
-            flex-grow : 1;
+            max-width: none;
+            flex-grow: 1;
 
             @include bootstrap.media-breakpoint-down(lg) {
-                min-width : 100px;
+                min-width: 100px;
                 padding-right: 0;
             }
 
             @include bootstrap.media-breakpoint-down(xl) {
-                min-width     : 100px;
+                min-width: 100px;
             }
 
             // "Clear" button
             &:last-of-type {
                 .btn-text {
                     @include typography.light15light16;
-                    float         : right !important;
-                    padding-right : 2px; // align visually - table border create a illusion that button text is not aligned
+                    float: right !important;
+                    padding-right: 2px; // align visually - table border create a illusion that button text is not aligned
                 }
             }
 
             &.large {
-                min-width : 300px;
-                flex-grow : 2;
+                min-width: 300px;
+                flex-grow: 2;
 
                 @include bootstrap.media-breakpoint-down(xl) {
-                    min-width : 160px;
+                    min-width: 160px;
                 }
             }
         }

@@ -1,58 +1,64 @@
-@use "../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 .card {
     &--body {
-        border-top : 1px solid var(--border-color);
-        padding    : 1rem;
+        border-top: 1px solid var(--border-color);
+        padding: 1rem;
 
         &-subheader {
-            height      : 2rem;
-            margin-top  : .5rem;
-            display     : flex;
-            align-items : center;
+            height: 2rem;
+            margin-top: .5rem;
+            display: flex;
+            align-items: center;
 
             h3 {
-                margin : 0;
+                margin: 0;
             }
         }
-    
+
         &-content {
-            h2, h3, h4 {
-                margin-top    : $line-height-computed;
-                margin-bottom : $line-height-computed;
-                color         : var(--card-header-text) !important;
+
+            h2,
+            h3,
+            h4 {
+                margin-top: $line-height-computed;
+                margin-bottom: $line-height-computed;
+                color: var(--card-header-text) !important;
             }
         }
 
         &-logo {
-            float               : left;
-            display             : flex;
-            align-items         : center;
-            height              : rem(48px);
-            max-width           : 160px;
-            background-size     : contain;
-            width               : 100%;
-            background-position : left center;
-            background-repeat   : no-repeat;
+            float: left;
+            display: flex;
+            align-items: center;
+            height: rem(48px);
+            max-width: 160px;
+            background-size: contain;
+            width: 100%;
+            background-position: left center;
+            background-repeat: no-repeat;
         }
 
         &-spacer {
-            margin-top : 1rem;
+            margin-top: 1rem;
         }
 
         &-heading {
             margin-bottom: .5rem !important;
 
             h4 {
-                margin      : 0;
-                line-height : 24px;
+                margin: 0;
+                line-height: 24px;
             }
         }
 
         &.section {
-            padding-top : 0;
-            &.no-spacing{
+            padding-top: 0;
+
+            &.no-spacing {
                 padding-bottom: 0;
+
                 .card--body-spacer {
                     margin-top: 0;
                 }
@@ -60,28 +66,28 @@
         }
 
         &.fixed {
-            height   : rem(200px);
-            overflow : hidden;
+            height: rem(200px);
+            overflow: hidden;
         }
 
-        & > div > *:last-child {
-            margin-bottom : 0;
+        &>div>*:last-child {
+            margin-bottom: 0;
         }
     }
 
     &--separator {
-        margin        : 0 -1rem !important;
-        height        : 1px;
-        border-bottom : 1px solid var(--border-color);
+        margin: 0 -1rem !important;
+        height: 1px;
+        border-bottom: 1px solid var(--border-color);
     }
 
     &.gray {
-        background-color : var(--grey-section-bg);
-        border           : 1px solid var(--grey-section-bg);
-        border-bottom    : none;
+        background-color: var(--grey-section-bg);
+        border: 1px solid var(--grey-section-bg);
+        border-bottom: none;
 
         .card--separator {
-            border-bottom-color : var(--border-color);
+            border-bottom-color: var(--border-color);
         }
     }
 
@@ -95,6 +101,3 @@
         line-height: 1rem;
     }
 }
-
-
-

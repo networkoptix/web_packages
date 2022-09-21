@@ -1,4 +1,5 @@
-@use "../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
+
 
 .dropdown-menu {
     position: fixed !important;
@@ -11,12 +12,12 @@
     border-top: var(--dropdown-menu-top-border) !important;
     border-radius: 2px !important;
     overflow: hidden;
-    
+
     &--list {
         max-height: calc(100vh - 56px) !important;
     }
 
-    @media screen  and (max-width: 992px) {
+    @media screen and (max-width: 992px) {
         margin: 0 !important;
         width: 100% !important;
     }
@@ -39,6 +40,7 @@
 
     .ellipsis {
         display: none;
+
         @media (min-width: $collapse-second-width + 1) {
             display: block;
         }
@@ -46,6 +48,7 @@
 
     .systems-label {
         display: none;
+
         @media (min-width: $collapse-first-width + 1) {
             display: block;
         }
@@ -75,7 +78,7 @@
 
 .systems-grid {
     @extend .base-grid;
-    background-color : var(--drop-menu-systems-bg);
+    background-color: var(--drop-menu-systems-bg);
     padding: 16px;
 }
 
@@ -83,6 +86,7 @@
     @extend .base-grid;
     background-color: var(--drop-menu-navigation-bg);
     padding: 24px 16px 18px 16px !important;
+
     &:not(.top-border) {
         background: var(--drop-menu-systems-bg);
     }

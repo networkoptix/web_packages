@@ -1,5 +1,5 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 nx-system-health-component {
@@ -22,7 +22,7 @@ nx-system-health-component {
       grid-template-columns: $grid-wide-menu-width $grid-wide-content-width;
 
       @media (min-width : 1920px) {
-        grid-template-columns : $grid-super-wide-menu-width $grid-super-wide-content-width;
+        grid-template-columns: $grid-super-wide-menu-width $grid-super-wide-content-width;
       }
     }
 
@@ -44,30 +44,31 @@ nx-system-health-component {
     // }
   }
 
-  @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
+  @media screen and (-ms-high-contrast : active),
+  screen and (-ms-high-contrast : none) {
     .mainGrid {
-      display : flex;
+      display: flex;
 
       &.mobileLayout {
-        flex-direction : column;
+        flex-direction: column;
 
         .gridMenu {
-          width   : 100%;
-          padding : 0;
+          width: 100%;
+          padding: 0;
         }
 
         .gridContent {
-          width : 100%;
+          width: 100%;
         }
       }
 
       .gridMenu {
-        width         : 25%;
-        padding-right : 1rem;
+        width: 25%;
+        padding-right: 1rem;
       }
 
       .gridContent {
-        width : 75%;
+        width: 75%;
       }
     }
   }
@@ -130,7 +131,8 @@ nx-system-health-component {
         fill: var(--dark15);
       }
 
-      &:focus, &:active {
+      &:focus,
+      &:active {
         svg * {
           fill: var(--light16);
         }
@@ -153,7 +155,7 @@ nx-system-health-component {
 
   .contentZone {
     @include typography.light14light16;
-    text-align : center;
+    text-align: center;
   }
 
   .importInfo {
@@ -166,8 +168,9 @@ nx-system-health-component {
 
 .support-button {
   margin-top: 40px !important;
+
   a {
-      text-decoration: none !important;
-      color: inherit !important;
+    text-decoration: none !important;
+    color: inherit !important;
   }
 }

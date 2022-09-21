@@ -1,40 +1,41 @@
-@use '../../../../../styles/typography';
+@use 'typography';
 
 label {
-    cursor : pointer;
+    cursor: pointer;
 
     &.control-label {
-        color : var(--dark9);
+        color: var(--dark9);
         text-align: left;
 
         &:hover {
-            color : var(--dark1);
+            color: var(--dark1);
         }
     }
 }
 
 .helper-block {
     @include typography.regular12light;
-    margin      : 2px 0 8px 22px;
-    line-height : 16px;
+    margin: 2px 0 8px 22px;
+    line-height: 16px;
 }
 
-.disabled-helper-block, .disabled-label {
-    opacity : 0.3;
-    cursor  : default;
+.disabled-helper-block,
+.disabled-label {
+    opacity: 0.3;
+    cursor: default;
 }
 
-nx-block div.checkbox-block:last-of-type + .helper-block {
-    margin-bottom : 0;
+nx-block div.checkbox-block:last-of-type+.helper-block {
+    margin-bottom: 0;
 }
 
 .time-unit-input {
-    width        : 70px !important;
-    margin-right : 8px;
+    width: 70px !important;
+    margin-right: 8px;
 }
 
 .time-unit-select {
-    width : 110px;
+    width: 110px;
 }
 
 .session-alert {

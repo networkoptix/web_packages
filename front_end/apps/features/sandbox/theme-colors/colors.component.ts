@@ -3,28 +3,28 @@ import {
     OnInit,
 } from '@angular/core';
 
-import { NxMenuService } from '../../../menu/menu.service';
+import { NxMenuService } from '@app/menu/menu.service';
 
 const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --alt-body-bg : #000000; //$dark1;
             --body-text-color : #A5B7C0; //$light10;
-        
+
             --header-bg                  : #212A2F; //$dark7;
             --header-border-color        : transparent;
             --header-webadm-bg           : #212A2F; //$dark7;
             --header-webadm-border-color : transparent;
-        
+
             --ribbon-bg     : var(--brand-d3);
             --ribbon-border : var(--brand-d4);
             --ribbon-color  : #{$light4};
-        
+
             --ribbon-alert-bg : #{$yellow_d2};
             --ribbon-alert-border : #{$yellow_d2};
             --ribbon-alert-color : #1C2327; //$dark6;
-        
+
             --image-box-border-color : #303F47; //$dark10;
             --image-box-selected-border-color : var(--brand-d1);
-        
+
             --storage-size-available : #E1E7EA; //$light4
             --storage-size-reserved : repeating-linear-gradient(
                         -45deg,
@@ -34,15 +34,15 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
                         #{$light6} 9px
             );
             --storage-size-reserved-border : #{$light6};
-        
+
             --search-link-color               : #F5F7F8; // $light2;
             --search-link-hover-color         : #CDD7DC; // $light6;
             --search-link-visited-color       : #CDD7DC; // $light6;
             --search-link-visited-hover-color : #B9C7CE; // $light8;
             --search-highlight-color          : rgba(var(--brand_d1--rgb), 0.8);
-        
+
             --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
-        
+
             --spot-gradient : radial-gradient(
                             ellipse farthest-corner at center center,
                             #303F47 0,
@@ -56,7 +56,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
                             #080707 30%,
                             #000000 40%
             );
-        
+
             --h1 : #E1E7EA; //$light4;
             --h2 : #E1E7EA; //$light4;
             --h3 : #E1E7EA; //$light4;
@@ -64,28 +64,28 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --h5 : #E1E7EA; //$light4;
             --h6 : #E1E7EA; //$light4;
             --h7 : #E1E7EA; //$light4;
-        
+
             --elements-disabled : #3A4D57; //$dark12;
-        
+
             --svg-std-icon-fill : #587785; //$dark18;
             --svg-path-light-color : #2B383F; //$dark9;
             --svg-path-dark-color  : #E1E7EA; //$light4;
-        
+
             --text-placeholder-color : #587785; //$dark18;
-        
+
             --scrollbar-color                   : #35464F; //$light16;
             --scrollbar-thumb-bg                : #A5B7C0; //$light10;
             --scrollbar-thumb-border-color      : #2B383F; //$dark9;
             --menu-scrollbar-thumb-border-color : #2B383F; //$dark9;
-        
+
             --tooltip-shadow-color : #000000;  //$dark1;
             --tooltip-bg : #3F545F; //$dark13;
             --tooltip-color : #E1E7EA; //$light4;
-        
+
             --popover-shadow-color : none;
             --popover-bg           : #3F545F; //$dark13;
             --popover-color        : #E1E7EA; //$light4;
-        
+
             --radio-color              : #A5B7C0; //$light10;
             --radio-check-color        : var(--brand-d1);
             --radio-hover-color        : #E1E7EA; //$light4;
@@ -93,7 +93,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --radio-active-color       : #A5B7C0; //$light10;
             --radio-active-check-color : var(--brand-l1);
             --radio-active-hover-color : #E1E7EA; //$light4;
-        
+
             --checkbox-color              : #A5B7C0; //$light10;
             --checkbox-check-color        : var(--brand-d1);
             --checkbox-hover-color        : #E1E7EA; //$light4;
@@ -101,19 +101,19 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --checkbox-active-color       : #F5F7F8; //$light2;
             --checkbox-active-check-color : var(--brand-l1);
             --checkbox-active-hover-color : #E1E7EA; //$light4;
-        
+
             --auth-header-bg : #1C2327; //$dark6;
             --auth-header-color : #E1E7EA; //$light4;
             --auth-subheader-color : #A5B7C0; //$light10;
             --auth-body-bg : #121517; //$dark4;
             --auth-pill-bg : #3A4D57; //$dark11;
-        
+
             --border-color         : #35464F; //$dark11;
             --border-hover-color   : #263137; //$dark8;
             --border-active-color  : #1C2327; //$dark6;
             --horizontal-sep-color : #2B383F; //$dark9;
             --label-color          : #E1E7EA; //light4;
-        
+
             --placehoder-cloud-color   : #171C1F; //$dark5
             --placehoder-cloud-opacity : 0;
             --placeholder-light-color : #E1E7EA; //$light4;
@@ -122,13 +122,13 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --placeholder-accent2-color : #{$light12};
             --placehoder-title-color   : #E1E7EA; //$light4;
             --placehoder-body-color    : #A5B7C0; //light10;
-        
+
             --progress-bar-color                  : #4E6977; //$dark16
             --progress-bar-border-color           : #4E6977; //$dark16
             --progress-bar-reindex-color          : var(--brand-d1);
             --progress-bar-heder-title-color      : var(--brand-d1);
             --progress-bar-heder-persentage-color : #E1E7EA; //$light4
-        
+
             --switch-slider-bg            : #3A4D57; //$dark12;
             --switch-slider-hover-bg      : #445B67; //$dark14;
             --switch-disabled-color       : #3A4D57; //$dark12;
@@ -139,21 +139,21 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --switch-bar-color            : #3A911E; //$green_main};
             --switch-bar-hover-color      : #44A624; //$green_l1};
             --switch-bar-disable-color    : #263137; //$dark8;
-        
+
             --switch-warning-color        : #8E1717; //$red_d2;
             --switch-warning-hover-color  : #AA1E1E; //$red_d1;
             --switch-warning-circle-color : #{$red_d1};
             --switch-circle-off-color         : #263137; //$dark9;
             --switch-circle-off-hover-color   : #C22626; //$red_main;
             --switch-circle-off-disable-color : #2B383F; //$dark9;
-        
+
             --switch-circle-color         : #263137; //$dark9;
             --switch-circle-hover-color   : #C22626; //$red_main;
             --switch-circle-disable-color : #2B383F; //$dark9;
-        
+
             --developer-menu-bg: #171C1F; //$dark5;
             --developer-menu-base-color : #879FAB; //$light13;
-        
+
             // *** arch svg ***********************
             --arch-svg-dash-stroke              : var(--brand-d6);
             --arch-svg-solid-path-arrow-fill    : #E1E7EA; //$light4;
@@ -175,7 +175,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --arch-svg-server-hover-fill        : #212A2F; //$dark7;
             --arch-svg-transparent-tile-stroke  : #587787; //$dark18
             // ***************************************
-        
+
             --left-menu-border-color                    : transparent;
             --left-menu-l1-bg                           : transparent;
             --left-menu-l1-bg-hover                     : #3A4D57; //$dark11;
@@ -195,7 +195,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --left-menu-l3-selected-color               : #F5F7F8; //$light2;
             --left-menu-disabled-item-color             : #3F545F; //$dark13;
             --left-menu-disabled-item-addtitional-color : #445B67; //$dark14;
-        
+
            // New header ******************************
            --header-level-one-color              : #{$light13};
            --header-level-one-bg                 : #{$dark4};
@@ -208,7 +208,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
            --header-arrow-hover                  : #{$dark8};
            --header-nav-arrow-bg                 : #{$dark7};
            --header-logout-action-color          : #{$light16};
-        
+
            // Mobile header
            --mobile-header-bg                    : #{$dark4};
            --mobile-level-one-color              : #{$dark15};
@@ -220,7 +220,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
            --mobile-header-item-nav-arrow        : #{$dark13};
            --mobile-header-logout-btn-bg         : #{$dark12};
            --mobile-header-logout-btn-color      : #{$light2};
-        
+
            // Header profile dropdown
            --header-profile-bg                   : #{$dark7};
            --header-profile-color                : #{$light13};
@@ -228,7 +228,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
            --header-profile-hover-color          : #{$light10};
            --header-profile-active-color         : #{$light4};
            --header-profile-active-bg            : #{$dark9};
-        
+
             // View tab ********************************
             --view-bg                    : #171C1F; //$dark5;
             --view-search-bg             : #171C1F; //$dark5;
@@ -237,16 +237,16 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --view-search-hover-color    : #A5B7C0; //$light10;
             --view-search-active-bg      : #0D0E0F; //$dark3;
             --view-search-active-color   : #E1E7EA; //$light4;
-        
+
             --control-color              : #303F47; //dark10;
             --control-enabled-color      : #587785; //$dark18;
             --control-hoved-bg           : #0D0E0F; //$dark3;
             --control-active-bg          : #0D0E0F; //$dark3;
-        
+
             --left-menu-view-hover-bg    : #263137; //$dark8;
             --left-menu-view-selected-bg : #35464F; //$light16;
             // end View tab ****************************
-        
+
             --time-under-mouse-bg               : rgba(var(--dark9--rgb), 0.9);
             --time-under-mouse-color            : #A5B7C0; //$light10;
             --timeline-bg                       : #171C1F; //$dark5;
@@ -260,32 +260,32 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --timeline-selection-panel-bg       : var(--brand-d3);
             --timeline-selection-panel-color    : #{$light4};
             --timeline-selection-picker         : dark;
-        
+
             --paginator-bg           : #1C2327; //$dark6;
             --paginator-color        : #A5B7C0; //$light10;
             --paginator-hover-bg     : #3A4D57; //$dark12;
             --paginator-hover-color  : #F5F7F8; //$light2;
             --paginator-active-bg    : #35464F; //$dark11;
             --paginator-active-color : #F5F7F8; //$light2;
-        
+
             --btn-download-hover-bg : #A5B7C0; //$light10;
-        
+
             --btn-close-hover-bg : #2B383F; //$dark9;
             --btn-close-hover-color : #A5B7C0; //light10;
             --btn-close-active-bg : #121517; //$dark4;
             --btn-close-active-color : #5F7F8F; //$light17;
-        
+
             --btn-text-color : #E1E7EA; //$light4;
             --btn-text-hover-color : #A5B7C0; //light10;
             --btn-text-active-color : #5F7F8F; //$light17;
-        
+
             --btn-clear-bg    : transparent;
             --btn-clear-color : #E1E7EA; //$light4;
             --btn-clear-hover-bg  : transparent;
             --btn-clear-hover-color  : #A5B7C0; //light10;
             --btn-clear-active-bg : transparent;
             --btn-clear-active-color : #5F7F8F; //$light17;
-        
+
             --btn-dropdown-toggle-bg             : #263137; //$dark8
             --btn-dropdown-toggle-selected-color : #D7DFE3; //$light5;
             --btn-dropdown-toggle-color          : #A5B7C0; //$light10
@@ -294,21 +294,21 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #1C2327; //$dark6;
             --btn-dropdown-toggle-active-bg      : #35464F; //$dark11;
             --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #1C2327; //$dark6;
-        
+
             --btn-tag-bg                 : #3A4D57; //$dark12;
             --btn-tag-color              : #F5F7F8; //$light2;
             --btn-tag-selected-bg        : #49626F; //$dark15;
             --btn-tag-selected-hover-bg  : #35464F; //$dark11;
             --btn-tag-selected-active-bg : #263137; //$dark8
             --btn-tag-selected-color     : #E1E7EA; //$light4;
-        
+
             --btn-arrow-bg             : #3A4D57; //$dark12;
             --btn-arrow-color          : #F5F7F8; //$light2;
             --btn-arrow-hover-bg       : #303F47; //$dark10;
             --btn-arrow-hover-color    : #F5F7F8; //$light2;
             --btn-arrow-selected-bg    : #2B383F; //$dark9;
             --btn-arrow-selected-color : #D7DFE3; //$light5;
-        
+
             --btn-default-bg                : #3A4D57; //$dark12;
             --btn-default-color             : #F5F7F8; //$light2;
             --btn-default-shadow            : none;
@@ -320,7 +320,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --btn-default-active-shadow     : inset 0 1px 0 0 #1C2327; //$dark6;
             --btn-default-focus-shadow      : #{$light14};
             --btn-default-focus-outline-rgb : 125, 151, 164; //$light14;
-        
+
             --btn-primary-bg                : var(--brand-core);
             --btn-primary-color             : #F5F7F8; //$light2;
             --btn-primary-shadow            : none;
@@ -332,7 +332,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --btn-primary-active-shadow     : inset 0 1px 0 0 var(--brand-d4);
             --btn-primary-focus-shadow      : var(--brand-l1);
             --btn-primary-focus-outline-rgb : var(--brand_l1--rgb);
-        
+
             --btn-danger-bg                : #741414; //$red_d3;
             --btn-danger-color             : #F5F7F8; //$light2;
             --btn-danger-shadow            : #5E1010; //red_d4;
@@ -344,54 +344,54 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --btn-danger-active-shadow     : #330909; //$red_d6;
             --btn-danger-focus-shadow      : #{$red_l1};
             --btn-danger-focus-outline-rgb : 217, 42, 42; //$red_l1;
-        
+
             --btn-header-saparator-color : #A5B7C0; //light10;
             --btn-header-main-bg         : transparent;
             --btn-header-main-color      : #E1E7EA; //$light4;
             --btn-header-main-hover-bg   : #35464F; //$dark11;
-        
+
             --btn-header-webadm-main-bg         : transparent;
             --btn-header-webadm-main-color      : #E1E7EA; //$light4;
             --btn-header-webadm-main-hover-bg   : #35464F; //$dark11;
             --btn-header-webadm-main-active-bg  : #49626F; //$dark15;
-        
+
             --dialog-bg : #171C1F; //$dark5;
             --dialog-border-color : #35464F; //$dark11;
             --dialog-header-bg : #1C2327; //$dark6;
-        
+
             --svg-legend-bg : #171C1F; //$dark5;
             --svg-legend-border-color : #35464F; //$dark11;
-        
+
             --light-text-color : #A5B7C0; //light10;
             --light-text-opacity : .4;
-        
+
             --tab-link-hover-bg           : #35464F; //$dark11;
             --tab-link-hover-bottom-color : #1C2327; //$dark6;
             --tab-link-active-bg           : #171C1F; //$dark5;
             --tab-link-active-bottom-color : #171C1F; //$dark5;
             --tab-link-selected-color       : var(--brand-core);
-        
+
             --tab-link-webadm-color               : #E1E7EA; //$light4;
             --tab-link-webadm-hover-bg            : #35464F; //dark11;
             --tab-link-webadm-active-bg           : #171C1F; //$dark5;
-        
+
             --dropdown-menu-arrow-color      : #49626F; //$dark15;
             --dropdown-menu-arrow-fill-color : #121517; //dark4;
-        
+
             --dropdown-menu-border : 1px solid #263137; //$dark8;
             --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
             --dropdown-menu-shadow : none;
             --dropdown-menu-bg : #121517; //dark4;
             --drop-menu-systems-bg    : #171C1F; //$dark5;
             --drop-menu-navigation-bg : #212A2F; //$dark7;
-        
+
             --dropdown-item-color: #A5B7C0; //$light10
             --dropdown-item-active-bg : #2B383F; //$dark9;
             --dropdown-item-hover-bg : #212A2F; //dark7;
             --dropdown-item-hover-color : #A5B7C0; //$light10
             --dropdown-item-selected-bg    : #35464F; //dark11;
             --dropdown-item-selected-color : #E1E7EA; //$light4;
-        
+
             // part of drop-menu
             --system-tile-icon-offline-color : #AA1E1E; //$red_d1
             --system-tile-name-color  : #E1E7EA; //$light4;
@@ -406,7 +406,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --system-tile-nav-link-active-bg           : #35464F; //$dark11;
             --system-tile-nav-link-active-border-color : #35464F; //$dark11;
             // *****************
-        
+
             --swagger-get-bg    : #{$blue12};
             --swagger-put-bg    : #{$orange_d1};
             --swagger-delete-bg : #{$red_d1};
@@ -425,22 +425,22 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --api-tool-section-header: #{$dark1};
             --media-type-bg: #{$dark11};
             --media-type-border: #{$light13};
-        
+
             --footer-color : rgba(var(--light10--rgb), .65);
-        
+
             --tabset-bg : #0D0E0F; //$dark3;
             --tabset-hover-bg : #1C2327; //$dark6;
             --tabset-color : #A5B7C0; //$light10;
-        
+
             --table-alt-row-bg: #171C1F; //$dark5;
             --table-row-hover-bg : #35464F; //$dark11;
-        
+
             --promo-tile-bg : #{$dark4};
             --promo-tile-h4-color : #{$light10};
             --promo-tile-img-1-path : url("/static/images/promo/landing_promo_dark_1.svg");
             --promo-tile-img-2-path : url("/static/images/promo/landing_promo_dark_2.svg");
             --promo-tile-img-3-path : url("/static/images/promo/landing_promo_dark_3.svg");
-        
+
             --toast-danger-bg : var(--red_d3);
             --toast-danger-color : #E1E7EA; //$light4;
             --toast-danger-border-color : var(--red_d3);
@@ -453,44 +453,44 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --toast-info-bg : var(--brand_d3);
             --toast-info-color : #E1E7EA; //$light4;
             --toast-info-border-color : var(--brand_d3);
-        
+
             --card-shadow : none;
             --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;
             --card-header-bg : #1C2327; //$dark6;
             --card-header-text : #E1E7EA; //$light4;
             --card-body-bg   : #121517; //$dark4;
             --card-hover-bg : #263137; //$dark8;
-        
+
             --card-simple-info-bg           : var(--brand_d3);
             --card-simple-info-border-color : var(--brand_d3);
             --card-simple-info-color        : #E1E7EA; //$light4;
             --card-simple-info-svg-color    : #E1E7EA; //$light4;
-        
+
             --card-simple-warning-bg           : var(--yellow_d2);
             --card-simple-warning-border-color : var(--yellow_d2);
             --card-simple-warning-color        : #1C2327; //$dark6;
-        
+
             --card-simple-error-bg           : var(--red_d3);
             --card-simple-error-border-color : var(--red_d3);
             --card-simple-error-color        : #E1E7EA; //$light4;
             --card-simple-error-svg-color    : #E1E7EA; //$light4;
-        
+
             --card-simple-default-bg           : var(--red_d3);
             --card-simple-default-border-color : var(--red_d3);
             --card-simple-default-color        : #E1E7EA; //$light4;
-        
+
             --card-support-bg : #1C2327; //$dark6;
             --card-support-color : #A5B7C0; //$light10;
             --card-support-svg-elem-bg : #D7DFE3; //$light5; #CDD7DC; // $light6;
-        
+
             --card-capability-header-bg : #1C2327; //$dark6;
             --card-capability-intro-color : #A5B7C0; //$light10;
             --card-capability-icon        : var(--brand-d1);
-        
+
             --support-lang-wrapper-bg    : #121517; //$dark4
             --support-lang-wrapper-color : #A5B7C0; //$light10;
             --support-tech-apple-color : #E1E7EA; //$light4;
-        
+
             --input-bg                 : #121517; //$dark4;
             --input-color              : #A5B7C0; //$light10;
             --input-border-color       : #35464F; //$dark11;
@@ -504,10 +504,10 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --input-active-bg           : #0D0E0F; //$dark3;
             --input-active-color        : #E1E7EA; //$light4;
             --input-active-border-color : #5D7E8F; //$dark19;
-        
+
             --input-numeric-arrow-bg    : #121517; //$dark4;
             --input-numeric-arrow-color : #A5B7C0; //$light10;
-        
+
             --badge-opacity : 0.9;
             --badge-base-bg    : #1C2327; //$dark6;
             --badge-base-hover-bg : #2B383F; //$dark9;
@@ -515,7 +515,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --badge-base-selected-bg : #49626F; //$dark15;
             --badge-base-selected-hover-bg  : #35464F;//#{$dark11};
             --badge-base-selected-active-bg : #263137;//#{$dark8};
-        
+
             --badge-default-bg    : #35464F; //$dark11;
             --badge-color : #E1E7EA; //$light4;
             --badge-selected-color : #EBEFF1; //$light3;
@@ -531,10 +531,10 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --badge-info-bg : var(--brand-d4);
             --badge-integration-bg : #3F545F; //$dark13;
             --badge-integration-color : #E1E7EA; //$light4;
-        
+
             --grey-section-bg : #212A2F; //$dark7;
             --grey-section-sep-color : #35464F; //$dark11;
-        
+
             --dashboard-add-widget-color : var(--brand-d2);
             --dashboard-widget-hover-color : var(--brand-core);
             --dashboard-settings-menu-bg : #1C2327; //$dark6;
@@ -599,7 +599,7 @@ export class NxThemeColorsComponent implements OnInit {
     ];
 
     constructor(
-            private menuService: NxMenuService,
+        private menuService: NxMenuService,
     ) {
     }
 

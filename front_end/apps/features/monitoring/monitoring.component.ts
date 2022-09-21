@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { Content } from '@app/menu/menu.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -16,12 +17,10 @@ import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { Content } from '../../menu/menu.types';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@src//language_i18n_static_types';
 
 import { NxMonitoringService } from './monitoring.service';
 
@@ -110,9 +109,9 @@ export class NxMonitoringComponent implements OnInit {
             ) {
                 this.selectedServer.disabled = (server.status !== 'Online');
                 this.monitoringService.selectedServerId =
-                        this.selectedServer.disabled
-                            ? undefined
-                            : server.id; // trigger onChange
+                    this.selectedServer.disabled
+                        ? undefined
+                        : server.id; // trigger onChange
             }
         });
 

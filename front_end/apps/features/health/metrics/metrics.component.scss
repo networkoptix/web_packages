@@ -1,5 +1,5 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 nx-system-metrics-component {
@@ -30,6 +30,7 @@ nx-system-metrics-component {
                     grid-template-columns: $grid-super-wide-table-width $grid-super-wide-panel-width;
                 }
             }
+
             &--no-panel {
                 grid-template-columns: 100%;
             }
@@ -54,38 +55,41 @@ nx-system-metrics-component {
         }
     }
 
-    @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
+    @media screen and (-ms-high-contrast : active),
+    screen and (-ms-high-contrast : none) {
         .gridMetricContent {
-            display : flex;
+            display: flex;
 
             .gridMetricContentPanelComponent {
-                width : 30%;
-                padding-left : 1rem;
+                width: 30%;
+                padding-left: 1rem;
             }
 
             &.fixedLayout {
                 &--with-panel {
                     .gridMetricContentComponent {
-                        width         : 70%;
-                        padding-right : 1rem;
+                        width: 70%;
+                        padding-right: 1rem;
 
                         @include bootstrap.media-breakpoint-down(xxl) {
-                            width : 55%;
+                            width: 55%;
                         }
                     }
 
                     .gridMetricContentPanelComponent {
-                        padding-left : 0;
+                        padding-left: 0;
 
                         @include bootstrap.media-breakpoint-down(lg) {
-                            width : 100%;
+                            width: 100%;
                         }
                     }
                 }
 
                 &--no-panel {
-                    .gridMetricContentComponent, .gridMetricContentPanelComponent {
-                        width : 100%;
+
+                    .gridMetricContentComponent,
+                    .gridMetricContentPanelComponent {
+                        width: 100%;
                     }
                 }
             }
@@ -107,16 +111,16 @@ nx-system-metrics-component {
     }
 
     .nx-table-wrapper .nx-table thead th {
-        &:nth-child(n+2) > .caption .ellipsis {
-            width       : max-content;
-            white-space : unset;
-            line-height : 16px;
+        &:nth-child(n+2)>.caption .ellipsis {
+            width: max-content;
+            white-space: unset;
+            line-height: 16px;
         }
     }
 
     .text-placeholder {
         @include typography.regular20nocolor;
-        color : var(--text-placeholder-color);
-        height      : 2rem;
+        color: var(--text-placeholder-color);
+        height: 2rem;
     }
 }

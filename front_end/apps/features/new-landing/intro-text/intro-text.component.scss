@@ -1,6 +1,7 @@
-@use "../../../../styles/theme_variables_common" as *;
-@use "../../../styles/typography";
-@use "../../../styles/mixins";
+@use "theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+
 
 .wrapper {
     position: relative;
@@ -89,7 +90,7 @@
     text-align: center;
     z-index: 4 !important;
     left: 50%;
-    transform:translateX(-50%);
+    transform: translateX(-50%);
 }
 
 .button-container-fixed {
@@ -120,12 +121,13 @@
 // Animations
 @keyframes dash {
     from {
-      stroke-dasharray: 0, 473;
+        stroke-dasharray: 0, 473;
     }
+
     to {
-      stroke-dasharray: 473, 0;
+        stroke-dasharray: 473, 0;
     }
-  }
+}
 
 .slide-down-animation {
     animation: slide-down 400ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
@@ -137,6 +139,7 @@
     from {
         transform: scaleY(0)
     }
+
     to {
         transform: scaleY(1)
     }

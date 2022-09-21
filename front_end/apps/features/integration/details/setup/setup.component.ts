@@ -3,6 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -22,7 +23,7 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    plugin: any = {};
+    plugin: Partial<Integration> = {};
     pluginSubscription: SubscriptionLike;
 
     private setupDefaults(): void {

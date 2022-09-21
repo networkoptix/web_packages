@@ -1,6 +1,7 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/bootstrap_utils" as bootstrap;
+@use "typography";
+@use "theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+
 
 :host {
     background: linear-gradient(242.24deg, #F5F7F8 0.43%, #92DBFF 122.68%);
@@ -34,6 +35,7 @@
     display: flex;
     max-width: 512px;
     margin: 40px auto 12px auto;
+
     @include bootstrap.media-breakpoint-down(sm) {
         flex-direction: column;
         max-width: 360px;

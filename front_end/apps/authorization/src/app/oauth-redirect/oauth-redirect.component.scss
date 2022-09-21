@@ -1,6 +1,7 @@
-@use "../../../../../src/app/styles/typography";
-@use "../../../../../src/app/styles/mixins";
-@use "../../../../../src/styles/theme_variables_common" as *;
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
+
 
 .oauth-redirect {
     height: 100vh;
@@ -9,9 +10,11 @@
     justify-content: center;
     align-items: center;
 
-    &.container-d, &.container-m {
+    &.container-d,
+    &.container-m {
         background-color: $dark8;
     }
+
     .container {
         max-width: 991px;
         padding: 0 16px;
@@ -21,7 +24,7 @@
     }
 
     .oauth-redirect-btn {
-        color: $light1 !important;
+        color: $light1  !important;
         background-color: var(--brand-core);
         width: 250px;
         height: 120px !important;
@@ -30,13 +33,16 @@
     }
 
     .oauth-text {
-        color: $light1 !important;
+        color: $light1  !important;
+
         &.oauth-error {
             background-color: var(--error);
         }
+
         &:not(.oauth-error) {
             background-color: var(--brand-core);
         }
+
         width: 250px;
         height: 120px !important;
         font-size: rem(18px) !important;
@@ -47,6 +53,7 @@
         align-items: center;
         text-align: center;
         padding: 0 30px;
+
         p {
             margin-bottom: 0;
         }

@@ -1,78 +1,79 @@
-@use "../../styles/theme_variables_common";
+@use "theme_variables_common";
+
 
 /* Customize the label (the container) */
 .option {
-    display             : block;
-    position            : relative;
-    font-size           : 1em;
-    min-height          : 16px;
-    padding-left        : 20px !important;
-    margin-bottom       : 5px;
-    font-weight         : 400;
-    cursor              : pointer;
-    -webkit-user-select : none;
-    -moz-user-select    : none;
-    -ms-user-select     : none;
-    user-select         : none;
+    display: block;
+    position: relative;
+    font-size: 1em;
+    min-height: 16px;
+    padding-left: 20px !important;
+    margin-bottom: 5px;
+    font-weight: 400;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     .text {
-        font-family : theme_variables_common.$font-family-regular;
-        user-select : none;
-        color       : theme_variables_common.$dark9
+        font-family: theme_variables_common.$font-family-regular;
+        user-select: none;
+        color: theme_variables_common.$dark9
     }
 
     /* Hide the browser's default checkbox */
     & input {
-        position : absolute;
-        opacity  : 0;
-        cursor   : pointer;
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
     }
 
     /* When the checkbox is checked, add a blue background */
-    & input:checked ~ .optionmark {
+    & input:checked~.optionmark {
         svg {
             circle {
-                display : block;
+                display: block;
             }
         }
     }
 
-    & input:hover ~ .optionmark {
+    & input:hover~.optionmark {
         svg path.circle {
-            fill : theme_variables_common.$dark1;
+            fill: theme_variables_common.$dark1;
         }
 
-        & ~ .text {
-            color : theme_variables_common.$dark1;
+        &~.text {
+            color: theme_variables_common.$dark1;
         }
     }
 
-    & input:active ~ .optionmark {
+    & input:active~.optionmark {
         svg path.circle {
-            fill : theme_variables_common.$dark9 !important;
+            fill: theme_variables_common.$dark9  !important;
         }
 
-        & ~ .text {
-            color : theme_variables_common.$dark9 !important;
+        &~.text {
+            color: theme_variables_common.$dark9  !important;
         }
     }
 }
 
 /* Create a custom checkbox */
 .optionmark {
-    position   : absolute;
-    top        : 0;
-    left       : 0;
-    height     : 20px;
-    width      : 20px;
-    margin-top : -2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    margin-top: -2px;
 
     & svg path.circle {
-        fill : theme_variables_common.$dark9;
+        fill: theme_variables_common.$dark9;
     }
 
     & svg circle {
-        fill    : var(--brand-core);
-        display : none;
+        fill: var(--brand-core);
+        display: none;
     }
 }

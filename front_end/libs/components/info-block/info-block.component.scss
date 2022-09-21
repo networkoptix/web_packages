@@ -1,5 +1,6 @@
-@use "../../../styles/theme_variables_common" as *;
-@use "../../styles/typography";
+@use "theme_variables_common" as *;
+@use "typography";
+
 
 .remove-top-margin {
     &:first-child {
@@ -7,13 +8,14 @@
     }
 }
 
-.column-wrapper > div:not(:last-child) {
+.column-wrapper>div:not(:last-child) {
     margin-right: 16px !important;
 }
 
 .block {
     margin-top: 16px;
-    & > h6 {
+
+    &>h6 {
         color: var(--card-header-text) !important;
         line-height: 24px;
     }
@@ -21,29 +23,34 @@
     &-section {
         display: flex;
         justify-content: flex-start;
+
         div {
             display: flex;
             flex-direction: column;
+
             p {
                 margin: 3px 3px 3px 0;
                 white-space: pre-wrap;
             }
         }
+
         &-keys {
             flex: 2 0 auto;
 
             p {
                 @include typography.regular13dark9;
-                color : var(--label-color) !important;
+                color: var(--label-color) !important;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
                 align-items: flex-end;
                 line-height: 16px;
-                & > * {
+
+                &>* {
                     flex-basis: 0;
                     flex-grow: 0;
                 }
+
                 &:after {
                     content: "";
                     position: relative;
@@ -57,30 +64,33 @@
             }
 
             &.clear-flex {
-                flex      : none;
-                min-width : 150px;
+                flex: none;
+                min-width: 150px;
             }
         }
+
         &-values {
-            flex          : 0 1 auto;
-            max-width     : 100%;
-            line-height   : 16px;
-            overflow-wrap : break-word;
-            word-wrap     : break-word;
-            word-break    : break-word;
-            hyphens       : auto;
-            
+            flex: 0 1 auto;
+            max-width: 100%;
+            line-height: 16px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+
             p {
                 @include typography.medium13dark9;
-                color : var(--label-color) !important;
+                color: var(--label-color) !important;
                 display: flex;
                 align-items: flex-end;
                 line-height: 16px;
+
                 &.error {
                     color: var(--error) !important;
                 }
+
                 &.warning {
-                    color: $yellow_d1 !important;
+                    color: $yellow_d1  !important;
                 }
             }
         }

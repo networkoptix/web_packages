@@ -1,4 +1,6 @@
-@use '../styles/typography' as typography;
+@use "theme_variables_common" as theme_vars;
+@use "typography" as typography;
+
 
 :host {
     position: absolute;

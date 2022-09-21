@@ -17,14 +17,14 @@ import { delay, throttleTime } from 'rxjs/operators';
 import { NxMenuService } from '@app/menu/menu.service';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { paramSortFunc } from '@utils/general';
 
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { IConfig } from '../../../services/nx-config/config-types';
-import { NxConfigService } from '../../../services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
 
@@ -194,7 +194,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             .selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
-            // when user click same section in the menu - we need to reset table and entity
+                // when user click same section in the menu - we need to reset table and entity
                 if (this.metricId === selection) {
                     this.resetActiveEntity();
                     this.resetFilterModel();
@@ -203,7 +203,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                         this.filterModel
                     );
                 } else {
-                // short circuit first subscription
+                    // short circuit first subscription
                     this.metricId = 'alerts';
                 }
             });
@@ -351,7 +351,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
                 singleSelect = singleSelect ||
-                (select.selected.value !== '0'); // 0 is default choice
+                    (select.selected.value !== '0'); // 0 is default choice
             });
         }
 

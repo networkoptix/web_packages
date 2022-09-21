@@ -1,78 +1,79 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
 
 $item_height : 40px;
 
 .menu-level-1 {
     @include typography.medium15nocolor;
-    position         : relative;
-    line-height      : $item_height;
-    background-color : var(--left-menu-l1-bg);
-    color            : var(--left-menu-l1-color) !important;
-    display          : block;
-    text-decoration  : none;
-    padding-left     : $item_height;
-    padding-right    : .5rem;
-    border-radius    : 2px;
-    cursor           : pointer;
+    position: relative;
+    line-height: $item_height;
+    background-color: var(--left-menu-l1-bg);
+    color: var(--left-menu-l1-color) !important;
+    display: block;
+    text-decoration: none;
+    padding-left: $item_height;
+    padding-right: .5rem;
+    border-radius: 2px;
+    cursor: pointer;
 
     &:hover {
-        background-color : var(--left-menu-l1-bg-hover);
+        background-color: var(--left-menu-l1-bg-hover);
     }
 
     &:active {
-        background-color : var(--left-menu-l1-bg-active);
+        background-color: var(--left-menu-l1-bg-active);
     }
 
     &-icon {
-        position        : absolute;
-        left            : 0;
-        display         : flex;
-        align-items     : center;
-        justify-content : center;
-        width           : $item_height;
-        height          : $item_height;
-        line-height     : initial;
+        position: absolute;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $item_height;
+        height: $item_height;
+        line-height: initial;
+
         svg .st0 {
-            fill   : var(--left-menu-l1-color) !important;
-            stroke : none
+            fill: var(--left-menu-l1-color) !important;
+            stroke: none
         }
     }
 
     &.selected {
-        background-color : var(--left-menu-l1-selected-bg);
+        background-color: var(--left-menu-l1-selected-bg);
     }
 
     &.collapsed {
-        background-color : $light4;
+        background-color: $light4;
     }
 
     &-alerts {
-        position        : absolute;
-        right           : 0;
-        top             : 0;
-        display         : flex;
-        align-items     : center;
-        justify-content : center;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
 .search-results-label {
     @include typography.regular13nocolor;
-    color : var(--text-placeholder-color);
-    position : absolute;
-    top      : 0;
-    right    : 36px;
+    color: var(--text-placeholder-color);
+    position: absolute;
+    top: 0;
+    right: 36px;
 }
 
 .search-results {
-    position        : absolute;
-    display         : flex;
-    flex-direction  : row;
-    height          : 100%;
-    align-items     : center;
-    justify-content : center;
-    top             : 0;
-    right           : 0;
-    width           : 36px;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    right: 0;
+    width: 36px;
 }

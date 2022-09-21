@@ -1,4 +1,4 @@
-@use "../../../../../../styles/theme_variables_common" as *;
+@use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
 :host {
@@ -21,6 +21,7 @@
 
     &.animated {
         transition: padding-left .2s ease-in-out;
+
         .nx-view-sidebar {
             transition: left .2s ease-in-out;
         }
@@ -32,6 +33,7 @@
 
         &.initialization-error {
             padding-left: 0 !important;
+
             .nx-view-sidebar {
                 left: -320px !important;
             }
@@ -39,6 +41,7 @@
 
         &.sidebarShown {
             padding-left: 320px;
+
             .nx-view-sidebar {
                 left: 0;
             }
@@ -56,11 +59,11 @@
 
         &.error-initialization {
 
-            > svg {
+            >svg {
                 width: 50%;
             }
 
-            > span {
+            >span {
                 margin-top: 1em;
                 font-size: 40px;
                 text-transform: uppercase;
@@ -83,75 +86,76 @@
             left: -100%;
         }
 
-        > .sidebar-toggling-ear--wrapper {
-            position : absolute;
-            top      : calc(50% - 40px / 2);
-            right    : -16px;
-            width    : 16px;
-            height   : 40px;
+        >.sidebar-toggling-ear--wrapper {
+            position: absolute;
+            top: calc(50% - 40px / 2);
+            right: -16px;
+            width: 16px;
+            height: 40px;
 
             @include bootstrap.media-breakpoint-down(md) {
-                content    : "";
-                position   : absolute;
-                top        : calc(50% - 70px / 2);
-                right      : -50px;
-                width      : 50px;
-                height     : 70px;
-                background : transparent;
+                content: "";
+                position: absolute;
+                top: calc(50% - 70px / 2);
+                right: -50px;
+                width: 50px;
+                height: 70px;
+                background: transparent;
             }
 
             opacity: 0;
+
             &.visible {
                 opacity: 1;
             }
 
             &.shown {
                 @include bootstrap.media-breakpoint-down(sm) {
-                    right : 0;
+                    right: 0;
                 }
 
                 .sidebar-toggling-ear {
-                    transform     : rotate(0deg);
-                    border-radius : 0 2px 2px 0;
+                    transform: rotate(0deg);
+                    border-radius: 0 2px 2px 0;
 
                     @include bootstrap.media-breakpoint-down(sm) {
-                        float : right;
+                        float: right;
                     }
                 }
             }
 
             .sidebar-toggling-ear {
-                width               : 16px;
-                height              : 40px;
-                background-color    : var(--control-color);
-                box-shadow          : 0px -2px 0px 0px rgba(var(--dark1--rgb), 0.1);
-                cursor              : pointer;
-                opacity             : 0.8;
+                width: 16px;
+                height: 40px;
+                background-color: var(--control-color);
+                box-shadow: 0px -2px 0px 0px rgba(var(--dark1--rgb), 0.1);
+                cursor: pointer;
+                opacity: 0.8;
 
                 svg-icon {
-                    position : absolute;
-                    top      : 10px;
-                    right    : -2px;
+                    position: absolute;
+                    top: 10px;
+                    right: -2px;
 
                     svg .st0 {
-                        transform        : rotate(270deg);
-                        transform-origin : center;
-                        fill             : none;
-                        stroke-width     : 1;
-                        stroke           : var(--sidebar-toggling-ear-color);
+                        transform: rotate(270deg);
+                        transform-origin: center;
+                        fill: none;
+                        stroke-width: 1;
+                        stroke: var(--sidebar-toggling-ear-color);
                     }
                 }
 
                 &:hover {
-                    opacity : 1.0;
+                    opacity: 1.0;
                 }
 
                 @include bootstrap.media-breakpoint-down(md) {
                     margin-top: 15px;
                 }
 
-                transform           : rotate(180deg);
-                border-radius       : 2px 0 0 2px;
+                transform : rotate(180deg);
+                border-radius : 2px 0 0 2px;
             }
         }
     }
@@ -163,7 +167,7 @@
         align-items: center;
         justify-content: center;
         text-transform: uppercase;
-        font-family : $font-family-light;
+        font-family: $font-family-light;
         font-size: 40px;
         line-height: 48px;
         color: var(--light10); // the spec says just "light", and it's kinda weird

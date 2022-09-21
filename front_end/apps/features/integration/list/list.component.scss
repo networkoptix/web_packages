@@ -1,36 +1,37 @@
-@use "../../../styles/typography";
-@use "../../../../styles/theme_variables_common" as theme_vars;
+@use "typography";
+@use "theme_variables_common" as theme_vars;
+
 
 .plugin {
-    text-decoration : none;
-    color           : inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 .card {
     &--header {
         &-info {
-            position        : absolute;
-            right           : 16px;
-            top             : 12px;
-            bottom          : 12px;
-            display         : flex;
-            flex-direction  : column-reverse;
-            align-items     : flex-end;
-            justify-content : space-between;
+            position: absolute;
+            right: 16px;
+            top: 12px;
+            bottom: 12px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            justify-content: space-between;
 
-            > div {
+            >div {
                 @include typography.regular12light12;
-                line-height : 1rem;
+                line-height: 1rem;
             }
 
             .platforms {
-                display         : flex;
-                justify-content : flex-end;
+                display: flex;
+                justify-content: flex-end;
 
                 img {
-                    height      : 1rem;
-                    width       : 1rem;
-                    margin-left : .25rem;
+                    height: 1rem;
+                    width: 1rem;
+                    margin-left: .25rem;
                 }
             }
         }
@@ -39,32 +40,32 @@
     &--body {
         &-name {
             h3 {
-                margin      : 0;
-                line-height : 24px;
+                margin: 0;
+                line-height: 24px;
             }
         }
 
         &-by {
-            color     : var(--light16);
-            font-size : theme_vars.$font-size-ssm;
+            color: var(--light16);
+            font-size: theme_vars.$font-size-ssm;
         }
 
         &-descr {
             @include typography.regular13nocolor;
-            color : var(--label-color);
-            margin-top  : .5rem;
+            color: var(--label-color);
+            margin-top: .5rem;
         }
     }
 }
 
 .text-placeholder {
     @include typography.regular20nocolor;
-    color : var(--text-placeholder-color);
-    height : 32px;
+    color: var(--text-placeholder-color);
+    height: 32px;
 }
 
 .row {
-    max-width : 1600px;
+    max-width: 1600px;
 }
 
 .tags-compact {
@@ -73,8 +74,9 @@
     grid-auto-flow: dense;
     gap: 4px;
 
-    & > nx-tag {
+    &>nx-tag {
         grid-column: span 70;
+
         &:not(.ready) {
             margin-right: auto;
         }

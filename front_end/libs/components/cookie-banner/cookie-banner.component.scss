@@ -1,5 +1,7 @@
-@use "../../styles/typography";
-@use "../../../styles/theme_variables_common" as *;
+@use "typography";
+@use "theme_variables_common" as *;
+
+
 :host {
     width: 100%;
     height: 0px;
@@ -24,26 +26,31 @@
     border-radius: 2px;
     border-color: transparentize($blue14, 0.1);
     padding: 12px 16px;
-    & > p {
+
+    &>p {
         font: $font-family-regular;
         font-size: 13px;
         line-height: 17px;
         color: $light1;
         margin-bottom: 0px;
-        & > a {
+
+        &>a {
             color: $light1;
         }
     }
 
-    & > svg-icon{
-        height:21px;
+    &>svg-icon {
+        height: 21px;
         margin: 5px 0px 0px 32px;
+
         & .close-svg {
             stroke: $light1;
         }
+
         &:hover {
-            box-shadow: 1px 1px 5px transparentize($dark4, 0.5) ;
+            box-shadow: 1px 1px 5px transparentize($dark4, 0.5);
         }
+
         &:active .close-svg {
             stroke: $light3;
         }
