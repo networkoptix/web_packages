@@ -246,7 +246,7 @@ const typeLintBlacklist = [
     'src/app/services/url-protocol.service.ts',
     'src/app/services/url-protocol.service.types.ts',
     'src/app/utils/logger.ts',
-    'src/test.ts'
+    'common/test.ts'
 ];
 
 /**
