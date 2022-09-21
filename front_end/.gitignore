@@ -18,8 +18,8 @@ common/images/favicon.ico
 common/images/logo.png
 common/images/dark_logo.png
 common/images/logo_small.png
-src/styles/custom
-src/styles/*.css
+common/styles/custom
+common/styles/*.css
 **/*.js.map
 src/app/**/*.js
 src/supported_languages.json

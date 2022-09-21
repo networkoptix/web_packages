@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const copySkin = (color) => {
     var source = path.resolve(__dirname, '../skins', color, 'front_end/styles');
-    var dest = path.resolve(__dirname, 'src/styles/custom');
+    var dest = path.resolve(__dirname, 'common/styles/custom');
     fsmv.copy(source, dest, { mkdirp: true }, error => error ? console.log(error) : null);
 
     const inlineWizardDest = path.resolve(__dirname, 'inline-wizard/customization/custom');

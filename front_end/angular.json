@@ -54,7 +54,11 @@
                 "output": "."
               },
               "src/fonts",
-              "src/styles",
+              {
+                "glob": "**/*",
+                "input": "common/styles",
+                "output": "."
+              },
               "src/views",
               "src/scripts",
               "src/503.html",
@@ -70,7 +74,7 @@
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",
-              "src/styles/main.scss"
+              "common/styles/main.scss"
             ],
             "scripts": [
               "node_modules/marked/marked.min.js"
@@ -78,7 +82,7 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/app/styles",
-                "src/styles",
+                "common/styles",
                 "src/app",
                 "libs"
               ]
@@ -231,13 +235,13 @@
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",
-              "src/styles/main.scss"
+              "common/styles/main.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/",
                 "src/app/styles",
-                "src/styles",
+                "common/styles",
                 "src/app"
               ]
             },
@@ -310,7 +314,11 @@
                 "output": "."
               },
               "src/fonts",
-              "src/styles",
+              {
+                "glob": "**/*",
+                "input": "common/styles",
+                "output": "."
+              },
               "src/views",
               "src/scripts",
               "src/503.html",
@@ -326,7 +334,7 @@
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",
-              "src/styles/main.scss"
+              "common/styles/main.scss"
             ],
             "scripts": [
               "node_modules/marked/marked.min.js"
@@ -334,7 +342,7 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/app/styles",
-                "src/styles",
+                "common/styles",
                 "src/app",
                 "libs"
               ]
@@ -452,13 +460,13 @@
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",
-              "src/styles/main.scss"
+              "common/styles/main.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/",
                 "src/app/styles",
-                "src/styles",
+                "common/styles",
                 "src/app",
                 "libs"
               ]

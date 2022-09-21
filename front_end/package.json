@@ -75,7 +75,7 @@
     "removeDeadCss": "node deadCss.mjs",
     "buildSkins": "node buildSkins.mjs",
     "setSkin": "node setSkin.mjs --skin",
-    "setVarSkin": "node buildSkins.mjs ./src/styles",
+    "setVarSkin": "node buildSkins.mjs ./common/styles",
     "update-lang-files": "node checkIfLangNeedsUpdate.mjs && npm run handle:lang || echo 'Lang already up to date'",
     "lang-ci-check": "cp ./src/language_i18n.json ./src/i18n_copy.json; cp ./src/language_i18n_static_types.ts ./src/types_copy.ts; npm run update-lang-files; cmp_i18n=$(cmp ./src/language_i18n.json ./src/i18n_copy.json); cmp_types=$(cmp ./src/language_i18n_static_types.ts ./src/types_copy.ts); if [ ! -z \"$cmp_i18n\" ] || [ ! -z \"$cmp_types\" ]; then exit 1; fi",
     "compile-lang": "python compile-lang.py",
