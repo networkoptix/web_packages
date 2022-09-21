@@ -95,5 +95,5 @@ const lazyRoutes: Routes = [
         RouterModule
     ]
 })
-export class WebadminPageModule {
+export class AppRoutingModule {
 }

@@ -2,9 +2,6 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
     PathLocationStrategy,
-    HashLocationStrategy,
-    LocationStrategy,
-    // CommonModule,
     DatePipe
 } from '@angular/common';
 import {
@@ -33,11 +30,9 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
-// import { systemsReducer } from '@app/store/systems/systems.reducer';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
-// import { DirectivesModule } from '@directives/directives.module';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
@@ -56,11 +51,9 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
-// import { PipesModule } from '@app/pipes/pipes.module';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PagesModule } from './pages/pages.module';
-import { WebadminPageModule } from './pages/webadmin-page.module';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -71,7 +64,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        // StoreModule.forRoot({ systems: systemsReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
@@ -91,10 +83,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         }),
         NgxTranslateCutModule.forRoot(),
         NgxWebstorageModule.forRoot(),
-        // Need to find a different way to choose page module for webadmin
-        environment.isLocal ? WebadminPageModule : PagesModule,
+        AppRoutingModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production && !environment.isLocal,
+            enabled: environment.production,
             registrationStrategy: 'registerImmediately'
         }),
         CdkScrollableModule,
@@ -136,7 +127,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
+        PathLocationStrategy,
         {
             provide: FIREBASE_OPTIONS,
             deps: [NxConfigService],

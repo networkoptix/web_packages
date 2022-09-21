@@ -1,10 +1,7 @@
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
-    PathLocationStrategy,
     HashLocationStrategy,
-    LocationStrategy,
-    // CommonModule,
     DatePipe
 } from '@angular/common';
 import {
@@ -15,12 +12,9 @@ import {
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
-// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { ServiceWorkerModule } from '@angular/service-worker';
-// import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
@@ -48,7 +42,6 @@ import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
-import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
 import { initializeApp } from '@pages/push-notifications/push-notifications.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -56,11 +49,9 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
-// import { PipesModule } from '@app/pipes/pipes.module';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PagesModule } from './pages/pages.module';
-import { WebadminPageModule } from './pages/webadmin-page.module';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -71,7 +62,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        // StoreModule.forRoot({ systems: systemsReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
@@ -91,12 +81,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         }),
         NgxTranslateCutModule.forRoot(),
         NgxWebstorageModule.forRoot(),
-        // Need to find a different way to choose page module for webadmin
-        environment.isLocal ? WebadminPageModule : PagesModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production && !environment.isLocal,
-            registrationStrategy: 'registerImmediately'
-        }),
+        AppRoutingModule,
         CdkScrollableModule,
         HoverPreloadModule,
         PreLoaderModule,
@@ -109,11 +94,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         Title,
         CookieService,
         NxUriCacheService,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: NxSwCacheInterceptor,
-            multi: true
-        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxUriCachingInterceptor,
@@ -136,7 +116,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
+        HashLocationStrategy,
         {
             provide: FIREBASE_OPTIONS,
             deps: [NxConfigService],

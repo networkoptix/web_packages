@@ -230,5 +230,5 @@ const lazyRoutes: Routes = [
     exports: []
 })
 
-export class PagesModule {
+export class AppRoutingModule {
 }
