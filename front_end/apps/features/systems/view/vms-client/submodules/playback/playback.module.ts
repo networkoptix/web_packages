@@ -4,9 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { ComponentsModule } from '@components/components.module';
 import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
-
-import { ComponentsModule } from '../../../../../../components/components.module';
 
 import { components } from './components';
 

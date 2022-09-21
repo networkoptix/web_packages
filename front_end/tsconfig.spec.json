@@ -14,7 +14,7 @@
         "suppressImplicitAnyIndexErrors": true,
         "baseUrl": "",
         "paths": {
-            "@components/*": ["src/app/components/*"],
+            "@components/*": ["src/app/components/*", "libs/components/*"],
             "@decorators/*": ["src/app/decorators/*"],
             "@directives/*": ["src/app/directives/*"],
             "@dialogs/*": ["src/app/dialogs/*"],

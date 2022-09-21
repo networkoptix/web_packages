@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
-
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { NxRibbonService } from '../../../components/ribbon/ribbon.service';
-import { NxDialogsService } from '../../../dialogs/dialogs.service';
-import { NxConfigService } from '../../../services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxProcessService } from '../../../services/process.service';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'toaster',
@@ -39,11 +38,11 @@ export class ToasterComponent implements OnInit, OnDestroy {
         this.menuService.detail = 'toaster';
     }
 
-    ngOnDestroy():void {
+    ngOnDestroy(): void {
         this.ribbonService.hide();
     }
 
-    showAlertRibbon():void {
+    showAlertRibbon(): void {
         this.ribbonService.hide();
         if (this.ribbonType) {
             this.ribbonService.show(
@@ -55,7 +54,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         }
     }
 
-    showInfoRibbon():void {
+    showInfoRibbon(): void {
         this.ribbonService.hide();
         if (this.ribbonType) {
             this.ribbonService.show(

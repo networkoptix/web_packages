@@ -12,7 +12,7 @@ import type { SystemListItem } from '../../store/groups/groups.types';
 @Component({
     selector: 'nx-system-list-dumb-component',
     templateUrl: 'system-list-dumb.component.html',
-    styleUrls: ['system-list-dumb.component.scss', '../../../../../components/systems-list/list.component.scss']
+    styleUrls: ['system-list-dumb.component.scss', '@components/systems-list/list.component.scss']
 })
 export class NxSystemListDumbComponent {
     CONFIG: IConfig;

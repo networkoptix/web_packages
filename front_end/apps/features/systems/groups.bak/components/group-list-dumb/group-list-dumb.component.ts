@@ -6,7 +6,7 @@ import { ParentIdChangeRequestedEvent } from '../events';
 @Component({
     selector: 'nx-group-list-dumb-component',
     templateUrl: 'group-list-dumb.component.html',
-    styleUrls: ['group-list-dumb.component.scss', '../../../../../components/systems-list/list.component.scss']
+    styleUrls: ['group-list-dumb.component.scss', '@components/systems-list/list.component.scss']
 })
 export class NxGroupListDumbComponent {
     @Input() groups: Array<GroupListItem> = [];

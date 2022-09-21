@@ -6,11 +6,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { ComponentsModule } from '@components/components.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
-
-import { ComponentsModule } from '../../../components/components.module';
-import { DirectivesModule } from '../../../directives/directives.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
 import { NxSystemViewCameraPageComponent } from './pages/system-view-camera/system-view-camera.page.component';
