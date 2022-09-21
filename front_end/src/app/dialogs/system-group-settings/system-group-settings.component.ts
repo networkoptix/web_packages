@@ -2,10 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import { DialogRef } from '@dialogs/dialog-ref';
+import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-
-import { NxSystemGroupsService } from '../../pages/systems/groups/services/system-groups.service';
 
 @Component({
     selector: 'nx-modal-system-group-settings-content',

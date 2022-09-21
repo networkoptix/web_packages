@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { NxHealthService } from '../pages/health/health.service';
+import { NxHealthService } from '@pages/health/health.service';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
