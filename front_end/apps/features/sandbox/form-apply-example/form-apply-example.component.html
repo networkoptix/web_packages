@@ -11,7 +11,7 @@
             #form1="ngForm"
             novalidate
         >
-            <h2>Form 1</h2>
+            <h2 translate>Form 1</h2>
             <div class="form-group">
                 <input
                     class="form-control"
@@ -69,7 +69,7 @@
             #form2="ngForm"
             novalidate
         >
-            <h2>Form 2</h2>
+            <h2 translate>Form 2</h2>
             <div class="form-group">
                 <input
                     class="form-control"
@@ -89,10 +89,15 @@
                             componentId="show1"
                             #spyShow1
                             [(ngModel)]="show1"
+                            translate
                             >Remember me
                         </nx-checkbox>
 
-                        <label for="show1">Remember me</label>
+                        <label
+                            for="show1"
+                            translate
+                            >Remember me</label
+                        >
                         <!--component: {{spyShow1 | json}}-->
                     </div>
                     <div class="form-group">
@@ -105,9 +110,18 @@
                         >
                         </nx-checkbox>
 
-                        <label for="show2">I agree to T&C (required)</label>
+                        <label
+                            for="show2"
+                            translate
+                            >I agree to T&C (required)</label
+                        >
                         <!--component: {{spyShow2 | json}}-->
-                        <div class="help-block input-error input-error--required">Required</div>
+                        <div
+                            class="help-block input-error input-error--required"
+                            translate
+                        >
+                            Required
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -118,25 +132,39 @@
                             [(ngModel)]="blah"
                         >
                         </nx-radio>
-                        <label for="blah1">blah1</label>
+                        <label
+                            for="blah1"
+                            translate
+                            >blah1</label
+                        >
                         <br />
                         <nx-radio
                             name="blah"
                             componentId="blah2"
                             value="blah2"
                             [(ngModel)]="blah"
+                            translate
                             >blah2
                         </nx-radio>
-                        <label for="blah2">blah2</label>
+                        <label
+                            for="blah2"
+                            translate
+                            >blah2</label
+                        >
                         <br />
                         <nx-radio
                             name="blah"
                             componentId="blah3"
                             value="blah3"
                             [(ngModel)]="blah"
+                            translate
                             >blah3
                         </nx-radio>
-                        <label for="blah3">blah3</label>
+                        <label
+                            for="blah3"
+                            translate
+                            >blah3</label
+                        >
                     </div>
                 </div>
             </div>

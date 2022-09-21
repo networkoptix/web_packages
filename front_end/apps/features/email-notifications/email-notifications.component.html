@@ -4,15 +4,21 @@
     </div>
 </ng-template>
 <div class="container">
-    <h2 class="ml-3 mr-3 pt-3">Email Notification Test</h2>
+    <h2
+        class="ml-3 mr-3 pt-3"
+        translate
+    >
+        Email Notification Test
+    </h2>
     <nx-block class="mt-3 d-block">
-        <header>Send Test Email Notification</header>
+        <header translate>Send Test Email Notification</header>
         <nx-section [nonPadded]="true">
             <ng-template #sendButton>
                 <ng-template #sendAnother>
                     <button
                         class="btn btn-default"
                         (click)="handleSendAnother()"
+                        translate
                     >
                         Send Another Test
                     </button>
@@ -22,6 +28,7 @@
                     class="btn btn-primary"
                     [disabled]="!subject"
                     (click)="handleSend()"
+                    translate
                 >
                     Send Test Notification
                 </button>
@@ -38,7 +45,7 @@
                         *ngIf="account$ | async; else preloader"
                         class="h-100"
                     >
-                        <h4>Select system to test email notification</h4>
+                        <h4 translate>Select system to test email notification</h4>
                         <nx-select
                             [items]="systems$ | async"
                             [selected]="selectedSystem$ | async"
@@ -52,7 +59,7 @@
                         *ngIf="users$ | async as users; else preloader"
                         class="h-100"
                     >
-                        <h4>Select users to send test email notification</h4>
+                        <h4 translate>Select users to send test email notification</h4>
                         <div class="checkbox-wrapper">
                             <div
                                 *ngFor="let user of users"
@@ -79,11 +86,11 @@
                     <div class="h-100">
                         <ng-template #eventSummary>
                             <ng-container *ngIf="!sending; else preloader">
-                                <h3>Endpoint</h3>
+                                <h3 translate>Endpoint</h3>
                                 <pre [innerText]="endpoint"></pre>
-                                <h3>Payload</h3>
+                                <h3 translate>Payload</h3>
                                 <pre [innerText]="payload"></pre>
-                                <h3>Response</h3>
+                                <h3 translate>Response</h3>
                                 <pre [innerText]="response"></pre>
                             </ng-container>
                         </ng-template>
@@ -92,15 +99,19 @@
                             class="send-wrapper"
                         >
                             <div class="send-section h-100">
-                                <h4>Select test notification type</h4>
+                                <h4 translate>Select test notification type</h4>
                                 <nx-select
                                     [items]="notificationTypes"
                                     [selected]="selectedNotificationType"
                                     (onSelected)="updateType($event)"
                                 ></nx-select>
-                                <h4>Test email notification content</h4>
+                                <h4 translate>Test email notification content</h4>
                                 <div class="email-content-wrapper">
-                                    <label for="systemId">systemId</label>
+                                    <label
+                                        for="systemId"
+                                        translate
+                                        >systemId</label
+                                    >
                                     <input
                                         [ngModel]="(selectedSystem$ | async)?.value"
                                         type="text"
@@ -109,7 +120,11 @@
                                     />
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="targets">targets</label>
+                                    <label
+                                        for="targets"
+                                        translate
+                                        >targets</label
+                                    >
                                     <textarea
                                         [ngModel]="usersSelected$ | async"
                                         id="targets"
@@ -126,6 +141,7 @@
                                                 selectedNotificationType.name !==
                                                 notificationTypes[0].name
                                         }"
+                                        translate
                                         >subject (required)</label
                                     >
                                     <input
@@ -147,6 +163,7 @@
                                                 selectedNotificationType.name !==
                                                 notificationTypes[0].name
                                         }"
+                                        translate
                                         >messageHtml</label
                                     >
                                     <textarea
@@ -169,6 +186,7 @@
                                                 selectedNotificationType.name !==
                                                 notificationTypes[0].name
                                         }"
+                                        translate
                                         >messageText</label
                                     >
                                     <textarea
@@ -184,7 +202,11 @@
                                     ></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="attachment">attachment</label>
+                                    <label
+                                        for="attachment"
+                                        translate
+                                        >attachment</label
+                                    >
                                     <div class="w-100">
                                         <div
                                             *ngFor="

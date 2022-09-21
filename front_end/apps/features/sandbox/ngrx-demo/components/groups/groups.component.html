@@ -1,6 +1,6 @@
-<h1>NGRX Demo :: System Groups</h1>
+<h1 translate>NGRX Demo :: System Groups</h1>
 
-<h2>Groups</h2>
+<h2 translate>Groups</h2>
 <ngrx-demo-group-list
     class="group-list"
     [groups]="groupList$ | async"
@@ -8,13 +8,18 @@
     (parentIdChangeRequested)="changeGroupParent($event)"
 ></ngrx-demo-group-list>
 
-<button (click)="reset()">Reset</button>
+<button
+    (click)="reset()"
+    translate
+>
+    Reset
+</button>
 
 <br /><br />
 <hr />
 <br /><br />
 
-<h2>Under the hood:</h2>
+<h2 translate>Under the hood:</h2>
 <div
     style="
         display: flex;
@@ -24,17 +29,17 @@
     "
 >
     <div>
-        <h3>State (full, reactive)</h3>
+        <h3 translate>State (full, reactive)</h3>
         <pre>{{ state$ | async | json }}</pre>
     </div>
 
     <div>
-        <h3>Group List (a reactive computable projection)</h3>
+        <h3 translate>Group List (a reactive computable projection)</h3>
         <pre>{{ groupList$ | async | json }}</pre>
     </div>
 
     <div>
-        <h3>Group Forest (a reactive computable projection)</h3>
+        <h3 translate>Group Forest (a reactive computable projection)</h3>
         <pre>{{ groupForest$ | async | json }}</pre>
     </div>
 </div>

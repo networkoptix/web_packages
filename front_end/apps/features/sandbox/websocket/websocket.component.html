@@ -1,6 +1,6 @@
 <div class="col-12 p-0">
     <nx-block>
-        <header>Group Inputs</header>
+        <header translate>Group Inputs</header>
         <nx-section>
             <form
                 class="form"
@@ -15,6 +15,7 @@
                             <label
                                 for="group-name"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >Group Name</label
                             >
                         </div>
@@ -39,6 +40,7 @@
                             <label
                                 for="group-id"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >Group Id</label
                             >
                         </div>
@@ -63,6 +65,7 @@
                             <label
                                 for="target-group-id"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >Target Group ID (Moving Groups to Group)</label
                             >
                         </div>
@@ -87,6 +90,7 @@
                             <label
                                 for="target-system-id"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >System ID (Moving System to Group)</label
                             >
                         </div>
@@ -110,18 +114,43 @@
 
         <nx-section>
             <div class="d-flex justify-content-between">
-                <button (click)="sendGroupAction('create')">Create group</button>
-                <button (click)="sendGroupAction('delete')">Delete group</button>
-                <button (click)="sendGroupAction('moveSystem')">Move system to group</button>
-                <button (click)="sendGroupAction('moveGroup')">Move group to group</button>
-                <button (click)="sendGroupAction('list')">Update list</button>
+                <button
+                    (click)="sendGroupAction('create')"
+                    translate
+                >
+                    Create group
+                </button>
+                <button
+                    (click)="sendGroupAction('delete')"
+                    translate
+                >
+                    Delete group
+                </button>
+                <button
+                    (click)="sendGroupAction('moveSystem')"
+                    translate
+                >
+                    Move system to group
+                </button>
+                <button
+                    (click)="sendGroupAction('moveGroup')"
+                    translate
+                >
+                    Move group to group
+                </button>
+                <button
+                    (click)="sendGroupAction('list')"
+                    translate
+                >
+                    Update list
+                </button>
             </div>
         </nx-section>
     </nx-block>
 </div>
 <div class="col-12 p-0 mt-2">
     <nx-block>
-        <header>Aggregate Url</header>
+        <header translate>Aggregate Url</header>
         <nx-section>
             <form
                 class="form"
@@ -136,6 +165,7 @@
                             <label
                                 for="aggregate-url"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >Url</label
                             >
                         </div>
@@ -160,6 +190,7 @@
                             <label
                                 for="aggregate-group-id"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >Aggregate Group Id</label
                             >
                         </div>
@@ -184,6 +215,7 @@
                             <label
                                 for="aggregate-method"
                                 class="control-label m-0 pb-md-2"
+                                translate
                                 >Request Method</label
                             >
                         </div>
@@ -206,10 +238,16 @@
         </nx-section>
         <nx-section>
             <div class="d-flex justify-content-between">
-                <button (click)="sendAggregateAction('aggregateSystemsRequest')">
+                <button
+                    (click)="sendAggregateAction('aggregateSystemsRequest')"
+                    translate
+                >
                     All systems
                 </button>
-                <button (click)="sendAggregateAction('aggregateRequestByGroup')">
+                <button
+                    (click)="sendAggregateAction('aggregateRequestByGroup')"
+                    translate
+                >
                     All systems in a group
                 </button>
             </div>
@@ -219,7 +257,7 @@
 
 <div class="col-12 p-0 mt-2">
     <nx-block>
-        <header>Socket Data</header>
+        <header translate>Socket Data</header>
         <nx-section>
             <pre [innerText]="socketData | json"></pre>
         </nx-section>
@@ -228,7 +266,7 @@
 
 <div class="col-12 p-0 mt-2">
     <nx-block>
-        <header>System Groups</header>
+        <header translate>System Groups</header>
         <nx-section>
             <pre [innerText]="systemGroups | json"></pre>
         </nx-section>

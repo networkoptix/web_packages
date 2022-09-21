@@ -3,10 +3,14 @@
         class="form-horizontal"
         novalidate
     >
-        <h1>Debug new proxy</h1>
+        <h1 translate>Debug new proxy</h1>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Proxy URL</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Proxy URL</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -18,7 +22,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">System</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >System</label
+            >
             <div class="col-sm-4">
                 <select
                     class="form-control"
@@ -40,7 +48,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Method</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Method</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -51,7 +63,11 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">API call</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >API call</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -62,7 +78,11 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">POST data</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >POST data</label
+            >
             <div class="col-sm-4">
                 <textarea
                     class="form-control"
@@ -73,7 +93,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Request:</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Request:</label
+            >
             <div class="col-sm-4">
                 <p class="form-control-static">{{ debugProxyUrl() }}</p>
             </div>
@@ -83,6 +107,7 @@
                 <button
                     class="btn btn-default"
                     (click)="debugProxy()"
+                    translate
                 >
                     Test
                 </button>
@@ -93,7 +118,11 @@
             *ngIf="debugProxySettings.result"
             [ngClass]="{ 'has-error': !debugProxySettings.success }"
         >
-            <label class="col-sm-2 control-label">Result:</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Result:</label
+            >
             <div class="col-sm-10">
                 <pre>{{ debugProxySettings.result }}</pre>
             </div>
@@ -101,10 +130,14 @@
 
         <hr />
 
-        <h1>Debug merge systems</h1>
+        <h1 translate>Debug merge systems</h1>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Master System</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Master System</label
+            >
             <div class="col-sm-4">
                 <select
                     class="form-control"
@@ -126,7 +159,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Slave System</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Slave System</label
+            >
             <div class="col-sm-4">
                 <select
                     class="form-control"
@@ -152,6 +189,7 @@
                 <button
                     class="btn btn-default"
                     (click)="mergeSystems()"
+                    translate
                 >
                     Merge
                 </button>
@@ -161,7 +199,11 @@
             class="form-group"
             *ngIf="mergeSettings.result"
         >
-            <label class="col-sm-2 control-label">Result:</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Result:</label
+            >
             <div class="col-sm-10">
                 <pre>{{ mergeSettings.result }}</pre>
             </div>
@@ -169,7 +211,7 @@
 
         <hr />
 
-        <h1>Debug native links</h1>
+        <h1 translate>Debug native links</h1>
 
         <div class="form-group">
             <div class="offset-sm-2 col-sm-10">
@@ -191,7 +233,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Auth key</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Auth key</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -204,6 +250,7 @@
                 <button
                     class="btn btn-sm btn-default"
                     (click)="getTempKey()"
+                    translate
                 >
                     Get temporary key
                 </button>
@@ -211,7 +258,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">From</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >From</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -221,12 +272,21 @@
                 />
             </div>
             <div class="col-sm-4">
-                <p class="help-block">portal, mobile, client, webadmin</p>
+                <p
+                    class="help-block"
+                    translate
+                >
+                    portal, mobile, client, webadmin
+                </p>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Context</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Context</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -238,7 +298,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Command</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Command</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -248,12 +312,21 @@
                 />
             </div>
             <div class="col-sm-4">
-                <p class="help-block">client, cloud, system</p>
+                <p
+                    class="help-block"
+                    translate
+                >
+                    client, cloud, system
+                </p>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">SystemId</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >SystemId</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -265,7 +338,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">System action</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >System action</label
+            >
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -280,7 +357,11 @@
             class="form-group"
             [ngClass]="{ 'has-error': actionParametersError }"
         >
-            <label class="col-sm-2 control-label">Action parameters (json)</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Action parameters (json)</label
+            >
             <div class="col-sm-4">
                 <textarea
                     class="form-control"
@@ -300,13 +381,18 @@
                     class="btn btn-default"
                     (click)="openLink()"
                     title="{{ system.stateMessage }}"
+                    translate
                 >
                     Call url
                 </button>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Formatted link:</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Formatted link:</label
+            >
             <div class="col-sm-10">
                 <b>{{ generateLink() }}</b>
                 <pre>{{ formatJSON(linkSettings) }}</pre>
@@ -315,7 +401,7 @@
 
         <hr />
         <div *ngIf="debugProcess">
-            <h1>Debug processes and notifications</h1>
+            <h1 translate>Debug processes and notifications</h1>
             <!--            <div class="form-group">-->
             <!--                <div class="offset-sm-2 col-sm-10">-->
             <!--                    <pre>{{formatJSON(debugProcess.process)}}</pre>-->
@@ -337,12 +423,14 @@
                     <button
                         class="btn btn-primary"
                         (click)="debugProcess.process.run()"
+                        translate
                     >
                         Run process
                     </button>
                     <button
                         class="btn btn-primary"
                         (click)="notify()"
+                        translate
                     >
                         Call notification
                     </button>
@@ -370,9 +458,13 @@
         </div>
 
         <hr />
-        <h1>Debug email notifications</h1>
+        <h1 translate>Debug email notifications</h1>
         <div class="form-group">
-            <label class="fs-mask col-sm-2 control-label">Email</label>
+            <label
+                class="fs-mask col-sm-2 control-label"
+                translate
+                >Email</label
+            >
             <div class="col-sm-10">
                 <input
                     type="email"
@@ -384,7 +476,11 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Type</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Type</label
+            >
             <div class="col-sm-10">
                 <input
                     type="text"
@@ -395,7 +491,11 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Message (json)</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Message (json)</label
+            >
             <div class="col-sm-10">
                 <textarea
                     class="form-control"
@@ -411,6 +511,7 @@
                     type="submit"
                     class="btn btn-default"
                     (click)="testNotification()"
+                    translate
                 >
                     Send Notification
                 </button>
@@ -421,7 +522,11 @@
             *ngIf="result"
             [ngClass]="{ 'has-error': notificationError, 'has-success': !notificationError }"
         >
-            <label class="col-sm-2 control-label">Result:</label>
+            <label
+                class="col-sm-2 control-label"
+                translate
+                >Result:</label
+            >
             <div class="col-sm-12">
                 <pre
                     *ngIf="result"
