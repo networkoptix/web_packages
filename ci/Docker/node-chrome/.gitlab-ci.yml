@@ -4,6 +4,7 @@ variables:
 
 docker:build-node-chrome:
   extends: .docker.template
+  interruptible: true
   before_script:
   - |
     DOCKER_DIR="ci/Docker/node-chrome"
@@ -27,4 +28,5 @@ docker:build-node-chrome:
   - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
     changes:
-    - ci/Docker/node-chrome/*
+      - ci/Docker/node-chrome/*
+      - front_end/**/package*.json

@@ -34,6 +34,7 @@ stages:
   - fail-fast
 
 .retries:
+  interruptible: true
   retry:
     max: 2
     when:
@@ -167,12 +168,18 @@ django-unit-test-fast:
 
 .frontend-node:
   extends: .frontend-changes
+  variables:
+    CHROME_BIN: /usr/bin/google-chrome
+    FRONTEND_NODE_MODULES: /node_modules_frontend
+    ES_LINT_PLUGIN_NODE_MODULES: /node_modules_es_lint_plugin
+
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  before_script:
+    - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
+    - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
 
 all-frontend-checks:
   extends: .frontend-node
-  variables:
-    CHROME_BIN: /usr/bin/google-chrome
   stage: check
   artifacts:
     paths:
@@ -207,18 +214,11 @@ all-frontend-checks:
     popd
 
     pushd "front_end"
-        echo "Installing node_modules"
-        npm ci
-        pushd "eslint-plugin-nx"
-            npm ci
-        popd
         run_background_task "npm run lang-ci-check" "lang_check"
         run_background_task "npm run lint:ci" "lint_ci"
         run_background_task "npm run test:ci" "test_ci"
         pushd "eslint-plugin-nx"
-            npm ci
             run_background_task "npm run build-check" "eslint_plugin_build_check"
-            echo "Installing eslint-plugin-nx node_modules"
             run_background_task "npm run test" "eslint_plugin_test"
         popd
     popd
@@ -316,6 +316,7 @@ wheel-uploader:
 .fail-on:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   stage: fail-fast
+  interruptible: true
   variables:
     CANCEL_ENDPOINT: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/cancel"
     CANCEL_HEADER: "PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN"
