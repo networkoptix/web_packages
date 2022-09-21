@@ -1,78 +1,78 @@
 <div class="panel-body text-center" ng-if="stepIs(0)">
     <div class="master-icon"><span class="preloader"></span></div>
     <div class="vertical-center">
-        <h2>불러오는 중</h2>
+        <h2>Loading ...</h2>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>시스템을 초기화할 수 없습니다.</h2>
+    <h2>Cannot initialize System</h2>
     <p class="master-description">
-        인증 실패
+        Authorization failed.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">재시도</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>시스템을 설정 할수 없습니다.</h2>
-    <p class="master-description">시스템을 설정할 수 없습니다. <br>
+    <h2>Cannot setup System</h2>
+    <p class="master-description">The System cannot be configured. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">재시도</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
     <div>
-        <h2>{{Config.productName}} 시작</h2>
+        <h2>Get Started with {{Config.productName}}</h2>
         <p class="master-description">Please configure the server first.<br>
             Choose an option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
-        <button class="btn btn-primary" autofocus ng-click="next()">신규 시스템 설정</button>
+        <button class="btn btn-primary" autofocus ng-click="next()">Setup New System</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
-            <span class="text"> 또는</span>
+            <span class="text">or</span>
             <span class="line"></span>
         </div>
-        <button class="btn btn-default" ng-click="skip()"> 기존 시스템에 추가 </button><br>
-        <small class="text"> ( {{Config.productName}} 이 이미 설정된 경우) </small><br>
+        <button class="btn btn-default" ng-click="skip()">Add to Existing System</button><br>
+        <small class="text">(if {{Config.productName}} has been already setup)</small><br>
         <small ng-if="!settings.liteClient">&nbsp;</small>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>시스템 이름을 입력하세요</h2>
+    <h2>Enter System Name</h2>
     <p class="master-description">
-        이것은 시스템 식별 혹은 검색을 도와줍니다.
+        It will help to identify or find System.
     </p>
     <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
-                   placeholder="시스템 이름" required auto-focus>
+                   placeholder="System name" required auto-focus>
         </div>
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
             <div class="help-block">
-                시스템 이름이 필요합니다.
+                System name is required
             </div>
         </div>
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
     </form>
     <p class="vertical-bottom">
-        <a href="" ng-click="next('advanced', true)">고급 시스템 설정</a>
+        <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>고급 시스템 설정</h2>
+    <h2>Advanced System settings</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
@@ -100,7 +100,7 @@
             </div>
 
             <label ng-if="Config.settingsConfig[setting].type != 'checkbox' "
-                   for="{{setting}}">{{LANG.settingsConfig[setting]}}</label>
+                   for="{{setting}}" >{{LANG.settingsConfig[setting]}}</label>
             <input ng-if="Config.settingsConfig[setting].type == 'number' " type="number"
                    id="{{setting}}"
                    placeholder="{{}}"
@@ -111,13 +111,13 @@
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
         </div>
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
     </form>
 </div>
 
 
 <div class="panel-body text-center"  ng-if="stepIs('chooseCloudOrLocal')">
-    <h2>시스템 종류 선택</h2>
+    <h2>Choose System type</h2>
     <div class="row radio-panels">
         <div class="col-xs-6 radio-panel ">
             <div class="radio-panel-body"
@@ -125,10 +125,10 @@
                  ng-click="settings.chooseCloudSystem = false">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
-                <h3>로컬</h3>
+                <h3>Local</h3>
                 <p>
-                    로컬 네트워크에서만 사용합니다.<br>
-                    인터넷 연결이 필요 없습니다.
+                    Works in local networks only<br>
+                    Does not require Internet connection
                 </p>
             </div>
         </div>
@@ -138,10 +138,10 @@
                  ng-click="settings.chooseCloudSystem = true">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-cloud"></span></div>
-                <h3>클라우드</h3>
+                <h3>Cloud</h3>
                 <p>
-                    어디서나 접속 가능<br>
-                    인터넷 연결 필수.
+                    Available from everywhere<br>
+                    Requires Internet connection
                 </p>
             </div>
         </div>
@@ -158,43 +158,43 @@
     <div class="master-icon">
         <span class="icon-account"></span>
     </div>
-    <h2>{{Config.cloud.productName}} 계정</h2>
+    <h2>{{Config.cloud.productName}} account</h2>
     <p class="master-description">
-        클라우드 시스템 {{Config.cloud.productName}}을 사용하려면 계정이 필요합니다
+        An account is required to use the cloud System {{Config.cloud.productName}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>새 계정 만들기</button>&nbsp;&nbsp;
-        <button class="btn btn-default" ng-click="next('cloudLogin', true)">기존 사용</button>
+        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Create a new account</button>&nbsp;&nbsp;
+        <button class="btn btn-default" ng-click="next('cloudLogin', true)">Use existing</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('cloudAuthorizedIntro')">
-    <p>시스템에 연결 될 것 이다</p>
+    <p>System will be connected to</p>
 
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
     <h2>{{settings.presetCloudEmail}}</h2>
 
     <p class="vertical-bottom">
-        <a href="" ng-click="next('cloudLogin', true)">다른 계정에 연결</a>
+        <a href="" ng-click="next('cloudLogin', true)">Connect to another account</a>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudLogin')">
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
-    <h2><span class="product-name add-version">{{Config.cloud.productName}}</span>에 로그인</h2>
+    <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
     <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
-                   type="email" placeholder="이메일" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
+                   type="email" placeholder="Email" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudPassword" name="cloudPassword" class="form-control"
-                   type="password" autocomplete="new-password" required placeholder="패스워드" ng-change="clearCloudError()">
+                   type="password" autocomplete="new-password" required placeholder="Password" ng-change="clearCloudError()">
         </div>
 
         <div class="new-style-checkbox" ng-if="settings.thickClient">
@@ -214,14 +214,14 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="stayLoggedIn">
-                <span>로그인 유지</span>
+                <span>Stay logged in</span>
             </label>
         </div>
 
         <div class="form-group has-error"
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.email">
             <div class="help-block">
-                유효한 이메일을 입력하십시오
+                Please, enter a valid email
             </div>
         </div>
 
@@ -229,7 +229,7 @@
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.required ||
                     forms.cloudForm.cloudPassword.$touched && forms.cloudForm.cloudPassword.$error.required">
             <div class="help-block">
-                이메일과 암호가 필요합니다.
+                Email and password are required
             </div>
         </div>
 
@@ -241,16 +241,16 @@
 
         <div class="form-group" ng-if="settings.liteClient">
             <p class="help-block">
-                계정을 만들려면 {{portalUrl}} 을 방문하십시오.
+                To create an account please visit {{portalUrl}}
             </p>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
-    <h2>관리자 암호 설정</h2>
-    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete>
-        <input type="submit" hidden/>
+    <h2>Set up an administrator password</h2>
+    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
             <!-- <input ng-model="settings.localLogin" name="localLogin" class="form-control"
                    type="text" placeholder="Login" required readonly> -->
@@ -264,6 +264,7 @@
             <input ng-model="settings.localPasswordConfirmation" name="localPasswordConfirmation" class="form-control"
                    type="password" autocomplete="new-password" placeholder="Repeat password" required>
         </div>
+
         <div class="new-style-checkbox" ng-if="settings.thickClient">
             <label class="nx-checkbox">
                 <input type="checkbox"
@@ -281,7 +282,7 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="savePassword">
-                <span>패스워드 저장</span>
+                <span>Save password</span>
             </label>
         </div>
 
@@ -290,7 +291,7 @@
                      !forms.localForm.passwordInput.$dirty &&
                      !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
-                비밀번호는 다른 유형의 문자 및 기호를 포함한 8자이상 이어야 합니다.
+                Password must contain different types of characters and have at least 8 symbols
             </div>
         </div>
         <div class="form-group has-error" ng-if="!forms.localForm.passwordInput.password.$valid">
@@ -313,7 +314,7 @@
                     forms.localForm.localPasswordConfirmation.$touched &&
                     forms.localForm.localPasswordConfirmation.$error.required)">
             <div class="help-block">
-                모든 항목을 입력하십시오
+                All fields are required
             </div>
         </div>
 
@@ -321,18 +322,17 @@
              ng-if= "forms.localForm.$valid &&
                      (settings.localPasswordConfirmation != settings.localPassword)">
             <div class="help-block">
-                패스워드가 일치하지 않습니다.
+                Passwords do not match
             </div>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
-    <h2>서버를 기존 시스템에 연결</h2>
+    <h2>Connect the server to the existing System</h2>
     <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
-
             <input type="text" ng-model="settings.remoteSystem" name="remoteSystemName"
                    uib-typeahead="system as system.visibleName for system in discoveredUrls | filter: {isNew:false, visibleName: $viewValue} | limitTo:8"
                    uib-typeahead-input-formatter="getSystemName($model)"
@@ -341,10 +341,10 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
-                   placeholder="기존 시스템 URL (https://host:port)"
+ placeholder="Existing System URL (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
-                   class="form-control">
+ class="form-control">
 
             <p class="help-block text-left">
                 {{settings.remoteSystem.hint}}
@@ -359,14 +359,14 @@
             <input ng-model="settings.remotePassword"
                    name="remotePassword" autocomplete="new-password" class="form-control" type="password"
                    ng-change="clearRemoteError(true)"
-                   placeholder="패스워드" required>
+                   placeholder="Password" required>
         </div>
         <div class="form-group has-error"
              ng-if="forms.remoteSystemForm.remoteSystemName.$touched &&  forms.remoteSystemForm.remoteSystemName.$error.required||
                     forms.remoteSystemForm.remoteLogin.$touched && forms.remoteSystemForm.remoteLogin.$error.required ||
                     forms.remoteSystemForm.remotePassword.$touched && forms.remoteSystemForm.remotePassword.$error.required">
             <div class="help-block">
-                모든 항목을 입력하십시오
+                All fields are required
             </div>
         </div>
 
@@ -381,20 +381,20 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>시스템 병합 중 ...</h2>
-    <p class="master-description">잠시만 기다려 주세요</p>
+    <h2>Merging Systems ...</h2>
+    <p class="master-description">It may take several minutes</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>시스템 병합 중 ...</h2>
-    <p class="master-description">시스템에 연결 시도 중</p>
+    <h2>Merging Systems ...</h2>
+    <p class="master-description">Trying to connect to the System</p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('mergeFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>시스템을 병합할 수 없습니다.</h2>
+    <h2>Cannot merge Systems</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
@@ -406,79 +406,79 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeTemporaryFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>시스템은 성공적으로 병합 되었으나 아직 사용할수 없습니다.</h2>
+    <h2>System was successfully merged, but is not ready yet.</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">재시도</button>
+        <button class="btn btn-default" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>{{Config.cloud.productName}}에 연결중...</h2>
-    <p class="master-description">잠시만 기다려 주세요</p>
+    <h2>Connecting to {{Config.cloud.productName}} ...</h2>
+    <p class="master-description">It may take several moments</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>시스템 사용할 준비가 되었습니다.</h2>
+    <h2>System is ready for use</h2>
     <p>Login</p>
     <h4>{{settings.cloudEmail}}</h4>
-    <p>공유 및 계정 설정</p>
+    <p>Sharing and account settings</p>
     <h4><a class="external" ng-href="{{portalSystemLink}}"  title="open {{Config.cloud.productName}}"
            ng-click="openLink($event)">{{portalShortLink}}</a></h4>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>시스템 사용할 준비가 되었습니다.</h2>
-    <p>서버주소</p>
+    <h2>System is ready for use</h2>
+    <p>Server address</p>
     <h4>{{serverAddress}}</h4>
-    <p>관리자 로그인</p>
+    <p>Administrator login</p>
     <h4>{{settings.localLogin}}</h4>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('configureWrongNetwork')">
-    <p><b>네트워크를 먼저 구성 하십시오</b></p>
+    <p><b>Please configure network settings first</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">설정을 저장하고 장치 재 부 팅</button>
+        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('configureNetworkForInternet')">
-    <p><b>인터넷 연결을 하시려면 네트워크 구성을 하십시요</b></p>
+    <p><b>Configure the network to set up Internet connection</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">설정을 저장하고 장치 재 부 팅</button>
+        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnServer')">
-    <h2>서버를 인터넷에 연결</h2>
+    <h2>Connect the server to the Internet</h2>
     <p class="master-description">
-        {{Config.cloud.productName}}을 사용하여 어디서든 <br> 접속하려면 인터넷을 설정하세요.
+        Set up Internet connection on the server to be able <br> to connect to it anywhere using {{Config.cloud.productName}}.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
         <button class="btn btn-default" ng-click="skip()">Setup local System</button>
     </p>
     <p ng-if="serverInfo.flags.canSetupNetwork" class="vertical-bottom">
-        <a href="" ng-click="next('configureNetworkForInternet')">네트워크 구성 설정</a>
+        <a href="" ng-click="next('configureNetworkForInternet')">Configure network settings</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
-    <h2>{{Config.cloud.productName}}에 연결할 수 없습니다.</h2>
+    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
-        인터넷 연결을 확인 하십시오.
+        Check the Internet connection.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
@@ -488,7 +488,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('cloudFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>{{Config.cloud.productName}}에 연결할 수 없습니다.</h2>
+    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
         {{cloudError}}
     </p>
@@ -500,12 +500,12 @@
 
 <div class="panel-body text-center" ng-if="stepIs('localFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>시스템을 설정 할수 없습니다.</h2>
-    <p class="master-description">무엇인가 잘못된 방향으로 진행되었습니다. <br>
-        오류 내용: {{settings.localError}}
+    <h2>Cannot setup System</h2>
+    <p class="master-description">Something went totally wrong. <br>
+        Error description: {{settings.localError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">재시도</button>
+        <button class="btn btn-default" ng-click="retry()">Try again</button>
     </p>
 </div>
 
@@ -517,15 +517,15 @@
     </p>
     <div class="row">
         <div class="col-xs-6">
-            <div class="text-center"><b>웹 브라우저를 사용 하 여</b></div>
-            <div class="col-xs-4 text-right">주소</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
+            <div class="text-center"><b>Using web browser</b></div>
+            <div class="col-xs-4 text-right">Address</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
-            <div class="text-center"><b>{{Config.productName}} 응용 프로그램을 사용 하 여</b></div>
-            <div class="col-xs-6 text-right">호스트</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
-            <div class="col-xs-6 text-right">포트:</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
+            <div class="text-center"><b>Using {{Config.productName}} application</b></div>
+            <div class="col-xs-6 text-right">Host</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
+            <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
             <div class="col-xs-6 text-right">Login</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
-            <div class="col-xs-6 text-right">패스워드</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
+            <div class="col-xs-6 text-right">Password</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
         </div>
     </div>
 </div>
@@ -535,17 +535,18 @@
             ng-if="activeStep.next"
             ng-disabled="lockNextButton"
             auto-focus
-            ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
+ ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
     <button class="btn btn-primary pull-right"
             ng-if="activeStep.finish"
             ng-disabled="lockNextButton"
             auto-focus
-            ng-click="finish()">Finish</button>
-    <button class="btn btn-default"
+ ng-click="finish()">Finish
+    </button>
+    <button class="btn btn-default pull-left"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
             ng-click="cancel()">Cancel</button>
-    <button class="btn btn-default"
+    <button class="btn btn-default pull-left"
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"
             ng-click="back()"><span class="glyphicon glyphicon-arrow-left"></span></button>

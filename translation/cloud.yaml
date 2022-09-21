@@ -5,21 +5,31 @@ preserve_hierarchy: true
 
 files:
   -
-    source: '/front_end/app/lang*.json'
+    source: '/front_end/src/lang*.json'
     translation: '/translations/%locale_with_underscore%/%original_file_name%'
     ignore:
-      - '/front_end/app/languages.json'
+      - '/front_end/src/languages.json'
   -
     source: '/robot_tests/translations/variables_language_en_US.json'
     translation: '/robot_tests/translations/variables_language_%locale_with_underscore%.json'
   -
-    source: '/front_end/app/views/**/*.*'
+    source: '/front_end/src/views/**/*.*'
     translation: '/translations/%locale_with_underscore%/views/**/%original_file_name%'
     ignore:
-      - '/front_end/app/views/debug.html'
-      - '/front_end/app/views/view.html'
-      - '/front_end/app/views/static/eula.html'
-      - '/front_end/app/views/components/downloadRelease.html'
+      - '/front_end/src/views/debug.html'
+      - '/front_end/src/views/view.html'
+      - '/front_end/src/views/static/eula.html'
+      - '/front_end/src/views/components/downloadRelease.html'
+  -
+    source: '/front_end/inline-wizard/app/views/**/*.html'
+    translation: '/front_end/inline-wizard/translations/%locale_with_underscore%/views/**/%original_file_name%'
+    ignore:
+      - '/front_end/inline-wizard/app/views/components/dialog.html'
+  -
+    source: '/front_end/inline-wizard/app/language.json'
+    translation: '/front_end/inline-wizard/translations/%locale_with_underscore%/language.json'
+    ignore:
+      - '/front_end/inline-wizard/app/views/components/dialog.html'
   -
     source: '/cloud/notifications/static/templates/*.json'
     translation: '/translations/%locale_with_underscore%/templates/%original_file_name%'
