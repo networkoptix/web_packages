@@ -1,6 +1,7 @@
 <div
     #selectedRange
     class="selected-range"
+    (mouseleave)="selectedRangeMouseLeaveHandler($event)"
     (mousedown)="selectedRangeMouseDownHandler($event)"
     (dblclick)="selectedRangeDoubleClickHandler($event)"
 >

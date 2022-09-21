@@ -5,7 +5,8 @@ import {
     ViewChild,
     AfterViewInit,
     OnDestroy,
-    HostListener, Inject
+    HostListener,
+    Inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent, Subject } from 'rxjs';
@@ -25,9 +26,7 @@ import { px, ms } from '@vms-client/utils/type-aliases';
 import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
-import type {
-    TimelineServiceStatus,
-} from '../../services/timeline.services.types';
+import type { TimelineServiceStatus } from '../../services/timeline.services.types';
 import { SELECTION_DRAG_MODE } from '../../services/timeline.services.types';
 import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
 import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
@@ -47,7 +46,7 @@ const CLICK_AND_HOLD_TIMEOUT = 250;
 @Component({
     selector: 'nx-timeline',
     templateUrl: './timeline.component.html',
-    styleUrls: ['./timeline.component.scss']
+    styleUrls: ['./timeline.component.scss'],
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
@@ -74,9 +73,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         public ux: WebClientUxService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.archiveSelectionEnabled = this.configService.flagsEnabled(
-            'archiveSelection'
-        );
+        this.archiveSelectionEnabled =
+            this.configService.flagsEnabled('archiveSelection');
 
         this.selection.subject
             .pipe(untilDestroyed(this))
@@ -111,17 +109,16 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(() => this.updateCanvas.next(true));
 
         this.updateCanvas
-            .pipe(
-                startWith(true),
-                debounceTime(50),
-                untilDestroyed(this)
-            ).subscribe(() => {
+            .pipe(startWith(true), debounceTime(50), untilDestroyed(this))
+            .subscribe(() => {
                 this._updateCanvasGeometry();
                 if (!this._animationFrameRequestHandler) {
                     // allow CanvasGeometry to be updated
                     setTimeout(() => {
                         this._animationFrameRequestHandler =
-                                requestAnimationFrame(() => this.onAnimationFrame());
+                            requestAnimationFrame(() =>
+                                this.onAnimationFrame(),
+                            );
                     }, 250);
                 }
             });
@@ -133,13 +130,14 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 const durationDelta =
                     (scaleChange - 1) * this.timeline.fullRange.duration;
                 this.timeline.zoom(durationDelta, offset);
-            }
+            },
         );
     }
 
     public ngOnDestroy(): void {
         clearTimeout(this._animationTimeout);
-        this._animationFrameRequestHandler && cancelAnimationFrame(this._animationFrameRequestHandler);
+        this._animationFrameRequestHandler &&
+            cancelAnimationFrame(this._animationFrameRequestHandler);
         this._pinchDestructor && this._pinchDestructor();
     }
 
@@ -151,8 +149,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 
         this._animationTimeout = setTimeout(() => {
-            this._animationFrameRequestHandler =
-                requestAnimationFrame(() => this.onAnimationFrame());
+            this._animationFrameRequestHandler = requestAnimationFrame(() =>
+                this.onAnimationFrame(),
+            );
         }, this.timeline.renderFps);
     }
 
@@ -161,7 +160,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         const dpr = window.devicePixelRatio;
         this.canvasView.nativeElement.width = rect.width * dpr;
         this.canvasView.nativeElement.height = rect.height * dpr;
-        this.timeline.setCanvasGeometry(rect.width * dpr, rect.height * dpr, dpr);
+        this.timeline.setCanvasGeometry(
+            rect.width * dpr,
+            rect.height * dpr,
+            dpr,
+        );
     }
 
     public canvasWheelHandler(e: WheelEvent): void {
@@ -184,9 +187,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isDragging = true;
         }
         if (this.isDragging) {
-            const dt = -1 * this.timeline.domWidthToDuration(
-                screenX - this._mouseDownScreenX
-            );
+            const dt =
+                -1 *
+                this.timeline.domWidthToDuration(
+                    screenX - this._mouseDownScreenX,
+                );
             // console.log('dragging in progress', dt)
             this.timeline.shiftVisibleRange(dt);
             this._mouseDownScreenX = screenX;
@@ -213,7 +218,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         if (this.archiveSelectionEnabled) {
             const offsetY = calcOffsetY(e);
-            if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
+            if (
+                offsetY >= CANVAS_SELECTION_OFFSET_START &&
                 offsetY <= CANVAS_SELECTION_OFFSET_END
             ) {
                 this.selection.handleBackgroundMouseDown(e as MouseEvent);
@@ -244,16 +250,24 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         if (offsetX < edgeWidth) {
             // console.log('left edge fix')
             this.timeline.jumpScrollTo(time - offset, true);
-        } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
+        } else if (
+            offsetX >
+            this.timeline.canvasGeometry.width /
+                this.timeline.canvasGeometry.dpr -
+                edgeWidth
+        ) {
             // console.log('right edge fix')
             this.timeline.jumpScrollTo(
                 time - this.timeline.visibleRange.duration + offset,
-                true
+                true,
             );
         }
     }
 
-    public canvasMouseUpHandler(e: MouseEvent | TouchEvent, mustPlay: boolean = false): void {
+    public canvasMouseUpHandler(
+        e: MouseEvent | TouchEvent,
+        mustPlay: boolean = false,
+    ): void {
         e.stopPropagation();
         e.preventDefault();
 
@@ -289,7 +303,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
             if (!this.selection.handleMouseUp(e)) {
-                this._play(e.clientX - (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left);
+                this._play(
+                    e.clientX -
+                        (
+                            this.canvasView.nativeElement as HTMLElement
+                        ).getBoundingClientRect().left,
+                );
             }
         }
     }

@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -5,6 +6,7 @@ import {
     ElementRef,
     ViewChild,
     AfterViewInit,
+    Inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
@@ -12,17 +14,13 @@ import { animationFrameScheduler, interval } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import {
-    TimelineScrollbarRelativeService
-} from '@vms-client/submodules/timeline/services/timeline.scrollbarRelative.service';
+import { TimelineScrollbarRelativeService } from '@vms-client/submodules/timeline/services/timeline.scrollbarRelative.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import type { ms } from '@vms-client/utils/type-aliases';
 import { px } from '@vms-client/utils/type-aliases';
 
-import {
-    TimelineSelectionService,
-} from '../../services/timeline.selection.service';
+import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
 import type {
     TimelineServiceStatus,
@@ -60,7 +58,7 @@ enum EDGE_SCROLLING_SPEED_POS {
 @Component({
     selector: 'nx-timeline-selection',
     templateUrl: './timeline-selection.component.html',
-    styleUrls: ['./timeline-selection.component.scss']
+    styleUrls: ['./timeline-selection.component.scss'],
 })
 export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     protected selectionStatus: TimelineSelectionServiceStatus;
@@ -100,7 +98,9 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             this.rightDate = '';
             this.rightTime = '';
         } else {
-            const tweakedTStart = this.vms.tweakT(this.selectionStatus.range.start);
+            const tweakedTStart = this.vms.tweakT(
+                this.selectionStatus.range.start,
+            );
             const tweakedTEnd = this.vms.tweakT(this.selectionStatus.range.end);
             this.leftDate = dateFormat(tweakedTStart, DATE_FORMAT_STRING);
             this.leftTime = dateFormat(tweakedTStart, TIME_FORMAT_STRING);
@@ -117,9 +117,9 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         private scroll: TimelineScrollbarRelativeService,
         protected playback: PlaybackService,
         protected wheel: TimelineWheelHandlerService,
-        protected timeUnderMouse: TimelineTimeUnderMouseService
-    ) {
-    }
+        protected timeUnderMouse: TimelineTimeUnderMouseService,
+        @Inject(DOCUMENT) private document: Document,
+    ) {}
 
     public ngOnInit(): void {
         this.selection.subject
@@ -146,70 +146,66 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         const offset = this.timeline.domWidthToDuration((1 << speed) * 10);
         let target = this.timeline.visibleRange.start;
 
-        target = (direction === EDGE_SCROLLING_DIRECTION.LEFT)
-            ? target - offset
-            : target + offset;
+        target =
+            direction === EDGE_SCROLLING_DIRECTION.LEFT
+                ? target - offset
+                : target + offset;
 
-        if (
-            this.timeline.stepScrollToStartTime(
-                target,
-                EDGE_SCROLL_STEP
-            )
-        ) {
+        if (this.timeline.stepScrollToStartTime(target, EDGE_SCROLL_STEP)) {
             this.updateMouseMoveEvent(this._lastMouseMoveEvent);
         }
     }
 
     private _onAnimationFrame() {
-        // @ts-expect-error classname does not exist in EventTarget
-        const direction = this._lastMouseMoveEvent?.target.className === 'right-draggable'
-            ? EDGE_SCROLLING_DIRECTION.RIGHT
-            : EDGE_SCROLLING_DIRECTION.LEFT;
+        const direction =
+            // @ts-expect-error classname does not exist in EventTarget
+            this._lastMouseMoveEvent?.target.className === 'right-draggable'
+                ? EDGE_SCROLLING_DIRECTION.RIGHT
+                : EDGE_SCROLLING_DIRECTION.LEFT;
 
-        const canScroll = (direction === EDGE_SCROLLING_DIRECTION.LEFT)
-            ? this.scroll.canScrollLeft
-            : this.scroll.canScrollRight;
+        const canScroll =
+            direction === EDGE_SCROLLING_DIRECTION.LEFT
+                ? this.scroll.canScrollLeft
+                : this.scroll.canScrollRight;
 
         if (!(this.selectionMode && canScroll)) {
             return;
         }
 
-        const timelineWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
+        const timelineWidth =
+            this.timeline.canvasGeometry.width /
+            this.timeline.canvasGeometry.dpr;
         if (direction === EDGE_SCROLLING_DIRECTION.LEFT) {
             // left going left
             if (this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
-                this.scrollTimeline(
-                    this.left,
-                    EDGE_SCROLLING_DIRECTION.LEFT
-                );
+                this.scrollTimeline(this.left, EDGE_SCROLLING_DIRECTION.LEFT);
             }
             // left going right
             if (timelineWidth - this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
                 this.scrollTimeline(
                     this.timeline.canvasGeometry.width - this.left,
-                    EDGE_SCROLLING_DIRECTION.RIGHT)
-                ;
+                    EDGE_SCROLLING_DIRECTION.RIGHT,
+                );
             }
         }
 
         if (direction === EDGE_SCROLLING_DIRECTION.RIGHT) {
             this.right = timelineWidth - (this.left + this.duration);
             if (this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
-                this.scrollTimeline(
-                    this.right,
-                    EDGE_SCROLLING_DIRECTION.RIGHT
-                );
+                this.scrollTimeline(this.right, EDGE_SCROLLING_DIRECTION.RIGHT);
             }
             if (timelineWidth - this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
                 this.scrollTimeline(
                     timelineWidth - this.right,
-                    EDGE_SCROLLING_DIRECTION.LEFT
+                    EDGE_SCROLLING_DIRECTION.LEFT,
                 );
             }
         }
     }
 
-    private distanceToScrollingSpeed(distanceFromEdge: px): EDGE_SCROLLING_SPEED {
+    private distanceToScrollingSpeed(
+        distanceFromEdge: px,
+    ): EDGE_SCROLLING_SPEED {
         if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.FAR) {
             return EDGE_SCROLLING_SPEED.NONE;
         }
@@ -237,21 +233,21 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         if (this.selectedRangeView && this.selectionStatus.isActive) {
             this.selectedRangeView.nativeElement.classList.add('active');
             this.left = this.timeline.timeToDomOffsetX(
-                this.selectionStatus.range.start
+                this.selectionStatus.range.start,
             );
             this.duration = this.timeline.durationToDomWidth(
-                this.selectionStatus.range.duration
+                this.selectionStatus.range.duration,
             );
 
             this.selectedRangeView.nativeElement.style.left = `${this.left}px`;
             this.selectedRangeView.nativeElement.style.width = `${this.duration}px`;
             this.leftEarView?.nativeElement.classList.toggle(
                 'playback',
-                this._leftEarOverPlayback
+                this._leftEarOverPlayback,
             );
             this.rightEarView?.nativeElement.classList.toggle(
                 'playback',
-                this._rightEarOverPlayback
+                this._rightEarOverPlayback,
             );
         } else if (this.selectedRangeView) {
             this.selectedRangeView.nativeElement.classList.remove('active');
@@ -296,10 +292,15 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth);
         if (offsetX < edgeWidth) {
             this.timeline.jumpScrollTo(time - offset, true);
-        } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
+        } else if (
+            offsetX >
+            this.timeline.canvasGeometry.width /
+                this.timeline.canvasGeometry.dpr -
+                edgeWidth
+        ) {
             this.timeline.jumpScrollTo(
                 time - this.timeline.visibleRange.duration + offset,
-                true
+                true,
             );
         }
     }
@@ -313,9 +314,10 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         }, CLICK_AND_HOLD_TIMEOUT);
     }
 
+    @HostListener('document:mouseup', ['$event'])
     @HostListener('mouseup', ['$event'])
     public mouseSelectionUpHandler(e: MouseEvent): void {
-        if (!this.selectionMode) {
+        if (!this.selectionMode && e.currentTarget !== this.document) {
             this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
             // short click
             const offsetX = calcOffsetX(e);
@@ -328,11 +330,6 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         this.hideRightEar = this.selectionStatus.isActive;
         this.selection.handleMouseUp(e);
     }
-
-    // @HostListener('document:mouseup', ['$event'])
-    // public mouseUpHandler(e: MouseEvent): void {
-    //     this.selection.handleMouseUp(e);
-    // }
 
     @HostListener('mouseenter', ['$event'])
     public mouseEnterHandler(e: MouseEvent): void {
@@ -357,12 +354,19 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             offsetX:
                 (e.target as HTMLElement).getBoundingClientRect().left -
                 this.host.getBoundingClientRect().left +
-                e.offsetX
+                e.offsetX,
         });
-        this.selection.handleMouseMove(e);
-        if (this.selectionMode) {
+        if (this.selectionMode && e.buttons) {
+            this.selection.handleMouseMove(e);
             this.hideLeftEar = this.selection.range.duration === 0;
             this.hideRightEar = this.selection.range.duration === 0;
+        }
+    }
+
+    public selectedRangeMouseLeaveHandler(e: MouseEvent): void {
+        if (!this.selectionMode) {
+            this.hideLeftEar = true;
+            this.hideRightEar = true;
         }
     }
 
@@ -387,13 +391,17 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public rightEarMouseInOutHandler(status: boolean): void {
-        this.selection.handleEarMouseInOut(status);
-        this.hideRightEar = !status;
+        if (!this.selectionMode) {
+            this.selection.handleEarMouseInOut(status);
+            this.hideRightEar = !status;
+        }
     }
 
     public leftEarMouseInOutHandler(status: boolean): void {
-        this.selection.handleEarMouseInOut(status);
-        this.hideLeftEar = !status;
+        if (!this.selectionMode) {
+            this.selection.handleEarMouseInOut(status);
+            this.hideLeftEar = !status;
+        }
     }
 
     @HostListener('wheel', ['$event'])
@@ -408,7 +416,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                     this.host.getBoundingClientRect().left +
                     e.offsetX,
                 deltaX: e.deltaX,
-                deltaY: e.deltaY
+                deltaY: e.deltaY,
             });
         } else {
             this.wheel.handleWheel(e);
