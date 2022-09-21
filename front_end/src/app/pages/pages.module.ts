@@ -16,24 +16,24 @@ import { FeatureFlagStrings } from '@services/nx-config/base-config';
 const lazyRoutes: Routes = [
     {
         path: '',
-        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule),
+        loadChildren: () => import('@pages/landing/landing.module').then(m => m.LandingModule),
         pathMatch: 'full'
     },
     {
         path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.NxAccountModule)
+        loadChildren: () => import('@pages/account/account.module').then(m => m.NxAccountModule)
     },
     {
         path: 'systems/:systemId/advanced',
-        loadChildren: () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
+        loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
     {
         path: 'systems/:systemId/view',
-        loadChildren: () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
+        loadChildren: () => import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule)
     },
     {
         path: 'systems/:systemId/layouts',
-        loadChildren: () => import('./systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
+        loadChildren: () => import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
         canLoad: [FeatureGuard],
         canActivate: [SystemGuard],
         data: {
@@ -42,41 +42,41 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'health-report',
-        loadChildren: () => import('./health/health.module').then(m => m.NxHealthModule)
+        loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule)
     },
     {
         path: 'new-landing',
-        loadChildren: () => import('./new-landing/new-landing.module').then(m => m.NewLandingModule)
+        loadChildren: () => import('@pages/new-landing/new-landing.module').then(m => m.NewLandingModule)
     },
     {
         path: 'systems/:systemId/health',
-        loadChildren: () => import('./health/health.module').then(m => m.NxHealthModule)
+        loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule)
     },
     {
         path: 'systems/:systemId/bookmarks',
-        loadChildren: () => import('./systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
+        loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
         canActivate: [BookmarksGuard]
     },
     {
         path: 'systems/:systemId/monitoring',
-        loadChildren: () => import('./monitoring/monitoring.module').then(m => m.NxMonitoringModule),
+        loadChildren: () => import('@pages/monitoring/monitoring.module').then(m => m.NxMonitoringModule),
         canActivate: [AuthGuard, SystemGuard, TwofaGuard]
     },
     {
         path: 'integrations/:id',
-        loadChildren: () => import('./integration/details/details.module').then(m => m.IntegrationDetailModule)
+        loadChildren: () => import('@pages/integration/details/details.module').then(m => m.IntegrationDetailModule)
     },
     {
         path: 'integrations',
-        loadChildren: () => import('./integration/integrations.module').then(m => m.IntegrationsModule)
+        loadChildren: () => import('@pages/integration/integrations.module').then(m => m.IntegrationsModule)
     },
     {
         path: 'systems',
-        loadChildren: () => import('./systems/list/list.module').then(m => m.NxSystemsListModule)
+        loadChildren: () => import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule)
     },
     {
         path: 'systems/groups',
-        loadChildren: () => import('./systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
+        loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
         // canActivate: [AuthGuard],
         // uncomment to enable the feature flag:
         // canLoad: [FeatureGuard],
@@ -86,31 +86,31 @@ const lazyRoutes: Routes = [
     },
     // {
     //     path: 'systems/groupsbak',
-    //     loadChildren: () => import('./systems/groups.bak/groups.module').then(m => m.NxSystemGroupsModule),
+    //     loadChildren: () => import('@pages/systems/groups.bak/groups.module').then(m => m.NxSystemGroupsModule),
     // },
     {
         path: 'download',
-        loadChildren: () => import('./download/download.module').then(m => m.DownloadModule)
+        loadChildren: () => import('@pages/download/download.module').then(m => m.DownloadModule)
     },
     {
         path: 'downloads',
-        loadChildren: () => import('./download-history/download-history.module').then(m => m.DownloadHistoryModule)
+        loadChildren: () => import('@pages/download-history/download-history.module').then(m => m.DownloadHistoryModule)
     },
     {
         path: 'sandbox',
-        loadChildren: () => import('./sandbox/sandbox.module').then(m => m.SandboxModule)
+        loadChildren: () => import('@pages/sandbox/sandbox.module').then(m => m.SandboxModule)
     },
     {
         path: 'doc/developers/api-tool',
-        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+        loadChildren: () => import('@pages/api-tool/api-tool.module').then(m => m.NxApiToolModule)
     },
     {
         path: 'docs',
-        loadChildren: () => import('./developers/developers.module').then(m => m.NxDevelopersModule)
+        loadChildren: () => import('@pages/developers/developers.module').then(m => m.NxDevelopersModule)
     },
     {
         path: 'developers',
-        loadChildren: () => import('./developer-console/developer-console.module').then(m => m.NxDeveloperConsoleModule),
+        loadChildren: () => import('@pages/developer-console/developer-console.module').then(m => m.NxDeveloperConsoleModule),
         canLoad: [FeatureGuard],
         canActivate: [AuthGuard],
         data: {
@@ -119,77 +119,77 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'systems/:systemId',
-        loadChildren: () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
+        loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
     {
         path: 'twofa-required',
-        loadChildren: () => import('./twofa-required/twofa-required.module').then(m => m.TwofaRequiredModule)
+        loadChildren: () => import('@pages/twofa-required/twofa-required.module').then(m => m.TwofaRequiredModule)
     },
     {
         path: 'ipvd',
-        loadChildren: () => import('./ipvd/ipvd.module').then(m => m.IpvdModule)
+        loadChildren: () => import('@pages/ipvd/ipvd.module').then(m => m.IpvdModule)
     },
     {
         path: 'embed/ipvd',
-        loadChildren: () => import('./ipvd/ipvd.module').then(m => m.IpvdModule)
+        loadChildren: () => import('@pages/ipvd/ipvd.module').then(m => m.IpvdModule)
     },
     {
         path: 'login',
-        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
+        loadChildren: () => import('@pages/landing/landing.module').then(m => m.LandingModule)
     },
     {
         path: 'logout',
-        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
+        loadChildren: () => import('@pages/landing/landing.module').then(m => m.LandingModule)
     },
     {
         path: 'push-notifications',
-        loadChildren: () => import('./push-notifications/push-notifications.module').then(m => m.PushNotificationsModule)
+        loadChildren: () => import('@pages/push-notifications/push-notifications.module').then(m => m.PushNotificationsModule)
     },
     {
         path: 'email-notifications',
-        loadChildren: () => import('./email-notifications/email-notifications.module').then(m => m.EmailNotificationsModule)
+        loadChildren: () => import('@pages/email-notifications/email-notifications.module').then(m => m.EmailNotificationsModule)
     },
     {
         path: 'content/about',
-        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
+        loadChildren: () => import('@pages/landing/landing.module').then(m => m.LandingModule)
     },
     {
         path: 'content',
-        loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
+        loadChildren: () => import('@pages/content/content.module').then(m => m.ContentModule)
     },
     {
         path: 'agreement',
-        loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
+        loadChildren: () => import('@pages/content/content.module').then(m => m.ContentModule)
     },
     {
         path: 'browser',
-        loadChildren: () => import('./non-supported-browser/non-supported-browser.module').then(m => m.NonSupportedBrowserModule)
+        loadChildren: () => import('@pages/non-supported-browser/non-supported-browser.module').then(m => m.NonSupportedBrowserModule)
     },
     {
         path: 'cloud-authorize',
-        loadChildren: () => import('./cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
+        loadChildren: () => import('@pages/cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
     },
     {
         path: 'restore_password',
         canActivate: [RedirectAuthGuard],
-        loadChildren: () => import('./404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
+        loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
     },
     {
         path: 'register',
         canActivate: [RedirectAuthGuard],
-        loadChildren: () => import('./404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
+        loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
     },
     {
         path: '500',
-        loadChildren: () => import('./500/500.module').then(m => m.Nx500Module)
+        loadChildren: () => import('@pages/500/500.module').then(m => m.Nx500Module)
     },
     {
         path: '503',
-        loadChildren: () => import('./503/503.module').then(m => m.Nx503Module)
+        loadChildren: () => import('@pages/503/503.module').then(m => m.Nx503Module)
     },
     {
         path: '404',
-        loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
+        loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module)
     },
     {
         path: 'dashboard',
@@ -199,11 +199,11 @@ const lazyRoutes: Routes = [
             flags: FeatureFlagStrings.dashboard,
             override: 'devServer'
         },
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.NxDashboardModule)
+        loadChildren: () => import('@pages/dashboard/dashboard.module').then(m => m.NxDashboardModule)
     },
     {
         path: '**',
-        loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
+        loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module)
     }
 ];
 

@@ -568,6 +568,7 @@
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
           },
+          "tsConfig": "tsconfig.json",
           "configurations": {
             "production": {
               "browserTarget": "authorization:build:production"
