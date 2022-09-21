@@ -7,6 +7,11 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { HelperMockProvider } from '@mocks/helpers.test';
+import {
+    devToolsNode,
+    docMenuMap
+} from '@mocks/knowledge_base_landing.mock';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockDirective, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
@@ -18,12 +23,6 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
-
-import { HelperMockProvider } from '../../../_mocks/helpers.test';
-import {
-    devToolsNode,
-    docMenuMap
-} from '../../../_mocks/knowledge_base_landing.mock';
 
 import { NxDevToolsComponent } from './dev-tools.component';
 

@@ -41,7 +41,8 @@
             "@src/*": ["src/*", "common/*", "libs/*"],
             "@authorization/*": ["apps/authorization/*"],
             "@pipes/*": ["src/app/pipes/*", "libs/pipes/*"],
-            "@common/*": ["common/*"]
+            "@common/*": ["common/*"],
+            "@mocks/*": ["common/_mocks/*"]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]

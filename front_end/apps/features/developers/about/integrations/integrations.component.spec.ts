@@ -3,6 +3,14 @@ import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
+import {
+    getMockTranslations,
+    HelperMockProvider,
+    sanitizerMock
+} from '@mocks/helpers.test';
+import {
+    integrationsNode
+} from '@mocks/knowledge_base_landing.mock';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockDirective, MockProvider } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
@@ -13,15 +21,6 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
-
-import {
-    getMockTranslations,
-    HelperMockProvider,
-    sanitizerMock
-} from '../../../../_mocks/helpers.test';
-import {
-    integrationsNode
-} from '../../../../_mocks/knowledge_base_landing.mock';
 
 import { NxIntegrationsComponent } from './integrations.component';
 

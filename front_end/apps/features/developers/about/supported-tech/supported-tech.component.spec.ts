@@ -2,17 +2,16 @@ import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, RouterLink } from '@angular/router';
+import { HelperMockProvider } from '@mocks/helpers.test';
+import {
+    routeLandingMock,
+    supportedTechNode
+} from '@mocks/knowledge_base_landing.mock';
 import { MockDirective } from 'ng-mocks';
 
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
-
-import { HelperMockProvider } from '../../../../_mocks/helpers.test';
-import {
-    routeLandingMock,
-    supportedTechNode
-} from '../../../../_mocks/knowledge_base_landing.mock';
 
 import { NxSupportedTechComponent } from './supported-tech.component';
 

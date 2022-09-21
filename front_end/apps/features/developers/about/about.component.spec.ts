@@ -4,6 +4,15 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { getMockTranslations, HelperMockProvider } from '@mocks/helpers.test';
+import {
+    landingRoute,
+    docMenuMap,
+    menuStructure,
+    documentation,
+    introNode,
+    routeLandingMock
+} from '@mocks/knowledge_base_landing.mock';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -16,16 +25,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-
-import { getMockTranslations, HelperMockProvider } from '../../../_mocks/helpers.test';
-import {
-    landingRoute,
-    docMenuMap,
-    menuStructure,
-    documentation,
-    introNode,
-    routeLandingMock
-} from '../../../_mocks/knowledge_base_landing.mock';
 
 import { NxAboutComponent } from './about.component';
 

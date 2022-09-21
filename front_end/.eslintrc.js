@@ -1,8 +1,8 @@
 /** Files that need to be typed */
 const typeLintBlacklist = [
     'packages/dashboard-widget-state/types.ts',
-    'src/app/_mocks/getSettings.mock.ts',
-    'src/app/_mocks/helpers.test.ts',
+    'common/_mocks/getSettings.mock.ts',
+    'common/_mocks/helpers.test.ts',
     'src/app/components/advanced-filter/advanced-filter.component.ts',
     'src/app/components/apply/apply.component.ts',
     'src/app/components/carousel/carousel.component.ts',

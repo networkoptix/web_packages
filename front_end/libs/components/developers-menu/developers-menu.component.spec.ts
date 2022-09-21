@@ -3,6 +3,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgModel } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { kbMenu } from '@mocks/knowledge_base_menu.mock';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockComponent, MockDirective, MockModule } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
@@ -15,8 +16,6 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-
-import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
 
 import { NxDevelopersMenuComponent } from './developers-menu.component';
 
