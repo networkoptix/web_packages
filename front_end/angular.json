@@ -10,8 +10,8 @@
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "apps/front-end",
+      "sourceRoot": "apps/front-end/src",
       "prefix": "app",
       "architect": {
         "build": {
@@ -33,9 +33,9 @@
               "swagger-ui"
             ],
             "outputPath": "dist/front_end",
-            "index": "src/app/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "index": "apps/front-end/src/app/index.html",
+            "main": "apps/front-end/src/main.ts",
+            "polyfills": "apps/front-end/src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -82,8 +82,7 @@
                 "glob": "**/*",
                 "input": "common/language",
                 "output": "."
-              },
-              "src/supported_languages.json"
+              }
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",
@@ -273,8 +272,8 @@
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "apps/webadmin",
+      "sourceRoot": "apps/webadmin/src",
       "prefix": "app",
       "architect": {
         "build": {
@@ -296,9 +295,9 @@
               "swagger-ui"
             ],
             "outputPath": "dist",
-            "index": "src/app/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "index": "apps/webadmin/src/app/index.html",
+            "main": "apps/webadmin/src/main.ts",
+            "polyfills": "apps/webadmin/src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -390,11 +389,7 @@
                   "replace": "src/app/routeGuards/authGuard.ts",
                   "with": "src/app/routeGuards/authGuard.webadmin.ts"
                 }
-              ],
-              "index": {
-                "input": "src/app/index.tagless.html",
-                "output": "index.html"
-              }
+              ]
             },
             "production": {
               "fileReplacements": [
@@ -407,10 +402,6 @@
                   "with": "src/app/services/account.service/index.webadmin.ts"
                 }
               ],
-              "index": {
-                "input": "src/app/index.tagless.html",
-                "output": "index.html"
-              },
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
@@ -468,9 +459,9 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "common/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": "apps/webadmin/src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "karmaConfig": "karma.conf.ci.js",
+            "karmaConfig": "apps/webadmin/karma.conf.ci.js",
             "assets": [
               "src/favicon.ico",
               "src/assets"

@@ -50,9 +50,7 @@ import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
-import { PagesModule } from '@pages/pages.module';
 import { initializeApp } from '@pages/push-notifications/push-notifications.module';
-import { WebadminPageModule } from '@pages/webadmin-page.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
@@ -61,6 +59,8 @@ import { WINDOWS_PROVIDERS } from '@services/window-provider';
 // import { PipesModule } from '@app/pipes/pipes.module';
 
 import { AppComponent } from './app.component';
+import { PagesModule } from './pages/pages.module';
+import { WebadminPageModule } from './pages/webadmin-page.module';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
