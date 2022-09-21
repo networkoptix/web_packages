@@ -96,6 +96,7 @@
               "includePaths": [
                 "src/app/styles",
                 "common/styles",
+                "common/styles/common",
                 "src/app",
                 "libs"
               ]
@@ -254,6 +255,7 @@
               "includePaths": [
                 "node_modules/",
                 "src/app/styles",
+                "common/styles/common",
                 "common/styles",
                 "src/app"
               ]
@@ -369,6 +371,7 @@
               "includePaths": [
                 "src/app/styles",
                 "common/styles",
+                "common/styles/common",
                 "src/app",
                 "libs"
               ]
@@ -493,6 +496,7 @@
                 "node_modules/",
                 "src/app/styles",
                 "common/styles",
+                "common/styles/common",
                 "src/app",
                 "libs"
               ]
