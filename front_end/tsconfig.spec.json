@@ -1,0 +1,44 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "es2020",
+        "lib": ["es2020", "dom", "DOM.Iterable"],
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "noImplicitAny": false,
+        "noUnusedLocals": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "baseUrl": "",
+        "paths": {
+            "@components/*": ["src/app/components/*"],
+            "@decorators/*": ["src/app/decorators/*"],
+            "@directives/*": ["src/app/directives/*"],
+            "@dialogs/*": ["src/app/dialogs/*"],
+            "@environments/*": ["src/environments/*"],
+            "@interceptors/*": ["src/app/interceptors/*"],
+            "@pages/*": ["src/app/pages/*", "apps/features/*"],
+            "@view/*": ["src/app/pages/systems/view/*"],
+            "@vms-client/*": ["src/app/pages/systems/view/vms-client/*"],
+            "@guards/*": ["src/app/routeGuards/*"],
+            "@services/*": ["src/app/services/*"],
+            "@utils/*": ["src/app/utils/*"],
+            "@src/app/*": ["src/app/*"],
+            "@app/*": ["src/app/*"],
+            "@lib/*": ["src/lib/*"],
+            "@src/*": ["src/*"],
+            "@authorization/*": ["apps/authorization/*"]
+        },
+        "typeRoots": ["node_modules/@types"],
+        "types": ["jasmine", "node"]
+    },
+    "angularCompilerOptions": {
+        "enableIvy": true,
+        "strictTemplates": true
+    },
+    "include": ["**/main.ts", "**/polyfills.ts", "**/*.spec.ts", "**/*.d.ts"],
+    "exclude": ["node_modules", ".eslintrc.js"]
+}

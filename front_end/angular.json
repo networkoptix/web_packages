@@ -36,7 +36,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
@@ -213,7 +213,7 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.ci.js",
             "assets": [
               "src/favicon.ico",
@@ -281,7 +281,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
@@ -423,7 +423,7 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.app.json",
             "karmaConfig": "karma.conf.ci.js",
             "assets": [
               "src/favicon.ico",
@@ -468,7 +468,7 @@
             "index": "apps/authorization/src/index.html",
             "main": "apps/authorization/src/main.ts",
             "polyfills": "apps/authorization/src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
               "apps/authorization/src/favicon.ico",
               "apps/authorization/src/assets"
@@ -585,7 +585,7 @@
           "options": {
             "main": "apps/authorization/src/test.ts",
             "polyfills": "apps/authorization/src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "apps/authorization/karma.conf.js",
             "assets": [
               "apps/authorization/src/favicon.ico",
@@ -602,7 +602,7 @@
           "options": {
             "main": "apps/authorization/src/test.ts",
             "polyfills": "apps/authorization/src/polyfills.ts",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "apps/authorization/karma.conf.ci.js",
             "codeCoverage": true,
             "assets": [
