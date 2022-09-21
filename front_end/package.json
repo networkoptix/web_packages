@@ -81,7 +81,7 @@
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",
     "test-lang": "node --experimental-specifier-resolution=node testCompiledLang.mjs",
-    "update-lang": "ngx-translate-extract -i ./src/app ./apps/authorization/src -o ./src/language_i18n.json --clean --sort --format json",
+    "update-lang": "ngx-translate-extract -i ./src/app ./apps ./libs -o ./src/language_i18n.json --clean --sort --format json",
     "update-lang-types": "quicktype ./src/language_i18n_static.json -o ./src/language_i18n_static_types.ts --just-types; sed -i -e 's/string;/TranslateFuncType;/g' src/language_i18n_static_types.ts; sed -i -e 's/string /TranslateFuncType /g' src/language_i18n_static_types.ts; sed -i -e 's/TranslateFuncType/(params?: Record<string, string | number>) => string/g' src/language_i18n_static_types.ts; rm -f src/language_i18n_static_types.ts-e",
     "link-local-libs": "node src/lib/link-libs.js",
     "publish-public-libraries": "node src/lib/publish-public-libs.js",

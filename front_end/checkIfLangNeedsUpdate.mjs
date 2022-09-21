@@ -6,7 +6,7 @@ const hashFile = 'language_hash'
 const update = process.argv.pop() === 'update'
 
 const include = [
-    "./src/**/*.component.html",
+    "**/*.component.html",
     "./src/language_*.json",
     "./src/customization/menus.json",
     "./src/language_i18n_static_types.ts",
