@@ -3,8 +3,7 @@
 <head></head>
 <body>
 <div>
-    <button onclick="getCode()">Get access code</button>
-    <button onclick="initWebsocket()">Connect</button>
+    <button onclick="getCode()">Login</button>
     <button onclick="reset()">Reset Inputs</button>
 </div>
 <hr>
@@ -141,7 +140,7 @@
                 }, {});
             } else if (action === 'list_groups') {
                 const createGroupOption = (g) => `<option value="${g.id}">${g.name} (${g.id})</option>`;
-                const gidOptions = ['<option value="">Root</option>'];
+                const gidOptions = ['<option value="" selected>Root</option>'];
 
                 const placedSystems = new Set();
                 const mapIdsToSystem = (groupSystems) => groupSystems
@@ -172,8 +171,6 @@
                 const stringOptions = gidOptions.join();
                 groupId.innerHTML = stringOptions;
                 targetId.innerHTML = stringOptions;
-                groupId.value ||= gidOptions[0]?.id;
-                targetId.value ||= gidOptions[0]?.id;
 
                 Object.entries(systems).forEach(([id, system]) => {
                     if (!placedSystems.has(id)) {
@@ -250,6 +247,7 @@
                 console.log(`code: ${code}`);
                 console.log('If 2fa is enabled you will need to verify the code before connecting');
             })
+            .then(initWebsocket)
             .catch(error => console.log('error', error));
     }
 </script>
