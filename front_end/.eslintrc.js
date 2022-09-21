@@ -537,7 +537,7 @@ module.exports = {
         },
         {
             // Don't need to enforce naming on sandbox components
-            files: ['src/app/pages/sandbox/**/*.ts'],
+            files: ['**/sandbox/**/*.ts'],
             rules: {
                 '@angular-eslint/component-class-suffix': 'off',
                 '@angular-eslint/component-selector': 'off',
