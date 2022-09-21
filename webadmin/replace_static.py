@@ -2,8 +2,8 @@ from sys import argv
 import json
 
 target_json_paths = argv[1:]
-description_path = "src/customization/description.json"
-config_path = "src/customization/webadmin_config.json"
+description_path = "common/customization/description.json"
+config_path = "common/customization/webadmin_config.json"
 
 with open(description_path) as description_file:
     description = json.load(description_file)
@@ -20,7 +20,7 @@ main_replacements = {
 }
 
 page_title_replacements = {
-   "%CLOUD_NAME%": "webadmin",
+    "%CLOUD_NAME%": "webadmin",
 }
 
 
@@ -46,7 +46,8 @@ for lang_path in target_json_paths:
     with open(lang_path) as lang_file:
         language_compiled = json.load(lang_file)
 
-    traverse_and_replace(language_compiled['pageTitles'], replacements=page_title_replacements)
+    traverse_and_replace(
+        language_compiled['pageTitles'], replacements=page_title_replacements)
     traverse_and_replace(language_compiled, replacements=main_replacements)
     traverse_and_replace(config, replacements=main_replacements)
 

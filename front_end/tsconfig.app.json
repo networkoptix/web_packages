@@ -18,8 +18,11 @@
             "@decorators/*": ["src/app/decorators/*", "libs/decorators/*"],
             "@directives/*": ["src/app/directives/*", "libs/directives/*"],
             "@dialogs/*": ["src/app/dialogs/*", "libs/dialogs/*"],
-            "@environments/*": ["src/environments/*", "libs/environments/*"],
-            "@interceptors/*": ["src/app/interceptors/*", "libs/interceptors/*"],
+            "@environments/*": ["common/environments/*"],
+            "@interceptors/*": [
+                "src/app/interceptors/*",
+                "libs/interceptors/*"
+            ],
             "@pages/*": ["src/app/pages/*", "apps/features/*"],
             "@view/*": [
                 "src/app/pages/systems/view/*",
@@ -37,7 +40,8 @@
             "@lib/*": ["src/lib/*", "common/*", "libs/*"],
             "@src/*": ["src/*", "common/*", "libs/*"],
             "@authorization/*": ["apps/authorization/*"],
-            "@pipes/*": ["src/app/pipes/*", "libs/pipes/*"]
+            "@pipes/*": ["src/app/pipes/*", "libs/pipes/*"],
+            "@common/*": ["common/*"]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]

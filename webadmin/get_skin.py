@@ -1,7 +1,9 @@
-import json, sys, os
+import json
+import sys
+import os
 
 skins_path = os.path.abspath('../skins')
-description_path = "src/customization/description.json"
+description_path = "common/customization/description.json"
 
 with open(description_path) as description:
     customization_skin_name = json.load(description).get('skin')

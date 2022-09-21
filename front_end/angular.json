@@ -43,8 +43,16 @@
                 "input": "node_modules/tinymce",
                 "output": "/tinymce/"
               },
-              "src/customization",
-              "src/images",
+              {
+                "glob": "**/*",
+                "input": "common/customization",
+                "output": "."
+              },
+              {
+                "glob": "**/*",
+                "input": "common/images",
+                "output": "."
+              },
               "src/fonts",
               "src/styles",
               "src/views",
@@ -90,40 +98,40 @@
             "cloud-test": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.cloud-test.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.cloud-test.ts"
                 }
               ]
             },
             "dev2": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev2.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.dev2.ts"
                 }
               ]
             },
             "dev3": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev3.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.dev3.ts"
                 }
               ]
             },
             "local": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.local.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.local.ts"
                 }
               ]
             },
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.prod.ts"
                 }
               ],
               "deployUrl": "static/",
@@ -154,8 +162,8 @@
             "stage": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.stage.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.stage.ts"
                 }
               ]
             }
@@ -291,8 +299,16 @@
                 "input": "node_modules/tinymce",
                 "output": "/tinymce/"
               },
-              "src/customization",
-              "src/images",
+              {
+                "glob": "**/*",
+                "input": "common/customization",
+                "output": "."
+              },
+              {
+                "glob": "**/*",
+                "input": "common/images",
+                "output": "."
+              },
               "src/fonts",
               "src/styles",
               "src/views",
@@ -338,8 +354,8 @@
             "development": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.webadmin.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.webadmin.ts"
                 },
                 {
                   "replace": "src/app/services/account.service/index.ts",
@@ -358,8 +374,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.webadmin-prod.ts"
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.webadmin-prod.ts"
                 },
                 {
                   "replace": "src/app/services/account.service/index.ts",
@@ -501,8 +517,8 @@
               "deployUrl": "static/authorization/",
               "fileReplacements": [
                 {
-                  "replace": "apps/authorization/src/environments/environment.ts",
-                  "with": "apps/authorization/src/environments/environment.prod.ts"
+                  "replace": "apps/authorization/common/environments/environment.ts",
+                  "with": "apps/authorization/common/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,

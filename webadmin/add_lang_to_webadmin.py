@@ -1,7 +1,7 @@
 import json
 
-description_path = "src/customization/description.json"
-config_path = "src/customization/webadmin_config.json"
+description_path = "common/customization/description.json"
+config_path = "common/customization/webadmin_config.json"
 
 
 def adding_lang_to_webadmin_config():
@@ -14,10 +14,12 @@ def adding_lang_to_webadmin_config():
         config = json.load(config_file)
 
     config["defaultLanguage"] = description.get("defaultLanguage", "en_US")
-    config["supportedLanguages"] = description.get("customLanguages", ["en_US"])
+    config["supportedLanguages"] = description.get(
+        "customLanguages", ["en_US"])
     config["companyLink"] = description.get("contact", {}).get("companyUrl")
     config["companyName"] = description.get("companyName")
-    config["trialLicenseKey"] = description.get("desktop", {}).get("trialLicenseKey")
+    config["trialLicenseKey"] = description.get(
+        "desktop", {}).get("trialLicenseKey")
 
     with open(config_path, 'w') as config_file:
         json.dump(config, config_file, indent=4,
