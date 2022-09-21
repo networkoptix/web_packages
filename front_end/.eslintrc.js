@@ -382,6 +382,7 @@ module.exports = {
             rules: {
                 'no-undef': 'off', // TS incompatible
 
+                'nx/no-global-window': 'error',
                 'no-useless-constructor': 'off',
                 'nx/no-useless-constructor': 'error',
                 'nx/only-export-injectable': 'error',

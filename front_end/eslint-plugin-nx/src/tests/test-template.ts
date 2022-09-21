@@ -15,9 +15,7 @@ ruleTester.run('rule-name', rule, {
     invalid: [
         {
             code: '',
-            errors: [
-                { messageId: '' },
-            ]
+            errors: [{ messageId: '' }],
         },
     ],
 });

@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Injector } from '@angular/core';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError, Observable } from 'rxjs';
@@ -29,6 +30,7 @@ import type {
     NxSystemUser
 } from './system.service/user-manager/user-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
+import { WINDOW } from './window-provider';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -87,6 +89,7 @@ export class NxSystemAPI {
     cookieService: CookieService;
     healthService: NxHealthService;
     appState: NxAppStateService;
+    protected injector: Injector;
 
     constructor(
         http: HttpClient,
@@ -99,7 +102,8 @@ export class NxSystemAPI {
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
-        appState: NxAppStateService
+        appState: NxAppStateService,
+        injector: Injector,
     ) {
         this.version = 0;
         this.http = http;
@@ -109,6 +113,7 @@ export class NxSystemAPI {
         this.cookieService = cookieService;
         this.healthService = healthService;
         this.appState = appState;
+        this.injector = injector;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
         // This is to make it easy to access the systemService from the console for testing,
@@ -118,6 +123,10 @@ export class NxSystemAPI {
         // console.log('systemService added to window');
         // console.log('to test system system api method just access the systemService from console');
         // console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
+    }
+
+    public get window() {
+        return this.injector.get(WINDOW);
     }
 
     public get isSessionOauth() {
@@ -156,14 +165,14 @@ export class NxSystemAPI {
         return btoa(`${login}:${nonce}:${authDigest}`);
     }
 
-    protected getUrlBase(protocol = window.location.protocol) {
+    protected getUrlBase(protocol = this.window.location.protocol) {
         let urlBase = '';
         if (this.systemId) {
             urlBase =
                 protocol +
                 '//' +
                 this.CONFIG.trafficRelayHost
-                    .replace('{host}', window.location.host)
+                    .replace('{host}', this.window.location.host)
                     .replace('{systemId}', this.systemId);
         }
         return urlBase;
@@ -179,9 +188,9 @@ export class NxSystemAPI {
             params = params.set(key, data[key]);
         });
         if (absUrl) {
-            const proto = window.location.protocol;
-            const hostName = window.location.hostname;
-            const usePort = window.location.port;
+            const proto = this.window.location.protocol;
+            const hostName = this.window.location.hostname;
+            const usePort = this.window.location.port;
             const port = usePort ? `:${usePort}` : '';
             url = `${proto}//${hostName}${port}${url}`;
         } else {
@@ -1308,7 +1317,7 @@ export class NxSystemAPI {
                 let urlBase = this.getUrlBase();
                 // If we are in webadmin we need to have the origin or else https is not replaced with rtsp.
                 if (!urlBase) {
-                    urlBase = window.location.origin;
+                    urlBase = this.window.location.origin;
                 }
                 url = `${urlBase}/${this.cleanId(cameraId)}?stream=${resolution}&`.replace(/https?:\/\//, 'rtsp://');
                 break;

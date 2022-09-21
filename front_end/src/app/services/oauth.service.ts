@@ -121,7 +121,7 @@ export class OauthService {
 
     add2fa(accessToken): void {
         const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize?state=renew&access_token=${accessToken}`;
-        window.open(authorizeUrl, '_blank').focus();
+        this.window.open(authorizeUrl, '_blank').focus();
     }
 
     setTokens(tokens): void {

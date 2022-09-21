@@ -395,7 +395,7 @@ export class AppComponent implements AfterViewInit {
     @HostListener('window:popstate')
     windowListener(): void {
         if (this.applyService.locked) {
-            window.history.go(1);
+            this.window.history.go(1);
             this.applyService.showDialog().catch(() => {
             });
         }

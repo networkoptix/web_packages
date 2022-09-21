@@ -30,7 +30,7 @@ export class NxIntegrationsComponent implements OnInit {
     integrations;
 
     @HostListener('window:resize') onResize(): void {
-        this.currentWindowWidth = window.innerWidth;
+        this.currentWindowWidth = this.window.innerWidth;
     }
 
     // @ViewChild('integrationsScroll') integrationsScroll: ElementRef
@@ -86,7 +86,7 @@ export class NxIntegrationsComponent implements OnInit {
 
     navigate(url: string): void {
         // Need to figure out why router.navigate doesn't work
-        window.location.href = url;
+        this.window.location.href = url;
     }
 
     constructor(
@@ -108,7 +108,7 @@ export class NxIntegrationsComponent implements OnInit {
                 this.pluginCount = data.count || 0;
                 this.integrations = this.integrationsDetails();
             });
-        this.currentWindowWidth = window.innerWidth;
+        this.currentWindowWidth = this.window.innerWidth;
         this.integrationsShortDescription =
             (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '')
                 .split('\n')

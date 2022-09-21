@@ -5,6 +5,7 @@ import {
     ElementRef,
     HostListener, Renderer2,
     HostBinding,
+    Inject,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -18,6 +19,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
+import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
@@ -124,7 +126,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private ux: WebClientUxService,
         private deviceService: DeviceDetectorService,
         private ribbonService: NxRibbonService,
-        private settingsService: NxSettingsService
+        private settingsService: NxSettingsService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -173,7 +176,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 this._onUxStateChange(s);
             });
 
-        this.onResize({ target: { innerWidth: window.innerWidth } });
+        this.onResize({ target: { innerWidth: this.window.innerWidth } });
 
         // Handles the case where you are on the view tab and get redirected back to /view
         this.router.events

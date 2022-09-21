@@ -738,7 +738,7 @@ export class MergeModalContent {
         if (this.serverUrlInputExists) {
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if (!(/^https?:\/\//).test(this.serverUrl)) {
-                this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
+                this.serverUrl = `${this.window.location.protocol}//${this.serverUrl}`;
             }
             if (!(/:\d{1,5}$/).test(this.serverUrl)) {
                 this.serverUrl += ':7001';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -21,6 +21,7 @@ import type { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
@@ -58,7 +59,8 @@ export class NxOverlayModalComponent implements OnInit {
         private systemService: NxSystemService,
         private accountService: NxAccountService,
         private router: Router,
-        private localStorage: LocalStorageService
+        private localStorage: LocalStorageService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -66,7 +68,7 @@ export class NxOverlayModalComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.localStorage.retrieve('resetServer') === true) {
-            setTimeout(() => window.location.reload(), 2000);
+            setTimeout(() => this.window.location.reload(), 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
             if (!state || this.system?.serverManager.servers.length > 1) {

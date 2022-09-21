@@ -89,7 +89,7 @@ export class NxConfigService {
     private attachDebugConfigToWindow(): void {
         if (this.window) {
             // @ts-expect-error
-            window.debugConfig = this.generateDebugConfigProxy();
+            this.window.debugConfig = this.generateDebugConfigProxy();
         }
     }
 

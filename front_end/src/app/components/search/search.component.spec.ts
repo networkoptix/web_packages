@@ -20,6 +20,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
+import { WINDOW } from '@services/window-provider';
 
 import { NxSearchComponent } from './search.component';
 
@@ -51,6 +52,7 @@ describe('NxSearchComponent', () => {
                     MockProvider(Location),
                     MockProvider(NxUriService),
                     MockProvider(NxSearchService),
+                    MockProvider(WINDOW),
                 ]
             });
 

@@ -112,7 +112,7 @@ export class ResetServerModalContent {
                     this.close();
                     if (numberOfServers === 1) {
                         this.localStorage.store('resetServer', true);
-                        setTimeout(() => window.location.reload(), 2000);
+                        setTimeout(() => this.window.location.reload(), 2000);
                     } else if (isResettingCurrentServer()) {
                         this.appState.systemAvailable$.next(false);
                     } else {

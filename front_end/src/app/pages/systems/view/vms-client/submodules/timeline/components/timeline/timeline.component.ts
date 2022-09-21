@@ -157,7 +157,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _updateCanvasGeometry(): void {
         const rect = this.canvasView.nativeElement.getBoundingClientRect();
-        const dpr = window.devicePixelRatio;
+        const dpr = this.window.devicePixelRatio;
         this.canvasView.nativeElement.width = rect.width * dpr;
         this.canvasView.nativeElement.height = rect.height * dpr;
         this.timeline.setCanvasGeometry(

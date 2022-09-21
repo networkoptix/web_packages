@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -11,6 +11,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -68,7 +69,8 @@ export class PushComponent implements OnInit, OnDestroy {
         private systemsService: NxSystemsService,
         private afMessaging: AngularFireMessaging,
         private http: HttpClient,
-        private router: Router
+        private router: Router,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();
@@ -204,7 +206,7 @@ export class PushComponent implements OnInit, OnDestroy {
             deviceInfo.name = this.currentDeviceName
                 ? this.currentDeviceName
                 : 'Browser';
-            deviceInfo.model = window.navigator.userAgent;
+            deviceInfo.model = this.window.navigator.userAgent;
             provider = 'firebase';
         } else {
             deviceToken = this.newDevice.deviceToken;

@@ -1,7 +1,7 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
@@ -23,6 +23,7 @@ import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import type { NxSystem } from './system.service/system';
+import { WINDOW } from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -48,6 +49,7 @@ export class NxLoginService extends DialogBase {
         private storage: LocalStorageService,
         private simpleDialogService: NxSimpleDialogsService,
         private bootstrapProvider: NxBootstrapProvider,
+        @Inject(WINDOW) private window: Window,
     ) {
         super(overlay, injector);
         this.CONFIG = configService.getConfig();
@@ -149,7 +151,7 @@ export class NxLoginService extends DialogBase {
                 return Promise.resolve(false);
             }
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;
-            window.open(authorizeUrl, '_blank').focus();
+            this.window.open(authorizeUrl, '_blank').focus();
             return this.storage.observe(this.CONFIG.oauthStore.code)
                 .pipe(
                     take(1),

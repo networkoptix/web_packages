@@ -14,6 +14,7 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 interface IParams<Value = any> {
@@ -42,6 +43,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         configService: NxConfigService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) dialogData: never,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.params = {
             authString: '',
@@ -76,7 +78,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     createEmbedUrl(params): void {
         // Cannot use A6 router at this moment - AJS is leading the parade
-        const url = window.location.href.replace('systems', 'embed').split('?')[0];
+        const url = this.window.location.href.replace('systems', 'embed').split('?')[0];
         let uri = '';
 
         for (const paramsKey in params) {

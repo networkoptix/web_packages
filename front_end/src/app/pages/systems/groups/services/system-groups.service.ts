@@ -90,7 +90,7 @@ export class NxSystemGroupsService {
             this.CONFIG.toast.danger,
         );
         let retries = 5;
-        this.reconnectInterval = window.setInterval(() => {
+        this.reconnectInterval = this.window.setInterval(() => {
             if (retries) {
                 retries -= 1;
                 this.connect();

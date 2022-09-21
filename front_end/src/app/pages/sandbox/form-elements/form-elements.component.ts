@@ -1,7 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { WINDOW } from '@services/window-provider';
 
 import type {
     AspectRatioDropdownItem,
@@ -33,6 +34,7 @@ export class FormElementsComponent {
 
     constructor(
         private menuService: NxMenuService,
+        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {
@@ -82,6 +84,6 @@ export class FormElementsComponent {
         }
 
         this.submitted = true;
-        window.alert('SUBMIT!');
+        this.window.alert('SUBMIT!');
     }
 }

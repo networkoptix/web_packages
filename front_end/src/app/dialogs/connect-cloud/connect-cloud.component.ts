@@ -16,6 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
@@ -57,6 +58,7 @@ export class ConnectCloudModalContent implements OnInit {
         private storage: LocalStorageService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -71,7 +73,7 @@ export class ConnectCloudModalContent implements OnInit {
         this.codeSubscription = this.storage.observe(this.CONFIG.oauthStore.code)
             .subscribe(code => this.handleCode(code));
 
-        window.open('/#/cloud-authorize?state=connect', '_blank').focus();
+        this.window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
 
     private connect(systemName, email, accessToken) {

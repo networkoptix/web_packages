@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivate,
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -17,7 +18,8 @@ export class AuthGuard implements CanActivate {
 
     constructor(
         configService: NxConfigService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -36,7 +38,7 @@ export class AuthGuard implements CanActivate {
         }
 
         // check if requested in iFrame
-        if (window.location !== window.parent.location) {
+        if (this.window.location !== this.window.parent.location) {
             return false;
         }
 

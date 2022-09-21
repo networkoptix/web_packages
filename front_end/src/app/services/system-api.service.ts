@@ -114,6 +114,7 @@ export class NxSystemAPIService {
                 this.cookieService,
                 this.healthService,
                 this.appState,
+                this.injector,
             ) as S;
         }
     }

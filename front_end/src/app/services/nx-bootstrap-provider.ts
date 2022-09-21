@@ -264,7 +264,7 @@ export class NxBootstrapProvider {
             this.CONFIG.landing.description = data.landingDescription;
 
             // detect preview mode
-            if (window.location.href.includes('preview')) {
+            if (this.window.location.href.includes('preview')) {
                 this.CONFIG.previewPath = 'preview';
                 this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
             }

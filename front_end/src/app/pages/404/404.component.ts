@@ -79,7 +79,7 @@ export class Nx404Component {
                 redirectUrl = '/';
                 if (translatedLink) {
                     // Open if redirect link found in translations
-                    window.open(translatedLink, '_blank');
+                    this.window.open(translatedLink, '_blank');
                 } else {
                     // Else return to show 404
                     this.redirecting = false;

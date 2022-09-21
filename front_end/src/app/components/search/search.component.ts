@@ -8,7 +8,8 @@ import {
     ViewEncapsulation,
     OnDestroy,
     EventEmitter,
-    Output
+    Output,
+    Inject
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
@@ -28,6 +29,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
 import { NxUriService } from '@services/uri.service';
+import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import type { SearchFilter } from './search.component.types';
@@ -105,7 +107,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         // private location: Location,
         private uri: NxUriService,
         private searchService: NxSearchService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -395,7 +398,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 queryParams[select.id] = select.selected.join(',');
             }
         });
-        this.uri.pageOffset = window.pageYOffset;
+        this.uri.pageOffset = this.window.pageYOffset;
 
         if (!isEqual(queryParams, this.params)) {
             // make sure we reset page on new model

@@ -8,13 +8,15 @@ import {
     ChangeDetectionStrategy,
     HostListener,
     Output,
-    EventEmitter
+    EventEmitter,
+    Inject
 } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { MotionMaskRenderer } from './MotionMaskRenderer';
@@ -46,6 +48,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     constructor(
         config: NxConfigService,
         private deviceService: DeviceDetectorService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.config = config.getConfig();
     }
@@ -111,8 +114,8 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
             this.config.cameraSettings.sensitivityColors,
             this.unsub$,
             this.sensitivityButtons$,
-            this.deviceService.isMobile() || this.deviceService.isTablet()
-
+            this.deviceService.isMobile() || this.deviceService.isTablet(),
+            this.window,
         );
 
         this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);

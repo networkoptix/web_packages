@@ -3,7 +3,8 @@ import {
     ViewEncapsulation,
     Input,
     forwardRef,
-    Directive
+    Directive,
+    Inject
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -14,6 +15,7 @@ import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
+import { WINDOW } from '@services/window-provider';
 import { paramSortFunc } from '@utils/general';
 
 import { BaseDropdown } from '../injDropdown';
@@ -44,7 +46,8 @@ class BaseLanguageDropdown extends BaseDropdown {
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
         private localStorageService: LocalStorageService,
-        private sessionService: NxSessionService
+        private sessionService: NxSessionService,
+        @Inject(WINDOW) private window: Window,
     ) {
         super(languageService, configService);
 
@@ -77,7 +80,7 @@ class BaseLanguageDropdown extends BaseDropdown {
             if (this.instantApply && this.instantReload) {
                 if (environment.isLocal) {
                     this.sessionService.language = this.langCode;
-                    window.location.reload();
+                    this.window.location.reload();
                 } else {
                     this.cloudApi
                         .changeLanguage(this.langCode)

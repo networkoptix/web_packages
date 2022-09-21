@@ -17,7 +17,6 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
-import { WINDOW } from '@services/window-provider';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
@@ -74,7 +73,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             cacheService,
             cookieService,
             healthService,
-            appState
+            appState,
+            injector,
         );
         this.version = 5.0;
         this.injector = injector;
@@ -82,10 +82,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private get storageService() {
         return this.injector.get(NxStorageService);
-    }
-
-    private get window() {
-        return this.injector.get(WINDOW);
     }
 
     public get isSessionOauth() {
@@ -557,8 +553,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     async redirectOauth(allSystems?: boolean): Promise<void> {
-        const window = this.window;
-        const { href } = window.location;
+        const { href } = this.window.location;
         const params = new URLSearchParams({
             client_type: 'loginWebadmin',
             view_type: 'web',
@@ -568,7 +563,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             grant_type: 'password',
             scope: `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
         });
-        window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
+        this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
 
     async logout() {
@@ -869,9 +864,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
             params = params.set(key, data[key]);
         });
         if (absUrl) {
-            const proto = window.location.protocol;
-            const hostName = window.location.hostname;
-            const usePort = window.location.port;
+            const proto = this.window.location.protocol;
+            const hostName = this.window.location.hostname;
+            const usePort = this.window.location.port;
             const port = usePort ? `:${usePort}` : '';
             url = `${proto}//${hostName}${port}${url}`;
         } else {

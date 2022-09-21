@@ -20,6 +20,7 @@ import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
+import { WINDOW } from '@services/window-provider';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { PLAYBACK_MODE, PlaybackState } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
@@ -109,6 +110,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         private settingsService: NxSettingsService,
         public ux: WebClientUxService,
         @Inject(DOCUMENT) private document: Document,
+        @Inject(WINDOW) private window: Window & typeof globalThis,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -266,7 +268,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private getMediaSource(): typeof MediaSource | undefined {
-        return (window as any).MediaSource || (window as any).WebKitMediaSource;
+        // https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
+        // @ts-expect-error: https://caniuse.com/mdn-api_mediasource
+        return this.window.MediaSource || this.window.WebKitMediaSource;
     }
 
     private isSupported(): boolean {
@@ -681,7 +685,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this._getRecords();
         }
 
-        if (window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
+        if (this.window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
             this.ux.isSidebarShown = false;
         }
     }

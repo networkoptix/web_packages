@@ -34,6 +34,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
+import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     paramSortFunc,
@@ -148,7 +149,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         private pageService: NxPageService,
         private accountService: NxAccountService,
         private scrollMechanicsService: NxScrollMechanicsService,
-        @Inject(PLATFORM_ID) private platformId: object
+        @Inject(PLATFORM_ID) private platformId: object,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -369,7 +371,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     setActiveCamera(): void {
         if (this.params.camera) {
-            this.uri.pageOffset = window.pageYOffset;
+            this.uri.pageOffset = this.window.pageYOffset;
             const selectedCamera = this.cameras.find(camera =>
                 camera.model === this.params.camera
             );

@@ -186,7 +186,7 @@ export class NxDebugComponent {
         const auth = (this.debugProxySettings.method === 'GET')
             ? this.debugProxySettings.authGet
             : this.debugProxySettings.authPost;
-        const protocol = window.location.protocol;
+        const protocol = this.window.location.protocol;
         const systemId = this.debugProxySettings.systemId.value;
         const proxyUrl = this.debugProxySettings.proxyUrl;
         const apiCall = this.debugProxySettings.apiCall;

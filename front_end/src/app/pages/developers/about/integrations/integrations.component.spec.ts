@@ -4,7 +4,7 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockDirective } from 'ng-mocks';
+import { MockDirective, MockProvider } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
 import { PipesModule } from '@app/pipes/pipes.module';
@@ -86,7 +86,7 @@ describe('NxIntegrationsComponent', () => {
                 providers: [
                     new HelperMockProvider(NxConfigService, configMock),
                     new HelperMockProvider(NxLanguageProviderService, langMock),
-                    new HelperMockProvider(WINDOW, {}),
+                    MockProvider(WINDOW),
                     new HelperMockProvider(NxCloudApiService, cloudApiMock),
                     new HelperMockProvider(DomSanitizer, sanitizerMock)
                 ]

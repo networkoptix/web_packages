@@ -1,5 +1,6 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { Router, RouterEvent } from '@angular/router';
+import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 
 import { headerNodes } from '@app/_mocks/nodesMock';
@@ -7,6 +8,7 @@ import { setupTest41System } from '@app/_mocks/system.test';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { WINDOW } from '@services/window-provider';
 
 const eventSubject = new ReplaySubject<RouterEvent>(1);
 const routerMock = {
@@ -27,7 +29,8 @@ describe('Nx Header Service', () => {
             providers: [
                 NxHeaderService,
                 { provide: NxMenusService, useValue: menuMock },
-                { provide: Router, useValue: routerMock }
+                { provide: Router, useValue: routerMock },
+                MockProvider(WINDOW),
             ]
         });
         headerService = TestBed.inject(NxHeaderService);

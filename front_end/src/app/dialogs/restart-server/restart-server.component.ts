@@ -152,7 +152,7 @@ export class RestartServerModalContent {
                         mergeMap(() => {
                             if (environment.isLocal) {
                                 // give the user chance to read the toaster
-                                setTimeout(() => window.location.reload(), 2000);
+                                setTimeout(() => this.window.location.reload(), 2000);
                                 throw Error('re-login on restart');
                             }
                             // makes sure that system is online

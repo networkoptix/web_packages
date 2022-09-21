@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
@@ -8,6 +8,7 @@ import { environment } from '@environments/environment';
 import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
 import { ContextManifest } from './nx-cloud-api/nx-cloud-api.types';
+import { WINDOW } from './window-provider';
 
 type createButtonType = 'default' | 'primary';
 interface MenuNodeNavProps {
@@ -43,7 +44,8 @@ export class NxHeaderService {
 
     constructor(
         private router: Router,
-        private menusService: NxMenusService
+        private menusService: NxMenusService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.router.events
             .pipe(untilDestroyed(this))
@@ -262,10 +264,10 @@ export class NxHeaderService {
             if (!url.startsWith('http')) {
                 url = `http://${url}`;
             }
-            window.open(url, openNewWindow ? '_blank' : '_self');
+            this.window.open(url, openNewWindow ? '_blank' : '_self');
         } else if (openNewWindow) {
             const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
-            window.open(serializedUrl, '_blank');
+            this.window.open(serializedUrl, '_blank');
         } else {
             this.router.navigate([url], { queryParamsHandling })
                 .catch(ex => {
