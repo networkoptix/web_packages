@@ -1,5 +1,5 @@
 @use "theme_variables_common" as theme_vars;
-@use src-variables/pages/timeline-scrollbar" as *;
+@use "src-variables/pages/timeline-scrollbar" as *;
 
 $current-playback-indicator-color: var(--dark1);
 $current-selection-indicator-color: theme_vars.$blue1;

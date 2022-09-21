@@ -61,7 +61,7 @@
               "src/robots.txt"
             ],
             "styles": [
-              "src/app/dialogs/dialogs.scss",
+              "libs/dialogs/dialogs.scss",
               "src/styles/main.scss"
             ],
             "scripts": [
@@ -222,7 +222,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/app/dialogs/dialogs.scss",
+              "libs/dialogs/dialogs.scss",
               "src/styles/main.scss"
             ],
             "stylePreprocessorOptions": {
@@ -309,7 +309,7 @@
               "src/robots.txt"
             ],
             "styles": [
-              "src/app/dialogs/dialogs.scss",
+              "libs/dialogs/dialogs.scss",
               "src/styles/main.scss"
             ],
             "scripts": [
@@ -435,7 +435,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/app/dialogs/dialogs.scss",
+              "libs/dialogs/dialogs.scss",
               "src/styles/main.scss"
             ],
             "stylePreprocessorOptions": {

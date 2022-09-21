@@ -15,11 +15,11 @@
         "baseUrl": "",
         "paths": {
             "@components/*": ["src/app/components/*", "libs/components/*"],
-            "@decorators/*": ["src/app/decorators/*"],
-            "@directives/*": ["src/app/directives/*"],
-            "@dialogs/*": ["src/app/dialogs/*"],
-            "@environments/*": ["src/environments/*"],
-            "@interceptors/*": ["src/app/interceptors/*"],
+            "@decorators/*": ["src/app/decorators/*", "libs/decorators/*"],
+            "@directives/*": ["src/app/directives/*", "libs/directives/*"],
+            "@dialogs/*": ["src/app/dialogs/*", "libs/dialogs/*"],
+            "@environments/*": ["src/environments/*", "libs/environments/*"],
+            "@interceptors/*": ["src/app/interceptors/*", "libs/interceptors/*"],
             "@pages/*": ["src/app/pages/*", "apps/features/*"],
             "@view/*": [
                 "src/app/pages/systems/view/*",
@@ -29,15 +29,15 @@
                 "src/app/pages/systems/view/vms-client/*",
                 "apps/features/systems/view/vms-client/*"
             ],
-            "@guards/*": ["src/app/routeGuards/*"],
-            "@services/*": ["src/app/services/*"],
-            "@utils/*": ["src/app/utils/*"],
-            "@src/app/*": ["src/app/*"],
-            "@app/*": ["src/app/*"],
-            "@lib/*": ["src/lib/*"],
-            "@src/*": ["src/*"],
+            "@guards/*": ["src/app/routeGuards/*", "libs/routeGuards/*"],
+            "@services/*": ["src/app/services/*", "libs/services/*"],
+            "@utils/*": ["src/app/utils/*", "libs/utils/*"],
+            "@src/app/*": ["src/app/*", "common/*", "libs/*"],
+            "@app/*": ["src/app/*", "common/*", "libs/*"],
+            "@lib/*": ["src/lib/*", "common/*", "libs/*"],
+            "@src/*": ["src/*", "common/*", "libs/*"],
             "@authorization/*": ["apps/authorization/*"],
-            "@pipes/*": ["src/app/pipes/*"]
+            "@pipes/*": ["src/app/pipes/*", "libs/pipes/*"]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]

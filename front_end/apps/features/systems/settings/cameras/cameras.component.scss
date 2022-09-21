@@ -1,7 +1,7 @@
 @use "typography";
 @use "mixins";
 @use "theme_variables_common" as *;
-@use src-variables/pages/cameras" as *;
+@use "src-variables/pages/cameras" as *;
 @use "bootstrap_utils" as bootstrap;
 
 .camera-settings-info {
