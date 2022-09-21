@@ -67,7 +67,7 @@
         },
         "cloudAdmin": {
             "description": "システムを構成し共有することができます",
-            "label": "アドミニストレーター"
+            "label": "管理者"
         },
         "custom": {
             "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
@@ -1257,7 +1257,7 @@
         "statisticsReportLastNumber": "統計レポート - 最終番号",
         "statisticsReportLastTime": "統計レポート - 最終時間",
         "statisticsReportLastVersion": "統計レポート - 前回のバージョン",
-        "statisticsReportServerApi": "統計サーバーAPI",
+        "statisticsReportServerApi": "統計レポートのサーバーAPI",
         "statisticsReportTimeCycle": "統計レポート間隔",
         "statisticsReportUpdateDelay": "統計レポート - 更新の遅延",
         "synchronizeTimeWithInternet": "時刻をインターネットと同期させる",

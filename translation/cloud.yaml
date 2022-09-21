@@ -21,6 +21,16 @@ files:
       - '/front_end/app/views/static/eula.html'
       - '/front_end/app/views/components/downloadRelease.html'
   -
+    source: '/front_end/inline-wizard/app/views/**/*.html'
+    translation: '/front_end/inline-wizard/translations/%locale_with_underscore%/views/**/%original_file_name%'
+    ignore:
+      - '/front_end/inline-wizard/app/views/components/dialog.html'
+  -
+    source: '/front_end/inline-wizard/app/language.json'
+    translation: '/front_end/inline-wizard/translations/%locale_with_underscore%/language.json'
+    ignore:
+      - '/front_end/inline-wizard/app/views/components/dialog.html'
+  -
     source: '/cloud/notifications/static/templates/*.json'
     translation: '/translations/%locale_with_underscore%/templates/%original_file_name%'
   -
