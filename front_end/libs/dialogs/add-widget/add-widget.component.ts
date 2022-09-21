@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -16,7 +17,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom, delayInitial } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;

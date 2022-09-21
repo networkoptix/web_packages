@@ -14,6 +14,7 @@ import {
     Router,
     RoutesRecognized
 } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
@@ -40,7 +41,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 class CombinedWidths {
     constructor(
@@ -51,7 +51,7 @@ class CombinedWidths {
         public rightNav: number = 0,
         public windowWidth: number = 0,
         public breadcrumbWidths: number[] = []
-    ) {}
+    ) { }
 }
 
 enum sizes {
@@ -307,7 +307,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             )) + element.offsetWidth)
     );
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     ngOnInit(): void {
         this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
@@ -420,8 +420,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     if (
                         !this.systemId &&
-                    this.route.firstChild &&
-                    this.route.firstChild.snapshot.params.systemId
+                        this.route.firstChild &&
+                        this.route.firstChild.snapshot.params.systemId
                     ) {
                         this.systemId = this.route.firstChild.snapshot.params.systemId;
                     }
@@ -501,7 +501,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                         .then(system => {
                             this.canSeeInfo = system?.canViewInfo() || false;
                         })
-                        .catch(_ => {});
+                        .catch(_ => { });
                 }
             } else {
                 this.stopActiveSubscription();

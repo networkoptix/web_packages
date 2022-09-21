@@ -16,7 +16,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxThemeService } from '@services/theme.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';

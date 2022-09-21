@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -10,7 +11,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';

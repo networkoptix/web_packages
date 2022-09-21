@@ -18,7 +18,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { IpvdParams } from '../../ipvd.types';
@@ -101,7 +101,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     ngAfterViewInit(): void {
         setTimeout(() => {

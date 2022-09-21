@@ -6,6 +6,7 @@ import {
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -15,7 +16,6 @@ import type {
     ICamera
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @Component({

@@ -4,6 +4,7 @@ import {
     OnChanges,
     OnInit,
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
@@ -11,7 +12,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 enum mainButtonState {

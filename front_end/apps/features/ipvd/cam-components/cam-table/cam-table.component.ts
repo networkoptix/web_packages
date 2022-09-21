@@ -27,7 +27,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     paramSortFunc,
     addPseudoAnchor,
@@ -378,14 +378,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             case 'count':
                 byParam = paramSortFunc(elm =>
                     param === 'maxResolution' ? elm.resolutionArea : elm[param]
-                , !this.sortOrderASC);
+                    , !this.sortOrderASC);
                 break;
             case 'isFisheye':
             case 'isMdSupported':
             case 'isIoSupported':
                 byParam = paramSortFunc(elm =>
                     elm[param] ? 0 : 2
-                , this.sortOrderASC);
+                    , this.sortOrderASC);
                 break;
             case 'isPtzSupported':
                 byParam = paramSortFunc(elm => {
@@ -418,7 +418,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     typeof elm[param] === 'string'
                         ? elm[param].toLowerCase()
                         : elm[param]
-                , this.sortOrderASC);
+                    , this.sortOrderASC);
         }
 
         this._elements.sort(byParam);

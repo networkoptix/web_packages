@@ -8,7 +8,7 @@ import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 

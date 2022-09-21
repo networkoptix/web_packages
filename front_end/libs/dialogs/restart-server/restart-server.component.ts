@@ -1,4 +1,5 @@
 import { Component, Input, Injector, Inject } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { timer } from 'rxjs';
 import {
     delayWhen,
@@ -22,7 +23,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @Component({
@@ -92,27 +92,27 @@ export class RestartServerModalContent {
             { ignoreError: true },
             () => {
                 /**
-                     * Potential post restart scenarios
-                     * When 1 server:
-                     *  -- goes offline + returns val.status === 502 || 503 (triggered in mergeMap system.getInfo)
-                     *
-                     * When more than 1 server (at least one other server in system online):
-                     *     when there's more than one server, generally another online server will respond
-                     *       potentially, if the "main" server was restarted, system might just go offline and act like above (When 1 server)
-                     *  Normal potential scenarios:
-                     *  -- restarted server goes offline right away (triggers 'still restarting' Error)
-                     *     once the server comes back online, usually within 10-20 seconds
-                     *     then goes to mergeMap system.getinfo to wait for system to come back online
-                     *  -- restarted server stays online & then goes offline at least once
-                     *     triggers !serverHasGoneOfflineOnce while online
-                     *     then waits for server to go offline
-                     *     once server comes back online, goes to checking whether system is back online
-                     *  -- restarted server stays online & never goes offline
-                     *     if server stays online for more than ~24 seconds (serverOnline < 6)
-                     *       then skips to system online check
-                     *  -- there might be an instance where after server comes back online, system shows online, but then system goes offline again
-                     *     --> not sure how we can handle this
-                     */
+                         * Potential post restart scenarios
+                         * When 1 server:
+                         *  -- goes offline + returns val.status === 502 || 503 (triggered in mergeMap system.getInfo)
+                         *
+                         * When more than 1 server (at least one other server in system online):
+                         *     when there's more than one server, generally another online server will respond
+                         *       potentially, if the "main" server was restarted, system might just go offline and act like above (When 1 server)
+                         *  Normal potential scenarios:
+                         *  -- restarted server goes offline right away (triggers 'still restarting' Error)
+                         *     once the server comes back online, usually within 10-20 seconds
+                         *     then goes to mergeMap system.getinfo to wait for system to come back online
+                         *  -- restarted server stays online & then goes offline at least once
+                         *     triggers !serverHasGoneOfflineOnce while online
+                         *     then waits for server to go offline
+                         *     once server comes back online, goes to checking whether system is back online
+                         *  -- restarted server stays online & never goes offline
+                         *     if server stays online for more than ~24 seconds (serverOnline < 6)
+                         *       then skips to system online check
+                         *  -- there might be an instance where after server comes back online, system shows online, but then system goes offline again
+                         *     --> not sure how we can handle this
+                         */
                 this.system.currentBusyServerIds.add(this.serverId);
                 this.close(this.CONFIG.servers.status.restarting);
                 let systemOfflineShown = false;
@@ -125,9 +125,9 @@ export class RestartServerModalContent {
                                 // maps server status into serverObj
                                 const serverObj: { id?: string } = {};
                                 Object.entries(res).forEach((server: [
-                                    string,
-                                    { id: string, status: string }
-                                ]) => {
+                                        string,
+                                        { id: string, status: string }
+                                    ]) => {
                                     serverObj[server[1].id] = server[1].status;
                                 });
                                 if (!serverObj[this.serverId]) {
@@ -139,7 +139,7 @@ export class RestartServerModalContent {
                                 }
                                 if (
                                     !serverHasGoneOfflineOnce ||
-                                    serverOnlineChecked < this.CONFIG.maxNumberServerChecked
+                                        serverOnlineChecked < this.CONFIG.maxNumberServerChecked
                                 ) {
                                     serverOnlineChecked++;
                                     throw Error('still in the process of restarting');
@@ -173,13 +173,13 @@ export class RestartServerModalContent {
                         }),
                         retryWhen(errors => {
                             /** If single server system or only online server, system goes offline
-                             * systemOfflineShown used to stop block from running constantly while offline
-                             * Otherwise, catches all other errors and retries every 4 seconds */
+                                 * systemOfflineShown used to stop block from running constantly while offline
+                                 * Otherwise, catches all other errors and retries every 4 seconds */
                             return errors.pipe(
                                 tap(val => {
                                     if (
                                         !systemOfflineShown &&
-                                        [502, 503].includes(val.status)
+                                            [502, 503].includes(val.status)
                                     ) {
                                         systemOfflineShown = true;
                                         serverHasGoneOfflineOnce = true;

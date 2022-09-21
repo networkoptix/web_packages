@@ -21,7 +21,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 

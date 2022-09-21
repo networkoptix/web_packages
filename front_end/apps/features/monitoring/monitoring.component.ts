@@ -2,6 +2,7 @@ import {
     Component, OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
@@ -20,7 +21,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { LanguageI18NStaticTypes } from '@src//language_i18n_static_types';
 
 import { NxMonitoringService } from './monitoring.service';
 

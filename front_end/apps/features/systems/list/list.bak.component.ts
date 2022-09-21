@@ -6,7 +6,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 // import { NxModalGenericComponent } from '@dialogs/generic/generic.component';
 import { NxAccountService } from '@services/account.service';
@@ -37,7 +37,7 @@ class GroupTile {
         public name: string,
         public readonly groups: GroupTile[] = [],
         public readonly systems: SystemTile[] = [],
-    ) {}
+    ) { }
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     get tiles(): Tile[] {
@@ -370,5 +370,5 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

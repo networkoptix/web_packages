@@ -7,9 +7,9 @@ const update = process.argv.pop() === 'update'
 
 const include = [
     "**/*.component.html",
-    "./src/language_*.json",
+    "./common/language/language_*.json",
     "./common/customization/menus.json",
-    "./src/language_i18n_static_types.ts",
+    "./common/language/language_i18n_static_types.ts",
     "../cloud/cms/menus.json"
 ]
 

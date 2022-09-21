@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';

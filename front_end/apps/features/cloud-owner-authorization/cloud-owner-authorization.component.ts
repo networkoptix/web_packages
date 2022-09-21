@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import type { IConfig } from '@services/nx-config/config-types';
@@ -7,7 +8,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-cloud-owner-authorization',

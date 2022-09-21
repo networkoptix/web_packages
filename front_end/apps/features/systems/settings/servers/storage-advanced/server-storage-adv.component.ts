@@ -23,7 +23,7 @@ import {
     STORAGE_STATUS,
 } from '@services/system.service/storage-manager/storage';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -256,7 +256,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
             if (
                 this.showStorage &&
                 this.currentStorageState?.locations?.length ===
-                    currentState.locations?.length &&
+                currentState.locations?.length &&
                 this.watchersChanged
             ) {
                 return; // if things seem same do not interrupt user
@@ -344,5 +344,5 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         );
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

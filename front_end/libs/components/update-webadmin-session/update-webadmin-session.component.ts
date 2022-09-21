@@ -8,6 +8,7 @@ import {
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
@@ -19,7 +20,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-update-webadmin-session',
@@ -105,13 +105,13 @@ export class UpdateWebadminSessionComponent implements OnInit {
         const successHandler = () => {
             this.loginSuccess.emit();
         };
-        const errorHandler = () => {};
+        const errorHandler = () => { };
         this.login = this.processService.createProcess(() => {
             return this.system.mediaserver.loginToken(this.auth.login, this.auth.password, true).toPromise();
         }, settings, successHandler, errorHandler);
     }
 
-    resetForm(): void {}
+    resetForm(): void { }
 
     setLogin(login): void {
         this.auth.login = login;

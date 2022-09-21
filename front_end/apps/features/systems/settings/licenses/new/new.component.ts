@@ -18,7 +18,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -160,8 +160,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             }
         }, {
             errorCodes: {
-                offline: () => {},
-                alreadyRegistered: () => {}
+                offline: () => { },
+                alreadyRegistered: () => { }
             }
         });
     }

@@ -19,7 +19,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { LogLevel, LogLevelReply } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { Logger } from './logger.component.types';

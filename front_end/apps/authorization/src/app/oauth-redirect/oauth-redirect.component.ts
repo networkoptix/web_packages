@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -10,7 +11,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { AuthorizeParams, ClientType } from '../components/authorize.component.types';
 
@@ -32,13 +32,13 @@ export class NxOAuthRedirectComponent implements OnInit {
     state: 'readyToLogin' | 'noNativeClient' | undefined;
 
     constructor(configService: NxConfigService,
-                private route: ActivatedRoute,
-                private pageService: NxPageService,
-                private language: NxLanguageProviderService,
-                private router: Router,
-                private localStorageService: LocalStorageService,
-                private deviceService: DeviceDetectorService,
-                @Inject(WINDOW) public window: Window
+        private route: ActivatedRoute,
+        private pageService: NxPageService,
+        private language: NxLanguageProviderService,
+        private router: Router,
+        private localStorageService: LocalStorageService,
+        private deviceService: DeviceDetectorService,
+        @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;

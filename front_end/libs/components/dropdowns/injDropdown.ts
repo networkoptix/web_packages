@@ -5,15 +5,15 @@ import {
     OnInit
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
-const noop = () => {};
+const noop = () => { };
 
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
@@ -47,7 +47,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     ngOnDestroy(): void {
     }
 
-    ngOnChanges(changes: NgChanges<BaseDropdown>): void {}
+    ngOnChanges(changes: NgChanges<BaseDropdown>): void { }
 
     trackItem(index, item) {
         return item ? item.value : undefined;

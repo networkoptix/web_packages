@@ -4,12 +4,12 @@ import {
     OnDestroy,
     OnInit,
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -36,5 +36,5 @@ export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

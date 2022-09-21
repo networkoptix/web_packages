@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -22,7 +23,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';
@@ -60,8 +60,8 @@ export class EditModalContent {
     deleteContext: Process;
     dropdownLookup: {
         [key: string]: {
-            selected : DropdownItem<string>,
-            options : DropdownItem<string>[]
+            selected: DropdownItem<string>,
+            options: DropdownItem<string>[]
         }
     } = {};
 

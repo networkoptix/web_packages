@@ -61,16 +61,17 @@
               },
               "src/views",
               "src/scripts",
-              "src/503.html",
-              "src/downloads.json",
-              "src/apple-app-site-association",
-              "src/language_compiled.json",
-              "src/language_i18n_static.json",
-              "src/language_i18n.json",
-              "src/language.json",
-              "src/languages.json",
-              "src/supported_languages.json",
-              "src/robots.txt"
+              {
+                "glob": "**/*",
+                "input": "common/static_assets",
+                "output": "."
+              },
+              {
+                "glob": "**/*",
+                "input": "common/language",
+                "output": "."
+              },
+              "src/supported_languages.json"
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",
@@ -319,18 +320,24 @@
                 "input": "common/styles",
                 "output": "."
               },
+              {
+                "glob": "**/*",
+                "input": "common/static_assets",
+                "output": "."
+              },
               "src/views",
               "src/scripts",
-              "src/503.html",
-              "src/downloads.json",
-              "src/apple-app-site-association",
-              "src/language_compiled.json",
-              "src/language_i18n_static.json",
-              "src/language_i18n.json",
-              "src/language.json",
-              "src/languages.json",
-              "src/supported_languages.json",
-              "src/robots.txt"
+              {
+                "glob": "**/*",
+                "input": "common/static_assets",
+                "output": "."
+              },
+              {
+                "glob": "**/*",
+                "input": "common/language",
+                "output": "."
+              },
+              "src/supported_languages.json"
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",

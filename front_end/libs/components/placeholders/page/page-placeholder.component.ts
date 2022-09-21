@@ -4,6 +4,7 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
@@ -12,7 +13,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
@@ -92,41 +92,41 @@ export class NxPagePlaceholderComponent implements OnInit {
             }
 
             switch (this.type) {
-                case 'NO_CAMS' :
+                case 'NO_CAMS':
                     this.placeholderTitle = this.LANG.common.systemHasNoCameras();
                     this.message = this.LANG.common.systemHasNoCamerasMessage();
                     this.iconName = 'NoCams';
                     break;
-                case 'OFFLINE' :
+                case 'OFFLINE':
                     this.placeholderTitle = this.LANG.common.systemOffline();
                     this.message = this.LANG.common.systemOfflineMessage();
                     this.iconName = 'Offline';
                     break;
-                case 'OFFLINE_INACCESSIBLE' :
+                case 'OFFLINE_INACCESSIBLE':
                     this.placeholderTitle = this.LANG.common.systemOffline();
                     this.message = this.LANG.common.inaccessibleFeatureMessage();
                     this.iconName = 'Wrong';
                     break;
-                case 'NO_ALERTS' :
+                case 'NO_ALERTS':
                     this.placeholderTitle = this.LANG.common.systemNoAlerts();
                     this.message = this.LANG.common.systemNoAlertsMessage();
                     this.iconName = 'NoActions';
                     break;
-                case '500' :
+                case '500':
                     this.placeholderTitle = this.LANG.common.systemServerError();
                     this.message = this.LANG.common.systemServerErrorMessage();
                     this.iconName = '500';
                     break;
-                case 'NEW_VERSION' :
+                case 'NEW_VERSION':
                     this.placeholderTitle = this.LANG.common.systemNewVersion();
                     this.message = this.LANG.common.systemNewVersionMessage();
                     this.iconName = 'NewVersion';
                     break;
-                case 'ACCOUNT_CREATED' :
+                case 'ACCOUNT_CREATED':
                     this.placeholderTitle = this.LANG.common.account.created.title();
                     this.iconName = 'SendEmail';
                     break;
-                case 'ACCOUNT_ACTIVATED' :
+                case 'ACCOUNT_ACTIVATED':
                     this.placeholderTitle = this.LANG.common.account.activated.title();
                     this.message = '';
                     this.iconName = 'Activated';
@@ -146,7 +146,7 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.message = this.LANG.errorCodes.failedToAccess2FA();
                     this.iconName = 'NoAccess';
                     break;
-                case '404' :
+                case '404':
                     this.placeholderTitle ||= this.LANG.pageTitles.pageNotFound();
                     this.message = '';
                     this.iconName = '404';

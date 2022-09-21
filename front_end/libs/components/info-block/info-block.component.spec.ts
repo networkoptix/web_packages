@@ -6,12 +6,12 @@ import {
     fakeAsync,
     tick
 } from '@angular/core/testing';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { MockProvider } from 'ng-mocks';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { NxInfoBlockComponent } from './info-block.component';
 import { InfoBlockLine, InfoBlockSection } from './info-block.component.types';

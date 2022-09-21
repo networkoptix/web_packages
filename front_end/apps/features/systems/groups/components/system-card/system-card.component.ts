@@ -10,7 +10,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
-import type { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import type { SystemItem } from '../../groups.types';
 
@@ -69,7 +69,7 @@ export class NxSystemCardComponent implements OnInit {
             },
             {
                 errorCodes: {
-                    [this.CONFIG.openClientError]: () => {}
+                    [this.CONFIG.openClientError]: () => { }
                 }
             },
             () => {

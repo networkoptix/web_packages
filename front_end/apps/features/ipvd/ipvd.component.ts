@@ -11,6 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
@@ -35,7 +36,6 @@ import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     paramSortFunc,
     addPseudoAnchor,
@@ -461,7 +461,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.filterModel = { ...this.filterModel };
                 this.searchVendor();
             },
-            ex => console.error(ex));
+                ex => console.error(ex));
     }
 
     // restrict the parameters to be passed and viewed for to cam-table (based on allowedParameters)

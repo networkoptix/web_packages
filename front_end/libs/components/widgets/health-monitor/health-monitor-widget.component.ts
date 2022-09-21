@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
@@ -13,7 +14,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -156,7 +156,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
                 id, items
             ]) => Object.entries(items).map(([
                 state, types
-            // eslint-disable-next-line array-bracket-newline
+                // eslint-disable-next-line array-bracket-newline
             ]: any) => Object.values<any[]>(
                 types
             ).reduce((

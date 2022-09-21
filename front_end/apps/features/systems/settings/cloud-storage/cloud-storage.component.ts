@@ -18,7 +18,7 @@ import { CloudStorageManager, CloudStorageUpdate } from '@services/system.servic
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { CLOUD_STORAGE_STATES, LicenseKeyFields, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
 import { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -112,8 +112,8 @@ export class NxCloudStorageComponent implements OnInit {
             settingsService.systemSubject.pipe(
                 filter(system => !!system?.id),
                 take(1)).toPromise().then(system => {
-                this.serverSettings = `/systems/${system.id}/servers`;
-            });
+                    this.serverSettings = `/systems/${system.id}/servers`;
+                });
         }
 
         settingsService.systemSubject.pipe(

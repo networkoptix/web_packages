@@ -5,6 +5,7 @@ import {
     ChangeDetectorRef,
     Component, EventEmitter, Input, Output
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip } from 'rxjs/operators';
@@ -16,7 +17,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { BaseResourceNode, LayoutRenderConfig, LayoutResourceTree, NewPosition, ParsedLayout, ParsedLayoutItem, ParsedLayoutItems, Point, Position, ResourceNode, Setting, Size } from './layout-grid.types';
@@ -229,7 +229,7 @@ export class NxLayoutGridComponent {
             collisions: this.layout.items.reduce((
                 collided, item
             ) => this.checkCollision(item, draggingItem)
-                ? { ...collided, [item.id]: item } : collided, {})
+                    ? { ...collided, [item.id]: item } : collided, {})
         })),
         shareReplay({
             bufferSize: 1,

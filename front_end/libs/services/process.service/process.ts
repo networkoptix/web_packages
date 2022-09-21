@@ -1,3 +1,4 @@
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     Observable,
     Subject,
@@ -7,7 +8,6 @@ import {
 import { map, takeUntil } from 'rxjs/operators';
 
 import { NxToastService } from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';
@@ -115,7 +115,7 @@ export class Process {
         private toastService: NxToastService,
         caller$: Observable<any>,
         settings: Partial<ProcessSettings> = {},
-        private _successHandler: Handler = () => {},
+        private _successHandler: Handler = () => { },
         private _errorHandler: Handler = logError,
         // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
         // @ts-ignore: Deprecated, kept for compatibility

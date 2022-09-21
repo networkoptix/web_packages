@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { filter } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -18,7 +19,6 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import type { LinkSettings } from '@services/url-protocol.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-debug',
@@ -70,16 +70,16 @@ export class NxDebugComponent {
     type = 'activate_account';
     userEmail = '';
     constructor(@Inject(WINDOW) private window: Window,
-                private http: HttpClient,
-                private accountService: NxAccountService,
-                private cloudApiService: NxCloudApiService,
-                private dialogsService: NxDialogsService,
-                private languageService: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private processService: NxProcessService,
-                private systemsService: NxSystemsService,
-                private urlProtocol: NxUrlProtocolService,
-                private configService: NxConfigService
+        private http: HttpClient,
+        private accountService: NxAccountService,
+        private cloudApiService: NxCloudApiService,
+        private dialogsService: NxDialogsService,
+        private languageService: NxLanguageProviderService,
+        private pageService: NxPageService,
+        private processService: NxProcessService,
+        private systemsService: NxSystemsService,
+        private urlProtocol: NxUrlProtocolService,
+        private configService: NxConfigService
     ) {
         this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
@@ -159,7 +159,7 @@ export class NxDebugComponent {
             process: debugProcess
         };
         // Handling promise to satisfy the linter.
-        this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
+        this.systemsService.forceUpdateSystemsAsPromise().then(() => { });
     }
 
     debugProxy(): void {

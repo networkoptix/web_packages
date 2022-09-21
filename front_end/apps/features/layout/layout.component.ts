@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 @Component({
     selector: 'nx-grid-layout',

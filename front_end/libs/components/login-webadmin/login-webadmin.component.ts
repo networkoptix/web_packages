@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { CookieService } from 'ngx-cookie-service';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
@@ -22,7 +23,6 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 /**

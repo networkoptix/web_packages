@@ -14,6 +14,7 @@ import {
     NavigationEnd,
     Router
 } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
@@ -48,7 +49,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { highlight } from '@utils/general';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';
@@ -388,7 +388,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }, {
             successMessage: this.LANG.toastMessage.reviewAccepted?.()
         },
-        this.acceptedReviewRedirect
+            this.acceptedReviewRedirect
         );
 
         return [

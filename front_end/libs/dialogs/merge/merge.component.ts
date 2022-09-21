@@ -2,6 +2,7 @@ import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef, Inject
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cloneDeep } from 'lodash-es';
 
 import type {
@@ -24,7 +25,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
@@ -612,7 +612,7 @@ export class MergeModalContent {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.environment.isLocal) {
                         const template =
-                        `<div class="my-1">
+                            `<div class="my-1">
                             <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.LANG.ribbon.beingMerged.to()}</div>
                             <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake()}</div>
                         </div>`;
@@ -635,12 +635,12 @@ export class MergeModalContent {
                             ? this.CONFIG.system.status.master
                             : this.CONFIG.system.status.slave
                     });
-                // wrong cloud password
+                    // wrong cloud password
                 } else if (res.errorString === this.wrongLogin) {
                     this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
                     this.confirmMergeInput.nativeElement.focus();
-                // wrong local admin password when checking VMS <= 4.0 systems
+                    // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
                     this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: 'adminPasswordWrong' });

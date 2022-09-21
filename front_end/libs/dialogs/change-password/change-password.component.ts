@@ -6,6 +6,7 @@ import {
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -17,7 +18,6 @@ import type { NxSystem } from '@services/system.service/system';
 import type {
     NxSystemUser
 } from '@services/system.service/user-manager/user-manager-types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @Component({
@@ -98,8 +98,8 @@ export class ChangePasswordModalContent {
                 errorCodes: {
                     notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
                     wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    dontMatch: () => {},
-                    wrongPassword: () => {}
+                    dontMatch: () => { },
+                    wrongPassword: () => { }
                 },
                 successMessage: this.LANG.account.passwordChangedSuccess?.(),
                 errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),

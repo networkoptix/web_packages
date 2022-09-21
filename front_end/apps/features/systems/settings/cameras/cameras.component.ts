@@ -57,7 +57,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -223,8 +223,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get canvasHeight() {
-        const aspect = <number> this.selectedAspect.value ||
-            <number> this.aspectRatios[1].value;
+        const aspect = <number>this.selectedAspect.value ||
+            <number>this.aspectRatios[1].value;
         return Math.min(
             Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight
         );
@@ -271,8 +271,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     get recordingSettingsChanged() {
         return this.recordingModesWatcher.changed ||
-                this.selectedFpsWatcher.changed ||
-                this.selectedQualityWatcher.changed;
+            this.selectedFpsWatcher.changed ||
+            this.selectedQualityWatcher.changed;
     }
 
     get recordingSwitchedOn() {
@@ -344,12 +344,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     get safeToUpdateRecordingSettings() {
         return !this.recordingSettingsChanged ||
-        (
-            !this.selectedCamera.scheduleTasks.length ||
-            this.selectedCamera.scheduleTasks.every(({ recordingType }) =>
-                recordingType === RecordingType.NEVER)
-        ) ||
-        !this.variousQualities && !this.variousFps && !this.existingModesSelected;
+            (
+                !this.selectedCamera.scheduleTasks.length ||
+                this.selectedCamera.scheduleTasks.every(({ recordingType }) =>
+                    recordingType === RecordingType.NEVER)
+            ) ||
+            !this.variousQualities && !this.variousFps && !this.existingModesSelected;
     }
 
     get selectedFps() {
@@ -549,7 +549,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                 this.system.cameraManager.cameras.length
                             ) {
                                 this.system.serverManager
-                                    .initSystemMediaServers().catch(_ => {});
+                                    .initSystemMediaServers().catch(_ => { });
                             }
                             if (!this.applyService.locked) {
                                 this.setCamera();
@@ -737,7 +737,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
         const RowsToRoundPixelsByMultiple = rotated ? 44 : 32;
         const defaultAspectRatio = 1.77778;
-        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
+        const aspect = <number>this.selectedAspect.value || defaultAspectRatio;
         const aspectWithRotation = rotated ? 1 / aspect : aspect;
         const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightInPixels;
         let height, width;
@@ -770,10 +770,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     checkModeEnabled(id, enabled = this.motionEnabled) {
         return id === RecordingType.ALWAYS ||
-        id === RecordingType.NEVER ||
-        (id === RecordingType.META_LOW
-            ? this.selectedCamera.motionLowResEnabled
-            : enabled);
+            id === RecordingType.NEVER ||
+            (id === RecordingType.META_LOW
+                ? this.selectedCamera.motionLowResEnabled
+                : enabled);
     }
 
     handleRecordingToggle(switchValue: boolean | undefined): void {
@@ -955,10 +955,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 ? this.selectedCamera.defaultRatio
                 : '';
             this.selectedAspect = this.aspectRatios.find(({ value: id }) =>
-                id === parseFloat(<string> this.selectedCamera.overrideAr)
+                id === parseFloat(<string>this.selectedCamera.overrideAr)
             ) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ value: id }) =>
-                id === parseInt(<string> this.selectedCamera.rotation)
+                id === parseInt(<string>this.selectedCamera.rotation)
             ) || this.rotations[0];
             this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
@@ -996,7 +996,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.warnings = currentAlerts.warnings;
             this.errors = currentAlerts.errors.filter(error =>
                 error.toLowerCase() !== unauthorizedMessage &&
-                    error.toLowerCase() !== offlineMessage
+                error.toLowerCase() !== offlineMessage
             );
         }
         this.showUnauthorized = this.selectedCamera &&

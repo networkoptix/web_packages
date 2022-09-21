@@ -32,7 +32,7 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -496,7 +496,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.toastService.notify(
                             this.LANG.toastMessage.system.deleted.success({
                                 systemName: this.system.info.systemName ||
-                                this.system.info.name
+                                    this.system.info.name
                             }),
                             this.CONFIG.toast.success,
                         );
@@ -507,7 +507,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             this.CONFIG.toast.danger,
                         );
                     },
-                    this.updateAndGoToSystems
+                        this.updateAndGoToSystems
                     );
                 }
             });
@@ -566,7 +566,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.LANG.dialogs.merge.mergeFailedTitle(),
                     this.LANG.dialogs.buttons.ok(),
                     'btn-primary',
-                    undefined).then(() => {});
+                    undefined).then(() => { });
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);

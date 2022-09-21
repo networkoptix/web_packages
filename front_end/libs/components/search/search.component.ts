@@ -16,6 +16,7 @@ import {
     ControlValueAccessor
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
@@ -30,7 +31,6 @@ import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import type { SearchFilter } from './search.component.types';
 
@@ -146,12 +146,12 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             });
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => {};
-    private onChangeCallback = (_: SearchFilter): void => {};
+    private onTouchedCallback = (): void => { };
+    private onChangeCallback = (_: SearchFilter): void => { };
 
     // Set touched on blur
     onBlur(): void {

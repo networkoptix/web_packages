@@ -13,7 +13,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
@@ -65,7 +65,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                                 break;
 
                             case '2':
-                                // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
+                            // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
 
                             // eslint-disable-next-line no-fallthrough
                             case '3':

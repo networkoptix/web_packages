@@ -27,7 +27,7 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxHealthService } from '../health.service';
 
@@ -552,7 +552,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
             flatMap((result: any) => this.setupReport(result))
-        ).subscribe(() => {}, () => {
+        ).subscribe(() => { }, () => {
             if (!this.system.id) {
                 !this.window.parent
                     ? this.window.location.reload()

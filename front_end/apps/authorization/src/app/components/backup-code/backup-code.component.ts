@@ -10,6 +10,7 @@ import {
     ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -18,7 +19,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -165,5 +165,5 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

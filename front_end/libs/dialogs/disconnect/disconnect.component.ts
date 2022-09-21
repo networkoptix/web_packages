@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { of } from 'rxjs';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
@@ -18,7 +19,6 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @Component({

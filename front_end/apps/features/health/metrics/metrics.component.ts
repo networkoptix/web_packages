@@ -20,7 +20,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
@@ -128,7 +128,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
-            // when user click same section in the menu - we need to reset table and entity
+                // when user click same section in the menu - we need to reset table and entity
                 if (this.metricId === selection) {
                     this.filterModel.query = '';
                     this.resetActiveEntity();
@@ -165,7 +165,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                         for (const adapter in this.selectedValues) {
                             if (this.selectedValues[adapter].info.otherAddresses) {
                                 this.selectedValues[adapter].info.otherAddresses.text =
-                                        this.selectedValues[adapter].info.otherAddresses.text?.split('%')[0] || '_';
+                                    this.selectedValues[adapter].info.otherAddresses.text?.split('%')[0] || '_';
                             }
                         }
                     }
@@ -220,11 +220,11 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 });
 
         this.activeEntitySubscription =
-        this.healthLayoutService.activeEntitySubject
-            .pipe(delay(0))
-            .subscribe(() => {
-                this.setLayout();
-            });
+            this.healthLayoutService.activeEntitySubject
+                .pipe(delay(0))
+                .subscribe(() => {
+                    this.setLayout();
+                });
     }
 
     ngOnDestroy(): void {

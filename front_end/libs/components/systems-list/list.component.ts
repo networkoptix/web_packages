@@ -7,6 +7,7 @@ import {
     Output
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -24,7 +25,6 @@ import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { htmlToEntity } from '@utils/general';
 
 type Endpoint = Partial<{
@@ -174,7 +174,7 @@ export class NxSystemsListComponent implements OnInit {
             this.filteredSystems = this.systems.filter(system => {
                 return !search ||
                     this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
-                        (system.ownerAccountEmail === this.accountService.email) ||
+                    (system.ownerAccountEmail === this.accountService.email) ||
                     this.hasMatch(system.name, search) ||
                     this.hasMatch(system.ownerFullName, search) ||
                     this.hasMatch(system.ownerAccountEmail, search);
@@ -200,7 +200,7 @@ export class NxSystemsListComponent implements OnInit {
         this.endpoint.view = this.isActive('/view');
         this.endpoint.information = this.isActive('/health');
         this.endpoint.settings = id &&
-        this.isActive('/systems') &&
+            this.isActive('/systems') &&
             !this.isActive('/view') &&
             !this.isActive('/health');
     }

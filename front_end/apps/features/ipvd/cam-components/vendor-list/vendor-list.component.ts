@@ -19,7 +19,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -160,7 +160,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     // Form control functions
     // The method set in registerOnChange to emit changes back to the form
-    private propagateChange = (_: SearchFilter): void => {};
+    private propagateChange = (_: SearchFilter): void => { };
 
     writeValue(value: SearchFilter): void {
         if (value) {
@@ -215,7 +215,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(_fn: () => void): void {}
+    registerOnTouched(_fn: () => void): void { }
 
     setFilter(tagFilter: TagFilter): false {
         const queryParams: IpvdParams = {};

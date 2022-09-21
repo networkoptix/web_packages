@@ -16,12 +16,12 @@ import {
     UntypedFormControl,
     NgModel
 } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({
@@ -62,7 +62,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     public value: string;
 
-    @ViewChild('addons') addons : ElementRef<HTMLDivElement>;
+    @ViewChild('addons') addons: ElementRef<HTMLDivElement>;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

@@ -43,7 +43,7 @@ def parse_menus(nodes, parsed_menu=None):
 
 
 def add_menu_to_i18n():
-    dynamic_i18n_path = "./src/language_i18n.json"
+    dynamic_i18n_path = "./common/language/language_i18n.json"
     with open(dynamic_i18n_path, 'r') as language:
         json_data = json.load(language)
 

@@ -25,7 +25,7 @@ import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -75,14 +75,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
 
     constructor(public APIToolSystemService: NxAPIToolSystemService,
-                public openAPIJSONService: NxOpenAPIJSONService,
-                private loginService: NxLoginService,
-                private configService: NxConfigService,
-                private renderer2: Renderer2,
-                private componentFactoryResolver: ComponentFactoryResolver,
-                private toastService: NxToastService,
-                languageService: NxLanguageProviderService,
-                @Inject(DOCUMENT) private document: Document) {
+        public openAPIJSONService: NxOpenAPIJSONService,
+        private loginService: NxLoginService,
+        private configService: NxConfigService,
+        private renderer2: Renderer2,
+        private componentFactoryResolver: ComponentFactoryResolver,
+        private toastService: NxToastService,
+        languageService: NxLanguageProviderService,
+        @Inject(DOCUMENT) private document: Document) {
         this.LANG = languageService.translations;
         this.CONFIG = this.configService.getConfig();
     }
@@ -194,7 +194,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private handlePotentialRTSPRoute = (request): void => {
         const urlPath = new URL(request.url).pathname.slice(1);
         const isRTSP = isUUID(urlPath) || // The only route that starts with uuid is an RTSP route.
-                      (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE'); // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
+            (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE'); // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
 
         if (isRTSP) {
             this.RTSPRequestShowing = true;

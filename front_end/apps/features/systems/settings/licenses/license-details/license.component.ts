@@ -18,7 +18,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NgChanges } from '@utils/ng-changes';
 
 import { getDynamicLicense } from '../dynamic-license';
@@ -113,8 +113,8 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
             deactivationsRemaining = 0;
         } else {
             deactivationsRemaining =
-                    dynamicLicense[info.class].deactivationsAllowed -
-                    (info.deactivations === '-' ? 0 : info.deactivations);
+                dynamicLicense[info.class].deactivationsAllowed -
+                (info.deactivations === '-' ? 0 : info.deactivations);
         }
 
         const block = new InfoBlockSection(

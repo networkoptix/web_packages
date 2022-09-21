@@ -31,7 +31,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxHealthService } from '../health.service';
 
@@ -175,7 +175,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     };
                     this.system.mediaserver = this.serverApi.createConnection(
                         undefined, undefined,
-                        undefined, () => {}
+                        undefined, () => { }
                     );
                     this.menu.base = '/health';
                 }
@@ -200,7 +200,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             .subscribe(({ width }) => {
                 if (
                     width >= 768 &&
-                this.appStateService.headerVisibleSubject.getValue()
+                    this.appStateService.headerVisibleSubject.getValue()
                 ) {
                     this.setHeaderHeight();
                 }
@@ -582,7 +582,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
             flatMap((result: any) => this.setupReport(result))
-        ).subscribe(() => {}, () => {
+        ).subscribe(() => { }, () => {
             if (!this.system.id) {
                 !this.window.parent
                     ? this.window.location.reload()

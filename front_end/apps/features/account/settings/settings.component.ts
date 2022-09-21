@@ -7,6 +7,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -24,7 +25,6 @@ import { Process } from '@services/process.service/process';
 import { NxStorageService } from '@services/storage.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-account-settings-component',
@@ -98,7 +98,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             // account info was changed successful (local and on server)
             // really no need to force update -- TT
             // this.accountService.get(true);
-        }, () => {});
+        }, () => { });
 
         this.accountService
             .get(true)

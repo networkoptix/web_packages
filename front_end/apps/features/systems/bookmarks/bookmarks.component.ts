@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { combineLatest, of, Subject } from 'rxjs';
@@ -17,7 +18,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { BookmarkService } from './bookmark.service';
 import type { Bookmark } from './bookmark.types';
@@ -58,7 +58,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         this.setupDefaults(configService);
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     ngOnInit(): void {
         this.LANG = this.language.translations;

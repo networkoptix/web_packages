@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -7,7 +8,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({
@@ -34,7 +34,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         this.LANG = languageService.translations;
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     ngOnInit(): void {
         this.content = {

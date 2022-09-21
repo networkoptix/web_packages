@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -28,7 +29,6 @@ import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import {
     AuthorizeParams,
@@ -435,7 +435,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
                     }
-                // error message exists when 2fa is required
+                    // error message exists when 2fa is required
                 } else if (err?.error === 'second_factor_required') {
                     this.loginCode = err.access_code || err.code;
                     this.redirectLink = err.link;
@@ -628,5 +628,5 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.window.location.href = route || this.initialData.redirect_uri || '/';
     };
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

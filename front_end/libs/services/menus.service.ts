@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -12,7 +13,6 @@ import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { Auth, MenuNode } from '@services/menus.service.types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';

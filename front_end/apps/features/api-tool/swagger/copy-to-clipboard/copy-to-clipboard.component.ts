@@ -6,7 +6,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({
@@ -19,9 +19,9 @@ export class NxCopyToClipboardComponent {
     LANG: LanguageI18NStaticTypes;
 
     constructor(private configService: NxConfigService,
-                private clipboardService: ClipboardService,
-                private toastService: NxToastService,
-                private languageService: NxLanguageProviderService) {
+        private clipboardService: ClipboardService,
+        private toastService: NxToastService,
+        private languageService: NxLanguageProviderService) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.translations;
 

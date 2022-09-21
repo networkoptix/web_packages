@@ -4,6 +4,7 @@ import {
     UntypedFormControl,
     Validators
 } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
@@ -18,7 +19,6 @@ import { Process } from '@services/process.service/process';
 import {
     StorageManager
 } from '@services/system.service/storage-manager/storage-manager';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId, pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';

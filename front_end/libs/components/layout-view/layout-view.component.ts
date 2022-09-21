@@ -3,6 +3,7 @@ import {
     Component
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
@@ -16,7 +17,6 @@ import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { cleanId, paramSortFunc } from '@utils/general';
 
 interface Resource {
@@ -120,7 +120,7 @@ export class NxLayoutViewComponent {
                     },
                     {
                         name:
-                        'Cameras',
+                            'Cameras',
                         children: camerasForTree
                     },
                     {
@@ -143,9 +143,9 @@ export class NxLayoutViewComponent {
                 }
             }
         }) => [
-            ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : []),
-            this.createNewLayout(systemId, userId)
-        ]),
+                ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : []),
+                this.createNewLayout(systemId, userId)
+            ]),
         shareReplay({
             bufferSize: 1,
             refCount: true

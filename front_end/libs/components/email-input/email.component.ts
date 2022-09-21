@@ -11,11 +11,11 @@ import {
     Validator,
     UntypedFormControl
 } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Component({
     selector: 'nx-email-input',
@@ -78,7 +78,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     }
 
     constructor(configService: NxConfigService,
-                private language: NxLanguageProviderService) {
+        private language: NxLanguageProviderService) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
     }

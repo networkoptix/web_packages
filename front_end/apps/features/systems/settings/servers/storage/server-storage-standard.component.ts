@@ -63,7 +63,7 @@ import {
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cleanId, cleanSmbUrl } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -543,11 +543,11 @@ export class NxSystemStorageComponent implements OnInit {
         const onlineStorages = this.currentStorageState.locations.filter(({
             isOnline, mode, status, storageId
         }) => isOnline &&
-            reindexMode === mode &&
-            ![
-                STORAGE_STATUS.BEING_CHECKED,
-                STORAGE_STATUS.INACCESSIBLE
-            ].includes(status) &&
+        reindexMode === mode &&
+        ![
+            STORAGE_STATUS.BEING_CHECKED,
+            STORAGE_STATUS.INACCESSIBLE
+        ].includes(status) &&
             !this.updatingModes.includes(storageId)
         ).length;
         return noStorages || !onlineStorages;

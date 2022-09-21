@@ -16,7 +16,7 @@ import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
 import { NumberParser } from '@utils/number-parser';
@@ -89,7 +89,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         this.popoverService.close();
     }
 
-    ngAfterViewInit(): void {}
+    ngAfterViewInit(): void { }
 
     ngOnDestroy(): void {
         this.closeLegend();

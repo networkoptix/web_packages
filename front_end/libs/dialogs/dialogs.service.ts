@@ -19,7 +19,7 @@ import { LicenseManager } from '@services/system.service/license-manager/licence
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { DialogBase } from './dialog-base';
@@ -691,9 +691,9 @@ export class NxDialogsService extends DialogBase {
 
         return this.open(
             component, {
-                ...infoDialogConfig,
-                data: { ...data, template }
-            }).afterClosed();
+            ...infoDialogConfig,
+            data: { ...data, template }
+        }).afterClosed();
     };
 
     public cloudStorageInfo = this.#newFeatureMethodFactory('cloudStorage');

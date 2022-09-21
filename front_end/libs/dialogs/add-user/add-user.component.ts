@@ -13,7 +13,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @Component({
@@ -118,13 +118,13 @@ export class AddUserModalContent {
                 return this.saveUser();
             }
         },
-        {},
-        user => {
-            if (user) {
-                this.hideErrors = true;
-                this.close(user.id);
-            }
-        });
+            {},
+            user => {
+                if (user) {
+                    this.hideErrors = true;
+                    this.close(user.id);
+                }
+            });
     }
 
     close = (msg?: string): void => {

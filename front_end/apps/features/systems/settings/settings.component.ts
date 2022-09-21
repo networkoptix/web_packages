@@ -38,7 +38,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { cleanId, htmlToEntity, paramSortFunc } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 
@@ -528,7 +528,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     } else if (secondary?.id === this.system.id) {
                         this.mergeTargetSystem = this.systemsService.systems
                             .find(system => primary.id === system.id) ||
-                                { name: this.LANG.system.mergeUnknownName?.() };
+                            { name: this.LANG.system.mergeUnknownName?.() };
                         this.secondaryMerge = true;
                     } else if (mergeInProgress) {
                         ribbonText = this.LANG.ribbon.systemsMerging();

@@ -4,7 +4,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import type { Bookmark } from '../bookmark.types';
 
@@ -31,7 +31,7 @@ export class NxBookmarksListComponent implements OnDestroy {
         this.LANG = language.translations;
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     updateTagSize(tagName: string, { width }: { width: number, height: number }): void {
         if (this.gridColumnLookup[tagName]) return;

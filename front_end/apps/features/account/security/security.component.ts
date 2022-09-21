@@ -9,6 +9,7 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -22,7 +23,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import {
     htmlToEntity,
     addPseudoAnchor,
@@ -123,7 +123,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             .then(action => {
                 if (action !== 'canceled') {
                     this.account2faEnabled = (action === 'enabled');
-                    this.accountService.get(true).catch(e => {});
+                    this.accountService.get(true).catch(e => { });
                 }
                 this.account2faEnabledCheck = this.account2faEnabled;
             });
@@ -197,7 +197,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
                     this.account2faEnabledCheck = this.account2faEnabled;
-                    this.accountService.get(true).catch(_ => {});
+                    this.accountService.get(true).catch(_ => { });
                     setTimeout(() => {
                         this.setPopoverTargets();
                     });
@@ -211,7 +211,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                         this.account2faEnabled = newState;
                         this.totpExistsForAccount = newState;
                         this.account2faEnabledCheck = this.account2faEnabled;
-                        this.accountService.get(true).catch(_ => {});
+                        this.accountService.get(true).catch(_ => { });
                     } else {
                         this.totpExistsForAccount = true; // revert value on cancel
                     }

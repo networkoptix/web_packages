@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 import { environment } from '@environments/environment';
 import { IEnvironment } from '@environments/environment-config';
@@ -6,7 +7,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 import { DIALOG_DATA, DialogRef } from '../dialog-ref';

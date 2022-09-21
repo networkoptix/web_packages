@@ -20,7 +20,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 
 @UntilDestroy()
 @Component({
@@ -41,7 +41,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     constructor(
-        languageService :NxLanguageProviderService,
+        languageService: NxLanguageProviderService,
         configService: NxConfigService,
         scrollMechanics: NxScrollMechanicsService,
         public headerService: NxHeaderService,
@@ -113,7 +113,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
                 .subscribe(() => {
                     if (
                         this.getElementPosition(this.rootAbsoluteRef.nativeElement).top >
-                            this.getElementPosition(this.rootFixedRef.nativeElement).top
+                        this.getElementPosition(this.rootFixedRef.nativeElement).top
                     ) {
                         if (this.cloudShowing !== 'fixed') {
                             this.cloudShowing = 'fixed';

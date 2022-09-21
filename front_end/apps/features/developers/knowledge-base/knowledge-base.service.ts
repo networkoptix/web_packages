@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
@@ -9,7 +10,6 @@ import { MenuNode } from '@services/menus.service.types';
 import { MenuStructure } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'

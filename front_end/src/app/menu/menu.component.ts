@@ -13,6 +13,7 @@ import {
     Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
@@ -28,7 +29,6 @@ import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import type { NgChanges } from '@utils/ng-changes';
 
 import { NxMenuService } from './menu.service';

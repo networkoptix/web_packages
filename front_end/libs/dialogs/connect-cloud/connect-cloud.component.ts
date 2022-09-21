@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
@@ -17,7 +18,6 @@ import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 import { pickFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
@@ -140,7 +140,7 @@ export class ConnectCloudModalContent implements OnInit {
                 this.cloudTokens.refresh_token
             ).then(() => this.close(false));
         };
-        const errorHandler = () => {};
+        const errorHandler = () => { };
         const settings = {
             ignoreError: true,
             ignoreUnauthorized: true,

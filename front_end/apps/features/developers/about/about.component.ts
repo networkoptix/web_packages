@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
@@ -16,7 +17,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
 import {
     AboutStructure,
@@ -64,11 +64,10 @@ export class NxAboutComponent {
             name: title,
             [helper]: Object.values(AboutTemplates).reduce((
                 rest, cur, ind, arr
-            ) => `${rest}"${cur}"${
-                arr.length === 1
+            ) => `${rest}"${cur}"${arr.length === 1
                     ? ''
                     : ind === arr.length - 2 ? ', and ' : ', '}`,
-            'Valid templates are ')
+                'Valid templates are ')
         };
     }
 
