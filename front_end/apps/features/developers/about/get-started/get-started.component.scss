@@ -1,6 +1,6 @@
 @use "theme_variables_common" as *;
 @use "typography";
-@use "src/app/styles/_bootstrap_utils" as bootstrap;
+@use "_bootstrap_utils" as bootstrap;
 
 .get-started-heading {
     font-family: $font-family-light;
