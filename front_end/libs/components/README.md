@@ -1,0 +1,1 @@
+This will contain all components. Initially it's ok to include components within feature modules during development but eventually they should all be moved here. 

@@ -20,7 +20,7 @@
             "@dialogs/*": ["src/app/dialogs/*"],
             "@environments/*": ["src/environments/*"],
             "@interceptors/*": ["src/app/interceptors/*"],
-            "@pages/*": ["src/app/pages/*"],
+            "@pages/*": ["src/app/pages/*", "apps/features/*"],
             "@view/*": ["src/app/pages/systems/view/*"],
             "@vms-client/*": ["src/app/pages/systems/view/vms-client/*"],
             "@guards/*": ["src/app/routeGuards/*"],
