@@ -1,3 +1,7 @@
-const karmaConfFactory = require('./karmaConfFactory');
+const path = require('path');
 
-module.exports = karmaConfFactory('front_end');
+const karmaConfFactory = require('../../karmaConfFactory.js');
+const src = path.basename(__dirname);
+const appBase = path.basename(src);
+
+module.exports = karmaConfFactory(appBase);

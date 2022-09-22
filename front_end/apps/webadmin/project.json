@@ -1,6 +1,6 @@
 {
     "projectType": "application",
-    "generators": {
+    "schematics": {
         "@schematics/angular:component": {
             "style": "scss"
         }
@@ -8,9 +8,9 @@
     "root": "apps/webadmin",
     "sourceRoot": "apps/webadmin/src",
     "prefix": "app",
-    "targets": {
+    "architect": {
         "build": {
-            "executor": "@angular-devkit/build-angular:browser",
+            "builder": "@angular-devkit/build-angular:browser",
             "options": {
                 "allowedCommonJsDependencies": [
                     "md5",
@@ -41,22 +41,22 @@
                     {
                         "glob": "**/*",
                         "input": "common/customization",
-                        "output": "/customization/"
+                        "output": "customization"
                     },
                     {
                         "glob": "**/*",
                         "input": "common/images",
-                        "output": "/images/"
+                        "output": "images"
                     },
                     {
                         "glob": "**/*",
                         "input": "common/fonts",
-                        "output": "/fonts/"
+                        "output": "fonts"
                     },
                     {
                         "glob": "**/*",
                         "input": "common/styles",
-                        "output": "/styles/"
+                        "output": "styles"
                     },
                     {
                         "glob": "**/*",
@@ -66,12 +66,12 @@
                     {
                         "glob": "**/*",
                         "input": "common/views",
-                        "output": "/views/"
+                        "output": "views"
                     },
                     {
                         "glob": "**/*",
                         "input": "common/scripts",
-                        "output": "/scripts/"
+                        "output": "scripts"
                     },
                     {
                         "glob": "**/*",
@@ -88,10 +88,8 @@
                 ],
                 "stylePreprocessorOptions": {
                     "includePaths": [
-                        "src/app/styles",
                         "common/styles",
                         "common/styles/common",
-                        "src/app",
                         "libs"
                     ]
                 },
@@ -114,12 +112,12 @@
                             "with": "common/environments/environment.webadmin.ts"
                         },
                         {
-                            "replace": "src/app/services/account.service/index.ts",
-                            "with": "src/app/services/account.service/index.webadmin.ts"
+                            "replace": "libs/services/account.service/index.ts",
+                            "with": "libs/services/account.service/index.webadmin.ts"
                         },
                         {
-                            "replace": "src/app/routeGuards/authGuard.ts",
-                            "with": "src/app/routeGuards/authGuard.webadmin.ts"
+                            "replace": "libs/routeGuards/authGuard.ts",
+                            "with": "libs/routeGuards/authGuard.webadmin.ts"
                         }
                     ]
                 },
@@ -130,8 +128,8 @@
                             "with": "common/environments/environment.webadmin-prod.ts"
                         },
                         {
-                            "replace": "src/app/services/account.service/index.ts",
-                            "with": "src/app/services/account.service/index.webadmin.ts"
+                            "replace": "libs/services/account.service/index.ts",
+                            "with": "libs/services/account.service/index.webadmin.ts"
                         }
                     ],
                     "deployUrl": "static/",
@@ -161,7 +159,7 @@
             "defaultConfiguration": ""
         },
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "builder": "@nrwl/linter:eslint",
             "options": {
                 "eslintConfig": ".eslintrc.js",
                 "lintFilePatterns": [
@@ -171,7 +169,7 @@
             }
         },
         "serve": {
-            "executor": "@angular-devkit/build-angular:dev-server",
+            "builder": "@angular-devkit/build-angular:dev-server",
             "options": {
                 "publicHost": "localhost:9000",
                 "host": "0.0.0.0",
@@ -188,16 +186,13 @@
             }
         },
         "test": {
-            "executor": "@angular-devkit/build-angular:karma",
+            "builder": "@angular-devkit/build-angular:karma",
             "options": {
                 "main": "common/test.ts",
                 "polyfills": "apps/webadmin/src/polyfills.ts",
-                "tsConfig": "tsconfig.app.json",
+                "tsConfig": "tsconfig.spec.json",
                 "karmaConfig": "apps/webadmin/karma.conf.ci.js",
-                "assets": [
-                    "src/favicon.ico",
-                    "src/assets"
-                ],
+                "assets": [],
                 "styles": [
                     "libs/dialogs/dialogs.scss",
                     "common/styles/main.scss"
@@ -205,10 +200,8 @@
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",
-                        "src/app/styles",
                         "common/styles",
                         "common/styles/common",
-                        "src/app",
                         "libs"
                     ]
                 },

@@ -42,6 +42,6 @@
         "enableIvy": true,
         "strictTemplates": true
     },
-    "include": ["**/main.ts", "**/polyfills.ts", "**/*.spec.ts", "**/*.d.ts"],
+    "include": ["**/test.ts", "**/main.ts", "**/*.spec.ts", "**/*.d.ts"],
     "exclude": ["node_modules", ".eslintrc.js"]
 }
