@@ -514,9 +514,19 @@
               "apps/authorization/src/assets"
             ],
             "styles": [
-              "src/styles/main.scss",
+              "common/styles/main.scss",
               "apps/authorization/src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/",
+                "src/app/styles",
+                "common/styles",
+                "common/styles/common",
+                "src/app",
+                "libs"
+              ]
+            },
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -535,7 +545,7 @@
               "fileReplacements": [
                 {
                   "replace": "common/environments/environment.ts",
-                  "with": "environments/environment.prod.ts"
+                  "with": "common/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -656,14 +666,6 @@
           }
         }
       }
-    }
-  },
-  "cli": {
-    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea",
-    "cache": {
-      "enabled": true,
-      "path": ".angular/cache",
-      "environment": "all"
     }
   }
 }
