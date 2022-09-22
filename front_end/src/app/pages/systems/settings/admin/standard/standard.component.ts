@@ -95,7 +95,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     alexaSettings: Partial<AlexaSettings>;
     eventRulesBeingSetup = false;
 
-    is2faDialogActive: Promise<any>;
+    is2faDialogActive: boolean;
     system2faEnabled = false;
     settingsWatchersSet = false;
     canChange2fa = false;
@@ -326,18 +326,14 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    check2fa(event): void {
-        event.preventDefault();
-        this.handleMandatory2fa();
-    }
-
     // handle mandatory 2fa
-    async handleMandatory2fa(): Promise<any> {
+    async handleMandatory2fa(event: MouseEvent): Promise<void> {
+        event.preventDefault();
+
         if (this.is2faDialogActive) {
             return;
         }
 
-        // @ts-expect-error
         this.is2faDialogActive = await this.dialogService
             .toggleSystem2fa(this.system, !this.system2faEnabled) // using !this.system2faEnabled as click event was canceled --TT
             .then(res => {
@@ -355,9 +351,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                             });
                     });
                 }
-            }).finally(() => {
-                this.is2faDialogActive = undefined;
-                return Promise.resolve();
+                return false;
             });
     }
 

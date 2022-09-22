@@ -336,7 +336,7 @@
                             <nx-checkbox
                                 name="mandatory2fa"
                                 componentId="mandatory2fa"
-                                (click)="check2fa($event)"
+                                (click)="handleMandatory2fa($event)"
                                 [(ngModel)]="system2faEnabled"
                                 [ngModelOptions]="{ standalone: true }"
                             >
@@ -345,6 +345,7 @@
                             <label
                                 class="control-label mb-0"
                                 for="mandatory2fa"
+                                (click)="handleMandatory2fa($event)"
                             >
                                 <span translate
                                     >Mandatory two-factor authentication for cloud users</span
@@ -355,6 +356,7 @@
                             id="mandatory2faHelpBlock"
                             class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                             for="mandatory2fa"
+                            (click)="handleMandatory2fa($event)"
                         >
                             <span translate
                                 >Cloud users without two-factor authentication will not be able to
