@@ -344,8 +344,7 @@
                 "glob": "**/*",
                 "input": "common/language",
                 "output": "."
-              },
-              "src/supported_languages.json"
+              }
             ],
             "styles": [
               "libs/dialogs/dialogs.scss",

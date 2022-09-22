@@ -217,6 +217,7 @@ all-frontend-checks:
         run_background_task "npm run lang-ci-check" "lang_check"
         run_background_task "npm run lint:ci" "lint_ci"
         run_background_task "npm run test:ci" "test_ci"
+        run_background_task "npx nx run-many --target=build --all" "build_check"
         pushd "eslint-plugin-nx"
             run_background_task "npm run build-check" "eslint_plugin_build_check"
             run_background_task "npm run test" "eslint_plugin_test"
