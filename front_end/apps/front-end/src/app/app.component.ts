@@ -411,6 +411,6 @@ export class AppComponent implements AfterViewInit {
             if (prevScroll !== scroll) { // Only trigges on programatically set scroll
                 this.mainContainer.nativeElement.scrollTop = scroll;
             }
-        })
+        });
     }
 }

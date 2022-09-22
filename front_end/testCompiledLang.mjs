@@ -6,11 +6,12 @@
  * If this script starts causing build failures even though the language_compiled.json files are valid then set failOnBuild to false.
  */
 
-import "@angular/compiler";
-import { TranslateMessageFormatCompiler } from "ngx-translate-messageformat-compiler";
+import '@angular/compiler';
 import fs from 'fs';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
+
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,11 +23,11 @@ const sourceDir = sourceArg || __dirname;
 const compiler = new TranslateMessageFormatCompiler({ disablePluralKeyChecks: true });
 const failedLangs = [];
 
-function* walkSync(dir) {
+function * walkSync(dir) {
     const files = fs.readdirSync(dir, { withFileTypes: true });
     for (const file of files) {
         if (file.isDirectory()) {
-            yield* walkSync(path.join(dir, file.name));
+            yield * walkSync(path.join(dir, file.name));
         } else if (file.name === LANG_FILE) {
             yield path.join(dir, file.name);
         }

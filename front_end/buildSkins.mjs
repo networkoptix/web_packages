@@ -1,7 +1,8 @@
-import sass from 'sass';
 import fs from 'fs';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
+
+import sass from 'sass';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const dest = path.resolve(__dirname, process.argv[2] || 'static/styles');
 const skinPath = path.resolve(__dirname, '../skins');
 
-const buildSkin = (color) => {
+const buildSkin = color => {
     const source = path.resolve(skinPath, color, 'front_end/styles/_custom_palette.scss');
 
     const skin = sass.renderSync({ file: source });
@@ -22,7 +23,7 @@ const buildSkin = (color) => {
 
 const scanSkins = () => {
     const skins = fs.readdirSync(skinPath);
-    skins.forEach((color) => buildSkin(color));
+    skins.forEach(color => buildSkin(color));
 };
 
 scanSkins();

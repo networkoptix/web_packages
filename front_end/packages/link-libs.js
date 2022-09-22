@@ -32,4 +32,4 @@ for (const dir of getAllPackageDirs()) {
         }
     });
     processes[dir] = child;
-};
+}

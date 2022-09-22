@@ -1,25 +1,10 @@
-<h1 translate>NGRX Demo :: Counter Component</h1>
+<h1>NGRX Demo :: Counter Component</h1>
 
-<button
-    (click)="increment()"
-    translate
->
-    Increment
-</button>
+<button (click)="increment()">Increment</button>
 
 <div>Current Count: {{ count$ | async }}</div>
 <div>Squared: {{ countSquared$ | async }}</div>
 
-<button
-    (click)="decrement()"
-    translate
->
-    Decrement
-</button>
+<button (click)="decrement()">Decrement</button>
 
-<button
-    (click)="reset()"
-    translate
->
-    Reset Counter
-</button>
+<button (click)="reset()">Reset Counter</button>

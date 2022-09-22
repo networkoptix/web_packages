@@ -22,7 +22,7 @@ async function main() {
                 if (err) {
                     process.exitCode = 1;
                     console.error(stderr);
-                    console.error(`\nFailed to publish ${packageJson.name}@${packageJson.version}. Check logged error for cause.`)
+                    console.error(`\nFailed to publish ${packageJson.name}@${packageJson.version}. Check logged error for cause.`);
                 }
             });
             child.on('exit', code => {
