@@ -408,9 +408,9 @@ export class AppComponent implements AfterViewInit {
 
         this.scrollMechanicsService.windowScrollSubject.pipe(untilDestroyed(this)).subscribe(scroll => {
             const prevScroll = this.mainContainer.nativeElement.scrollTop;
-            if (prevScroll !== scroll) { // Only triggers on programatically set scroll
+            if (prevScroll !== scroll) { // Only trigges on programatically set scroll
                 this.mainContainer.nativeElement.scrollTop = scroll;
             }
-        });
+        })
     }
 }

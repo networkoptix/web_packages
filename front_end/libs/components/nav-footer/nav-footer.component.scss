@@ -29,22 +29,9 @@
             margin-left: 22px;
             position: relative;
             bottom: 1px;
-            transition-property: width, margin-left;
-            transition-duration: 500ms, 500ms;
             &:hover {
                 cursor: pointer;
             }
-            svg-icon {
-                transition: opacity 500ms linear;
-            }
-
-            &.invisible {
-                width: 0px;
-                margin-left: 0px;
-                svg-icon {
-                    opacity: 0;
-                }
-              }
         }
     }
 }

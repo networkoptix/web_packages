@@ -3217,7 +3217,7 @@ class ReadOnlyAPIFile(models.Model):
 
     FILE_TYPES = Choices((0, "json", "JSON"),  (1, "preamble_markdown", "Preamble Markdown File"), (2, "changelog_markdown", "Changelog Markdown File"))
     readonly_api = models.ForeignKey(ReadOnlyAPI, on_delete=models.CASCADE)
-    filename = models.CharField(max_length=46)
+    filename = models.CharField(max_length=46, help_text="File name must exist in the readonlyAPI's manifest")
     type = models.IntegerField(
         choices=FILE_TYPES, default=FILE_TYPES.json)
     content = models.TextField(blank=True, help_text="File contents")
@@ -3245,8 +3245,14 @@ class ReadOnlyAPIFile(models.Model):
         if self.type in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
             existing_file = ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id)
             if existing_file:
-                raise ValidationError('This file type already exists for this Readonly API')
+                raise ValidationError('This file type is unique and already exists for this Readonly API')
             super(ReadOnlyAPIFile, self).validate_unique(exclude=exclude)
+
+    def save(self, *args, **kwargs):
+        # Clear cache
+        READONLY_API_CACHE.lookup_key = "readonlyapi-" + str(self.readonly_api.id)
+        READONLY_API_CACHE.set_cached_item({})
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.readonly_api.name}'s {self.filename}"
