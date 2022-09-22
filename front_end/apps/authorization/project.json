@@ -110,6 +110,107 @@
             },
             "defaultConfiguration": ""
         },
+        "build-ssr": {
+            "executor": "@angular-devkit/build-angular:browser",
+            "options": {
+                "allowedCommonJsDependencies": [
+                    "md5",
+                    "uuid"
+                ],
+                "outputPath": "dist/authorization/browser",
+                "index": "apps/authorization/src/index.html",
+                "main": "apps/authorization/src/main.ts",
+                "polyfills": "apps/authorization/src/polyfills.ts",
+                "tsConfig": "tsconfig.app.json",
+                "assets": [
+                    "apps/authorization/src/favicon.ico",
+                    "apps/authorization/src/assets"
+                ],
+                "styles": [
+                    "common/styles/main.scss",
+                    "apps/authorization/src/styles.scss"
+                ],
+                "stylePreprocessorOptions": {
+                    "includePaths": [
+                        "node_modules/",
+                        "src/app/styles",
+                        "common/styles",
+                        "common/styles/common",
+                        "src/app",
+                        "libs"
+                    ]
+                },
+                "scripts": [],
+                "vendorChunk": true,
+                "extractLicenses": false,
+                "buildOptimizer": false,
+                "sourceMap": {
+                    "scripts": true,
+                    "styles": true,
+                    "vendor": false
+                },
+                "optimization": false,
+                "namedChunks": true
+            },
+            "configurations": {
+                "production": {
+                    "deployUrl": "static/authorization/",
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.prod.ts"
+                        }
+                    ],
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "2mb",
+                            "maximumError": "3mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "200kb",
+                            "maximumError": "280kb"
+                        },
+                        {
+                            "type": "anyScript",
+                            "maximumWarning": "1mb",
+                            "maximumError": "2mb"
+                        }
+                    ]
+                },
+                "development": {
+                    "outputHashing": "all",
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "2mb",
+                            "maximumError": "3mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "200kb",
+                            "maximumError": "280kb"
+                        },
+                        {
+                            "type": "anyScript",
+                            "maximumWarning": "1mb",
+                            "maximumError": "2mb"
+                        }
+                    ]
+                }
+            },
+            "defaultConfiguration": ""
+        },
         "lint": {
             "executor": "@nrwl/linter:eslint",
             "options": {
@@ -176,6 +277,64 @@
                 ],
                 "scripts": []
             }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/authorization/server",
+            "main": "apps/authorization/src/ssr.server.ts",
+            "tsConfig": "apps/authorization/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "common/environments/environment.ts",
+                  "with": "common/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "authorization:build-ssr:development",
+              "serverTarget": "authorization:server:development"
+            },
+            "production": {
+              "browserTarget": "authorization:build-ssr:production",
+              "serverTarget": "authorization:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "authorization:build-ssr:production",
+              "serverTarget": "authorization:server:production"
+            },
+            "development": {
+              "browserTarget": "authorization:build-ssr:development",
+              "serverTarget": "authorization:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
     }
 }

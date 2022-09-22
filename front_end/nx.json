@@ -33,5 +33,13 @@
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "libs"
+  },
+  "cli": {
+    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea",
+    "cache": {
+      "enabled": true,
+      "path": ".angular/cache",
+      "environment": "all"
+    }
   }
 }

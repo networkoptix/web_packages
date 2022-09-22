@@ -33,6 +33,7 @@
             "@authorization/*": ["apps/authorization/*"],
             "@pipes/*": ["libs/pipes/*"],
             "@common/*": ["common/*"],
+            "@styles/*": ["common/styles/*"],
             "@mocks/*": ["common/_mocks/*"]
         },
         "typeRoots": ["node_modules/@types"],

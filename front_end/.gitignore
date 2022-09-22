@@ -25,6 +25,7 @@ src/app/**/*.js
 src/supported_languages.json
 coverage
 reports
+env_**
 common/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
 common/scripts/downgraded-providers.js
 src/{main,polyfills,vendor,overrides.d,app.module,app.component,ajs-upgraded-providers}.js

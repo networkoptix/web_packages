@@ -1,0 +1,23 @@
+:root {
+  --brand-contrast: #121517;
+  --brand-l4: #DBFC83;
+  --brand-l3: #D1F573;
+  --brand-l2: #C5EB5F;
+  --brand-l1: #B5DE4A;
+  --brand-core: #A6CC46;
+  --brand-d1: #98BF2F;
+  --brand-d2: #88AE26;
+  --brand-d3: #789A1E;
+  --brand-d4: #678615;
+  --brand-d5: #57730E;
+  --brand-d6: #496207;
+  --brand-d7: #3E5502;
+  --brand-core--rgb: 166, 204, 70;
+  --brand-core-d10: rgba(166, 204, 70, 0.9);
+  --brand-core-d15: rgba(166, 204, 70, 0.85);
+  --brand-core-t90: rgba(166, 204, 70, 0.1);
+  --brand-l2-l20: #e6f6ba;
+  --brand-l2-t40: rgba(197, 235, 95, 0.6);
+  --brand-info-d10: #c5eb5f;
+  --brand-info-d15: #c5eb5e;
+}
