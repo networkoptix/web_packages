@@ -10,6 +10,14 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
+html {
+    --font-family-base    : #{$font-family-base};
+    --font-family-regular : #{$font-family-regular};
+    --font-family-medium  : #{$font-family-medium};
+    --font-family-light   : #{$font-family-light};
+    --font-family-bold    : #{$font-family-bold};
+}
+
 // @import "_theme_variables_light";
 // @import "_theme_variables_dark";
 

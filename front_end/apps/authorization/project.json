@@ -1,9 +1,9 @@
 {
     "projectType": "application",
-    "generators": {
-        "@schematics/angular:component": {
-            "style": "scss"
-        }
+    "schematics": {
+      "@schematics/angular:component": {
+        "style": "scss"
+      }
     },
     "root": "apps/authorization",
     "sourceRoot": "apps/authorization/src",
@@ -32,10 +32,9 @@
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",
-                        "src/app/styles",
+                        "apps/authorization/src/styles",
                         "common/styles",
                         "common/styles/common",
-                        "src/app",
                         "libs"
                     ]
                 },
@@ -133,10 +132,9 @@
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",
-                        "src/app/styles",
+                        "apps/authorization/src/styles",
                         "common/styles",
                         "common/styles/common",
-                        "src/app",
                         "libs"
                     ]
                 },
@@ -283,7 +281,16 @@
           "options": {
             "outputPath": "dist/authorization/server",
             "main": "apps/authorization/src/ssr.server.ts",
-            "tsConfig": "apps/authorization/tsconfig.server.json"
+            "tsConfig": "apps/authorization/tsconfig.server.json",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/",
+                "apps/authorization/src/styles",
+                "common/styles",
+                "common/styles/common",
+                "libs"
+              ]
+            }
           },
           "configurations": {
             "production": {

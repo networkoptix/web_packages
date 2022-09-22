@@ -1,8 +1,5 @@
-@use "theme_variables_common" as *;
-
-
 .placeholder-text {
-    color: $light13;
+    color: var(--input-color-placeholder);
 
     &-no-changes {
         height: 32px;
@@ -21,5 +18,5 @@
 }
 
 .warning-text {
-    color: $red-l2;
+    color: var(--red_l2);
 }

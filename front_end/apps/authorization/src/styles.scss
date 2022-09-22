@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use "_theme_variables_common" as *;
+@use "theme_variables_common" as *;
 @import "~@angular/cdk/overlay-prebuilt.css";
 
 * {
