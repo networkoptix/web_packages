@@ -320,7 +320,7 @@
     "Log in to your System using %VMS_NAME%": "Log in to your System using %VMS_NAME%",
     "Log settings": "Log settings",
     "Login": "Login",
-    "Login or password is incorrect": "Login or password is incorrect",
+    "Login or password is incorrect": "ログインID、またはパスワードが間違っています。",
     "Look for the email with the activation link in your inbox or login to %CLOUD_NAME% and follow provided instructions.": "Look for the email with the activation link in your inbox or login to %CLOUD_NAME% and follow provided instructions.",
     "Maintenance": "Maintenance",
     "Make sure your trust this URL.": "Make sure your trust this URL.",
