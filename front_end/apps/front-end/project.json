@@ -1,0 +1,262 @@
+{
+    "projectType": "application",
+    "generators": {
+        "@schematics/angular:component": {
+            "style": "scss"
+        }
+    },
+    "root": "apps/front-end",
+    "sourceRoot": "apps/front-end/src",
+    "prefix": "app",
+    "targets": {
+        "build": {
+            "executor": "@angular-devkit/build-angular:browser",
+            "options": {
+                "allowedCommonJsDependencies": [
+                    "md5",
+                    "uuid",
+                    "ng2-trim-directive",
+                    "qrcode",
+                    "@firebase/util",
+                    "@firebase/component",
+                    "dateformat",
+                    "@videojs/xhr",
+                    "videojs-vtt.js",
+                    "global/document",
+                    "mux.js/lib/mp4/probe",
+                    "mux.js/lib/tools/ts-inspector.js",
+                    "swagger-ui"
+                ],
+                "outputPath": "dist/front_end",
+                "index": "apps/front-end/src/app/index.html",
+                "main": "apps/front-end/src/main.ts",
+                "polyfills": "apps/front-end/src/polyfills.ts",
+                "tsConfig": "tsconfig.app.json",
+                "assets": [
+                    {
+                        "glob": "**/*",
+                        "input": "node_modules/tinymce",
+                        "output": "/tinymce/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/customization",
+                        "output": "/customizatin/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/images",
+                        "output": "/images/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/fonts",
+                        "output": "/fonts/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/styles",
+                        "output": "/styles/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/views",
+                        "output": "/views/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/scripts",
+                        "output": "/scripts/"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/static_assets",
+                        "output": "."
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/language",
+                        "output": "."
+                    }
+                ],
+                "styles": [
+                    "libs/dialogs/dialogs.scss",
+                    "common/styles/main.scss"
+                ],
+                "scripts": [
+                    "node_modules/marked/marked.min.js"
+                ],
+                "stylePreprocessorOptions": {
+                    "includePaths": [
+                        "src/app/styles",
+                        "common/styles",
+                        "common/styles/common",
+                        "src/app",
+                        "libs"
+                    ]
+                },
+                "vendorChunk": true,
+                "extractLicenses": false,
+                "sourceMap": {
+                    "scripts": true,
+                    "styles": false,
+                    "vendor": false
+                },
+                "aot": true,
+                "optimization": false,
+                "namedChunks": true
+            },
+            "configurations": {
+                "cloud-test": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.cloud-test.ts"
+                        }
+                    ]
+                },
+                "dev2": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.dev2.ts"
+                        }
+                    ]
+                },
+                "dev3": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.dev3.ts"
+                        }
+                    ]
+                },
+                "local": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.local.ts"
+                        }
+                    ]
+                },
+                "production": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.prod.ts"
+                        }
+                    ],
+                    "deployUrl": "static/",
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "extractLicenses": true,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "2mb",
+                            "maximumError": "3mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "200kb",
+                            "maximumError": "280kb"
+                        },
+                        {
+                            "type": "anyScript",
+                            "maximumWarning": "1mb",
+                            "maximumError": "2mb"
+                        }
+                    ],
+                    "serviceWorker": true,
+                    "ngswConfigPath": "ngsw-config.json"
+                },
+                "stage": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.stage.ts"
+                        }
+                    ]
+                }
+            },
+            "defaultConfiguration": ""
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": [
+                    "**/*.ts",
+                    "**/*.component.html"
+                ]
+            }
+        },
+        "serve": {
+            "executor": "@angular-devkit/build-angular:dev-server",
+            "options": {
+                "publicHost": "localhost:9000",
+                "host": "0.0.0.0",
+                "port": 9000,
+                "browserTarget": "front-end:build",
+                "sslKey": "ssl_keys/server.key",
+                "sslCert": "ssl_keys/server.crt",
+                "ssl": true
+            },
+            "configurations": {
+                "cloud-test": {
+                    "browserTarget": "front-end:build:cloud-test"
+                },
+                "dev2": {
+                    "browserTarget": "front-end:build:dev2"
+                },
+                "dev3": {
+                    "browserTarget": "front-end:build:dev3"
+                },
+                "local": {
+                    "browserTarget": "front-end:build:local"
+                },
+                "production": {
+                    "browserTarget": "front-end:build:production"
+                },
+                "stage": {
+                    "browserTarget": "front-end:build:stage"
+                }
+            }
+        },
+        "extract-i18n": {
+            "executor": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+                "browserTarget": "front-end:build"
+            }
+        },
+        "test": {
+            "executor": "@angular-devkit/build-angular:karma",
+            "options": {
+                "main": "common/test.ts",
+                "polyfills": "src/polyfills.ts",
+                "tsConfig": "tsconfig.spec.json",
+                "karmaConfig": "karma.conf.ci.js",
+                "assets": [
+                    "src/favicon.ico",
+                    "src/assets"
+                ],
+                "styles": [
+                    "libs/dialogs/dialogs.scss",
+                    "common/styles/main.scss"
+                ],
+                "stylePreprocessorOptions": {
+                    "includePaths": [
+                        "node_modules/",
+                        "src/app/styles",
+                        "common/styles/common",
+                        "common/styles",
+                        "src/app"
+                    ]
+                },
+                "scripts": [],
+                "codeCoverage": true
+            }
+        }
+    }
+}
