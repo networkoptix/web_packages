@@ -298,7 +298,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (err && (
             [500, 503, 504].includes((err as HttpErrorResponse).status) ||
             (err as HttpErrorResponse).message?.includes('timeout') ||
-            (typeof err === 'string' && err.includes('Error occured while trying to proxy to:')) || // occurs when wifi on machine turned off
+            (typeof err === 'string' && err.includes('Error occurred while trying to proxy to:')) || // occurs when wifi on machine turned off
             err instanceof ProgressEvent // occurs when virtual machine connection turned off (offline testing)
         )) {
             this.errorType = (err as HttpErrorResponse).status === 503

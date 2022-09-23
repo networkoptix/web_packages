@@ -1,4 +1,9 @@
 {
     "extends": "../../tsconfig.app.json",
-    "include": ["./src/main.ts", "./src/polyfills.ts",  "./src/**/*.d.ts"]
+    "include": [
+        "./src/main.ts",
+        "./src/polyfills.ts",
+        "./src/**/*.d.ts",
+        "src/overrides.d.ts"
+    ]
 }

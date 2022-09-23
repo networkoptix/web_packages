@@ -12,6 +12,9 @@
     "src/main.server.ts",
     "src/ssr.server.ts"
   ],
+  "include": [
+    "src/overrides.d.ts"
+  ],
   "angularCompilerOptions": {
     "entryModule": "./src/app/app.server.module#AppServerModule"
   }
