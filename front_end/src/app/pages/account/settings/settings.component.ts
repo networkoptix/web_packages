@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -66,6 +67,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private applyService: NxApplyService,
         private pageService: NxPageService,
+        private toastService: NxToastService,
         @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -79,18 +81,19 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.saveLang = this.processService.createProcess(() => {
-            return this.cloudApiService.changeLanguage(this.langCode);
-        }, {}).then(result => {
             this.storageService.langChanged = true;
+            this.toastService.remove();
+            return this.cloudApiService.changeLanguage(this.langCode);
+        }, {}).then(() => {
             setTimeout(() => {
                 this.window.location.reload();
             });
         });
 
         this.saveAccount = this.processService.createProcess(() => {
+            this.storageService.langChanged = false;
             return this.cloudApiService.accountPost(this.account);
         }, {
-            successMessage: this.LANG.account.accountSavedSuccess(),
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden: true
         }).then(() => {
@@ -98,6 +101,12 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             // account info was changed successful (local and on server)
             // really no need to force update -- TT
             // this.accountService.get(true);
+            if (!this.storageService.langChanged) {
+                this.toastService.notify(
+                    this.LANG.account.accountSavedSuccess(),
+                    this.CONFIG.toast.success,
+                );
+            }
         }, () => {});
 
         this.accountService
@@ -113,6 +122,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                     setTimeout(() => {
                         // both form are inside *ngIf="account"
                         // otherwise they should be in ngAfterViewInit
+
                         this.accountFormWatcher = this.applyService.createFormWatcher(
                             'accountForm',
                             this.accountForm,
