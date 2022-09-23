@@ -21,7 +21,7 @@ common/images/logo_small.png
 common/styles/custom
 common/styles/*.css
 **/*.js.map
-src/app/**/*.js
+src/**/*
 src/supported_languages.json
 coverage
 reports
