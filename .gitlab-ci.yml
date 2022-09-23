@@ -239,6 +239,10 @@ all-frontend-checks:
       fi
     done
 
+    if [ ! "${#ArrayName[@]}" = "$(ls -1q "$log_folder"/*.log | wc -l | xargs)" ]; then
+      echo "Some task failed to start, check for missing logs."
+    fi
+
     # TODO: Merge coverage
     # pushd "front_end"
     #   pushd "coverage"

@@ -16,6 +16,7 @@ import { SearchableModule } from '@components/dropdowns/searchable/searchable.mo
 import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { TagModule } from '@components/tag/tag.module';
+import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
 import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -56,6 +57,7 @@ import {
     UpdateCameraCredentialsModalContent
 } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
+import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 
 @NgModule({
     imports: [
@@ -77,7 +79,10 @@ import { WizardModalContent } from './wizard/wizard.component';
         InfoBlockModule,
         SearchableModule,
         AlertBlockModule,
-        TagModule
+        DynamicWidgetModule,
+        TagModule,
+        ThirdsPartyWidgetModule,
+        LoginWebadminModule
     ],
     declarations: [
         DisconnectModalContent,

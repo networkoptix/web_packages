@@ -24,7 +24,7 @@ export class NxNavFooterComponent implements OnInit {
     returnToTopVisible$ = new BehaviorSubject(true);
     copyright: string;
 
-    constructor(private menusService: NxMenusService, config: NxConfigService, @Inject(WINDOW) private window: Window, private scrollMechanicsService: NxScrollMechanicsService, languageService: NxLanguageProviderService) {
+    constructor(private menusService: NxMenusService, config: NxConfigService, @Inject(WINDOW) private window: Window, public scrollMechanicsService: NxScrollMechanicsService, languageService: NxLanguageProviderService) {
         this.CONFIG = config.getConfig();
         this.copyright = languageService.translations.appFooter.copyright({ currentYear: new Date().getFullYear().toString() });
 

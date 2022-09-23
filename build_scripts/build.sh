@@ -10,9 +10,9 @@ function build_frontend () {
     pushd ../front_end
         BUILD=${VERSION//*.}
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' 's@{{BUILD}}@'"$BUILD"'@g' ./src/app/services/nx-config/config.ts
+            sed -i '' 's@{{BUILD}}@'"$BUILD"'@g' ./libs/services/nx-config/config.ts
         else
-            sed -i 's@{{BUILD}}@'"$BUILD"'@g' ./src/app/services/nx-config/config.ts
+            sed -i 's@{{BUILD}}@'"$BUILD"'@g' ./libs/services/nx-config/config.ts
         fi
 
         npm run build

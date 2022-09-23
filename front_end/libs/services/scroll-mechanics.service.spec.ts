@@ -78,6 +78,7 @@ describe('Scroll mechanics service', () => {
 
     it('should check window size (max)', () => {
         let result: boolean;
+        // @ts-expect-error Need to update global for test
         viewport.set('screen');
 
         result = scroll.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
@@ -89,6 +90,7 @@ describe('Scroll mechanics service', () => {
 
     it('should check window size (min)', () => {
         let result: boolean;
+        // @ts-expect-error Need to update global for test
         viewport.set('screen');
 
         result = scroll.mediaQueryMin(NxScrollMechanicsService.MEDIA.sm);

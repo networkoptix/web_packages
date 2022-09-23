@@ -5,6 +5,7 @@ import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import staticLang from '@common/language/language_compiled.json';
 import { TranslateService } from '@ngx-translate/core';
 import { MockInstance, ngMocks } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -26,8 +27,6 @@ import { NxSessionService } from '@services/session.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-
-import staticLang from './language_compiled.json';
 
 // HELPERS ******************************************
 nxConfig.company.name = 'Nx Cloud';
@@ -106,7 +105,7 @@ ngMocks.defaultMock(NxProcessService, () => ({
 
 // @ts-expect-error
 ngMocks.defaultMock(Process, () => ({
-    run: () => {}
+    run: () => { }
 }));
 
 ngMocks.defaultMock(NxScrollMechanicsService, () => ({
@@ -125,18 +124,18 @@ ngMocks.defaultMock(NxSystemsService, () => ({
 ngMocks.defaultMock(WINDOW, () => window);
 
 declare const require: {
-  context(path: string, deep?: boolean, filter?: RegExp): {
-    keys(): string[];
-    <T>(id: string): T;
-  };
+    context(path: string, deep?: boolean, filter?: RegExp): {
+        keys(): string[];
+        <T>(id: string): T;
+    };
 };
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting(), {
-        teardown: { destroyAfterEach: false }
-    }
+    teardown: { destroyAfterEach: false }
+}
 );
 // Then we find all the tests.
 const context = require.context('./', true, /\.spec\.ts$/);

@@ -1,7 +1,9 @@
 #!/bin/bash
 IS_WEBADMIN=$1
 
-if [ -d ./dist/front_end ]; then
+if [ "$IS_WEBADMIN" = true ]; then
+    mv ./dist/webadmin/* ./dist/
+else
     mv ./dist/front_end/* ./dist/
 fi
 

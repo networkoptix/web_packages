@@ -1,7 +1,9 @@
 {
     "paths": [
-        "./src/**/*.ts",
-        "./apps/authorization/src/**/*.ts",
+        "./apps/**/*.ts",
+        "./common/**/*.ts",
+        "./libs/**/*.ts",
+        "./packages/**/*.ts",
         "./**/*.component.html"
     ]
 }

@@ -7,12 +7,7 @@
     class="container"
     *ngIf="account"
 >
-    <h2
-        class="ml-3 mr-3 pt-3"
-        translate
-    >
-        Push Notification Test
-    </h2>
+    <h2 class="ml-3 mr-3 pt-3">Push Notification Test</h2>
     <div class="row m-0 pl-2 pr-2 pt-0">
         <div class="col-12 col-lg-9">
             <nx-block class="mt-3 d-block">
@@ -32,11 +27,7 @@
                             class="form-group"
                         >
                             <div class="form-group">
-                                <label
-                                    for="currentDeviceName"
-                                    translate
-                                    >Name</label
-                                >
+                                <label for="currentDeviceName">Name</label>
                                 <input
                                     class="fs-mask form-control"
                                     type="text"
@@ -49,14 +40,10 @@
                             <button
                                 class="btn btn-success"
                                 (click)="onRegisterDevice()"
-                                translate
                             >
                                 Register Browser
                             </button>
-                            <p
-                                class="footnote"
-                                translate
-                            >
+                            <p class="footnote">
                                 Makes an API call to add your browser token to the database
                             </p>
                         </div>
@@ -65,14 +52,10 @@
                             <button
                                 class="btn btn-danger"
                                 (click)="onDeleteToken()"
-                                translate
                             >
                                 Invalidate Browser
                             </button>
-                            <p
-                                class="footnote"
-                                translate
-                            >
+                            <p class="footnote">
                                 Browser token invalidation occurs on your device, no API request is
                                 involved. The next push notification you send notifies the server
                                 that your token is invalid and removes it from the database.
@@ -83,18 +66,15 @@
                             *ngIf="this.permission === 'default'"
                             class="btn btn-success"
                             (click)="onAllowNotifications()"
-                            translate
                         >
                             Allow Notifications
                         </button>
-                        <span
-                            *ngIf="this.permission === 'denied'"
-                            translate
+                        <span *ngIf="this.permission === 'denied'"
                             >Notification permission was denied.</span
                         >
 
                         <div class="mt-2">
-                            <h4 translate>Debug Info</h4>
+                            <h4>Debug Info</h4>
                             <p>Device Token: {{ deviceToken }}</p>
                             <p>Registered: {{ registered }}</p>
                         </div>
@@ -102,15 +82,11 @@
                 </nx-section>
             </nx-block>
             <nx-block class="mt-3 d-block">
-                <header translate>Add another Device</header>
+                <header>Add another Device</header>
                 <nx-section>
                     <form #formNewDevice="ngForm">
                         <div class="form-group">
-                            <label
-                                for="newDeviceToken"
-                                translate
-                                >Device Token*</label
-                            >
+                            <label for="newDeviceToken">Device Token*</label>
                             <input
                                 class="form-control"
                                 type="text"
@@ -130,11 +106,7 @@
                             ></div>
                         </div>
                         <div class="form-group">
-                            <label
-                                for="deviceName"
-                                translate
-                                >Name*</label
-                            >
+                            <label for="deviceName">Name*</label>
                             <input
                                 class="fs-mask form-control"
                                 type="text"
@@ -146,11 +118,7 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label
-                                for="deviceModel"
-                                translate
-                                >Model</label
-                            >
+                            <label for="deviceModel">Model</label>
                             <input
                                 class="form-control"
                                 type="text"
@@ -160,11 +128,7 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label
-                                for="deviceProvider"
-                                translate
-                                >Provider*</label
-                            >
+                            <label for="deviceProvider">Provider*</label>
                             <select
                                 class="form-control"
                                 type="text"
@@ -176,48 +140,18 @@
                                 <option
                                     selected="selected"
                                     value=""
-                                    translate
                                 >
                                     Please select a provider
                                 </option>
-                                <option
-                                    value="firebase_legacy"
-                                    translate
-                                >
-                                    Firebase Legacy
-                                </option>
-                                <option
-                                    value="firebase"
-                                    translate
-                                >
-                                    Firebase
-                                </option>
-                                <option
-                                    value="apn"
-                                    translate
-                                >
-                                    APN
-                                </option>
-                                <option
-                                    value="apn_sandbox"
-                                    translate
-                                >
-                                    APN Sandbox
-                                </option>
-                                <option
-                                    value="baidu"
-                                    translate
-                                >
-                                    Baidu
-                                </option>
+                                <option value="firebase_legacy">Firebase Legacy</option>
+                                <option value="firebase">Firebase</option>
+                                <option value="apn">APN</option>
+                                <option value="apn_sandbox">APN Sandbox</option>
+                                <option value="baidu">Baidu</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label
-                                for="deviceUserId"
-                                translate
-                                >Baidu User Id</label
-                            >
+                            <label for="deviceUserId">Baidu User Id</label>
                             <input
                                 class="form-control"
                                 type="text"
@@ -225,24 +159,17 @@
                                 id="deviceUserId"
                                 [(ngModel)]="newDevice.userId"
                             />
-                            <p
-                                class="footnote"
-                                translate
-                            >
-                                Only required for baidu device registrations
-                            </p>
+                            <p class="footnote">Only required for baidu device registrations</p>
                         </div>
                         <button
                             [disabled]="!formNewDevice.valid"
                             class="btn btn-success d-inline-block"
                             (click)="onRegisterDevice(formNewDevice)"
-                            translate
                         >
                             Register Device</button
                         ><span
                             class="ml-2 text-success"
                             *ngIf="newDevice.success && formNewDevice.untouched"
-                            translate
                             >Success!</span
                         >
                     </form>
@@ -250,14 +177,14 @@
             </nx-block>
 
             <nx-block class="mt-3 d-block">
-                <header translate>Subscriptions</header>
+                <header>Subscriptions</header>
                 <nx-section *ngIf="devices && devices.length > 0">
                     <div class="row">
                         <div class="col-sm-1 devices">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th translate>Devices</th>
+                                        <th>Devices</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -280,7 +207,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th translate>All</th>
+                                        <th>All</th>
                                         <th
                                             *ngFor="let system of this.systems"
                                             class="ellipsis"
@@ -318,24 +245,17 @@
                         </div>
                     </div>
                 </nx-section>
-                <nx-section
-                    *ngIf="!devices || devices.length === 0"
-                    translate
-                >
+                <nx-section *ngIf="!devices || devices.length === 0">
                     No registered devices found
                 </nx-section>
             </nx-block>
 
             <nx-block class="mt-3 d-block">
-                <header translate>Send Notification</header>
+                <header>Send Notification</header>
                 <nx-section>
                     <form #formNotification="ngForm">
                         <div class="form-group">
-                            <label
-                                for="system"
-                                translate
-                                >System</label
-                            >
+                            <label for="system">System</label>
                             <select
                                 class="form-control"
                                 name="system"
@@ -346,7 +266,6 @@
                                 <option
                                     selected="selected"
                                     value=""
-                                    translate
                                 >
                                     Please select a system
                                 </option>
@@ -360,11 +279,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label
-                                for="title"
-                                translate
-                                >Title</label
-                            >
+                            <label for="title">Title</label>
                             <input
                                 class="form-control"
                                 type="text"
@@ -375,11 +290,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label
-                                for="body"
-                                translate
-                                >Body</label
-                            >
+                            <label for="body">Body</label>
                             <textarea
                                 class="form-control"
                                 name="body"
@@ -390,11 +301,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label
-                                for="payload"
-                                translate
-                                >Payload (JSON)</label
-                            >
+                            <label for="payload">Payload (JSON)</label>
                             <textarea
                                 class="form-control"
                                 name="payload"
@@ -406,11 +313,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label
-                                for="options"
-                                translate
-                                >Options (JSON)</label
-                            >
+                            <label for="options">Options (JSON)</label>
                             <textarea
                                 class="form-control"
                                 name="options"
@@ -426,7 +329,6 @@
                             type="submit"
                             class="btn btn-default"
                             (click)="onSendNotification(formNotification)"
-                            translate
                         >
                             Send Notification
                         </button>
@@ -443,7 +345,7 @@
                 class="d-block mt-3"
                 *ngIf="receivedMessages.length > 0"
             >
-                <header translate>Foreground Messages</header>
+                <header>Foreground Messages</header>
                 <div class="foreground-messages-content pre-scrollable">
                     <nx-section *ngFor="let message of receivedMessages">
                         <h5>{{ message.notification.title }}</h5>
