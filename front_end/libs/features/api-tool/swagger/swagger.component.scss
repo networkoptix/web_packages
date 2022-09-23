@@ -58,6 +58,10 @@
 	font-family: $font-family-regular;
 	color: var(--body-text-color);
 
+	section.models {
+		display: none;
+	}
+
 	.opblock-body {
 		background-color: var(--alt-body-bg);
 		padding-top: 2px;
