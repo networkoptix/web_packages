@@ -919,7 +919,7 @@
         "notActivated": "有効化されていません",
         "offline": "オフライン",
         "online": "オンライン",
-        "unavailable": "利用できません"
+        "unavailable": "利用不可"
     },
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
