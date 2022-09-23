@@ -149,7 +149,7 @@
         "cloudError": "システムを統合できません。依存システムがクラウドに接続されています。先にそちらを切断する必要があります。",
         "cloudBothError": "システムを統合できません。どちらのシステムもクラウドに接続されています。先に片方をクラウドから切断する必要があります。",
         "cloudHostConflict": "異なるクラウドホストで構築されたサーバーが存在するため、システムを統合できません",
-        "licenceError": "Warning! You are about to merge Systems with Starter licenses. Only one Starter license is allowed per System, so the second license will be deactivated. Merge anyway?",
+        "licenceError": "警告！スターターライセンスが有効化されたシステムを統合しようとしています。システムごとに許可されるスターターライセンスは1つまでで、2番目のライセンスは無効になります。統合しますか？",
         "duplicateServersError": "同じIDを持つサーバーが統合相手に1つ以上存在するため、システムを統合できません。このサーバーを削除してやり直してください。",
         "connectionFailed": "接続失敗: ",
         "unknownError": "不明なエラー",

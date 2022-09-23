@@ -55,7 +55,7 @@
     "REINDEXING BACKUP": "バックアップストレージの再インデックス中...",
     "REINDEX ARCHIVE MSG TEXT": "ストレージデバイスが移動・名前変更・削除された場合、あるいはアーカイブファイルが削除・名前変更された場合、タイムスタンプが正しくない場合、またはその他の方法で破損した場合、このインデックスは破損します。再インデックスを行うと、データベースとストレージデバイス間の連携が復元されます",
     "REINDEX ARCHIVE TEXT": "アーカイブの再インデックス",
-    "URL REQUIRED TEXT": "URL は必須です。",
+    "URL REQUIRED TEXT": "URL は必須です",
     "INVALID URL TEXT": "URLが無効です",
     "LOGIN OR PASSWORD INCORRECT TEXT": "ログインIDまたはパスワードが間違っています",
     "FAILED TO ADD STORAGE TEXT": "外部ストレージの追加に失敗しました - サーバーが応答しません",
