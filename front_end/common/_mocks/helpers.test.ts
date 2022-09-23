@@ -1,5 +1,6 @@
-import staticLang from '@common/language/language_i18n_static.json';
 import { Subject } from 'rxjs';
+
+import staticLang from '@common/language/language_i18n_static.json';
 
 export class HelperMockProvider<Provider, Value> {
     constructor(public provide: Provider, public useValue?: Value) {
