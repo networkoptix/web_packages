@@ -5,12 +5,12 @@ import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
-import staticLang from '@common/language/language_compiled.json';
 import { TranslateService } from '@ngx-translate/core';
 import { MockInstance, ngMocks } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, EMPTY, of } from 'rxjs';
 
+import staticLang from '@common/language/language_compiled.json';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { DUMMY_ACCOUNT } from '@services/account.service/account';
@@ -134,8 +134,8 @@ declare const require: {
 getTestBed().initTestEnvironment(
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting(), {
-    teardown: { destroyAfterEach: false }
-}
+        teardown: { destroyAfterEach: false }
+    }
 );
 // Then we find all the tests.
 const context = require.context('./', true, /\.spec\.ts$/);

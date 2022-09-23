@@ -599,7 +599,7 @@ module.exports = {
                 '**/debug/debug.component.html',
                 '**/email-notifications/email-notifications.component.html',
                 '**/layout/layout.component.html',
-                '.**/push-notifications/push-notifications.component.html',
+                '**/push-notifications/push-notifications.component.html',
                 '**/sandbox/**/*.html',
                 // Not required for internal/testing components
             ],
