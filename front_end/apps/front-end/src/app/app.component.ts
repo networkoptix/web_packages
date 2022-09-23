@@ -68,7 +68,6 @@ require('what-input');
             </div>
         </div>
         <ng-container *ngIf="!reauthorizing">
-            <ng-template #overlayModal></ng-template>
             <nx-pre-loader
                 type="page"
                 *ngIf="(!appStateService.ready && !newSystem) || loading"
@@ -94,7 +93,6 @@ export class AppComponent implements AfterViewInit {
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
     @ViewChild('header', { read: ViewContainerRef }) header: ViewContainerRef;
-    @ViewChild('overlayModal', { read: ViewContainerRef }) overlayModalRef: ViewContainerRef;
     @ViewChild('appToast', { read: ViewContainerRef }) appToast: ViewContainerRef;
     @ViewChild('ribbon', { read: ViewContainerRef }) ribbon: ViewContainerRef;
     @ViewChild('cookieBanner', { read: ViewContainerRef }) cookieBanner: ViewContainerRef;
@@ -122,13 +120,6 @@ export class AppComponent implements AfterViewInit {
         await import('@components/ribbon/ribbon.module').then(m => m.RibbonModule);
         const { NxRibbonComponent } = await import('@components/ribbon/ribbon.component');
         this.ribbon.createComponent(NxRibbonComponent);
-
-        if (environment.isLocal) {
-            await idle();
-            await import('@components/overlay-modal/overlay-modal.module').then(m => m.OverlayModalModule);
-            const { NxOverlayModalComponent } = await import('@components/overlay-modal/overlay-modal.component');
-            this.overlayModalRef.createComponent(NxOverlayModalComponent);
-        }
     };
 
     constructor(

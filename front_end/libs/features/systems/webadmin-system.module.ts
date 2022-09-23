@@ -18,6 +18,7 @@ import { NxSystemLicensesModule } from './settings/licenses/licenses.module';
 import { NxSystemServersComponent } from './settings/servers/servers.component';
 import { NxSystemServersModule } from './settings/servers/servers.module';
 import { NxSystemSettingsComponent } from './settings/settings.component';
+import { NxSettingsModule } from './settings/settings.module';
 import { NxSystemUsersComponent } from './settings/users/users.component';
 import { NxSystemUsersModule } from './settings/users/users.module';
 
@@ -102,7 +103,8 @@ export const localSettingsRoutes: Routes = [
         NxCamerasModule,
         NxSystemLicensesModule,
         RouterModule.forChild(localSettingsRoutes),
-        MenuModule
+        MenuModule,
+        NxSettingsModule
     ],
     providers: [
     ],

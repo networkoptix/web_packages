@@ -23,8 +23,7 @@ import { NxUrlProtocolService } from './url-protocol.service';
     imports: [
         CommonModule
     ],
-    declarations: [
-    ],
+    declarations: [],
     providers: [
         NxAppSourceService,
         NxAppStateService,
@@ -49,5 +48,5 @@ export class ServiceModule {
     constructor(
         // Do not remove, IDE will show that these services aren't used, but we just need them to be instantiated here.
         swPromptUpdateService: NxSwPromptUpdateService
-    ) {}
+    ) { }
 }

@@ -31,7 +31,7 @@
                 "index": "apps/front-end/src/app/index.html",
                 "main": "apps/front-end/src/main.ts",
                 "polyfills": "apps/front-end/src/polyfills.ts",
-                "tsConfig": "tsconfig.app.json",
+                "tsConfig": "apps/front-end/tsconfig.app.json",
                 "assets": [
                     {
                         "glob": "**/*",
@@ -184,7 +184,7 @@
         "lint": {
             "builder": "@nrwl/linter:eslint",
             "options": {
-                "eslintConfig": ".eslintrc.js",
+                "eslintConfig": "./.eslintrc.js",
                 "lintFilePatterns": [
                     "**/*.ts",
                     "**/*.component.html"
@@ -234,7 +234,7 @@
             "options": {
                 "main": "common/test.ts",
                 "polyfills": "apps/front-end/src/polyfills.ts",
-                "tsConfig": "tsconfig.spec.json",
+                "tsConfig": "apps/front-end/tsconfig.spec.json",
                 "karmaConfig": "apps/front-end/karma.conf.ci.js",
                 "assets": [],
                 "styles": [

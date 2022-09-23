@@ -27,11 +27,11 @@
                     "mux.js/lib/tools/ts-inspector.js",
                     "swagger-ui"
                 ],
-                "outputPath": "dist",
+                "outputPath": "dist/webadmin",
                 "index": "apps/webadmin/src/app/index.html",
                 "main": "apps/webadmin/src/main.ts",
                 "polyfills": "apps/webadmin/src/polyfills.ts",
-                "tsConfig": "tsconfig.app.json",
+                "tsConfig": "apps/webadmin/tsconfig.app.json",
                 "assets": [
                     {
                         "glob": "**/*",
@@ -83,9 +83,7 @@
                     "libs/dialogs/dialogs.scss",
                     "common/styles/main.scss"
                 ],
-                "scripts": [
-                    "node_modules/marked/marked.min.js"
-                ],
+                "scripts": [],
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "common/styles",
@@ -130,6 +128,10 @@
                         {
                             "replace": "libs/services/account.service/index.ts",
                             "with": "libs/services/account.service/index.webadmin.ts"
+                        },
+                        {
+                            "replace": "libs/routeGuards/authGuard.ts",
+                            "with": "libs/routeGuards/authGuard.webadmin.ts"
                         }
                     ],
                     "deployUrl": "static/",
@@ -161,7 +163,7 @@
         "lint": {
             "builder": "@nrwl/linter:eslint",
             "options": {
-                "eslintConfig": ".eslintrc.js",
+                "eslintConfig": "./.eslintrc.js",
                 "lintFilePatterns": [
                     "**/*.ts",
                     "**/*.component.html"
@@ -174,14 +176,14 @@
                 "publicHost": "localhost:9000",
                 "host": "0.0.0.0",
                 "port": 9000,
-                "browserTarget": "front-end:build",
+                "browserTarget": "webadmin:build:production",
                 "sslKey": "ssl_keys/server.key",
                 "sslCert": "ssl_keys/server.crt",
                 "ssl": true
             },
             "configurations": {
                 "production": {
-                    "browserTarget": "front-end:build:webadmin"
+                    "browserTarget": "webadmin:build:production"
                 }
             }
         },
@@ -190,7 +192,7 @@
             "options": {
                 "main": "common/test.ts",
                 "polyfills": "apps/webadmin/src/polyfills.ts",
-                "tsConfig": "tsconfig.spec.json",
+                "tsConfig": "apps/webadmin/tsconfig.spec.json",
                 "karmaConfig": "apps/webadmin/karma.conf.ci.js",
                 "assets": [],
                 "styles": [

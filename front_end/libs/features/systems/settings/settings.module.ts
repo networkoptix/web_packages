@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
+import { FooterModule } from '@components/footer/footer.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -107,7 +108,8 @@ export const cloudSettingsRoutes: Routes = [
         NxCamerasModule,
         MenuModule,
         RouterModule.forChild(cloudSettingsRoutes),
-        PagePlaceHolderModule
+        PagePlaceHolderModule,
+        FooterModule
     ],
     providers: [
         NxSettingsService
