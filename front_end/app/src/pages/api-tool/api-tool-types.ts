@@ -28,6 +28,11 @@ export interface APIDoc {
         [key:string]: MethodInfo,
     },
     servers?: { url: string}[]
+    components?: {
+        schemas?: {
+            [key:string]: any;
+        }
+    }
 }
 
 export type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'

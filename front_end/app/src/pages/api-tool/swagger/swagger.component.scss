@@ -15,6 +15,10 @@
 	display : none;
 }
 
+.swagger-ui section.models {
+	display: none !important
+}
+
 .swagger-ui .opblock-loading-animation {
 	display: none !important;
 }

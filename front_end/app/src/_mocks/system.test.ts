@@ -137,6 +137,7 @@ export function setupTest50System(): Partial<NxSystem> {
         subscriberCount: 2,
         show404: false,
         currentServerNotBusy: true,
-        currentUserEmail: 'noptixautoqa+owner@gmail.com'
+        currentUserEmail: 'noptixautoqa+owner@gmail.com',
+        getLicenseSummaries: () => new Promise(() => '')
     };
 }

@@ -597,8 +597,8 @@ export class NxAPIToolService {
     }
 
     async getLegacyAPIDocs(mainMenuContent: MenuNodeWithParent[], apiDocFull: APIDoc) {
-        let legacyAPI;
-        let deprecatedAPI;
+        let legacyAPI: APIDoc;
+        let deprecatedAPI: APIDoc;
 
         // Optional chaining here because getApiDoc returns undefined if system version is below 5.0
         const legacyAPICall = this.getAPIDoc('legacy')?.then(response => {
@@ -614,10 +614,10 @@ export class NxAPIToolService {
 
         await legacyAPICall;
         await deprecatedAPICall;
-
         if (legacyAPI) {
             apiDocFull.tags = [...apiDocFull.tags, ...legacyAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths, legacyAPI.paths);
+            apiDocFull.components.schemas = Object.assign(apiDocFull.components.schemas, legacyAPI?.components?.schemas);
             const APIType: APIDocVersion = 'legacy';
             addSeperatedAPI(legacyAPI, mainMenuContent, 'LEGACY');
             this.addAPIDescription(APIType, legacyAPI.info);
@@ -626,6 +626,7 @@ export class NxAPIToolService {
             const APIType: APIDocVersion = 'deprecated';
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths, deprecatedAPI.paths);
+            apiDocFull.components.schemas = Object.assign(apiDocFull.components.schemas, deprecatedAPI?.components?.schemas);
             const deprecatedMenuContent = createMenuContent(deprecatedAPI, this.markdownStore?.api_information ? 'LEGACY' : '');
             addAPIInfoNodesToMenu(apiDocFull, deprecatedMenuContent, !!this.markdownStore?.api_information);
             this.APIDropdown.push({
