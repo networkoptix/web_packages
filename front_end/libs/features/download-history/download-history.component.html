@@ -27,7 +27,7 @@
                     >
                         <span
                             class="tab-heading"
-                            [textContent]="LANG.downloads.releasesTypes[type]() || type.name"
+                            [textContent]="LANG.downloads.releasesTypes[type]() || type"
                         ></span>
                     </a>
                 </li>
@@ -45,7 +45,8 @@
                                     build ||
                                     (release.backwardsCompatible
                                         ? release.version
-                                        : release.buildNumber)
+                                        : release.buildNumber
+                                    ).toString()
                                 "
                                 [linkbase]="linkbase"
                                 [release]="release"

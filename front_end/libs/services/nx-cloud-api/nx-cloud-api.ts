@@ -553,12 +553,14 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDownloads() {
-        return this.http.get<t.Downloads>(this.CONFIG.apiBase + '/utils/downloads').toPromise();
+    getDownloads(): Promise<t.Downloads | null> {
+        return this.http.get<t.Downloads | null>(this.CONFIG.apiBase + '/utils/downloads').toPromise();
     }
 
-    getDownloadsHistory(build: string) {
-        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
+    getDownloadsHistory(build: string | undefined): Promise<t.BuildHistory | t.Build> {
+        return this.http.get<t.BuildHistory | t.Build>(
+            this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')
+        ).toPromise();
     }
 
     accountPost(account: Account) {

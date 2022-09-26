@@ -1,8 +1,10 @@
 /** Files that need to be typed */
 const typeLintBlacklist = [
+    /* Common */
     '**/_mocks/getSettings.mock.ts',
     '**/_mocks/helpers.test.ts',
     '**/test.ts',
+    /* Components */
     '**/advanced-filter/advanced-filter.component.ts',
     '**/apply/apply.component.ts',
     '**/carousel/carousel.component.ts',
@@ -54,6 +56,7 @@ const typeLintBlacklist = [
     '**/server-monitor/server-monitor-widget.component.ts',
     '**/systems-list/systems-list-widget.component.ts',
     '**/third-party/third-party-widget.component.ts',
+    /* Dialogs */
     '**/add-storage/add-storage.component.ts',
     '**/add-user/add-user.component.ts',
     '**/add-widget/add-widget.component.ts',
@@ -85,9 +88,11 @@ const typeLintBlacklist = [
     '**/simple-dialogs.service.ts',
     '**/two-fa/two-fa.component.ts',
     '**/update-camera-credentials/update-camera-credentials.component.ts',
+    /* Directives */
     '**/nx-editable.directive.ts',
     '**/nx-intersection.directive.ts',
     '**/nx-projected-link-handler.directive.ts',
+    /* Features */
     '**/password/password.component.ts',
     '**/security/security.component.ts',
     '**/settings/settings.component.ts',
@@ -119,9 +124,6 @@ const typeLintBlacklist = [
     '**/dev-tools/dev-tools.component.ts',
     '**/knowledge-base/knowledge-base.component.ts',
     '**/knowledge-base/knowledge-base.service.ts',
-    '**/download-history/download-history.component.ts',
-    '**/download-history/release/release.component.ts',
-    '**/download/download.component.ts',
     '**/email-notifications/email-notifications.component.ts',
     '**/alerts/alerts.component.ts',
     '**/card/card.component.ts',
@@ -198,6 +200,7 @@ const typeLintBlacklist = [
     '**/services/vms.service.ts',
     '**/vms/testMediaServers.ts',
     '**/utils/generateClickDubleClickPair.ts',
+    /* Services */
     '**/account.service/base.ts',
     '**/account.service/cloud.ts',
     '**/account.service/local.ts',
@@ -242,7 +245,9 @@ const typeLintBlacklist = [
     '**/uri.service.ts',
     '**/url-protocol.service.ts',
     '**/url-protocol.service.types.ts',
-    'libs/utils/logger.ts',
+    /* Utils */
+    '**/logger.ts',
+    /* Packages */
     '**/dashboard-widget-state/types.ts'
 ];
 

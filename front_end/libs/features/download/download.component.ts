@@ -2,9 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import {
     Component,
     OnInit,
-    OnDestroy,
     Inject,
-    Input,
     PLATFORM_ID
 } from '@angular/core';
 import {
@@ -21,6 +19,8 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { Arm, Groups } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -33,43 +33,28 @@ import { NxPageService } from '@services/page.service';
     styleUrls: ['download.component.scss']
 })
 
-export class DownloadComponent implements OnInit, OnDestroy {
-    @Input() routeParamPlatform;
-
+export class DownloadComponent implements OnInit {
     private sub: Subscription;
-    private platform;
+    private platform: string;
     private activeOs: string;
-    public canViewDownloads: boolean;
+    public canViewDownloads: boolean = false;
     private paramPlatform: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    activePlatform: any;
+    activePlatform: Platform;
 
-    downloadButton;
-    downloads;
-    downloadsData;
+    downloadButton: Installer;
+    downloadsData: Downloads | null;
     canSeeHistory: boolean;
-    tabsVisible: boolean;
-    sortedPlatforms;
-    checkedDownloads = false;
+    tabsVisible: boolean = false;
+    sortedPlatforms: Platform[];
+    checkedDownloads: boolean = false;
     // Placeholder should not appear while downloads are loading
-    otherPackages;
+    otherPackages: Installer[];
 
     // TODO: Fix arm supported. It says the same thing as linux
-
-    private setupDefaults(): void {
-        this.canViewDownloads = false;
-        this.tabsVisible = false;
-        this.downloads = { ...this.CONFIG.downloads };
-
-        this.downloadsData = {
-            version: '',
-            installers: [{ platform: '', appType: '' }],
-            releaseUrl: ''
-        };
-    }
 
     constructor(
         configService: NxConfigService,
@@ -85,8 +70,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
-        this.setupDefaults();
-
         if (isPlatformBrowser(this.platformId)) {
             this.router.events
                 .pipe(
@@ -97,10 +80,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     this.paramPlatform = event.snapshot.params.platform;
 
                     if (this.paramPlatform) {
-                        let title;
+                        let title: string;
                         if (this.paramPlatform) {
-                            title = this.LANG.pageTitles.downloadPlatform() +
-                                this.paramPlatform;
+                            title = this.LANG.pageTitles.downloadPlatform() + this.paramPlatform;
                         } else {
                             title = this.LANG.pageTitles.download();
                         }
@@ -117,7 +99,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    private calcDisplayedPackages(platformName): void {
+    private calcDisplayedPackages(platformName: string): void {
         const platform = this.sortedPlatforms.find(platform =>
             platform.name === platformName
         );
@@ -144,16 +126,12 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.platform = params.platform.toLowerCase();
 
-            for (const mobile in this.downloads.mobile) {
-                if (this.downloads.mobile[mobile].os === this.activeOs) {
-                    if (
-                        this.LANG.downloads.mobile[
-                            this.downloads.mobile[mobile].name
-                        ].link() !== 'disabled'
-                    ) {
-                        document.location.href = this.LANG.downloads.mobile[
-                            this.downloads.mobile[mobile].name
-                        ].link();
+            for (const mobile in this.CONFIG.downloads.mobile) {
+                const { name, os } = this.CONFIG.downloads.mobile[mobile];
+                if (os === this.activeOs) {
+                    const link = this.LANG.downloads.mobile[name].link();
+                    if (link !== 'disabled') {
+                        document.location.href = link;
                         return;
                     }
                     break;
@@ -161,53 +139,58 @@ export class DownloadComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.cloudApi
-            .getDownloads()
-            .then((response: any) => {
-                // Response is null if no releases
-                this.downloadsData = response;
-                this.sortedPlatforms = [];
-                // Sorts platforms based on order defined in nx-config service
-                Object.values(this.CONFIG.downloads.groups).forEach(checkPlatform => {
-                    const platform = this.downloadsData?.platforms.find(
-                        downloadsPlatform => downloadsPlatform.name === checkPlatform.name
-                    );
-                    if (platform) {
-                        platform.files = platform.files.filter(installer => {
-                            return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
-                        }).map(installer => {
-                            if (!installer.niceName) {
-                                const translatedPlatform = this.LANG.downloads.platforms[installer.platform]();
-                                const translatedAppType = this.LANG.downloads.appTypes[installer.appType]();
-                                if (platform.name === 'sdk' && translatedAppType) {
-                                    installer.niceName = translatedAppType;
-                                } else if (translatedPlatform && translatedAppType) {
-                                    installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
-                                } else {
-                                    installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package()}`;
-                                }
-                            }
-                            installer.url = `${this.downloadsData.releaseUrl}${installer.path}`;
-                            return installer;
-                        });
-
-                        if (platform.files.length > 0) {
-                            this.sortedPlatforms.push(platform);
-                        }
-                    }
-                });
-
-                if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
-                    const configDownloads = this.CONFIG.downloads;
-                    const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
-                    this.platform = configDownloads.platformMatch[detectedOS] || configDownloads.groups.windows.name;
+        this.cloudApi.getDownloads().then(response => {
+            // Response is null if no releases
+            this.downloadsData = response;
+            this.sortedPlatforms = [];
+            // Sorts platforms based on order defined in nx-config service
+            Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform: Arm) => {
+                const platform = this.downloadsData?.platforms.find(
+                    downloadsPlatform => downloadsPlatform.name === checkPlatform.name
+                );
+                if (!platform) {
+                    return;
                 }
-                this.calcDisplayedPackages(this.platform);
-                this.activePlatform = this.sortedPlatforms.find(platform => platform.name === this.platform);
-                this.checkedDownloads = true;
+                platform.files = platform.files
+                    .filter(installer =>
+                        this
+                            .CONFIG
+                            .downloads
+                            .groups[platform.name as keyof Groups]
+                            .appTypes
+                            .includes(installer.appType)
+                    )
+                    .map(installer => {
+                        if (!installer.niceName) {
+                            const translatedPlatform = this.LANG.downloads.platforms[installer.platform]();
+                            const translatedAppType = this.LANG.downloads.appTypes[installer.appType]();
+                            if (platform.name === 'sdk' && translatedAppType) {
+                                installer.niceName = translatedAppType;
+                            } else if (translatedPlatform && translatedAppType) {
+                                installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
+                            } else {
+                                installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package()}`;
+                            }
+                        }
+                        return installer;
+                    });
 
-                this.sub.unsubscribe();
+                if (platform.files.length > 0) {
+                    this.sortedPlatforms.push(platform);
+                }
             });
+
+            if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
+                const configDownloads = this.CONFIG.downloads;
+                const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
+                this.platform = configDownloads.platformMatch[detectedOS] || configDownloads.groups.windows.name;
+            }
+            this.calcDisplayedPackages(this.platform);
+            this.activePlatform = this.sortedPlatforms.find(platform => platform.name === this.platform);
+            this.checkedDownloads = true;
+
+            this.sub.unsubscribe();
+        });
     }
 
     ngOnInit(): void {
@@ -237,5 +220,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void { }
+    installerName(platformName: string): string {
+        return this.LANG.downloads.groups[platformName].shortLabel() ||
+            this.LANG.downloads.groups[platformName].label();
+    }
 }
