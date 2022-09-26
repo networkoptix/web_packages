@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <h3 class="modal-title">A szerver offine</h3>
+    <h3 class="modal-title">Server is offline</h3>
 </div>
 <form class="form" role="form" id="restartDialog">
     <div class="modal-body">
-        <p>A szerver nem tudja kezelni a kéréseket. Próbálja meg újra elérni.</p>
+        <p>Server can't handle requests now. Trying to reach it again.</p>
         <uib-progressbar class="progress-striped active" type="info" value="100" id="restartingProgress">{{state}}</uib-progressbar>
-        <p>Ha nem történik egy ideig semmi - ellenőrizze a szerver állapotát vagy frissítse az oldalt</p>
+        <p>If nothing happens for a while - you could check server condition manually or refresh the page</p>
     </div>
 </form>

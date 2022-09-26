@@ -291,6 +291,8 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             continue
 
         if force_update or not doc_dict or external_link or not trust_cache or doc_dict.get('version', None) != version or draft:
+            if type(doc) is int:
+                doc = Asset.objects.get(id=doc)
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()
@@ -303,7 +305,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             values = DataStructure.find_actual_values(
                 doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=customization_name
             )
-            values = defaultdict(str, values)
+            values = {ds.name: val for ds, val in values.items()}
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']

@@ -1,44 +1,44 @@
 <div class="panel-body text-center" ng-if="stepIs(0)">
     <div class="master-icon"><span class="preloader"></span></div>
     <div class="vertical-center">
-        <h2>Đang tải...</h2>
+        <h2>Loading ...</h2>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Không thể khởi tạo hệ thống</h2>
+    <h2>Cannot initialize System</h2>
     <p class="master-description">
-        Xác thực thất bại.
+        Authorization failed.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Thử lại</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Không thể thiết lập Hệ thống</h2>
-    <p class="master-description">Hệ thống không thể được cấu hình. <br>
+    <h2>Cannot setup System</h2>
+    <p class="master-description">The System cannot be configured. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Thử lại</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
     <div>
-        <h2>Bắt đầu với {{Config.productName}}</h2>
+        <h2>Get Started with {{Config.productName}}</h2>
         <p class="master-description">Please configure the server first.<br>
             Choose an option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
-        <button class="btn btn-primary" autofocus ng-click="next()">Thiết lập hệ thống mới</button>
+        <button class="btn btn-primary" autofocus ng-click="next()">Setup New System</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
-            <span class="text"> hoặc </span>
+            <span class="text">or</span>
             <span class="line"></span>
         </div>
         <button class="btn btn-default" ng-click="skip()">Add to Existing System</button><br>
@@ -48,31 +48,31 @@
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>Nhập tên hệ thống</h2>
+    <h2>Enter System Name</h2>
     <p class="master-description">
-        Nó sẽ giúp để xác định hoặc tìm hệ thống.
+        It will help to identify or find System.
     </p>
     <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
-                   placeholder="Tên hệ thống" required auto-focus>
+                   placeholder="System name" required auto-focus>
         </div>
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
             <div class="help-block">
-                Tên hệ thống là bắt buộc
+                System name is required
             </div>
         </div>
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
     </form>
     <p class="vertical-bottom">
-        <a href="" ng-click="next('advanced', true)">Thiết lập hệ thống nâng cao</a>
+        <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>Thiết lập hệ thống nâng cao</h2>
+    <h2>Advanced System settings</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
@@ -100,7 +100,7 @@
             </div>
 
             <label ng-if="Config.settingsConfig[setting].type != 'checkbox' "
-                   for="{{setting}}">{{LANG.settingsConfig[setting]}}</label>
+                   for="{{setting}}" >{{LANG.settingsConfig[setting]}}</label>
             <input ng-if="Config.settingsConfig[setting].type == 'number' " type="number"
                    id="{{setting}}"
                    placeholder="{{}}"
@@ -111,13 +111,13 @@
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
         </div>
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
     </form>
 </div>
 
 
 <div class="panel-body text-center"  ng-if="stepIs('chooseCloudOrLocal')">
-    <h2>Chọn loại Hệ thống</h2>
+    <h2>Choose System type</h2>
     <div class="row radio-panels">
         <div class="col-xs-6 radio-panel ">
             <div class="radio-panel-body"
@@ -125,7 +125,7 @@
                  ng-click="settings.chooseCloudSystem = false">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
-                <h3>Vị trí</h3>
+                <h3>Local</h3>
                 <p>
                     Works in local networks only<br>
                     Does not require Internet connection
@@ -138,7 +138,7 @@
                  ng-click="settings.chooseCloudSystem = true">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-cloud"></span></div>
-                <h3>Đám mây</h3>
+                <h3>Cloud</h3>
                 <p>
                     Available from everywhere<br>
                     Requires Internet connection
@@ -158,9 +158,9 @@
     <div class="master-icon">
         <span class="icon-account"></span>
     </div>
-    <h2>{{Config.cloud.productName}} tài khoản</h2>
+    <h2>{{Config.cloud.productName}} account</h2>
     <p class="master-description">
-        Cần có tài khoản để sử dụng Hệ thống đám mây {{Config.cloud.productName}}
+        An account is required to use the cloud System {{Config.cloud.productName}}
     </p>
     <p class="master-controls">
         <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Create a new account</button>&nbsp;&nbsp;
@@ -170,31 +170,31 @@
 
 
 <div class="panel-body text-center" ng-if="stepIs('cloudAuthorizedIntro')">
-    <p>Hệ thống sẽ được kết nối với</p>
+    <p>System will be connected to</p>
 
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
     <h2>{{settings.presetCloudEmail}}</h2>
 
     <p class="vertical-bottom">
-        <a href="" ng-click="next('cloudLogin', true)">Kết nối với một tài khoản khác</a>
+        <a href="" ng-click="next('cloudLogin', true)">Connect to another account</a>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudLogin')">
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
-    <h2>Đăng nhập vào <span class="product-name add-version"> {{Config.cloud.productName}} </span></h2>
+    <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
     <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
                    type="email" placeholder="Email" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudPassword" name="cloudPassword" class="form-control"
-                   type="password" autocomplete="new-password" required placeholder="Mật khẩu" ng-change="clearCloudError()">
+                   type="password" autocomplete="new-password" required placeholder="Password" ng-change="clearCloudError()">
         </div>
 
         <div class="new-style-checkbox" ng-if="settings.thickClient">
@@ -214,14 +214,14 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="stayLoggedIn">
-                <span>Duy trì đăng nhập</span>
+                <span>Stay logged in</span>
             </label>
         </div>
 
         <div class="form-group has-error"
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.email">
             <div class="help-block">
-                Vui lòng nhập email hợp lệ
+                Please, enter a valid email
             </div>
         </div>
 
@@ -229,7 +229,7 @@
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.required ||
                     forms.cloudForm.cloudPassword.$touched && forms.cloudForm.cloudPassword.$error.required">
             <div class="help-block">
-                Email và mật khẩu là bắt buộc
+                Email and password are required
             </div>
         </div>
 
@@ -241,16 +241,16 @@
 
         <div class="form-group" ng-if="settings.liteClient">
             <p class="help-block">
-                Để tạo tài khoản, vui lòng truy cập {{portalUrl}}
+                To create an account please visit {{portalUrl}}
             </p>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
-    <h2>Thiết lập mật khẩu quản trị viên</h2>
-    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete>
-        <input type="submit" hidden/>
+    <h2>Set up an administrator password</h2>
+    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
             <!-- <input ng-model="settings.localLogin" name="localLogin" class="form-control"
                    type="text" placeholder="Login" required readonly> -->
@@ -262,8 +262,9 @@
                      forms.localForm.localPasswordConfirmation.$touched &&
                      settings.localPasswordConfirmation != settings.localPassword}">
             <input ng-model="settings.localPasswordConfirmation" name="localPasswordConfirmation" class="form-control"
-                   type="password" autocomplete="new-password" placeholder="Lặp lại mật khẩu" required>
+                   type="password" autocomplete="new-password" placeholder="Repeat password" required>
         </div>
+
         <div class="new-style-checkbox" ng-if="settings.thickClient">
             <label class="nx-checkbox">
                 <input type="checkbox"
@@ -281,7 +282,7 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="savePassword">
-                <span>Lưu mật khẩu</span>
+                <span>Save password</span>
             </label>
         </div>
 
@@ -290,7 +291,7 @@
                      !forms.localForm.passwordInput.$dirty &&
                      !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
-                Mật khẩu phải chứa các loại ký tự khác nhau và có ít nhất 8 ký tự
+                Password must contain different types of characters and have at least 8 symbols
             </div>
         </div>
         <div class="form-group has-error" ng-if="!forms.localForm.passwordInput.password.$valid">
@@ -313,7 +314,7 @@
                     forms.localForm.localPasswordConfirmation.$touched &&
                     forms.localForm.localPasswordConfirmation.$error.required)">
             <div class="help-block">
-                Tất cả các trường đều bắt buộc
+                All fields are required
             </div>
         </div>
 
@@ -321,18 +322,17 @@
              ng-if= "forms.localForm.$valid &&
                      (settings.localPasswordConfirmation != settings.localPassword)">
             <div class="help-block">
-                Mật khẩu không trùng nhau
+                Passwords do not match
             </div>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
-    <h2>Kết nối máy chủ với Hệ thống hiện có</h2>
+    <h2>Connect the server to the existing System</h2>
     <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
-        <input type="submit" hidden/>
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
-
             <input type="text" ng-model="settings.remoteSystem" name="remoteSystemName"
                    uib-typeahead="system as system.visibleName for system in discoveredUrls | filter: {isNew:false, visibleName: $viewValue} | limitTo:8"
                    uib-typeahead-input-formatter="getSystemName($model)"
@@ -341,10 +341,10 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
-                   placeholder="URL hệ thống hiện có (https://host:port)"
+ placeholder="Existing System URL (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
-                   class="form-control">
+ class="form-control">
 
             <p class="help-block text-left">
                 {{settings.remoteSystem.hint}}
@@ -353,20 +353,20 @@
         <div class="form-group" validate-field>
             <input ng-model="settings.remoteLogin" name="remoteLogin" class="form-control" type="text"
                    ng-change="clearRemoteError(true)"
-                   placeholder="Đăng nhập" required>
+                   placeholder="Login" required>
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.remotePassword"
                    name="remotePassword" autocomplete="new-password" class="form-control" type="password"
                    ng-change="clearRemoteError(true)"
-                   placeholder="Mật khẩu" required>
+                   placeholder="Password" required>
         </div>
         <div class="form-group has-error"
              ng-if="forms.remoteSystemForm.remoteSystemName.$touched &&  forms.remoteSystemForm.remoteSystemName.$error.required||
                     forms.remoteSystemForm.remoteLogin.$touched && forms.remoteSystemForm.remoteLogin.$error.required ||
                     forms.remoteSystemForm.remotePassword.$touched && forms.remoteSystemForm.remotePassword.$error.required">
             <div class="help-block">
-                Tất cả các trường đều bắt buộc
+                All fields are required
             </div>
         </div>
 
@@ -381,20 +381,20 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Sáp nhập hệ thống ...</h2>
-    <p class="master-description">Quá trình này có thể mất vài phút</p>
+    <h2>Merging Systems ...</h2>
+    <p class="master-description">It may take several minutes</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Sáp nhập hệ thống ...</h2>
-    <p class="master-description">Đang cố gắng kết nối với hệ thống</p>
+    <h2>Merging Systems ...</h2>
+    <p class="master-description">Trying to connect to the System</p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('mergeFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Hệ thống không thể hợp nhất</h2>
+    <h2>Cannot merge Systems</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
@@ -406,79 +406,79 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeTemporaryFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Hệ thống đã được hợp nhất thành công, nhưng chưa sẵn sàng.</h2>
+    <h2>System was successfully merged, but is not ready yet.</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Thử lại</button>
+        <button class="btn btn-default" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Đang kết nối với {{Config.cloud.productName}} ...</h2>
-    <p class="master-description">Quá trình này có thể mất vài phút</p>
+    <h2>Connecting to {{Config.cloud.productName}} ...</h2>
+    <p class="master-description">It may take several moments</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>Hệ thống đã sẵn sàng để sử dụng</h2>
-    <p>Đăng nhập</p>
+    <h2>System is ready for use</h2>
+    <p>Login</p>
     <h4>{{settings.cloudEmail}}</h4>
-    <p>Cài đặt chia sẻ và tài khoản</p>
-    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="mở {{Config.cloud.productName}}"
+    <p>Sharing and account settings</p>
+    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="open {{Config.cloud.productName}}"
            ng-click="openLink($event)">{{portalShortLink}}</a></h4>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>Hệ thống đã sẵn sàng để sử dụng</h2>
-    <p>Địa chỉ máy chủ</p>
+    <h2>System is ready for use</h2>
+    <p>Server address</p>
     <h4>{{serverAddress}}</h4>
-    <p>Đăng nhập người quản trị</p>
+    <p>Administrator login</p>
     <h4>{{settings.localLogin}}</h4>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('configureWrongNetwork')">
-    <p><b>Trước tiên hãy cấu hình cài đặt mạng</b></p>
+    <p><b>Please configure network settings first</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Lưu cài đặt và khởi động lại thiết bị</button>
+        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('configureNetworkForInternet')">
-    <p><b>Định cấu hình mạng để thiết lập kết nối Internet</b></p>
+    <p><b>Configure the network to set up Internet connection</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Lưu cài đặt và khởi động lại thiết bị</button>
+        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnServer')">
-    <h2>Kết nối máy chủ với Internet</h2>
+    <h2>Connect the server to the Internet</h2>
     <p class="master-description">
-        Thiết lập kết nối Internet trên máy chủ để có thể <br> kết nối với người sử dụng ở bất kỳ nơi nào {{Config.cloud.productName}}.
+        Set up Internet connection on the server to be able <br> to connect to it anywhere using {{Config.cloud.productName}}.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
         <button class="btn btn-default" ng-click="skip()">Setup local System</button>
     </p>
     <p ng-if="serverInfo.flags.canSetupNetwork" class="vertical-bottom">
-        <a href="" ng-click="next('configureNetworkForInternet')">Cấu hình thiết đặt mạng</a>
+        <a href="" ng-click="next('configureNetworkForInternet')">Configure network settings</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
-    <h2>Không thể kết nối với {{Config.cloud.productName}}</h2>
+    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
-        Kiểm tra kết nối Internet.
+        Check the Internet connection.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
@@ -488,7 +488,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('cloudFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Không thể kết nối với {{Config.cloud.productName}}</h2>
+    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
         {{cloudError}}
     </p>
@@ -500,12 +500,12 @@
 
 <div class="panel-body text-center" ng-if="stepIs('localFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Không thể thiết lập Hệ thống</h2>
-    <p class="master-description">Có lỗi xảy ra. <br>
+    <h2>Cannot setup System</h2>
+    <p class="master-description">Something went totally wrong. <br>
         Error description: {{settings.localError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Thử lại</button>
+        <button class="btn btn-default" ng-click="retry()">Try again</button>
     </p>
 </div>
 
@@ -517,15 +517,15 @@
     </p>
     <div class="row">
         <div class="col-xs-6">
-            <div class="text-center"><b>Sử dụng trình duyệt web</b></div>
-            <div class="col-xs-4 text-right">Địa chỉ</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
+            <div class="text-center"><b>Using web browser</b></div>
+            <div class="col-xs-4 text-right">Address</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
-            <div class="text-center"><b>Sử dụng ứng dụng {{Config.productName}}</b></div>
-            <div class="col-xs-6 text-right">Máy chủ</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
+            <div class="text-center"><b>Using {{Config.productName}} application</b></div>
+            <div class="col-xs-6 text-right">Host</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
             <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
-            <div class="col-xs-6 text-right">Đăng nhập</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
-            <div class="col-xs-6 text-right">Mật khẩu</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
+            <div class="col-xs-6 text-right">Login</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
+            <div class="col-xs-6 text-right">Password</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
         </div>
     </div>
 </div>
@@ -535,17 +535,18 @@
             ng-if="activeStep.next"
             ng-disabled="lockNextButton"
             auto-focus
-            ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
+ ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
     <button class="btn btn-primary pull-right"
             ng-if="activeStep.finish"
             ng-disabled="lockNextButton"
             auto-focus
-            ng-click="finish()">Finish</button>
-    <button class="btn btn-default"
+ ng-click="finish()">Finish
+    </button>
+    <button class="btn btn-default pull-left"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
             ng-click="cancel()">Cancel</button>
-    <button class="btn btn-default"
+    <button class="btn btn-default pull-left"
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"
             ng-click="back()"><span class="glyphicon glyphicon-arrow-left"></span></button>

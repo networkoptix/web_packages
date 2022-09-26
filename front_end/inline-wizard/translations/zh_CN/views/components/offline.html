@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <h3 class="modal-title">服务器离线</h3>
+    <h3 class="modal-title">Server is offline</h3>
 </div>
 <form class="form" role="form" id="restartDialog">
     <div class="modal-body">
-        <p>服务器现在无法处理请求。 试图再次连结它。</p>
+        <p>Server can't handle requests now. Trying to reach it again.</p>
         <uib-progressbar class="progress-striped active" type="info" value="100" id="restartingProgress">{{state}}</uib-progressbar>
-        <p>如果没有事情发生一段时间-你可以手动检查服务器状态或刷新页面</p>
+        <p>If nothing happens for a while - you could check server condition manually or refresh the page</p>
     </div>
 </form>
