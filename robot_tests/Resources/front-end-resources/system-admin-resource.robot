@@ -68,7 +68,7 @@ Wait until settings are visible
 Wait Until Advanced Settings Are Visible
     [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
     IF    '${block number}'=='ONE' or '${block number}'=='THREE' or '${block number}'=='FOUR'
-        IF    '${IMAGE}'=='5.0_test' 
+        IF    '${IMAGE}'=='5.0'
             ${block number}=   Set Variable    ${block number} ${IMAGE}
         END
     END

@@ -179,7 +179,7 @@ ${SUCCESS DIALOG}                           //nx-modal-generic-content
 ${SUCCESS DIALOG TEXT}                      ${SUCCESS DIALOG}//p[contains(text(), "${SETTINGS SAVED TEXT}")]
 ${SUCCESS DIALOG HEADER}                    ${SUCCESS DIALOG}//h1/span[contains(text(), "${SUCCESS TEXT}")]
 ${SUCCESS DIALOG X BUTTON}                  ${SUCCESS DIALOG}//button[@data-dismiss="modal" and contains(@class, "close")]
-${SUCCESS DIALOG CLOSE BUTTON}              ${SUCCESS DIALOG}//button[text()="${CLOSE TEXT}"]
+${SUCCESS DIALOG CLOSE BUTTON}              ${SUCCESS DIALOG}//button[contains(text(), "${CLOSE TEXT}")]
 
 ${ADDITIONAL LOCAL FS TYPES INPUT}          //input[@id='additionalLocalFsTypes']
 ${ADDITIONAL LOCAL FS TYPES LABEL}          //div[text()='${ADDITIONAL LOCAL FS TYPES TEXT}']
@@ -201,7 +201,7 @@ ${AUTO UPDATE THUMBNAILS LABEL}                 //div[text()='${AUTO UPDATE THUM
 ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}       //*[@id='backupNewCamerasByDefault']
 ${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMERAS BY DEFAULT TEXT}']
 
-@{ADVANCED SETTING ELEMENT BLOCK ONE 5.0_test}
+@{ADVANCED SETTING ELEMENT BLOCK ONE 5.0}
 ...    ${ADDITIONAL LOCAL FS TYPES INPUT}
 ...    ${ADDITIONAL LOCAL FS TYPES LABEL}
 ...    ${AUDIT TRAIL PERIOD DAYS INPUT}
@@ -304,7 +304,7 @@ ${SUPPORT EMAIL LABEL}                        //div[text()='${SUPPORT EMAIL TEXT
 ...    ${SUPPORT EMAIL INPUT}
 ...    ${SUPPORT EMAIL LABEL}
 
-@{ADVANCED SETTING ELEMENT BLOCK THREE 5.0_test}
+@{ADVANCED SETTING ELEMENT BLOCK THREE 5.0}
 ...    ${EMAIL FROM INPUT}
 ...    ${EMAIL FROM LABLE}
 ...    ${EMAIL SIGNATURE INPUT}
@@ -339,7 +339,7 @@ ${LAST MERGE SLAVEID LABEL}                  //div[text()='${LAST MERGE SLAVEID 
 ...    ${LAST MERGE SLAVEID INPUT}
 ...    ${LAST MERGE SLAVEID LABEL}
 
-@{ADVANCED SETTING ELEMENT BLOCK FOUR 5.0_test}
+@{ADVANCED SETTING ELEMENT BLOCK FOUR 5.0}
 ...    ${ENABLE EDGE RECORDING CHECKBOX}${visible}
 ...    ${ENABLE EDGE RECORDING LABEL}
 ...    ${KEEP PORT STATE CHECKBOX}${visible}
@@ -454,7 +454,7 @@ ${MAX WEARABLE ARCHIVE SYNC LABEL}              //div[text()='maxWearableArchive
 #...    ${MAX HTTP TRANSCODERS INPUT}
 #...    ${MAX HTTP TRANSCODERS LABEL}
 
-@{ADVANCED SETTING ELEMENT BLOCK EIGHT 5.0_test}
+@{ADVANCED SETTING ELEMENT BLOCK EIGHT 5.0}
 ...    ${MAX RTP RETRY COUNT INPUT}
 ...    ${MAX RTP RETRY COUNT LABEL}
 ...    ${MAX RTSP CONNECT DURATION INPUT}
@@ -520,7 +520,7 @@ ${SMTP HOST INPUT}                              //input[@id='smtpHost']
 ${SMTP HOST LABEL}                              //div[text()='${SMTP HOST TEXT}']
 ${SMTP PORT INPUT}                              //input[@id='smtpPort']
 ${SMTP PORT LABEL}                              //div[text()='${SMTP PORT TEXT}']
-${SMTP SIMPLE CHECKBOX}                        //*[@id='smtpSimple']
+${SMTP SIMPLE CHECKBOX}                         //*[@id='smtpSimple']
 ${SMTP SIMPLE LABEL}                            //div[text()='${SMTP SIMPLE TEXT}']
 ${SMTP TIMEOUT INPUT}                           //input[@id='smtpTimeout']
 ${SMTP TIMEOUT LABEL}                           //div[text()='${SMTP TIMEOUT TEXT}']
