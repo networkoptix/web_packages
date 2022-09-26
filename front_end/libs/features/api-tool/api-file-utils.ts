@@ -96,7 +96,7 @@ export const getPathAndMethodFromNodeName = (name: string) => {
 };
 
 export const cleanJSON = (api: APIDoc) => {
-    delete api?.components?.schemas;
+    // delete api?.components?.schemas;
     Object.keys(api.paths).forEach(path => {
         const apiPath = api.paths[path];
         Object.keys(apiPath).forEach(requestType => {

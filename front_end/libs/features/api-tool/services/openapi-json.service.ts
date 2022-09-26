@@ -75,7 +75,7 @@ export class NxOpenAPIJSONService {
     constructor(private APIToolService: NxAPIToolSystemService,
                 private readonlyAPIService: NxReadonlyAPIService,
                 private router: Router) {
-        this.currentType = this.APIToolService.queryParams.type || this.defaultTypeValue;
+        this.currentType = parseInt(this.APIToolService.queryParams.type) || this.defaultTypeValue;
 
         this.APIToolService.serverEmitter$.pipe(untilDestroyed(this)).subscribe(({ info, disabled, error }) => {
             if (!disabled && !error) {
@@ -176,7 +176,7 @@ export class NxOpenAPIJSONService {
         const queryparamsType = this.APIToolService.queryParams?.type;
         const type = API.menus[queryparamsType] ? queryparamsType : this.defaultTypeValue;
         this.APIToolService.setQueryParams('type', type);
-        this.currentType = type;
+        this.currentType = parseInt(type);
         this.currentAPIDoc = API.json;
         this.currentMarkdown = API.markdown || null;
         this.setMenuNodes(API.menus[type]);
