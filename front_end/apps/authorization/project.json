@@ -115,7 +115,7 @@
           "md5",
           "uuid"
         ],
-        "outputPath": "dist/authorization/browser",
+        "outputPath": "dist/authorization-ssr/browser",
         "index": "apps/authorization/src/index.html",
         "main": "apps/authorization/src/main.ts",
         "polyfills": "apps/authorization/src/polyfills.ts",
@@ -287,7 +287,7 @@
     "server": {
       "builder": "@angular-devkit/build-angular:server",
       "options": {
-        "outputPath": "dist/authorization/server",
+        "outputPath": "dist/authorization-ssr/server",
         "main": "apps/authorization/src/ssr.server.ts",
         "tsConfig": "apps/authorization/tsconfig.server.json",
         "stylePreprocessorOptions": {

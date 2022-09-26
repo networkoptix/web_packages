@@ -13,9 +13,6 @@ common/language/language_i18n_static_types.ts
 # Don't lint tsconfig
 tsconfig.json
 
-# Don't lint push-notifications (missing translations)
-libs/features/push-notifications/push-notifications.component.html
-
 # Don't lint deprecated files/folders
 *.bak.*
 **/*.bak/**/*
