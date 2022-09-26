@@ -173,7 +173,7 @@ Force Tags        account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
-    Click Element    ${ACCOUNT SAVE}
+    Click Element    //header/h4[contains(text(),'${ACCOUNT INFORMATION}')]
     Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Disabled       ${ACCOUNT SAVE}
@@ -187,7 +187,7 @@ Force Tags        account
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
-    Click Element    ${ACCOUNT SAVE}
+    Click Element    //header/h4[contains(text(),'${ACCOUNT INFORMATION}')]
     Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Disabled       ${ACCOUNT SAVE}
@@ -329,8 +329,11 @@ Force Tags        account
     sleep    5
     Reload Page
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
-    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
+    IF    "${lang}"=="ja_JP"    
+        Wait Until Element is Visible    //header/h4[text()='${ja_JP account info}']
+    ELSE IF    "${lang}"=="de_DE"    
+        Wait Until Element is Visible    //header/h4[text()='${de_DE account info}']
+    END
     Log Out Japanese
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
@@ -339,8 +342,11 @@ Force Tags        account
     Sleep    5
     Reload Page
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
-    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
+    IF    "${lang}"=="ja_JP"    
+        Wait Until Element is Visible    //header/h4[text()='${ja_JP account info}']
+    ELSE IF    "${lang}"=="de_DE"    
+        Wait Until Element is Visible    //header/h4[text()='${de_DE account info}']
+    END
     Check Language Logged In    ${no perm}    ${password}
 
 18. Should open account page in anonymous state

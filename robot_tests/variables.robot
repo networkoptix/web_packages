@@ -57,7 +57,7 @@ ${ACCOUNT DOES NOT EXIST}             //nx-authorize-component//p[contains(text(
 ${YOU CAN CREATE AN ACCOUNT}          //nx-authorize-component//p[contains(text(),'${YOU CAN CREATE ACCOUNT TEXT}')]
 ${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
 ${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[contains(text(),"${WRONG PASSWORD}")]
-${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST TEXT}"]
+${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[contains(text(),"${ACCOUNT DOES NOT EXIST TEXT}")]
 ${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[contains(text(),"${TOO MANY ATTEMPTS TEXT}")]
 ${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//form//input[@id="resetPassword"]
 ${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
