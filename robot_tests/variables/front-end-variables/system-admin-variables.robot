@@ -125,9 +125,9 @@ ${LIMIT SESSION DURATION CHECKBOX}    //*[@id='sessionLimitMinutesToggle']
 ${TIME NUMBER INPUT}                       //*[@type='number']
 ${TIME DURATION INTERVAL BUTTON}           //*[@id="genericSelect"]
 ${TIME DURATION INTERVAL TEXT}            ${TIME DURATION INTERVAL BUTTON}/span
-${TIME DURATION NEW SELECTION}            //*[@aria-labelledby='genericSelect']//a[contains(@class,"dropdown-item inset")]
-${TIME DURATION SELECTION HOURS}           //*[@aria-labelledby='genericSelect']//a/span[text()="${HOURS TEXT}"]
-${TIME DURATION SELECTION MINUTES}         //*[@aria-labelledby='genericSelect']//a/span[text()="${MINUTES TEXT}"]
+${TIME DURATION NEW SELECTION}             //*[@aria-labelledby='genericSelect']//a[contains(@class,"dropdown-item inset")]
+${TIME DURATION SELECTION HOURS}          //li/a/span[contains(text(), "${HOURS TEXT}")]
+${TIME DURATION SELECTION MINUTES}        //li/a/span[contains(text(), "${MINUTES TEXT}")]
 
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 
@@ -145,7 +145,7 @@ ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span//sp
 ${SAVE BUTTON}                        //nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${CANCEL BUTTON}                      //nx-cancel-button//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 
-${ENCRYPTING VIDEO WARNING}           //div[text()="${ENCRYPTING VIDEO WARNING TEXT}"]
+${ENCRYPTING VIDEO WARNING}           //div[contains(text(), "${ENCRYPTING VIDEO WARNING TEXT}")]
 
 #Disconnect from cloud portal
 ${DISCONNECT FORM}                      //form[@name='disconnectForm']
