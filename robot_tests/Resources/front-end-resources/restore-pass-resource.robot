@@ -124,7 +124,7 @@ Test Password Invalid
     Check Password Badge    ${new pw}    ${SAVE PASSWORD}
     IF    '''${new pw}''' not in ${good passwords} and '''${new pw}''' not in ${fair passwords}
         Click Button    ${SAVE PASSWORD}
-        Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    resetPassword
+        Check New Password Outline and Error Message    ${new pw}    ${RESET NEXT BUTTON}    ${RESET PASSWORD INPUT}    resetPassword
     END
 
 Restart Restore Pass Form Password

@@ -681,6 +681,7 @@ Force Tags        system
 
 19. Check HTTPS traffic encryption
     [Tags]    C65701    cloud    webadmin    system settings    threaded
+    Skip If Image Is    5.0    5.1    5.2    msg=5.0 and above not supported
     Log    Preconditions
     ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}

@@ -1,78 +1,78 @@
 <div class="panel-body text-center" ng-if="stepIs(0)">
     <div class="master-icon"><span class="preloader"></span></div>
     <div class="vertical-center">
-        <h2>Loading ...</h2>
+        <h2>Wird geladen ...</h2>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot initialize System</h2>
+    <h2>System kann nicht initialisiert werden</h2>
     <p class="master-description">
-        Authorization failed.
+        Autorisierung fehlgeschlagen.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Erneut versuchen</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot setup System</h2>
-    <p class="master-description">The System cannot be configured. <br>
+    <h2>System kann nicht eingerichtet werden</h2>
+    <p class="master-description">Das System kann nicht konfiguriert werden. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Erneut versuchen</button>
     </p>
 </div>
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
     <div>
-        <h2>Get Started with {{Config.productName}}</h2>
-        <p class="master-description">Please configure the server first.<br>
-            Choose an option.</p>
+        <h2>Erste Schritte mit {{Config.productName}}</h2>
+        <p class="master-description">Bitte konfigurieren Sie den Server zuerst.<br>
+Wählen Sie eine Option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
-        <button class="btn btn-primary" autofocus ng-click="next()">Setup New System</button>
+        <button class="btn btn-primary" autofocus ng-click="next()">Neues System einrichten</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
-            <span class="text">or</span>
+            <span class="text">oder</span>
             <span class="line"></span>
         </div>
-        <button class="btn btn-default" ng-click="skip()">Add to Existing System</button><br>
-        <small class="text">(if {{Config.productName}} has been already setup)</small><br>
+        <button class="btn btn-default" ng-click="skip()">Zur bestehendem System hinzufügen</button><br>
+        <small class="text">(wenn {{Config.productName}} bereits eingerichtet wurde)</small><br>
         <small ng-if="!settings.liteClient">&nbsp;</small>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>Enter System Name</h2>
+    <h2>Systemname eingeben</h2>
     <p class="master-description">
-        It will help to identify or find System.
+        Es hilft das System zu identifizieren oder zu finden.
     </p>
     <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
-                   placeholder="System name" required auto-focus>
+                   placeholder="Systemname" required auto-focus>
         </div>
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
             <div class="help-block">
-                System name is required
+                Systemname ist erforderlich
             </div>
         </div>
         <input type="submit" hidden>
     </form>
     <p class="vertical-bottom">
-        <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
+        <a href="" ng-click="next('advanced', true)">Erweiterte Systemeinstellungen</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>Advanced System settings</h2>
+    <h2>Erweiterte Systemeinstellungen</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
@@ -117,7 +117,7 @@
 
 
 <div class="panel-body text-center"  ng-if="stepIs('chooseCloudOrLocal')">
-    <h2>Choose System type</h2>
+    <h2>Wählen Sie den Systemtyp</h2>
     <div class="row radio-panels">
         <div class="col-xs-6 radio-panel ">
             <div class="radio-panel-body"
@@ -125,10 +125,10 @@
                  ng-click="settings.chooseCloudSystem = false">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
-                <h3>Local</h3>
+                <h3>Lokal</h3>
                 <p>
-                    Works in local networks only<br>
-                    Does not require Internet connection
+                    Funktioniert nur in lokalen Netzwerken<br>
+Benötigt keine Internetverbindung
                 </p>
             </div>
         </div>
@@ -140,16 +140,16 @@
                 <div class="master-icon"><span class="icon-cloud"></span></div>
                 <h3>Cloud</h3>
                 <p>
-                    Available from everywhere<br>
-                    Requires Internet connection
+                    Erreichbar von überall<br>
+                    Benötigt eine Internetverbindung
                 </p>
             </div>
         </div>
     </div>
     <p class="vertical-bottom">
         <a ng-if="!settings.liteClient" class="external" ng-href="{{portalUrl}}" title="learn more about {{Config.cloud.productName}}"
-           target="_blank" ng-click="openLink($event)">Help me decide</a>
-        <span ng-if="settings.liteClient">Learn more: {{portalUrl}}</span>
+           target="_blank" ng-click="openLink($event)">Helfen Sie mir zu entscheiden</a>
+        <span ng-if="settings.liteClient">Erfahren Sie mehr: {{portalUrl}}</span>
     </p>
 </div>
 
@@ -158,33 +158,33 @@
     <div class="master-icon">
         <span class="icon-account"></span>
     </div>
-    <h2>{{Config.cloud.productName}} account</h2>
+    <h2>{{Config.cloud.productName}}-Account</h2>
     <p class="master-description">
-        An account is required to use the cloud System {{Config.cloud.productName}}
+        Ein Account ist erforderlich, um das Cloudsystem {{Config.cloud.productName}} zu verwenden
     </p>
     <p class="master-controls">
-        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Create a new account</button>&nbsp;&nbsp;
-        <button class="btn btn-default" ng-click="next('cloudLogin', true)">Use existing</button>
+        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Neuen Account erstellen</button>&nbsp;&nbsp;
+        <button class="btn btn-default" ng-click="next('cloudLogin', true)">Vorhandenen Account verwenden</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('cloudAuthorizedIntro')">
-    <p>System will be connected to</p>
+    <p>System wird verbunden mit</p>
 
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
     <h2>{{settings.presetCloudEmail}}</h2>
 
     <p class="vertical-bottom">
-        <a href="" ng-click="next('cloudLogin', true)">Connect to another account</a>
+        <a href="" ng-click="next('cloudLogin', true)">Mit anderem Konto verbinden</a>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudLogin')">
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
-    <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
+    <h2>Login bei <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
     <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
         <input type="submit" hidden>
@@ -194,7 +194,7 @@
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudPassword" name="cloudPassword" class="form-control"
-                   type="password" autocomplete="new-password" required placeholder="Password" ng-change="clearCloudError()">
+                   type="password" autocomplete="new-password" required placeholder="Passwort" ng-change="clearCloudError()">
         </div>
 
         <div class="new-style-checkbox" ng-if="settings.thickClient">
@@ -214,14 +214,14 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="stayLoggedIn">
-                <span>Stay logged in</span>
+                <span>Eingeloggt bleiben</span>
             </label>
         </div>
 
         <div class="form-group has-error"
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.email">
             <div class="help-block">
-                Please, enter a valid email
+                Geben Sie bitte eine gültige Email an
             </div>
         </div>
 
@@ -229,7 +229,7 @@
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.required ||
                     forms.cloudForm.cloudPassword.$touched && forms.cloudForm.cloudPassword.$error.required">
             <div class="help-block">
-                Email and password are required
+                Email und Passwort sind erforderlich
             </div>
         </div>
 
@@ -241,14 +241,14 @@
 
         <div class="form-group" ng-if="settings.liteClient">
             <p class="help-block">
-                To create an account please visit {{portalUrl}}
+                Um einen Account zu erstellen, bitte {{portalUrl}} besuchen
             </p>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
-    <h2>Set up an administrator password</h2>
+    <h2>Administratorpasswort einrichten</h2>
     <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
         <input type="submit" hidden>
         <div class="form-group" validate-field>
@@ -488,44 +488,44 @@
 
 <div class="panel-body text-center" ng-if="stepIs('cloudFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
+    <h2>Kann keine Verbindung zu {{Config.cloud.productName}} herstellen</h2>
     <p class="master-description">
         {{cloudError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Erneut versuchen</button>
+        <button class="btn btn-default" ng-click="skip()">Lokales System einrichten</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot setup System</h2>
-    <p class="master-description">Something went totally wrong. <br>
-        Error description: {{settings.localError}}
+    <h2>System kann nicht eingerichtet werden</h2>
+    <p class="master-description">Etwas ist schief gelaufen. <br>
+        Fehlerbeschreibung: {{settings.localError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-click="retry()">Erneut versuchen</button>
     </p>
 </div>
 
 
 <div class="panel-footer lite-client-instruction" ng-if="settings.liteClient && stepIs('start')">
     <p>
-        It is possible to set it up from another computer by connecting<br>
-        to this device by one of the following ways:
+        Es ist möglich, es von einem anderen Computer einzurichten,<br>
+        indem Sie sich auf dieses Gerät mit einer der folgenden Möglichkeiten verbinden:
     </p>
     <div class="row">
         <div class="col-xs-6">
-            <div class="text-center"><b>Using web browser</b></div>
-            <div class="col-xs-4 text-right">Address</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
+            <div class="text-center"><b>Mit dem Webbrowser</b></div>
+            <div class="col-xs-4 text-right">Adresse</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
-            <div class="text-center"><b>Using {{Config.productName}} application</b></div>
+            <div class="text-center"><b>Mit der {{Config.productName}}-Anwendung</b></div>
             <div class="col-xs-6 text-right">Host</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
             <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
             <div class="col-xs-6 text-right">Login</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
-            <div class="col-xs-6 text-right">Password</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
+            <div class="col-xs-6 text-right">Passwort</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
         </div>
     </div>
 </div>
@@ -535,17 +535,17 @@
             ng-if="activeStep.next"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
+ ng-click="next()">Weiter <span class="glyphicon glyphicon-arrow-right"></span></button>
     <button class="btn btn-primary pull-right"
             ng-if="activeStep.finish"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="finish()">Finish
+ ng-click="finish()">Fertig
     </button>
     <button class="btn btn-default pull-left"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
-            ng-click="cancel()">Cancel</button>
+            ng-click="cancel()">Abbrechen</button>
     <button class="btn btn-default pull-left"
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"

@@ -34,7 +34,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Log in to user and system    ${system}[owner]    ${system}[cloud id]${ADVANCED SETTINGS}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
     Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
-    IF    '${IMAGE}'=='5.0_test'
+    IF    '${IMAGE}'=='5.0'
         Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
     ELSE
         Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
@@ -52,7 +52,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
-    IF    '${IMAGE}'=='5.0_test'
+    IF    '${IMAGE}'=='5.0'
         Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
     ELSE
         Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
@@ -98,7 +98,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     
     Log    Step 6
 
-    IF    '${IMAGE}'=='5.0_test'
+    IF    '${IMAGE}'=='5.0'
         Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    {"backupNewCameras":true,"id":"{00000000-2222-0000-0000-000000000000}","quality":"CameraBackupBoth"}
     ELSE
         Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=${True}
@@ -172,12 +172,12 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    THREE    timeout=60
 
     Log    Step 1
-    IF    '${IMAGE}' != '5.0_test'
+    IF    '${IMAGE}' != '5.0'
         Changing input setting changes it on server    ${CONNECTION KEEP ALIVE TIMEOUT INPUT}     ec2ConnectionKeepAliveTimeoutSec    7
     END
 
     Log    Step 2
-    IF    '${IMAGE}' != '5.0_test'
+    IF    '${IMAGE}' != '5.0'
         Changing input setting changes it on server    ${CONNECTION KEEP ALIVE PROBE INPUT}    ec2KeepAliveProbeCount    0
     END
     
@@ -215,7 +215,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Changing input setting changes it on server    ${FORCE LIVE CACHE INPUT}    forceLiveCacheForPrimaryStream    Yes
 
     Log    Step 4
-    IF    '${IMAGE}' == '5.0_test'
+    IF    '${IMAGE}' == '5.0'
         Changing setting changes it on server    ${KEEP PORT STATE CHECKBOX}    keepIoPortStateIntactOnInitialization    advanced=True
     ELSE
         Changing setting changes it on server    ${KEEP HANWHA PORT STATE CHECKBOX}    keepHanwhaIoPortStateIntactOnInitialization    advanced=True
@@ -339,7 +339,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Changing input setting changes it on server    ${MAX SCENE ITEMS INPUT}    maxSceneItems    1
 
     Log    Step 4
-    IF    '${IMAGE}'=='5.0_test'
+    IF    '${IMAGE}'=='5.0'
         Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
         Log    Step 5
         Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
@@ -405,7 +405,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
 14. Server discovery timeout
     [Tags]    C78386
     # Skipped in 5.0 as it's not an option
-    Skip If    '${IMAGE}'=='5.0_test'
+    Skip If    '${IMAGE}'=='5.0'
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    serverDiscoveryPingTimeoutSec=60

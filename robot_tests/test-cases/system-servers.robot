@@ -248,9 +248,13 @@ Force Tags        system
         Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
     END
     
-    Wait Until Page Contains Element    ${HM TABLE}
-    Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    Wait Until Element is Visible    //nx-block//h4[@class="panel-title"]
+    Wait Until Elements Are Visible
+    ...     //span[contains(text(), "Availability")]
+    ...     //span[contains(text(), "Load")]
+    ...     //span[contains(text(), "Info")]
+    ...     //span[contains(text(), "Activity")]
+#    Page Should Not Contain Element    ${HM SINGLE ENTITY}
+#    Wait Until Element is Visible    //nx-block//h4[@class="panel-title"]
     Execute Command Remotely    docker container stop ${server 2}[id]
 
 14. Offline system 1 server settings

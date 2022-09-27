@@ -1,30 +1,30 @@
 <div class="panel-body text-center" ng-if="stepIs(0)">
     <div class="master-icon"><span class="preloader"></span></div>
     <div class="vertical-center">
-        <h2>Loading ...</h2>
+        <h2>Ładowanie...</h2>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot initialize System</h2>
+    <h2>Nie można zainicjować systemu</h2>
     <p class="master-description">
-        Authorization failed.
+        Autoryzacja nie powiodła się.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Spróbuj ponownie</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot setup System</h2>
+    <h2>Nie można skonfigurować systemu</h2>
     <p class="master-description">The System cannot be configured. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Spróbuj ponownie</button>
     </p>
 </div>
 
@@ -34,7 +34,7 @@
         <p class="master-description">Please configure the server first.<br>
             Choose an option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
-        <button class="btn btn-primary" autofocus ng-click="next()">Setup New System</button>
+        <button class="btn btn-primary" autofocus ng-click="next()">Konfiguruj nowy system</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
@@ -48,31 +48,31 @@
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>Enter System Name</h2>
+    <h2>Wprowadź nazwę systemu</h2>
     <p class="master-description">
         It will help to identify or find System.
     </p>
     <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
-                   placeholder="System name" required auto-focus>
+                   placeholder="Nazwa systemu" required auto-focus>
         </div>
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
             <div class="help-block">
-                System name is required
+                Nazwa systemu jest wymagana
             </div>
         </div>
         <input type="submit" hidden>
     </form>
     <p class="vertical-bottom">
-        <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
+        <a href="" ng-click="next('advanced', true)">Zaawansowane ustawienia systemu</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>Advanced System settings</h2>
+    <h2>Zaawansowane ustawienia systemu</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
@@ -117,7 +117,7 @@
 
 
 <div class="panel-body text-center"  ng-if="stepIs('chooseCloudOrLocal')">
-    <h2>Choose System type</h2>
+    <h2>Wybierz typ systemu</h2>
     <div class="row radio-panels">
         <div class="col-xs-6 radio-panel ">
             <div class="radio-panel-body"
@@ -127,8 +127,8 @@
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
                 <h3>Local</h3>
                 <p>
-                    Works in local networks only<br>
-                    Does not require Internet connection
+                    Do stosowania w sieciach lokalnych<br>
+                    Nie wymaga połączenia internetowego
                 </p>
             </div>
         </div>
@@ -138,7 +138,7 @@
                  ng-click="settings.chooseCloudSystem = true">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-cloud"></span></div>
-                <h3>Cloud</h3>
+                <h3>Chmura</h3>
                 <p>
                     Available from everywhere<br>
                     Requires Internet connection

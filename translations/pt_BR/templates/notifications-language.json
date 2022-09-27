@@ -21,10 +21,10 @@
     "emailSubject": "Feedback da Página da Câmera{{#message.asset}} para {{{message.asset}}}{{/message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "Transferência de propriedade para {{message.system_name}}"
   },
   "ownership_transfer_response": {
-    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+    "emailSubject": "Transferência de propriedade para {{message.system_name}} - {{message.status}}"
   },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} tem uma nova versão para revisar"
