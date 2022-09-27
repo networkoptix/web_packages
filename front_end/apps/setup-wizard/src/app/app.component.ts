@@ -5,7 +5,7 @@ import { NxThemeService } from '@services/theme.service';
 import { WizardStateService } from './services/wizard-state.service';
 
 @Component({
-    selector: 'app-root',
+    selector: 'nx-setupwizard-app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })

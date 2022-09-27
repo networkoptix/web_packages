@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
-    selector: 'app-local-login',
+    selector: 'nx-local-login',
     templateUrl: './local-login.component.html',
     styleUrls: ['./local-login.component.scss']
 })

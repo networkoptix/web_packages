@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
-    selector: 'app-init-failure',
+    selector: 'nx-init-failure',
     templateUrl: './init-failure.component.html',
     styleUrls: ['./init-failure.component.scss']
 })

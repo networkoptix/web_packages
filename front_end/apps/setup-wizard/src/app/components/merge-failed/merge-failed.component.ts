@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
-    selector: 'app-merge-failed',
+    selector: 'nx-merge-failed',
     templateUrl: './merge-failed.component.html',
     styleUrls: ['./merge-failed.component.scss']
 })

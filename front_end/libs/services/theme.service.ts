@@ -83,7 +83,6 @@ export class NxThemeService {
                 themeSelected
             );
         }
-        
 
         username &&
         username !== 'setup' &&

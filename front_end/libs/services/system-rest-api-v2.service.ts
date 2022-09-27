@@ -6,6 +6,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
+import { SettingsConfig } from '@services/nx-config/base-config';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
@@ -13,7 +14,6 @@ import * as t from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
-import { SettingsConfig } from '@services/nx-config/base-config';
 
 interface CustomFilter {
     filter?: string;

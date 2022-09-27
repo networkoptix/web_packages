@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
-    selector: 'app-merge-process',
+    selector: 'nx-merge-process',
     templateUrl: './merge-process.component.html',
     styleUrls: ['./merge-process.component.scss']
 })

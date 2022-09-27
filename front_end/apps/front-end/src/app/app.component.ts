@@ -146,7 +146,6 @@ export class AppComponent implements OnInit {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.newHeader = this.CONFIG.featureFlags.newHeader;
 
-
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
 
@@ -391,7 +390,7 @@ export class AppComponent implements OnInit {
             });
         }
     }
-    
+
     private initScroll(): void {
         fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe(untilDestroyed(this)).subscribe(() => {
             this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
@@ -404,7 +403,7 @@ export class AppComponent implements OnInit {
             }
         });
     }
-    
+
     private initComponents(): void {
         if (!this.CONFIG.browserNotSupported) {
             if (environment.isLocal || this.appStateService.ready) {

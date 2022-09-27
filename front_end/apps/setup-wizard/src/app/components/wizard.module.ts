@@ -12,8 +12,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 // import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { PasswordModule } from '@components/password-input/password.module';
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
+import { PasswordModule } from '@components/password-input/password.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
 

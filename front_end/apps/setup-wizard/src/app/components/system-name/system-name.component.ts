@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
-    selector: 'app-system-name',
+    selector: 'nx-system-name',
     templateUrl: './system-name.component.html',
     styleUrls: ['./system-name.component.scss']
 })

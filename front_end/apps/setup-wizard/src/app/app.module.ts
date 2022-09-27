@@ -9,18 +9,15 @@ import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { GenericDialogModule } from '@dialogs/generic/generic.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxUriCacheService } from '@services/uri-cache.service';
+import { WINDOWS_PROVIDERS } from '@services/window-provider';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WizardModule } from './components/wizard.module';
-
-import { WINDOWS_PROVIDERS } from '@services/window-provider';
-
-
-
-import { NxUriCacheService } from '@services/uri-cache.service';
-import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {

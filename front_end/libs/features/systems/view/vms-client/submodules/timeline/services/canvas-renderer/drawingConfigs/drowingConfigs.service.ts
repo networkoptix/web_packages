@@ -55,7 +55,7 @@ export class NxDrawingConfigsService {
                 }
             }
         };
-        
+
         return primaryRuler[rule];
     }
 

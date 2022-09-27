@@ -9,10 +9,10 @@ declare global {
     }
 
     class nativeClient {
-        static cancelDialog(): void
-        static closeDialog(): void
-        static getCredentials(): credentials
-        static init(): Promise<void>
+        static cancelDialog(): void;
+        static closeDialog(): void;
+        static getCredentials(): credentials;
+        static init(): Promise<void>;
         static openUrlInBrowser(url: string): void;
     }
 }

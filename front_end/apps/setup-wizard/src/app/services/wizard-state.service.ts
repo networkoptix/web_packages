@@ -635,7 +635,7 @@ export class WizardStateService {
     }
 
     // Local setup
-    private offlineErrorHandler = (_): void => {
+    private offlineErrorHandler = (_: unknown): void => {
         // add local error
         this.currentState = WIZARD_STATE.LocalFailure;
     };
@@ -752,7 +752,6 @@ export class WizardStateService {
             .createConnection(undefined, undefined, undefined, () => of(''), this.serverVersion);
         let initPromise = Promise.resolve();
         if (this.hasNativeClient) {
-
             initPromise = nativeClient.init();
         }
         initPromise.finally(this.initWizard);
