@@ -16,7 +16,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxThemeService } from '@services/theme.service';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -75,7 +74,6 @@ export abstract class BaseAccount implements OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
-        themeService: NxThemeService,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
         protected cloudApi: NxCloudApiService,
@@ -140,14 +138,6 @@ export abstract class BaseAccount implements OnDestroy {
             this.dialogs.notify(this.LANG.toastMessage.loggingIn(), 'success', false);
             this.loginTokens(this.tokens).then(() => { });
         });
-
-        const currentTheme = this.localStorage.retrieve('theme');
-        this.localStorage.observe('theme')
-            .subscribe((theme: string) => {
-                if (currentTheme !== theme) {
-                    this.window.location.reload();
-                }
-            });
     }
 
     private loginTokens(tokens) {

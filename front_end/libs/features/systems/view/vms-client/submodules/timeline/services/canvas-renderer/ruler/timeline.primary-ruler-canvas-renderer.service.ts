@@ -7,7 +7,7 @@ import { ms, int, px } from '@vms-client/utils/type-aliases';
 
 import { cfg } from '../../timeline.config';
 import { TimelineService } from '../../timeline.service';
-import { primaryRulerSerifDrawingConfigs } from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
+import { NxDrawingConfigsService } from '../drawingConfigs/drowingConfigs.service';
 
 import { AnimatedFloat } from './animationPrimitives/AnimatedFloat';
 import { primaryRulerDateFormats } from './dateformats/primary_ruler_date_formats';
@@ -37,7 +37,8 @@ export class TimelinePrimaryRulerCanvasRendererService {
     constructor(
         languageService: NxLanguageProviderService,
         protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService
+        protected vms: VideoManagementSystemService,
+        private drawingConfigService: NxDrawingConfigsService,
     ) {
         languageService.loadTimelineTranslations();
     }
@@ -155,8 +156,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         const interval = intervalsReversed.find(i =>
             isAlignedByIrregularInterval(this.vms.tweakT(time), i)
         );
-        const result = this._intervalWeightAnimations[interval]?.get() || 0;
-        return result;
+        return this._intervalWeightAnimations[interval]?.get() || 0;
     }
 
     protected _drawSerif(ctx: CanvasRenderingContext2D, s: RulerSerif): void {
@@ -166,9 +166,8 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
         const lowerWeight = Math.floor(s.weight);
         const upperWeight = Math.ceil(s.weight);
-
-        const lowerDrawingConfig = primaryRulerSerifDrawingConfigs[lowerWeight];
-        const upperDrawingConfig = primaryRulerSerifDrawingConfigs[upperWeight];
+        const lowerDrawingConfig = this.drawingConfigService.primaryRulerSerifDrawingConfigs(lowerWeight);
+        const upperDrawingConfig = this.drawingConfigService.primaryRulerSerifDrawingConfigs(upperWeight);
         if (!lowerDrawingConfig || !upperDrawingConfig) {
             // console.warn('no drawing config found!', s, lowerWeight, upperWeight, lowerDrawingConfig, upperDrawingConfig)
             return;

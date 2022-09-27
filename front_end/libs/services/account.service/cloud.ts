@@ -7,7 +7,6 @@ import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
-import { NxThemeService } from '@services/theme.service';
 
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -28,7 +27,6 @@ export class CloudAccount extends BaseAccount {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
-        themeService: NxThemeService,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
         protected cloudApi: NxCloudApiService,
@@ -49,7 +47,6 @@ export class CloudAccount extends BaseAccount {
             configService,
             languageService,
             locationService,
-            themeService,
             document,
             window,
             cloudApi,

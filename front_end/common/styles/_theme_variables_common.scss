@@ -33,8 +33,9 @@ $brand-info:            var(--brand-l2, $brand_l2);
 $gray-light:             $light11;   //~#999
 // $gray-lighter:           $light3;    //~#EEE
 
-
-$body-bg:                 $additional_light2;
+// achromatic color for better transition to light / dark theme
+$body-bg:                 #808080;
+// ************************************************************
 $text-color:              $dark9;
 $navbar-default-bg:       $light1;
 $navbar-default-link-color: $dark10;
