@@ -397,6 +397,11 @@ button,
                 margin: 0 !important;
             }
         }
+
+        svg-icon svg g polyline.st0 {
+            stroke: var(--btn-tag-selected-color) !important;
+            fill: none;
+        }
     }
 }
 

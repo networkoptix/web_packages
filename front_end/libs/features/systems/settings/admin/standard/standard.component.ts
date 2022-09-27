@@ -326,13 +326,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    check2fa(event): void {
-        event.preventDefault();
-        this.handleMandatory2fa();
-    }
-
     // handle mandatory 2fa
-    async handleMandatory2fa(): Promise<any> {
+    async handleMandatory2fa(event: MouseEvent): Promise<void> {
+        event.preventDefault();
+
         if (this.is2faDialogActive) {
             return;
         }

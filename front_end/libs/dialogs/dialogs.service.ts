@@ -590,7 +590,7 @@ export class NxDialogsService extends DialogBase {
     public async toggleSystem2fa(
         system: NxSystem,
         system2faEnabled: boolean,
-    ): Promise<any> {
+    ): Promise<string | undefined> {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {

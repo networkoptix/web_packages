@@ -5,6 +5,7 @@ import {
     Inject,
     ViewContainerRef
 } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
@@ -95,6 +96,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     infoBlockSizeEnum = InfoBlockSize;
     public reload$ = new BehaviorSubject(0);
     width$ = new BehaviorSubject(0);
+    sensitivity = new FormGroup({
+        current: new FormControl<number | boolean | 'reset'>(false)
+    });
 
     sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'> = new BehaviorSubject(false);
     settingsSubscription: Subscription;
@@ -453,6 +457,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsSubscription?.unsubscribe();
             }
         });
+
+        this.sensitivity.controls.current.valueChanges.pipe(
+            untilDestroyed(this)
+        ).subscribe(this.sensitivityButtons$);
 
         this.routeParamsSubscription = this.route
             .params
