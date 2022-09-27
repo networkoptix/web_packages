@@ -21,6 +21,7 @@ import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
+import { setupText, TemplateText } from '../setupText';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -46,13 +47,8 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     isMobile = true;
     @ViewChild('emailForm', { static: false }) emailForm: NgForm;
     header: string;
-    subHeader: string;
-    templateText: {
-        [clientType: string]: {
-            header: string,
-            subHeader?: string
-        }
-    };
+    subHeader: string | undefined;
+    templateText: TemplateText;
     emailAutoFilled = false;
 
     constructor(
@@ -75,7 +71,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit(): void {
-        this.setupText();
+        this.templateText = setupText(this.LANG, 'email');
         this.setText();
         this.sendEmail = () => {
             if (this.emailAutoFilled && this.errorCode) {
@@ -112,29 +108,6 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     setupNonCloudSystem(): void {
         // TODO: waiting for new setup wizard
-    }
-
-    setupText(): void {
-        const auth = this.LANG.authorize;
-        const connect = {
-            header: auth.connectHeader(),
-            subHeader: auth.connectSubheader()
-        };
-        const renew = {
-            header: auth.expiredHeader(),
-            subHeader: auth.expiredSubheader()
-        };
-        const login = {
-            header: auth.loginCloudHeader()
-        };
-        this.templateText = {
-            loginToCloud: login,
-            loginToWebadmin: login,
-            connectSystemToCloud: connect,
-            setupWizard: connect,
-            renewSessionDesktop: renew,
-            renewSessionWeb: renew
-        };
     }
 
     setText(): void {

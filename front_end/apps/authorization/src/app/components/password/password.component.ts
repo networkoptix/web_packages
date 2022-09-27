@@ -20,6 +20,7 @@ import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
+import { setupText, TemplateText } from '../setupText';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -47,15 +48,9 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @ViewChild('passwordForm', { static: false }) passwordForm: NgForm;
     passwordToggle = true;
     header: string;
-    subHeader: string;
-    subHeaderSuffix: string;
-    templateText: {
-        [clientType: string]: {
-            header: string,
-            subHeader: string,
-            subHeaderSuffix?: string
-        }
-    };
+    subHeader: string | undefined;
+    subHeaderSuffix: string | undefined;
+    templateText: TemplateText;
 
     constructor(
         language: NxLanguageProviderService,
@@ -66,7 +61,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     }
 
     ngOnInit(): void {
-        this.setupText();
+        this.templateText = setupText(this.LANG);
         this.setText();
         this.sendPassword = () => {
             this.loginPasswordChange.emit(this.loginPassword);
@@ -85,71 +80,6 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
 
     logout(): void {
         // clear out local storage of email/user information
-    }
-
-    setupText(): void {
-        const auth = this.LANG.authorize;
-        const connect = {
-            header: auth.connectHeader(),
-            subHeader: auth.toAccountSubheader()
-        };
-        const renew = {
-            header: auth.expiredHeader(),
-            subHeader: auth.expiredAccountSubheader()
-        };
-        const subHeader = auth.asAccountSubheader();
-        const login = {
-            header: auth.loginCloudHeader(),
-            subHeader
-        };
-        this.templateText = {
-            loginToCloud: login,
-            loginToWebadmin: login,
-            confirmPasswordDisconnect: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordDisconnect()
-            },
-            confirmPasswordMerge: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordMerge()
-            },
-            confirmPasswordCreateBackup: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordBackup()
-            },
-            confirmPasswordRestoreBackup: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordRestore()
-            },
-            confirmPasswordResetServer: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordReset()
-            },
-            confirmPasswordRestartServer: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordRestart()
-            },
-            confirmPasswordDetachServer: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordDetach()
-            },
-            confirmPasswordTransfer: {
-                header: auth.loginCloudHeader(),
-                subHeader,
-                subHeaderSuffix: auth.passwordTransfer()
-            },
-            connectSystemToCloud: connect,
-            setupWizard: connect,
-            renewSessionDesktop: renew,
-            renewSessionWeb: renew
-        };
     }
 
     setText(): void {
