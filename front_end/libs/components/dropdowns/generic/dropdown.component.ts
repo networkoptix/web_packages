@@ -13,7 +13,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { htmlToEntity } from '@utils/general';
+import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
@@ -67,8 +67,6 @@ export class NxGenericDropdown<
         offsetTop?: number
     };
 
-    @IBool() @Input() allowHTML: CoercedBoolInput = false;
-
     @Output() onSelected = new EventEmitter<Item>();
 
     dropdownType: string;
@@ -79,19 +77,6 @@ export class NxGenericDropdown<
 
     // Used in merge.component.ts
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
-
-    get selectedItemHTML(): string {
-        if (!this._selectedItem) {
-            return;
-        }
-        const selectedName = this.allowHTML
-            ? this._selectedItem.name
-            : htmlToEntity(this._selectedItem.name);
-        const selectedHelp = this._selectedItem.help;
-        return selectedHelp && !this._selectedItem.name.includes(selectedHelp)
-            ? selectedName + `<span class="additional-help">${selectedHelp}</span>`
-            : selectedName;
-    }
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -150,8 +135,8 @@ export class NxGenericDropdown<
     filterChanged(value: string): void {
         this.filter = value;
         this._items = this.items.filter(item =>
-            item.name.toLowerCase().includes(this.filter.toLowerCase()) ||
-            item.help?.toLowerCase().includes(this.filter.toLowerCase())
+            caseInsenstiveSearch(item.name, this.filter) ||
+            item.help && caseInsenstiveSearch(item.help, this.filter)
         );
 
         if (!this._items.length) {

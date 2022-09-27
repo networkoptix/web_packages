@@ -97,7 +97,6 @@ describe('NxGenericDropdown', () => {
                 fixture = TestBed.createComponent(NxGenericDropdown);
                 component = fixture.componentInstance;
                 component.items = dropdownItems.slice();
-                component.allowHTML = true;
                 el = fixture.debugElement;
             })
             .catch(err => console.error(err));

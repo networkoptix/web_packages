@@ -19,7 +19,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
-import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 interface ServerOption extends DropdownItem<string> {
@@ -187,7 +186,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 this.serverOptions = changes.servers.currentValue.map(server => {
                     const option: ServerOption = {
-                        name: htmlToEntity(server.name),
+                        name: server.name,
                         value: server.id,
                         status: server.status
                     };

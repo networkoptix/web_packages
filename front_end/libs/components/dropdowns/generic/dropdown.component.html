@@ -35,8 +35,14 @@
                 'ellipsis-mr': merge || ellipsisMargin,
                 ellipsis: !merge
             }"
-            [innerHTML]="selectedItemHTML"
-        ></span>
+        >
+            {{ _selectedItem.name }}
+            <span
+                *ngIf="_selectedItem.help && !_selectedItem.name.includes(_selectedItem.help)"
+                class="additional-help"
+                >{{ _selectedItem.help }}</span
+            >
+        </span>
         <div class="arrow-flip">
             <svg-icon
                 nx-add-svg-src
@@ -105,13 +111,7 @@
                     </ng-container>
                 </ng-template>
                 <ng-template #itemText>
-                    <span
-                        *ngIf="allowHTML"
-                        [outerHTML]="item.name"
-                    ></span>
-                    <ng-container *ngIf="!allowHTML">
-                        {{ item.name }}
-                    </ng-container>
+                    {{ item.name }}
                     <span
                         *ngIf="item.help && !item.name.includes(item.help)"
                         class="additional-help"

@@ -892,11 +892,11 @@ export class MergeModalContent {
         }
     }
 
-    addStatus(system) {
-        const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible?.()}`;
-        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable?.()}`;
-        const statusOffline = ` – ${this.LANG.systemStatuses.offline?.()}`;
-        const statusCloud = ` - ${this.LANG.dialogs.merge.cloud?.()}`;
+    getStatus(system): [name: string, status: string] {
+        const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible()}`;
+        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable()}`;
+        const statusOffline = ` – ${this.LANG.systemStatuses.offline()}`;
+        const statusCloud = ` – ${this.LANG.dialogs.merge.cloud()}`;
 
         let stateOfHealth = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.status || '';
@@ -942,8 +942,7 @@ export class MergeModalContent {
             systemName = system.name;
         }
 
-        // HTML required for dropdown list
-        return `<span>${htmlToEntity(systemName)}</span><span class="text-muted">${status}</span>`;
+        return [systemName, status];
     }
 
     checkMergeability(system) {
@@ -980,9 +979,11 @@ export class MergeModalContent {
 
     makeSelectorList(systems): SystemDropdownItem[] {
         return systems.map(system => {
+            const [name, help] = this.getStatus(system);
             return {
                 value: system.id,
-                name: this.addStatus(system),
+                name,
+                help,
                 peer: Boolean(system.localSystemId)
             };
         });
