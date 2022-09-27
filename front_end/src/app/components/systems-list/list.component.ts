@@ -120,7 +120,7 @@ export class NxSystemsListComponent implements OnInit {
                     return;
                 }
 
-                this.hasOneSystem = this.systems.length === 1 && this.systems[0].stateOfHealth !== 'offline';
+                this.hasOneSystem = this.systems.length === 1;
 
                 this.systems.map(system => ({
                     ...system,
