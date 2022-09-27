@@ -30,6 +30,7 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -93,7 +94,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,
-        NgxMaskModule.forRoot()
+        NgxMaskModule.forRoot(),
+        LoginWebadminModule
     ],
     providers: [
         Location,

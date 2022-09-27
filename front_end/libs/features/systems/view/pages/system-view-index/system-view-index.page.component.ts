@@ -316,11 +316,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 // _initSystem is called on systems subscription
                 if (this.systems.filter(s => s.id === this.systemId).length) {
-                    this._setInitializationState(false, false);
-                    this.ribbonService.hide();
-
                     this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
                     this.settingsService.system = this.system;
+                    this._setInitializationState(!this.system.isOnline, !this.system.isOnline);
+                    this.ribbonService.hide();
                     return Promise.resolve(); // this.system.update();
                 }
 

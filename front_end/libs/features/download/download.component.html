@@ -1,6 +1,6 @@
 <div
     class="container"
-    *ngIf="canViewDownloads && LANG"
+    *ngIf="canViewDownloads"
 >
     <h1
         class="old-h12"
@@ -70,7 +70,7 @@
                                         <a
                                             class="media btn btn-default download-button"
                                             *ngIf="downloadButton"
-                                            [href]="downloadButton.url"
+                                            [href]="downloadsData.releaseUrl + downloadButton.path"
                                         >
                                             <div class="media-left">
                                                 <svg-icon
@@ -85,12 +85,9 @@
                                             <div class="media-body text-left">
                                                 <h3 translate>Download %VMS_NAME%</h3>
                                                 <div class="h7 installer-name">
-                                                    <!-- eslint-disable prettier/prettier -->
                                                     <span *ngIf="!downloadButton.niceName">{{
-                                                        LANG.downloads.groups[activePlatform.name].shortLabel() ||
-                                                        LANG.downloads.groups[activePlatform.name].label()
+                                                        installerName(activePlatform.name)
                                                     }}</span>
-                                                    <!-- eslint-enable prettier/prettier -->
                                                     <ng-container>{{
                                                         downloadButton.niceName
                                                     }}</ng-container>
@@ -120,7 +117,9 @@
                                         *ngFor="let otherPackage of otherPackages; let i = index"
                                         [ngClass]="{ 'a-link': i % 3 !== 2 }"
                                     >
-                                        <a [href]="otherPackage.url">{{ otherPackage.niceName }}</a>
+                                        <a [href]="downloadsData.releaseUrl + otherPackage.path">{{
+                                            otherPackage.niceName
+                                        }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +139,7 @@
             <div class="clearfix">
                 <div
                     class="mobile-badge"
-                    *ngFor="let platform of downloads.mobile"
+                    *ngFor="let platform of CONFIG.downloads.mobile"
                 >
                     <a
                         *ngIf="LANG.downloads.mobile[platform.name].link() !== 'disabled'"

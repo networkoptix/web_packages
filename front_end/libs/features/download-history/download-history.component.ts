@@ -1,8 +1,7 @@
-import { isPlatformBrowser, TitleCasePipe } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
     Component,
     OnInit,
-    OnDestroy,
     Inject,
     PLATFORM_ID
 } from '@angular/core';
@@ -12,6 +11,7 @@ import {
     Router
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { startCase } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -19,6 +19,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { BuildHistory, Build, Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -32,32 +33,24 @@ import { NxUriService } from '@services/uri.service';
     styleUrls: ['download-history.component.scss']
 })
 
-export class DownloadHistoryComponent implements OnInit, OnDestroy {
+export class DownloadHistoryComponent implements OnInit {
     private sub: Subscription;
     readonly releases = 'releases';
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    build;
-    canViewRelease: boolean;
-    tabsVisible: boolean;
-    routeParam;
-    section;
-    user;
-    downloads;
-    activeBuilds;
-    downloadsData;
-    noteTypes;
-    linkbase;
+    build: string;
+    canViewRelease: boolean = false;
+    tabsVisible: boolean = false;
+    routeParam: string;
+    section: string;
+    activeBuilds: Downloads[];
+    downloadsData: Omit<BuildHistory, 'updatesPrefix'>;
+    noteTypes: string[] = [];
+    linkbase: string;
 
     currentTab: string;
-
-    private setupDefaults(): void {
-        this.tabsVisible = false;
-        this.canViewRelease = false;
-        this.noteTypes = [];
-    }
 
     constructor(
         configService: NxConfigService,
@@ -70,7 +63,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         private uriService: NxUriService,
         @Inject(PLATFORM_ID) private platformId: object
     ) {
-        this.setupDefaults();
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
@@ -88,32 +80,41 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getAvailableDownloadTypes(data): void {
-        this.noteTypes = Object.keys(data || {}).filter(noteType => {
-            return Array.isArray(data[noteType]) && data[noteType].length;
-        }).reverse();
+    private getAvailableDownloadTypes(data: BuildHistory): void {
+        this.noteTypes = Object.keys(data || {})
+            .filter(noteType => {
+                return Array.isArray(data[noteType]) && data[noteType].length;
+            })
+            .reverse();
+    }
+
+    // Only for response from NxCloudApiService.getDownloadsHistory(this.build),
+    // doesn't acually check object contents
+    private isSingleBuild(_data: BuildHistory | Build): _data is BuildHistory {
+        return !this.build;
     }
 
     private getData(): void {
         this.cloudApiService
             .getDownloadsHistory(this.build)
-            .then((data: any) => {
+            .then(data => {
                 this.linkbase = data.updatesPrefix;
-                if (!this.build) { // only one build
+                if (this.isSingleBuild(data)) {
                     this.downloadsData = data;
-                    if (!(this.section in this.downloadsData)) {
+                    if (!(this.section in data)) {
                         this.section = this.releases;
                     }
-                    this.activeBuilds = this.downloadsData[this.section];
-                    this.getAvailableDownloadTypes(this.downloadsData);
-                } else {
+                    this.activeBuilds = data[this.section];
+                    this.getAvailableDownloadTypes(data);
+                } else { // only one build
                     this.activeBuilds = [data];
                     this.noteTypes = [data.type];
-                    this.downloadsData = {};
-                    this.downloadsData[data.type] = this.activeBuilds;
+                    this.downloadsData = {
+                        [data.type]: this.activeBuilds,
+                    };
                 }
 
-                this.pageService.pageTitle = new TitleCasePipe().transform(this.currentTab || this.noteTypes[0]);
+                this.pageService.pageTitle = startCase(this.currentTab || this.noteTypes[0]);
 
                 setTimeout(() => {
                     this.tabsVisible = true;
@@ -179,10 +180,10 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         });
     }
 
-    public switchTo(name: string) {
+    public switchTo(name: string): false {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
-        this.pageService.pageTitle = new TitleCasePipe().transform(name);
+        this.pageService.pageTitle = startCase(name);
 
         this.uriService
             .updateURI('/downloads/' + name, {})
@@ -191,6 +192,4 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
             });
         return false;
     }
-
-    ngOnDestroy(): void { }
 }

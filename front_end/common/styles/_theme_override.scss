@@ -4,10 +4,10 @@
 
 $font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //~16px - we just need 16px sometimes :-)
 
-body {
-    color : var(--body-text-color);
-    background-color: var(--body-bg);
-}
+//body {
+//    color : var(--body-text-color);
+//    background-color: var(--body-bg);
+//}
 
 .container-fluid {
     padding : 0;

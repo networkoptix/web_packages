@@ -68,7 +68,7 @@ Wait until settings are visible
 Wait Until Advanced Settings Are Visible
     [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
     IF    '${block number}'=='ONE' or '${block number}'=='THREE' or '${block number}'=='FOUR'
-        IF    '${IMAGE}'=='5.0_test' 
+        IF    '${IMAGE}'=='5.0'
             ${block number}=   Set Variable    ${block number} ${IMAGE}
         END
     END
@@ -101,7 +101,9 @@ Validate Success Dialog
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
     Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=1
+    Sleep    1
     Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=${new name}
+    Sleep    1
 #    Press Keys    ${SYSTEM NAME}    ${new name}
     #Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
 #    Press Keys    ${SYSTEM NAME}    ENTER
@@ -407,7 +409,7 @@ Show Advanced Settings
 
 Reset Settings To Default
     [Arguments]    ${auth}    ${server url}
-    IF    "${IMAGE}" == "5.0_test"
+    IF    "${IMAGE}" == "5.0" or "${IMAGE}" == "5.1"
         Set System Settings    ${auth}    ${server url}    ${default settings5}
     ELSE
         Set System Settings    ${auth}    ${server url}    ${default settings}

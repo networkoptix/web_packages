@@ -1,0 +1,126 @@
+/*Django Built-In Fixes*/
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #79aec8;
+        --secondary: #417690;
+        --accent: #f5dd5d;
+        --primary-fg: #fff;
+
+        --body-fg: #333;
+        --body-bg: #fff;
+        --body-quiet-color: #666;
+        --body-loud-color: #000;
+
+        --header-color: #ffc;
+        --header-branding-color: var(--accent);
+        --header-bg: var(--secondary);
+        --header-link-color: var(--primary-fg);
+
+        --breadcrumbs-fg: #c4dce8;
+        --breadcrumbs-link-fg: var(--body-bg);
+        --breadcrumbs-bg: var(--primary);
+
+        --link-fg: #447e9b;
+        --link-hover-color: #036;
+        --link-selected-fg: #5b80b2;
+
+        --hairline-color: #e8e8e8;
+        --border-color: #ccc;
+
+        --error-fg: #ba2121;
+
+        --message-success-bg: #dfd;
+        --message-warning-bg: #ffc;
+        --message-error-bg: #ffefef;
+
+        --darkened-bg: #f8f8f8; /* A bit darker than --body-bg */
+        --selected-bg: #e4e4e4; /* E.g. selected table cells */
+        --selected-row: #ffc;
+
+        --button-fg: #fff;
+        --button-bg: var(--primary);
+        --button-hover-bg: #609ab6;
+        --default-button-bg: var(--secondary);
+        --default-button-hover-bg: #205067;
+        --close-button-bg: #888; /* Previously #bbb, contrast 1.92 */
+        --close-button-hover-bg: #747474;
+        --delete-button-bg: #ba2121;
+        --delete-button-hover-bg: #a41515;
+
+        --object-tools-fg: var(--button-fg);
+        --object-tools-bg: var(--close-button-bg);
+        --object-tools-hover-bg: var(--close-button-hover-bg);
+    }
+}
+
+
+/*Dashboard Fixes*/
+@media (prefers-color-scheme: dark) {
+    .group ul,
+    .dashboard-module,
+    .dashboard-placeholder,
+    #dashboard-panel ul li {
+        border-color: inherit;
+        border-radius: inherit;
+    }
+
+    .group .ui-state-default,
+    .dashboard-module-content {
+        border-color: inherit;
+    }
+
+    #dashboard-panel h3 a {
+        background: inherit;
+    }
+
+    .group ul {
+        border: inherit;
+        background: inherit;
+    }
+
+    .dashboard-module.ui-tabs-panel,
+    .group .ui-state-default,
+    .group-accordion .group-accordion-header.ui-state-default,
+    #dashboard-panel ul li,
+    .dashboard-module ul li {
+        background: inherit;
+    }
+
+    .dashboard-module ul li:hover {
+        background: inherit;
+        color: inherit;
+    }
+
+    .group .ui-state-default a {
+        color: inherit;
+    }
+
+    .group .ui-tabs-active,
+    .group .ui-state-default:hover,
+    .dashboard-placeholder {
+        background-color: inherit;
+    }
+
+    .dashboard-module h2 {
+        background-color: inherit;
+        color: inherit;
+    }
+
+    .dashboard-module h3 {
+        background-color: inherit;
+        color: inherit;
+    }
+
+    .dashboard-module ul li.odd {
+        background-color: inherit;
+    }
+
+    .dashboard-module ul li.even {
+        background-color: inherit;
+    }
+
+    .dashboard-module h2 a.toggle-icon,
+    .dashboard-module h2 a.close-icon {
+        filter: inherit;
+    }
+}

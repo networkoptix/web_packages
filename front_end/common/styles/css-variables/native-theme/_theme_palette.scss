@@ -1,5 +1,6 @@
 @use "../../utils" as *;
 @use "../../native-theme/_theme_palette.scss" as *;
+@use "../../_theme_palette.scss" as palette;
 
 :root {
 	@include generateVarAndRgb(--bluez-light, $bluez-light);
@@ -146,6 +147,10 @@
 	@include generateVarAndRgb(--additional_light4, $additional_light4);
 
 	@include generateVarAndRgb(--green_main, $green_main);
+	@include generateVarAndRgb(--green_main, palette.$green_l1);
+	@include generateVarAndRgb(--green_main, palette.$green_l2);
+	@include generateVarAndRgb(--green_main, palette.$green_l3);
+	
 	@include generateVarAndRgb(--red_main, $red_main);
 
 	@include generateVarAndRgb(--yellow_main, $yellow_main);

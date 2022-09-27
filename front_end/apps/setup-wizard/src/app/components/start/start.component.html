@@ -1,0 +1,24 @@
+<div class="state-container">
+    <div class="state-container--title">
+        <div translate>Please configure the server first.</div>
+        <div translate>Choose an option.</div>
+    </div>
+    <div class="state-container--body">
+        <button
+            class="btn btn-primary"
+            translate
+            (click)="setupSystem()"
+        >
+            Setup New System
+        </button>
+        <div translate>or</div>
+        <button
+            class="btn btn-default-clear"
+            (click)="mergeSystem()"
+            translate
+        >
+            Add to Existing System
+        </button>
+        <div translate>(if Nx Witness has been already setup)</div>
+    </div>
+</div>

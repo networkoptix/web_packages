@@ -1,0 +1,65 @@
+<div
+    class="container"
+    [style.height.vh]="100"
+    *ngIf="fsm"
+>
+    <div class="card p-3 card-wizard">
+        <div class="header">
+            <h2>{{ fsm?.title }}</h2>
+        </div>
+        <div class="body">
+            <router-outlet></router-outlet>
+        </div>
+        <div
+            class="footer"
+            *ngIf="(state$ | async) !== start"
+        >
+            <hr />
+            <button
+                *ngIf="fsm?.cancel"
+                class="btn btn-default-clear btn-backward"
+                (click)="cancel()"
+                [disabled]="nextDisabled"
+                translate
+            >
+                Cancel
+            </button>
+            <button
+                *ngIf="fsm?.back"
+                class="btn btn-default-clear btn-backward"
+                (click)="back()"
+                [disabled]="nextDisabled"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    [applyClass]="true"
+                ></svg-icon>
+            </button>
+            <button
+                *ngIf="fsm?.next"
+                class="btn btn-primary btn-forward"
+                (click)="next()"
+                [disabled]="nextDisabled"
+            >
+                <span translate>Next</span>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_right.svg'"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    [applyClass]="true"
+                ></svg-icon>
+            </button>
+            <button
+                *ngIf="fsm?.finish"
+                class="btn btn-primary btn-forward"
+                (click)="finish()"
+                [disabled]="nextDisabled"
+                translate
+            >
+                Finish
+            </button>
+        </div>
+    </div>
+</div>

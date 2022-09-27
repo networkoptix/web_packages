@@ -960,6 +960,21 @@
         "Layouts": "Layouts",
         "Monitoring": "Monitoring"
     },
+    "setupWizard": {
+        "title": {
+            "advanced": "Advanced System settings",
+            "brokenSystem": "Cannot setup System",
+            "initFailure": "Cannot initialize System",
+            "localFailure": "Cannot setup System",
+            "localLogin": "Set up an administrator password",
+            "localSuccess": "System is ready for use",
+            "merge": "Connect the server to the existing System",
+            "mergeFailure": "Cannot merge Systems",
+            "mergeProcess": "Merging Systems...",
+            "start": "Get Started with %VMS_NAME%",
+            "systemName": "Enter System Name"
+        }
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",

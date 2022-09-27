@@ -6,6 +6,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
+import { SettingsConfig } from '@services/nx-config/base-config';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
@@ -161,6 +162,10 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             }), {});
         return this.patch<LogLevelV2Response>('/rest/v2/servers/this/logSettings', parsedLogLevels)
             .pipe(map(this.parseLogData));
+    }
+    // Setup wizard calls
+    wizardGetSystemSettings(): Observable<SettingsConfig> {
+        return this.get('/rest/v1/system/settings');
     }
 
     // Servers

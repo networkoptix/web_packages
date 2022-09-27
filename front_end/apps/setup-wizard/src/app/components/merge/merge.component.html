@@ -1,0 +1,44 @@
+<div class="state-container">
+    <div class="state-container--title"></div>
+    <div class="state-container--body">
+        <form
+            #mergeForm="ngForm"
+            name="mergeForm"
+            novalidate
+        >
+            <div class="form-group">
+                <nx-searchable-select
+                    name="mergeDropdown"
+                    [(ngModel)]="remoteSystem"
+                    [items]="items"
+                ></nx-searchable-select>
+            </div>
+            <div class="form-group">
+                <input
+                    name="user"
+                    class="form-control"
+                    [(ngModel)]="user"
+                    [placeholder]="'Login' | translate"
+                    required
+                />
+            </div>
+            <div class="form-group">
+                <nx-password-input
+                    name="passwordField"
+                    componentId="passwordField"
+                    class="form-component"
+                    [(ngModel)]="password"
+                    [placeholder]="'Password' | translate"
+                    [component]="passwordField"
+                    [form]="mergeForm"
+                    #passwordField="ngModel"
+                ></nx-password-input>
+                <nx-password-input-validation
+                    [forElement]="passwordField"
+                    [value]="password"
+                >
+                </nx-password-input-validation>
+            </div>
+        </form>
+    </div>
+</div>

@@ -706,7 +706,7 @@ export const nxConfig: IConfig = {
     trialLicenseKey: '',
     licenseDeactivations: 3,
     pushConfig: '',
-    testedOperatingSystems: '',
+    testedOperatingSystems: {},
     trafficRelayHost: '',
     vmsName: '',
     // End of dynamic config

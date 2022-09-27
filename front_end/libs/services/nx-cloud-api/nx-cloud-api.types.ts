@@ -1,5 +1,6 @@
 import { Observable, ObservableInput } from 'rxjs';
 
+import type { ReleasesTypes } from '@common/language/language_i18n_static_types';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -183,20 +184,21 @@ export interface CloudUser {
 export interface CloudUsers extends Array<CloudUser> { }
 
 export interface Downloads {
-    version: string,
-    releaseNotes: string,
+    backwardsCompatible: boolean;
+    beta: boolean,
+    buildNumber: number,
+    cloudGroup: string,
+    date: string,
+    dismissed: boolean,
+    installers: Installer[],
+    password: string,
+    platforms: Platform[],
     product: string,
     productDescription: string,
-    date: string,
-    buildNumber: number,
-    password: string,
-    type: string,
-    installers: Installers[],
-    platforms: Platforms[],
-    cloudGroup: string,
-    beta: boolean,
-    dismissed: boolean,
+    releaseNotes: string,
     releaseUrl: string
+    type: string,
+    version: string,
 }
 
 type ReadOnlyAPIType = 'VMS';
@@ -218,18 +220,19 @@ export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
     }]
 }
 
-interface Installers {
-    platform: string,
+export interface Installer {
     appType: string,
     beta: boolean,
     cloudGroup: string,
     fileName: string,
-    path: string,
     niceName: string
+    path: string,
+    platform: string,
 }
 
-interface Platforms extends Installers {
-    url: string
+export interface Platform extends Installer {
+    files: Installer[];
+    name: string;
 }
 
 export interface AccountEdit {
@@ -378,4 +381,12 @@ export interface LicenseServerInfo {
     systemId: string;
     licenseServer: string;
     cacheUpdated: boolean;
+}
+
+export type BuildHistory =
+    { [type in keyof ReleasesTypes]?: Downloads[] } &
+    { updatesPrefix: string };
+
+export interface Build extends Downloads {
+    updatesPrefix: string;
 }

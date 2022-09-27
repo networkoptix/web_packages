@@ -134,7 +134,6 @@
                             "with": "libs/routeGuards/authGuard.webadmin.ts"
                         }
                     ],
-                    "deployUrl": "static/",
                     "optimization": true,
                     "outputHashing": "all",
                     "sourceMap": false,

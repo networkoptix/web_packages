@@ -2,6 +2,7 @@ from collections import defaultdict
 from functools import wraps
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+import time
 from django.conf import settings
 from inlinestyler.utils import inline_css
 import re
@@ -62,10 +63,13 @@ def html2plain(html):
 #     return _ignore_index_not_found
 
 class SearchableCache(BaseCache):
+    check_interval = 60 * 5 # 5 Minutes
+
     def __init__(self, *args, **kwargs):
         self.custom_settings = kwargs.pop('search_settings', {})
         self.current_settings = None
         self._search_index = None
+        self.last_checked = time.time() - SearchableCache.check_interval
         super().__init__(*args, **kwargs)
         self.get_search_index()
 
@@ -74,22 +78,30 @@ class SearchableCache(BaseCache):
 
     @property
     def search_index(self):
-        return self._search_index or self.get_search_index()
+        return self.get_search_index()
+
+    @property
+    def recently_checked(self):
+        return (self.last_checked + self.check_interval) > time.time()
 
     def get_search_index(self):
+        if self._search_index or self.recently_checked:
+            return self._search_index
+
         client = get_meilisearch_client()
         self._search_index = client.index(self.cache_key)
+
         try:
-            self.search_index.get_stats()
+            self._search_index.get_stats()
             self.check_and_update_custom_settings()
         except MeiliSearchApiError:
             try:
-                client.create_index('documentation')
+                self._search_index = client.create_index(self.cache_key)
             except MeiliSearchApiError:
                 self._search_index = None
         except MeiliSearchCommunicationError:
             self._search_index = None
-
+        self.last_checked = time.time()
         return self._search_index
 
     def check_if_settings_changed(self):
@@ -106,7 +118,7 @@ class SearchableCache(BaseCache):
 
     # @ignore_index_not_found
     def check_and_update_custom_settings(self):
-        if not settings.CELERY_WORKER and self.custom_settings:
+        if not settings.CELERY_WORKER and self.custom_settings and self.search_index:
             try:
                 self.current_settings = self.search_index.get_settings()
                 if self.check_if_settings_changed():
@@ -119,8 +131,10 @@ class SearchableCache(BaseCache):
     # @ignore_index_not_found
     def clear_cache(self):
         super().clear_cache()
+
         try:
-            self.search_index.delete_all_documents()
+            if self.search_index:
+                self.search_index.delete_all_documents()
         except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError, AttributeError) as e:
             # MeiliSearchApiError is only raised when running with an empty db
             # raised when meilisearch service is unavailable
@@ -144,14 +158,15 @@ class SearchableCache(BaseCache):
 
         if switch_is_active(SWITCHES.kb_instant_search) and lookup_key.endswith('release'):
             try:
-                self.search_index.add_documents(
-                    [{
-                        **from_doc,
-                        'cacheKey': lookup_key,
-                        'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks']))
-                    }],
-                    primary_key='cacheKey'
-                )
+                if self.search_index:
+                    self.search_index.add_documents(
+                        [{
+                            **from_doc,
+                            'cacheKey': lookup_key,
+                            'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks']))
+                        }],
+                        primary_key='cacheKey'
+                    )
             except (MeiliSearchCommunicationError, TypeError) as e:
                 # MeiliSearchCommunicationError is raised when meilisearch service is unavailable
                 # TypeError is raised when switch is enabled but no master key provided

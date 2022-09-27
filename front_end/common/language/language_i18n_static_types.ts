@@ -54,6 +54,7 @@ export interface LanguageI18NStaticTypes {
     search:                Search;
     servers:               Servers;
     serverTabTitles:       ServerTabTitles;
+    setupWizard:           SetupWizard;
     system:                LanguageI18NStaticTypesSystem;
     systemGroups:          LanguageI18NStaticTypesSystemGroups;
     systemStatuses:        SystemStatuses;
@@ -561,7 +562,7 @@ export interface DialogsMessage {
     placeholders:            Placeholders;
     sent:                    (params?: Record<string, string | number>) => string;
     subject:                 Subject;
-    title:                   Title;
+    title:                   MessageTitle;
     twoFactor:               MessageTwoFactor;
 }
 
@@ -577,7 +578,7 @@ export interface Subject {
     technical_inquiry:    (params?: Record<string, string | number>) => string;
 }
 
-export interface Title {
+export interface MessageTitle {
     integration:          (params?: Record<string, string | number>) => string;
     ipvd_feedback_device: (params?: Record<string, string | number>) => string;
     ipvd_feedback_page:   (params?: Record<string, string | number>) => string;
@@ -1129,6 +1130,24 @@ export interface ServersStatus {
     offline:    (params?: Record<string, string | number>) => string;
     resetting:  (params?: Record<string, string | number>) => string;
     restarting: (params?: Record<string, string | number>) => string;
+}
+
+export interface SetupWizard {
+    title: SetupWizardTitle;
+}
+
+export interface SetupWizardTitle {
+    advanced:     (params?: Record<string, string | number>) => string;
+    brokenSystem: (params?: Record<string, string | number>) => string;
+    initFailure:  (params?: Record<string, string | number>) => string;
+    localFailure: (params?: Record<string, string | number>) => string;
+    localLogin:   (params?: Record<string, string | number>) => string;
+    localSuccess: (params?: Record<string, string | number>) => string;
+    merge:        (params?: Record<string, string | number>) => string;
+    mergeFailure: (params?: Record<string, string | number>) => string;
+    mergeProcess: (params?: Record<string, string | number>) => string;
+    start:        (params?: Record<string, string | number>) => string;
+    systemName:   (params?: Record<string, string | number>) => string;
 }
 
 export interface Storage {

@@ -51,14 +51,14 @@ export class NxThemeService {
             this.themeSelected = 'auto';
         }
 
-        this.setTheme(this.themeSelected, loginState);
+        await this.setTheme(this.themeSelected, loginState);
     }
 
     getTheme(): string {
         return this.themeSelected;
     }
 
-    setTheme(themeSelected: string, username:string): void {
+    async setTheme(themeSelected: string, username:string): Promise<void> {
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
 
         if (
@@ -85,8 +85,9 @@ export class NxThemeService {
         }
 
         username &&
+        username !== 'setup' &&
         this.userTheme !== themeSelected &&
-        this.cloudApi.saveCustomAccountProperty(
+        await this.cloudApi.saveCustomAccountProperty(
             { theme: themeSelected },
             'theme',
             username

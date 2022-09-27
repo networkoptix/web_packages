@@ -96,7 +96,7 @@ export interface BaseConfig {
     trialLicenseKey: string;
     licenseDeactivations: number,
     pushConfig: {};
-    testedOperatingSystems: {};
+    testedOperatingSystems: Record<string, string>;
     trafficRelayHost: string;
     vmsName: string;
     accessRoles: AccessRoles;

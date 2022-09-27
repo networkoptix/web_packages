@@ -1,0 +1,17 @@
+<div class="state-container">
+    <div class="state-container--title"></div>
+    <div class="state-container--body">
+        <div class="wrapper">
+            <div
+                class="flex-row"
+                *ngFor="let setting of wizardService.systemSettings | as: stringBool | keyvalue"
+            >
+                <nx-checkbox
+                    [(ngModel)]="wizardService.systemSettings[setting.key]"
+                    [componentId]="setting.key"
+                ></nx-checkbox>
+                <label [for]="setting.key">{{ setting.key }}</label>
+            </div>
+        </div>
+    </div>
+</div>

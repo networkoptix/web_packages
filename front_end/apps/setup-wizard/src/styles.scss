@@ -1,0 +1,77 @@
+/* You can add global styles to this file, and also import other style files */
+@use "typography" as typography;
+@use "_theme_variables_common" as *;
+@use "buttons" as *;
+@use "css-variables/native-theme/theme_palette" as *;
+@import "theme_variables_light";
+@import "theme_variables_dark";
+@import "~@angular/cdk/overlay-prebuilt.css";
+
+a {
+    color: var(--brand-core) !important;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.card-wizard {
+    box-shadow : var(--popover-shadow-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 500px;
+    width: 470px;
+
+    .header {
+        position: absolute;
+        top: 75px;
+
+        h2 {
+            @include typography.regular30nocolor;
+            padding: 0 2rem;
+            text-align: center;
+        }
+    }
+
+    .body {
+        height: 55%;
+
+        .additional-action-link {
+            position: absolute;
+            bottom: 70px;
+        }
+
+        .wrapper {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        form {
+            width: 100%;
+        }
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 0 0 0.75rem;
+    }
+}
+
+.state-container {
+    height: 100%;
+    width: 250px;
+
+    & > div {
+        display        : flex;
+        flex-direction : column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &--title {
+        margin-bottom: 4rem;
+    }
+}

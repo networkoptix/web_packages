@@ -178,6 +178,7 @@ export interface ModuleInformationReply {
     cloudSystemId: string,
     customization: string,
     ecDbReadOnly: boolean,
+    flags?: IParams<boolean>,
     hardwareIds?: string[],
     hwPlatform: string,
     id: string,
@@ -269,6 +270,13 @@ interface Users {
     userRoleId: string
 }
 interface ec2GetUsers extends Array<Users> {}
+
+export interface UserSession {
+  username: string,
+  token: string,
+  ageS: number,
+  expiresInS: number
+}
 
 interface AggregatedUsersReply {
     'ec2/getPredefinedRoles': ec2PredefinedRoles,
@@ -581,6 +589,7 @@ interface DiscoveredPeersReply {
     cloudSystemId: string,
     customization: string,
     ecDbReadOnly: boolean,
+    flags?: IParams<boolean>,
     hwPlatform: string,
     id: string,
     localSystemId: string,
@@ -603,7 +612,7 @@ interface DiscoveredPeersReply {
     version: string
 }
 
-export interface DiscoveredPeers extends NormalResponse<DiscoveredPeersReply> {}
+export interface DiscoveredPeers extends NormalResponse<DiscoveredPeersReply[]> {}
 
 export interface MergeSystems extends NormalResponse<DiscoveredPeersReply> {}
 

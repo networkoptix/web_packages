@@ -133,7 +133,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         const config = {
             name: systemName,
-            settings: Object.entries(systemSettings).map(([name, value]) => ({ name, value })),
+            settings: systemSettings,
             local: {
                 password
             },
@@ -143,6 +143,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 owner
             }
         };
+        !cloudSystemID ? delete config.cloud : delete config.local;
         return this.post('/rest/v1/system/setup', config).toPromise();
     }
 
@@ -516,7 +517,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }));
     }
 
-    loginToken(username: string, password: string, remember: boolean): Observable<any> {
+    loginToken(username: string, password: string, remember: boolean): Observable<t.UserSession> {
         return this.post(
             '/rest/v1/login/sessions',
             { username, password, setCookie: remember }

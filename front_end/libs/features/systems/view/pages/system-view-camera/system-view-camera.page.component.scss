@@ -505,19 +505,19 @@ $border-color: var(--light6);
         -ms-user-select: none;       /* Internet Explorer/Edge */
         user-select: none;           /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 
-        playback-controls {
+        nx-playback-controls {
           flex-grow   : 0;
           flex-shrink : 0;
           z-index     : 12;
         }
 
-        zoom-controls {
+        nx-zoom-controls {
           flex-grow   : 0;
           flex-shrink : 0;
           z-index     : 12;
         }
 
-        timeline {
+        nx-timeline {
           flex-grow        : 1;
           border           : 1px solid var(--border-color);
           background-color : var(--timeline-bg);
@@ -540,7 +540,7 @@ $border-color: var(--light6);
           z-index          : 2;
         }
 
-        playback-state-indicator {
+        nx-playback-state-indicator {
           flex-grow   : 0;
           flex-shrink : 0;
           width       : 64px;

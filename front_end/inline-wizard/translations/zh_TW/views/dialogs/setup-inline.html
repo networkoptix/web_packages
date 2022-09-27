@@ -1,30 +1,30 @@
 <div class="panel-body text-center" ng-if="stepIs(0)">
     <div class="master-icon"><span class="preloader"></span></div>
     <div class="vertical-center">
-        <h2>Loading ...</h2>
+        <h2>讀取中...</h2>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot initialize System</h2>
+    <h2>無法初始化系統</h2>
     <p class="master-description">
-        Authorization failed.
+        驗證失敗。
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">再試一次</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot setup System</h2>
-    <p class="master-description">The System cannot be configured. <br>
+    <h2>無法設定系統</h2>
+    <p class="master-description">無法設定系統. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">再試一次</button>
     </p>
 </div>
 
@@ -34,28 +34,28 @@
         <p class="master-description">Please configure the server first.<br>
             Choose an option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
-        <button class="btn btn-primary" autofocus ng-click="next()">Setup New System</button>
+        <button class="btn btn-primary" autofocus ng-click="next()">設定新系統</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
-            <span class="text">or</span>
+            <span class="text">或</span>
             <span class="line"></span>
         </div>
-        <button class="btn btn-default" ng-click="skip()">Add to Existing System</button><br>
-        <small class="text">(if {{Config.productName}} has been already setup)</small><br>
+        <button class="btn btn-default" ng-click="skip()">加入到現有系統</button><br>
+        <small class="text">(如果 {{Config.productName}} 已設定)</small><br>
         <small ng-if="!settings.liteClient">&nbsp;</small>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>Enter System Name</h2>
+    <h2>輸入系統名稱</h2>
     <p class="master-description">
-        It will help to identify or find System.
+        這將有助於確認或找到系統。
     </p>
     <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
-                   placeholder="System name" required auto-focus>
+                   placeholder="系統名稱" required auto-focus>
         </div>
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
@@ -117,7 +117,7 @@
 
 
 <div class="panel-body text-center"  ng-if="stepIs('chooseCloudOrLocal')">
-    <h2>Choose System type</h2>
+    <h2>選擇系統類型</h2>
     <div class="row radio-panels">
         <div class="col-xs-6 radio-panel ">
             <div class="radio-panel-body"
@@ -125,10 +125,10 @@
                  ng-click="settings.chooseCloudSystem = false">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
-                <h3>Local</h3>
+                <h3>本地</h3>
                 <p>
-                    Works in local networks only<br>
-                    Does not require Internet connection
+                    只運作於內部網路<br>
+                    不需網路連線
                 </p>
             </div>
         </div>

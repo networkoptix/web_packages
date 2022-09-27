@@ -1,10 +1,11 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 2,
-  "newProjectRoot": "apps",
-  "projects": {
-    "front-end": "apps/front-end",
-    "webadmin": "apps/webadmin",
-    "authorization": "apps/authorization"
-  }
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 2,
+    "newProjectRoot": "apps",
+    "projects": {
+        "authorization": "apps/authorization",
+        "front-end": "apps/front-end",
+        "webadmin": "apps/webadmin",
+        "setup-wizard": "apps/setup-wizard"
+    }
 }

@@ -6,7 +6,7 @@ import {
     ViewChild,
     ElementRef,
     ViewContainerRef,
-    AfterViewInit
+    OnInit
 } from '@angular/core';
 import {
     ActivationEnd,
@@ -46,39 +46,41 @@ require('what-input');
 @Component({
     selector: 'nx-app',
     template: `
-        <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
-            <ng-template #header></ng-template>
-            <ng-template #ribbon></ng-template>
-        </div>
-        <div
-            class="outerContainer"
-            *ngIf="appStateService.ready || reauthorizing"
-            [ngStyle]="{ 'height': appStateService.appContainerHeight }"
-        >
-            <div
-                class="mainContainer"
-                [ngClass]="{ altMainBackground: appStateService.altBackground }"
-                nxScrollHelper
-                cdkScrollable
-                #mainContainer
-            >
-                <ng-template #cookieBanner></ng-template>
-                <router-outlet></router-outlet>
-                <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
+        <div *ngIf="themeSet" style="height: 100vh">
+            <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
+                <ng-template #header></ng-template>
+                <ng-template #ribbon></ng-template>
             </div>
-        </div>
-        <ng-container *ngIf="!reauthorizing">
-            <nx-pre-loader
-                type="page"
-                *ngIf="(!appStateService.ready && !newSystem) || loading"
-            ></nx-pre-loader>
-            <ng-template #appToast></ng-template>
-        </ng-container>`,
+            <div
+                class="outerContainer"
+                *ngIf="appStateService.ready || reauthorizing"
+                [ngStyle]="{ 'height': appStateService.appContainerHeight }"
+            >
+                <div
+                    class="mainContainer"
+                    [ngClass]="{ altMainBackground: appStateService.altBackground }"
+                    nxScrollHelper
+                    cdkScrollable
+                    #mainContainer
+                >
+                    <ng-template #cookieBanner></ng-template>
+                    <router-outlet></router-outlet>
+                    <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
+                </div>
+            </div>
+            <ng-container *ngIf="!reauthorizing">
+                <nx-pre-loader
+                    type="page"
+                    *ngIf="(!appStateService.ready && !newSystem) || loading"
+                ></nx-pre-loader>
+                <ng-template #appToast></ng-template>
+            </ng-container>
+        </div>`,
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
     // isInIframe: boolean;
@@ -87,6 +89,7 @@ export class AppComponent implements AfterViewInit {
     loading: boolean;
     reauthorizing: boolean;
     headerHeight: number;
+    themeSet: boolean = false;
 
     CONFIG: IConfig;
     readonly environment = environment;
@@ -142,18 +145,6 @@ export class AppComponent implements AfterViewInit {
         this.CONFIG = configService.getConfig();
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.newHeader = this.CONFIG.featureFlags.newHeader;
-
-        if (!this.CONFIG.browserNotSupported) {
-            if (environment.isLocal || this.appStateService.ready) {
-                this.lazyLoadHeader();
-            } else {
-                this.appStateService.readySubject.pipe(
-                    filter(ready => ready),
-                    take(1)
-                ).subscribe(() => this.lazyLoadHeader());
-            }
-            this.lazyLoadComponents();
-        }
 
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
@@ -370,9 +361,17 @@ export class AppComponent implements AfterViewInit {
                 const { innerHeight, innerWidth } = event.target as Window;
                 this.scrollMechanicsService.setWindowSize(innerHeight, innerWidth);
             });
+    }
 
+    ngOnInit(): void {
         if (this.CONFIG.featureFlags.themesEnabled) {
-            this.themeService.initTheme().then();
+            this.themeService.initTheme().then(() => {
+                this.themeSet = true;
+                setTimeout(() => {
+                    this.initComponents();
+                    this.initScroll();
+                });
+            });
         }
     }
 
@@ -392,16 +391,30 @@ export class AppComponent implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit(): void {
+    private initScroll(): void {
         fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe(untilDestroyed(this)).subscribe(() => {
             this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
         });
 
         this.scrollMechanicsService.windowScrollSubject.pipe(untilDestroyed(this)).subscribe(scroll => {
             const prevScroll = this.mainContainer.nativeElement.scrollTop;
-            if (prevScroll !== scroll) { // Only trigges on programatically set scroll
+            if (prevScroll !== scroll) { // Only triggers on programmatically set scroll
                 this.mainContainer.nativeElement.scrollTop = scroll;
             }
         });
+    }
+
+    private initComponents(): void {
+        if (!this.CONFIG.browserNotSupported) {
+            if (environment.isLocal || this.appStateService.ready) {
+                this.lazyLoadHeader();
+            } else {
+                this.appStateService.readySubject.pipe(
+                    filter(ready => ready),
+                    take(1)
+                ).subscribe(() => this.lazyLoadHeader());
+            }
+            this.lazyLoadComponents();
+        }
     }
 }

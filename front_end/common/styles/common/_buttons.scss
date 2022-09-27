@@ -94,6 +94,49 @@ button,
     }
 }
 
+.btn.btn-default-clear {
+    color            : var(--btn-default-color) !important;
+    background-color : var(--btn-clear-bg) !important;
+    //box-shadow       : var(--btn-default-shadow);
+    border: 1px solid var(--btn-default-bg);
+    font-family      : $font-family-medium;
+
+    &.svg-icon svg-icon svg .st0 {
+        fill   : var(--btn-default-color);
+        stroke : none;
+    }
+
+    &.has-icon {
+        position     : relative;
+        padding-left : 36px !important;
+
+        svg-icon {
+            position : absolute;
+            left     : 6px;
+
+            svg .st0 {
+                fill : var(--btn-default-color) !important;
+            }
+        }
+    }
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : var(--btn-default-hover-bg) !important;
+        box-shadow       : var(--btn-default-hover-shadow);
+    }
+
+    &:active,
+    &.active {
+        color : var(--btn-default-active-color) !important;
+        background-color : var(--btn-default-active-bg) !important;
+        box-shadow       : var(--btn-default-active-shadow) !important;
+
+        &.has-icon svg-icon svg .st0 {
+            fill : var(--btn-default-active-color) !important;
+        }
+    }
+}
+
 .btn.btn-dropdown-toggle {
     color: var(--btn-dropdown-toggle-color) !important;
     background-color: var(--btn-dropdown-toggle-bg);
@@ -353,6 +396,11 @@ button,
             .tag-close-icon {
                 margin: 0 !important;
             }
+        }
+
+        svg-icon svg g polyline.st0 {
+            stroke: var(--btn-tag-selected-color) !important;
+            fill: none;
         }
     }
 }

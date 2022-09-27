@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 
+import {
+    RecordsConfig
+} from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { TimelineService } from '../timeline.service';
 
-import { cfg } from './drawingConfigs/recordsDrawingConfig';
+import { NxDrawingConfigsService } from './drawingConfigs/drowingConfigs.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,12 +15,13 @@ import { cfg } from './drawingConfigs/recordsDrawingConfig';
 export class TimelineDebugCanvasRendererService {
     constructor(
         protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService
+        protected vms: VideoManagementSystemService,
+        private drawingConfigsService: NxDrawingConfigsService,
     ) {
     }
 
-    protected get cfg(): typeof cfg {
-        return cfg;
+    protected get cfg(): RecordsConfig {
+        return this.drawingConfigsService.recordsDrawingConfig;
     }
 
     public render(ctx: CanvasRenderingContext2D): void {

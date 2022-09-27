@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 
+import {
+    RecordsConfig
+} from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, ms } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from '../timeline.service';
 
-import { cfg } from './drawingConfigs/recordsDrawingConfig';
+import { NxDrawingConfigsService } from './drawingConfigs/drowingConfigs.service';
 import { stripeCfg } from './stripy-bar/cfg';
 import { getSlopeWidth } from './stripy-bar/slope';
 import { drawStripyBar } from './stripy-bar/stripy-bar';
@@ -16,12 +19,13 @@ import { drawStripyBar } from './stripy-bar/stripy-bar';
 export class TimelineRecordsCanvasRendererService {
     constructor(
         protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService
+        protected vms: VideoManagementSystemService,
+        private drawingConfigsService: NxDrawingConfigsService,
     ) {
     }
 
-    protected get cfg() {
-        return cfg;
+    protected get cfg(): RecordsConfig {
+        return this.drawingConfigsService.recordsDrawingConfig;
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
