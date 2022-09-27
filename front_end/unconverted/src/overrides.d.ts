@@ -11,11 +11,12 @@ declare global {
     class nativeClient {
         static cancelDialog(): void;
         static closeDialog(): void;
-        static getCredentials(): credentials;
-        static init(): Promise<void>;
-        static openUrlInBrowser(url: string): void;
         getCredentials(): credentials;
+        static init(): Promise<void>;
+        static twoFaVerified(code: string): void;
+        static openUrlInBrowser(url: string): void;
+        static setCode(code: string): void;
     }
 }
 
-export {};
+export { };

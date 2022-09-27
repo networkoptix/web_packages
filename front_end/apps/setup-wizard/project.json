@@ -142,7 +142,7 @@
             "options": {
                 "main": "apps/setup-wizard/src/test.ts",
                 "polyfills": "apps/setup-wizard/src/polyfills.ts",
-                "tsConfig": "apps/setup-wizard/tsconfig.spec.app.json",
+                "tsConfig": "apps/setup-wizard/tsconfig.spec.json",
                 "karmaConfig": "apps/setup-wizard/karma.conf.ci.js",
                 "codeCoverage": true,
                 "assets": [
@@ -160,8 +160,8 @@
                 "options": {
                     "eslintConfig": ".eslintrc.js",
                     "lintFilePatterns": [
-                        "**/*.ts",
-                        "**/*.component.html"
+                        "apps/setup-wizard/**/*.ts",
+                        "apps/setup-wizard/**/*.component.html"
                     ]
             }
         },

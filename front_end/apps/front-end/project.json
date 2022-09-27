@@ -186,8 +186,8 @@
             "options": {
                 "eslintConfig": "./.eslintrc.js",
                 "lintFilePatterns": [
-                    "**/*.ts",
-                    "**/*.component.html"
+                    "apps/front-end/**/*.ts",
+                    "apps/front-end/**/*.component.html"
                 ]
             }
         },

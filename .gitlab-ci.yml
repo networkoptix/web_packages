@@ -178,93 +178,75 @@ django-unit-test-fast:
     - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
     - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
 
-all-frontend-checks:
+other-frontend-checks:
   extends: .frontend-node
   stage: check
   artifacts:
     paths:
-      - logs/**/*
-    reports:
-      junit:
-        - front_end/reports/*/*.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: front_end/coverage/cobertura-coverage.xml
+      - ci-package-license.json
+    when: on_failure
   script:
-   - |
-    echo "Running all frontend checks"
-    log_folder="$PWD/logs"
-    status_codes=()
-    exit_code="0"
-
-    mkdir -p "$log_folder"
-
-    run_background_task() {
-        echo "Starting $2: $1"
-        $1 1> "$log_folder/$2.log" 2>&1 & status_codes+=("$2 exit code: $?")
-    }
-
-    # Start background tasks
-    echo "Starting tasks in the background"
-
-    run_background_task "npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true" "license_check"
-
-    pushd "ci"
-        run_background_task "./nx_mentions.sh" "nx_mentions"
-    popd
-
-    pushd "front_end"
-        run_background_task "npm run lang-ci-check" "lang_check"
-        run_background_task "npm run lint:ci" "lint_ci"
-        run_background_task "npm run test:ci" "test_ci"
-        run_background_task "npx nx run-many --target=build --all" "build_check"
+    - |
+      npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true
+      pushd "ci"
+        start_task "./nx_mentions.sh" "nx_mentions" &
+      popd
+      pushd "front_end"
         pushd "eslint-plugin-nx"
-            run_background_task "npm run build-check" "eslint_plugin_build_check"
-            run_background_task "npm run test" "eslint_plugin_test"
+          start_task "npm run build-check" "eslint_plugin_build_check" &
+          start_task "npm run test" "eslint_plugin_test" &
         popd
-    popd
+        npm run lang-ci-check
+      popd
 
-    echo "Waiting for background tasks to complete"
+frontend-lint:
+  extends: .frontend-node
+  stage: check
+  script:
+    - |
+      pushd "front_end"
+        npm run lint:ci
+      popd
 
-    wait
+frontend-builds:
+  extends: .frontend-node
+  stage: build
+  script:
+    - |
+      pushd "front_end"
+          npm run build:ci
+      popd
 
-    # Display results
-    for status in "${status_codes[@]}"; do
-      echo "$status"
+frontend-tests:
+  extends: .frontend-node
+  stage: test
+  allow_failure: true
+  script:
+    - |
+      pushd "front_end"
+        npm run test:ci
+      popd
 
-      code=${status##*:}
+      # TODO: Merge coverage
+      # pushd "front_end"
+      #   pushd "coverage"
+      #     merge_coverage_reports="npx -y cobertura-merge -o cobertura-coverage.xml"
 
-      if [ ! "$code" = ' 0' ]; then
-        exit_code="1"
-      fi
-    done
+      #     echo "merging coverage reports"
 
-    if [ ! "${#ArrayName[@]}" = "$(ls -1q "$log_folder"/*.log | wc -l | xargs)" ]; then
-      echo "Some task failed to start, check for missing logs."
-    fi
+      #     for coverage_file in **/cobertura-coverage.xml; do
+      #         dir="$(dirname $coverage_file)""
+      #         project=$(echo "$dir" | cut -d "/" -f1)
+      #         moved_coverage="$project.xml"
+      #         cp "$coverage_file" "$moved_coverage"
+      #         merge_coverage_reports+=" $project=$moved_coverage"
+      #     done
 
-    # TODO: Merge coverage
-    # pushd "front_end"
-    #   pushd "coverage"
-    #     merge_coverage_reports="npx -y cobertura-merge -o cobertura-coverage.xml"
+      #     eval "$merge_coverage_reports"
+      #   popd
+      # popd
 
-    #     echo "merging coverage reports"
-
-    #     for coverage_file in **/cobertura-coverage.xml; do
-    #         dir="$(dirname $coverage_file)""
-    #         project=$(echo "$dir" | cut -d "/" -f1)
-    #         moved_coverage="$project.xml"
-    #         cp "$coverage_file" "$moved_coverage"
-    #         merge_coverage_reports+=" $project=$moved_coverage"
-    #     done
-
-    #     eval "$merge_coverage_reports"
-    #   popd
-    # popd
-
-    exit "$exit_code"
-
-all-builds:
+jenkings-builds:
   extends: .frontend-changes
   stage: build
   image: nx/ci
@@ -351,13 +333,21 @@ wheel-uploader:
         - front_end/**/*
       when: on_failure
 
-on-all-frontend-checks:
+on-other-frontend-checks:
   extends: .fail-on-frontend
-  needs: ["all-frontend-checks"]
+  needs: ["other-frontend-checks"]
 
-on-all-builds:
+on-frontend-builds:
   extends: .fail-on-frontend
-  needs: ["all-builds"]
+  needs: ["frontend-builds"]
+
+on-frontend-tests:
+  extends: .fail-on-frontend
+  needs: ["frontend-tests"]
+
+on-jenkings-builds:
+  extends: .fail-on-frontend
+  needs: ["jenkings-builds"]
 
 on-django-checks:
   extends: .fail-on-backend

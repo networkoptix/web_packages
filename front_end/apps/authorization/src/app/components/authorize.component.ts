@@ -340,7 +340,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             code = params.get('code');
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
-        // undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
+        // @es-ignore undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
         if (link?.includes('redirect-oauth') || (this.window.nativeClient && !link)) {
             const { client_id, client_type, access_code, access_token } = this.initialData;
             if (this.window.nativeClient &&

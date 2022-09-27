@@ -214,8 +214,8 @@
       "options": {
         "eslintConfig": "./.eslintrc.js",
         "lintFilePatterns": [
-          "**/*.ts",
-          "**/*.component.html"
+          "apps/authorization/**/*.ts",
+          "apps/authorization/**/*.component.html"
         ]
       }
     },

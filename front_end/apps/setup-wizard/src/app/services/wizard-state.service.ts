@@ -635,7 +635,7 @@ export class WizardStateService {
     }
 
     // Local setup
-    private offlineErrorHandler = (_: unknown): void => {
+    private offlineErrorHandler = (): void => {
         // add local error
         this.currentState = WIZARD_STATE.LocalFailure;
     };

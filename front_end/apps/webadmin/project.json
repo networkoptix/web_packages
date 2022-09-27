@@ -164,8 +164,8 @@
             "options": {
                 "eslintConfig": "./.eslintrc.js",
                 "lintFilePatterns": [
-                    "**/*.ts",
-                    "**/*.component.html"
+                    "apps/webadmin/**/*.ts",
+                    "apps/webadmin/**/*.component.html"
                 ]
             }
         },
