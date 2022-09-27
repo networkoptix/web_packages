@@ -603,6 +603,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                         additionalLabel: getCameraIP(camera.url)
                     }));
+
+                camerasNode.level3 = camerasNode.level3.sort((a, b) => {
+                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                });
             } else {
                 camerasNode.level3 = [];
             }
