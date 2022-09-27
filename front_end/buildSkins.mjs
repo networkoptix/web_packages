@@ -7,7 +7,7 @@ import sass from 'sass';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dest = path.resolve(__dirname, process.argv[2] || 'src/styles');
+const dest = path.resolve(__dirname, process.argv[2] || 'common/styles');
 const skinPath = path.resolve(__dirname, '../skins');
 
 const buildSkin = color => {
