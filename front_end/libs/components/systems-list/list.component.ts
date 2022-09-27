@@ -25,7 +25,6 @@ import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
-import { htmlToEntity } from '@utils/general';
 
 type Endpoint = Partial<{
     ipvd: boolean;
@@ -119,12 +118,6 @@ export class NxSystemsListComponent implements OnInit {
                 }
 
                 this.hasOneSystem = this.systems.length === 1 && this.systems[0].stateOfHealth !== 'offline';
-
-                this.systems.map(system => ({
-                    ...system,
-                    // avoid html being interpreted
-                    name: htmlToEntity(system.name)
-                }));
 
                 if (this.location.path().startsWith(this.base)) {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be

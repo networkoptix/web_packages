@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { TagModule } from '@components/tag/tag.module';
 
 import { SystemCardComponent } from './system-card.component';
@@ -14,7 +14,7 @@ import { SystemCardComponent } from './system-card.component';
         ComponentsCoreModule,
         ClientButtonModule,
         TagModule,
-        PipesModule,
+        NxSearchHighlightModule,
     ],
     declarations: [
         SystemCardComponent,

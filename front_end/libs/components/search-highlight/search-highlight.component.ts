@@ -23,6 +23,7 @@ import type { NgChanges } from '@utils/ng-changes';
 export class NxSearchHighlightComponent implements OnChanges {
     @Input() text: string;
     @Input() search: string | RegExp;
+    @Input() flags: string = 'i';
 
     subStrings: string[] = [];
 
@@ -30,9 +31,10 @@ export class NxSearchHighlightComponent implements OnChanges {
         return index;
     }
 
-    ngOnChanges({ text, search }: NgChanges<NxSearchHighlightComponent>): void {
+    ngOnChanges({ text, search, flags }: NgChanges<NxSearchHighlightComponent>): void {
         const textValue = text ? text.currentValue : this.text;
         const searchValue = search ? search.currentValue : this.search;
+        const flagsValue = flags ? flags.currentValue : this.flags;
         // Use current value when only one changes
 
         if (!textValue || !searchValue) {
@@ -41,7 +43,7 @@ export class NxSearchHighlightComponent implements OnChanges {
 
         this.subStrings = textValue.split(
             typeof searchValue === 'string'
-                ? new RegExp(`(${escapeRegExp(searchValue)})`)
+                ? new RegExp(`(${escapeRegExp(searchValue)})`, flagsValue)
                 : searchValue
         );
     }

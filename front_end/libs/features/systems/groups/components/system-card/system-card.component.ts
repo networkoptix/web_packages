@@ -102,25 +102,25 @@ export class NxSystemCardComponent implements OnInit {
             });
     }
 
-    getSystemOwnerName(): string {
+    get getSystemOwnerName(): string {
         return this.systemsService.getSystemOwnerName(
             this.system,
             this.account?.email
         );
     }
 
-    canShowTag(): boolean {
+    get canShowTag(): boolean {
         return this.system.stateOfHealth !== this.CONFIG.system.status.online &&
             !!this.LANG.systemStatuses;
     }
 
-    canShowButton(): boolean {
+    get canShowButton(): boolean {
         return this.LANG.system &&
             this.system.stateOfHealth === this.CONFIG.system.status.online &&
-            !this.needToConfigureTwoFactor();
+            !this.needToConfigureTwoFactor;
     }
 
-    needToConfigureTwoFactor(): boolean {
+    get needToConfigureTwoFactor(): boolean {
         return this.system.system2faEnabled && !this.account?.sessionVerified;
     }
 

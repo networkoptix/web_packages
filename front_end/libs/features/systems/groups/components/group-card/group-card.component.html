@@ -3,10 +3,12 @@
         class="card-body"
         (click)="openGroup()"
     >
-        <h2
-            class="old-h12 d-block"
-            [innerHTML]="group.name | unsafe | highlight: search"
-        ></h2>
+        <h2 class="old-h12 d-block">
+            <nx-search-highlight
+                [text]="group.name"
+                [search]="search"
+            ></nx-search-highlight>
+        </h2>
         <div class="system-list-bottom-bar">
             <span class="user-name">{{
                 LANG.systemGroups.groupCount({ count: group.groups.length })

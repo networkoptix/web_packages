@@ -3,28 +3,32 @@
         class="card-body"
         (click)="openSystem()"
     >
-        <h2
-            class="old-h12 d-block"
-            [innerHTML]="system.name | unsafe | highlight: search"
-        ></h2>
-        <span
-            class="system-owner user-name"
-            [innerHTML]="getSystemOwnerName() | unsafe | highlight: search"
-        ></span>
+        <h2 class="old-h12 d-block">
+            <nx-search-highlight
+                [text]="system.name"
+                [search]="search"
+            ></nx-search-highlight>
+        </h2>
+        <span class="system-owner user-name">
+            <nx-search-highlight
+                [text]="getSystemOwnerName"
+                [search]="search"
+            ></nx-search-highlight>
+        </span>
         <div class="system-list-bottom-bar">
             <div class="system-status">
                 <nx-tag
                     [clickable]="false"
                     [type]="tagType"
-                    *ngIf="canShowTag()"
+                    *ngIf="canShowTag"
                 >
                     <ng-container>{{ systemState }}</ng-container>
                 </nx-tag>
                 <svg-icon
                     [ngClass]="{
-                        'margin-system-list-status': canShowTag()
+                        'margin-system-list-status': canShowTag
                     }"
-                    *ngIf="needToConfigureTwoFactor()"
+                    *ngIf="needToConfigureTwoFactor"
                     nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'lock.svg'"
                     [svgStyle]="{ 'height.px': '20' }"
