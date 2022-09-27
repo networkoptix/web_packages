@@ -3,7 +3,6 @@
     "include": [
         "./src/main.ts",
         "./src/polyfills.ts",
-        "./src/**/*.d.ts",
-        "src/overrides.d.ts"
+        "./src/**/*.d.ts"
     ]
 }

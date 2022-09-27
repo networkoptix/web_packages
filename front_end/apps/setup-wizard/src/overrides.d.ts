@@ -5,7 +5,7 @@ interface credentials {
 
 declare global {
     interface Window {
-        nativeClient: nativeClient;
+        nativeClient: typeof nativeClient;
     }
 
     class nativeClient {
@@ -14,7 +14,6 @@ declare global {
         static getCredentials(): credentials;
         static init(): Promise<void>;
         static openUrlInBrowser(url: string): void;
-        getCredentials(): credentials;
     }
 }
 
