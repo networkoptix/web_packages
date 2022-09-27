@@ -572,7 +572,7 @@ module.exports = {
         },
         {
             /* Allow top-down organization in types files */
-            files: ['*types.ts', '**/nx-config/base-config.ts'],
+            files: ['*types.ts', '*.d.ts', '**/nx-config/base-config.ts'],
             rules: {
                 '@typescript-eslint/no-use-before-define': ['error', {
                     enums: true,

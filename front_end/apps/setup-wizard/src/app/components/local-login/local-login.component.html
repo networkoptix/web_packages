@@ -1,0 +1,52 @@
+<div class="state-container">
+    <div class="state-container--title"></div>
+    <div class="state-container--body">
+        <form
+            name="setAdminPasswordForm"
+            #setAdminPasswordForm="ngForm"
+        >
+            <div class="form-group">
+                <input
+                    id="adminName"
+                    name="adminName"
+                    class="form-control"
+                    value="admin"
+                    readonly
+                    disabled
+                />
+            </div>
+            <div class="form-group">
+                <nx-password-input
+                    name="createPassword"
+                    componentId="createPassword"
+                    class="form-component"
+                    [(ngModel)]="password"
+                    [placeholder]="'Password' | translate"
+                    [component]="createPassword"
+                    [form]="setAdminPasswordForm"
+                    #createPassword="ngModel"
+                ></nx-password-input>
+            </div>
+            <div class="form-group">
+                <nx-password-input
+                    name="confirmedPassword"
+                    componentId="confirmedPassword"
+                    class="form-component"
+                    [(ngModel)]="confirmedPassword"
+                    [placeholder]="'Repeat Password' | translate"
+                    [component]="confirmedPasswordModel"
+                    [form]="setAdminPasswordForm"
+                    #confirmedPasswordModel="ngModel"
+                ></nx-password-input>
+                <nx-password-input-validation
+                    [forElement]="createPassword"
+                    [value]="password"
+                >
+                </nx-password-input-validation>
+            </div>
+        </form>
+        <!--    <div translate>-->
+        <!--        Password must contain different types of characters and have at least 8 symbols-->
+        <!--    </div>-->
+    </div>
+</div>

@@ -526,46 +526,6 @@ export class NxSystemAPI {
             });
     }
 
-    async getSystemCloudInfo() {
-        const {
-            cloudSystemID,
-            cloudAccountName
-        } = await this.getSystemSettings();
-        return { cloudSystemID, cloudAccountName };
-    }
-
-    setupCloudSystem(
-        systemName: string,
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-        systemSettings: t.SystemConfigSettings
-    ) {
-        return this.post('/api/setupCloudSystem', {
-            systemName,
-            cloudSystemID,
-            cloudAuthKey,
-            cloudAccountName,
-            systemSettings: Object.entries(
-                systemSettings
-            ).map(([name, value]) => ({ name, value }))
-        }).toPromise();
-    }
-
-    setupLocalSystem(
-        systemName: string,
-        password: string,
-        systemSettings: t.SystemConfigSettings
-    ) {
-        return this.post('/api/setupLocalSystem', {
-            systemName,
-            password,
-            systemSettings: Object.entries(
-                systemSettings
-            ).map(([name, value]) => ({ name, value }))
-        }).toPromise();
-    }
-
     changeSystemName(systemName: string) {
         return this.updateOrGetSettings({ systemName }).toPromise();
     }
@@ -1339,8 +1299,8 @@ export class NxSystemAPI {
     }
 
     /** Merge Systems */
-    getPeerSystems(showAddresses = true) {
-        return this.get<t.DiscoveredPeers>('/api/discoveredPeers', {
+    getPeerSystems(showAddresses = true): Observable<t.DiscoveredPeers> {
+        return this.get('/api/discoveredPeers', {
             showAddresses
         });
     }
@@ -1463,6 +1423,10 @@ export class NxSystemAPI {
     }
 
     updateLogLevel(logLevel: unknown): Observable<unknown> {
+        throw new Error('should only be using rest v2 version');
+    }
+
+    wizardGetSystemSettings(): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
     }
 }

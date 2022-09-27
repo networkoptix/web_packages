@@ -1,5 +1,7 @@
 import type { Params, GetStorages } from '../system-api.types';
 
+export interface AddResponseTypeHere extends IParams {}
+
 export interface IParams<Value = any> {
     [key: string]: Value;
 }

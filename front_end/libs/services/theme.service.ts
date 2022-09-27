@@ -85,6 +85,7 @@ export class NxThemeService {
         }
 
         username &&
+        username !== 'setup' &&
         this.userTheme !== themeSelected &&
         this.cloudApi.saveCustomAccountProperty(
             { theme: themeSelected },

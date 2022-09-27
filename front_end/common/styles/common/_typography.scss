@@ -282,6 +282,10 @@ p {
     @include font-source($font-family-regular, $font-size-xlg, false, 400);
 }
 
+@mixin regular30nocolor {
+    @include font-source($font-family-regular, $font-size-30, false, 400);
+}
+
 // REGULAR
 
 // MEDIUM

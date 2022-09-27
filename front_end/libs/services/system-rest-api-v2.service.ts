@@ -13,6 +13,7 @@ import * as t from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
+import { SettingsConfig } from '@services/nx-config/base-config';
 
 interface CustomFilter {
     filter?: string;
@@ -161,6 +162,10 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             }), {});
         return this.patch<LogLevelV2Response>('/rest/v2/servers/this/logSettings', parsedLogLevels)
             .pipe(map(this.parseLogData));
+    }
+    // Setup wizard calls
+    wizardGetSystemSettings(): Observable<SettingsConfig> {
+        return this.get('/rest/v1/system/settings');
     }
 
     // Servers

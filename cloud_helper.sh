@@ -226,6 +226,22 @@ function build_webadmin_locally() {
     popd
 }
 
+# Temporary for build testing
+function build_webadmin_locally_improved() {
+    BUILD_DIR=~/Desktop/build
+    REPO=$PWD
+
+    export IS_LOCAL=true
+    [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
+
+    [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    cp webadmin/apply_customization_new.py $BUILD_DIR
+    pushd $BUILD_DIR
+        . "$REPO/webadmin/build_new.sh"
+        ./apply_customization_new.py
+    popd
+}
+
 function local_build() {
     VERSION=$1
     PORTS="$2"
@@ -415,6 +431,9 @@ do
             ;;
         build_local_webadmin)
             build_webadmin_locally
+            ;;
+        build_local_webadmin_improved)
+            build_webadmin_locally_improved
             ;;
         build_local_vms)
             VERSION=$2

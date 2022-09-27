@@ -1,0 +1,39 @@
+<div class="state-container">
+    <div
+        class="state-container--title"
+        translate
+    >
+        It will help to identify or find System.
+    </div>
+    <div class="state-container--body">
+        <form
+            #systemNameForm="ngForm"
+            name="systemNameForm"
+            novalidate
+        >
+            <input
+                #currentName="ngModel"
+                id="currentName"
+                name="currentName"
+                class="form-control"
+                [(ngModel)]="systemName"
+                required
+            />
+            <div style="height: 16px; margin-top: 4px">
+                <div
+                    class="input-error"
+                    *ngIf="currentName.errors?.required"
+                    translate
+                >
+                    System name is required
+                </div>
+            </div>
+        </form>
+        <a
+            class="additional-action-link"
+            (click)="advancedSettings()"
+            translate
+            >Advanced system settings</a
+        >
+    </div>
+</div>

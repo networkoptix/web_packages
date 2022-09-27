@@ -29,20 +29,19 @@ rsync -a $SOURCE_DIR/../skins .
 rsync -a $SOURCE_DIR/../translations .
 rsync -a $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --exclude dist --exclude .idea
 
-#if [ $IS_LOCAL ]
-#then
-    echo -e "\npip install requirements"
-    [ ! -d "env" ] && python3 -m venv env
-    . ./env/bin/activate
-    pip install -r build_scripts/requirements.txt
+# Setup environment for dependencies
+echo -e "\npip install requirements"
+[ ! -d "env" ] && python3 -m venv env
+. ./env/bin/activate
+pip install -r build_scripts/requirements.txt
 
-    echo -e "\nRunning nodeenv..."
-    [ -e nenv ] && rm -rf nenv
-    nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
-    . ./nenv/bin/activate
-    echo "Active Node.js: " && node -v
-    echo "Active npm: " && npm -v
-#fi
+echo -e "\nRunning nodeenv..."
+[ -e nenv ] && rm -rf nenv
+nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
+. ./nenv/bin/activate
+echo "Active Node.js: " && node -v
+echo "Active npm: " && npm -v
+
 
 pushd front_end
 # Install dependencies.

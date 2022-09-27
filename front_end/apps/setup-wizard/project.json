@@ -1,0 +1,181 @@
+{
+    "projectType": "application",
+    "schematics": {
+        "@schematics/angular:component": {
+            "style": "scss"
+        }
+    },
+    "root": "apps/front-end",
+    "sourceRoot": "apps/setup-wizard/src",
+    "prefix": "app",
+    "architect": {
+        "build": {
+            "builder": "@angular-devkit/build-angular:browser",
+            "options": {
+                "outputPath": "dist/setup-wizard",
+                "index": "apps/setup-wizard/src/index.html",
+                "main": "apps/setup-wizard/src/main.ts",
+                "polyfills": "apps/setup-wizard/src/polyfills.ts",
+                "tsConfig": "apps/setup-wizard/tsconfig.app.json",
+                "aot": true,
+                "assets": [
+                    "apps/setup-wizard/src/favicon.ico",
+                    "apps/setup-wizard/src/assets",
+                    "apps/setup-wizard/src/images"
+                ],
+                "styles": [
+                    "common/styles/main.scss",
+                    "apps/setup-wizard/src/styles.scss"
+                ],
+                "stylePreprocessorOptions": {
+                    "includePaths": [
+                        "node_modules/",
+                        "common/styles",
+                        "common/styles/common",
+                        "libs"
+                    ]
+                },
+                "scripts": [],
+                "vendorChunk": true,
+                "extractLicenses": false,
+                "buildOptimizer": false,
+                "sourceMap": {
+                    "scripts": true,
+                    "styles": true,
+                    "vendor": false
+                },
+                "optimization": false,
+                "namedChunks": true
+            },
+            "configurations": {
+                "production": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "apps/setup-wizard/src/environments/environment.ts"
+                        },
+                        {
+                            "replace": "apps/setup-wizard/src/environments/environment.ts",
+                            "with": "apps/setup-wizard/src/environments/environment.prod.ts"
+                        }
+                    ],
+                    "index": {
+                        "input": "src/index.html",
+                        "output": "inline.html"
+                    },
+                    "baseHref": "static/",
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "2mb",
+                            "maximumError": "5mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb",
+                            "maximumError": "10kb"
+                        }
+                    ]
+                },
+                "development": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "apps/setup-wizard/src/environments/environment.ts"
+                        }
+                    ],
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "namedChunks": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": false,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "1mb",
+                            "maximumError": "3mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "20kb",
+                            "maximumError": "28kb"
+                        }
+                    ]
+                }
+            }
+        },
+        "serve": {
+            "builder": "@angular-devkit/build-angular:dev-server",
+            "options": {
+                "browserTarget": "setup-wizard:build",
+                "host": "0.0.0.0",
+                "port": 9003,
+                "sslKey": "ssl_keys/server.key",
+                "sslCert": "ssl_keys/server.crt",
+                "ssl": true
+            },
+            "configurations": {
+                "production": {
+                    "browserTarget": "setup-wizard:build:production"
+                },
+                "development": {
+                    "browserTarget": "setup-wizard:build:development"
+                }
+            }
+        },
+        "extract-i18n": {
+            "builder": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+                "browserTarget": "setup-wizard:build"
+            }
+        },
+        "test": {
+            "builder": "@angular-devkit/build-angular:karma",
+            "options": {
+                "main": "apps/setup-wizard/src/test.ts",
+                "polyfills": "apps/setup-wizard/src/polyfills.ts",
+                "tsConfig": "apps/setup-wizard/tsconfig.spec.app.json",
+                "karmaConfig": "apps/setup-wizard/karma.conf.ci.js",
+                "codeCoverage": true,
+                "assets": [
+                    "apps/setup-wizard/src/favicon.ico",
+                    "apps/setup-wizard/src/assets"
+                ],
+                "styles": [
+                    "apps/setup-wizard/src/styles.scss"
+                ],
+                "scripts": []
+            }
+        },
+        "lint": {
+            "builder": "@nrwl/linter:eslint",
+                "options": {
+                    "eslintConfig": ".eslintrc.js",
+                    "lintFilePatterns": [
+                        "**/*.ts",
+                        "**/*.component.html"
+                    ]
+            }
+        },
+        "e2e": {
+            "builder": "@angular-devkit/build-angular:protractor",
+            "options": {
+                "protractorConfig": "apps/setup-wizard/e2e/protractor.conf.js",
+                "devServerTarget": "setup-wizard:serve"
+            },
+            "configurations": {
+                "production": {
+                    "devServerTarget": "setup-wizard:serve:production"
+                }
+            }
+        }
+    }
+}

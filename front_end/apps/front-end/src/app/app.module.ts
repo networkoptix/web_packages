@@ -54,6 +54,7 @@ import { WINDOWS_PROVIDERS } from '@services/window-provider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -93,7 +94,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,
-        NgxMaskModule.forRoot()
+        NgxMaskModule.forRoot(),
+        LoginWebadminModule
     ],
     providers: [
         Location,
