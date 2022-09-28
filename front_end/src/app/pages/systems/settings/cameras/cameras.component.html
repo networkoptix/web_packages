@@ -486,27 +486,24 @@
                                     for it. Hold Shift key to make complex shape selection.</span
                                 >
                                 <ng-container *ngIf="sensitivityButtons !== false">
-                                    <div
+                                    <form
                                         class="btn-toolbar btn-group-toggle"
-                                        ngbRadioGroup
-                                        name="radioBasic"
-                                        [(ngModel)]="sensitivityButtons"
+                                        [formGroup]="sensitivity"
                                     >
                                         <label
                                             *ngFor="let _ of sensitivityColors; let i = index"
-                                            ngbButtonLabel
                                             class="btn-secondary mr-2 sensitivity-buttons"
                                             [id]="'sensitivity-' + i + '-button'"
                                             [ngClass]="'button-' + i"
                                         >
                                             <input
-                                                ngbButton
                                                 type="radio"
+                                                formControlName="current"
                                                 [value]="i"
                                             />
                                             {{ i }}
                                         </label>
-                                    </div>
+                                    </form>
                                     <button
                                         class="btn btn-default"
                                         (click)="resetSensitivity()"

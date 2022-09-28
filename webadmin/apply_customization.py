@@ -145,12 +145,15 @@ def check_if_update_required(webadmin_package, customization_package, output_pac
             ZipFile(webadmin_package) as webadmin_zip, \
             ZipFile(output_package) as output_zip:
 
-        if customization_zip.read("description.json") \
-                != output_zip.read("static/customization/description.json"):
-            return True
+        try:
+            if customization_zip.read("description.json") \
+                    != output_zip.read("static/customization/description.json"):
+                return True
 
-        if webadmin_zip.read("static/version.txt") \
-                != output_zip.read("static/version.txt"):
+            if webadmin_zip.read("static/version.txt") \
+                    != output_zip.read("static/version.txt"):
+                return True
+        except KeyError:
             return True
 
     return False

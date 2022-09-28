@@ -15,8 +15,7 @@ import {
     of,
     timer,
     Subscription,
-    Observable,
-    throwError,
+    Observable
 } from 'rxjs';
 import {
     map,
@@ -543,11 +542,11 @@ export class NxSystemStorageComponent implements OnInit {
         const onlineStorages = this.currentStorageState.locations.filter(({
             isOnline, mode, status, storageId
         }) => isOnline &&
-            reindexMode === mode &&
-            ![
-                STORAGE_STATUS.BEING_CHECKED,
-                STORAGE_STATUS.INACCESSIBLE
-            ].includes(status) &&
+        reindexMode === mode &&
+        ![
+            STORAGE_STATUS.BEING_CHECKED,
+            STORAGE_STATUS.INACCESSIBLE
+        ].includes(status) &&
             !this.updatingModes.includes(storageId)
         ).length;
         return noStorages || !onlineStorages;
@@ -845,7 +844,7 @@ export class NxSystemStorageComponent implements OnInit {
                         this.reindexingBackup = true;
                         this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
                     }
-                    throwError(res);
+                    throw Object.assign(new Error(), res);
                 })
             )
         ).pipe(
