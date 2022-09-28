@@ -16,7 +16,6 @@ import {
     timer,
     Subscription,
     Observable,
-    throwError,
 } from 'rxjs';
 import {
     map,
@@ -845,7 +844,7 @@ export class NxSystemStorageComponent implements OnInit {
                         this.reindexingBackup = true;
                         this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
                     }
-                    throwError(res);
+                    throw Object.assign(new Error(), res);
                 })
             )
         ).pipe(
