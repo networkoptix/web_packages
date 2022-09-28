@@ -1,10 +1,12 @@
 import { Overlay } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import {
     ComponentFactoryResolver,
     ComponentRef,
     Injectable,
     Injector,
-    ViewContainerRef
+    ViewContainerRef,
+    Inject,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -85,6 +87,7 @@ export class NxApplyService extends DialogBase {
         injector: Injector,
         private factoryResolver: ComponentFactoryResolver,
         private processService: NxProcessService,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         super(overlay, injector);
     }
@@ -483,8 +486,8 @@ export class NxApplyService extends DialogBase {
         form: NgForm
     ) {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
-        if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
+        if (this.document.activeElement instanceof HTMLElement) {
+            this.document.activeElement.blur();
         }
 
         // when using FormWatchers

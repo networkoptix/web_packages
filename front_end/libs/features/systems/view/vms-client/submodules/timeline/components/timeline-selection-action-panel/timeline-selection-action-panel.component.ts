@@ -1,8 +1,12 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnInit,
     ElementRef,
-    AfterViewInit, TemplateRef, ViewContainerRef
+    AfterViewInit,
+    TemplateRef,
+    ViewContainerRef,
+    Inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -53,6 +57,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         protected dialogs: NxDialogsService,
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -99,13 +104,13 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             ? this.system.getExportUrl(this.selection.exportUrlParams)
             : '';
 
-        const e = document.createElement('a');
+        const e = this.document.createElement('a');
         const href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(this.export);
         e.setAttribute('href', href);
         e.setAttribute('download', `${this.selection.cameraId}.${transport}`);
-        document.body.appendChild(e);
+        this.document.body.appendChild(e);
         e.click();
-        document.body.removeChild(e);
+        this.document.body.removeChild(e);
     }
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {

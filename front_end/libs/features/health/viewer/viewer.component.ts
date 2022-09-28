@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     Inject,
@@ -72,6 +73,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         private headerService: NxHeaderService,
         public healthService: NxHealthService,
         @Inject(WINDOW) private window: Window,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -153,7 +155,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     setHeaderHeight(): void {
         this.headerHeight =
-            document.getElementsByClassName('headerContainer')[0].scrollHeight;
+            this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {

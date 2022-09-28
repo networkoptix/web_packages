@@ -384,7 +384,10 @@ module.exports = {
             rules: {
                 'no-undef': 'off', // TS incompatible
 
-                'nx/no-global-window': 'error',
+                'nx/ban-global-variables': ['error', [
+                    'window',
+                    'document',
+                ]],
                 'no-useless-constructor': 'off',
                 'nx/no-useless-constructor': 'error',
                 'nx/only-export-injectable': 'error',

@@ -146,7 +146,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         // this.fpsMeter.install()
         // @ts-expect-error
-        document.fpsMeter = this.fpsMeter;
+        this.document.fpsMeter = this.fpsMeter;
         // allows calling document.fpsMeter.install() from the developer console, if needed
 
         this.ux.isFullScreen = !!fullscreen.getElement();
@@ -800,7 +800,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.$self.classList.add('is-full-screen');
             }, 250);
         } else {
-            fullscreen.exit().call(document);
+            fullscreen.exit().call(this.document);
             setTimeout(() => {
                 this.$self.classList.remove('is-full-screen');
             }, 250);

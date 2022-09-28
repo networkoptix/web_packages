@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     Inject,
@@ -78,7 +79,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private sourceService: NxAppSourceService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -225,7 +227,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     setHeaderHeight(): void {
         this.headerHeight =
-            document.getElementsByClassName('headerContainer')[0].scrollHeight;
+            this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {

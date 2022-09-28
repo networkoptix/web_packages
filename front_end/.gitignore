@@ -3,7 +3,7 @@ node_modules**
 .angular**
 
 node_modules
-dist
+./dist
 config.json
 .tmp
 .idea

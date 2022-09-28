@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -111,7 +112,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         if (
             // Mobile Chrome doesn't use "code" ... maybe some others -- TT
             ['Enter', 'NumpadEnter'].includes(event.code || event.key) &&
-            document.activeElement.tagName === 'INPUT'
+            this.document.activeElement.tagName === 'INPUT'
         ) {
             const processButton = this.elem.nativeElement
                 .querySelector<HTMLButtonElement>('.on-keypress-enter');
@@ -174,6 +175,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;

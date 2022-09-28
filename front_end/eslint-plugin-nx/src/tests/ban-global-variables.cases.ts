@@ -87,6 +87,12 @@ class Foo {
         }
     }
 }`;
+export const success12 = `
+class Foo {
+    bar() {
+        const href = document.location.href;
+    }
+}`;
 
 export const fail1a = `
 class Foo {

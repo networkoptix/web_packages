@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -65,7 +65,8 @@ export class DownloadComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private pageService: NxPageService,
-        @Inject(PLATFORM_ID) private platformId: object
+        @Inject(PLATFORM_ID) private platformId: object,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -131,7 +132,7 @@ export class DownloadComponent implements OnInit {
                 if (os === this.activeOs) {
                     const link = this.LANG.downloads.mobile[name].link();
                     if (link !== 'disabled') {
-                        document.location.href = link;
+                        this.document.location.href = link;
                         return;
                     }
                     break;

@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnDestroy,
@@ -136,7 +137,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private menusService: NxMenusService,
         @Inject(WINDOW) private window: Window,
         private bootstrapProvider: NxBootstrapProvider,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -362,8 +364,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.userEmail = loginState;
                     this.dropdownsVisible = true;
                     this.loginState = true;
-                    this.renderer.removeClass(document.body, 'anonymous');
-                    this.renderer.addClass(document.body, 'authorized');
+                    this.renderer.removeClass(this.document.body, 'anonymous');
+                    this.renderer.addClass(this.document.body, 'authorized');
                     if (!this.environment.isLocal) {
                         setTimeout(() => {
                             this.systemsService
@@ -374,10 +376,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     this.loginState = false;
-                    this.renderer.removeClass(document.body, 'authorized');
-                    this.renderer.addClass(document.body, 'anonymous');
+                    this.renderer.removeClass(this.document.body, 'authorized');
+                    this.renderer.addClass(this.document.body, 'anonymous');
                 }
-                setTimeout(() => this.renderer.removeClass(document.body, 'loading'));
+                setTimeout(() => this.renderer.removeClass(this.document.body, 'loading'));
             });
 
         if (this.environment.isLocal) {

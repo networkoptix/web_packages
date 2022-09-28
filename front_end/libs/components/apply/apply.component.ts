@@ -1,9 +1,11 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     forwardRef,
     Input,
     HostListener,
-    ViewChild
+    ViewChild,
+    Inject
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 
@@ -47,15 +49,15 @@ export class NxApplyComponent {
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (
             event.key === 'Enter' &&
-            document.activeElement.tagName === 'INPUT' &&
+            this.document.activeElement.tagName === 'INPUT' &&
             this.processButton &&
-            !document.querySelector('.modal') // Modal is active
+            !this.document.querySelector('.modal') // Modal is active
         ) {
             this.processButton.checkForm();
         }
     }
 
-    constructor() {
+    constructor(@Inject(DOCUMENT) private document: Document) {
         this._disabled = false;
     }
 

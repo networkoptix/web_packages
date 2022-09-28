@@ -1,5 +1,5 @@
 /**
- * @fileoverview Disallow use of global window in classes.
+ * @fileoverview Disallow specific global variables in classes.
  *
  * @author Andrew Wu
  */
@@ -12,25 +12,35 @@ import { createRule, decoratorHasCall, decoratorName, Decorator } from './utils'
 // Helpers
 // ----------------------------------------------------------------------------
 
-function hasInjectedWindow(param: TSESTree.TSParameterProperty): boolean {
+function hasInjectionToken(
+    param: TSESTree.TSParameterProperty,
+    propName: string
+): boolean {
     return param.decorators?.some((d: Decorator) =>
         decoratorHasCall(d) &&
         decoratorName(d) === 'Inject' &&
         d.expression.arguments[0]?.type === AST_NODE_TYPES.Identifier &&
-        d.expression.arguments[0].name === 'WINDOW'
+        d.expression.arguments[0].name === propName.toUpperCase()
+        // window => WINDOW, document => DOCUMENT
     );
 }
 
-/** Checks for `@Inject(WINDOW) window` (does not check accessibility or type) */
-function hasInjectedWindowProp(classBody: TSESTree.ClassBody): boolean {
+/** Checks for `@Inject(VARIABLE) variable`.
+ *
+ * Does not check accessibility or type.
+ */
+function hasInjectedProp(
+    classBody: TSESTree.ClassBody,
+    propName: string,
+): boolean {
     return classBody.body.some(b =>
         b.type === AST_NODE_TYPES.MethodDefinition &&
         b.kind === 'constructor' &&
         b.value.params.some(p => {
             return p.type === AST_NODE_TYPES.TSParameterProperty &&
             p.parameter.type === AST_NODE_TYPES.Identifier &&
-            p.parameter.name === 'window' &&
-            hasInjectedWindow(p);
+            p.parameter.name === propName &&
+            hasInjectionToken(p, propName);
         })
     );
 }
@@ -42,18 +52,29 @@ function hasInjectedWindowProp(classBody: TSESTree.ClassBody): boolean {
 export = createRule({
     meta: {
         type: 'problem',
-        schema: [],
+        schema: [{
+            title: 'Banned variables names',
+            description: 'Variables which should not be accessed globally',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        }],
         messages: {
-            globalWindow: 'Do not use global window',
+            forbiddenGlobal: 'Forbidden global variable',
         },
         fixable: 'code',
         hasSuggestions: true,
     },
-    defaultOptions: [],
-    create(context) {
+    defaultOptions: [[]],
+    create(context, [bannedVars]: [string[]]) {
         return {
-            'ClassDeclaration Identifier[name="window"]'(node: TSESTree.Identifier) {
-                const { parent } = node;
+            'ClassDeclaration Identifier'(node: TSESTree.Identifier) {
+                if (!bannedVars.includes(node.name)) {
+                    return;
+                }
+
+                const { parent, name } = node;
 
                 const isBaseObject =
                     parent.type === AST_NODE_TYPES.MemberExpression &&
@@ -116,11 +137,11 @@ export = createRule({
                     parameter and not the global property */
                     let scope = context.getScope();
                     while (scope.type !== TSESLint.Scope.ScopeType.global) {
-                        if (scope.set.has('window')) {
-                            const variable = scope.set.get('window');
+                        if (scope.set.has(name)) {
+                            const variable = scope.set.get(name);
                             const identifier = variable.identifiers[0];
                             if (
-                                identifier.name === 'window' &&
+                                identifier.name === name &&
                                 identifier.range[1] < node.range[0]
                             ) {
                                 return;
@@ -133,10 +154,10 @@ export = createRule({
                     while (classBody.type !== AST_NODE_TYPES.ClassBody) {
                         classBody = classBody.parent;
                     }
-                    if (hasInjectedWindowProp(classBody)) {
+                    if (hasInjectedProp(classBody, name)) {
                         context.report({
                             node,
-                            messageId: 'globalWindow',
+                            messageId: 'forbiddenGlobal',
                             fix(fixer) {
                                 return fixer.insertTextBefore(node, 'this.');
                             }
@@ -144,7 +165,7 @@ export = createRule({
                     } else {
                         context.report({
                             node,
-                            messageId: 'globalWindow',
+                            messageId: 'forbiddenGlobal',
                         });
                     }
                 }
