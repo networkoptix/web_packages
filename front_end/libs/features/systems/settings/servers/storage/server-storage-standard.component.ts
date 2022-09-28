@@ -15,7 +15,6 @@ import {
     defer,
     of,
     timer,
-    Subscription,
     Observable,
 } from 'rxjs';
 import {
@@ -803,9 +802,9 @@ export class NxSystemStorageComponent implements OnInit {
         ).finally(this.pollStats);
     };
 
-    reindexStorage(type: MODE): Subscription {
+    reindexStorage(type: MODE): void {
         this.reindexingStorages = [...this.reindexingStorages, type];
-        return this.reindexing(TARGET_STORAGE[type.toUpperCase()], 'start');
+        this.reindexing(TARGET_STORAGE[type.toUpperCase()], 'start');
     }
 
     updateStorageStatus(type: number, status: STORAGE_STATUS): void {
@@ -817,7 +816,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
     }
 
-    reindexing(type: TARGET_STORAGE, action?: string): Subscription {
+    reindexing(type: TARGET_STORAGE, action?: string): void {
         const onlyCheck = !action;
         if (action) {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
@@ -825,8 +824,7 @@ export class NxSystemStorageComponent implements OnInit {
 
         let toastType = this.CONFIG.toast.success;
         let message: string;
-        // @ts-expect-error TODO: Fix type
-        return defer(() => this.system.storageManager
+        defer(() => this.system.storageManager
             .rebuildArchive(this.serverId, type, action)
             .pipe(
                 map((res: RebuildArchiveResponse) => {
