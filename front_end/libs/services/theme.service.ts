@@ -2,23 +2,26 @@ import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
-
-import { NxConfigService } from './nx-config/nx-config.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxThemeService {
+    CONFIG: IConfig;
     darkThemeMq: MediaQueryList;
     themeSelected: string;
     userTheme: string;
 
     constructor(
+        configService: NxConfigService,
         private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
         @Inject(WINDOW) private window: Window,
     ) {
+        this.CONFIG = configService.getConfig();
     }
 
     async initTheme(): Promise<void> {
@@ -26,6 +29,12 @@ export class NxThemeService {
         this.themeSelected = this.localStorageService.retrieve('theme');
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+
+        if (!this.CONFIG.featureFlags.themesEnabled) {
+            this.themeSelected = 'light';
+            await this.setTheme(this.themeSelected, loginState);
+            return;
+        }
 
         this.darkThemeMq.addEventListener('change', e => {
             this.themeSelected = this.localStorageService.retrieve('theme');
@@ -60,17 +69,18 @@ export class NxThemeService {
 
     async setTheme(themeSelected: string, username:string): Promise<void> {
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
-
+        const { themesEnabled } = this.CONFIG.featureFlags;
+        themeSelected = themesEnabled ? themeSelected || 'auto' : 'light';
         if (
             themeSelected === 'auto' ||
             !themeSelected ||
             !username
         ) {
-            this.localStorageService.store('theme', 'auto');
+            this.localStorageService.store('theme', themeSelected);
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
             this.window.document.documentElement.setAttribute(
                 'data-theme',
-                NxConfigService.isDarkTheme ? 'dark' : 'light'
+                NxConfigService.isDarkTheme && themesEnabled ? 'dark' : 'light'
             );
         } else {
             if (docTheme === this.userTheme) {
