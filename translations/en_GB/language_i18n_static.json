@@ -1,5 +1,5 @@
 {
-    "language": "en_US",
+    "language": "en_UK",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
@@ -805,8 +805,8 @@
     "pageTitles": {
         "about": "About",
         "account": "Account settings",
-        "activate": "Activate account",
-        "activateCode": "Activate account",
+        "activate": "Activate Account",
+        "activateCode": "Activate Account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Authorization",
@@ -823,7 +823,7 @@
         "pageNotFound": "Page not found",
         "register": "Create account in",
         "registerSuccess": "Welcome to",
-        "restorePassword": "Reset password",
+        "restorePassword": "Reset Password",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Supported Devices",
         "system": "System",
