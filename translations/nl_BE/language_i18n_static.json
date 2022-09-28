@@ -1,188 +1,188 @@
 {
-    "language": "en_US",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "language": "nl_BE",
+    "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+    "All Servers": "Alle servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "Voor ontwikkelaars",
+    "Integrations (β)": "Integraties (ß)",
     "Privacy": "Privacy",
-    "Support": "Support",
-    "Terms": "Terms",
-    "Developers Console": "Developers Console",
+    "Support": "Ondersteuning",
+    "Terms": "Voorwaarden",
+    "Developers Console": "Ontwikkelaarsconsole",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Zorg ervoor dat de opgegeven server online is en probeer het opnieuw."
     },
     "alarmTypes": {
         "Servers": "Servers",
-        "Cameras": "Cameras",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Cameras": "Camera's",
+        "Storage Locations": "Opslaglocaties",
+        "Network Interfaces": "Netwerk interfaces"
     },
     "alarmLevels": {
         "offline": "Offline",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Fouten",
+        "warning": "Waarschuwing"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Alle waarschuwingen",
+        "warning": "Alleen waarschuwingen",
+        "error": "Alleen fouten"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Alle apparaattypen",
         "servers": "Server",
-        "cameras": "Cameras",
-        "storages": "Storages",
+        "cameras": "Camera's",
+        "storages": "Opslag",
         "networkInterfaces": "Interface"
     },
     "accessRoles": {
         "Administrator": {
-            "description": "Unrestricted access including the ability to share",
+            "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen",
             "label": "Administrator"
         },
         "Advanced Viewer": {
-            "description": "Can view live video, browse the archive, control PTZ etc",
-            "label": "Advanced Viewer"
+            "description": "Kan live video bekijken, bladeren in het archief, PTZ bedienen, enz",
+            "label": "Geavanceerde Viewer"
         },
         "Custom": {
-            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
-            "label": "Custom"
+            "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
+            "label": "Aangepast"
         },
         "Live Viewer": {
-            "description": "Can only view live video",
+            "description": "Kan alleen live video bekijken",
             "label": "Live Viewer"
         },
         "Owner": {
-            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
-            "label": "Owner"
+            "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
+            "label": "Eigenaar"
         },
         "Viewer": {
-            "description": "Can view live video and browse the archive",
+            "description": "Kan live video bekijken en zoeken in opgenomen beelden",
             "label": "Viewer"
         },
         "advancedViewer": {
-            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
-            "label": "Advanced Viewer"
+            "description": "Kan live video bekijken, zoeken in opgenomen beelden, camera configureren, PTZ, enz. bedienen",
+            "label": "Geavanceerde Viewer"
         },
         "cloudAdmin": {
-            "description": "Can configure System and share it",
+            "description": "Kan systeem configureren en delen",
             "label": "Administrator"
         },
         "custom": {
-            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
-            "label": "Custom"
+            "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
+            "label": "Aangepast"
         },
         "customRole": {
-            "description": "Custom user role specified in System",
-            "label": "Custom role"
+            "description": "Aangepaste gebruikersrol die is opgegeven in systeem",
+            "label": "Aangepaste rollen"
         },
         "disabled": {
-            "description": "User is disabled and cannot log in to System",
-            "label": "Disabled"
+            "description": "Gebruiker is uitgeschakeld en kan niet aanmelden in het systeem",
+            "label": "Uitgeschakeld"
         },
         "liveViewer": {
-            "description": "Can only view live video",
+            "description": "Kan alleen live video bekijken",
             "label": "Live Viewer"
         },
         "owner": {
-            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
-            "label": "Owner"
+            "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
+            "label": "Eigenaar"
         },
         "viewer": {
-            "description": "Can view live video and browse the archive",
+            "description": "Kan live video bekijken en zoeken in opgenomen beelden",
             "label": "Viewer"
         }
     },
     "account": {
         "account": "Account",
-        "key": "Key",
-        "accountSavedSuccess": "Your account is successfully saved",
-        "accountSettings": "Account Settings",
-        "activationLinkSent": "Activation Link Sent",
-        "agreementAccepted": "Agreement has been accepted",
-        "changePassword": "Change Password",
-        "security": "Security",
-        "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "Password successfully saved",
-        "saveChanges": "Save"
+        "key": "Sleutel",
+        "accountSavedSuccess": "Uw account is succesvol opgeslagen",
+        "accountSettings": "Accountinstellingen",
+        "activationLinkSent": "Activatielink verzonden",
+        "agreementAccepted": "De overeenkomst is geaccepteerd",
+        "changePassword": "Wijzig wachtwoord",
+        "security": "Beveiliging",
+        "newPasswordLabel": "Nieuw wachtwoord",
+        "passwordChangedSuccess": "Wachtwoord succesvol opgeslagen",
+        "saveChanges": "Opslaan"
     },
     "activeActions": {
-        "resetPassword": "Reset Password",
-        "sendConfirm": "Resend activation link",
-        "setNewPassword": "Save password",
-        "setNewPasswordLabel": "New password"
+        "resetPassword": "Reset wachtwoord",
+        "sendConfirm": "Activatielink opnieuw verzenden",
+        "setNewPassword": "Wachtwoord opslaan",
+        "setNewPasswordLabel": "Nieuw wachtwoord"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
-        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
-        "connectSubheader": "To access it from anywhere and enable additional features",
-        "expiredSubheader": "Please, log in again",
-        "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
-        "setupText": "Setup Non-cloud System",
-        "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
-        "forAccountSubheader": "For {accountEmail}",
-        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
-        "passwordMerge": "to merge systems",
-        "passwordBackup": "to create backup",
-        "passwordRestore": "to restore system from backup",
-        "passwordReset": "to reset server",
-        "passwordRestart": "to restart server",
-        "passwordDetach": "to detach server",
+        "loginCloudHeader": "Inloggen op %CLOUD_NAME%",
+        "connectHeader": "Systeem verbinden met %CLOUD_NAME%",
+        "expiredHeader": "Uw sessie is verlopen",
+        "loginSystemSubheader": "Met uw %CLOUD_NAME% account",
+        "connectSubheader": "Om overal toegang te krijgen en extra functies in te schakelen",
+        "expiredSubheader": "Log opnieuw in",
+        "connectAdditional": "Deze account krijgt het toegangsniveau van de eigenaar",
+        "createText": "Account aanmaken",
+        "setupText": "Niet-cloudsysteem instellen",
+        "asAccountSubheader": "Als",
+        "toAccountSubheader": "Aan",
+        "forAccountSubheader": "Voor {accountEmail}",
+        "passwordDisconnect": "om het systeem te ontkoppelen van %CLOUD_NAME%",
+        "passwordMerge": "om systemen samen te voegen",
+        "passwordBackup": "om back-up te maken",
+        "passwordRestore": "om het systeem te herstellen vanaf back-up",
+        "passwordReset": "om server te resetten",
+        "passwordRestart": "om de server te herstarten",
+        "passwordDetach": "om de server los te koppelen",
         "passwordTransfer": "to transfer system",
-        "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
-        "activateHeader": "Activate %CLOUD_NAME% Account",
-        "createdText": "Account Created!",
-        "activatedText": "Account Activated!",
-        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
-        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
-        "passResetHeader": "Reset Password",
-        "newPassHeader": "Set New Password",
-        "newPassConfirmText": "Password is set!",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
-        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
-        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
-        "setupConnectedText": "System connected",
-        "stayLoggedInHelpText": "Checkbox for staying logged in",
-        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard",
+        "expiredAccountSubheader": "Gelieve opnieuw in te loggen als",
+        "createAccountHeader": "Maak %CLOUD_NAME% account aan",
+        "activateHeader": "Activeer %CLOUD_NAME% account",
+        "createdText": "Account aangemaakt!",
+        "activatedText": "Account geactiveerd!",
+        "createdAdditional": "<p class=\"mb-2\">Bevestigingsbericht met de activatielink is verzonden naar {accountEmail}.</p><p>Gelieve de account te activeren en hier terug te keren om het proces te voltooien</p>",
+        "activatedAdditional": "<p>Nu kunt u doorgaan met inloggen op %CLOUD_NAME% hier of elders,</p>",
+        "passResetHeader": "Reset wachtwoord",
+        "newPassHeader": "Stel nieuw wachtwoord in",
+        "newPassConfirmText": "Wachtwoord is ingesteld!",
+        "newPassInvalidCode": "Kan wachtwoord niet opslaan: de bevestigingscode is al in gebruik of onjuist",
+        "notSecureText": "Als u doorgaat, geeft u<br><span class='error-label'>{ redirectUrl }</span><br>toegang tot uw %CLOUD_NAME% account.",
+        "confirmHeader": "Systeem verbonden met %CLOUD_NAME%!",
+        "loginError": "Kan geen verbinding maken met %CLOUD_NAME%",
+        "loginErrorAdditional": "Probeer het opnieuw of log rechtstreeks in op het systeem met uw lokale account.",
+        "connectErrorAdditional": "Probeer het later nog eens.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Probeer het opnieuw of installeer een niet-cloud systeem.</p><p>U kunt het op elk gewenst moment met %CLOUD_NAME% verbinden.</p>",
+        "connectedText": "Systeem verbonden met %CLOUD_NAME%",
+        "setupConnectedText": "Systeem verbonden",
+        "stayLoggedInHelpText": "Vink aan om ingelogd te blijven",
+        "termsAndConditionsHelpText": "Vink aan om akkoord te gaan met de algemene voorwaarden en het privacybeleid",
+        "copiedToClipboard": "Gekopieerd naar het klembord",
         "authCode": {
-            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
-            "newPass": "set a new password",
-            "login": "log in"
+            "message": "Voer een code van uw authenticatie-app in om te bevestigen dat u het echt bent die probeert {suffix}",
+            "newPass": "stel een nieuw wachtwoord in",
+            "login": "inloggen"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "Email verzonden!"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",
-        "IO": "I / O modules",
-        "TwWayAudio": "2-way audio devices",
-        "aptz": "Cameras with advanced PTZ",
-        "audio": "Cameras with audio",
+        "IO": "I/O modules",
+        "TwWayAudio": "2-weg audio-apparaten",
+        "aptz": "Camera's met geavanceerde PTZ",
+        "audio": "Camera's met audio",
         "encoder": "Encoders",
-        "fisheye": "Fisheye cameras",
-        "highRes": "Extra high resolution cameras",
-        "multiSensor": "Multi-sensor cameras",
-        "ptz": "PTZ cameras"
+        "fisheye": "Fisheye camera 's",
+        "highRes": "Extra hoge resolutie camera's",
+        "multiSensor": "Multi-Sensor Camera's",
+        "ptz": "PTZ camera's"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
-            "key": "Key"
+            "size": "Grootte",
+            "state": "Status",
+            "system": "Systeem",
+            "expires": "Verloopt",
+            "key": "Sleutel"
         },
         "fromServer": {
             "ACTIVE": "Active",
@@ -203,111 +203,111 @@
             "This license has no deactivations remaining": "This license has no deactivations remaining",
             "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
             "used": "{used} of {total} ({percent}%) is used",
-            "available": "Available",
+            "available": "Beschikbaar",
             "usedSpace": "{usageSpace} ({percentage}%)"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "De cloudopslag die niet wordt gebruikt voor opnamen. Ga naar <a href=\"{serverSettings}\">Servers instellingen</a> om deze te configureren."
     },
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "title": "Account aangemaakt",
+                "message": "Een bevestigingsbericht met de activeringslink is verzonden naar {email}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Account succesvol geactiveerd"
             }
         },
         "cameraLinks": {
-            "copyActiveText": "copied to clipboard",
-            "copyDefaultText": "copy",
-            "copyToClipboard": "copy to clipboard",
-            "highStream": "High stream",
-            "lowStream": "Low stream",
+            "copyActiveText": "gekopieerd naar het klembord",
+            "copyDefaultText": "kopiëren",
+            "copyToClipboard": "kopiëren naar klembord",
+            "highStream": "Hoge stroom",
+            "lowStream": "Lage stroom",
             "transcoding": "Transcoding",
-            "unknown": "Unknown"
+            "unknown": "Onbekend"
         },
         "cameraStates": {
-            "error": "Error",
-            "errorLoading": "An error occurred while loading this video.",
-            "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
-            "flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
-            "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
-            "ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
-            "ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
-            "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
-            "noData": "No data",
-            "noFormat": "This browser does not support video playback from this camera.",
+            "error": "Fout",
+            "errorLoading": "Er is een fout opgetreden bij het laden van deze video.",
+            "flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
+            "flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
+            "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+            "ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
+            "noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
+            "noData": "Geen data",
+            "noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
             "offline": "Offline",
-            "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
+            "ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser.",
             "unauthorized": "Authentication required"
         },
-        "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
-        "copiedToClipboard": "Copied to clipboard",
+        "chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
+        "copiedToClipboard": "Gekopieerd naar het klembord",
         "login": "login",
-        "recordingSettingsWarning": "Please update missing recording settings.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
+        "disableMotionWarning": "De opnamemodus wordt gewijzigd in 'Altijd opnemen'",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Altijd opnemen",
+            "motion": "Neem alleen beweging op",
+            "motionLowRes": "Beweging + Lage-Res"
         },
         "resolution": {
-            "various": "– Different Values –",
-            "auto": "Auto",
-            "best": "Best",
-            "high": "High",
-            "medium": "Medium",
-            "low": "Low"
+            "various": "- Verschillende waarden -",
+            "auto": "Automatisch",
+            "best": "Beste",
+            "high": "Hoog",
+            "medium": "Gemiddeld",
+            "low": "Laag"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{count, plural, =0{# jaar} one{# jaar} other{# jaar}}",
+            "monthS": "{count, plural, =0{# maanden} one{# maand} other{# maanden}}",
+            "weekS": "{count, plural, =0{# weken} one{# week} other{# weken}}",
+            "dayS": "{count, plural, =0{# dagen} one{# dag} other{# dagen}}",
+            "hourS": "{count, plural, =0{# uur} one{# uur} other{# uur}}",
+            "minuteS": "{count, plural, =0{# minuten} one{# minuut} other{# minuten}}"
         },
-        "general": "General",
-        "generalError": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
-        "searchCamPlaceholder": "Search",
-        "system": "system",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "System Offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "Internal server error",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-        "systemUnreachable": "SYSTEM IS UNREACHABLE",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
-        "unknown": "Unknown",
-        "vendor": "Vendor",
+        "general": "Algemeen",
+        "generalError": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
+        "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} meer integraties...} one{#{endTag} meer integratie...} other{#{endTag} meer integratie...}}",
+        "searchCamPlaceholder": "Zoek",
+        "system": "systeem",
+        "systemHasNoCameras": "Geen camera's",
+        "systemHasNoCamerasMessage": "Er zijn geen toegankelijke camera's voor u in het systeem. <br><br>Verbind een paar camera's met het lokale netwerk van de server om ze te ontdekken, of vraag de systeembeheerder om uw toegangsniveau te wijzigen.",
+        "systemNewVersion": "Uw systeem bijwerken",
+        "systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
+        "systemNoAlerts": "Geen meldingen",
+        "systemNoAlertsMessage": "Uw systeem moet het goed doen!",
+        "systemOffline": "Systeem Offline",
+        "systemOfflineMessage": "Dit systeem is offline en is momenteel niet toegankelijk.",
+        "systemServerError": "Interne Server Fout",
+        "systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
+        "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
+        "systemUnresponsive": "Systeem lijkt niet meer te reageren. Herlaad alstublieft de pagina.",
+        "unknown": "Onbekend",
+        "vendor": "Fabrikant",
         "model": "Model",
-        "ip": "IP Address",
+        "ip": "IP Adres",
         "server": "Server",
         "os": "OS",
-        "version": "Version",
+        "version": "Versie",
         "voiceCommands": {
-            "clear search": "clear search",
-            "collapse all servers": "collapse all servers",
-            "collapse server": "collapse server + [server name]",
-            "expand all servers": "expand all servers",
-            "expand server": "expand server + [server name]",
+            "clear search": "zoekopdracht wissen",
+            "collapse all servers": "vouw alle servers samen",
+            "collapse server": "vouw server + [servernaam] samen",
+            "expand all servers": "vouw alle servers uit",
+            "expand server": "vouw server + [servernaam] uit",
             "help": "help | show commands",
-            "live": "go to live | show me live",
-            "pause": "pause",
-            "play": "play",
-            "search": "find + [text for searchbar]",
-            "stop listening": "stop listening",
-            "view": "view + [camera name]"
+            "live": "ga naar Live | live weergeven",
+            "pause": "pauze",
+            "play": "afspelen",
+            "search": "vind + [text for searchbar]",
+            "stop listening": "stoppen met luisteren",
+            "view": "bekijk + [camera naam]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
     "components": {
         "widgets": {
@@ -315,264 +315,264 @@
             "updatingIn": "Updating in { time } seconds"
         }
     },
-    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
+    "cookieWarning": "We hebben cookies gebruikt om uw ervaring op onze site te verbeteren. Ze helpen ons ook te begrijpen hoe onze site wordt gebruikt. Lees meer en stel uw cookievoorkeuren in&nbsp; | hier | . Door onze site te blijven gebruiken, stemt u in met het gebruik van onze cookies.",
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "Bewerken van dashboard is ingeschakeld",
+        "dashboardLocked": "Dashboard is vergrendeld",
+        "unlockToUpload": "Ontgrendel dashboard om configuratie vanuit json te uploaden",
+        "unlockToMove": "Ontgrendel dashboard om widgets te verplaatsen"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "Aanmaken"
     },
     "dialogs": {
         "twoFa": {
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
+            "wizardWarningDescr": "De oudere versies van %VMS_NAME% client en Web Admin ondersteunen geen tweefactorauthenticatie.",
+            "installAuthApp": "Installeer een authenticatie-app op uw mobiele apparaat als u er nog geen heeft. %CLOUD_NAME% ondersteunt <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> of <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Twee-factor-authenticatie is nu <strong>ingeschakeld</strong> voor uw %CLOUD_NAME% account!"
         },
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Deze e-mail is al geregistreerd in het %systemName% systeem"
         },
         "buttons": {
-            "cancel": "Cancel",
-            "createAccount": "Create New Account",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
-            "disable": "Disable",
-            "enable": "Enable",
+            "cancel": "Annuleren",
+            "createAccount": "Creëer een nieuw account",
+            "delete": "Verwijder",
+            "deleteAccount": "Account Verwijderen",
+            "disable": "Uitschakelen",
+            "enable": "Inschakelen",
             "download": "Download %VMS_NAME%",
-            "logoutAuthorised": "Log Out",
-            "ok": "OK",
-            "remove": "Remove",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "logoutAuthorised": "Uitloggen",
+            "ok": "Oké",
+            "remove": "Verwijder",
+            "stayAs": "Blijf aangemeld als {email} ",
+            "stayLoggedIn": "Ingelogd blijven"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "title": "Cloudopslag",
+            "enableStorage": "Cloud-opslag inschakelen",
+            "otherSystem": "Ander systeem...",
+            "initial": "We bieden {compCapacity} gratis cloud opslag aan per systeem om je op weg te helpen.",
+            "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
             "camera": "camera",
-            "cameras": "cameras",
+            "cameras": "camera's",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Cloudopslag activeren",
+                    "action": "Activeer",
+                    "success": "Cloudopslag succesvol geactiveerd!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Cloudopslag wijzigen",
+                    "action": "Aanpassen",
+                    "success": "Cloudopslag succesvol geüpgraded!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Cloud-opslag verplaatsen",
+                    "action": "Verplaatsen",
+                    "success": "Cloudopslag succesvol geüpgraded!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Cloudopslag verwijderen?",
+                    "action": "Verwijderen",
+                    "success": "Cloudopslag succesvol verwijderd!"
                 }
             },
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Huidige opnamen",
+                "whenFullyUsed": "Wanneer volledig gebruikt",
+                "amountUsed": "Gebruikte hoeveelheid",
+                "archiveFrom": "Archief van",
+                "recordingBitrate": "Bitrate van de opnames",
+                "delayFromLive": "Vertraging vanaf live"
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Aanpassen",
+                    "body": "U kunt de huidige grootte van de cloudopslag in het systeem wijzigen met de nieuwe sleutel. Alle opgenomen gegevens worden opgeslagen."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Verplaatsen",
+                    "body": "Cloud Storage met alle opgenomen gegevens kan eenvoudig worden overgedragen naar uw andere systeem zonder actieve Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Verwijderen",
+                    "body": "U kunt Cloud Storage op elk moment van het systeem verwijderen. U kunt deze sleutel later gebruiken om opnieuw te activeren, als u dat wilt."
                 }
             },
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Cloudopslag is succesvol verwijderd uit het systeem",
+                "errorPrefix": "Fout bij verwijderen cloudopslag"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Kan cloudopslag niet inschakelen",
+                "message": "U heeft al in totaal <volume> cloud opslag toegevoegd aan uw systemen en kan er niet meer toevoegen. <br/><br/>U kunt in plaats daarvan opslag verwijderen van een ander systeem of verplaatsen naar deze. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Kan de verbinding voor het systeem niet verbreken van %CLOUD_NAME%",
+                "message": "Dit systeem heeft nog date op de cloudopslag. <br/><br/>De cloudopslag moet handmatig worden geleerd voordat u het systeem loskoppelt van %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage successfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Cloud-opslag verplaatsen",
+                "success": "Opslag met succes verplaatst",
+                "errorPrefix": "Fout bij het verplaatsen van cloudopslag",
+                "notFound": "Opslag is niet gevonden. Opslag is mogelijk verplaatst of verwijderd door een andere gebruiker",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "Cloud opslag kan niet worden verplaatst naar offline systemen."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Cloud opslag ingeschakeld",
+                "errorPrefix": "Fout bij inschakelen van cloudopslag"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Je kunt alleen cloud opslag verplaatsen tussen systemen waar je eigenaar van bent. <br/><br/>Verbind een systeem met %CLOUD_NAME% door gebruik te maken van uw cloud-account om er gebruik van te kunnen maken."
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Als u van plan was analysegegevens te verplaatsen naar een andere opslaglocatie, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> voordat u verder gaat."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Wachtwoord voor admin gebruiker is onjuist",
+            "knownBothSystemsConnectedToCloud": "Systeem {targetSystem} is verbonden met %CLOUD_NAME%. Cloud systemen kunnen alleen worden samengevoegd vanuit het %CLOUD_NAME% portaal.",
+            "unknownBothSystemsConnectedToCloud": "Kan twee systemen die zijn verbonden met de cloud niet samenvoegen. Ga naar %CLOUD_NAME% om deze systemen samen te voegen.",
+            "checking": "Controleren...",
             "cloud": "Cloud",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
-            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeFailedTitle": "System merge failed",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
-            "mergeSystemsTitle": "Merge current system with",
-            "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
-            "passwordRequired": "Password is required",
-            "passwordWrong": "Wrong password",
-            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
-            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
-            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "commonText": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
+            "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen met <strong>%CLOUD_NAME%</strong> of voeg lokaal samen met <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Kan geen systeem vinden om mee samen te voegen",
+            "failedToFindAnySystem": "Zorg ervoor dat je de Eigenaar rol hebt in een cloud systeem waarmee je wilt samenvoegen. Of dat het systeem waarmee u wilt samenvoegen toegankelijk is via het lokale netwerk naar het huidige systeem.",
+            "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
+            "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
+            "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
+            "latestBuild": "nieuwste build",
+            "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>samen te voegen.</p><p>Instellingen en de naam worden overgenomen van <strong>{primarySystem}</strong>.</p>",
+            "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
+            "mergeSuccess": "Samenvoegen van systemen {primaryName} en {secondaryName} voltooid",
+            "mergeSystemsTitle": "Voeg het huidige systeem samen met",
+            "noServerFound": "Geen server gevonden",
+            "newSystemDisplayName": "Nieuw systeem",
+            "otherSystem": "Ander systeem...",
+            "ownerCanMergeText": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent",
+            "passwordRequired": "Wachtwoord is vereist",
+            "passwordWrong": "Wachtwoord onjuist",
+            "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
+            "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": "We raden u aan om te overleggen met | ondersteuning | vooraleer verder te gaan.",
             "restError": {
-                "duplicateServer": "Merge error. Both systems have same server",
-                "useCloudMerge": "Cannot merge systems bound to the cloud",
-                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+                "duplicateServer": "Fout bij samenvoegen. Beide systemen hebben dezelfde server",
+                "useCloudMerge": "Kan systemen gekoppeld aan de cloud niet samenvoegen",
+                "differentCloudOwners": "Kan twee Cloud-systemen met verschillende eigenaren niet samenvoegen"
             },
-            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
-            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {url}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-            "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
-            "urlEmpty": "Enter server address",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
-            "update": "Update them to the&nbsp; | latest build |"
+            "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server op {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Geen toegang tot het {targetSystem} systeem.</p><p>Zorg ervoor dat de opgegeven server online is en probeer het opnieuw.</p>",
+            "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+            "serverVersionOld": "Deze server heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk het bij naar de nieuwste versie om het samen te voegen met de huidige versie.",
+            "serverVersionNew": "Deze server heeft nieuwere softwareversie dan het huidige systeem. Update beide systemen naar dezelfde build om ze samen te voegen.",
+            "systemOffline": "Systeem {targetSystem} is offline en kan niet worden samengevoegd met de huidige",
+            "systemOfflineUrl": "{targetSystem} is ontoegankelijk",
+            "systemsIncompatible": "Deze server heeft een incompatibele softwareversie. Update beide systemen naar het {downloadHTML}.",
+            "systemVersionOld": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update %targetSystem% naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "systemVersionNew": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "systemVersionsNotMatch": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
+            "targetSystemBoundToCloud": "Dit systeem is niet verbonden met de cloud. Kan niet samenvoegen met systemen die zijn gebonden aan de cloud.",
+            "urlEmpty": "Voer het serveradres in",
+            "urlNotValid": "Voer een geldige URL in",
+            "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn.",
+            "update": "Werk ze bij naar de&nbsp; | laatste build |"
         },
         "message": {
-            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
-            "failedToSend": "Message has failed to send.",
+            "system2faEnabled": "Tweestapsverificatie zal nu afgedwongen worden voor dit systeem.",
+            "system2faDisabled": "Tweestapsverificatie is niet vereist voor dit systeem.",
+            "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
+            "storageSettingsNotSaved": "Kan opslaginstellingen niet opslaan.",
+            "settingsSaved": "Instellingen opgeslagen.",
+            "settingsNotSaved": "Instellingen konden niet worden opgeslagen.",
+            "logLevelsSaved": "Log level(s) opgeslagen.",
+            "logLevelsNotSaved": "Kan logboekniveau(s) niet opslaan.",
+            "failedToSend": "Bericht kan niet worden verzonden.",
             "placeholders": {
-                "feedback": "Make sure you include your camera model and manufacturer..."
+                "feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
             },
-            "sent": "Message has been sent.",
+            "sent": "Bericht is verzonden.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
-                "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Feedback for cameras page",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "integration_feedback": "Feedback voor integratie {asset}",
+                "ipvd_feedback_device": "Feedback over {asset}",
+                "ipvd_feedback_page": "Feedback voor camera's pagina",
+                "sales_inquiry": "Verkoopaanvraag voor {asset}",
+                "technical_inquiry": "Technisch onderzoek voor {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "integration": "Neem contact op met {companyName}",
+                "ipvd_feedback_device": "Feedback over {asset}",
+                "ipvd_feedback_page": "Feedback voor camera's pagina"
             },
             "twoFactor": {
-                "required": "Two-factor authentication is required.",
-                "configure": "You can configure it in your",
-                "accountLink": "account settings",
-                "codeRequired": "Code is required"
+                "required": "Tweestapsverificatie is vereist.",
+                "configure": "U kunt het configureren in uw",
+                "accountLink": "account instellingen",
+                "codeRequired": "Code is vereist"
             }
         },
         "removeSystem": {
-            "action": "Disconnect",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "action": "Verbinding verbreken",
+            "message": "U staat op het punt dit systeem te verwijderen uit uw account. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
+            "title": "Systeem loskoppelen?"
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Log opnieuw in.",
+            "title": "Uw sessie is verlopen"
         },
         "systemGroups": {
             "createdInRoot": "New group will be created in root",
             "createdInCurrentGroup": "New group will be created in current group"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } is geen gebruiker in het systeem"
         },
         "titles": {
-            "error": "Error",
-            "success": "Success",
-            "changeAccount": "You are already logged in as {email}",
-            "changePasswordFor": "Change Password for User \"{username}\"",
-            "deleteUser": "Delete user?",
-            "failedLoginTo": "Failed to login to {systemName}",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
-            "noClientDetected": "Install %VMS_NAME% to view your System",
-            "removeUser": "Remove user",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "error": "Fout",
+            "success": "Succes",
+            "changeAccount": "U bent al ingelogd als {email}",
+            "changePasswordFor": "Wachtwoord wijzigen voor gebruiker \"{username}\"",
+            "deleteUser": "Gebruiker verwijderen?",
+            "failedLoginTo": "Inloggen op {systemName} is mislukt",
+            "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
+            "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
+            "removeUser": "Gebruiker verwijderen",
+            "serversDetach": "Server&nbsp;<strong>{ title }</strong>&nbsp;loskoppelen van het huidige systeem?",
+            "serversReset": "Server resetten&nbsp;<strong>{ title }</strong>&nbsp;naar standaardwaarden?",
+            "serversRestart": "Herstart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Verbreek de verbinding met alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% en schakel tweestapsverificatie uit om uw account te verwijderen."
         },
         "twoFactor": {
             "action": "Login",
-            "message": "Two factor authentication is enabled for this account. Please login.",
-            "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+            "message": "Twee-factorenauthenticatie is ingeschakeld voor dit account. Log in.",
+            "title": "Twee factoren zijn vereist!",
+            "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
+            "unsupportedSystem": "Om in te loggen op dit systeem, schakelt u \"Vraag om verificatiecode bij elke login met %CLOUD_NAME% account\" uit in uw <a href=\"/account/security\">accountinstellingen</a>."
         }
     },
     "downloads": {
         "appTypes": {
-            "bundle": "Client and Server",
-            "camera_sdk": "Video Source SDK",
-            "client": "Client only",
+            "bundle": "Client en Server",
+            "camera_sdk": "Video Bron SDK",
+            "client": "Alleen client",
             "metadata_sdk": "Metadata SDK",
-            "package": "Package",
-            "server": "Server only",
-            "servertool": "Configuration tool",
+            "package": "Pakket",
+            "server": "Alleen server",
+            "servertool": "Configuratie tool",
             "storage_sdk": "Storage SDK",
-            "video_source_sdk": "Video Source SDK"
+            "video_source_sdk": "Video Bron SDK"
         },
         "groups": {
             "android": {
@@ -627,165 +627,165 @@
         "releasesTypes": {
             "beta": "Beta",
             "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
+            "patch": "Update",
+            "patches": "Updates",
+            "rc": "Release Kandidaat",
             "release": "Release",
             "releases": "Releases"
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "DUPLICATE_MEDIASERVER_FOUND": "Some server lists as existing in both Systems – in the selected and in the current one.<br>Remove offline and incompatible servers from each System and try again.",
-        "EmailAlreadyExists": "This Email is already registered",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
-        "This user does not exist.": "This user does not exist.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{failedSystem} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "accountAlreadyActivated": "This account is already activated",
-        "accountBlocked": "This account is temporarily blocked. Please try again in a few minutes.",
-        "accountNotActivated": "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>",
-        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
-        "alreadyExists": "This account already exists",
-        "brokenAccount": "Unexpected problem with account. <a href=\"/restore_password\">Restore account</a>",
-        "cantActivatePrefix": "Cannot activate your account",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
-        "cantChangeAccountPrefix": "Cannot save changes",
-        "cantChangePasswordPrefix": "Cannot save password",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
-        "cantConnectSystemPrefix": "Cannot connect System",
-        "cantDisconnectSystemPrefix": "Cannot delete System",
-        "cantEditAdmin": "This user has administrator permissions",
-        "cantEditYourself": "Changing own permissions is not allowed",
-        "cantGetSystemInfoPrefix": "System info is unavailable",
-        "cantGetSystemsListPrefix": "System list is unavailable",
-        "cantGetUsersListPrefix": "Users list is unavailable",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
-        "cantRegisterPrefix": "Error occurred",
-        "cantSendActivationPrefix": "Cannot send confirmation Email",
-        "cantSendConfirmationPrefix": "Cannot send confirmation Email",
-        "cantSharePrefix": "Cannot share System",
-        "cantUnshareWithMeSystemPrefix": "Cannot delete System",
-        "emailNotFound": "Account does not exist.",
-        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
-        "failedToAccessCamera": "No camera can be accessed by this link.",
-        "forbidden": "You do not have permissions to perform this action",
-        "lostConnection": "Connection to {systemName} lost",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
-        "notAuthorized": "Wrong password",
-        "badUsername": "Account not found",
-        "notFound": "Not found",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
+        "EmailAlreadyExists": "Dit Email is al geregistreerd",
+        "FAIL": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "Systeem <strong>{failedSystem}</strong> is momenteel onbereikbaar.<br>Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
+        "This authorization method is forbidden. Please contact your system administrator.": "Deze autorisatie methode is niet toegestaan. Neem contact op met uw systeembeheerder.",
+        "This user does not exist.": "Deze gebruiker bestaat niet.",
+        "The user is disabled. Please contact your system administrator.": "De gebruiker is uitgeschakeld. Neem contact op met uw systeembeheerder.",
+        "This user has been disabled by a system administrator.": "Deze gebruiker is uitgeschakeld door een systeembeheerder.",
+        "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
+        "fail": "{failedSystem} is niet toegankelijk.",
+        "incompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
+        "unknown_error": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "accountAlreadyActivated": "Deze account is al geactiveerd",
+        "accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
+        "accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",
+        "accountNotActivatedAlternate": "Account is niet geactiveerd. Log in op <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> en volg de instructies.",
+        "alreadyExists": "Deze account bestaat al",
+        "brokenAccount": "Onverwacht probleem met account. <a href=\"/restore_password\"> account herstellen</a>",
+        "cantActivatePrefix": "Kan uw account niet activeren",
+        "cantAddYourOwnEmail": "Je eigen e-mailadres toevoegen is niet toegestaan",
+        "cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
+        "cantChangePasswordPrefix": "Kan wachtwoord niet opslaan",
+        "cantDeleteAccountOwningSystems": "Kan het account dat eigen systemen heeft niet verwijderen",
+        "cantConnectSystemPrefix": "Kan geen verbinding maken",
+        "cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
+        "cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
+        "cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
+        "cantGetSystemInfoPrefix": "Systeeminformatie is niet beschikbaar",
+        "cantGetSystemsListPrefix": "Systeemlijst is niet beschikbaar",
+        "cantGetUsersListPrefix": "Gebruikerslijst is niet beschikbaar",
+        "cantOpenClient": "%VMS_NAME% applicatie is niet gedetecteerd.",
+        "cantRegisterPrefix": "Fout opgetreden",
+        "cantSendActivationPrefix": "Kan geen bevestigingsmail versturen",
+        "cantSendConfirmationPrefix": "Kan geen bevestigingsmail versturen",
+        "cantSharePrefix": "Kan het systeem niet delen",
+        "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
+        "emailNotFound": "Account bestaat niet.",
+        "failedToAccess2FA": "<p class=\"mb-0\">Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem.</p><p>U kunt twee-factorauthenticatie inschakelen in uw <a href=\"/account/security\">accountinstellingen</a>.</p>",
+        "failedToAccessSystem": "Geen enkel systeem is toegankelijk via deze link. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, de toegang tot dit systeem is ingetrokken, het systeem in de link niet bestaat of als u bent ingelogd op het verkeerde account.",
+        "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
+        "forbidden": "U hebt geen rechten om deze actie uit te voeren",
+        "lostConnection": "Verbinding met {systemName} verloren",
+        "mergedSystemIsOffline": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "notAuthorized": "Wachtwoord onjuist",
+        "badUsername": "Account niet gevonden",
+        "notFound": "Niet gevonden",
         "ok": "ok",
-        "oldPasswordMistmatch": "Current password is incorrect.",
-        "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
-        "passwordMismatch": "Wrong password",
-        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "thisSystem": "the system",
-        "unknownError": "Unexpected error occurred",
-        "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "wrongAuthCode": "Code is expired or incorrect",
-        "wrongCode": "Account is already activated or confirmation code is incorrect",
-        "wrongCodeRestore": "Confirmation code is already used or incorrect",
-        "wrongParameters": "Some parameters on the form are incorrect",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
-        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+        "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
+        "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
+        "passwordMismatch": "Wachtwoord onjuist",
+        "systemUnavailable": "{failedSystem} is momenteel onbereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "thisSystem": "het systeem",
+        "unknownError": "Onverwachte fout opgetreden",
+        "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "wrongAuthCode": "Code is verlopen of onjuist",
+        "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
+        "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
+        "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
+        "licenseFail": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support.",
+        "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
+        "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
+        "networkConnection": "Kan geen verbinding maken met %CLOUD_NAME%, controleer je netwerkverbinding.",
+        "archiveEncrypted": "ARCHIEF\nVERSLEUTELD",
+        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen.",
+        "webadmin2faRequired": "Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem. U kunt tweefactorauthenticatie inschakelen in uw <a href=\"{ cloudHost }/account/security\">accountinstellingen</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Mijn Systemen",
+        "systemList": "Systeem Lijst"
     },
     "integration": {
-        "Access Control": "Access Control",
+        "Access Control": "Toegangscontrole",
         "Connector": "Connector",
-        "Data Analytics": "Data Analytics",
+        "Data Analytics": "Data Analyse",
         "Drone": "Drone",
-        "Health Monitor": "Health Monitor",
-        "Storage": "Storage",
-        "myIntegrationsLabel": "Mine",
-        "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
-        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+        "Health Monitor": "Server monitor",
+        "Storage": "Opslag",
+        "myIntegrationsLabel": "Mijn",
+        "requirements": "{name} Vereisten",
+        "testedVersionLabel": "Getest door de ontwikkelaar met {vmsName} versie:",
+        "testedVersionsLabel": "Getest door de ontwikkelaar met {vmsName} versies:"
     },
     "ipvd": {
-        "Advanced PTZ cameras": "Advanced PTZ cameras",
-        "Cameras supporting H.265": "Cameras supporting H.265",
-        "Cameras with 2-way audio": "Cameras with 2-way audio",
-        "Extra high resolution cameras": "Extra high resolution cameras",
-        "Fisheye Cameras": "Fisheye Cameras",
-        "I / O modules": "I / O modules",
-        "Multisensor Cameras": "Multisensor Cameras",
-        "PTZ cameras": "PTZ cameras",
+        "Advanced PTZ cameras": "Geavanceerde PTZ-camera's",
+        "Cameras supporting H.265": "Camera's die H.265 ondersteunen",
+        "Cameras with 2-way audio": "Camera's met 2-weg audio",
+        "Extra high resolution cameras": "Extra hoge resolutie camera's",
+        "Fisheye Cameras": "Fisheye camera 's",
+        "I / O modules": "I/O modules",
+        "Multisensor Cameras": "Multisensor camera's",
+        "PTZ cameras": "PTZ camera's",
         "camera": "Camera",
-        "count": "Count",
+        "count": "Tellen",
         "dvr": "DVR",
         "encoder": "Encoder",
         "hardwareType": "Type",
         "isAnalyticsSupported": "Analytics",
-        "isAptzSupported": "Advanced PTZ",
+        "isAptzSupported": "Geavanceerde PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
         "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Motion Detection",
+        "isMdSupported": "Bewegingsdetectie",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
+        "isTwAudioSupported": "2-weg audio",
         "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "maxResolution": "Resolutie(max)",
         "model": "Model",
         "multiSensorCamera": "Multi-Sensor Camera",
-        "other": "Other",
+        "other": "Andere",
         "primaryCodec": "Codec",
-        "resolutionArea": "Area",
-        "sndResolution": "Secondary Stream",
-        "vendor": "Manufacturer",
+        "resolutionArea": "Gebied",
+        "sndResolution": "Secundaire Stream",
+        "vendor": "Fabrikant",
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
+        "request": "Gelieve <span id=\"request\">een verzoek in te dienen</span> voor aanvullende vragen/opmerkingen met betrekking tot ondersteunde apparaten."
     },
     "layoutAutosave": "Auto saving in { time } seconds...",
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
-    "ipvdTopXByVolume": "Top {value} by volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "systemsCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}} gevonden",
+    "alertsCount": "{count, plural, =0{# waarschuwingen} one{# waarschuwing} other{# waarschuwingen}}",
+    "ipvdTopXByVolume": "Top {value} door volume:",
+    "ipvdDisclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {vmsName} waar gebruikers automatisch rapporteren van apparaatspecificaties naar {companyName} toestaan. Er worden geen persoonlijke gegevens verzameld en elke gebruiker blijft volledig anoniem.",
     "menu": {
         "titles": {
-            "cameras": "Cameras",
-            "systemAdministration": "System Administration",
-            "general": "General",
-            "licenses": "Licenses",
-            "users": "Users",
+            "cameras": "Camera's",
+            "systemAdministration": "Systeem Administratie",
+            "general": "Algemeen",
+            "licenses": "Licenties",
+            "users": "Gebruikers",
             "servers": "Servers",
-            "alerts": "Alerts",
-            "systems": "System",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
-            "logs": "Logs"
+            "alerts": "Waarschuwingen",
+            "systems": "Systeem",
+            "storages": "Opslaglocaties",
+            "networkInterfaces": "Netwerk interfaces",
+            "graphs": "Grafieken",
+            "logs": "Logboeken"
         }
     },
     "tableHeaders": {
         "type": "Type",
         "server": "Server",
-        "alert": "Alert"
+        "alert": "Waarschuwing"
     },
     "appFooter": {
         "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
@@ -803,232 +803,232 @@
         }
     },
     "pageTitles": {
-        "about": "About",
-        "account": "Account settings",
-        "activate": "Activate account",
-        "activateCode": "Activate account",
-        "activateSuccess": "Account activated",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
-        "auth": "Authorization",
-        "changePassword": "Change password",
+        "about": "Over",
+        "account": "Account instellingen",
+        "activate": "Activeer account",
+        "activateCode": "Activeer account",
+        "activateSuccess": "Account geactiveerd",
+        "articleTitle": "{ARTICLE_TITLE} voor {VMS_NAME}",
+        "auth": "Autorisatie",
+        "changePassword": "Wachtwoord wijzigen",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
-        "downloadPlatform": "Download %VMS_NAME% for ",
-        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
-        "failedToAccessSystem": "Failed to access system",
-        "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
-        "login": "Log in",
-        "pageNotFound": "Page not found",
-        "register": "Create account in",
-        "registerSuccess": "Welcome to",
-        "restorePassword": "Reset password",
-        "restorePasswordSuccess": "Password saved",
-        "supportedDevices": "Supported Devices",
-        "system": "System",
-        "systemShare": "Share System",
-        "systems": "Systems",
+        "downloadPlatform": "Download %VMS_NAME% voor ",
+        "failedToAccess2FA": "Kan geen toegang krijgen tot het \"{systemName}\"-systeem",
+        "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
+        "failedToAccessCamera": "Geen toegang tot de camera",
+        "integrations": "%VMS_NAME% Integraties",
+        "login": "Inloggen",
+        "pageNotFound": "Pagina niet gevonden",
+        "register": "Maak een account aan in",
+        "registerSuccess": "Welkom bij",
+        "restorePassword": "Reset wachtwoord",
+        "restorePasswordSuccess": "Wachtwoord opgeslagen",
+        "supportedDevices": "Ondersteunde apparaten",
+        "system": "Systeem",
+        "systemShare": "Deel Systeem",
+        "systems": "Systemen",
         "template": "{title} - %CLOUD_NAME%",
-        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "View cameras",
+        "templateWebadmin": "{title} - webbadmin - %VMS_NAME%",
+        "view": "Bekijk camera's",
         "apiTool": "API testing tool",
-        "security": "Security",
-        "twofaRequired": "Two-factor authentication required"
+        "security": "Beveiliging",
+        "twofaRequired": "Tweestapsverificatie vereist"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
-        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+        "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",
+        "integrationSetup": "Instructies voor het instellen van {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} voor {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
-        "common": "too common",
-        "commonMessage": "This password is in top most popular passwords in the world",
-        "fair": "fair",
-        "fairMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger",
-        "good": "good",
-        "minLength": "too short",
-        "minLengthMessage": "Password must contain at least 8 characters",
-        "missingMessage": "Required",
-        "required": "incorrect",
-        "requiredMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
-        "strongMessage": "Strong password!",
-        "weak": "weak",
-        "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
+        "common": "te algemeen",
+        "commonMessage": "Dit wachtwoord bevind zich in de top van de meest populaire wachtwoorden in de wereld",
+        "fair": "redelijk",
+        "fairMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
+        "good": "goed",
+        "minLength": "te kort",
+        "minLengthMessage": "Het wachtwoord moet minstens 8 karakters bevatten",
+        "missingMessage": "Vereist",
+        "required": "onjuist",
+        "requiredMessage": "Gebruik alleen alfanumerieke tekens en symbolen van het toetsenbord, Vermijd spaties voor en na het wachtwoord",
+        "strongMessage": "Sterk wachtwoord!",
+        "weak": "zwak",
+        "weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken"
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Deze pagina kan niet worden geladen",
+            "message": "Zorg ervoor dat uw servers online zijn en probeer het opnieuw."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Dit systeem wordt samengevoegd met {systemName}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "dependingOnSize": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
+                "untilFinished": "Tot het samenvoegen is voltooid, kunt u zich aanmelden bij dit systeem en video bekijken, maar kunt u geen instellingen wijzigen.",
+                "whenFinished": "Als het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in het {systemName} -systeem, en dit systeem zal worden verwijderd."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Server niet toegankelijk",
+            "message": "Systeem is offline en daarom zijn servers niet toegankelijk."
         },
         "noSystemApiTool": {
-            "title": "No Valid System Found",
+            "title": "Geen geldig systeem gevonden",
             "message": ""
         },
         "systemLoadFailureApiTool": {
-            "title": "System failed to load",
+            "title": "Systeem kan niet worden geladen",
             "message": ""
         }
     },
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Selecteer...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Hier vindt u het {INTEGRATION_COMPANY} privacybeleid <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\"></a>. Het privacybeleid van %COMPANY_NAME% met instructies over het opnemen van uw toestemming, is hier beschikbaar <a href=\"%PRIVACY_LINK%\" target=\"_blank\"></a>.",
+        "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "wordt samengevoegd naar dit systeem",
+            "mayTake": "Afhankelijk van de grootte van de database kan dit enkele uren duren."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "Samenvoegen van systemen voltooid",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
-            "backToEditText": "Back to the editing interfaces",
-            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "accept": "Accepteren",
+            "reject": "Weigeren",
+            "backToEditText": "Terug naar de bewerkingsinterfaces",
+            "previewRibbon": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie.",
+            "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Refresh to Update"
+            "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
+            "installButton": "Vernieuwen om te updaten"
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
+        "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."
     },
     "search": {
-        "Any": "Any",
-        "Search": "Search",
+        "Any": "Elk",
+        "Search": "Zoek",
         "analytics": "Analytics",
-        "analyticsSelected": "analytics events",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "analyticsSelected": "analytics evenementen",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} toegepast",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
-        "minResolution": "Minimum Resolution",
-        "search_ipvd": "Search by model or manufacturer",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
-        "vendor": "Manufacturer",
-        "vendors": "Manufacturers",
-        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
-        "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "minResolution": "Minimale resolutie",
+        "search_ipvd": "Zoeken op model of fabrikant",
+        "selected": "{count, plural, =0{# geselecteerd} one{# geselecteerd} other{# geselecteerd}}",
+        "vendor": "Fabrikant",
+        "vendors": "Fabrikanten",
+        "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
+        "noMatches": "Geen overeenkomsten",
+        "userNotFound": "<span class=\"error\">Gebruiker niet gevonden</span>"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now resetting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
+        "autoRefresh": "automatisch vernieuwen in {time}...",
+        "beginDetach": "Server wordt nu losgekoppeld",
+        "beginReset": "Server wordt nu gereset.",
+        "detachSystemFailed": "Kan de server niet loskoppelen van het systeem. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
+        "detachSystemSuccess": "De server is succesvol losgekoppeld van het systeem.",
+        "portWarning": "Poortnummers minder dan 1024 zijn gereserveerd. De server kan ontoegankelijk worden.",
+        "refresh": "Vernieuwen",
+        "refreshing": "Vernieuwen...",
+        "removeMediaserverFailed": "Kan de server niet van het systeem verwijderen.",
+        "resetFailed": "Kan de server niet resetten. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
+        "resetSuccessful": "Server {serverName} is gereset naar de standaardwaarden.",
+        "restartFailed": "Er is een probleem opgetreden bij het herstarten van de server.",
+        "restartSuccessful": "Server is succesvol opnieuw gestart.",
         "serverOffline": "Server is offline.",
         "servers": "Servers",
         "status": {
-            "checking": "checking...",
+            "checking": "controleren...",
             "offline": "offline",
-            "resetting": "resetting...",
-            "restarting": "restarting..."
+            "resetting": "resetten...",
+            "restarting": "herstarten..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Servernaam opgeslagen."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
+        "View": "Weergave",
+        "Settings": "Instellingen",
+        "Information": "Informatie",
+        "Bookmarks": "Bladwijzers",
         "Layouts": "Layouts",
-        "Monitoring": "Monitoring"
+        "Monitoring": "Controle"
     },
     "system": {
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
-        "mergeUnknownName": "Unknown Name for System (Caused by cloud merge)",
+        "connected": "Verbonden",
+        "not_connected": "Niet verbonden",
+        "MERGE_FINISHES": "Als het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in <strong>{targetSystemName}</strong> systeem en wordt dit systeem verwijderd.",
+        "mergeUnknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadStorageInfo": "Kan opslaginformatie niet laden.",
+            "notAbleToLoadSecurity": "Kan beveiligingsinstellingen niet laden.",
+            "notAbleToLoadSystem": "Kan systeeminstellingen niet laden.",
             "sessionLimitDuration": {
-                "hours": "hours",
-                "minutes": "minutes",
-                "days": "days"
+                "hours": "uren",
+                "minutes": "minuten",
+                "days": "dagen"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
+                "videoEncryption": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
             }
         },
         "status": {
-            "offline": "System is offline",
-            "unavailable": "System is unreachable"
+            "offline": "Systeem is offline",
+            "unavailable": "Systeem is onbereikbaar"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "Gebruiker verwijderen",
+            "localDelete": "Verwijder gebruiker"
         },
-        "yourSystem": "Your System",
+        "yourSystem": "Uw systeem",
         "loggers": {
             "none": {
-                "text": "None",
-                "help": "(log disabled)"
+                "text": "Geen",
+                "help": "(log uitgeschakeld)"
             },
             "error": {
-                "text": "Error",
-                "help": "(log errors only)"
+                "text": "Fout",
+                "help": "(alleen logfouten)"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "Waarschuwing",
+                "help": "(log waarschuwingen en fouten)"
             },
             "info": {
                 "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(log waarschuwingen, fouten en alle berichten)"
             },
             "debug": {
                 "text": "Debug",
-                "help": "(log every System message and debug information)"
+                "help": "(log elk systeembericht en debug-informatie)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "Uitgebreid",
+                "help": "(log alle beschikbare informatie)"
             }
         },
-        "loggerDropdownLabel": "{ loggerName } log level",
+        "loggerDropdownLabel": "{ loggerName } logboek niveau",
         "storageToolTips": {
-            "local": "Local",
+            "local": "Lokaal",
             "usb": "USB",
-            "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "network": "Netwerk, toegevoegd via OS",
+            "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wil het eigendom van dit systeem aan u overdragen",
         "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
+        "systemCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1048,360 +1048,360 @@
         }
     },
     "systemStatuses": {
-        "activated": "activated",
-        "incompatible": "incompatible",
-        "merging": "merging",
-        "notActivated": "not activated",
+        "activated": "geactiveerd",
+        "incompatible": "niet compatibel",
+        "merging": "samenvoegen",
+        "notActivated": "niet geactiveerd",
         "offline": "offline",
         "online": "online",
-        "unavailable": "unavailable"
+        "unavailable": "niet beschikbaar"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
-        "nameFail": "Failed to change {type} name",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
-        "reviewAccepted": "The review has been accepted",
+        "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
+        "nameFail": "{type} naam wijzigen mislukt",
+        "noConnection": "Herstel de verbinding met %CLOUD_NAME% en probeer het opnieuw.",
+        "noInternet": "%CLOUD_NAME% is momenteel niet beschikbaar. Probeer het later opnieuw.",
+        "userChangesFail": "Wijzigingen toepassen is mislukt",
+        "reviewAccepted": "De review is verwijderd",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "Systeem {systemName} is succesvol verwijderd van uw account"
             },
             "disconnected": {
-                "success": "System is successfully disconnected from %CLOUD_NAME%"
+                "success": "Systeem is met succes ontkoppeld van %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "success": "Systeem verbonden met %CLOUD_NAME%",
+                "failed": "Kon geen verbinding maken met systeem %CLOUD_NAME%"
             },
             "merge": {
-                "failed": "System merge failed",
-                "success": "System merge completed"
+                "failed": "Het samenvoegen van systemen is mislukt",
+                "success": "Systeem samenvoegen voltooid"
             },
             "rename": {
-                "success": "System name saved"
+                "success": "Systeemnaam opgeslagen"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait.",
-        "sessionRenewed": "Session has been renewed.",
-        "failedToUpdateSession": "Updating the session failed."
+        "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker",
+        "twoFaRequired": "Twee-factor-authenticatie is ingeschakeld voor dit account. Voer uw verificatiecode in het pop-upvenster in.",
+        "loggingIn": "Inloggen. Een ogenblik geduld.",
+        "sessionRenewed": "Sessie is vernieuwd.",
+        "failedToUpdateSession": "Het bijwerken van de sessie is mislukt."
     },
     "healthMonitor": {
         "groups": {
             "info": "Info",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Beschikbaarheid",
+            "load": "Belasting",
+            "activity": "Activiteit"
         },
         "keys": {
-            "name": "Name",
+            "name": "Naam",
             "servers": "Servers",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
-            "users": "Users",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "cameras": "Camera kanalen",
+            "storages": "Opslaglocaties",
+            "users": "Gebruikers",
+            "version": "Systeemversie",
+            "cloudSystemId": "Cloudsysteem ID",
             "status": "Status",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
+            "offlineEvents": "Gebeurtenissen: Server offline (24h)",
+            "uptimeS": "Actief",
             "cpuUsageP": "CPU %",
             "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "ramUsageB": "RAM-gebruik",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
+            "serverRamUsageB": "CPU (VMS Server)",
+            "serverRamUsageP": "CPU (VMS Server) %",
             "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "decodingThreads": "Threads decoderen",
+            "decodingSpeed3s": "Decodering snelheid",
+            "encodingThreads": "Threads coderen",
+            "encodingSpeed3s": "Coderingssnelheid",
+            "primaryStreams": "Uitgaande primaire streams",
+            "secondaryStreams": "Uitgaande secundaire streams",
+            "incomingConnections": "Inkomende verbindingen",
+            "outgoingConnections": "Uitgaande verbindingen",
+            "logLevel": "Logging niveau",
+            "publicIp": "Openbare IP",
             "os": "OS",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "OS tijd",
+            "vmsTime": "VMS Tijd",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Kernen",
             "ramB": "RAM",
             "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
+            "vmsTimeChanged24h": "Gebeurtenissen: Tijd gewijzigd (24h)",
+            "transactionsPerSecond1m": "Transacties/s",
+            "actionsTriggered1m": "Regels Activeringen/s",
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "activePlugins": "Actieve plugins lijst"
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Health Report For System {systemName}"
+        "healthReportForSystem": "Gezondheidsrapport voor systeem {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
-            "Time": "Time",
-            "Trial": "Trial",
+            "Time": "Tijd",
+            "Trial": "Test",
             "Professional": "Professional",
-            "Analog": "Analog",
+            "Analog": "Analoog",
             "Edge": "Edge",
             "VMAX": "VMAX",
             "Video Wall": "Video Wall",
-            "Analog Encoder": "Analog Encoder",
+            "Analog Encoder": "Analoge Encoder",
             "Starter": "Starter",
-            "IO Module": "IO Module",
+            "IO Module": "I/O module",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Ongeldig"
         },
         "info": {
             "type": "Type",
-            "channels": "Channels",
+            "channels": "Kanalen",
             "server": "Server",
             "hwid": "Hardware ID",
             "status": "Status",
-            "expires": "Expires",
-            "deactivations": "Deactivation left",
+            "expires": "Verloopt",
+            "deactivations": "Resterende deactivering",
             "online": "Online",
-            "error": "Error",
-            "expired": "Expired",
-            "ok": "OK",
-            "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "error": "Fout",
+            "expired": "Verlopen",
+            "ok": "Oké",
+            "nvrError": "NVR fout",
+            "serverNotFound": "Server niet gevonden"
         },
         "messages": {
-            "required": "{number} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{number} meer vereist",
+            "activated": "Licentie geactiveerd",
+            "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
+            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "message": "De route \"{url}\" is verplaatst naar \"{redirectUrl}\".",
+        "defaultMessage": "Update alle links om te verwijzen naar de nieuwe route.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
+        "additionalLocalFsTypes": "Extra lokale FS types",
+        "autoDiscoveryResponseEnabled": "Resultaten automatische ontdekking",
+        "crossdomainEnabled": "Cross domein",
+        "defaultExportVideoCodec": "Standaard video codec export",
+        "defaultVideoCodec": "Standaard video codec",
+        "downloaderPeers": "Downloader connecties",
+        "lastMergeMasterId": "Laatste merge masterId",
+        "lastMergeSlaveId": "Laatste merge slaveID",
         "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
-        "systemName": "System name",
+        "licenseServer": "Licentieserver",
+        "lowQualityScreenVideoCodec": "Lage kwaliteit scherm video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P alle clients bytes grootte",
+        "maxRtpRetryCount": "Max. Aantal RTP-pogingen",
+        "metadataStorageChangePolicy": "Verandering van beleid voor Meta-opslag",
+        "pushNotificationsLanguage": "Taal voor pushmeldingen",
+        "resourceFileUri": "Bronbestand URI",
+        "sessionLimitMinutes": "Sessie limiet (minuten)",
+        "specificFeatures": "Specifieke functies",
+        "systemName": "Systeemnaam",
         "webSocketEnabled": "Web sockets",
-        "arecontRtspEnabled": "Arecont RTSP Enabled",
-        "auditTrailEnabled": "Audit trail enabled",
-        "auditTrailPeriodDays": "Audit trail period days",
-        "autoDiscoveryEnabled": "Enable device auto discovery",
-        "autoUpdateThumbnails": "Auto-update thumbnails",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
+        "arecontRtspEnabled": "Arecont RTSP ingeschakeld",
+        "auditTrailEnabled": "Audit historiek ingeschakeld",
+        "auditTrailPeriodDays": "Periode van audittrail",
+        "autoDiscoveryEnabled": "Schakel automatische detectie van apparaten in",
+        "autoUpdateThumbnails": "Auto-update voorbeeldweergaves",
+        "backupNewCamerasByDefault": "Maak standaard een back-up van nieuwe camera's",
+        "backupQualities": "Backup Kwaliteit",
+        "cameraSettingsOptimization": "Optimalisatie van apparaatinstellingen toestaan",
+        "clientStatisticsSettingsUrl": "Relatieve url van klantstatistieken",
+        "cloudAccountName": "Cloud eigenaar-account",
+        "cloudConnectRelayingEnabled": "Schakel relaying in voor cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Schakel UDP hole punching in voor de cloud verbinding",
         "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
-        "emailSignature": "Email signature",
-        "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Enable edge recording",
-        "eventLogPeriodDays": "Event log period (days)",
+        "cloudSystemID": "Cloud systeem id",
+        "disabledVendors": "Uitgeschakelde leveranciers",
+        "ec2AliveUpdateIntervalSec": "Systeem actief polling interval (seconden)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connectie verbinding-time-out (seconden)",
+        "ec2KeepAliveProbeCount": "Verbinding connectie keep alive (seconden)",
+        "emailFrom": "E-mail van",
+        "emailSignature": "Email handtekening",
+        "emailSupportEmail": "Ondersteuning e-mail",
+        "enableEdgeRecording": "Edge opname inschakelen",
+        "eventLogPeriodDays": "Gebeurtenislogboek periode (dagen)",
         "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
-        "ldapUri": "LDAP URI",
-        "localSystemId": "Local System ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
-        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
-        "maxRecordQueueSizeElements": "Max record queue size (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
-        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
-        "maxSceneItems": "Max scene items (0 means default)",
-        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
-        "rtpTimeoutMs": "RTP timeout (milliseconds)",
-        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
-        "smtpSimple": "SMTP simple",
-        "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
-        "SystemName": "System name",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
-        "updateNotificationsEnabled": "Update notifications enabled",
-        "upnpPortMappingEnabled": "UPNP port mapping enabled",
-        "useTextEmailFormat": "Send plain-text emails",
-        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
-        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "ldapSearchBase": "LDAP zoekbasis",
+        "ldapSearchFilter": "LDAP zoekfilter",
+        "ldapUri": "LDAP uri",
+        "localSystemId": "Lokale systeem ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max verschil tussen gesynchroniseerde en lokale tijd (milliseconden)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max verschil tussen gesynchroniseerde en lokale tijd (milliseconden)",
+        "maxP2pQueueSizeBytes": "Max P2P wachtrijgrootte (bytes)",
+        "maxRecordQueueSizeBytes": "Max records wachtrijgrootte (bytes)",
+        "maxRecordQueueSizeElements": "Max records wachtrijgrootte (elementen)",
+        "maxRemoteArchiveSynchronizationThreads": "Max externe opname synchronisatie taken",
+        "maxRtspConnectDurationSeconds": "Max. Rtsp connectie duur seconden",
+        "maxSceneItems": "Max scène items (0 betekent standaard)",
+        "proxyConnectTimeoutSec": "Time-out voor proxyverbinding (seconden)",
+        "rtpTimeoutMs": "RTP timeout (milliseconden)",
+        "sequentialFlirOnvifSearcherEnabled": "Gebruik sequentiële Flir Onvif-zoeker",
+        "serverDiscoveryPingTimeoutSec": "Server discovery time-out",
+        "smtpConnectionType": "SMTP-verbindingstype",
+        "smtpHost": "SMTP-host",
+        "smtpPort": "SMTP poort",
+        "smtpSimple": "SMTP eenvoudig",
+        "smtpTimeout": "SMTP-time-out",
+        "smtpUser": "SMTP-gebruiker",
+        "statisticsAllowed": "Verzend anonieme gebruiksstatistieken en crashmeldingen",
+        "statisticsReportLastNumber": "Statistiekenrapport - laatste nummer",
+        "statisticsReportLastTime": "Statistiekenrapport - laatste keer",
+        "statisticsReportLastVersion": "Statistiekenrapport - laatste versie",
+        "statisticsReportServerApi": "Statistieken server api",
+        "statisticsReportTimeCycle": "Statistiekenrapport interval",
+        "statisticsReportUpdateDelay": "Statistieken verslag - update vertraging",
+        "synchronizeTimeWithInternet": "Synchroniseer tijd met internet",
+        "SystemName": "Systeemnaam",
+        "takeCameraOwnershipWithoutLock": "Neem controle over camera's zonder vergrendeling",
+        "timeSynchronizationEnabled": "Tijdsynchronisatie ingeschakeld",
+        "primaryTimeServer": "Primaire tijdsynchronisatieserver",
+        "osTimeChangeCheckPeriodMs": "Controle van de tijd van het besturingssysteem",
+        "syncTimeExchangePeriod": "Synchroniseer tijd synchronisatie interval voor netwerkverzoeken",
+        "syncTimeEpsilon": "Synchroniseer tijd epsilon. Nieuwe waarde wordt niet toegepast als delta tijd minder is dan epsilon",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max. Aantal synchronisatie-threads voor virtuele camera-archieven",
+        "updateNotificationsEnabled": "Update meldingen ingeschakeld",
+        "upnpPortMappingEnabled": "UPNP-poorttoewijzing ingeschakeld",
+        "useTextEmailFormat": "Verstuur e-mails met onbewerkte tekst",
+        "useWindowsEmailLineFeed": "Gebruik Windows line feed in e-mails",
+        "trafficEncryptionForced": "Forceer Dataverkeer encryptie",
+        "videoTrafficEncryptionForced": "Forceer videoverkeer encryptie",
+        "updateStatus": "Status bijwerken",
+        "watermarkSettings": "Watermerk instellingen",
+        "maxHttpTranscodingSessions": "Maximaal aantal HTTP-verbindingen met transcodering voor de server. Chrome opent 2 verbindingen tegelijk en sluit vervolgens de eerste. Het wordt dus aanbevolen om waarde> = 2 in te stellen op deze parameter.",
+        "maxEventLogRecords": "Maximum logboek evenementen om in de database te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
+        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
     },
-    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "result": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
+    "additionalSystems": "{count, plural, =0{+ # systemen} one{+ # Systeem} other{+ # Systemen}}",
     "security": {
         "twoFa": {
-            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
-            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
-            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
-            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+            "twoFADescription": "Momenteel heb je er <span id=\"target2FaSystems\">{count, plural, =0{# zulke systemen} one{# zo'n systeem} other{# zulke systemen}}</span>.",
+            "systemsRemainder": "en {count} meer...",
+            "v5Warning": "Je hebt er <span id=\"targetV5\">{count, plural, =0{# systemen} one{# systeem} other{# systemen}}</span> met softwareversie lager dan 5.0. {count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} is niet toegankelijk via <strong>%VMS_NAME% Client</strong> omdat eerdere versies van %VMS_NAME% Client geen tweefactorauthenticatie ondersteunen, dus u kunt geen verificatiecode voor uw account invoeren.",
+            "v5WarningExplanation": "Maken {count, plural, =0{deze systemen} one{dit systeem} other{deze systemen}} volledig toegankelijke upgrade {count, plural, =0{hen} one{het} other{hen}} naar softwareversie 5.0 of schakel het selectievakje uit.",
+            "disableWarning": "Je hebt {count, plural, one{# systeem} other{# systemen}} die {count, plural, one{vereist} other{vereist}} authenticatie in twee stappen. Je kunt niet inloggen op {count, plural, one{dit systeem} other{deze systemen}}."
         }
     },
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Herindexering hoofdopslag voltooid",
+            "backupSuccess": "Back-up herindexering voltooid",
+            "mainFailed": "Herindexering hoofdopslag mislukt",
+            "backupFailed": "Herindexering van back-upopslag mislukt"
         },
         "modes": {
-            "main": "Main",
+            "main": "Algemeen",
             "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "notInUse": "Niet in gebruik",
+            "reserved": "Gereserveerd",
+            "inaccessible": "Niet toegankelijk",
+            "changing": "Modus wijzigen...",
+            "disabled": "Uitgeschakeld"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "alreadyUsed": "Opslagpad {url} wordt al gebruikt door een andere server.",
+        "deleteExternalStorage": "Externe opslag verwijderen?",
+        "failed": "Externe opslag kon niet worden toegevoegd",
+        "invalidPath": "Ongeldig opslagpad.",
+        "stillHasArchivesPreWarning": "Opname naar deze opslaglocatie zal stoppen. Echter, verouderde beelden blijven verwijderd worden.",
+        "stillHasArchives": "Opname naar deze opslaglocatie is gestopt. Echter, verouderde beelden worden nog steeds verwijderd.",
+        "storageDeleted": "Opslag {url} verwijderd",
+        "failedRemove": "Kan externe opslag {url} niet verwijderen",
+        "reservedTooSmallTooltip": "Deze opslaglocatie kan niet worden gebruikt voor opname, omdat deze te klein is en er andere grotere opslaglocaties beschikbaar zijn voor opname.",
+        "reservedSystemTooltip": "Deze opslaglocatie kan niet worden gebruikt voor opnemen, omdat de systeemopslag en er andere grotere opslaglocaties beschikbaar zijn voor opname.",
+        "serverOffline": "Kan geen externe opslag toevoegen - server reageert niet",
+        "success": "Externe opslag toegevoegd",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     },
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - Cloudportaal",
+            "description": "%CLOUD_NAME%, een eenvoudige manier om verbinding mee te maken, %VMS_NAME% systemen te beheren en uit te breiden."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Systemen - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% integraties - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Documentatie - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Ondersteunde apparaten - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "webadmin - %VMS_NAME%"
+            "title": "webbadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Instellingen - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Weergave - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Informatie - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
             "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {
-        "description": "We are working on some improvements and brand new features."
+        "description": "We werken aan enkele verbeteringen en gloednieuwe functies."
     },
     "view": {
         "timeline": {
             "dayNames": {
-                "Sun": "Sun",
-                "Mon": "Mon",
-                "Tue": "Tue",
-                "Wed": "Wed",
-                "Thu": "Thu",
-                "Fri": "Fri",
-                "Sat": "Sat",
-                "Sunday": "Sunday",
-                "Monday": "Monday",
-                "Tuesday": "Tuesday",
-                "Wednesday": "Wednesday",
-                "Thursday": "Thursday",
-                "Friday": "Friday",
-                "Saturday": "Saturday"
+                "Sun": "Zon",
+                "Mon": "Ma",
+                "Tue": "Di",
+                "Wed": "Woe",
+                "Thu": "Do",
+                "Fri": "Vr",
+                "Sat": "Za",
+                "Sunday": "Zondag",
+                "Monday": "Maandag",
+                "Tuesday": "Dinsdag",
+                "Wednesday": "Woensdag",
+                "Thursday": "Donderdag",
+                "Friday": "Vrijdag",
+                "Saturday": "Zaterdag"
             },
             "monthNames": {
                 "Jan": "Jan",
                 "Feb": "Feb",
-                "Mar": "Mar",
+                "Mar": "Maa",
                 "Apr": "Apr",
-                "May": "May",
+                "May": "Mei",
                 "Jun": "Jun",
                 "Jul": "Jul",
                 "Aug": "Aug",
                 "Sep": "Sep",
-                "Oct": "Oct",
+                "Oct": "Okt",
                 "Nov": "Nov",
                 "Dec": "Dec",
-                "January": "January",
-                "February": "February",
-                "March": "March",
+                "January": "Januari",
+                "February": "Februari",
+                "March": "Maart",
                 "April": "April",
-                "June": "June",
-                "July": "July",
-                "August": "August",
+                "June": "Juni",
+                "July": "Juli",
+                "August": "Augustus",
                 "September": "September",
-                "October": "October",
+                "October": "Oktober",
                 "November": "November",
                 "December": "December"
             },

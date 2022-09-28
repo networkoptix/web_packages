@@ -547,7 +547,7 @@
     "This key will be set to inactive": "このキーは非アクティブに設定されます",
     "This server must be available in the system to make the license key work": "ライセンスキーを機能させるには、このサーバーがシステム内で使用可能である必要があります",
     "This system is connected to Alexa": "このシステムは Alexa に接続されています",
-    "To": "To",
+    "To": "宛先",
     "To continue log in to %CLOUD_NAME% in the tab that popped up.": "続行するには、ポップアップしたタブで %CLOUD_NAME% にログインしてください。",
     "Too many attempts. Try again in a minute.": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
     "Total space": "合計容量",
