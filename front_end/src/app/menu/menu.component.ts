@@ -183,11 +183,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
         this.appStateService.ribbonSubject
             .pipe(
+                distinctUntilChanged(),
                 untilDestroyed(this),
-                distinctUntilChanged())
+            )
             .subscribe(state => {
                 if (state) {
-                    this.elmRibbon = this.renderer.selectRootElement('nx-ribbon div', true);
+                    this.elmRibbon = this.renderer.selectRootElement('nx-ribbon', true);
                 }
                 if (!this.ribbonShown && state) {
                     this.windowHeight = this.windowHeight - this.elmRibbon.offsetHeight;
