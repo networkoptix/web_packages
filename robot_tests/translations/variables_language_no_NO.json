@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Send aktiverings e-post igjen.",
     "FORGOT PASSWORD TEXT": "Glemt passord?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Alle sky-brukere vil bli slettet",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "Systemet vil bare være tilgjengelig gjennom lokalt nettverk.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Skriv inn passord for å fortsette",
     "SYSTEM NO ACCESS TEXT": "Kunne ikke få tilgang til systemet",
     "DISCONNECT FROM CLOUD TEXT": "Koble fra %PRODUCT_NAME%",
