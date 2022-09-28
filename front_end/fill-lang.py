@@ -1,5 +1,6 @@
 # Make sure any changes here do not break build_scripts/generate_language_compiled_json.py
 import json
+import os
 import re
 
 
@@ -51,9 +52,10 @@ def add_menu_to_i18n():
         menus = json.load(cms_static_menus)
         json_data.update(parse_menus(menus))
 
-    with open('../cloud/cms/menus.json') as cms_static_menus:
-        menus = json.load(cms_static_menus)
-        json_data.update(parse_menus(menus))
+    if os.path.exists('../cloud/cms/menus.json'):
+        with open('../cloud/cms/menus.json') as cms_static_menus:
+            menus = json.load(cms_static_menus)
+            json_data.update(parse_menus(menus))
 
     copy = json_data.copy()
 

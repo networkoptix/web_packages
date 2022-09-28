@@ -54,6 +54,7 @@
     "build:auth": "npm run cleardist && nx run authorization:build:production",
     "build:cloud": "npm run cleardist && npm run lang && nnx run front-end:build:production",
     "build-webadmin": "npm run cleardist && npm run lang && nx run webadmin:build:production",
+    "build:webadmin": "npm run cleardist && npm run lang && npx nx --skip-nx-cache=true run-many --target=build --projects=webadmin,setup-wizard --configuration=production",
     "bundle-report": "npm run lang && nx run front-end:build:production --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
     "bundle-report:auth": "npm run lang && npx nx run authorization:build:production --stats-json && webpack-bundle-analyzer dist/authorization/stats.json -s gzip",
     "cleardist": "([ -e ./dist ] && rm -rf ./dist) && echo 'Cleared dist folder' || echo 'No Dist to clear' ",

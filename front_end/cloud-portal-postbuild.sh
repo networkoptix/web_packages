@@ -3,6 +3,7 @@ IS_WEBADMIN=$1
 
 if [ "$IS_WEBADMIN" = true ]; then
     mv ./dist/webadmin/* ./dist/
+    cp -R ./dist/setup-wizard/* ./dist/
 else
     mv ./dist/front_end/* ./dist/
 fi
@@ -20,8 +21,8 @@ sed -i -e 's/type="text\/javascript"//g' dist/index.html;  # remove extra type a
 
 # Webadmin specific actions
 if [ $IS_WEBADMIN ]; then
+  echo "Nothing to see here"
 #    cp ./common/customization/webadmin_logo.png ./dist/images/logo.png
-    echo "Nothing to see here"
 else
     cp ./dist/index.html ./dist/index.mustache.html
     sed -i -d 's/<title><\/title>/<title>{{title}}<\/title>/' ./dist/index.mustache.html

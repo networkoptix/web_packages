@@ -2,7 +2,7 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
     PathLocationStrategy,
-    DatePipe
+    DatePipe, LocationStrategy
 } from '@angular/common';
 import {
     HttpClientModule,
@@ -50,6 +50,7 @@ import { initializeApp } from '@pages/push-notifications/push-notifications.modu
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
+import { NxSwPromptUpdateService } from '@services/sw-prompt-update.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 
@@ -129,7 +130,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
-        PathLocationStrategy,
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
         {
             provide: FIREBASE_OPTIONS,
             deps: [NxConfigService],
@@ -142,6 +143,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         BookmarksGuard,
         DatePipe,
         NxBootstrapProvider,
+        NxSwPromptUpdateService,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
     ],
@@ -154,4 +156,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 })
 
 export class AppModule {
+    constructor(
+        // Do not remove, IDE will show that these services aren't used, but we just need them to be instantiated here.
+        nxSwPromptUpdateService: NxSwPromptUpdateService
+    ) {
+    }
 }

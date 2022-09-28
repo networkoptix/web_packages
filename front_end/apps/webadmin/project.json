@@ -120,6 +120,7 @@
                     ]
                 },
                 "production": {
+                    "deployUrl": "static/",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

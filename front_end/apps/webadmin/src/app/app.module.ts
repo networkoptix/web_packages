@@ -2,7 +2,7 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
     HashLocationStrategy,
-    DatePipe
+    DatePipe, LocationStrategy
 } from '@angular/common';
 import {
     HttpClientModule,
@@ -116,7 +116,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
-        HashLocationStrategy,
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
         {
             provide: FIREBASE_OPTIONS,
             deps: [NxConfigService],

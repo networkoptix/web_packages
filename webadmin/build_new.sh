@@ -50,11 +50,12 @@ npm ci
 
 # Build webadmin.
 echo -e "\nBuild webadmin" >&2
-npm run build-webadmin
+npm run build:webadmin
 mv dist static
-cp -R static/scripts/. static/
+
+cp -R static/webadmin/. static/
 cp -R static/setup-wizard/. static/
-# rm -rf static/setup-wizard  # Removed while checking build stability
+rm -rf static/{setup-wizard,webadmin}
 
 # Make translations
 echo -e "\nCreate front end translations **************" >&2

@@ -49,6 +49,7 @@
             },
             "configurations": {
                 "production": {
+                    "baseHref": "static/",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",
@@ -60,10 +61,9 @@
                         }
                     ],
                     "index": {
-                        "input": "src/index.html",
+                        "input": "apps/setup-wizard/src/index.html",
                         "output": "inline.html"
                     },
-                    "baseHref": "static/",
                     "optimization": true,
                     "outputHashing": "all",
                     "sourceMap": false,
@@ -79,8 +79,8 @@
                         },
                         {
                             "type": "anyComponentStyle",
-                            "maximumWarning": "6kb",
-                            "maximumError": "10kb"
+                            "maximumWarning": "10kb",
+                            "maximumError": "20kb"
                         }
                     ]
                 },
