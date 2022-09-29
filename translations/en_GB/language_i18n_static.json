@@ -1,5 +1,5 @@
 {
-    "language": "en_UK",
+    "language": "en_US",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
@@ -805,8 +805,8 @@
     "pageTitles": {
         "about": "About",
         "account": "Account settings",
-        "activate": "Activate Account",
-        "activateCode": "Activate Account",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Authorization",
@@ -823,7 +823,7 @@
         "pageNotFound": "Page not found",
         "register": "Create account in",
         "registerSuccess": "Welcome to",
-        "restorePassword": "Reset Password",
+        "restorePassword": "Reset password",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Supported Devices",
         "system": "System",
@@ -959,6 +959,21 @@
         "Bookmarks": "Bookmarks",
         "Layouts": "Layouts",
         "Monitoring": "Monitoring"
+    },
+    "setupWizard": {
+        "title": {
+            "advanced": "Advanced System settings",
+            "brokenSystem": "Cannot setup System",
+            "initFailure": "Cannot initialize System",
+            "localFailure": "Cannot setup System",
+            "localLogin": "Set up an administrator password",
+            "localSuccess": "System is ready for use",
+            "merge": "Connect the server to the existing System",
+            "mergeFailure": "Cannot merge Systems",
+            "mergeProcess": "Merging Systems...",
+            "start": "Get Started with %VMS_NAME%",
+            "systemName": "Enter System Name"
+        }
     },
     "system": {
         "connected": "Connected",
