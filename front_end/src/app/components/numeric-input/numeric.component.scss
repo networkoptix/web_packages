@@ -3,22 +3,32 @@
 :host {
 	position : relative;
 	display  : block;
-	
+
 	input {
 		&.ng-invalid:not(.ng-untouched) {
 			input {
 				border-color : var(--input-error-color) !important;
 			}
 		}
-		
+
 		&:disabled::-webkit-outer-spin-button,
 		&:disabled::-webkit-inner-spin-button {
 			-webkit-appearance : none;
 			margin             : 0;
 		}
+
+
+		&:disabled ~ div.spinner-button {
+			display: none !important;
+		}
+		&:focus ~ div.spinner-button,
+		&:hover:not(:disabled) ~ div.spinner-button {
+			display: block !important;
+		}
 	}
-	
+
 	.spinner-button {
+		display          : none;
 		position         : absolute;
 		cursor           : default;
 		z-index          : 2;
@@ -30,30 +40,30 @@
 		height           : 15px;
 		line-height      : 10px;
 		right 			 : 3px;
-		
+
 		svg-icon svg {
 			width: 15px;
 			height: 15px;
-			
+
 			.st0 {
 				stroke : var(--input-numeric-arrow-color);
 				fill : none;
 			}
 		}
-		
+
 		&:hover {
 			// numeric input "steal" arrow's hover event
 		}
-		
+
 		&--increment {
 			top  : 1px;
 			transform: rotate(180deg);
-			
+
 			svg-icon svg {
 				margin-left : -1px
 			}
 		}
-		
+
 		&--decrement {
 			bottom  : 1px;
 		}
