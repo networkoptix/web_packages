@@ -178,3 +178,36 @@ class CloudConnector:
         current_app.logger.debug(json.dumps(data, indent=4))
         return await self.loop.run_in_executor(None, self._post_wrapper, request_url, data)
 
+
+class RestConnector:
+    def __init__(self, request):
+        self.session = requests.Session()
+        token = request.headers.get('Authorization')
+        self.session.headers.update({'Authorization': token})
+        self.email = self._get_username_from_token(token.split(" ")[1])
+
+    def _get(self, route, params=None):
+        url = f"https://{CLOUD_HOST}{route}"
+        res = self.session.get(url, params=params)
+        res.raise_for_status()
+        return res.json()
+
+    def _post(self, route, data=None):
+        url = f"https://{CLOUD_HOST}{route}"
+        res = self.session.post(url, data=data)
+        res.raise_for_status()
+        return res.json()
+
+    def _get_username_from_token(self, token):
+        return self._get(f'/cdb/oauth2/token/{token}').get('username')
+
+    async def share_system(self, systems, users):
+        route = '/api/systems/group-users'
+        data = {
+            'systems': systems,
+            'users': users
+        }
+        return self._post(route, data=data)
+
+    async def get_system(self, system_id):
+        return self._get("/cdb/systems/get", params={'systemId': system_id}).get('systems')[0]

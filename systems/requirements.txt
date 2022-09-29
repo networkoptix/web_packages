@@ -1,9 +1,11 @@
 aiofiles==0.8.0
+aniso8601==9.0.1
 blinker==1.4
 certifi==2021.10.8
 charset-normalizer==2.0.12
 click==8.0.3
 Flask==2.0.2
+Flask-RESTful==0.3.9
 Flask-SQLAlchemy==2.5.1
 greenlet==1.1.2
 h11==0.13.0
@@ -15,10 +17,15 @@ idna==3.3
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
+marshmallow==3.18.0
+packaging==21.3
 priority==2.0.0
 PyMySQL==1.0.2
+pyparsing==3.0.9
+pytz==2022.2.1
 quart==0.16.3
 requests==2.27.1
+six==1.16.0
 SQLAlchemy==1.4.31
 toml==0.10.2
 urllib3==1.26.8

@@ -78,10 +78,10 @@ class GroupView:
     def _check_group(group_id, email):
         group = Group.query.get(group_id)
         if not group:
-            return {'msg': 'You cannot delete a group that doesn\'t exist', 'error': 404}
+            return {'msg': 'You cannot delete a group that doesn\'t exist', 'error': 404}, 404
         if group.owner_account_email != email:
-            return {'msg': 'You can only delete groups that you own', 'error': 403}
-        return group
+            return {'msg': 'You can only delete groups that you own', 'error': 403}, 403
+        return group, None
 
     @staticmethod
     def create_group(name, email, parent_id=None):
@@ -94,9 +94,9 @@ class GroupView:
 
     @staticmethod
     async def delete_group(modify_users, group_id, email):
-        group = GroupView._check_group(group_id, email)
-        if type(group) is dict:
-            return group
+        group, error_code = GroupView._check_group(group_id, email)
+        if error_code:
+            return group, error_code
         group.users.delete()
         users = list(set(group.get_users_to_root()) | set(group.get_all_users()))
         emails = [user.email for user in users]
@@ -115,21 +115,24 @@ class GroupView:
         return {'msg': 'Group was deleted.'}
 
     @staticmethod
-    def list_groups(account_id=None):
-        groups = Group.query.filter(Group.parent_group_id == None)
-        if account_id:
-            groups = groups.filter(Group.owner_account_email == account_id)
+    def list_groups(email, group_id=None):
+        if group_id:
+            groups = Group.query.filter(Group.id == group_id)
+        else:
+            groups = Group.query.filter(Group.parent_group_id == None)
+        if email:
+            groups = groups.filter(Group.owner_account_email == email)
         groups_list = [group.data() for group in groups]
 
         return groups_list
 
     @staticmethod
-    async def move_system_to_group(modify_users, group_id, system, account):
-        if system.get('ownerAccountEmail') != account.get('email'):
+    async def move_system_to_group(modify_users, group_id, system, current_email):
+        if system.get('ownerAccountEmail') != current_email:
             return {'msg': 'You can only move systems that you own.', 'error': 403}
 
         group = Group.query.filter(Group.id == group_id).first()
-        if group and group.owner_account_email != account.get('email'):
+        if not group or group.owner_account_email != current_email:
             return {'msg': 'You can only move systems into groups that you own.', 'error': 403}
 
         system_id = system.get('id')
@@ -155,15 +158,18 @@ class GroupView:
         return {'msg': 'System was moved to target group.'}
 
     @staticmethod
-    async def move_group_to_group(modify_users, src_group_id, dst_group_id):
+    async def move_group_to_group(modify_users, dst_group_id, src_group_id, current_email):
         if src_group_id == dst_group_id:
             return {'msg': 'You cannot add a group to itself', 'error': 403}
         src = Group.query.get(src_group_id)
+        if not src or src.owner_account_email != current_email:
+            return {'msg': 'You can only move groups that you own.', 'error': 403}
         dst = None
         root = None
         if dst_group_id:
             dst = Group.query.get(dst_group_id)
-
+            if not dst and dst.owner_account_email != current_email:
+                return {'msg': 'You can only move groups that you own.', 'error': 403}
             if dst.parent_group_id == src_group_id:
                 return {'msg': 'You cannot add a parent group to its child.', 'error': 403}
             if src.owner_account_email != dst.owner_account_email:
@@ -187,9 +193,9 @@ class GroupView:
 
     @staticmethod
     def update_group(group_id, email, name):
-        group = GroupView._check_group(group_id, email)
-        if type(group) is dict:
-            return group
+        group, error_code = GroupView._check_group(group_id, email)
+        if error_code:
+            return group, error_code
         old_name = group.name
         group.name = name
         db.session.commit()
@@ -209,7 +215,7 @@ class UserView:
         user = [UserView.add_user_to_db(group_id, email, role)]
         group = Group.query.filter(group_id)
         if not group:
-            return False
+            return {'msg': f'Group not found. Failed to add {email}'}, 404
         await group.add_users_to_group(add_user_to_cloud, user)
         return {'msg': f'{email} was added to the group'}
 
@@ -236,7 +242,7 @@ class UserView:
         res = UserView.remove_user_from_db(group_id, email)
         group = Group.query.filter(group_id)
         if not group:
-            return False
+            return {'msg': f'Group not found. Failed to remove {email}'}, 404
         await group.remove_users_from_group(remove_user_from_system, email)
         return res
 
@@ -244,6 +250,6 @@ class UserView:
     async def update_users_in_group(modify_user, group_id, users):
         group = Group.query.filter(group_id)
         if not group:
-            return False
+            return {'msg': f'Group not found. Failed to update users'}, 404
         await group.update_users_in_group(modify_user, users)
         return {'msg': 'Users have been updated for group'}

@@ -82,10 +82,10 @@ class Group(db.Model):
         return await modify_users(self.get_all_system_ids_in_group(), users_to_update)
 
     async def add_users_from_above_group(self, modify_users):
-        return await self._move_users_in_group(modify_users, remove_user=True)
+        return await self._move_users_in_group(modify_users, remove_user=False)
 
     async def remove_users_from_above_group(self, modify_users):
-        return await self._move_users_in_group(modify_users, remove_user=False)
+        return await self._move_users_in_group(modify_users, remove_user=True)
 
     # Modifying users in a system
     async def add_users_to_system(self, modify_users, system_id):

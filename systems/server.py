@@ -9,6 +9,7 @@ from quart import Quart, current_app, websocket
 from debug_tools import PrintDebug
 from models import db
 from nx_common import CloudConnector
+from rest_v1 import rest_blueprint
 from views import GroupView, ParamsValidator, UserView
 
 dictConfig({
@@ -30,6 +31,38 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI') or 'sqlite:///test.s
 db.init_app(app)
 db.create_all(app=app)
 
+app.register_blueprint(rest_blueprint)
+
+
+class AuthMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if not scope.get('path').startswith('/rest/'):
+            return await self.app(scope, receive, send)
+
+        for header, value in scope['headers']:
+            if header == b'authorization' and value:
+                return await self.app(scope, receive, send)
+
+        return await self.error_response(receive, send)
+
+    async def error_response(self, receive, send):
+        await send({
+            'type': 'http.response.start',
+            'status': 401,
+            'headers': [(b'content-length', b'0')],
+        })
+        await send({
+            'type': 'http.response.body',
+            'body': b'',
+            'more_body': False,
+        })
+
+
+app.asgi_app = AuthMiddleware(app.asgi_app)
+
 
 async def receiving(cloud_connector):
     await websocket.send(json.dumps({
@@ -49,11 +82,12 @@ async def receiving(cloud_connector):
         elif action == 'delete_group':
             res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'], user_email)
         elif action == 'move_group':
-            res = await GroupView.move_group_to_group(cloud_connector.share_system, data['group_id'], data['target_id'])
+            res = await GroupView.move_group_to_group(
+                cloud_connector.share_system, data['target_id'], data['group_id'], cloud_connector.account.get('email'))
         elif action == 'move_system':
             system = await cloud_connector.get_systems(system_id=data['system_id'])
             res = await GroupView.move_system_to_group(
-                cloud_connector.share_system, data['group_id'], system, cloud_connector.account)
+                cloud_connector.share_system, data['group_id'], system, cloud_connector.account.get('email'))
         elif action == 'update_group':
             res = await GroupView.update_group(data['group_id'], user_email, data['name'])
         # User management
@@ -124,6 +158,11 @@ async def ws():
 def server_health():
     app.logger.debug('health check')
     return 'OK', 200
+
+
+@app.errorhandler(requests.exceptions.HTTPError)
+def not_found(error):
+    return error.response.json(), error.response.status_code
 
 
 if __name__ == "__main__":
