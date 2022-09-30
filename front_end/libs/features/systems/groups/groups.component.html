@@ -19,6 +19,23 @@
                 <!-- eslint-disable-next-line nx/template/no-untranslated -->
                 <!-- <button (click)="__crash()">Crash!</button> -->
             </div>
+            <!-- TODO: Add styling when spec is updated  -->
+            <div class="buttons">
+                <button
+                    class="btn btn-default mr-2"
+                    (click)="setSidebarAll(true)"
+                    translate
+                >
+                    Open all
+                </button>
+                <button
+                    class="btn btn-default"
+                    (click)="setSidebarAll(false)"
+                    translate
+                >
+                    Collapse all
+                </button>
+            </div>
             <div
                 class="group-drop-list"
                 cdkDropList

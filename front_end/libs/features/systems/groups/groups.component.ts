@@ -88,6 +88,10 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         this.dialogsService.createSystemGroup(this.groupId);
     }
 
+    setSidebarAll(state: boolean): void {
+        this.groupsService.sidebarOpenSubject.next(state);
+    }
+
     __crash(): void {
         // @ts-expect-error Deliberately crash the backend for testing
         this.groupsService.moveGroup(['foo'], ['bar']);

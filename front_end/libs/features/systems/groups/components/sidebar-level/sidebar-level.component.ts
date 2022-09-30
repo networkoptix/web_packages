@@ -1,5 +1,6 @@
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -8,6 +9,7 @@ import { NgChanges } from '@utils/ng-changes';
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 
+@UntilDestroy()
 @Component({
     selector: 'nx-sidebar-level',
     templateUrl: 'sidebar-level.component.html',
@@ -25,6 +27,9 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
         private groupsService: NxSystemGroupsService,
     ) {
         this.CONFIG = configService.getConfig();
+        groupsService.sidebarOpenSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(state => this.setAll(state));
     }
 
     ngOnChanges({ groups }: NgChanges<NxGroupsSidebarLevelComponent>): void {
@@ -40,6 +45,12 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
 
     trackItem(_index: number, item: GroupsItem): string {
         return item.id;
+    }
+
+    private setAll(state: boolean): void {
+        Object.keys(this.openState).forEach(k => {
+            this.openState[k] = state;
+        });
     }
 
     onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {

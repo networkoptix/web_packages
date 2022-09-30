@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
@@ -32,6 +33,9 @@ export class NxSystemGroupsService {
     private WEBSOCKET_URL: string;
 
     private reconnectInterval: number;
+
+    /** Signal for opening/collapsing all groups */
+    sidebarOpenSubject = new Subject<boolean>();
 
     constructor(
         configService: NxConfigService,
