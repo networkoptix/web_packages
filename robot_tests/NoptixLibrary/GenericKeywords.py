@@ -19,6 +19,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
 from robot.api.deco import keyword, library
 from ServerAPI import ServerAPI
+from ServerAPI5 import ServerAPI5
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -713,11 +714,17 @@ class GenericKeywords(object):
                 return
             
     @keyword
-    def remove_user_by_email(self, auth, serverUrl, email):
-        users = ServerAPI.get_users(self, auth, serverUrl)
-        for user in users:
-            if user['email']==email:
-                ServerAPI.remove_user(self, auth, serverUrl, user['id'])
+    def remove_user_by_email(self, auth, serverUrl, email, image):
+        if image == '4.2':
+            users = ServerAPI.get_users(self, auth, serverUrl)
+            for user in users:
+                if user['email']==email:
+                    ServerAPI.remove_user(self, auth, serverUrl, user['id'])
+        else:
+            users = ServerAPI5.get_users(self, auth, serverUrl)
+            for user in users:
+                if user['email'] == email:
+                    ServerAPI5.remove_user(self, auth, serverUrl, user['id'])
 
     @keyword
     def detect_language(self, text):

@@ -273,6 +273,7 @@ Force Tags        system    threaded
 
 16. Correct items are shown for admin
     [Tags]    C41561    webadmin    cloud
+    Log    currenty failing due to CLOUD-9047
     Log in to system    ${system}    ${system}[cloud users][cloudAdmin]
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
@@ -327,7 +328,7 @@ Force Tags        system    threaded
         Log Out
         Wait Until Element Is Visible    ${ANONYMOUS BODY}
     END
-    Remove User By Email    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${custom role}
+    Remove User By Email    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${custom role}   ${IMAGE}
 
 
 # Left search
@@ -438,7 +439,7 @@ Force Tags        system    threaded
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
     Capture Page Screenshot
-    IF   '${IMAGE}' == '5.0_test'
+    IF   '${IMAGE}' == '5.0'
         Should Be Equal As Numbers    ${num users found}    7
     ELSE
         Should Be Equal As Numbers    ${num users found}    6
