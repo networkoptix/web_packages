@@ -9,13 +9,15 @@
             {{ node.display_name }}
         </button>
     </ng-container>
-    <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>
-    <a
-        *ngIf="!loggedIn"
-        [href]="headerService.createUrl | unsafe"
-        class="create-account"
-        translate
-    >
-        CREATE ACCOUNT
-    </a>
+    <ng-container *ngIf="loggedIn !== undefined">
+        <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>
+        <a
+            *ngIf="!loggedIn"
+            [href]="headerService.createUrl | unsafe"
+            class="create-account"
+            translate
+        >
+            CREATE ACCOUNT
+        </a>
+    </ng-container>
 </div>

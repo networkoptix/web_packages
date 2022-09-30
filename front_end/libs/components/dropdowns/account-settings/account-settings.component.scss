@@ -129,8 +129,7 @@
         }
 
         .dropdown-arrow-wrapper {
-            background-color: $dark9;
-
+            background-color: var(--header-profile-active-bg);
             .dropdown-arrow {
                 .profile-dropdown-arrow {
                     fill: var(--header-profile-active-color);
@@ -233,6 +232,27 @@
                 position: relative;
                 left: 6.5px;
                 top: 1px;
+            }
+        }
+    }
+
+    &.active {
+        .displayed-name {
+            color: var(--header-profile-active-color) !important;
+        }
+        .user-svg-wrapper {
+            background: var(--header-profile-active-bg) !important;
+            .user-svg {
+                .icon-with-fill {
+                    fill: var(--header-profile-active-color) !important;
+                }
+            }
+        }
+        .dropdown-arrow-wrapper {
+            .dropdown-arrow {
+                .profile-dropdown-arrow {
+                    fill: var(--header-profile-active-color) !important;
+                }
             }
         }
     }

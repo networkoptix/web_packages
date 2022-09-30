@@ -5,7 +5,7 @@ import {
     OnDestroy,
     ViewChild
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     BehaviorSubject,
     combineLatest,
@@ -17,6 +17,7 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
@@ -39,6 +40,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     buttonWidth = new BehaviorSubject(0);
     rightOffset$ = new BehaviorSubject(0);
     newHeader = false;
+    isAccountRoute = false;
     displayedFullName = '';
 
     accountSubscription: SubscriptionLike;
@@ -58,10 +60,14 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
+        headerService: NxHeaderService,
         private accountService: NxAccountService
     ) {
         super(languageService, configService);
         this.newHeader = this.CONFIG.featureFlags.newHeader;
+        headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
+            this.isAccountRoute = location?.path?.includes('/account');
+        });
     }
 
     ngOnInit(): void {

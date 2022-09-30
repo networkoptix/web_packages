@@ -745,6 +745,32 @@
         "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
     },
     "appHeader": {
+        "headerMenuNodes": {
+            "accountSettings": {
+                "displayName": "account",
+                "nodes": [
+                    {
+                        "displayName": "Account Settings"
+                    }
+                ]
+            },
+            "system": {
+                "displayName": "systems",
+                "nodes": [
+                    {
+                        "displayName": "My Systems"
+                    }
+                ]
+            },
+            "welcome": {
+                "displayName": "welcome",
+                "nodes": [
+                    {
+                        "displayName": "Welcome To %CLOUD_NAME%"
+                    }
+                ]
+            }
+        },
         "mySystems": "My Systems",
         "systemList": "System List"
     },

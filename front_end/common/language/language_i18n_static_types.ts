@@ -124,8 +124,24 @@ export interface AppFooter {
 }
 
 export interface AppHeader {
-    mySystems:  (params?: Record<string, string | number>) => string;
-    systemList: (params?: Record<string, string | number>) => string;
+    mySystems:       (params?: Record<string, string | number>) => string;
+    systemList:      (params?: Record<string, string | number>) => string;
+    headerMenuNodes: HeaderMenuNodes;
+}
+
+export interface HeaderMenuNodes {
+    welcome:         AccountSettings;
+    accountSettings: AccountSettings;
+    system:          AccountSettings;
+}
+
+export interface AccountSettings {
+    displayName: (params?: Record<string, string | number>) => string;
+    nodes:       Node[];
+}
+
+export interface Node {
+    displayName: (params?: Record<string, string | number>) => string;
 }
 
 export interface Authorize {

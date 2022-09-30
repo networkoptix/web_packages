@@ -241,22 +241,24 @@ export class NxMenusService {
     }
 
     makeSystemMenuNode() {
-        // TODO: move to cms
-        const systemNode = new MenuNode('systems', '/systems');
-        systemNode.nodes.push(new MenuNode('My Systems', '/systems'));
+        const systemLang = this.LANG.appHeader.headerMenuNodes.system
+        const systemNode = new MenuNode(systemLang.displayName(), '/systems');
+        systemNode.nodes.push(new MenuNode(systemLang.nodes[0].displayName(), '/systems'));
         return systemNode;
     }
 
     makeAccountSettingsNode() {
-        const accountNode = new MenuNode('account', '/account');
+        const accountSettingsLang = this.LANG.appHeader.headerMenuNodes.accountSettings
+        const accountNode = new MenuNode(accountSettingsLang.displayName(), '/account');
         accountNode.invisible = true;
-        accountNode.nodes.push(new MenuNode('Account Settings', '/account'));
+        accountNode.nodes.push(new MenuNode(accountSettingsLang.nodes[0].displayName(), '/account'));
         return accountNode;
     }
 
     makeWelcomeNode() {
-        const welcomeNode = new MenuNode('Welcome', 'content/about');
-        welcomeNode.nodes.push(new MenuNode('Welcome To Nx', 'content/about'));
+        const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome
+        const welcomeNode = new MenuNode(welcomeLang.displayName(), 'content/about');
+        welcomeNode.nodes.push(new MenuNode(welcomeLang.nodes[0].displayName(), 'content/about'));
         return welcomeNode;
     }
 
