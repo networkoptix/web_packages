@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxMenusService } from '@services/menus.service';
@@ -9,7 +10,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy()
 @Component({
@@ -28,14 +28,18 @@ export class NxNavFooterComponent implements OnInit {
         config: NxConfigService,
         languageService: NxLanguageProviderService,
         private menusService: NxMenusService,
-        @Inject(WINDOW) private window: Window,
+        private router: Router,
         public scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = config.getConfig();
         this.copyright = languageService.translations.appFooter.copyright({ currentYear: new Date().getFullYear().toString() });
 
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
-            this.visible$.next(width > 576);
+            this.checkVisible(this.router.url, width);
+        });
+
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
+            this.checkVisible(event.url);
         });
     }
 
@@ -55,6 +59,11 @@ export class NxNavFooterComponent implements OnInit {
     }
 
     scrollToTop(): void {
-        this.window.scrollTo({ top: 0 });
+        this.scrollMechanicsService.windowScrollSubject.next(0);
+    }
+
+    checkVisible(url: string, width = this.scrollMechanicsService.windowSizeSubject.value.width): void {
+        const bootstrapXS = 576;
+        this.visible$.next(width > bootstrapXS && !url.includes('/systems'));
     }
 }

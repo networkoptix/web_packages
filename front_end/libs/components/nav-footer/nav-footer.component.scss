@@ -5,7 +5,7 @@
     height: 32px;
     background-color: var(--footer-bg);
     color: var(--footer-text-color);
-    z-index: 4;
+    z-index: 52;
     .navbar-nav {
         flex-wrap: nowrap;
         white-space: nowrap;
@@ -24,14 +24,33 @@
         white-space: nowrap;
         margin-left: auto;
         margin-right: 10px;
-        .return-to-top {
-            width: 20px;
-            margin-left: 22px;
-            position: relative;
-            bottom: 1px;
-            &:hover {
-                cursor: pointer;
+    }
+    .return-to-top {
+        background-color: var(--footer-bg);
+        width: 20px;
+        padding-left: 20px;
+        padding-right: 15px;
+        position: sticky;
+        right: 0px;
+        bottom: 1px;
+        transition-property: width, margin-left, padding;
+        transition-duration: 500ms, 500ms, 500ms;
+        &.invisible {
+            width: 0px;
+            margin-left: 0px;
+            padding: 0px;
+            svg-icon {
+                opacity: 0;
             }
+          }
+        &:hover {
+            cursor: pointer;
+        }
+        svg-icon {
+            position: relative;
+            right: 10px;
+            bottom: 1px;
+            transition: opacity 500ms linear;
         }
     }
 }
