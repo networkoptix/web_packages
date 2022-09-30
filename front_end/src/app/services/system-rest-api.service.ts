@@ -517,7 +517,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post(
             '/rest/v1/login/sessions',
             { username, password, setCookie: remember }
-        );
+        ).pipe(map(data => {
+            if (remember) {
+                this.setVmsToken(data.token);
+            }
+            return data;
+        }));
     }
 
     loginTokenUrl(token: string): Observable<any> {

@@ -29,8 +29,6 @@ export class UpdateWebadminSessionComponent implements OnInit {
     @Input() noConnectionMsg: string;
     @Input() system: NxSystem;
     @Input() processAction: string;
-    @Input() bypassOauth: boolean = false;
-
     @Input() dialogRef: DialogRef;
     @Output() loginSuccess = new EventEmitter<any>();
 
@@ -71,7 +69,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
         ]).then(([account, serverInfo]: any) => {
             const moduleInfo = serverInfo?.reply;
             this.auth.login = account.name;
-            this.isCloud = this.bypassOauth || this.system.mediaserver.isSessionOauth;
+            this.isCloud = this.system.mediaserver.isSessionOauth;
             if (this.isCloud && !(this.window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))) {
                 this.close();
                 this.toastService.notify(
