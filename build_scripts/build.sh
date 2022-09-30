@@ -8,13 +8,6 @@ function build_frontend () {
     echo "Building front_end"
     echo "Build statics"
     pushd ../front_end
-        BUILD=${VERSION//*.}
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' 's@{{BUILD}}@'"$BUILD"'@g' ./libs/services/nx-config/config.ts
-        else
-            sed -i 's@{{BUILD}}@'"$BUILD"'@g' ./libs/services/nx-config/config.ts
-        fi
-
         npm run build
         mkdir -p dist/skins
         npm run buildSkins dist/skins

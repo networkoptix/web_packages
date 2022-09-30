@@ -16,7 +16,8 @@ import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { IConfig } from './config-types';
 
 // Swapped with BUILD env during cloud portal build
-const buildSubstituted = !'{{BUILD}}'.includes('BUILD');
+const buildFromEnv = '{{BUILD}}'.trim();
+const buildSubstituted = buildFromEnv && !buildFromEnv.includes('BUILD');
 const staticBase = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
 
 export const nxConfig: IConfig = {

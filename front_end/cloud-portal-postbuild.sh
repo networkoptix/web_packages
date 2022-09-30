@@ -5,6 +5,17 @@ if [ "$IS_WEBADMIN" = true ]; then
     mv ./dist/webadmin/* ./dist/
     cp -R ./dist/setup-wizard/* ./dist/
 else
+    BUILD=${VERSION//*.}
+    echo "BUILD: $BUILD"
+
+    for main_bundle in ./dist/**/main.*.js;
+    do
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i '' 's@{{BUILD}}@'"$BUILD"'@g' "$main_bundle"
+        else
+            sed -i 's@{{BUILD}}@'"$BUILD"'@g' "$main_bundle"
+        fi
+    done
     mv ./dist/front_end/* ./dist/
 fi
 
