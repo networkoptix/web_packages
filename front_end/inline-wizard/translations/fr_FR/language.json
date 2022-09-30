@@ -110,7 +110,7 @@
         "statisticsReportTimeCycle": "Statistics report interval",
         "statisticsReportUpdateDelay": "Statistics report - update delay",
         "synchronizeTimeWithInternet": "Synchronize time with Internet",
-        "SystemName": "System name",
+        "SystemName": "Nom du système",
         "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
         "timeSynchronizationEnabled": "Time synchronization enabled",
         "primaryTimeServer": "Primary time synchronization server",
@@ -176,12 +176,12 @@
         "serverOffline": "server is offline"
     },
     "advanced": {
-        "free": "Free",
+        "free": "Libre",
         "total": "Total",
-        "occupied": "Occupied",
-        "reserved": "Reserved"
+        "occupied": "Occupé",
+        "reserved": "Réservé"
     },
     "pageTitles": {
-        "default": "{{PRODUCT_NAME}} web interface"
+        "default": "Interface web {{PRODUCT_NAME}}"
     }
 }
