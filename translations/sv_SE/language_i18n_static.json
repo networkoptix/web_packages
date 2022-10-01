@@ -707,7 +707,33 @@
     },
     "appHeader": {
         "mySystems": "My Systems",
-        "systemList": "System List"
+        "systemList": "System List",
+        "headerMenuNodes": {
+            "welcome": {
+                "displayName": "welcome",
+                "nodes": [
+                    {
+                        "displayName": "Welcome To %CLOUD_NAME%"
+                    }
+                ]
+            },
+            "accountSettings": {
+                "displayName": "account",
+                "nodes": [
+                    {
+                        "displayName": "Account Settings"
+                    }
+                ]
+            },
+            "system": {
+                "displayName": "systems",
+                "nodes": [
+                    {
+                        "displayName": "My Systems"
+                    }
+                ]
+            }
+        }
     },
     "integration": {
         "Access Control": "Access Control",
