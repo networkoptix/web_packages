@@ -18,7 +18,7 @@ from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiErro
 from util.base_cache import BaseCache
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
-from util.helpers import get_meilisearch_client
+from util.helpers import get_customization, get_meilisearch_client
 
 logger = logging.getLogger(__name__)
 
@@ -258,7 +258,8 @@ def apply_replacements(html, replacements):
     return html
 
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False, customization_name=settings.CUSTOMIZATION):
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False, *, customization=None, request=None):
+    customization = customization or get_customization(request)
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
     REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
@@ -276,12 +277,12 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
     docs_json = []
 
     # Get global contexts and fill any matching variables in datarecords
-    cloud_portal = get_cloud_portal_asset(customization_name)
+    cloud_portal = get_cloud_portal_asset(customization=customization)
 
     for doc in docs:
         version = None
         doc_id = doc if type(doc) is int else doc.id
-        cache_key = f'{customization_name}-{language.code}-{doc_id}-{state}'
+        cache_key = f'{customization}-{language.code}-{doc_id}-{state}'
         doc_dict = DOC_CACHE[cache_key] or {}
 
         # Check if we need to query for the asset and version
@@ -290,13 +291,13 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
                 doc = Asset.objects.filter(
                     id=doc, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
             if doc:
-                version = doc.version_id(customization=customization_name)
+                version = doc.version_id(customization=customization)
             else:
                 continue
 
         pending_review = None
         if review:
-            pending_review = get_review_matching_current_version(doc, version, customization_name)
+            pending_review = get_review_matching_current_version(doc, version, customization=customization)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -310,7 +311,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
                 doc = Asset.objects.get(id=doc)
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
-                cloud_portal = get_cloud_portal_asset()
+                cloud_portal = get_cloud_portal_asset(customization=customization)
                 global_contexts = Context.objects.filter(
                     asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
                 global_contexts_dict = global_contexts_to_dict(
@@ -318,7 +319,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
             # Get values of article for this version
             values = DataStructure.find_actual_values(
-                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=customization_name
+                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=customization
             )
             values = {ds.name: val for ds, val in values.items()}
             doc_dict = dict()

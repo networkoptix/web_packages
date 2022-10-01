@@ -84,7 +84,7 @@ class IntegrationSerializer(serializers.Serializer):
     @staticmethod
     def generate(integrations, request):
         data = make_integrations_json(integrations, language=get_language_object_from_request(
-            request), show_pending="pending" in request.GET, show_drafts="draft" in request.GET, user=request.user)
+            request), show_pending="pending" in request.GET, show_drafts="draft" in request.GET, user=request.user, request=request)
         return IntegrationSerializer(data=data, many=True)
 
 

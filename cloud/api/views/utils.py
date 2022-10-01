@@ -17,6 +17,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import serializers, status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from util.helpers import get_customization
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
 from cloud.helpers.exceptions import handle_exceptions, require_params,\
@@ -40,9 +41,10 @@ language__body = openapi.Schema(type=openapi.TYPE_STRING)
 visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
-def get_cloud_capabilities_from_cache():
+def get_cloud_capabilities_from_cache(*, customization=None, request=None):
+    customization = customization or get_customization(request)
     customization_cache = cloud_portal_customization_cache(
-        settings.CUSTOMIZATION, 'cloud_capabilities')
+        customization, 'cloud_capabilities')
     capabilities = {
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False)
     }
@@ -53,9 +55,10 @@ def get_cloud_capabilities_from_cache():
     return capabilities
 
 
-def get_settings_from_cache():
+def get_settings_from_cache(*, customization=None, request=None):
+    customization = customization or get_customization(request)
     customization_cache = cloud_portal_customization_cache(
-        settings.CUSTOMIZATION, 'config')
+        customization, 'config')
     serializer = CustomizationCacheSerializer(data=customization_cache)
     serializer.is_valid()
     return serializer.data
@@ -185,20 +188,21 @@ def languages(request):
 @permission_classes((AllowAny, ))
 def downloads_history(request):
     # TODO: later we can check specific permissions
+    customization = get_customization(request)
     can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(
-            request.user, settings.CUSTOMIZATION, 'api.can_view_release')
-    public_release_history = get_settings_from_cache()['publicReleases']
+            request.user, customization, 'api.can_view_release')
+    public_release_history = get_settings_from_cache(customization=customization)['publicReleases']
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
 
     downloads_url = settings.DOWNLOADS_JSON.replace(
-        '{{customization}}', settings.CUSTOMIZATION)
+        '{{customization}}', customization)
     downloads_json = requests.get(downloads_url)
 
     if downloads_json.status_code == 404:
         logger.warning(
-            f"downloads.json doesn't exist for customization: {settings.CUSTOMIZATION}, {settings.CONFIG_ERROR} "
+            f"downloads.json doesn't exist for customization: {customization}, {settings.CONFIG_ERROR} "
             f"(publish and accept a release)"
         )
         return Response(None)
@@ -206,7 +210,7 @@ def downloads_history(request):
     downloads_json.raise_for_status()
     downloads_json = downloads_json.json()
 
-    if not get_settings_from_cache()["showAllBetas"]:
+    if not get_settings_from_cache(customization=customization)["showAllBetas"]:
         filter_type = "betas"
         downloads_json[filter_type] = filter_releases(
             downloads_json.get(filter_type, []))
@@ -222,8 +226,8 @@ def downloads_history(request):
 @permission_classes((IsAuthenticated, ))
 def download_build(request, build):
     # TODO: later we can check specific permissions
-    customization = settings.CUSTOMIZATION
-    public_release_history = get_settings_from_cache()['publicReleases']
+    customization = get_customization(request)
+    public_release_history = get_settings_from_cache(customization=customization)['publicReleases']
     can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(
             request.user, customization, 'api.can_view_release')
@@ -284,8 +288,8 @@ def download_build(request, build):
 @permission_classes((AllowAny, ))
 def downloads(request):
     global_cache = caches['global']
-    customization = settings.CUSTOMIZATION
-    settings_cache = get_settings_from_cache()
+    customization = get_customization(request)
+    settings_cache = get_settings_from_cache(customization=customization)
 
     public_downloads = settings_cache['publicDownloads']
     if not public_downloads and not request.user.is_authenticated:
@@ -379,7 +383,7 @@ def get_feature_flags(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def get_settings(request):
-    data = get_settings_from_cache()
+    data = get_settings_from_cache(request=request)
     serializer = SettingsSerializer(
         data=data, request=request)
     serializer.is_valid()
@@ -456,7 +460,7 @@ def get_ipvd(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def cloud_capabilities(request):
-    capabilities = get_cloud_capabilities_from_cache()
+    capabilities = get_cloud_capabilities_from_cache(request=request)
 
     return Response(capabilities)
 

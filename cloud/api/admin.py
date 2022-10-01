@@ -11,6 +11,7 @@ from api.forms import *
 from api.models import *
 from cms.admin import CMSAdmin
 from cms.models import *
+from util.helpers import get_customization
 
 
 @admin.register(Permission)
@@ -38,7 +39,7 @@ class CustomizationFilter(SimpleListFilter):
     def lookups(self, request, model_admin):
         # Temporary customization 0 is need for 'All' since we need to keep it,
         # but choose the customization for the current cloud portal as the default value
-        self.default_customization = Customization.objects.get(name=settings.CUSTOMIZATION)
+        self.default_customization = Customization.objects.get(name=get_customization(request))
         customizations = [Customization(id=0, name="All")]
         customizations.extend(list(Customization.objects.filter(name__in=request.user.customizations)))
         return [(c.id, c.name) for c in customizations]
@@ -112,14 +113,14 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     def get_list_filter(self, request):
         if UserGroupsToAssetPermissions.check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+                request.user, get_customization(request), 'api.change_proxygroup'
         ):
             return self.list_filter + [GroupFilter]
         return self.list_filter
 
     def get_list_display(self, request):
         if UserGroupsToAssetPermissions.check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+                request.user, get_customization(request), 'api.change_proxygroup'
         ):
             return self.list_display + ['user_groups']
         return self.list_display
@@ -134,14 +135,14 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     def has_change_permission(self, request, obj=None):
         return UserGroupsToAssetPermissions.\
-            check_customization_change_account(request.user, settings.CUSTOMIZATION)
+            check_customization_change_account(request.user, customization=get_customization(request))
 
     def has_delete_permission(self, request, obj=None):  # No deleting users at all
         return False
 
     def has_view_permission(self, request, obj=None):
         return UserGroupsToAssetPermissions.\
-            check_customization_change_account(request.user, settings.CUSTOMIZATION)
+            check_customization_change_account(request.user, customization=get_customization(request))
 
     def get_urls(self):
         urls = super(AccountAdmin, self).get_urls()
@@ -176,12 +177,12 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         }
 
         if request.method == 'POST':
-            form = UserInviteFrom(request.POST, user=request.user)
+            form = UserInviteFrom(request.POST, user=request.user, request=request)
             if form.is_valid():
                 user_id = form.add_user(request, group=group)
                 return redirect(reverse('admin:api_account_change', args=[user_id]))
         else:
-            form = UserInviteFrom(user=request.user)
+            form = UserInviteFrom(user=request.user, request=request)
         context['form'] = form
         context['adminform'] = helpers.AdminForm(form, list([(None, {'fields': form.base_fields})]),
                                                  self.get_prepopulated_fields(request))

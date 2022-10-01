@@ -187,7 +187,7 @@ def test_save_records(mocker):
         language, request_data, language_changed, asset, context, request_files, request
     ) == expected_return
     mock_save_unrevisioned_records.assert_called_once_with(
-        asset, context, language, data_structures, request_data, request_files, user)
+        asset, context, language, data_structures, request_data, request_files, user, request=request)
 
 
 def test_generate_preview(mocker, db):
@@ -1403,7 +1403,7 @@ class TestCustomClientViewSet:
         instance.perform_create(mock_serializer)
         mock_serializer.save.assert_called_once_with(
             **expected_non_meta_kwargs)
-        mock_get_vms_asset.assert_called_once_with(settings.CUSTOMIZATION)
+        mock_get_vms_asset.assert_called_once_with(customization=settings.CUSTOMIZATION)
 
         # Test meta
         mocker.patch.object(settings, 'META', True)

@@ -30,15 +30,16 @@ import json
 import logging
 import traceback
 
+from util.helpers import get_customization
+
 logger = logging.getLogger(__name__)
 
 
-def get_mobile_compatible_customization():
+def get_mobile_compatible_customization(current_customization):
     mobile_customizations = caches['push_config'].get(
         'mobile_customizations', {})
-    current_customization = settings.CUSTOMIZATION
     if current_customization not in mobile_customizations:
-        current_portal = get_cloud_portal_asset(current_customization)
+        current_portal = get_cloud_portal_asset(customization=current_customization)
         mobile_customizations[current_customization] = current_portal.read_global_value(
             '%PUSH_CUSTOMIZATION%') or current_customization
         caches['push_config'].set(
@@ -142,6 +143,7 @@ class CloudSessionAuthentication(SessionAuthentication):
 @permission_classes((IsAuthenticatedUserOrSystem,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
+    customization = get_customization(request)
     serializer = NotificationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -155,8 +157,7 @@ def push_notification(request):
         title=data['notification']['title'], body=data['notification']['body'],
         payload=payload_str, options=options_str, raw_targets=json.dumps(
             data['targets']),
-        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization(
-        )
+        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization(customization)
     )
 
     transaction.on_commit(lambda: send_push_notification.apply_async(

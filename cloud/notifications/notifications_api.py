@@ -14,6 +14,7 @@ from notifications.models import Message, Event, Feedback, PushDevice, PushNotif
 from cms.models import Asset, get_cloud_portal_asset
 
 import botocore
+from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +29,9 @@ def find_message(external_id):
     return msg
 
 
-def send(user_email, msg_type, message, customization, external_id=None):
+def send(user_email, msg_type, message, *, customization=None, external_id=None, request=None):
     django.core.validators.validate_email(user_email)
+    customization = customization or get_customization(request)
 
     if 'code' in message:
         message['code'] = quote_plus(message['code'])
@@ -51,17 +53,18 @@ def send(user_email, msg_type, message, customization, external_id=None):
             'Empty message',
             params={'value': message})
 
-    msg.send()
+    msg.send(customization=customization)
 
 
-def notify(event_type, object, data):
+def notify(event_type, object, data, *, request=None):
     event = Event(type=event_type, object=object, data=data)
-    event.send()
+    event.send(customization=get_customization(request))
 
 
-def send_feedback(event_type, asset_id, data):
+def send_feedback(event_type, asset_id, data, *, request=None):
+    customization=get_customization(request)
     if not asset_id:
-        asset = get_cloud_portal_asset()
+        asset = get_cloud_portal_asset(customization=customization)
     else:
         asset = Asset.objects.get(id=asset_id)
 
@@ -71,7 +74,7 @@ def send_feedback(event_type, asset_id, data):
                                        sender_email=data['sender_email'],
                                        target_asset=asset,
                                        type=event_type)
-    feedback.send()
+    feedback.send(customization=customization)
 
 
 # Push Notifications

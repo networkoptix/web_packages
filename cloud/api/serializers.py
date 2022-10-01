@@ -11,6 +11,7 @@ import re
 
 from cloud.helpers.exceptions import APIInternalException
 from cms.models import LicenseType, Menu, MenuNode, UserGroupsToAssetPermissions, cached_doc_menu_map, get_cached_menu
+from util.helpers import get_customization
 
 
 def to_camel_case(value):
@@ -213,9 +214,10 @@ class SettingsSerializer(CustomizationCacheSerializer):
 
     def extend_settings(self, request):
         from api.views.utils import get_feature_flags
+        customization=get_customization(request)
         return {
-            'menus': get_cached_menu(settings.CUSTOMIZATION, user=request.user, request=request),
-            'docMenuMap': cached_doc_menu_map(customization_name=settings.CUSTOMIZATION),
+            'menus': get_cached_menu(customization, user=request.user, request=request),
+            'docMenuMap': cached_doc_menu_map(customization_name=customization),
             'licenseTypes': LicenseType.get_license_types(),
             'featureFlags': get_feature_flags(request)
         }
@@ -235,16 +237,18 @@ class SettingsSerializer(CustomizationCacheSerializer):
                 **self.extend_settings(request)
             }
 
+            customization = get_customization(request)
+
             if not kwargs['data'].get('integrationStoreEnabled', False) and \
-                    UserGroupsToAssetPermissions.user_has_beta_access(request.user):
+                    UserGroupsToAssetPermissions.user_has_beta_access(request.user, customization=customization):
                 kwargs['data']['integrationStoreEnabled'] = True
             if not kwargs['data'].get('developersEnabled', False) and \
                     UserGroupsToAssetPermissions.check_customization_permission(
-                        request.user, settings.CUSTOMIZATION, 'cms.access_developers'):
+                        request.user, customization, 'cms.access_developers'):
                 kwargs['data']['developersEnabled'] = True
             if not kwargs['data'].get('customClientsEnabled', False) and \
                     UserGroupsToAssetPermissions.check_customization_permission(
-                        request.user, settings.CUSTOMIZATION, 'api.custom_clients'):
+                        request.user, customization, 'api.custom_clients'):
                 kwargs['data']['customClientsEnabled'] = True
             if not kwargs['data'].get('trafficRelayHost', False):
                 kwargs['data']['trafficRelayHost'] = settings.TRAFFIC_RELAY_HOST

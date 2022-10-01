@@ -13,7 +13,7 @@ from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Asset
                         DataStructure, ContributorAgreement)
 from cms.serializers import AgreementSerializer
 from util.base_cache import BaseCache
-from util.helpers import get_language_object_from_request
+from util.helpers import get_customization, get_language_object_from_request
 
 AGREEMENT_NOT_FOUND = 'Agreement not found'
 PREVIEW_NOT_ALLOWED = 'Not allowed to view this preview'
@@ -43,6 +43,7 @@ def get_agreement(request):
     review = state == 'pending'
     agreement_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
+    customization=get_customization(request)
     agreement = None
     agreement_review = None
     version = None
@@ -54,7 +55,7 @@ def get_agreement(request):
     else:
         agreement_review = AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
-            state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
+            state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
         ).last()
 
         if not agreement_review:
@@ -62,7 +63,7 @@ def get_agreement(request):
 
         agreement_id = agreement_review.version.asset.id
         AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
-            language, state, agreement_id, agreement_review.version)
+            language, state, agreement_id, agreement_review.version, request=request)
         cached_agreement = AGREEMENT_CACHE.get_cached_item()
 
         if agreement_review and not cached_agreement:
@@ -84,7 +85,7 @@ def get_agreement(request):
         version = agreement.version_id()
         if review:
             pending_review = get_review_matching_current_version(
-                agreement, version)
+                agreement, version, request=request)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -99,15 +100,15 @@ def get_agreement(request):
             # Get values for title and body of agreement for this version
             title = agreement_structures.filter(name='title').first().find_actual_value(
                 asset=agreement, version_id=version, draft=draft or review,
-                customization_name=settings.CUSTOMIZATION
+                customization_name=customization
             )
             body = agreement_structures.filter(name='text').first().find_actual_value(
                 asset=agreement, version_id=version, draft=draft or review,
-                customization_name=settings.CUSTOMIZATION
+                customization_name=customization
             )
             short_description = agreement_structures.filter(name='description').first().find_actual_value(
                 asset=agreement, version_id=version, draft=draft or review,
-                customization_name=settings.CUSTOMIZATION
+                customization_name=customization
             )
             agreement_dict = {
                 "title": title,
@@ -122,7 +123,7 @@ def get_agreement(request):
             }
 
             # Get global contexts and fill any matching variables in datarecords
-            cloud_portal = get_cloud_portal_asset()
+            cloud_portal = get_cloud_portal_asset(customization=customization)
             global_contexts = Context.objects.filter(
                 asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(
@@ -141,7 +142,7 @@ def get_agreement(request):
             AGREEMENT_CACHE.set_cached_item(agreement_dict)
             if agreement_id:
                 AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
-                    language, state)
+                    language, state, request=request)
                 AGREEMENT_CACHE.set_cached_item(agreement_dict)
             return api_success(agreement_dict)
 
@@ -168,7 +169,7 @@ def accept_agreement(request):
 
     agreement_review = AssetCustomizationReview.objects.filter(
         version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
-        state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION, id=review_id
+        state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=get_customization(request), id=review_id
     ).last()
 
     if agreement_review:

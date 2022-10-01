@@ -122,9 +122,9 @@ class CustomClientSerializer(serializers.ModelSerializer):
         if not settings.META or not self.context.get('request', None):
             self.fields['base_vms'].read_only = True
         else:
-            self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets
+            self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets(request=self.request)
             self.fields['base_vms'].required = False
-            self.fields['base_vms'].default = get_vms_asset()
+            self.fields['base_vms'].default = get_vms_asset(request=self.request)
 
 
 class FieldeManifestSerialzier(serializers.Serializer):

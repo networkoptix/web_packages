@@ -17,6 +17,7 @@ from cms.models import *
 from cms.controllers.modify_db import are_asset_datarecords_unique, GUID_REGEXP
 from cms.controllers.special_structures import SpecialStructures
 from cms.widgets import BootstrapMultiSelect
+from util.helpers import get_customization
 
 BYTES_TO_MEGABYTES = 1048576.0
 GUID_DESCRIPTION = "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
@@ -49,21 +50,22 @@ def convert_meta_to_description(meta):
     return converted_msg
 
 
-def get_languages_list():
+def get_languages_list(*, customization=None, request=None):
     def modify_default_language(language):
         is_default = ""
         if language[0] == default_language_code:
             is_default = " - default"
         return language[0], f"{language[0]} - {language[1]}{is_default}"
 
-    customization = Customization.objects.get(name=settings.CUSTOMIZATION)
+    customization = Customization.objects.get(name=customization or get_customization(request))
     default_language_code = customization.default_language.code
     return map(modify_default_language, customization.languages.values_list('code', 'name'))
 
 
-def get_branding_shortcuts(customization = settings.CUSTOMIZATION):
+def get_branding_shortcuts(customization=None, request=None):
+    customization = customization or get_customization(request)
     cloud_portal = Asset.objects.get(customizations__name=customization,
-                                     asset_type=get_cloud_portal_asset().asset_type)
+                                     asset_type=get_cloud_portal_asset(customization=customization).asset_type)
     branding_context_structures = branding_context.datastructure_set.all() if (
         branding_context := Context.objects.filter(
             name='branding', asset_type=get_cloud_portal_asset().asset_type).first()
@@ -84,12 +86,13 @@ def get_branding_shortcuts(customization = settings.CUSTOMIZATION):
 
     return brands, hidden_brands
 
-def get_restricted_keywords(customization = settings.CUSTOMIZATION):
+def get_restricted_keywords(*, customization=None, request=None):
     '''Returns list of keywords that should be restricted from use in assets
     '''
+    customization = customization or get_customization(request)
     cloud_portal = Asset.objects.get(customizations__name=customization,
-                                     asset_type=get_cloud_portal_asset().asset_type)
-    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
+                                     asset_type=get_cloud_portal_asset(customization=customization).asset_type)
+    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset(customization=customization).asset_type)
     restricted_struct = list(branding_context.datastructure_set.filter(name="Restricted"))
     vals = DataStructure.find_actual_values(restricted_struct, asset=cloud_portal)
 
@@ -102,7 +105,7 @@ def get_restricted_keywords(customization = settings.CUSTOMIZATION):
 
     if customization != 'default':
         default_cloud_portal = Asset.objects.get(customizations__name='default',
-                                     asset_type=get_cloud_portal_asset().asset_type)
+                                     asset_type=get_cloud_portal_asset(customization='default').asset_type)
         default_vals = DataStructure.find_actual_values(restricted_struct, asset=default_cloud_portal)
         restricted += get_restricted(default_vals)
 
@@ -124,9 +127,9 @@ def createMapper(cloud_portal, vals, special_structures):
     return mapper
 
 
-def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_branding_shortcuts=None):
+def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_branding_shortcuts=None, *, customization=None, request=None):
     if not (branding_shortcuts and hidden_branding_shortcuts):
-        branding_shortcuts, hidden_branding_shortcuts = get_branding_shortcuts()
+        branding_shortcuts, hidden_branding_shortcuts = get_branding_shortcuts(customization=customization, request=request)
     return render_to_string(
         'cms/widgets/branding_variables.html',
         context={'brands': branding_shortcuts, 'hidden_brands': hidden_branding_shortcuts, 'datastructure': datastructure}
@@ -142,13 +145,13 @@ def datastructure_is_disabled(datastructure, asset, context, language, can_edit_
     return disabled or (not datastructure.translatable and language != asset.default_language
                             and context.translatable)
 
-def generate_description(datastructure, branding_shortcuts, hidden_branding_shortcuts):
+def generate_description(datastructure, branding_shortcuts, hidden_branding_shortcuts, *, customization=None, request=None):
     ds_description = datastructure.description
 
     if datastructure.meta_settings:
             ds_description += convert_meta_to_description(datastructure.meta_settings)
             if 'brand_vars' in datastructure.meta_settings and datastructure.meta_settings['brand_vars']:
-                ds_description += generate_branding_variables(datastructure, branding_shortcuts, hidden_branding_shortcuts)
+                ds_description += generate_branding_variables(datastructure, branding_shortcuts, hidden_branding_shortcuts,customization=customization, request=request)
 
     if datastructure.type == DataStructure.DATA_TYPES.guid:
             ds_description += GUID_DESCRIPTION
@@ -207,12 +210,13 @@ class CustomContextForm(forms.Form):
     language = forms.ChoiceField(
         widget=forms.Select, label="Language")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, request, **kwargs):
         self.order = kwargs.pop('order', None)
+        self.request = request
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
-        self.fields['language'].choices = get_languages_list()
+        self.fields['language'].choices = get_languages_list(request=self.request)
         self.fieldsets = {}
-        self.branding_shortcuts, self.hidden_branding_shortcuts = get_branding_shortcuts()
+        self.branding_shortcuts, self.hidden_branding_shortcuts = get_branding_shortcuts(request=request)
 
     def remove_language(self):
         super(CustomContextForm, self)
@@ -236,7 +240,7 @@ class CustomContextForm(forms.Form):
 
         for ds in data_structures:
             label = ds.label if ds.label else ds.name
-            description = generate_description(ds, self.branding_shortcuts, self.hidden_branding_shortcuts)
+            description = generate_description(ds, self.branding_shortcuts, self.hidden_branding_shortcuts, request=self.request)
             ds_language = language
             if not ds.translatable:
                 if context.translatable:

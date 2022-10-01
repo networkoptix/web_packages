@@ -69,12 +69,12 @@ def test_get_mobile_compatible_customization(db):
         Customization, name=mobile_customization)
 
     # Test use current customization
-    assert get_mobile_compatible_customization().name == settings.CUSTOMIZATION
+    assert get_mobile_compatible_customization(settings.CUSTOMIZATION).name == settings.CUSTOMIZATION
 
     # Test use different push customization
     caches['push_config'].set('mobile_customizations', {
                               settings.CUSTOMIZATION: mobile_customization})
-    assert get_mobile_compatible_customization().name == mobile_customization
+    assert get_mobile_compatible_customization(settings.CUSTOMIZATION).name == mobile_customization
 
 
 class TestIsAuthenticatedUserOrSystem(WithInstanceFixture):

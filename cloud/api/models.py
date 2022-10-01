@@ -14,6 +14,7 @@ from cloud.helpers.exceptions import (
 )
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, get_cloud_portal_asset
 from cloud.settings import CUSTOMIZATION
+from util.helpers import get_customization
 
 
 class AccountManager(models.Manager):
@@ -172,7 +173,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 name='User can view all releases', codename='user_can_view_all_releases', content_type=content_type)
             release_group.permissions.add(permission)
             UserGroupsToAssetPermissions.objects.get_or_create(
-                group=release_group, asset=get_cloud_portal_asset(settings.CUSTOMIZATION))
+                group=release_group, asset=get_cloud_portal_asset(customization=self.customization))
 
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
@@ -268,12 +269,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
             )
         ]
 
-    @property
-    def custom_client_vms_assets(self):
+    def custom_client_vms_assets(self, *, request=None):
+        customization=get_customization(request) if request else self.customization
         return Asset.objects.filter(models.Q(
             asset_type__type=AssetType.ASSET_TYPES.vms,
             customizations__in=UserGroupsToAssetPermissions.get_customizations_with_permission(
-                self, 'custom_clients')) | models.Q(asset_type__type=AssetType.ASSET_TYPES.vms, customizations__name=settings.CUSTOMIZATION)
+                self, 'custom_clients')) | models.Q(asset_type__type=AssetType.ASSET_TYPES.vms, customizations__name=customization)
         ).distinct()
 
     @property

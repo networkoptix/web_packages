@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 from cms.controllers.release_notes import make_release_notes_json
 from cms.models import AssetCustomizationReview, UserGroupsToAssetPermissions
-from util.helpers import get_language_object_from_request
+from util.helpers import get_customization, get_language_object_from_request
 
 
 class ReleaseNotesContentSerializer(serializers.Serializer):
@@ -34,7 +34,7 @@ class ReleaseNotesSerializer(serializers.Serializer):
     @staticmethod
     def generate(release_notes, request):
         data = make_release_notes_json(release_notes, language=get_language_object_from_request(
-            request), show_pending="pending" in request.GET, show_drafts="draft" in request.GET, user=request.user)
+            request), show_pending="pending" in request.GET, show_drafts="draft" in request.GET, user=request.user, request=request)
         return ReleaseNotesSerializer(data=data, many=True)
 
 
@@ -45,10 +45,11 @@ class ReleaseNotesListSerializer(serializers.Serializer):
     def generate(release_notes, request):
         language = get_language_object_from_request(request)
         response_release_notes = []
+        customization=get_customization(request)
 
         is_portal_manager = UserGroupsToAssetPermissions.\
             check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+                request.user, customization, 'cms.publish_version')
 
         draft_release_notes = []
         if not request.user.is_anonymous:
@@ -60,20 +61,20 @@ class ReleaseNotesListSerializer(serializers.Serializer):
             elif is_portal_manager:
                 review_release_notes = release_notes.filter(
                     contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.pending,
-                    contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION,
+                    contentversion__assetcustomizationreview__customization__name=customization,
                 ).distinct()
             else:
                 review_release_notes = draft_release_notes
 
             if draft_release_notes:
                 response_release_notes.extend(make_release_notes_json(
-                    draft_release_notes, language, user=request.user, show_drafts=True))
+                    draft_release_notes, language, user=request.user, show_drafts=True, request=request))
             if review_release_notes:
                 response_release_notes.extend(make_release_notes_json(
-                    review_release_notes, language, user=request.user, show_pending=True))
+                    review_release_notes, language, user=request.user, show_pending=True, request=request))
 
         response_release_notes.extend(make_release_notes_json(
-            release_notes, language, user=request.user,))
+            release_notes, language, user=request.user, request=request))
 
         return ReleaseNotesListSerializer(data=response_release_notes)
 

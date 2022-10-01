@@ -136,7 +136,7 @@ class CustomizationFilter(SimpleListFilter):
     def lookups(self, request, model_admin):
         # Temporary customization 0 is need for 'All' since we need to keep it,
         # but choose the customization for the current cloud portal as the default value
-        self.default_customization = Customization.objects.get(name=settings.CUSTOMIZATION).id
+        self.default_customization = Customization.objects.get(name=get_customization(request)).id
         customizations = [Customization(id=self.ALL_CUSTOMIZATIONS, name='All Customizations')]
         customizations.extend(list(Customization.objects.filter(name__in=request.user.customizations)))
         customizations.extend([Customization(id=self.OTHER_CUSTOMIZATIONS, name='Other Customizations')])
@@ -266,7 +266,7 @@ class AssetFilter(SimpleListFilter):
             assets = assets.filter(customizations__name__in=request.user.customizations).distinct()
         # TODO: Get list of available assets for non context managers
         if not UserGroupsToAssetPermissions.\
-                check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+                check_customization_permission(request.user, get_customization(customization), 'cms.publish_version'):
             editable_assets = request.user.assets_with_permission('cms.edit_content')
             assets = Asset.objects.filter(Q(id__in=editable_assets))
 
@@ -533,7 +533,7 @@ class AssetAdmin(CMSAdmin):
                 qs = exclude_hidden
 
             for page in qs:
-                page.state = page.get_state(context['asset'])
+                page.state = page.get_state(context['asset'], request=request)
             context['contexts'] = qs
         return render(request, 'cms/page_list_view.html', context)
 
@@ -555,7 +555,7 @@ class AssetAdmin(CMSAdmin):
                 return redirect(f'{context["preview_link"].url}{custom_preview or ""}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
-        context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+        context['language_code'] = Customization.objects.get(name=get_customization(request)).default_language
         context['EXTERNAL_IMAGE'] = DataStructure.DATA_TYPES[
             DataStructure.DATA_TYPES.external_image]
         context['BYTES_TO_MB'] = BYTES_TO_MEGABYTES
@@ -589,14 +589,14 @@ class AssetAdmin(CMSAdmin):
         context['admin_files'] = json.dumps(admin_files)
         context['admin_uploads'] = json.dumps(admin_uploads)
 
-        form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id}, order=order)
+        form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id}, order=order, request=request)
         form.add_fields(asset, target_context, Language.objects.get(code=context['language_code']), request.user)
         form.cleaned_data = {}
         for field_error in context['errors']:
             form.add_error(field_error[0], field_error[1])
         context['custom_form'] = form
-        branding, *_ = get_branding_shortcuts()
-        restricted = get_restricted_keywords()
+        branding, *_ = get_branding_shortcuts(request=request)
+        restricted = get_restricted_keywords(request=request)
         context['default_branding'] = json.dumps(list({
             shortcut[1].lower()
             for shortcut in branding + [(None, term) for term in restricted]
@@ -772,7 +772,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         customization_name = customization_review.customization.name
         extra_context['current_customization_name'] = customization_name
         title = f"Changes for {version.asset.name} - Version: {version.id}"
-        if not UserGroupsToAssetPermissions.check_customization_access(request.user, customization_name):
+        if not UserGroupsToAssetPermissions.check_customization_access(request.user, customization=customization_name):
             title = f"{title} – {self.state_tag(customization_review.state)}"
 
         extra_context["page_title"] = format_html(title)
@@ -858,7 +858,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     def template_allowed(self, request, customization_review):
         customization_name = customization_review.customization.name
-        matching_portal = customization_name == settings.CUSTOMIZATION
+        matching_portal = customization_name == get_customization(request)
         asset = customization_review.version.asset
         is_cloud_portal = asset.is_cloud_portal
         state = customization_review.state
@@ -1180,7 +1180,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         if zendesk_sync_feature_enabled:
             extra_context['zendesk_sync_url'] = reverse("admin:menu_sync", args=(menu.id,))
             extra_context['sync_states'] = menu.zendesk_sync_state
-            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(getattr(self, 'chosen_customization', settings.CUSTOMIZATION),))
+            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(getattr(self, 'chosen_customization', get_customization(request)),))
         extra_context['preview_url_review'] = menu.preview_url('pending')
         extra_context['asset_info'] = json.dumps(prepare_asset_info_for_menu(request, object_id))
         extra_context['label_lookup'] = Menu.LABEL_LOOKUP
@@ -1275,7 +1275,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     if not (credentials['token'] or data['zendesk_email']):
                         credentials['token'] = 'xx'
                     try:
-                        Importer(subdomain=subdomain, domain=domain, user=request.user, creds=credentials).import_knowledgebase(menu=data['menu'], category_name=data['zendesk_category_name'])
+                        Importer(subdomain=subdomain, domain=domain, user=request.user, creds=credentials).import_knowledgebase(menu=data['menu'], category_name=data['zendesk_category_name'], customization=get_customization(request))
                     except CategoryNotFoundException:
                         messages.error(request, 'Zendesk category not found')
                     else:
@@ -1307,7 +1307,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
     @check_feature_flag(FLAGS.zendesk_sync, validate_is_superuser)
     def zendesk_mapping(self, request, customization):
         from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured, ZendeskInvalidConfiguration
-        settings_context = Context.objects.get(name='settings', asset_type=get_cloud_portal_asset().asset_type)
+        settings_context = Context.objects.get(name='settings', asset_type=get_cloud_portal_asset(get_customization(request)).asset_type)
         settings_change_page = reverse('admin:change_page', args=(customization_obj.id, settings_context.id)) if (customization_obj := Customization.objects.filter(name=customization).first()) else ''
         try:
             mapper = ZendeskMapper(customization_name=customization, verify_auth=True)

@@ -29,7 +29,7 @@ def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings)
     expected = {'integrationStoreEnabled': cloud_capabilities.get(
         'integration_store_enabled', False)}
 
-    cache_capabilities = utils.get_cloud_capabilities_from_cache()
+    cache_capabilities = utils.get_cloud_capabilities_from_cache(customization=settings.CUSTOMIZATION)
     cache_mock.assert_called_with(settings.CUSTOMIZATION, 'cloud_capabilities')
     assert cache_capabilities == expected
 
@@ -38,7 +38,7 @@ def test_get_settings_from_cache(mocker, customization_config, settings_from_cac
     cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache')
     cache_mock.return_value = settings_from_cache
 
-    settings_dict = utils.get_settings_from_cache()
+    settings_dict = utils.get_settings_from_cache(customization=settings.CUSTOMIZATION)
     cache_mock.assert_called_with(settings.CUSTOMIZATION, 'config')
     assert settings_dict == settings_from_cache
 

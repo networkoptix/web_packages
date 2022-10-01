@@ -11,6 +11,7 @@ from api.serializers import CloudResponseSerializer, TransferSystemActionSeriali
 from cloud.controllers.cloud_api import OwnershipTransfer, System
 from cloud.helpers.exceptions import api_success
 from notifications import notifications_api
+from util.helpers import get_customization
 
 
 cloud__response = openapi.Response('Cloud response.', CloudResponseSerializer)
@@ -36,7 +37,7 @@ def send_ownership_transfer_email(request, system_id, new_owner_email):
         new_owner_email,
         'ownership_transfer_invite',
         message,
-        settings.CUSTOMIZATION
+        customization=get_customization(request)
     )
 
 
@@ -52,7 +53,7 @@ def send_ownership_transfer_response_email(request, system_info, status):
         system_info.get('ownerAccountEmail'),
         'ownership_transfer_response',
         message,
-        settings.CUSTOMIZATION
+        customization=get_customization(request)
     )
 
 

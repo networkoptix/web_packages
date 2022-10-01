@@ -62,12 +62,12 @@ class SpecialStructures:
     @staticmethod
     def get_global_value(asset: Asset, key: str):
         customization = asset.customizations.first()
-        return get_cloud_portal_asset(customization.name).read_global_value(key)
+        return get_cloud_portal_asset(customization=customization.name).read_global_value(key)
 
     @staticmethod
     def calc_cloud_portal(asset: Asset):
         customization = asset.customizations.first()
-        return get_cloud_portal_asset(customization.name).name if customization else ""
+        return get_cloud_portal_asset(customization=customization.name).name if customization else ""
 
     @staticmethod
     def calc_customization(asset: Asset):
@@ -102,7 +102,7 @@ class SpecialStructures:
 
     @staticmethod
     def get_vms_and_config(asset: Asset, ds_name):
-        vms_asset = get_vms_asset(asset.customizations.first().name)
+        vms_asset = get_vms_asset(customization=asset.customizations.first().name)
         struct = SpecialStructure.objects.filter(name=ds_name).first()
         if vms_asset and struct:
             vms_dss = DataStructure.objects.filter(context__asset_type=vms_asset.asset_type)
@@ -194,7 +194,7 @@ class SpecialStructures:
     @staticmethod
     def calc_mobile_display_name(asset):
         customization = asset.customizations.first()
-        return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%') or 'the mobile client'
+        return get_cloud_portal_asset(customization=customization.name).read_global_value('%MOBILE_DISPLAY_NAME%') or 'the mobile client'
 
     @staticmethod
     def calc_abbreviation(asset):

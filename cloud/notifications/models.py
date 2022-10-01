@@ -21,6 +21,7 @@ import botocore
 
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
+from util.helpers import get_customization
 from .conf import get_sns_client
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
@@ -61,8 +62,9 @@ class Event(models.Model):
     def __str__(self):
         return f'{self.object} - {self.type}'
 
-    def send(self, customization_name=settings.CUSTOMIZATION):
+    def send(self, *, customization=None, request=None):
         self.save()
+        customization = customization or get_customization(request)
         # 1. Get all subscriptions for this event
         subscriptions = Subscription.objects.filter(Q(type=self.type, object='') |
                                                     Q(type='', object=self.object) |
@@ -92,11 +94,11 @@ class Event(models.Model):
             message = Message(
                 message=self.data,
                 user_email=subscription.user_email,
-                customization=user.customization if user else customization_name,
+                customization=user.customization if user else customization,
                 type=self.type,
                 event=self
             )
-            message.send()
+            message.send(customization=customization)
         self.send_date = timezone.now()
         self.save()
 
@@ -131,8 +133,9 @@ class Message(models.Model):
     def __str__(self):
         return f'{self.type} - {self.user_email}'
 
-    def send(self):
+    def send(self, *, customization=None, request=None):
         self.save()
+        customization = customization or get_customization(request)
 
         # TODO: initiate business-logic here
 
@@ -150,10 +153,10 @@ class Message(models.Model):
                 queue_name = settings.NOTIFICATIONS_CONFIG[self.type]['queue']
 
             result = send_email.apply_async(
-                args=[self.id, queue_name], queue=queue_name)
+                args=[self.id], queue=queue_name, customization=customization)
             self.task_id = result.task_id
         else:
-            send_email(self.id)
+            send_email(self.id, customization=customization)
             self.task_id = 'sync'
 
         self.save()
@@ -178,7 +181,8 @@ class Feedback(models.Model):
     def __str__(self):
         return f'{self.asset_name} - {self.type}'
 
-    def send(self, customization_name=settings.CUSTOMIZATION):
+    def send(self, *, customization=None, request=None):
+        customization = customization or get_customization(request)
         self.save()
         data = {
             'sender_name': self.sender_name,
@@ -188,7 +192,7 @@ class Feedback(models.Model):
         }
         event = Event.objects.create(
             type=self.type, object=self.target_asset.id, data=data)
-        event.send()
+        event.send(customization=customization)
 
         # Send email to the contact email for an integration.
         data_structure = DataStructure.objects.filter(
@@ -205,11 +209,11 @@ class Feedback(models.Model):
         msg = Message.objects.create(
             user_email=json.dumps(emails),
             type=self.type,
-            customization=customization_name,
+            customization=customization,
             message=data,
             event=event
         )
-        msg.send()
+        msg.send(customization=customization)
 
 
 # model to use when checking on message status

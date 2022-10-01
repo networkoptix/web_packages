@@ -6,23 +6,25 @@ from cms.controllers.asset_json import generate_asset_dictionary, get_contexts_a
                                        get_user_assets, process_asset_global_contexts, get_state
 from cms.models import Asset,  AssetType, cloud_portal_customization_cache, get_cloud_portal_asset
 from util.base_cache import BaseCache
+from util.helpers import get_customization
 
 INTEGRATION_CACHE = BaseCache(cache_key='integrations')
 INTEGRATION = AssetType.ASSET_TYPES.integration
 
 
-def make_integrations_json(assets, language, user=None, show_pending=False, show_drafts=False):
+def make_integrations_json(assets, language, user=None, show_pending=False, show_drafts=False, request=None):
     if not assets:
         return []
 
     contexts, data_structures = get_contexts_and_datastructures_of_asset_type(INTEGRATION)
     user_assets = get_user_assets(user)
-    cloud_portal = get_cloud_portal_asset()
+    customization=get_customization(request)
+    cloud_portal = get_cloud_portal_asset(customization=customization)
     state = get_state(show_pending, show_drafts)
     response_asset_json = []
 
     if cloud_portal:
-        versions = Asset.version_ids(assets)
+        versions = Asset.version_ids(assets, customization=customization)
         global_contexts = get_global_contexts(cloud_portal)
 
         for asset in assets:
@@ -37,7 +39,7 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
             if not asset_dict or asset_dict['version'] != current_version or show_drafts:
                 for context, context_dict in generate_context_dicts_with_actual_values(show_pending, show_drafts,
                                                                   contexts, data_structures,
-                                                                  asset, current_version):
+                                                                  asset, current_version, request=request):
                     if context_dict or "PYTEST_CURRENT_TEST" in os.environ:
                         asset_dict[context.name] = context_dict
                         handle_integration_contexts(
@@ -95,5 +97,6 @@ def add_integration_properties(asset_dict, asset, user, user_assets):
     return asset_dict
 
 
-def check_integration_store_enabled():
-    return cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')['integration_store_enabled']
+def check_integration_store_enabled(request=None):
+    customization = get_customization(request)
+    return cloud_portal_customization_cache(customization, 'config')['integration_store_enabled']

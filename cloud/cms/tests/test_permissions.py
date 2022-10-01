@@ -24,6 +24,9 @@ def test_can_view_developers_permission(account_factory, mocker, db):
     superuser = account_factory(email=str(uuid4()))
     non_superuser = account_factory(email=str(uuid4()), is_superuser=False)
     request, view = [mocker.MagicMock() for _ in range(2)]
+    request.POST={}
+    request.META={}
+    request.data={}
 
     instance = CanViewDevelopers()
 

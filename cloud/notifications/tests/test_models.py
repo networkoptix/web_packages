@@ -1,3 +1,4 @@
+from cms.models import AssetType
 from conftest import check_against_expected_meta, BaseModelTest
 import functools
 import pytest
@@ -64,7 +65,7 @@ class TestEvent(BaseModelTest):
         assert instance.send_date is not None
         mock_message.assert_called_once_with(
             message=expected_message, user_email=account.email, customization=account.customization, type=instance.type, event=instance)
-        mock_message_instance.send.assert_called_once_with()
+        mock_message_instance.send.assert_called_once_with(customization=account.customization)
 
 
 class TestSubscription(BaseModelTest):
@@ -130,7 +131,7 @@ class TestMessage(BaseModelTest):
 
         instance.send()
 
-        mock_send_email.assert_called_once_with(instance.id)
+        mock_send_email.assert_called_once_with(instance.id, customization=instance.customization)
         mock_save.call_count == 2
 
     def test_delivery_time_interval(self, instance):
@@ -189,9 +190,9 @@ class TestFeedback(BaseModelTest):
             'message': instance.message
         }
 
-        instance.send()
+        instance.send(customization=settings.CUSTOMIZATION)
 
-        mock_event.send.assert_called_once_with()
+        mock_event.send.assert_called_once_with(customization=settings.CUSTOMIZATION)
         mock_save.assert_called_once_with()
         mock_create_event.assert_called_once_with(
             type=instance.type,
@@ -230,7 +231,7 @@ class TestMessageStatusSerializer:
                 expected_value = str(expected_value).replace(' ', 'T')
             assert serialized_data[field] == expected_value
 
-        mock_send_email.assert_called_once_with(message.id)
+        mock_send_email.assert_called_once_with(message.id, customization=message.customization)
 
 class TestCloudNotification(BaseModelTest):
     model_class = CloudNotification

@@ -17,7 +17,7 @@ from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_por
     AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
-from util.helpers import get_language_object_from_request, get_meilisearch_client
+from util.helpers import get_customization, get_language_object_from_request, get_meilisearch_client
 import re
 from meilisearch.errors import MeiliSearchApiError
 
@@ -98,7 +98,7 @@ def find_article(nodes, doc_id):
 @handle_exceptions
 def kb_for_article(request, doc_id):
     doc = Asset.objects.filter(
-        id=doc_id, asset_type__type=AssetType.ASSET_TYPES.documentation, customizations__name=settings.CUSTOMIZATION,
+        id=doc_id, asset_type__type=AssetType.ASSET_TYPES.documentation, customizations__name=get_customization(request),
         contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
     ).first()
     if not doc:
@@ -189,11 +189,12 @@ kb_name__path_param = openapi.Parameter(
 
 
 def sync_search_for_menu(request, name):
-    cache_key = f'!!{settings.CUSTOMIZATION}--kb--{name}'
+    customization=get_customization(request)
+    cache_key = f'!!{customization}--kb--{name}'
     docs = DOC_CACHE[cache_key]
     language = get_language_object_from_request(request)
     knowledgebase_menu = get_cached_menu(
-        settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+        customization, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
     if not knowledgebase_menu:
         raise APINotFoundException(f'Knowledgebase {name} not found')
     knowledgebase = knowledgebase_menu['nodes']
@@ -333,11 +334,12 @@ def get_pages(request, name):
     page = request.query_params.get('page', 1)
     page_size = request.query_params.get('pageSize', 5)
     language = get_language_object_from_request(request)
-    cache_key = f'!!{settings.CUSTOMIZATION}--kb--{name}'
+    customization=get_customization(request)
+    cache_key = f'!!{customization}--kb--{name}'
     docs = DOC_CACHE[cache_key]
     if not docs:
         knowledgebase_menu = get_cached_menu(
-            settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+            customization, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
         if not knowledgebase_menu:
             raise APINotFoundException(f'Knowledgebase {name} not found')
         knowledgebase = knowledgebase_menu['nodes']
@@ -369,7 +371,7 @@ def find_asset_knowledgebase(asset, base_url):
     return ''
 
 
-def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False, user=None):
+def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False, user=None, request=None):
     for node in parent:
         asset_id = node.get('asset_id', None)
         if asset_id:
@@ -391,7 +393,7 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                             asset, base_url)
                 elif asset_type == AssetType.ASSET_TYPES.integration:
                     integrations = make_integrations_json(
-                        [asset], language=language, user=user)
+                        [asset], language=language, user=user, request=request)
                     if integrations:
                         node['asset'] = integrations[0]
         if node.get('nodes', None):
@@ -402,7 +404,8 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                 global_contexts_dict=global_contexts_dict,
                 draft=draft,
                 review=review,
-                user=user
+                user=user,
+                request=request
             )
 
 
@@ -419,7 +422,8 @@ menu_name__path_param = openapi.Parameter(
 @permission_classes((CanViewDevelopers,))
 def menu_to_endpoint(request, name):
     language = get_language_object_from_request(request)
-    cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--struct--{name}'
+    customization = get_customization(request)
+    cache_id = f'!!{customization}-{language.code}--struct--{name}'
     state = request.GET.get('state', '')
 
     menu_dict = (not state and DOC_CACHE[cache_id]) or generate_menu_dict(
@@ -430,7 +434,8 @@ def menu_to_endpoint(request, name):
 
 def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
     language = language or get_language_object_from_request(request)
-    cache_id = cache_id or f'!!{settings.CUSTOMIZATION}-{language.code}--struct--{name}'
+    customization = get_customization(request)
+    cache_id = cache_id or f'!!{customization}-{language.code}--struct--{name}'
     state = state or request.GET.get('state', '')
     draft = state == 'draft' and request.user.is_superuser
     review = state == 'review' and request.user.is_superuser
@@ -438,17 +443,16 @@ def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
         draft or review) and request.user.is_superuser
 
     if show_superuser_draft_review:
-        menu_dict = Menu.generate_menu(
-            menu_name=name, customization_name=settings.CUSTOMIZATION)
+        menu_dict = Menu.generate_menu(menu_name=name, customization=customization)
     else:
         menu_dict = get_cached_menu(
-            settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
+            customization, name, menu_type=Menu.MENU_TYPES.docs_struct)
 
     if not menu_dict:
         raise APINotFoundException(f'Menu {name} not found')
 
     base_url = menu_dict['base_url']
-    cloud_portal = get_cloud_portal_asset()
+    cloud_portal = get_cloud_portal_asset(customization=customization)
     global_contexts = Context.objects.filter(
         asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
     global_contexts_dict = global_contexts_to_dict(
@@ -462,7 +466,8 @@ def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
         global_contexts_dict=global_contexts_dict,
         draft=draft,
         review=review,
-        user=request.user
+        user=request.user,
+        request=request
     )
 
     if not draft and not review:

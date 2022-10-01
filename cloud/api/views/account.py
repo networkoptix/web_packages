@@ -33,6 +33,7 @@ from cloud.helpers.exceptions import (
 from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
 from cloud.utils import get_authenticated_session_cookie_age
+from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -600,7 +601,7 @@ def restore_password(request):
             account.save()
     elif 'user_email' in request.data:
         user_email = request.data['user_email'].lower()
-        Account.reset_password(user_email, get_ip(request))
+        Account.reset_password(user_email, get_ip(request), request=request)
     else:
         raise APIRequestException('Parameters are missing', ErrorCodes.wrong_parameters,
                                   error_data={'code': ['This field is required.'],
@@ -625,7 +626,7 @@ def check_account_in_portal(request):
                 email=email,
                 first_name='',
                 last_name='',
-                customization=settings.CUSTOMIZATION,
+                customization=get_customization(request),
                 is_active=is_active
             )
             if account.is_active:

@@ -20,7 +20,7 @@ def test_get_menu(mocker, arf, account_factory, db):
     res = get_menu(mock_request, menu_name)
     assert res.status_code == status.HTTP_404_NOT_FOUND
     assert res.data['errorText'] == f'Menu {menu_name} not found'
-    mock_generate_menu.assert_called_once_with(menu_name=menu_name)
+    mock_generate_menu.assert_called_once_with(menu_name=menu_name, customization=settings.CUSTOMIZATION)
 
     # Test found
     mock_menu = str(uuid4())
@@ -31,7 +31,7 @@ def test_get_menu(mocker, arf, account_factory, db):
     res = get_menu(mock_request, menu_name)
     assert res.status_code == status.HTTP_200_OK
     assert res.data == mock_menu
-    mock_generate_menu.assert_called_once_with(menu_name=menu_name)
+    mock_generate_menu.assert_called_once_with(menu_name=menu_name, customization=settings.CUSTOMIZATION)
 
 
 def test_menu_force_sync(arf, mocker, account_factory, disable_feature_flags, db):

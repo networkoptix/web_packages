@@ -10,20 +10,21 @@ from rest_framework.decorators import api_view, permission_classes
 
 from cms.models import MENU_CACHE, Customization, Menu, MenuNode, ZendeskSyncLog
 from cms.permissions import IsSuperuser
+from util.helpers import get_customization
 
 
 @api_view(("GET",))
 @permission_classes((AllowAny,))
 def get_menu(request, name):
-    customization = settings.CUSTOMIZATION
+    customization = get_customization(request)
     name = name.lower()
     cached_menus = MENU_CACHE[customization] or {}
     menu  = None
 
     if request.user.is_superuser or not (menu := cached_menus.get(name, None)):
-        menu = Menu.generate_menu(menu_name=name)
+        menu = Menu.generate_menu(menu_name=name, customization=customization)
         if menu:
-            cached_menus = cached_menus or Menu.generate_menus(customization)
+            cached_menus = cached_menus or Menu.generate_menus(customization=customization)
             MENU_CACHE[customization] = {**cached_menus, name: menu}
 
 

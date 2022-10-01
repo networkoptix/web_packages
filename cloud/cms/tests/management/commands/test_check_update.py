@@ -29,11 +29,11 @@ class TestCheckUpdate:
         mock_write_stdout.assert_called_with(
             instance.style.SUCCESS('Initialized version.id file.'))
         mock_initialize_static_content.assert_not_called()
-        
+
         # Test initialize static content
         mock_read_id.return_value = local_version
         instance.handle()
-        mock_initialize_static_content.assert_called_once_with(current_version)
+        mock_initialize_static_content.assert_called_once_with(current_version, settings.CUSTOMIZATION)
 
         # Test no changes
         mock_check_update_cache.return_value = [False, current_version]
@@ -53,7 +53,7 @@ class TestCheckUpdate:
         expected = randint(1, 10000)
         instance.write_id(expected)
         assert instance.read_id() == expected
-    
+
     def test_initialize_static_content(self, mocker):
         instance = Command()
         current_version = randint(1, 1000)
@@ -69,7 +69,7 @@ class TestCheckUpdate:
             'Content has been updated.'
         ]
 
-        instance.initialize_static_content(current_version)
+        instance.initialize_static_content(current_version, customization=settings.CUSTOMIZATION)
         assert instance.read_id() == current_version
         mock_log_info.assert_has_calls(call(message) for message in expected_logged_info)
         mock_write_stdout.assert_called_once_with(
@@ -78,7 +78,7 @@ class TestCheckUpdate:
         mock_init_skin.assert_has_calls(
             call(asset, state, workers=1) for state in [False, True])
 
-    
+
     @pytest.fixture(autouse=True)
     def cleanup_created_version_id_file(self):
         yield

@@ -12,7 +12,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from util.helpers import get_language_object_from_request
+from util.helpers import get_customization, get_language_object_from_request
 from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
@@ -53,6 +53,7 @@ RELEASE_NOTES_REVIEW_FORBIDDEN = "You do not have permission to view this review
 def get_release_note(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
+    customization=get_customization(request)
 
     if not asset_id:
         return api_success(RELEASE_NOTES_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
@@ -60,7 +61,7 @@ def get_release_note(request, asset_id=None):
     asset_id = int(asset_id)
     release_note = Asset.objects.filter(asset_type__type=RELEASE_NOTES_ASSET_TYPE,
                                         customizations__name__in=[
-                                            settings.CUSTOMIZATION],
+                                            customization],
                                         id=asset_id).last()
 
     if not release_note:
@@ -76,7 +77,7 @@ def get_release_note(request, asset_id=None):
                                    status_code=status.HTTP_403_FORBIDDEN)
             # If not draft, it is a review
             if not UserGroupsToAssetPermissions.\
-                    check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+                    check_customization_permission(request.user, customization, 'cms.publish_version'):
                 return api_success(RELEASE_NOTES_REVIEW_FORBIDDEN,
                                    status_code=status.HTTP_403_FORBIDDEN)
 
@@ -98,7 +99,7 @@ def get_release_notes(request):
     Returns a list of release_notes available to the current user
     """
     customization_release_notes = Asset.objects.filter(asset_type__type=RELEASE_NOTES_ASSET_TYPE,
-                                                       customizations__name__in=[settings.CUSTOMIZATION])
+                                                       customizations__name__in=[get_customization(request)])
     serializer = ReleaseNotesListSerializer.generate(
         customization_release_notes, request)
     serializer.is_valid()

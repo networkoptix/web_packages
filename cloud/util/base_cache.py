@@ -28,7 +28,9 @@ class BaseCache(object):
         self.lookup_key = lookup_key
 
     @staticmethod
-    def generate_lookup_key(language, state, identifier='', version='latest', customization_name=settings.CUSTOMIZATION):
+    def generate_lookup_key(language, state, identifier='', version='latest', *, customization_name=None, request=None):
+        from util.helpers import get_customization
+        customization_name = customization_name or get_customization(request)
         draft = state == "draft"
         return f'{customization_name}-{language.code}-{identifier}-{state}-{"latest" if draft else version}'
 

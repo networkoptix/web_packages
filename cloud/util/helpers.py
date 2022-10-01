@@ -2,18 +2,28 @@ import re
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from api.models import Account
 from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language
 from django.urls import reverse
 from meilisearch import Client
 
 
+def get_customization(request=None, /):
+    if not request:
+        return settings.CUSTOMIZATION
+
+    if customization := getattr(request, 'data', request.POST).get('customization'):
+        return customization
+
+    return request.META.get('CUSTOMIZATION', settings.CUSTOMIZATION)
+
+
 def get_meilisearch_client():
     return Client(settings.MEILISEARCH_ENDPOINT, settings.MEILISEARCH_MASTER_KEY)
 
-def get_languages(customization=None):
+
+def get_languages(customization=None, request=None):
     if not customization:
-        customization = settings.CUSTOMIZATION
+        customization = get_customization(request)
 
     return cloud_portal_customization_cache(customization, 'default_language'), \
         cloud_portal_customization_cache(customization, 'languages')
@@ -21,7 +31,7 @@ def get_languages(customization=None):
 
 def detect_language_by_request(request):
     lang = None
-    default_language, languages = get_languages()
+    default_language, languages = get_languages(get_customization(request))
 
     # 1. Try account value - top priority
     if request.user.is_authenticated:
@@ -56,6 +66,7 @@ def get_language_object_from_request(request):
 
 
 def get_language_for_email(email, customization):
+    from api.models import Account
     default_language, languages = get_languages(customization)
 
     try:

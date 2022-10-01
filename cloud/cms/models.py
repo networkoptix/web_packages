@@ -164,7 +164,9 @@ def rename_permission_group(group, asset):
     group.save()
 
 
-def get_cloud_portal_asset(customization=settings.CUSTOMIZATION, no_create=False):
+def get_cloud_portal_asset(*, customization=None, request=None, no_create=False):
+    from util.helpers import get_customization
+    customization = customization or get_customization(request)
     if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="", asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
         return asset
 
@@ -182,7 +184,9 @@ def get_cloud_portal_asset(customization=settings.CUSTOMIZATION, no_create=False
     raise Asset.DoesNotExist(f"""No cloud portal asset found for {customization}. Most likely a customization with the name \"{customization}\" doesn't exist.""")
 
 
-def get_vms_asset(customization=settings.CUSTOMIZATION):
+def get_vms_asset(*, customization=None, request=None):
+    from util.helpers import get_customization
+    customization = customization or get_customization(request)
     return Asset.objects.filter(
         customizations__name__in=[customization], asset_type__name="",
         asset_type__type=AssetType.ASSET_TYPES.vms
@@ -210,7 +214,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     customization_cache = caches['customization']
     data = customization_cache.get(
         f'customization_{customization_name}', dict())
-    asset = get_cloud_portal_asset(customization_name)
+    asset = get_cloud_portal_asset(customization=customization_name)
 
     if data and 'version_id' in data and not force:
         force = check_update_cache(customization_name, data['version_id'])[0]
@@ -319,7 +323,9 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return data
 
 
-def check_user_menu_permissions(nodes, user, overrides=None):
+def check_user_menu_permissions(nodes, user, overrides=None, *, customization=None, request=None):
+    from util.helpers import get_customization
+    customization = customization or get_customization(request)
     for i in reversed(range(len(nodes))):
         node = nodes[i]
         condition = node.pop('condition', None)
@@ -327,30 +333,32 @@ def check_user_menu_permissions(nodes, user, overrides=None):
         beta_permission = Customization.BETA_PERMISSION_MAP.get(
             condition, None)
         if feature_flag := (FLAGS.value_to_key(condition) or SWITCHES.value_to_key(condition)):
-            if not feature_flag_is_active(feature_flag, user, overrides):
+            if not feature_flag_is_active(feature_flag, user, overrides, customization=customization):
                 del nodes[i]
                 continue
         elif not condition_met and condition and \
                 not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
-                    user, settings.CUSTOMIZATION, f'cms.{beta_permission}'
+                    user, customization, f'cms.{beta_permission}'
                 )):
             del nodes[i]
             continue
         permissions = node.get('permissions', [])
         for permission_codename in permissions:
             if not (user and UserGroupsToAssetPermissions.check_customization_permission(
-                    user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
+                    user, customization, f'cms.{permission_codename}'
             )):
                 del nodes[i]
                 break
         else:
             node.pop('permissions', None)
-            check_user_menu_permissions(node.get('nodes', []), user, overrides)
+            check_user_menu_permissions(node.get('nodes', []), user, overrides, customization=customization)
 
-def feature_flag_is_active(feature_flag, user, overrides=None):
+def feature_flag_is_active(feature_flag, user, overrides=None, *, customization=None, request=None):
+    from util.helpers import get_customization
+    customization = customization or get_customization(request)
     flag = getattr(FLAGS, feature_flag, None)
     switch = getattr(SWITCHES, feature_flag, None)
-    return flag and flag_is_active_for_user(user, flag, overrides) or switch and switch_is_active(switch)
+    return flag and flag_is_active_for_user(user, flag, overrides, customization=customization) or switch and switch_is_active(switch)
 
 
 def cached_doc_menu_map(customization_name, refresh=False):
@@ -375,15 +383,15 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None, re
 
     if menu_customization is None:
         menus_to_generate = [*Menu.REQUIRED_MENUS, name] if name else Menu.REQUIRED_MENUS
-        menu_customization = Menu.generate_menus(customization_name, menus_to_generate)
+        menu_customization = Menu.generate_menus(customization=customization_name, menu_names=menus_to_generate)
         MENU_CACHE[customization_name] = menu_customization
 
     elif name and not menu_customization.get(name.lower(), False):
-        if generated := Menu.generate_menus(customization_name, [name]):
+        if generated := Menu.generate_menus(customization=customization_name, menu_names=[name]):
             MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
 
     for menu_name, menu in menu_customization.items():
-        check_user_menu_permissions(menu['nodes'], user, overrides)
+        check_user_menu_permissions(menu['nodes'], user, overrides, customization=customization_name, request=request)
 
     if menu_type:
         menu_customization = {name: menu for name, menu in menu_customization.items(
@@ -787,7 +795,9 @@ class Asset(models.Model):
         return accepted_review.version.id if accepted_review else 0
 
     @classmethod
-    def version_ids(cls, assets, customization=settings.CUSTOMIZATION):
+    def version_ids(cls, assets, customization=None, request=None):
+        from util.helpers import get_customization
+        customization = customization or get_customization(request)
         asset_ids = {asset.id for asset in assets}
         version_dict = {}
         accepted_reviews = AssetCustomizationReview.objects.filter(
@@ -961,15 +971,16 @@ class Context(models.Model):
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
                     None)
 
-    def get_state(self, asset):
+    def get_state(self, asset, *, customization=None, request=None):
+        from util.helpers import get_customization
         # (State, order) In order of importance. Only update a state if the new state is more important
         INCOMPLETE = ('Incomplete', 0)
         DRAFT = ('Draft', 1)
         IN_REVIEW = ('In review', 2)
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
+        customization = customization or get_customization(request)
 
-        customization = settings.CUSTOMIZATION
         if asset.asset_type.single_customization and asset.customizations.exists():
             customization = asset.customizations.first().name
         reviews = AssetCustomizationReview.objects.filter(version__asset=asset,
@@ -1466,7 +1477,7 @@ class UserGroupsToAssetPermissions(models.Model):
 
     @staticmethod
     def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None, no_create=True):
-        if not (cloud_portal := get_cloud_portal_asset(customization, no_create)):
+        if not (cloud_portal := get_cloud_portal_asset(customization=customization, no_create=no_create)):
             return False
 
         return UserGroupsToAssetPermissions.\
@@ -1489,34 +1500,36 @@ class UserGroupsToAssetPermissions(models.Model):
             )
 
     @staticmethod
-    def check_customization_access(user, customization=settings.CUSTOMIZATION):
+    def check_customization_access(user, *, customization):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(
                 user, customization, "cms.access_customization")
 
     @staticmethod
-    def check_customization_change_account(user, customization=settings.CUSTOMIZATION):
+    def check_customization_change_account(user, *, customization):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(
                 user, customization, "api.change_account")
 
     @staticmethod
-    def check_customization_publish(user, customization=settings.CUSTOMIZATION):
+    def check_customization_publish(user, *, customization=None, request=None):
+        from util.helpers import get_customization
+        customization = customization or get_customization(request)
         return UserGroupsToAssetPermissions.\
             check_customization_permission(
                 user, customization, "cms.publish_version")
 
     @staticmethod
-    def user_has_beta_access(user):
+    def user_has_beta_access(user, *, customization):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(
-                user, settings.CUSTOMIZATION, "cms.access_integration_store")
+                user, customization, "cms.access_integration_store")
 
     @staticmethod
-    def user_can_view_all_releases(user):
+    def user_can_view_all_releases(user, *, customization):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(
-                user, settings.CUSTOMIZATION, "cms.user_can_view_all_releases")
+                user, customization, "cms.user_can_view_all_releases")
 
     @staticmethod
     def convert_permission_to_codename(permission):
@@ -1685,7 +1698,7 @@ class AssetCustomizationReview(models.Model):
 
         can_show_customization = UserGroupsToAssetPermissions. \
             check_customization_access(
-                self.version.created_by, self.customization)
+                self.version.created_by, customization=self.customization)
 
         is_parent_in_asset = self.is_customization_in_asset
         recursive_update_states = [AssetCustomizationReview.REVIEW_STATES.blocked,
@@ -2000,14 +2013,19 @@ class ContributorAgreement(models.Model):
         return super().save(*args, **kwargs)
 
     @staticmethod
-    def get_current(customization=settings.CUSTOMIZATION):
+    def get_current(*, customization=None, request=None):
+        from util.helpers import get_customization
+        customization = customization or get_customization(request)
         return AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
         ).last()
 
-    def is_valid(self):
-        review = self.get_current()
+    def is_valid(self, *, customization=None, request=None):
+        if not customization:
+            from util.helpers import get_customization
+            customization = self.accepted_agreement.customization or get_customization(request)
+        review = self.get_current(customization=customization)
         return review and self.accepted_agreement == review
 
 
@@ -2075,7 +2093,7 @@ class Menu(models.Model):
     @classmethod
     def generate_menus_for_customization(cls, menus, customization, include_not_accepted=False):
         from cms.controllers.filldata import global_contexts_to_dict
-        cloud_portal_asset = get_cloud_portal_asset(customization.name)
+        cloud_portal_asset = get_cloud_portal_asset(customization=customization.name)
         global_contexts = Context.objects.filter(
             asset_type=cloud_portal_asset.asset_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(
@@ -2109,22 +2127,22 @@ class Menu(models.Model):
         return customization, structures
 
     @classmethod
-    def generate_menu(cls, menu_name, customization_name=settings.CUSTOMIZATION):
+    def generate_menu(cls, menu_name, *, customization):
         menu_name = menu_name.lower()
         customization = Customization.objects.filter(
-            name=customization_name).first()
+            name=customization).first()
         menus = cls.get_prefetched_menus([menu_name])
         _, structures = cls.generate_menus_for_customization(
             menus, customization, include_not_accepted=True)
         return structures.get(menu_name)
 
     @classmethod
-    def generate_menus(cls, customization_name=None, menu_names=None):
+    def generate_menus(cls, *, customization=None, menu_names=None):
         menus = cls.get_prefetched_menus(menu_names)
 
-        if customization_name:
+        if customization:
             customizations = Customization.objects.filter(
-                name=customization_name)
+                name=customization)
         else:
             customizations = [asset.customizations.first() for asset in Asset.objects.annotate(
                 customization_count=models.Count('customizations')
@@ -2134,13 +2152,13 @@ class Menu(models.Model):
 
         with ThreadPoolExecutor(max_workers=4) as executer:
             futures = [executer.submit(cls.generate_menus_for_customization,
-                                       menus, customization) for customization in customizations]
+                                       menus, customization_instance) for customization_instance in customizations]
 
         for future in as_completed(futures):
-            customization, structures = future.result()
-            menu_customization_structure[customization.name] = structures
+            customization_instance, structures = future.result()
+            menu_customization_structure[customization_instance.name] = structures
 
-        return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
+        return menu_customization_structure[customization] if customization else menu_customization_structure
 
     @classmethod
     def get_prefetched_menus(cls, menu_names=None, only_enabled=True):
@@ -3275,7 +3293,7 @@ class Flag(AbstractUserFlag):
             return cached
 
         ds_val = self.data_structure.find_actual_value(
-            get_cloud_portal_asset(customization_name))
+            get_cloud_portal_asset(customization=customization_name))
 
         flag_cache.add(cache_key, ds_val)
         return ds_val
@@ -3302,7 +3320,9 @@ class Flag(AbstractUserFlag):
         return super(AbstractUserFlag, self).is_active(request)
 
 
-    def is_active_for_user(self, user, overrides=None, customization_name=settings.CUSTOMIZATION):
+    def is_active_for_user(self, user, overrides=None, *, customization=None, request=None):
+        from util.helpers import get_customization
+        customization = customization or get_customization(request)
         if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
             with suppress(ValueError):
                 return bool(int(override))
@@ -3319,13 +3339,13 @@ class Flag(AbstractUserFlag):
                 user_groups = set(user.groups.filter(
                     Q(options__all_assets=True, usergroupstoassettype__asset_type__type=AssetType.ASSET_TYPES.cloud_portal) |
                     Q(usergroupstoassetpermissions__asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
-                      usergroupstoassetpermissions__asset__customizations__name=settings.CUSTOMIZATION)
+                      usergroupstoassetpermissions__asset__customizations__name=customization)
                 ).values_list('pk', flat=True))
                 if group_ids.intersection(user_groups):
                     return True
 
         try:
-            if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
+            if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization):
                 return True
         except:
             pass

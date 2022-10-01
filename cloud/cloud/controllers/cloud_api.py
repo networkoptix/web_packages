@@ -16,6 +16,7 @@ from rest_framework import status
 from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
                                       APINotAuthorisedException, APINotFoundException, get_client_ip,
                                       kill_session, kill_tokens)
+from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -344,7 +345,7 @@ class System(object):
         auth = None
         params = {}
         if one_customization:
-            params['customization'] = settings.CUSTOMIZATION
+            params['customization'] = get_customization(request)
 
         if email and password:
             auth = {"email": email, "password": password}
@@ -443,7 +444,7 @@ class System(object):
     def bind(request, name, headers=None):
         params = {
             'name': name,
-            'customization': settings.CUSTOMIZATION
+            'customization': get_customization(request)
         }
         return post_wrapper(System.get_request_url('bind'), json=params, headers=headers)
 
@@ -537,7 +538,8 @@ class Account(object):
 
     @staticmethod
     @lower_case_email
-    def register(email, password, first_name, last_name, ip=None, code=None):
+    def register(email, password, first_name, last_name, ip=None, code=None, *, customization=None, request=None):
+        customization = customization or get_customization(request)
         logger.debug('cloud_api.Account.register: ' + email)
 
         headers = {
@@ -566,7 +568,7 @@ class Account(object):
             'passwordHa1': password_ha1,
             'passwordHa1Sha256': password_ha1_sha256,
             'fullName': ' '.join((first_name, last_name)),
-            'customization': settings.CUSTOMIZATION
+            'customization': customization
         }
 
         if not code:
@@ -638,10 +640,10 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def reset_password(email, ip):
+    def reset_password(email, ip, *, request=None):
         params = {
             'email': email,
-            'customization': settings.CUSTOMIZATION
+            'customization': get_customization(request)
         }
         headers = {
             'X-Forwarded-For': ip

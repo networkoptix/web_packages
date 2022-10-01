@@ -473,7 +473,7 @@ class TestAccountViews:
 
         resp = restore_password(req)
         assert resp.status_code == status.HTTP_200_OK
-        reset_mock.assert_called_with(self.user.email, '8.8.8.8')
+        reset_mock.assert_called_with(self.user.email, '8.8.8.8', request=reset_mock.mock_calls[0].kwargs['request'])
 
     def test_check_account_in_portal_doesnt_exist(self):
         req = self.arf.post('/api/account/check',

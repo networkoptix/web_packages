@@ -17,7 +17,7 @@ from notifications import notifications_api
 from notifications.engines import email_engine
 from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
 from notifications.models import RESULT_STATES, Message, PushNotification, SystemEmail
-from util.helpers import get_language_for_email
+from util.helpers import get_customization, get_language_for_email
 
 logger = logging.getLogger(__name__)
 
@@ -52,13 +52,13 @@ def send_email_log(_task):
 
 @shared_task
 @send_email_log
-def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, session = None):
+def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, session = None, *, customization=None):
     if emails is None:
         emails = []
     if session is None:
         session = {}
     message = (SystemEmail if email_type == SystemEmail.MSG_TYPE else Message).objects.get(id=msg_id)
-    customization = getattr(message, 'customization', settings.CUSTOMIZATION)
+    customization = getattr(message, 'customization', customization)
     emails = emails or getattr(message, 'user_email', '') or getattr(message, 'targets')
     template_type = getattr(message, 'type', email_type)
     lang = get_language_for_email(emails, customization)
@@ -128,7 +128,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
             and attempt < settings.MAX_RETRIES
         ):
             send_email.apply_async(
-                args=[message.id, queue, attempt + 1, email_type, failed_emails], queue=queue)
+                args=[message.id, queue, attempt + 1, email_type, failed_emails], queue=queue, customization=get_customization(request))
         elif attempt >= settings.MAX_RETRIES:
             error = MaxResendException()
         log_error(
@@ -353,7 +353,7 @@ def send_to_all_users(notification_id, message, customizations, force=False):
     for user in users:
         message['userFullName'] = user.get_full_name()
         notifications_api.send(
-            user.email, 'cloud_notification', message, user.customization)
+            user.email, 'cloud_notification', message, customization=user.customization)
 
     return {'notification_id': notification_id, 'subject': message['subject'], 'force': force}
 

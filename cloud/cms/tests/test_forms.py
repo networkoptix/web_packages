@@ -49,7 +49,7 @@ class TestHelperFunctions:
         customization.default_language = test_language
         customization.save()
 
-        languages = get_languages_list()
+        languages = get_languages_list(customization=settings.CUSTOMIZATION)
         assert tuple(languages) == (('TL', 'TL - test_language - default'),)
 
     def test_get_branding_shortcuts(self, db):
@@ -60,11 +60,11 @@ class TestHelperFunctions:
 
     @patch('cms.models.DataStructure.find_actual_values')
     def test_get_restricted_keywords(self, mock_cms_models, mocker, db):
-        branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
+        branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset(customization=settings.CUSTOMIZATION).asset_type)
         restricted_ds = branding_context.datastructure_set.filter(name='Restricted').first()
         mock_cms_models.return_value = {restricted_ds: ['item1', 'item2']}
 
-        restricted_words = get_restricted_keywords()
+        restricted_words = get_restricted_keywords(customization=settings.CUSTOMIZATION)
         assert restricted_words == ['item1', 'item2']
 
     def test_generate_branding_variables(self, db):
@@ -116,7 +116,7 @@ class TestHelperFunctions:
         for str in mock_strs:
             assert str in desc
 
-        mock_generate_branding_variables.assert_called_once_with(self.ds, branding_shortcuts, hidden_branding_shortcuts)
+        mock_generate_branding_variables.assert_called_once_with(self.ds, branding_shortcuts, hidden_branding_shortcuts, customization=None, request=None)
 
     def test_get_widget(self, db, mocker):
         placeholder = str(uuid4())
@@ -214,10 +214,10 @@ class TestHelperFunctions:
 
 class TestCustomContextForm:
     @pytest.fixture(autouse=True)
-    def setup(self, django_user_model):
+    def setup(self, django_user_model, asset_factory):
         self.user = django_user_model(email='useremail@test.com')
         self.user.save()
-        self.asset = baker.make("Asset", name='test_asset')
+        self.asset = next(asset_factory())
         self.context = baker.make("Context", name='test_context')
         self.language = baker.make("Language", name='testlanguage', code='TL')
 
@@ -231,7 +231,7 @@ class TestCustomContextForm:
 
     @pytest.fixture()
     def init_form(self):
-        self.form = CustomContextForm(initial={'language': self.language, 'context': self.context.id},  order = None)
+        self.form = CustomContextForm(initial={'language': self.language, 'context': self.context.id},  order = None, request=None)
 
     @pytest.fixture()
     def create_datastructures(self, mocker):

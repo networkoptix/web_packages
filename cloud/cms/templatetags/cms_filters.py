@@ -3,13 +3,14 @@ import json
 from django import template
 
 from cms.models import *
+from util.helpers import get_customization
 
 register = template.Library()
 
 
 @register.filter
 def portal_name(customization):
-    return get_cloud_portal_asset(customization).name
+    return get_cloud_portal_asset(customization=customization).name
 
 
 @register.simple_tag
@@ -65,10 +66,9 @@ def has_permission(user, asset, permission=None):
     return UserGroupsToAssetPermissions.check_permission(user, asset, permission)
 
 
-@register.simple_tag
-def has_customization_permission(user, customization, permission):
-    if not customization:
-        customization = settings.CUSTOMIZATION
+@register.simple_tag(takes_context=True)
+def has_customization_permission(user, customization, permission, context):
+    customization = customization or get_customization(context['request'])
     return UserGroupsToAssetPermissions.check_customization_permission(user, customization, permission)
 
 

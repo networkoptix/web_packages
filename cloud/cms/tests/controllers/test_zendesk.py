@@ -70,7 +70,7 @@ def test_generate_branding_dict(mocker):
         for ds, value in ds_values
     }
     assert branding_dict == expected_dict
-    mock_get_branding_shortcuts.assert_called_once_with()
+    mock_get_branding_shortcuts.assert_called_once_with(customization=None, request=None)
 
 
 def test_substitute_branding():
@@ -126,9 +126,10 @@ def test_retry(mocker):
 
 class TestImporter:
     @pytest.fixture
-    def importer_instance(self, db):
+    def importer_instance(self, asset_factory, db):
         domain, subdomain, user, oauth_token = [str(uuid4()) for _ in range(4)]
         credentials = {'oauth_token': oauth_token}
+        _, = asset_factory(asset_type=AssetType.ASSET_TYPES.documentation)
         importer = Importer(domain, subdomain, credentials, user)
         importer.branding = defaultdict(lambda: '')
         return importer
@@ -282,7 +283,7 @@ class TestImporter:
             mock_article, substituted_body)
         structures = mock_save_unrevisioned_records.mock_calls[0].args[3]
         mock_save_unrevisioned_records.assert_called_once_with(
-            asset, target_context, None, structures, data_records, files, importer_instance.user)
+            asset, target_context, None, structures, data_records, files, importer_instance.user, customization=None)
 
     def test_update_zendesk_article(self, mocker, importer_instance):
         mock_zd_article = mocker.MagicMock()
@@ -1440,7 +1441,7 @@ def test_push_accepted_article_to_zendesk(mocker, asset_type_factory, db):
         name=settings.CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
-    cloud_portal = get_cloud_portal_asset(settings.CUSTOMIZATION)
+    cloud_portal = get_cloud_portal_asset(customization=settings.CUSTOMIZATION)
     mocker.patch.object(cloud_portal, 'read_global_value', return_value=True)
     mocker.patch.object(Asset, 'read_global_value', return_value=True)
     mocker.patch.object(documentation, 'generate_doc_json',

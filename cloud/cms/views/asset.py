@@ -173,7 +173,7 @@ def save_records(language, request_data, language_changed, asset, context, reque
         current_lang = Language.by_code(request_lang)
 
     return modify_db.save_unrevisioned_records(
-        asset, context, current_lang, context.datastructure_set.all(), request_data, request_files, request.user)
+        asset, context, current_lang, context.datastructure_set.all(), request_data, request_files, request.user, request=request)
 
 
 def generate_preview(asset, language, preview, save_draft, send_review, saved_msg, context, request):
@@ -257,7 +257,7 @@ def page_editor(request):
         # Otherwise go to the first customization in the list of reviews.
         try:
             customization_review = customization_reviews.get(
-                customization__name=settings.CUSTOMIZATION)
+                customization__name=get_customization(request))
         except AssetCustomizationReview.DoesNotExist:
             customization_review = customization_reviews.first()
 
@@ -296,7 +296,7 @@ def accept_review(request):
         request.user, asset.asset_type, 'cms.publish_version'
     )
     can_accept = has_asset_type_permission and UserGroupsToAssetPermissions.check_customization_publish(
-        request.user, customization.name,
+        request.user, customization=customization.name,
     )
 
     if can_accept and asset_review.state == AssetCustomizationReview.REVIEW_STATES.pending:
@@ -340,7 +340,7 @@ def publish_review(request, target_review, target_customization='', message=True
             if flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser:
                 from cms.tasks import async_zendesk_push_article
                 async_zendesk_push_article.apply_async(
-                    args=[asset.id, target_customization])
+                    args=[asset.id, target_customization], kwargs={'customization': helpers.get_customization(request)})
         if message:
             return 'success', f"Version {target_review.version.id} has been accepted"
     return None, None
@@ -369,15 +369,16 @@ def manage_release_note_notification(asset_review):
     asset = asset_review.version.asset
     if asset.asset_type.type == AssetType.ASSET_TYPES.release_notes:
         create_or_update_notification_for_release_note(
-            asset, asset_review.version)
+            asset, asset_review.version, customization=asset_review.customization)
 
 
-def create_or_update_notification_for_release_note(asset, version):
+def create_or_update_notification_for_release_note(asset, version, *, customization=None, request=None):
+    customization = customization or helpers.get_customization(request)
     _, datastructures = get_contexts_and_datastructures_of_asset_type(
         AssetType.ASSET_TYPES.release_notes)
     datastructures = DataStructure.find_actual_values(
         datastructures, asset=asset, version_id=version,
-        customization_name=settings.CUSTOMIZATION, draft=True
+        customization_name=customization, draft=True
     )
 
     build_ds = next(filter(lambda ds: ds.name ==
@@ -421,7 +422,7 @@ def defer_handler(func):
 def handle_force_update(request, asset_review):
     if "force_update" in request.POST:
         asset = asset_review.version.asset
-        if asset.is_cloud_portal and asset.can_preview_on_portal and UserGroupsToAssetPermissions.check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.force_update'):
+        if asset.is_cloud_portal and asset.can_preview_on_portal and UserGroupsToAssetPermissions.check_customization_permission(request.user, asset.customizations.first().name, 'cms.force_update'):
             filldata.init_skin(asset, preview=False)
             filldata.init_skin(asset, preview=True)
             return 'success', f'Version {asset_review.version.id} was force updated'
@@ -485,13 +486,14 @@ def handle_revoke(request, asset_review, can_publish):
 
 @defer_handler
 def handle_reject_or_ask(request, asset_review):
+    customization=get_customization(request)
     if "ask_question" not in request.POST and "reject" not in request.POST:
         return
 
     message_to_display = [None, None]
     if "reject" in request.POST:
         review_id = request.POST.get('review_id')
-        if not UserGroupsToAssetPermissions.check_customization_publish(request.user):
+        if not UserGroupsToAssetPermissions.check_customization_publish(request.user, customization=customization):
             raise PermissionDenied
         modify_db.update_draft_state(
             review_id, AssetCustomizationReview.REVIEW_STATES.rejected, request.user)
@@ -499,13 +501,13 @@ def handle_reject_or_ask(request, asset_review):
         asset_review = AssetCustomizationReview.objects.get(id=review_id)
 
     if "access_customization" in request.POST:
-        make_customization_visible_to_user(get_cloud_portal_asset(asset_review.customization),
+        make_customization_visible_to_user(get_cloud_portal_asset(customization=asset_review.customization),
                                            asset_review.version.created_by)
 
     note = request.POST["addedNote"]
     message = f'\n{request.user.email}: {note}\n'
     if not UserGroupsToAssetPermissions.\
-            check_customization_access(asset_review.version.created_by, asset_review.customization):
+            check_customization_access(asset_review.version.created_by, customization=asset_review.customization):
         message = f'\nMessage: {note}\n'
     asset_review.notes += message
     asset_review.save()
@@ -526,10 +528,11 @@ def handle_invalid_option():
 
 def get_review_arguments(request):
     review_id = request.POST.get('review_id')
+    customization=get_customization(request)
     asset_review = AssetCustomizationReview.objects.filter(
         id=review_id).first()
     can_publish = asset_review and UserGroupsToAssetPermissions.check_customization_publish(
-        request.user)
+        request.user, customization=customization)
     has_asset_type_permission = asset_review and UserGroupsToAssetType.check_asset_type(
         request.user, asset_review.version.asset.asset_type, 'cms.publish_version'
     )
@@ -579,9 +582,10 @@ def make_preview(request):
     version_id = request.POST.get('version_id')
     context = Context.objects.filter(id=request.POST['context_id']).first()
     asset = get_asset_by_revision(version_id)
+    customization=get_customization(request)
 
     if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset) and \
-            not UserGroupsToAssetPermissions.check_customization_publish(request.user):
+            not UserGroupsToAssetPermissions.check_customization_publish(request.user, customization=customization):
         raise PermissionDenied
 
     if asset.can_preview_on_portal:
@@ -1061,11 +1065,13 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
 
 def prepare_asset_info(request, customization, asset, ignore_error=False):
     review_url = None
+    customization = customization or get_customization(request)
     if (
         not request.user.is_superuser
         and not (
             UserGroupsToAssetPermissions.check_customization_publish(
-                request.user
+                request.user,
+                customization=customization
             )
             and UserGroupsToAssetType.check_asset_type(
                 request.user, asset.asset_type, 'cms.publish_version'
@@ -1124,9 +1130,10 @@ def dict_to_nodes(to_transform, sort_children=True):
     return [{'name': name, 'children': dict_to_nodes(content, sort_children)} for name, content in to_transform.items()]
 
 
-def build_up(target_dict, name, asset_type, include_preview=True, include_admin=True):
+def build_up(target_dict, name, asset_type, include_preview=True, include_admin=True, *, customization=None, request=None):
+    customization = customization or helpers.get_customization(request)
     assets = Asset.objects.filter(
-        asset_type__type=asset_type, customizations__name=settings.CUSTOMIZATION)
+        asset_type__type=asset_type, customizations__name=customization)
     target_dict[name] = []
 
     for asset in assets:
@@ -1162,6 +1169,7 @@ def build_up(target_dict, name, asset_type, include_preview=True, include_admin=
 @permission_required('cms.change_asset')
 def get_assets(request):
     max_age = int(request.GET.get('maxAge') or 0)
+    customization=helpers.get_customization(request)
     included_types = request.GET.getlist('type') or [
         'custom_clients', *[asset_type for asset_type in AssetType.ASSET_TYPES._identifier_map.keys()]]
     selected_type_ids = [asset_type_id for identifier in included_types if (
@@ -1188,7 +1196,7 @@ def get_assets(request):
     if 'custom_clients' in included_types:
         mapped_clients = defaultdict(lambda: [])
         custom_clients = request.user.customclient_set.filter(
-            created_customization__name=settings.CUSTOMIZATION)
+            created_customization__name=customization)
 
         for client in custom_clients:
             settings_link = {
@@ -1228,7 +1236,7 @@ def get_assets(request):
     for args in asset_mapping:
         if args[1] in selected_type_ids:
             build_up(asset_dict, *args,
-                     include_preview=args[1] in preview_type_ids, include_admin=args[1] in admin_type_ids)
+                     include_preview=args[1] in preview_type_ids, include_admin=args[1] in admin_type_ids, customization=customization)
 
     cached = PACKAGES_CACHE[cache_key] = {
         'last': datetime.utcnow(), 'data': dict_to_nodes(asset_dict)}
@@ -1244,17 +1252,18 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_anonymous:
             return CustomClient.objects.none()
-        return self.request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
+        return self.request.user.customclient_set.filter(created_customization__name=helpers.get_customization(self.request))
 
     def perform_create(self, serializer):
         from cms.models import get_vms_asset
         kwargs = {}
+        customization = helpers.get_customization(self.request)
         if not settings.META:
-            kwargs['base_vms'] = get_vms_asset(settings.CUSTOMIZATION)
+            kwargs['base_vms'] = get_vms_asset(customization=customization)
         serializer.save(
             created_by=self.request.user,
             created_customization=Customization.objects.filter(
-                name=settings.CUSTOMIZATION).first(),
+                name=customization).first(),
             **kwargs
         )
 
@@ -1271,7 +1280,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     def generate_settings_for_manifest(request):
         show_vms_list = settings.META
         vms_list = [{'name': vms.name, 'value': vms.id} for vms in
-                    request.user.custom_client_vms_assets] if show_vms_list else []
+                    request.user.custom_client_vms_assets(request)] if show_vms_list else []
 
         return {
             'base_vms': {

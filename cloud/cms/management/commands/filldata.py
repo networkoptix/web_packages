@@ -7,6 +7,7 @@ from django.conf import settings
 from cloud.debug import timer
 from cms.controllers import filldata, structure
 from cms.models import Customization, Language
+from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--customization', nargs='?', default=settings.CUSTOMIZATION, type=str)
+            '--customization', nargs='?', default=get_customization(), type=str)
         parser.add_argument(
             '--preview', nargs='?', default=False, type=bool)
 
@@ -43,7 +44,7 @@ class Command(BaseCommand):
 
         asset = structure.find_or_add_asset_with_single_customization(
             'Cloud Portal', customization, 'cloud_portal', '')
- 
+
         for _ in range(settings.FILLDATA_TRIES):
             if filldata.init_skin(asset, preview, workers=1):
                 break

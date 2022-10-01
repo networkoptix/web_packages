@@ -4,6 +4,7 @@ from uuid import uuid4
 from random import randint, choice
 from math import ceil
 from shutil import rmtree
+from unittest.mock import call
 
 from model_bakery import baker
 
@@ -236,7 +237,8 @@ def test_read_structure(mocker, db):
             # Need special handling for checking cloud portal type since asset is created before tests can run
             actual_global_strings = mock_read_structure_file.mock_calls[0].args[2]
             mock_strings = set(actual_global_strings)
-            mock_with_global_strings = set(actual_global_strings + global_strings)
+            mock_with_global_strings = set(
+                actual_global_strings + global_strings)
 
             assert mock_strings == mock_with_global_strings
 
@@ -302,19 +304,18 @@ class TestReadStructure:
     def test_add_arguments(self, mocker):
         parser = mocker.MagicMock()
         Command().add_arguments(parser)
-        parser.add_argument.assert_called_once_with(
-            'asset_type', nargs='?', default='cloud_portal')
+        parser.add_argument.assert_has_calls(
+            [call('--customization', nargs='?', default='default', type=str),
+             call('asset_type', nargs='?', default='cloud_portal')]
+        )
 
-    def test_handle(self, mocker, db):
+    def test_handle(self, mocker, asset_factory, db):
         deployment_cache = caches['deployment']
         deployment_cache.set(settings.DEPLOYMENT_READY, False)
         instance = Command()
         customization_name = str(uuid4())
         asset_type = 'cloud_portal'
-        mocker.patch(
-            f'{BASE_PATH}.get_customization_name',
-            return_value=customization_name
-        )
+
         mock_read_structure_json = mocker.patch.object(
             structure, 'read_structure_json')
         mock_read_structure = mocker.patch(
@@ -336,8 +337,8 @@ class TestReadStructure:
             'Set deployment status to ready'
         ]
         instance.handle(asset_type=asset_type)
-        created_customization = Customization.objects.filter(
-            name=customization_name, default_language__code='en_US').first()
+        created_customization, = asset_factory(
+            name=customization_name, lang_code='en_US')
         added_default_to_languages = list(
             created_customization.languages.all()) == [created_customization.default_language]
 

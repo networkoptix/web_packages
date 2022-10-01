@@ -14,6 +14,8 @@ from notifications.conf import get_sns_client
 import botocore
 import logging
 
+from util.helpers import get_customization
+
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 PROVIDERS = tuple(PushDevice.PROVIDERS._identifier_map.keys())
 PROVIDERS_REVERSE_MAP = {i: name for name,
@@ -32,7 +34,7 @@ logger = logging.getLogger(__name__)
 def get_aws_platform_arns(customization_name):
     arn_customizations = caches['push_config'].get('platform_arns', {})
     if customization_name not in arn_customizations:
-        current_portal = get_cloud_portal_asset(customization_name)
+        current_portal = get_cloud_portal_asset(customization=customization_name)
         arn_customizations[customization_name] = {}
         for provider in ('FIREBASE', 'BAIDU', 'APN', 'APN_SANDBOX'):
             arn_customizations[customization_name][provider.lower()] = current_portal.read_global_value(
@@ -87,12 +89,13 @@ class SubscriptionSerializer(serializers.Serializer):
         device_token = data.get('deviceToken')
         provider = data.get('provider')
         user_id = data.get('userId')
+        customization=get_customization(self.context['request'])
 
         if not self.instance:
             if provider == 'firebase_legacy':
                 device = PushDevice(
                     registration_id=device_token, cloud_message_type='FCM', user=self.context['request'].user,
-                    application_id=settings.CUSTOMIZATION
+                    application_id=customization
                 )
                 response = device.send_message(message='', dry_run=True)
                 if response['success'] == 1:
@@ -173,7 +176,7 @@ class SubscriptionSerializer(serializers.Serializer):
     def create_platform_endpoint(self, instance):
         provider = self.validated_data.get('provider')
         user_id = self.validated_data.get('userId')
-        platform_arns = get_aws_platform_arns(settings.CUSTOMIZATION)
+        platform_arns = get_aws_platform_arns(get_customization(self.context['request']))
         platform_arn = platform_arns[provider]
         if not platform_arn:
             raise serializers.ValidationError(
@@ -210,10 +213,11 @@ class SubscriptionSerializer(serializers.Serializer):
             PushDevice.objects.filter(provider=PushDevice.PROVIDERS.firebase,
                                       registration_id=device.registration_id).delete()
 
-    def create(self, validated_data):
+    def create(self, validated_data, *, customization=None):
+        customization = customization or get_customization(self.context['request'])
         device = PushDevice(
             registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
-            user=self.context['request'].user, application_id=settings.CUSTOMIZATION
+            user=self.context['request'].user, application_id=customization
         )
         systems = validated_data.get('systems', ['all'])
         is_enabled = validated_data.get('isEnabled', True)
@@ -318,6 +322,6 @@ class SystemEmailSerializer(serializers.ModelSerializer):
         fields = ('systemId', 'subject', 'messageHtml',
                   'messageText', 'targets', 'attachments', 'messageId')
 
-    def create(self, customization=settings.CUSTOMIZATION):
+    def create(self, *, customization):
         self.is_valid(True)
         return SystemEmail(**self.validated_data, customization=customization)

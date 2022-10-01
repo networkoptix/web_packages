@@ -6,15 +6,21 @@ from django.core.management.base import BaseCommand
 
 from cms.controllers import filldata
 from cms import models
+from util.helpers import get_customization
 logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
     _id_file = "version.id"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--customization', nargs='?', default=get_customization(), type=str)
+
     def handle(self, *args, **options):
         local_version = self.read_id()
-        update, current_version = models.check_update_cache(settings.CUSTOMIZATION, local_version)
+        customization = options.get('customization', get_customization())
+        update, current_version = models.check_update_cache(customization, local_version)
         logger.info(f"Local version: {local_version}\tUpdate: {update}\tCurrent Version: {current_version}")
 
         # Memory is initializing
@@ -25,13 +31,13 @@ class Command(BaseCommand):
             return
 
         if update:
-            self.initialize_static_content(current_version)
+            self.initialize_static_content(current_version, customization)
         else:
             self.stdout.write(self.style.SUCCESS("No change was detected"))
 
-    def initialize_static_content(self, current_version):
+    def initialize_static_content(self, current_version, customization):
         self.write_id(current_version)
-        asset = models.get_cloud_portal_asset()
+        asset = models.get_cloud_portal_asset(customization=customization)
         logger.info("Need to update content.")
 
         logger.info(f"Init skin: {asset}\t Preview: False")

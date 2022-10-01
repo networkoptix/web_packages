@@ -61,7 +61,7 @@ class TestModifyDB:
                      'asset': asset.name,
                      'asset_type': asset_type
                  },
-                 user.customization)
+                 customization = user.customization)
             for user in other_users)
 
     def test_are_asset_datarecords_unique_is_unique(self, mocker, asset_factory, account_factory, db):

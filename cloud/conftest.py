@@ -166,7 +166,7 @@ def mock_cloud_portal_customization_cache(mocker):
 
 @pytest.fixture(scope="session")
 def asset_factory():
-    def generate_mock_assets(name="test", qty=1, state=AssetCustomizationReview.REVIEW_STATES.accepted, customization_name='default', asset_type=AssetType.ASSET_TYPES.integration, account=None, draft=False, write_db=True):
+    def generate_mock_assets(name="test", qty=1, state=AssetCustomizationReview.REVIEW_STATES.accepted, customization_name='default', asset_type=AssetType.ASSET_TYPES.integration, account=None, draft=False, write_db=True, lang_code='en_US'):
         """Useful for generating mock assets for testing. Current implementation works well for integrations, some changes might need to be made to use with other asset types.
 
         Args:
@@ -181,7 +181,7 @@ def asset_factory():
         Yields:
             Asset: With asset type and name from asset_type and name kwargs
         """
-        language = get_language()
+        language = get_language(code=lang_code)
         customization = get_customization(customization_name)
         customization.languages.add(language)
         accepted = state == AssetCustomizationReview.REVIEW_STATES.accepted

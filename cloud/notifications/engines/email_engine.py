@@ -130,7 +130,7 @@ def read_template(customization_name, name, language_code, html):
         suffix = '.txt'
     filename = os.path.join("templates/lang_{{language}}", name + suffix + '.mustache')
     return read_file(customization_name, filename, language_code)
-    
+
 
 def read_file(customization_name, filename, language_code=""):
     files_cache = email_cache(customization_name, 'files')
@@ -138,7 +138,7 @@ def read_file(customization_name, filename, language_code=""):
     if translated_name not in files_cache:
         from cms.models import get_cloud_portal_asset
         files_cache[translated_name] = filldata.read_customized_file(filename,
-                                                                     get_cloud_portal_asset(customization_name),
+                                                                     get_cloud_portal_asset(customization=customization_name),
                                                                      language_code)
         email_cache(customization_name, 'files', files_cache)
     return files_cache[translated_name]

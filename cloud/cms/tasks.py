@@ -1,3 +1,4 @@
+from calendar import c
 import json
 from celery import shared_task, current_task
 from celery.exceptions import Ignore
@@ -7,6 +8,7 @@ from cms.controllers import filldata, generate_structure, structure, structure_t
 from api.models import Account
 from cms.models import Asset, Menu, PackagesCache, UserGroupsToAssetPermissions, CustomClient
 from celery.result import AsyncResult
+from util.helpers import get_customization
 
 PACKAGE_CACHE = PackagesCache()
 
@@ -170,9 +172,10 @@ def async_zendesk_sync(menu_id, customization_name, log_id, force_update=True):
 
 
 @shared_task
-def async_zendesk_push_article(asset_id, customization_name):
+def async_zendesk_push_article(asset_id, *, customization=None, request=None):
     from cms.models import Asset
     from cms.controllers.zendesk import push_accepted_article_to_zendesk
+    customization = customization or get_customization(request)
     asset = Asset.objects.filter(id=asset_id).first()
     if asset:
-        push_accepted_article_to_zendesk(asset, customization_name)
+        push_accepted_article_to_zendesk(asset, customization=customization, request=request)

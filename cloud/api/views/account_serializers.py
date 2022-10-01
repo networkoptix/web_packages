@@ -76,6 +76,7 @@ class BaseAccountModelSerializer(CdbAccountMixin, serializers.ModelSerializer):
         fields = CdbAccountMixin.Meta.fields + ('first_name', 'last_name', 'language', 'account2faEnabled')
 
     def __init__(self, request, *args, **kwargs):
+        kwargs['context'] = {'request': request}
         super().__init__(request.user, *args, **kwargs)
         super().get_cdb_fields(request)
 
@@ -91,7 +92,7 @@ class AccountSerializer(BaseAccountModelSerializer):
         fields = BaseAccountModelSerializer.Meta.fields + ('is_staff', 'is_superuser', 'cookie_reviewed', 'permissions', 'can_publish_integration', 'is_authenticated', 'email')
 
     def get_can_publish_integration(self, obj):
-        return UserGroupsToAssetPermissions.check_customization_publish(obj) and \
+        return UserGroupsToAssetPermissions.check_customization_publish(obj, request=self.context['request']) and \
                UserGroupsToAssetType.check_asset_type(obj, AssetType.ASSET_TYPES.integration, 'cms.publish_version'
     )
 

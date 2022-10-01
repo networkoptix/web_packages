@@ -105,10 +105,10 @@ class TestAPIWrappers:
 
 class TestSystemAPI:
     @pytest.fixture(autouse=True)
-    def setup(self):
-        request, user, password, d1_key, d1_val, d2_key, d2_val, system_id, slave_system_id, system_name, headers = generate_args(
-            11)
-        self.request = request
+    def setup(self, mocker):
+        user, password, d1_key, d1_val, d2_key, d2_val, system_id, slave_system_id, system_name, headers = generate_args(
+            10)
+        self.request = mocker.MagicMock(spec=Request, POST={}, META={}, data={})
         self.user = user
         self.password = password
         self.auth = {'email': user, 'password': password}

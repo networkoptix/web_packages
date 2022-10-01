@@ -143,12 +143,12 @@ class TestModelFunctions:
         uses(cloud_portal_asset=True)
 
         assert get_cloud_portal_asset(
-            self.customization.name).id == self.cloud_portal_asset.id
+            customization=self.customization.name).id == self.cloud_portal_asset.id
 
     def test_get_vms_asset(self, uses):
         uses(vms_asset=True)
 
-        assert get_vms_asset(self.customization.name).id ==self.vms_asset.id
+        assert get_vms_asset(customization=self.customization.name).id ==self.vms_asset.id
 
     def test_get_asset_by_revision(self, uses):
         uses(documentation_asset=True)
@@ -214,7 +214,7 @@ class TestModelFunctions:
         for node in range(nodes_count):
             node = baker.make(MenuNode, name=f'{menu_name} - node {node}', enabled=[self.customization], available=[
                        self.customization], authentication=MenuNode.AUTH_CHOICES.logged_in, parent_menu=menu)
-        MENU_CACHE[customization] = Menu.generate_menus(customization, menu_names=[menu_name])
+        MENU_CACHE[customization] = Menu.generate_menus(customization=customization, menu_names=[menu_name])
         return customization, menu_name, menu_type, nodes_count
 
     def map_menu_helper(self, menu_name, base_url, menu_url):
@@ -253,8 +253,8 @@ class TestModelFunctions:
         condition = 'user_one_condition'
         baker.make(MenuNode, name=f'user1 node', enabled=[self.customization], available=[
                        self.customization], condition=condition, parent_menu=self.menu)
-        mocker.patch('cms.feature_flags.FLAGS.value_to_key', lambda node_condition: node_condition == condition)
-        mocker.patch('cms.models.feature_flag_is_active', lambda flag, user, _: flag and user == user_one)
+        mocker.patch('cms.feature_flags.FLAGS.value_to_key', lambda node_condition, **kwargs: node_condition == condition)
+        mocker.patch('cms.models.feature_flag_is_active', lambda flag, user, _, **kwargs: flag and user == user_one)
         customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
 
         # user_one gets an extra node because they have permission
@@ -481,7 +481,7 @@ class TestMenuMethods:
             Menu, 'generate_menus_for_customization',
             return_value=('customization', {kb_menu.name.lower(): mocker.sentinel.generated_menu})
         )
-        generated_menu = Menu.generate_menu(kb_menu.name)
+        generated_menu = Menu.generate_menu(kb_menu.name, customization=settings.CUSTOMIZATION)
         assert generated_menu == mocker.sentinel.generated_menu
         prefetch_mock.assert_called_with([kb_menu.name.lower()])
         gen_mock.assert_called_with(['prefetched_menu'], default_customization, include_not_accepted=True)
@@ -501,7 +501,7 @@ class TestMenuMethods:
         assert menus == {'other': {'menu1': mocker.sentinel.generated_menu_other}, 'default': {'menu1': mocker.sentinel.generated_menu_default}}
 
         gen_mock.side_effect = generated_menus[0:1]
-        menus = Menu.generate_menus(customization_name='default')
+        menus = Menu.generate_menus(customization='default')
         assert menus == {'menu1': mocker.sentinel.generated_menu_default}
 
     def test_get_prefetched_menus(self, mocker, kb_menu, struct_menu):
@@ -1056,22 +1056,22 @@ class TestAssetMethods:
         )
         assert saved_asset.version_id() == version.id
 
-    def test_version_ids(self, default_customization):
-        asset1 = baker.make('Asset', name='asset1')
+    def test_version_ids(self, default_customization, asset_factory):
+        asset1, = asset_factory(name='asset1')
         version1 = baker.make('ContentVersion', asset=asset1)
         baker.make(
             'AssetCustomizationReview', version=version1, state=AssetCustomizationReview.REVIEW_STATES.accepted,
             customization=default_customization
         )
 
-        asset2 = baker.make('Asset', name='asset2')
+        asset2, = asset_factory(name='asset2')
         version2 = baker.make('ContentVersion', asset=asset2)
         baker.make(
             'AssetCustomizationReview', version=version2, state=AssetCustomizationReview.REVIEW_STATES.accepted,
             customization=default_customization
         )
 
-        assert Asset.version_ids([asset1, asset2]) == {asset1.id: version1.id, asset2.id: version2.id}
+        assert Asset.version_ids([asset1, asset2], customization=default_customization.name) == {asset1.id: version1.id, asset2.id: version2.id}
 
     def test_change_preview_status(self, saved_asset):
         assert saved_asset.preview_status == Asset.PREVIEW_STATUS.draft
@@ -1417,7 +1417,7 @@ class TestContributorAgreement:
         review = baker.make('AssetCustomizationReview', version=version, customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted)
         version2 = baker.make('ContentVersion', asset=agreement)
         review2 = baker.make('AssetCustomizationReview', version=version2, customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted)
-        assert ContributorAgreement.get_current() == review2
+        assert ContributorAgreement.get_current(customization=default_customization) == review2
 
     def test_is_valid(self, mocker, db):
         review = baker.prepare('AssetCustomizationReview')

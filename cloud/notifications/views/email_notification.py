@@ -5,16 +5,17 @@ from django.conf import settings
 from cloud.helpers.exceptions import api_success, require_params
 from notifications.views.push_notification import CloudSessionAuthentication, CloudSystemBasicAuthentication, IsAuthenticatedUserOrSystem
 from notifications.serializers import SystemEmailSerializer
+from util.helpers import get_customization
 
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedUserOrSystem,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def email_notification(request):
-    serializer = SystemEmailSerializer(data=request.data)
+    customization = get_customization(request)
+    serializer = SystemEmailSerializer(data={**request.data, customization: request.data.get('customization', customization)})
 
-    email_obj = serializer.create(customization=getattr(request.user, 'customization', request.data.get(
-        'system', {}).get('customization', settings.CUSTOMIZATION)))
+    email_obj = serializer.create(customization=customization)
 
     access_token = request.session.get('access_token')
     refresh_token = request.session.get('refresh_token')

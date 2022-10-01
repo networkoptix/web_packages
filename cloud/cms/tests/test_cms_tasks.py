@@ -280,12 +280,12 @@ def test_async_zendesk_sync(mocker, db):
         menu, site, mock_log, force_update)
 
 
-def test_async_zendesk_push_article(mocker, db):
+def test_async_zendesk_push_article(mocker, asset_factory, db):
     mock_push_accepted_article_to_zendesk = mocker.patch(
         'cms.controllers.zendesk.push_accepted_article_to_zendesk')
-    asset = baker.make(Asset)
+    asset, = asset_factory()
     customization_name = str(uuid4())
 
-    async_zendesk_push_article(asset.id, customization_name)
+    async_zendesk_push_article(asset.id, customization=customization_name)
     mock_push_accepted_article_to_zendesk.assert_called_once_with(
-        asset, customization_name)
+        asset, customization=customization_name, request=None)

@@ -22,6 +22,7 @@ from cms.models import Customization, Asset, UserGroupsToAssetPermissions, cloud
 from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
+from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +123,7 @@ def update_or_create_notification(data, customizations=None):
 @permission_classes((AllowAny, ))
 def send_event(request):
     feedback_enabled = cloud_portal_customization_cache(
-        settings.CUSTOMIZATION, 'config').get('feedback_enabled', False)
+        get_customization(request), 'config').get('feedback_enabled', False)
     if not feedback_enabled:
         raise APIServiceException(
             'Feedback is currently unavailable', ErrorCodes.service_unavailable)
@@ -244,12 +245,12 @@ def send_notification(request):
         notifications_api.send(request.data['user_email'],
                                request.data['type'],
                                request.data['message'],
-                               request.data['customization'],
-                               external_id)
+                               customization = get_customization(request),
+                               external_id = external_id)
     except ValidationError as error:
         error_data = error.detail if hasattr(error, 'detail') else None
         raise APIRequestException(
-            error.message, ErrorCodes.wrong_parameters, error_data=error_data)
+            error.message, ErrorCodes.wrong_parameters, error_data=error_data) from error
     return api_success()
 
 
@@ -274,7 +275,7 @@ def cloud_notification_action(request):
         'notifications.change_cloudnotification')
     can_send = request.user.has_perm('notifications.send_cloud_notification')
 
-    customizations = [settings.CUSTOMIZATION]
+    customizations = [get_customization(request)]
     if 'customizations' in request.data:
         customizations = request.data.getlist('customizations')
 
@@ -302,7 +303,7 @@ def cloud_notification_action(request):
             message = original_message.copy()
             message["userFullName"] = user.get_full_name()
             notifications_api.send(
-                user.email, 'cloud_notification', message, user.customization)
+                user.email, 'cloud_notification', message, customization = user.customization or get_customization(request))
         messages.success(request._request, "Preview has been sent")
 
     elif can_send and 'Send' in request.data and notification_id:

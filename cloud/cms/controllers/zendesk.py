@@ -6,7 +6,7 @@ from cms.controllers import modify_db
 from cms.controllers import structure
 from cms import forms
 from cms.models import *
-from util.helpers import substitute_branding
+from util.helpers import get_customization, substitute_branding
 
 from django.conf import settings
 from django.utils.http import urlencode
@@ -43,8 +43,8 @@ def item_position(item):
     return item.position
 
 
-def generate_branding_dict():
-    _branding, hidden_branding = forms.get_branding_shortcuts()
+def generate_branding_dict(customization=None, request=None):
+    _branding, hidden_branding = forms.get_branding_shortcuts(customization=customization, request=request)
     branding = _branding + hidden_branding
     rep = {re.escape(value): ds['name'] for ds, value in branding}
     rep[re.escape('Nx Cloud')] = '%CLOUD_NAME%'
@@ -122,8 +122,7 @@ class Importer:
         self.all_sections = None
         self.site = None
         self.branding = None
-        self.asset_type = AssetType.objects.get(
-            name='', type=AssetType.ASSET_TYPES.documentation)
+        self.asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.documentation)
         self.user = user
 
     def _process_sections(self, sections):
@@ -198,7 +197,7 @@ class Importer:
         body = substitute_branding(self.branding, article.body)
         data_records, files = self._get_data_records(article, body)
         modify_db.save_unrevisioned_records(
-            asset, context_model, None, context_model.datastructure_set.all(), data_records, files, self.user)
+            asset, context_model, None, context_model.datastructure_set.all(), data_records, files, self.user, customization=self.customization)
 
     def _update_zendesk_article(self, article, zd_article):
         zd_article.author_id = article.author_id
@@ -322,14 +321,15 @@ class Importer:
                 section['sections'], parent_section=zd_section, parent_menu_node=menu_node
             )
 
-    def import_knowledgebase(self, menu, category_name, customization_name=settings.CUSTOMIZATION):
+    def import_knowledgebase(self, menu, category_name, *, customization=None, request=None):
+        customization = customization or get_customization(request)
         self.menu = menu
         self.category_name = category_name
         self.customization = Customization.objects.get(
-            name=customization_name)
+            name=customization)
         self.site = ZendeskSite.objects.get_or_create(
             customization=self.customization)[0]
-        self.branding = generate_branding_dict()
+        self.branding = generate_branding_dict(customization=self.customization)
         struct = self._pull_category_from_zendesk()
         self.category = ZendeskCategory.objects.get_or_create(
             site=self.site, menu=menu, name=struct['category'].name, category_id=struct['category'].id
@@ -338,8 +338,8 @@ class Importer:
 
 
 class ZendeskBase:
-    def __init__(self, customization_name=settings.CUSTOMIZATION, cloud_portal=None, default_permission_group_id=None, verify_auth=False):
-        self.customization_name = customization_name
+    def __init__(self, customization_name=None, cloud_portal=None, default_permission_group_id=None, verify_auth=False):
+        self.customization_name = customization_name or get_customization()
         self.cloud_portal = cloud_portal or get_cloud_portal_asset(
             self.customization_name)
         domain = self.cloud_portal.read_global_value('%ZENDESK_DOMAIN%')
@@ -1026,23 +1026,24 @@ def sync_article(zd_article, doc_json, site, exporter):
                 sync_item.mark_failed(f'{type(e).__name__}: {e}\n trace: {tb}')
 
 
-def push_accepted_article_to_zendesk(asset, customization_name=settings.CUSTOMIZATION):
-    cloud_portal = get_cloud_portal_asset(customization_name)
+def push_accepted_article_to_zendesk(asset, *, customization=None, request=None):
+    customization = customization or get_customization(request)
+    cloud_portal = get_cloud_portal_asset(customization=customization)
     sync_enabled = cloud_portal.read_global_value('%ZENDESK_SYNC_ARTICLES%')
     zd_articles = list(ZendeskArticle.objects.filter(asset=asset, sync=True))
     site = ZendeskSite.objects.filter(
-        customization__name=customization_name).first()
+        customization__name=customization).first()
 
     if not all([site, sync_enabled, zd_articles]):
         return
 
     lang = Language.objects.filter(code='en_US').first()
-    doc_json = documentation.generate_doc_json([asset], lang, external_link=True, customization_name=customization_name)[0]
+    doc_json = documentation.generate_doc_json([asset], lang, external_link=True, customization=customization)[0]
     try:
-        exporter = Exporter(customization_name=customization_name,
+        exporter = Exporter(customization_name=customization,
                             cloud_portal=cloud_portal, verify_auth=True)
     except ZendeskInvalidConfiguration:
-        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {customization_name}. Unable to Authorize User')
+        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {customization}. Unable to Authorize User')
         return
 
     for zd_article in zd_articles:
@@ -1112,7 +1113,7 @@ def update_zd_article(node: MenuNode, site: ZendeskSite, parent_section: Zendesk
         lang = Language.objects.filter(code='en_US').first()
         if publish:
             doc_json = documentation.generate_doc_json(
-                [node.asset], lang, external_link=True, customization_name=customization.name)[0]
+                [node.asset], lang, external_link=True, customization=customization.name)[0]
             doc_json['title'] = custom_name or doc_json.get('title', '')
         zd_article.title = doc_json.get('title') or node.name or node.asset.name
 

@@ -3,6 +3,7 @@ from django.conf import settings
 from cms.controllers.filldata import ContextProcessor
 from cms.models import Asset, AssetCustomizationReview, AssetType, Context, DataStructure, get_cloud_portal_asset
 from util.base_cache import BaseCache
+from util.helpers import get_customization
 
 S3_STRUCTURE_TYPES = [
             DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file]
@@ -40,14 +41,15 @@ def get_global_contexts(cloud_portal):
         asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
 
 
-def get_current_version(language, state, versions, asset, show_pending=False, show_drafts=False):
+def get_current_version(language, state, versions, asset, show_pending=False, show_drafts=False, *, customization=None, request=None):
+    customization = customization or get_customization(request)
     review_id = None
     has_version = False
     version_not_found = has_version, None, None, None
     current_version = versions[asset.id]
     lookup_key = BaseCache.generate_lookup_key(language, state, asset.id, current_version)
     if show_pending:
-        if not (review := get_review_matching_current_version(asset, current_version)):
+        if not (review := get_review_matching_current_version(asset, current_version, customization=customization)):
             return version_not_found
         current_version = review.version.id
         review_id = review.id
@@ -78,22 +80,23 @@ def generate_asset_dictionary(show_pending, show_drafts, asset, current_version,
     return asset_dict
 
 
-def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, customization_name=settings.CUSTOMIZATION, name_filter=[]):
+def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, *, customization=None, request=None, name_filter=[]):
     ds_list = data_structures
+    customization = customization or get_customization(request)
     if name_filter:
         ds_list = [ds for ds in ds_list if ds.name in name_filter]
 
     return DataStructure.find_actual_values(ds_list, asset=asset, version_id=current_version,
-                                               draft=show_pending or show_drafts, customization_name=customization_name)
+                                               draft=show_pending or show_drafts, customization_name=customization)
 
 
 def map_ds_attribute_to_actual_value(datastructure_values, map_by='id'):
      return { getattr(ds, map_by): actual_value for ds, actual_value in datastructure_values.items() }
 
 
-def generate_context_dicts_with_actual_values(show_pending, show_drafts, contexts, data_structures, asset, current_version, customization_name=settings.CUSTOMIZATION):
+def generate_context_dicts_with_actual_values(show_pending, show_drafts, contexts, data_structures, asset, current_version, *, customization=None, request=None):
     actual_values = find_actual_values(
-        data_structures, asset, current_version, show_pending, show_drafts, customization_name=customization_name)
+        data_structures, asset, current_version, show_pending, show_drafts, customization=customization, request=request)
     actual_values = map_ds_attribute_to_actual_value(actual_values)
 
     for context in contexts:
@@ -126,8 +129,9 @@ def process_asset_global_contexts(language, cloud_portal, global_contexts, curre
         content=asset_dict, language=language)
 
 
-def get_review_matching_current_version(asset, current_version, customization_name=settings.CUSTOMIZATION):
+def get_review_matching_current_version(asset, current_version, *, customization=None, request=None):
+    customization = customization or get_customization(request)
     return AssetCustomizationReview.objects.filter(version__id__gt=current_version,
                                                    version__asset=asset,
-                                                   customization__name=customization_name,
+                                                   customization__name=customization,
                                                    state=PENDING).last()

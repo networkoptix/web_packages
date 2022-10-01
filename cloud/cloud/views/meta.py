@@ -9,7 +9,7 @@ from django.views.generic.base import TemplateView
 import waffle
 
 from cms.models import cloud_portal_customization_cache
-from util.helpers import detect_language_by_request
+from util.helpers import detect_language_by_request, get_customization
 from cms.models import Menu, Asset, Language
 from cms.controllers import documentation
 from cms.controllers import integration
@@ -127,7 +127,7 @@ def get_doc_meta(path, config, lang, config_meta, lang_meta):
 def get_lang_meta(request, lang_path=None):
     lang = detect_language_by_request(request)
     if not lang_path:
-        lang_path = os.path.join(settings.STATIC_LOCATION, settings.CUSTOMIZATION,
+        lang_path = os.path.join(settings.STATIC_LOCATION, get_customization(request),
                                  'static', f'lang_{lang}', 'language_compiled.json')
     with open(lang_path) as file:
         return json.load(file)['metaDefaults']
@@ -136,7 +136,7 @@ def get_lang_meta(request, lang_path=None):
 def get_config_meta(request, config_path=None):
     if not config_path:
         config_path = os.path.join(
-            settings.STATIC_LOCATION, settings.CUSTOMIZATION, 'static', 'metaDefaults.json')
+            settings.STATIC_LOCATION, get_customization(request), 'static', 'metaDefaults.json')
     is_secure = request.is_secure()
     host = request.get_host()
     base = f'http{"s" if is_secure else ""}://{host}'
@@ -152,7 +152,7 @@ def get_config_meta(request, config_path=None):
 
 
 def get_meta(request, config_path=None):
-    config = cloud_portal_customization_cache(settings.CUSTOMIZATION)['config']
+    config = cloud_portal_customization_cache(get_customization(request))['config']
     lang = Language(code=detect_language_by_request(request))
     lang_meta = get_lang_meta(request)
     config_meta = get_config_meta(request, config_path)
@@ -203,7 +203,7 @@ def check_redirect(request):
 
     for node in doc.nodes.all():
         node_enabled = node.enabled_customizations.filter(
-            name=settings.CUSTOMIZATION).exists()
+            name=get_customization(request)).exists()
         parent_menu = node.get_parent()
 
         if node_enabled and parent_menu and parent_menu.enabled:

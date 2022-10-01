@@ -15,6 +15,7 @@ from api.models import Account
 from cms.models import (
     Customization, Asset, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType)
 from notifications import notifications_api
+from util.helpers import get_customization
 
 User = get_user_model()
 assets_help_text = "Grants group permissions to the selected assets.<br>" \
@@ -117,19 +118,21 @@ class GroupAdminForm(forms.ModelForm):
 
 class UserInviteFrom(forms.Form):
     email = forms.CharField(max_length=100, validators=[EmailValidator()])
-    customization = forms.ChoiceField(choices=[], initial=settings.CUSTOMIZATION)
+    customization = forms.ChoiceField(choices=[])
     message = forms.CharField(widget=forms.Textarea)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, request, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.request = request
         super(UserInviteFrom, self).__init__(*args, **kwargs)
+        self.fields['customization'].initial = get_customization(self.request)
         if self.user:
             self.fields['customization'].choices = [(customization, customization) for customization in self.user.customizations]
 
     @staticmethod
     def add_user(request, group=None):
         email = request.POST['email']
-        customization = request.POST['customization']
+        customization = get_customization(request)
         message = request.POST['message']
         user = User.objects.filter(email=email).first()
         if user:
@@ -139,7 +142,7 @@ class UserInviteFrom(forms.Form):
                 messages.error(request, f'User already in "{group.name}" group.')
             else:
                 group.user_set.add(user)
-                messages.success(request, f'User successfully added to "{group.name}" group.') 
+                messages.success(request, f'User successfully added to "{group.name}" group.')
             return user.id
 
         messages.success(request, "User has been invited to cloud.")
@@ -150,6 +153,6 @@ class UserInviteFrom(forms.Form):
             group.user_set.add(user)
         # Password in the encoded email doesnt matter its just a place holder.
         encode_email = base64.b64encode(f"password:{email}".encode('utf-8')).decode('utf-8')
-        notifications_api.send(email, 'cloud_invite', {"message": message, "code": encode_email}, customization)
+        notifications_api.send(email, 'cloud_invite', {"message": message, "code": encode_email}, customization=customization)
 
         return user.id

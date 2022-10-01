@@ -5,22 +5,24 @@ from cms.controllers.asset_json import generate_asset_dictionary, get_contexts_a
     process_asset_global_contexts, get_state
 from cms.models import Asset,  AssetType, Context, get_cloud_portal_asset
 from util.base_cache import BaseCache
+from util.helpers import get_customization
 
 RELEASE_NOTES_CACHE = BaseCache(cache_key='release_notes')
 RELEASE_NOTES = AssetType.ASSET_TYPES.release_notes
 
 
 def make_release_notes_json(assets, language, user=None,
-                           show_pending=False, show_drafts=False):
+                           show_pending=False, show_drafts=False, request=None):
     if not assets:
         return []
     contexts, data_structures = get_contexts_and_datastructures_of_asset_type(RELEASE_NOTES)
-    cloud_portal = get_cloud_portal_asset()
+    customization=get_customization(request)
+    cloud_portal = get_cloud_portal_asset(customization=customization)
     state = get_state(show_pending, show_drafts)
     response_asset_json = []
 
     if cloud_portal:
-        versions = Asset.version_ids(assets)
+        versions = Asset.version_ids(assets, customization=customization)
         global_contexts = get_global_contexts(cloud_portal)
 
         for asset in assets:
@@ -35,7 +37,7 @@ def make_release_notes_json(assets, language, user=None,
             if not asset_dict or asset_dict['version'] != current_version or show_drafts:
                 for context, context_dict in generate_context_dicts_with_actual_values(show_pending, show_drafts,
                                                                   contexts, data_structures,
-                                                                  asset, current_version):
+                                                                  asset, current_version, request=request):
                     if context_dict or "PYTEST_CURRENT_TEST" in os.environ:
                         asset_dict[context.name] = context_dict
 

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from model_bakery import baker
 from cloud.views.meta import *
+from rest_framework.request import Request
 
 from cms.models import AssetType, Customization, Menu, MenuNode
 from cms.tests.management.commands.test_read_structure import FileTest
@@ -238,24 +239,25 @@ def test_check_redirect(account_factory, asset_factory, mocker, db):
 
     latest_route = f'/docs/{expected_base_url}/{expected_url}/{doc.urlify()}'
 
+    def mock_request_factory(path):
+        return mocker.MagicMock(path=path, POST={}, META={}, data={}, spec=Request)
+
     # Don't redirect if latest route
-    assert not check_redirect(mocker.MagicMock(path=latest_route))
+    assert not check_redirect(mock_request_factory(latest_route))
 
     # Redirect changed slug
     route_old_slug = f'/docs/{expected_base_url}/{expected_url}/{doc.id}-{uuid4()}'
-    assert check_redirect(mocker.MagicMock(
-        path=route_old_slug)) == latest_route
+    assert check_redirect(mock_request_factory(route_old_slug)) == latest_route
 
     # Redirect changed kb
     route_old_kb = f'/docs/{uuid4()}/{uuid4()}/{doc.urlify()}'
-    assert check_redirect(mocker.MagicMock(path=route_old_kb)) == latest_route
+    assert check_redirect(mock_request_factory(route_old_kb)) == latest_route
 
     # Redirect to content if article no longer attached to kb
     doc_no_kb_slug = doc_no_kb.urlify()
     route_non_kb = f'/docs/{uuid4()}/{uuid4()}/{doc_no_kb_slug}'
     generic_doc_route = f'/docs/content/{doc_no_kb_slug}'
-    assert check_redirect(mocker.MagicMock(
-        path=route_non_kb)) == generic_doc_route
+    assert check_redirect(mock_request_factory(route_non_kb)) == generic_doc_route
 
 
 SHARE_AGENTS = ['facebookexternalhit/TEST', 'Facebot',

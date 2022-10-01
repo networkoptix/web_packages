@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from util.helpers import get_language_object_from_request
+from util.helpers import get_customization, get_language_object_from_request
 from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
@@ -48,13 +48,14 @@ INTEGRATION_FORBIDDEN = "You do not have permission to view this integration"
 def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
-    is_enabled = check_integration_store_enabled()
+    is_enabled = check_integration_store_enabled(request)
+    customization = get_customization(request)
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
-        request.user)
+        request.user, customization=customization)
     has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'cms.view_integration_drafts')
+                request.user, customization, 'cms.view_integration_drafts')
 
-    if not (asset_id := int(asset_id)) or not (integration := Asset.objects.filter(asset_type__type=INTEGRATION, customizations__name__in=[settings.CUSTOMIZATION], id=asset_id).last()):
+    if not (asset_id := int(asset_id)) or not (integration := Asset.objects.filter(asset_type__type=INTEGRATION, customizations__name__in=[customization], id=asset_id).last()):
         return api_success(INTEGRATION_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
     if draft or review:
@@ -70,7 +71,7 @@ def get_integration(request, asset_id=None):
                 )
 
             if review and not UserGroupsToAssetPermissions.\
-                    check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+                    check_customization_permission(request.user, customization, 'cms.publish_version'):
                 return api_success(
                     'You do not have permission to view this review.',
                     status_code=status.HTTP_403_FORBIDDEN,
@@ -96,10 +97,11 @@ def get_integrations(request):
     """
     Returns a list of integrations available to the current user.
     """
-    is_enabled = check_integration_store_enabled()
+    is_enabled = check_integration_store_enabled(request)
     language = get_language_object_from_request(request)
+    customization=get_customization(request)
     integrations = Asset.objects.filter(asset_type__type=INTEGRATION,
-                                        customizations__name__in=[settings.CUSTOMIZATION])
+                                        customizations__name__in=[customization])
 
     if not integrations.exists():
         return api_success([])
@@ -107,12 +109,12 @@ def get_integrations(request):
 
     is_portal_manager = UserGroupsToAssetPermissions.\
         check_customization_permission(
-            request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+            request.user, customization, 'cms.publish_version')
 
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
-        request.user)
+        request.user, customization=customization)
     has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'cms.view_integration_drafts')
+                request.user, customization, 'cms.view_integration_drafts')
     draft_integrations = []
 
     if not request.user.is_anonymous:
@@ -126,24 +128,24 @@ def get_integrations(request):
         elif is_portal_manager:
             review_integrations = integrations.filter(
                 contentversion__assetcustomizationreview__state=PENDING,
-                contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION,
+                contentversion__assetcustomizationreview__customization__name=customization,
             ).distinct()
         else:
             review_integrations = draft_integrations
 
         if draft_integrations:
             integration_list.extend(make_integrations_json(
-                draft_integrations, language=language, user=request.user, show_drafts=True))
+                draft_integrations, language=language, user=request.user, show_drafts=True, request=request))
         if review_integrations:
             integration_list.extend(make_integrations_json(
-                review_integrations, language=language, user=request.user, show_pending=True))
+                review_integrations, language=language, user=request.user, show_pending=True, request=request))
 
     if is_enabled or is_portal_manager or has_beta_access:
         integration_list.extend(make_integrations_json(
-            integrations, language=language, user=request.user))
+            integrations, language=language, user=request.user, request=request))
     else:
         integration_list.extend(make_integrations_json(
-            draft_integrations, language=language, user=request.user))
+            draft_integrations, language=language, user=request.user, request=request))
 
     # Sort integrations by name. Ignore case.
     # Name might not exist if integration was just created.
@@ -163,17 +165,18 @@ def get_integrations(request):
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_integrations_count(request):
-    is_enabled = check_integration_store_enabled()
+    is_enabled = check_integration_store_enabled(request)
+    customization=get_customization(request)
     is_portal_manager = UserGroupsToAssetPermissions. \
         check_customization_permission(
-            request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+            request.user, customization, 'cms.publish_version')
 
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
-        request.user)
+        request.user, customization=customization)
     response = {}
     if is_enabled or is_portal_manager or has_beta_access:
         integration_count = Asset.objects.filter(
-            asset_type__type=AssetType.ASSET_TYPES.integration, customizations__name=settings.CUSTOMIZATION,
+            asset_type__type=AssetType.ASSET_TYPES.integration, customizations__name=customization,
             contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
         ).distinct().count()
         response['count'] = integration_count
