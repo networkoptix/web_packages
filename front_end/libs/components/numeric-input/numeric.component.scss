@@ -16,9 +16,19 @@
 			-webkit-appearance: none;
 			margin: 0;
 		}
+
+
+		&:disabled ~ div.spinner-button {
+			display: none !important;
+		}
+		&:focus ~ div.spinner-button,
+		&:hover:not(:disabled) ~ div.spinner-button {
+			display: block !important;
+		}
 	}
 
 	.spinner-button {
+		display: none;
 		position: absolute;
 		cursor: default;
 		z-index: 2;

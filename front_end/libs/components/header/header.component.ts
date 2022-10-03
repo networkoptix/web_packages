@@ -375,9 +375,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     this.loginState = false;
-     				this.renderer.removeClass(this.document.body, 'authorized');
+                    this.renderer.removeClass(this.document.body, 'authorized');
                     this.renderer.addClass(this.document.body, 'anonymous');
-                    if(this.newHeader) {
+                    if (this.newHeader) {
                         this.headerService.nodes.unshift(this.menusService.makeWelcomeNode());
                     }
                 }

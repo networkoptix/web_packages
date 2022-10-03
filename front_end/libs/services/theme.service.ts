@@ -55,6 +55,8 @@ export class NxThemeService {
                 .then(result => {
                     this.userTheme = result.name;
                     this.themeSelected = result.theme;
+                }, err => {
+                    console.error('Feature not available', err);
                 });
         } else {
             this.themeSelected = 'auto';

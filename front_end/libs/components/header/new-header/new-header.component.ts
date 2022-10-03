@@ -5,12 +5,12 @@ import { cloneDeep } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystem } from '@services/system.service/system';
-import { NxAccountService } from '@services/account.service';
 
 @UntilDestroy()
 @Component({

@@ -55,7 +55,6 @@
     </div>
     <nx-update-webadmin-session
         *ngIf="needsUpdate"
-        [bypassOauth]="true"
         (loginSuccess)="needsUpdate = false; disconnect.run()"
         [noConnectionMsg]="'Failed to disconnect system from %CLOUD_NAME%.' | translate"
         [dialogRef]="dialogRef"

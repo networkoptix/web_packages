@@ -142,7 +142,8 @@ export class NxLoginService extends DialogBase {
     }
 
     async updateSession(state?: string) {
-        if (['disconnect', 'transfer'].includes(state) || this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
+        if (['disconnect', 'transfer'].includes(state) && !environment.isLocal ||
+        this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
                 this.simpleDialogService.notify(this.LANG.toastMessage.noInternet(), 'warning', true);
                 // Close dialog if any

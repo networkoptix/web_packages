@@ -25,7 +25,7 @@
 
             main {
                 header .authorize-header {
-                    margin: 0 16px !important;
+                    margin: 0 8px !important;
                 }
 
                 form {
@@ -156,14 +156,16 @@
         }
 
         .authorize-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 100%;
             @include typography.medium22dark9lh24;
             color: var(--auth-header-color) !important;
-            height: 24px;
+            height: 40px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            text-align: center;
             padding: 0 16px;
         }
 

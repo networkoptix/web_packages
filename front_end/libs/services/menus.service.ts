@@ -241,14 +241,14 @@ export class NxMenusService {
     }
 
     makeSystemMenuNode() {
-        const systemLang = this.LANG.appHeader.headerMenuNodes.system
+        const systemLang = this.LANG.appHeader.headerMenuNodes.system;
         const systemNode = new MenuNode(systemLang.displayName(), '/systems');
         systemNode.nodes.push(new MenuNode(systemLang.nodes[0].displayName(), '/systems'));
         return systemNode;
     }
 
     makeAccountSettingsNode() {
-        const accountSettingsLang = this.LANG.appHeader.headerMenuNodes.accountSettings
+        const accountSettingsLang = this.LANG.appHeader.headerMenuNodes.accountSettings;
         const accountNode = new MenuNode(accountSettingsLang.displayName(), '/account');
         accountNode.invisible = true;
         accountNode.nodes.push(new MenuNode(accountSettingsLang.nodes[0].displayName(), '/account'));
@@ -256,7 +256,7 @@ export class NxMenusService {
     }
 
     makeWelcomeNode() {
-        const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome
+        const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
         const welcomeNode = new MenuNode(welcomeLang.displayName(), 'content/about');
         welcomeNode.nodes.push(new MenuNode(welcomeLang.nodes[0].displayName(), 'content/about'));
         return welcomeNode;
