@@ -1,6 +1,6 @@
 @use '../../../../styles/typography';
 @use '../../../../styles/mixins';
-@use '../../../../../styles/theme_variables' as *;
+@use '../../../../../styles/theme_variables' as theme_vars;
 
 .user-name {
     @include mixins.ellipsis;
@@ -15,7 +15,7 @@
         display: flex;
         align-items: center;
         .heading-style {
-            font-family: $font-family-medium;
+            font-family: theme_vars.$font-family-medium;
             line-height: 40px;
             height: 40px;
             font-size: 24px;
@@ -66,7 +66,7 @@
 .help-block {
     display          : block;
     background-color : transparent;
-    color            : $light16;
+    color            : var(--light16);
     padding          : .5rem 0 0;
 }
 
@@ -77,14 +77,18 @@
     .user-form-labels {
         width: 1px;
         margin-right: 0.5rem;
-        color: $dark9;
+        color: var(--dark9);
     }
     input:disabled {
-        background-color: $light2;
-        border: 1px solid $light6;
+        background-color: var(--light2);
+        border: 1px solid var(--light6);
     }
 }
 
 .edit-padding {
     padding-left: 6px !important;
+}
+
+.password-change-required {
+    line-height: 2rem;
 }

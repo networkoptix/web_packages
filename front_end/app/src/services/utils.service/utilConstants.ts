@@ -1,4 +1,5 @@
-import { catchError } from 'rxjs/operators';
+import { combineLatest, Observable, timer } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 const BYTE_UNITS: Byte[] = [
     'B',
@@ -107,3 +108,8 @@ export {
 * Provides a fallback value for errors.
 */
 export const fallback = <T>(value: T) => catchError(() => Promise.resolve(value));
+
+/**
+ * Use for async tasks that run quickly but for the UI you'd like to delay initial output of stream.
+ */
+export const delayInitial = <Source>(source: Observable<Source> | Promise<Source>, msDelay = 750) => combineLatest([source, timer(msDelay)]).pipe(map(([source]) => source));

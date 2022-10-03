@@ -1,0 +1,83 @@
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+
+.bookmarks-wrapper {
+    overflow-y: auto;
+    padding: 8px;
+    height: 100%;
+    user-select: none;
+}
+
+h4 svg {
+    cursor: pointer;
+    & * {
+        fill: $blue10;
+    }
+}
+
+
+.animate-rotation svg {
+    animation-name: rotate;
+    animation-duration: 1.8s;
+    animation-iteration-count: infinite;
+    transform-origin: 50% 50%;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+a {
+    color: inherit !important;
+    &:hover {
+        color: $brand_core !important;
+    }
+}
+
+.bookmark-wrapper {
+    border: 1px solid $light3;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    &.active {
+        border: 2px solid $brand_core;
+    }
+}
+
+.bookmark-heading, .bookmark-content {
+    padding: 8px 4px;
+}
+
+.bookmark-thumbnail {
+    width: 100%;
+}
+
+.content-wrapper {
+    position: relative;
+    width: 75vw;
+    max-width: 640px;
+    border: 2px solid $brand_core;
+    background: $light1;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.bookmark-heading {
+    cursor: pointer;
+    &:hover {
+        background : $additional_light2;
+    }
+    &:active, &.active {
+        background : $additional_light3 !important;
+    }
+}
+
+.tags-wrapper {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+}

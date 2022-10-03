@@ -1,30 +1,10 @@
 *** Settings ***
-Resource          ../resource.robot
-Suite Setup       Setup
-Test Setup        Restart
+Resource          ../Resources/front-end-resources/login-dialog-resource.robot
+Suite Setup       login-dialog-resource.Setup
+Test Setup        login-dialog-resource.Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
-
-*** Variables ***
-${email}    ${EMAIL OWNER}
-${email invalid}    aodehurgjaegir
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Open New Browser On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-Setup
-    Open Browser and go to URL    ${url}
-    ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Set Suite Variable    ${login user}    ${user}
-
-Restart
-    Go To    ${url}
-    Common Restart Logout    ${url}
 
 *** Test Cases ***
 1. Can be opened in anonymous state
@@ -32,22 +12,19 @@ Restart
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${LOG IN MODAL}
 
-2. Can be closed by clicking on the X
-    [tags]    C24212    
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible
-    ...    ${LOG IN MODAL}
-    ...    ${BACKDROP}
-    ...    ${LOG IN BUTTON}
-    ...    ${EMAIL INPUT}
-    ...    ${PASSWORD INPUT}
-    ...    ${LOG IN CLOSE BUTTON}
-    Click Button    ${LOG IN CLOSE BUTTON}
-    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
+#2. Can be closed by clicking on the X
+#    [tags]    C24212    
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Elements are Visible
+#    ...    ${LOG IN MODAL}
+#    ...    ${LOG IN NEXT BUTTON}
+#    ...    ${EMAIL INPUT}
+#    Click Button    ${LOG IN CLOSE BUTTON}
+#    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
 
 3. Allows to log in with existing credentials and to log out
-    [tags]    C24212    C24213    
+    [tags]    C24212    C24213    smoke
     Log In    ${login user}    ${password}
     Log Out
 
@@ -66,28 +43,26 @@ Restart
     Log In    ${email uppercase}    ${password}    validate=${False}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
 
-7. Allows log in with 'Remember Me checkmark' switched off
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible
-    ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...    ${EMAIL INPUT}
-    ...    ${PASSWORD INPUT}
-    ...    ${LOG IN BUTTON}
-    Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
-    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Log In    ${login user}    ${password}    button=None
+#7. Allows log in with 'Remember Me checkmark' switched off
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Elements are Visible
+#    ...    ${REMEMBER ME CHECKBOX VISIBLE}
+#    ...    ${EMAIL INPUT}
+#    ...    ${PASSWORD INPUT}
+#    ...    ${LOG IN BUTTON}
+#    Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
+#    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
+#    Log In    ${login user}    ${password}    button=None
 
 8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     Log In    ${login user}    'aderhgadehf'    validate=${False}
     Wait Until Elements are Visible
-    ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...    ${EMAIL INPUT}
     ...    ${PASSWORD INPUT}
     ...    ${LOG IN BUTTON}
     ...    ${FORGOT PASSWORD}
     Sleep    1
-    Click Link    ${FORGOT PASSWORD}
+    Click Button    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
@@ -97,49 +72,66 @@ Restart
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Input Text    ${EMAIL INPUT}    ${login user}
-# the transition animations causes bad targeting on the link.  This is tentative.
-    sleep    .15
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${FORGOT PASSWORD}
-    Click Link    ${FORGOT PASSWORD}
+    Click Button    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
 10. Shows non-activated user message when not activated at login; Resend activation button sends email
-    [tags]    email    C41865    
+    [tags]    email    C41865 
     Go To    ${url}/register
-    ${random email}    get random email    ${BASE EMAIL}    extra=sendemail
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    'mark'    'hamill'    ${random email}    ${password}
-    Wait Until Elements are Visible
-    ...    ${ACCOUNT CREATION SUCCESS}
-    ...    ${ACCOUNT CREATION SUCCESS ICON}
-    ...    ${ACCOUNT CREATION CONFIRMATION}
-    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
+    Validate Register Success
+    Wait Until Element Is Visible    ${LOG IN BTN REGISTER ACCOUNT PAGE}
+    Click Element    ${LOG IN BTN REGISTER ACCOUNT PAGE}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${random email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
-    Click Link    ${RESEND ACTIVATION LINK BUTTON}
+    Click Element    ${RESEND ACTIVATION LINK BUTTON}
     Activate    ${random email}
-    Log In    ${random email}    ${password}
+    Click Element    ${LOG IN BUTTON}
+    Input Text    ${PASSWORD INPUT}    ${password}
+    Click Element    ${LOG IN BUTTON}
+    Validate Log In    ${random email}
 
 11. Displays password masked
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${PASSWORD INPUT}
     ${input type}    Get Element Attribute    ${PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
 12. Requires log In, if the user has just logged out and pressed back button in browser
     Log In    ${login user}    ${password}
+    Sleep   2
     Log Out
+    Sleep   3
     Go Back
     Wait Until Element is Visible    ${LOG IN MODAL}
 
 13. Handles more than 255 symbols email and password
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
     Input Text    ${EMAIL INPUT}    ${300CHARS}
-    Input Text    ${PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${EMAIL INPUT}    ${255CHARS}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Element is Visible    ${PASSWORD INPUT}
+    Input Text    ${PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${PASSWORD INPUT}    ${255CHARS}
 
 14. Logout refreshes page
@@ -158,44 +150,50 @@ Restart
     Paste Text    ${EMAIL INPUT}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
-16. Should respond to Esc key and close dialog
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${PASSWORD INPUT}
-    Press Keys    ${PASSWORD INPUT}    ESCAPE
-    Wait Until Element Is Not Visible    ${LOG IN MODAL}
-    Element Should Not Be Visible    ${LOG IN MODAL}
+#16. Should respond to Esc key and close dialog
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Element is Visible    ${PASSWORD INPUT}
+#    Press Keys    ${PASSWORD INPUT}    ESCAPE
+#    Wait Until Element Is Not Visible    ${LOG IN MODAL}
+#    Element Should Not Be Visible    ${LOG IN MODAL}
 
 17. Should respond to Enter key and log in
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}    
     Input Text    ${EMAIL INPUT}    ${login user}
+    Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Element Is Visible    ${PASSWORD INPUT}
     Input Text    ${PASSWORD INPUT}    ${password}
     Wait Until Element is Visible    ${LOG IN BUTTON}
     Press Keys    ${PASSWORD INPUT}    ENTER
     Validate Log In    ${login user}
 
 18. Should respond to Tab key
+    [Tags]
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Set Focus To Element    ${EMAIL INPUT}
     Press Keys    ${EMAIL INPUT}    TAB
-    Element Should Be Focused    ${PASSWORD INPUT}
+    Element Should Be Focused    ${LOG IN CREATE ACCOUNT BUTTON}/parent::button
+    Press Keys    ${EMAIL INPUT}    TAB   TAB
+    Element Should Be Focused    ${LOG IN NEXT BUTTON}
 
-19. Should respond to Space key and toggle checkbox
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
-    Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
-    Press Keys    None    SPACE
-    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Press Keys    None    SPACE
-    Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
+#19. Should respond to Space key and toggle checkbox
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
+#    Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
+#    Press Keys    None    SPACE
+#    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
+#    Press Keys    None    SPACE
+#    Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 20. Handles two tabs, updates second tab state if logout is done on first
-    Go To    ${url}/register
+    [Tags]
+    Go To    ${url}/authorize?client_type=create
     Wait Until Elements are Visible
     ...    ${REGISTER FIRST NAME INPUT}
     ...    ${REGISTER LAST NAME INPUT}
@@ -217,12 +215,13 @@ Restart
     Sleep    5
     Log In    ${login user}    ${password}
     Switch Window    ${tabs}[0]
-    Location Should Be    ${url}/register
-    Reload Page
-    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Sleep    2
-    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
+    Location Should Be    ${url}/authorize?client_type=create
+    Go To   ${url}
+#    Reload Page
+#    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+#    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+#    Sleep    2
+#    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In    ${login user}
     Log Out
     ${tabs}    Get Window Handles
@@ -232,21 +231,16 @@ Restart
     Wait Until Element is Visible    ${LOG IN MODAL}
 
 21. Log in more than 5 times
-    [tags]    C42075    
-    Go To    ${url}/register
-    ${email}    Get Random Email    ${BASE EMAIL}
+    [tags]    C42075
+    Go To    ${url}/authorize?client_type=create
+    ${email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
     Activate    ${email}
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
+    Click Element    ${LOG IN BUTTON}
     Wait Until Elements are Visible
     ...    ${LOG IN MODAL}
-    ...    ${BACKDROP}
     ...    ${LOG IN BUTTON}
-    ...    ${EMAIL INPUT}
     ...    ${PASSWORD INPUT}
-    ...    ${LOG IN CLOSE BUTTON}
-    Input Text    ${EMAIL INPUT}    ${email}
     FOR  ${x}  IN RANGE  6
         Sleep    2
         Input Text    ${PASSWORD INPUT}    incorrect

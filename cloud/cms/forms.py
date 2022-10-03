@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from dal import autocomplete
+from itertools import chain
 from urllib.parse import quote
 
 from api.models import Account
@@ -57,11 +58,14 @@ def get_languages_list():
     return map(modify_default_language, customization.languages.values_list('code', 'name'))
 
 
-def get_branding_shortcuts():
-    cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
+def get_branding_shortcuts(customization = settings.CUSTOMIZATION):
+    cloud_portal = Asset.objects.get(customizations__name=customization,
                                      asset_type=get_cloud_portal_asset().asset_type)
-    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
-    brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
+    branding_context_structures = branding_context.datastructure_set.all() if (
+        branding_context := Context.objects.filter(
+            name='branding', asset_type=get_cloud_portal_asset().asset_type).first()
+    ) else []
+    brand_structures = [ds for ds in branding_context_structures if 'shortcut' in ds.meta_settings]
     hidden_branding_structures = [ds for ds in DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
         context__hidden=False, context__is_global=True, name__startswith='%', context__name__in=['settings', 'branding'],
@@ -70,26 +74,51 @@ def get_branding_shortcuts():
     vals = DataStructure.find_actual_values(brand_structures + hidden_branding_structures, asset=cloud_portal)
     special_structures = SpecialStructures()
 
-    brands = [
-        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
-        for ds in brand_structures
-    ]
-    brands.extend([(
-        {'name': name, 'label': structure['label'], 'description': structure['description']},
-        structure['function'](cloud_portal))
-        for name, structure in special_structures.function_dict.items() if structure['shortcut']
-    ])
+    mapper = createMapper(cloud_portal, vals, special_structures)
 
-    hidden_brands = [
-        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
-        for ds in hidden_branding_structures
-    ]
-    hidden_brands.extend([(
-        {'name': name, 'label': structure['label'], 'description': structure['description']},
-        structure['function'](cloud_portal))
-        for name, structure in special_structures.function_dict.items() if not structure['shortcut'] and not structure['hidden']
-    ])
+    brands = mapper(brand_structures, lambda structure: structure['shortcut'])
+    hidden_brands = mapper(hidden_branding_structures, lambda structure: not structure['shortcut'] and not structure['hidden'])
+
     return brands, hidden_brands
+
+def get_restricted_keywords(customization = settings.CUSTOMIZATION):
+    '''Returns list of keywords that should be restricted from use in assets
+    '''
+    cloud_portal = Asset.objects.get(customizations__name=customization,
+                                     asset_type=get_cloud_portal_asset().asset_type)
+    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
+    restricted_struct = list(branding_context.datastructure_set.filter(name="Restricted"))
+    vals = DataStructure.find_actual_values(restricted_struct, asset=cloud_portal)
+
+
+    def get_restricted(vals):
+        return list(chain(*[vals[ds] for ds in restricted_struct]))
+
+
+    restricted = get_restricted(vals)
+
+    if customization != 'default':
+        default_cloud_portal = Asset.objects.get(customizations__name='default',
+                                     asset_type=get_cloud_portal_asset().asset_type)
+        default_vals = DataStructure.find_actual_values(restricted_struct, asset=default_cloud_portal)
+        restricted += get_restricted(default_vals)
+
+    return restricted
+
+def createMapper(cloud_portal, vals, special_structures):
+    def mapper(structures_to_map, special_structure_filter):
+        mapped = [
+            ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
+            for ds in structures_to_map
+        ]
+        if special_structure_filter:
+            mapped.extend([(
+                {'name': name, 'label': structure['label'], 'description': structure['description']},
+                structure['function'](cloud_portal))
+                for name, structure in special_structures.function_dict.items() if special_structure_filter(structure)
+            ])
+        return mapped
+    return mapper
 
 
 def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_branding_shortcuts=None):
@@ -296,28 +325,33 @@ class AssetSettingsForm(forms.Form):
         required=False
     )
 
-    action = forms.ChoiceField(
-        widget=forms.RadioSelect,
-        required=True,
-        choices=(
-            ('generate_json', mark_safe('Generate structure template based on archive<br>'
-                                        '<span class="radio-hint">Upload a zip archive to generate a structure.json file from the archive</em>')),
+    ASSET_ACTIONS = (
             ('merge_with_db', mark_safe('Generate structure using archive and db<br>'
                               '<span class="radio-hint">Upload a zip archive to generate a structure.json file that uses values of the asset from the db and archive<br>'
                               'If a value doesn\'t exist in the db it takes the value from the zip archive.</span>')),
+            ('update_content', mark_safe('Upload content files for this asset<br>'
+                                         '<span class="radio-hint">Upload a zip archive to update content such as images for the asset.</span>')),
+            ('update_asset_by_json', mark_safe('Update data records for this asset from a json file<br>'
+                                               '<span class="radio-hint">Upload a structure.json to update the data records for the current asset</span>'))
+    )
+
+    ASSET_TYPE_ACTIONS = (
+            ('generate_json', mark_safe('Generate structure template based on archive<br>'
+                                        '<span class="radio-hint">Upload a zip archive to generate a structure.json file from the archive</em>')),
             ('update_structure',
              mark_safe(
                  'Update CMS structure and default values based on archive with structure.json and asset_type template, '
                  'or upload just the structure.json<br>'
                  '<span class="radio-hint">If you upload only structure.json it will only modify the structure of the asset_type.<br>'
                  'If you upload an archive with the structure.json in the base directory it will update contexts and datastructure in the asset_type.</span>')),
-            ('update_content', mark_safe('Upload content files for this asset<br>'
-                                         '<span class="radio-hint">Upload a zip archive to update content such as images for the asset.</span>')),
-            ('update_asset_by_json', mark_safe('Update data records for this asset from a json file<br>'
-                                               '<span class="radio-hint">Upload a structure.json to update the data records for the current asset</span>')),
             ('import_assets_from_json', mark_safe('Create assets and update data records for existing assets from a json file<br>'
                                                   '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets</span>')),
-        )
+    )
+
+    action = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        required=True,
+        choices=[]
     )
 
     force = forms.BooleanField(
@@ -327,9 +361,12 @@ class AssetSettingsForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        is_asset = kwargs.pop('target_class', Asset) is Asset
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user and user.is_superuser:
+        self.fields['action'].choices = AssetSettingsForm.ASSET_ACTIONS if is_asset else AssetSettingsForm.ASSET_TYPE_ACTIONS
+
+        if user and user.is_superuser and not is_asset:
             self.fields['action'].choices += ('import_assets_from_json_publish',
                                               mark_safe('Create assets and update data records for existing assets from a json file and publish/accept reviews<br>'
                                                         '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets. Also submits and accepts reviews</span>')),
@@ -381,7 +418,6 @@ class AssetForm(forms.ModelForm):
         cleaned_data = super().clean()
         customizations = cleaned_data.get('customizations')
         asset_type = cleaned_data.get('asset_type')
-
         if self.instance.pk:
             if not customizations:
                 customizations = self.instance.customizations.all()
@@ -393,7 +429,6 @@ class AssetForm(forms.ModelForm):
             cleaned_data['customizations'] = Customization.objects.all()
         else:
             num_customizations = len(customizations)
-
             if asset_type.single_customization:
                 if num_customizations > 1:
                     raise forms.ValidationError(f"Too many customizations selected for "
@@ -467,6 +502,9 @@ class MenuChangeForm(forms.ModelForm):
     customization_view = forms.ChoiceField(required=False, help_text='Make sure to save any changes before changing the view')
     admin_config = forms.CharField(widget=forms.Textarea,
         help_text='Configures which fields to display on inline menu nodes. Should be a dict with properties, header, details, and advanced. Each contains an array of fields to show.')
+    class Meta:
+        model = Menu
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -481,7 +519,7 @@ class MenuChangeForm(forms.ModelForm):
         config = self.cleaned_data['admin_config']
         updated_config = {'header': [], 'details': [], 'advanced': []}
         invalid_config = 'Invalid config structure:'
-        valid_fields = [field.name for field in MenuNode._meta.fields] + ['enabled', 'related_assets', 'permissions', 'preview', 'is_global']
+        valid_fields = [field.name for field in MenuNode._meta.fields] + ['enabled', 'related_assets', 'permissions', 'preview', 'zendesk_record', 'is_global']
         validation_errors = []
         try:
             parsed_config = json.loads(config)
@@ -505,7 +543,6 @@ class MenuChangeForm(forms.ModelForm):
 
         if validation_errors:
             raise ValidationError(validation_errors)
-
         return json.dumps(updated_config)
 
 
@@ -521,7 +558,9 @@ class MenuNodeChangeForm(forms.ModelForm):
                 },
                 forward=['menu']
             ),
-        }
+        },
+        model = MenuNode
+        exclude = []
 
     class Media:
         js = ('js/menuNode.js',)
@@ -535,7 +574,7 @@ class MenuNodeChangeForm(forms.ModelForm):
             self.fields['parent_node'].queryset = MenuNode.objects.filter(id__in=node_ids)
             self.fields['parent_menu'] = forms.ModelChoiceField(queryset=Menu.objects.all(), widget=forms.HiddenInput, required=False)
         else:
-            # if parent is none, that means we are creating a new MenuNode. 
+            # if parent is none, that means we are creating a new MenuNode.
             # In this case, hide the parent_node field and let the user choose a menu to attach the node to with parent_menu field
             # menu.required is set to false for creating a new node to avoid a validation error, it will be overwritten on submit by the value of parent_menu
             self.fields['parent_menu'].required = True
@@ -552,9 +591,11 @@ class MenuNodeChangeForm(forms.ModelForm):
                 raise ValidationError('Cannot enable customizations for which the node is not available. Please make sure available customizations are set first')
         return enabled
 
-        
+
 class MenuNodeInlineForm(forms.ModelForm):
     class Meta:
+        model = MenuNode
+        exclude = []
         widgets = {
             'enabled': BootstrapMultiSelect(field_name='enabled', options={
                 'includeSelectAllOption': True,
@@ -608,7 +649,6 @@ class MenuNodeInlineForm(forms.ModelForm):
                 ).exists()
             elif self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
                 enabled = True
-
             self.fields['enabled'] = forms.BooleanField(required=False)
             self.initial['enabled'] = enabled
         if 'permissions' in self.fields:
@@ -692,3 +732,17 @@ class ZendeskImportForm(forms.Form):
             if not data['zendesk_category_name']:
                 raise ValidationError('Zendesk Category Name required if importing')
         return data
+
+
+class QASettingsForm(forms.Form):
+    session_age = forms.IntegerField(help_text=f'Lifetime of new authenticated sessions in seconds. Default: {settings._AUTHENTICATED_SESSION_COOKIE_AGE} (1 month)', initial=settings._AUTHENTICATED_SESSION_COOKIE_AGE)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            cache_val = caches['testing'].get(name)
+            field.initial = cache_val if cache_val is not None else field.initial
+
+    def update_cache(self):
+        for name, val in self.cleaned_data.items():
+            caches['testing'].set(name, val)

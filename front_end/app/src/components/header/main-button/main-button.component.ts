@@ -1,11 +1,17 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges
+} from '@angular/core';
 
-import { environment }              from '@environments/environment';
-import { MenuNode }                 from '@services/menus.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxHeaderService }         from '@services/nx-header.service';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+import { MenuNode } from '@services/menus.service.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 export enum mainButtonState {
     ALL='all',
@@ -15,9 +21,9 @@ export enum mainButtonState {
 }
 
 @Component({
-    selector    : 'nx-header-main-button',
-    templateUrl : 'main-button.component.html',
-    styleUrls   : [environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
+    selector: 'nx-header-main-button',
+    templateUrl: 'main-button.component.html',
+    styleUrls: [environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;
@@ -26,6 +32,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() hideArrow = false;
     @Input() maxWidth = 175;
     CONFIG: IConfig;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     systemCounter: number;
@@ -51,13 +58,22 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     getState() {
         //  TODO: Refine state when adding header mechanics
         let state = mainButtonState.ALL;
-        if (this.CONFIG.isLocal) {
+        if (this.environment.isLocal) {
             state = mainButtonState.SYSTEM;
-        } else if (this.node && !this.headerService.currentLocation.isSystem) {
+        } else if (
+            this.node &&
+            !this.headerService.currentLocation.isSystem
+        ) {
             state = mainButtonState.NODE;
-        } else if (this.headerService.currentLocation.isSystem && this.headerService.activeSystem) {
+        } else if (
+            this.headerService.currentLocation.isSystem &&
+            this.headerService.activeSystem
+        ) {
             state = mainButtonState.SYSTEM;
-        } else if (this.headerService.currentLocation.isSystem && this.systems) {
+        } else if (
+            this.headerService.currentLocation.isSystem &&
+            this.systems
+        ) {
             state = mainButtonState.SYSTEMS;
         }
         return state;

@@ -1,17 +1,21 @@
 import {
-    Component, Input,
-    Renderer2, ViewChild
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+    Component,
+    Input,
+    Renderer2,
+    ViewChild
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-change-password',
-    templateUrl : 'change-password.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-change-password',
+    templateUrl: 'change-password.component.html',
+    styleUrls: []
 })
 export class ChangePasswordModalContent {
     @Input() system;
@@ -28,7 +32,7 @@ export class ChangePasswordModalContent {
     currentPasswordToggle = true;
     confirmPasswordToggle = true;
 
-    @ViewChild('changePasswordForm') changePasswordForm: HTMLFormElement;
+    @ViewChild('changePasswordForm') changePasswordForm: NgForm;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -44,46 +48,54 @@ export class ChangePasswordModalContent {
         this.confirmNewPasswordForUser = '';
     }
 
+    public get isMe (): boolean {
+        return this.user.isLocalOwner && this.user.isMe;
+    }
+
+    public closeModal = (result: boolean = false) => {
+        return this.activeModal.close(result);
+    }
+
     ngOnInit() {
         this.changePassword = this.processService
             .createProcess(() => {
                 this.user.password = this.newPasswordForUser;
 
-                if (this.user.isLocalOwner && this.user.isMe) {
+                if (this.isMe) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({ dontMatch: true });
                         this.renderer.selectRootElement('#confirmNewPassword').focus();
                         return Promise.reject('dontMatch');
                     }
 
-                    return this.system.userManager
-                        .authCurrentUser('admin', this.currentPasswordForUser)
-                        .then(response => {
-                            if (!response.reply) {
-                                this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
-                                this.renderer.selectRootElement('#currentPassword').focus();
-                                return Promise.reject('wrongPassword');
-                            }
-
-                            return this.system
-                                .saveUser(this.user, this.user.role)
-                                .then(() => this.activeModal.close());
-                        });
+                    return this.system.mediaserver.loginToken(
+                        'admin',
+                        this.currentPasswordForUser,
+                        true
+                    ).toPromise().then(() => {
+                        return this.system
+                            .saveUser(this.user, this.user.role)
+                            .then(() => this.closeModal(true));
+                    }, () => {
+                        this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
+                        this.renderer.selectRootElement('#currentPassword').focus();
+                        return Promise.reject('wrongPassword');
+                    });
                 }
 
                 return this.system
                     .saveUser(this.user, this.user.role)
-                    .then(() => this.activeModal.close());
+                    .then(() => this.closeModal(true));
             }, {
                 errorCodes: {
-                    notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    dontMatch        : () => {},
-                    wrongPassword    : () => {}
+                    notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                    wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                    dontMatch: () => {},
+                    wrongPassword: () => {}
                 },
-                successMessage     : this.LANG.account.passwordChangedSuccess?.(),
-                errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.(),
-                ignoreUnauthorized : true
+                successMessage: this.LANG.account.passwordChangedSuccess?.(),
+                errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
+                ignoreUnauthorized: true
             });
     }
 }

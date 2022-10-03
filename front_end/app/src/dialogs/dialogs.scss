@@ -1,5 +1,5 @@
-@use '../styles/typography';
-@use '../../../app/styles/theme_variables' as *;
+@use "../styles/typography";
+@use "../../../app/styles/theme_variables" as *;
 
 
 @keyframes slide-down-fade-in {
@@ -77,7 +77,7 @@ nx-modal-wizard {
     }
 }
 
-.modal-open .modal {
+.modal-open .modal:not(.no-scroll) {
     overflow-y: scroll;
 }
 
@@ -137,6 +137,14 @@ nx-modal-wizard {
             padding         : 0 !important;
             border-radius   : 25px !important;
             outline         : none !important; // Fix for mobile ios to remove blue circle.
+
+            &:before, &:after {
+                position         : absolute;
+                content          : " ";
+                height           : 16px;
+                width            : 1px;
+                background-color : $dark9;
+            }
 
             .close-content {
                 border-radius : 25px !important;

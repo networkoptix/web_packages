@@ -1,8 +1,8 @@
-@use './typography';
+@use "./typography";
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
-@use './mixins';
-@use '../../styles/theme_variables' as *;
+@use "./mixins";
+@use "../../styles/theme_variables" as *;
 
 svg {
     pointer-events : none;
@@ -21,6 +21,9 @@ svg {
     //flex: 1 1 auto;
     overflow-y : auto;
     height     : 100%;
+    &.full-screen {
+        overflow: hidden;
+    }
 }
 
 .standalone-delimiter {
@@ -32,7 +35,7 @@ svg {
     &:after {
         height           : 1px;
         background-color : $light7;
-        content          : '';
+        content          : "";
         position         : absolute;
         width            : calc(100% - 24px);
     }
@@ -130,6 +133,10 @@ h1 .badge {
     min-width : 80px;
 }
 
+.min-w-100 {
+    min-width : 100px;
+}
+
 .min-w-120 {
     min-width : 120px;
 }
@@ -155,3 +162,11 @@ h1 .badge {
 span.marked {
     background-color : $light4;
 }
+
+.pseudo-anchor {
+    color: var(--brand-core) !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+

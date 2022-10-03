@@ -1,18 +1,24 @@
-<form #restartServerForm="ngForm" name="restartServerForm" novalidate>
+<div>
     <div class="modal-header">
         <h1 class="modal-title"
-            [innerText]="'dialogs.titles.serversRestart'| translate: { title: serverName }"></h1>
+            [innerHTML]="'dialogs.titles.serversRestart'| translate: { title: serverName } | safe: 'html'"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="close('')" *ngIf="closable">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-    <div class="modal-footer">
-        <nx-process-button [process]="restartServer"
-                           [form]="restartServerForm"
-                           [actionType]="'primary'"
-                           buttonText="{{ 'Restart' | translate }}"></nx-process-button>
-        <nx-cancel-button [process]="restartServer" [discardFn]="activeModal.close"></nx-cancel-button>
+    <div [ngStyle]="{ display: needsUpdate ? 'none': 'unset'}">
+        <div class="modal-footer">
+            <nx-process-button [process]="restartServer"
+                               [actionType]="'primary'"
+                               [buttonDisabled]="needsUpdate"
+                               buttonText="{{ 'Restart' | translate }}"></nx-process-button>
+            <nx-cancel-button [process]="restartServer" [discardFn]="activeModal.close"></nx-cancel-button>
+        </div>
     </div>
-</form>
+    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
+                                (loginSuccess)="needsUpdate=false; restartServer.run()"
+                                [noConnectionMsg]="'Failed to restart server.' | translate"
+                                [system]="system"></nx-update-webadmin-session>
+</div>

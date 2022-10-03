@@ -1,0 +1,11 @@
+<div class="section-placeholder" [style.height.px]="wrapperHeight">
+    <svg-icon nx-add-svg-src
+        [svgStyle]="{
+            'height.px': height,
+            'width.px': width,
+            'pointer-events': 'none'
+        }"
+        [src]="CONFIG.icons.dirSectionPlaceholder + svgFileName + '.svg'"></svg-icon>
+    <span>{{ translatedMessage }}</span>
+    <nx-client-button [system]="system" [textOnly]="true"></nx-client-button>
+</div>

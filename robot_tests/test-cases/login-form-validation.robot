@@ -1,73 +1,22 @@
 *** Settings ***
-Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-Test Teardown     Run Keyword If Test Failed    Restart
+Resource          ../Resources/front-end-resources/login-form-validation-resource.robot
+Suite Setup       login-form-validation-resource.Restart
+Test Teardown     Run Keyword If Test Failed    login-form-validation-resource.Restart
 Test Template     Test Login Invalid
-Suite Teardown    Close Browser
+Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        form    Threaded 
 
-*** Variables ***
-${url}    ${ENV}
-${good email}                 ${EMAIL VIEWER}
-${good email unregistered}    ${EMAIL UNREGISTERED}
-${good password}              ${BASE PASSWORD}
-${bad password}               adrhartjad
-
 *** Test Cases ***            EMAIL                         PASS
-1. Empty Email and Password      ${EMPTY}                      ${EMPTY}
-    [tags]    C24212
-2. Empty Email                   ${EMPTY}                      ${good password}
-3. Empty Password                ${good email}                 ${EMPTY}
-4. Invalid Email 1               noptixqagmail.com             ${good password}
-5. Invalid Email 2               @gmail.com                    ${good password}
-6. Invalid Email 3               noptixqa@gmail..com           ${good password}
-7. Invalid Email 4               noptixqa@192.168.1.1.0        ${good password}
-8. Invalid Email 5               noptixqa.@gmail.com           ${good password}
-9. Invalid Email 6               noptixq..a@gmail.c            ${good password}
-10. Invalid Email 7               noptixqa@-gmail.com           ${good password}
-11. Invalid Password              ${good email}                 ${bad password}
+1. Login Empty Email                   ${EMPTY}                      ${good password}
+2. Login Empty Password                ${good email}                 ${EMPTY}
+3. Login Invalid Email 1               noptixqagmail.com             ${good password}
+4. Login Invalid Email 2               @gmail.com                    ${good password}
+5. Login Invalid Email 3               noptixqa@gmail..com           ${good password}
+6. Login Invalid Email 4               noptixqa@192.168.1.1.0        ${good password}
+7. Login Invalid Email 5               noptixqa.@gmail.com           ${good password}
+8. Login Invalid Email 6               noptixq..a@gmail.c            ${good password}
+9. Login Invalid Email 7               noptixqa@-gmail.com           ${good password}
+10. Login Invalid Password              ${good email}                 ${bad password}
     [tags]    C41869
-12. Invalid Email and Password    noptixqagmail.com             ${bad password}
-13. Valid Email Unregistered      ${good email unregistered}    ${good password}
+11. Login Valid Email Unregistered      ${good email unregistered}    ${good password}
     [tags]    C41868
-
-*** Keywords ***
-Restart
-    Close Browser
-    Open Log In Dialog
-
-Open Log In Dialog
-    Open Browser and go to URL    ${url}
-
-Test Login Invalid
-    [Arguments]    ${email}    ${pass}
-    Reload Page
-    Wait Until Elements Are Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${LOG IN BUTTON}
-    Log In Form Validation    ${email}    ${pass}
-    Outline Error    ${email}    ${pass}
-    Run Keyword If    "${email}"=="${good email}" and "${pass}"=="${bad password}"
-    ...    Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Run Keyword If    "${email}"=="${good email unregistered}" and "${pass}"=="${good password}"
-    ...    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-
-Log In Form Validation
-    [Arguments]    ${email}    ${pass}
-    Input Text    ${EMAIL INPUT}    ${email}
-    Input Text    ${PASSWORD INPUT}    ${pass}
-    click button    ${LOG IN BUTTON}
-
-Outline Error
-    [Arguments]    ${email}    ${pass}
-    Run Keyword If    "${pass}" == "${EMPTY}"    Check Password Outline
-    Run Keyword Unless
-    ...    "${email}" == "${good email}" or "${email}" == "${good email unregistered}"
-    ...    Check Email Outline
-
-Check Email Outline
-    Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${ERROR COLOR}
-
-Check Password Outline
-    ${class}    Get Element Attribute    ${PASSWORD INPUT}    class
-    Should Contain    ${class}    ng-invalid

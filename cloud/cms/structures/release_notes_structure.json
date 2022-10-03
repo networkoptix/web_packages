@@ -1,0 +1,62 @@
+{
+    "type": "release_notes",
+    "can_preview": true,
+    "single_customization": false,
+    "contexts": [
+        {
+            "name": "Release Notes",
+            "label": "Release Notes",
+            "description": "Release notes for version",
+            "values": [
+              {
+                "label": "Version",
+                "name": "%build%",
+                "value": "",
+                "description": "Cloud portal full version",
+                "type": "text",
+                "optional": false
+              },
+              {
+                "label": "Warnings",
+                "name": "%warnings%",
+                "type": "html",
+                "value": "",
+                "description": "List of warnings",
+                "optional": true
+              },
+              {
+                "label": "Features",
+                "name": "%features%",
+                "type": "html",
+                "value": "",
+                "description": "List of features",
+                "optional": true
+              },
+              {
+                "label": "Improvements",
+                "name": "%improvements%",
+                "type": "html",
+                "value": "",
+                "description": "List of improvements",
+                "optional": true
+              },
+              {
+                "label": "Bugfixes",
+                "name": "%bugFixes%",
+                "type": "html",
+                "value": "",
+                "description": "List of bugfixes",
+                "optional": true
+              },
+              {
+                "label": "Custom",
+                "name": "%custom%",
+                "type": "html",
+                "value": "",
+                "description": "Custom text",
+                "optional": true
+              }
+            ]
+          }
+    ]
+}

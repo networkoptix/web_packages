@@ -1,0 +1,82 @@
+@use '../../../styles/typography';
+
+.explorer-node ul,
+.explorer-node li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+.explorer-node {
+  display: block;
+}
+
+.explorer-node .explorer-node {
+  padding-left: 24px;
+}
+
+.explorer-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  padding: 8px;
+  user-select: none;
+}
+
+a {
+  color: var(--dark9);
+}
+
+[cdktreenodetoggle], a:not(.action-link) {
+  display: inline-block;
+  padding: 2px 12px 2px 8px;
+
+  border-radius: 16px 16px 50px 16px;
+  margin: 2px 0;
+  cursor: pointer;
+  &:hover {
+    background: var(--light2);
+  }
+}
+
+[ng-reflect-recursive=true], a:active {
+  background: var(--light3);
+  &:hover {
+    background: var(--light4);
+  }
+}
+
+.asset-link:last-of-type {
+  margin-bottom: 8px;
+}
+
+.action-link {
+  cursor: pointer;
+  padding: 2px;
+  margin: 0 2px;
+  text-decoration: none;
+}
+
+.animate-rotation svg {
+  animation-name: rotate;
+  animation-duration: 1.8s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+}
+
+h5 {
+  @include typography.regular12light16;
+  * svg {
+    cursor: pointer;
+    & * {
+        fill: var(--blue10);
+    }
+  }
+}
+
+@keyframes rotate {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}

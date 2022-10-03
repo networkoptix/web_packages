@@ -1,28 +1,42 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
-import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
-import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
-import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
-import TimelineSelectionService from '../../services/timeline.selection.service';
-import PlaybackService from '../../../playback/services/playback.service';
+import {
+    Component,
+    OnInit,
+    ElementRef,
+    ViewChild,
+    AfterViewInit,
+    OnDestroy,
+    HostListener
+} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { px, ms } from '@pages/systems/view/vms-client/utils/type-aliases';
-import { NxUtilsService } from '@services/utils.service';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
-const CANVAS_SELECTION_HEIGHT = 50;
+import { NxConfigService } from '@services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
+import { px, ms } from '@view/vms-client/utils/type-aliases';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+
+import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
+import TimelineSelectionService from '../../services/timeline.selection.service';
+import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
+import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
+
+import { onPinch } from './onPinch';
+
+const CANVAS_SELECTION_OFFSET_START = 60;
+const CANVAS_SELECTION_OFFSET_END = 85;
 const MOUSE_MINIMAL_MOVE_PX = 2;
 const MOUSE_HIDE_UNTIL_PX = 8;
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
 @Component({
-    selector    : 'timeline',
-    templateUrl : './timeline.component.html',
-    styleUrls   : ['./timeline.component.scss']
+    selector: 'timeline',
+    templateUrl: './timeline.component.html',
+    styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
-    @ViewChild('canvas') canvasView: ElementRef;
+    @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
 
     protected _state: TimelineServiceStatus
     protected _stateSubscription: Subscription
@@ -30,6 +44,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     private unsub$ = new Subject();
 
     constructor(
+        protected configService: NxConfigService,
         public timeline: TimelineService,
         protected playback: PlaybackService,
         protected canvasRenderer: TimelineCanvasRendererService,
@@ -38,7 +53,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         protected selection: TimelineSelectionService
     ) {
         this._onTimelineStatusChange = this._onTimelineStatusChange.bind(this);
+        this.archiveSelectionEnabled = this.configService.flagsEnabled(
+            'archiveSelection'
+        );
     }
+
+    public readonly archiveSelectionEnabled: boolean = false
 
     protected _onTimelineStatusChange (s: TimelineServiceStatus) {
         if (s.canvasGeometryUpdateRequested) {
@@ -48,14 +68,18 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _animationFrameRequestHandler: number
 
+    protected _pinchDestructor: Function
+
     public ngOnInit (): void {
-        this._stateSubscription = this.timeline.subject.subscribe(this._onTimelineStatusChange);
+        this._stateSubscription = this.timeline.subject.subscribe(
+            this._onTimelineStatusChange
+        );
         this._animationFrameRequestHandler =
             requestAnimationFrame(() => this.onAnimationFrame());
     }
 
     public onAnimationFrame (): void {
-        const ctx = (this.canvasView.nativeElement as HTMLCanvasElement).getContext('2d');
+        const ctx = this.canvasView.nativeElement.getContext('2d');
         // console.log('render #', times_rendered)
         this.canvasRenderer.render(ctx);
 
@@ -71,6 +95,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unsub$.next();
         this._stateSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
+        this._pinchDestructor && this._pinchDestructor();
     }
 
     public ngAfterViewInit (): void {
@@ -84,6 +109,15 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             debounceTime(50),
             takeUntil(this.unsub$)
         ).subscribe(() => this._updateCanvasGeometry());
+
+        this._pinchDestructor = onPinch(
+            this.canvasView.nativeElement,
+            ({ newScale, scaleChange, offset }) => {
+                const durationDelta =
+                    (scaleChange - 1) * this.timeline.fullRange.duration;
+                this.timeline.zoom(durationDelta, offset);
+            }
+        );
     }
 
     protected _updateCanvasGeometry (): void {
@@ -101,6 +135,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public canvasMouseMoveHandler (e: MouseEvent|TouchEvent): void {
         this.timeUnderMouse.handleMouseMove(e);
+        if (this.selection.handleMouseMove(e as MouseEvent)) {
+            return;
+        }
         const screenX = NxUtilsService.calcScreenX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
@@ -108,7 +145,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isDragging = true;
         }
         if (this.isDragging) {
-            const dt = -1 * this.timeline.domWidthToDuration(screenX - this._mouseDownScreenX);
+            const dt = -1 * this.timeline.domWidthToDuration(
+                screenX - this._mouseDownScreenX
+            );
             // console.log('dragging in progress', dt)
             this.timeline.shiftVisibleRange(dt);
             this._mouseDownScreenX = screenX;
@@ -137,63 +176,75 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         e.stopPropagation();
         e.preventDefault();
-        // console.log('mouse down', e.screenX)
-        this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
-        this._mouseNotReleasedYet = true;
-        this.timeUnderMouse.handleMouseDown()
+        if (this.archiveSelectionEnabled) {
+            const offsetY = NxUtilsService.calcOffsetY(e);
+            if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
+                offsetY <= CANVAS_SELECTION_OFFSET_END
+            ) {
+                this.selection.handleBackgroundMouseDown(e as MouseEvent);
+            } else {
+                this.selection.reset();
+                this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
+                this._mouseNotReleasedYet = true;
+                this.timeUnderMouse.handleMouseDown();
+            }
+        } else {
+            this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
+            this._mouseNotReleasedYet = true;
+            this.timeUnderMouse.handleMouseDown();
+        }
     }
 
-    public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
+    protected _play (offsetX) {
+        const time = this.timeline.domOffsetXtoTime(offsetX);
+        this.playback.playArchive(time);
+        this.hideTimeUnderMouse = true;
+        this._mouseDownScreenX = screenX;
+
+        const edgeWidth: px = 80;
+        const edgeFixWidth: px = 160;
+        const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth);
+        if (offsetX < edgeWidth) {
+            // console.log('left edge fix')
+            this.timeline.jumpScrollTo(time - offset, true);
+        } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
+            // console.log('right edge fix')
+            this.timeline.jumpScrollTo(
+                time - this.timeline.visibleRange.duration + offset,
+                true
+            );
+        }
+    }
+
+    public canvasMouseUpHandler (e: MouseEvent|TouchEvent, mustPlay: boolean = false): void {
+        if (!mustPlay && this.archiveSelectionEnabled) {
+            mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
+        }
         const screenX = NxUtilsService.calcScreenX(e);
         const offsetX = NxUtilsService.calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         // console.log('mouse up', e.screenX, delta)
-        if (!this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX) {
-            const time = this.timeline.domOffsetXtoTime(offsetX);
-            // this.selection.reset()
-            this.playback.playArchive(time);
-            this.hideTimeUnderMouse = true;
-            this._mouseDownScreenX = screenX;
-
-            const edgeWidth: px = 80;
-            const edgeFixWidth: px = 160;
-            const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth);
-            if (offsetX < edgeWidth) {
-                // console.log('left edge fix')
-                this.timeline.jumpScrollTo(time - offset, true);
-            } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
-                // console.log('right edge fix')
-                this.timeline.jumpScrollTo(time - this.timeline.visibleRange.duration + offset, true);
-            }
+        mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
+        if (mustPlay) {
+            this._play(offsetX);
 
             // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
         }
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
-        this.timeUnderMouse.handleMouseUp()
+        this.timeUnderMouse.handleMouseUp();
     }
 
-    @HostListener('document:mouseup')
+    @HostListener('document:mouseup', ['$event'])
     public documentMouseUpHandler (e: MouseEvent): void {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
+        if (this.archiveSelectionEnabled) {
+            if (!this.selection.handleMouseUp(e)) {
+                this._play(e.clientX - (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left);
+            }
+        }
     }
-
-    // public canvasClickHandler (e: MouseEvent): void {
-    //   e.stopPropagation()
-    //   e.preventDefault()
-    //   // if (e.offsetY > CANVAS_SELECTION_HEIGHT) {
-    //     const time = this.timeline.domOffsetXtoTime(e.offsetX)
-    //     this.selection.reset()
-    //     this.playback.playArchive(time)
-    //   // }
-    // }
-
-    // public canvasMouseDownHandler (e: MouseEvent): void {
-    //   if (e.offsetY <= CANVAS_SELECTION_HEIGHT) {
-    //     this.selection.handleBackgroundMouseDown(e)
-    //   }
-    // }
 }
 
 export default TimelineComponent;

@@ -1,0 +1,8 @@
+@function _hex2Rgb($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
+@mixin generateVarAndRgb($name, $hex) {
+  #{$name}: $hex;
+  #{$name}--rgb: _hex2Rgb($hex);
+}

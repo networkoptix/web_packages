@@ -253,7 +253,7 @@ def send_notification(request):
                          }
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated, ))
 def cloud_notification_action(request):
     can_add = request.user.has_perm('notifications.add_cloudnotification')
     can_change = request.user.has_perm('notifications.change_cloudnotification')
@@ -309,9 +309,9 @@ def cloud_notification_action(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def test(request):
+def notification_test(request):
     from notifications import tasks
     from random import seed, randint
     seed()
-    tasks.test_task.delay(randint(1, 100), randint(1, 5))
+    tasks.async_task_test.delay(randint(1, 100), randint(1, 5))
     return Response('ok')

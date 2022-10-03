@@ -1,12 +1,41 @@
 {
     "language": "pt_BR",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
+    "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
     "Integrations (β)": "Integrações (β)",
     "Privacy": "Privacidade",
     "Support": "Suporte",
     "Terms": "Termos",
+    "Developers Console": "Console do desenvolvedor",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "Certifique-se de que o servidor especificado esteja online e tente novamente."
+    },
+    "alarmTypes": {
+        "Servers": "Servidores",
+        "Cameras": "Câmeras",
+        "Storage Locations": "Locais de armazenamento",
+        "Network Interfaces": "Interfaces de rede"
+    },
+    "alarmLevels": {
+        "offline": "Off-line",
+        "error": "Erros",
+        "warning": "Avisos"
+    },
+    "alertFilters": {
+        "all": "Todos os alertas",
+        "warning": "Apenas avisos",
+        "error": "Apenas erros"
+    },
+    "deviceTypes": {
+        "All Device Types": "Todos os tipos de dispositivos",
+        "servers": "Servidor",
+        "cameras": "Câmeras",
+        "storages": "Armazenamentos",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Acesso irrestrito, incluindo a capacidade de compartilhar",
@@ -21,23 +50,23 @@
             "label": "Personalizado"
         },
         "Live Viewer": {
-            "description": "Só pode visualizar o vídeo ao vivo",
+            "description": "Só pode ver vídeo ao vivo",
             "label": "Visualizador ao vivo"
         },
         "Owner": {
-            "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
-            "label": "Dono"
+            "description": "Acesso irrestrito, incluindo a capacidade de compartilhar e conectar/desconectar o sistema da nuvem",
+            "label": "Proprietário"
         },
         "Viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
             "label": "Visualizador"
         },
         "advancedViewer": {
-            "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc",
+            "description": "Pode visualizar vídeo ao vivo, navegar no arquivo, configurar câmeras, controlar PTZ etc",
             "label": "Visualizador Avançado"
         },
         "cloudAdmin": {
-            "description": "Pode configurar o Sistema e partilhá-lo",
+            "description": "Pode configurar o sistema e compartilhá-lo",
             "label": "Administrador"
         },
         "custom": {
@@ -45,20 +74,20 @@
             "label": "Personalizado"
         },
         "customRole": {
-            "description": "Perfil de utilizador personalizado especificado no Sistema",
-            "label": "Perfil Personalizado"
+            "description": "Função de usuário personalizada especificada no sistema",
+            "label": "Função personalizada"
         },
         "disabled": {
-            "description": "O utilizador está desativado e não pode efetuar login no sistema",
+            "description": "O usuário está desabilitado e não pode fazer ‘login’ no sistema",
             "label": "Desabilitado"
         },
         "liveViewer": {
-            "description": "Só pode visualizar o vídeo ao vivo",
+            "description": "Só pode ver vídeo ao vivo",
             "label": "Visualizador ao vivo"
         },
         "owner": {
-            "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
-            "label": "Dono"
+            "description": "Acesso irrestrito, incluindo a capacidade de compartilhar e conectar/desconectar o sistema da nuvem",
+            "label": "Proprietário"
         },
         "viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
@@ -66,20 +95,72 @@
         }
     },
     "account": {
-        "accountSavedSuccess": "A sua conta foi gravada com sucesso",
+        "account": "Conta",
+        "key": "Chave",
+        "accountSavedSuccess": "Sua conta foi salva com sucesso",
         "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de ativação enviado",
         "agreementAccepted": "O acordo foi aceito",
         "changePassword": "Mudar Senha",
+        "security": "Segurança",
         "newPasswordLabel": "Nova senha",
         "passwordChangedSuccess": "Senha salva com sucesso",
-        "saveChanges": "Gravar"
+        "saveChanges": "Salvar"
     },
     "activeActions": {
         "resetPassword": "Reset da Senha",
         "sendConfirm": "Reenviar Link de Ativação",
-        "setNewPassword": "Guardar senha",
+        "setNewPassword": "Salvar senha",
         "setNewPasswordLabel": "Nova senha"
+    },
+    "authorize": {
+        "loginCloudHeader": "Entrar em %CLOUD_NAME%",
+        "connectHeader": "Conecte o sistema a %CLOUD_NAME%",
+        "expiredHeader": "Sua sessão expirou",
+        "loginSystemSubheader": "Com sua conta %CLOUD_NAME%",
+        "connectSubheader": "Para acessá-lo de qualquer lugar e habilitar recursos adicionais",
+        "expiredSubheader": "Por favor faça login novamente",
+        "connectAdditional": "Esta conta terá o nível de acesso do proprietário",
+        "createText": "Criar Conta",
+        "setupText": "Configuração do sistema fora da nuvem",
+        "asAccountSubheader": "Como",
+        "toAccountSubheader": "Para",
+        "forAccountSubheader": "Para {accountEmail}",
+        "passwordDisconnect": "para desconectar o sistema de %CLOUD_NAME%",
+        "passwordMerge": "fazer merge de sistemas",
+        "passwordBackup": "para criar backup",
+        "passwordRestore": "restaurar o sistema de backup",
+        "passwordReset": "para reiniciar o servidor",
+        "passwordRestart": "reiniciar o servidor",
+        "passwordDetach": "para desanexar o servidor",
+        "expiredAccountSubheader": "Por favor, faça login novamente como",
+        "createAccountHeader": "Criar %CLOUD_NAME% conta",
+        "activateHeader": "Ativar %CLOUD_NAME% conta",
+        "createdText": "Conta criada!",
+        "activatedText": "Conta ativada!",
+        "createdAdditional": "<p class=\"mb-2\">A mensagem de confirmação com o link de ativação é enviada para {accountEmail}.</p><p>Por favor, ative a conta e volte aqui para finalizar o processo.</p>",
+        "activatedAdditional": "<p>Agora você pode continuar a fazer login em %CLOUD_NAME% aqui ou em outro lugar</p>",
+        "passResetHeader": "Reset da Senha",
+        "newPassHeader": "Definir nova senha",
+        "newPassConfirmText": "A senha está definida!",
+        "newPassInvalidCode": "Não é possível salvar a senha: o código de confirmação já está em uso ou está incorreto",
+        "notSecureText": "Se você continuar, permitirá que<br><span class='error-label'>{ redirectUrl }</span><br>acesse sua conta %CLOUD_NAME%.",
+        "confirmHeader": "Sistema conectado a %CLOUD_NAME%!",
+        "loginError": "Não é possível conectar a %CLOUD_NAME%",
+        "loginErrorAdditional": "Tente novamente ou faça login no sistema diretamente com sua conta local.",
+        "connectErrorAdditional": "Por favor, tente novamente mais tarde.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Por favor, tente novamente ou configure um sistema fora da nuvem.</p><p>Você poderá conectá-lo a %CLOUD_NAME% qualquer momento depois.</p>",
+        "connectedText": "Sistema conectado a %CLOUD_NAME%",
+        "setupConnectedText": "Sistema conectado",
+        "stayLoggedInHelpText": "Caixa de seleção para permanecer conectado",
+        "termsAndConditionsHelpText": "Caixa de seleção concordando com os termos e condições e a política de privacidade",
+        "copiedToClipboard": "Copiado para a área de transferência",
+        "authCode": {
+            "message": "Digite um código do seu aplicativo de autenticação para confirmar que é realmente você tentando {suffix}",
+            "newPass": "definir uma nova senha",
+            "login": "entrar"
+        },
+        "emailSent": "E-mail enviado!"
     },
     "cameraFilters": {
         "H265": "Câmeras H.265",
@@ -129,6 +210,7 @@
             "unauthorized": "Autentificação requerida"
         },
         "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
+        "copiedToClipboard": "Copiado para a área de transferência",
         "login": "login",
         "recordingSettingsWarning": "Atualize as configurações de gravação ausentes.",
         "disableMotionWarning": "O modo de gravação será alterado para \"Gravar sempre\"",
@@ -146,6 +228,7 @@
             "low": "Baixa"
         },
         "general": "Geral",
+        "generalError": "Ocorreu um erro, por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com sua equipe de suporte.",
         "inaccessibleFeatureMessage": "O sistema está offline e, portanto, as informações não estão acessíveis.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} mais integrações...} one{#{endTag} mais integração...} other{#{endTag} mais integrações...}}",
         "searchCamPlaceholder": "Pesquisa",
@@ -185,7 +268,22 @@
         },
         "viewingOutdatedReport": "Você está visualizando um relatório desatualizado."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "A edição do painel está habilitada",
+        "dashboardLocked": "O painel está bloqueado",
+        "unlockToUpload": "Desbloqueie o painel para fazer o upload da configuração do json",
+        "unlockToMove": "Desbloqueie o painel para mover os widgets"
+    },
+    "devConsole": {
+        "create": "Criar"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:",
+            "wizardWarningDescr": "As versões mais antigas de %VMS_NAME% client e Web Admin não oferecem suporte à autenticação de dois fatores.",
+            "installAuthApp": "Instale um aplicativo de autenticação em seu dispositivo móvel, caso ainda não tenha um. %CLOUD_NAME% suporta <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> ou <strong>Duo Mobile</strong>.",
+            "nowEnabled": "A autenticação de dois fatores agora é <strong>habilitada</strong> para sua conta %CLOUD_NAME%!"
+        },
         "addUser": {
             "alreadyExists": "Este email já foi cadastrado no sistema %systemName%"
         },
@@ -194,6 +292,8 @@
             "createAccount": "Criar nova conta",
             "delete": "Excluir",
             "deleteAccount": "Excluir Conta",
+            "disable": "Desabilitar",
+            "enable": "Habilitar",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Sair",
             "ok": "OK",
@@ -252,9 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Digite a senha da conta do proprietário em <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "A senha do usuário administrador está errada",
+            "knownBothSystemsConnectedToCloud": "O sistema {targetSystem} está conectado a %CLOUD_NAME%. Os sistemas em nuvem podem ser mesclados apenas a partir de %CLOUD_NAME% portais.",
+            "unknownBothSystemsConnectedToCloud": "Não é possível mesclar dois sistemas conectados à nuvem. Vá para %CLOUD_NAME% para mesclar esses sistemas.",
             "checking": "Verificando...",
+            "cloud": "Nuvem",
             "commonText": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Conecte o sistema que deseja mesclar com este para <strong>%cloudName%</strong> ou mesclar localmente usando <strong>%vmsName%</strong> Cliente.",
+            "connectToCloud": "Conecte o sistema que deseja mesclar com este para <strong>%CLOUD_NAME%</strong> ou mesclar localmente usando <strong>%VMS_NAME%</strong> Cliente.",
+            "failedToFindAnySystemHeader": "Falha ao encontrar qualquer sistema para mesclar com",
+            "failedToFindAnySystem": "Certifique-se de ter a função Proprietário em um sistema de nuvem com o qual deseja mesclar. Ou que o sistema com o qual você deseja mesclar é acessível pela rede local ao sistema atual.",
             "differentOwners": "Tanto o sistema selecionado quanto o atual estão conectados a %CLOUD_NAME% e têm proprietários diferentes. Os sistemas em nuvem podem ser mesclados apenas se a conta do proprietário for a mesma.",
             "duplicateServers": "<p class=\"mb-2\">Um servidor parece estar se listando no sistema selecionado e no sistema atual.</p><p>Remova os servidores off-line e incompatíveis de cada sistema e tente novamente.</p>",
             "enterSystemAddressTitle": "Digite o endereço de qualquer servidor no sistema que deseja mesclar com este.",
@@ -277,6 +382,11 @@
                 "b_support": "suporte",
                 "c_proceeding": "antes de prosseguir."
             },
+            "restError": {
+                "duplicateServer": "Erro de mesclagem. Ambos os sistemas têm o mesmo servidor",
+                "useCloudMerge": "Não é possível mesclar sistemas vinculados à nuvem",
+                "differentCloudOwners": "Não é possível mesclar dois sistemas em nuvem com proprietários diferentes"
+            },
             "secondaryCannotMerge": "O sistema {targetSystem} possui uma versão de software mais antiga que é incompatível com o sistema atual. Atualize {targetSystem} para {downloadHTML} para mesclá-lo com o atual.",
             "secondarySystemUnavailable": "O sistema {targetSystem} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
             "serverAtUrl": "servidor em {url}",
@@ -290,12 +400,15 @@
             "systemVersionOld": "O sistema {targetSystem} possui uma versão de software mais antiga que é incompatível com o sistema atual. Atualize %targetSystem% para {downloadHTML} para mesclá-lo com o atual.",
             "systemVersionNew": "O sistema {targetSystem} possui uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para o {downloadHTML} para mesclá-lo com o {targetSystem} sistema.",
             "systemVersionsNotMatch": "Os sistemas têm versões de software incompatíveis. Atualize ambos para {downloadHTML}.",
+            "targetSystemBoundToCloud": "Este sistema não está conectado à nuvem. Não é possível mesclar com sistemas vinculados à nuvem.",
             "urlEmpty": "Digite o endereço do servidor",
             "urlNotValid": "Insira um URL válido",
             "unknownError": "Ocorreu um erro desconhecido. Atualize a página e tente novamente. Se o problema persistir, entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
             "warning": "Haverá mais de <strong>{maxServers}</strong> servidores no sistema mesclado."
         },
         "message": {
+            "system2faEnabled": "A autenticação de dois fatores agora será forçada para este sistema.",
+            "system2faDisabled": "A autenticação de dois fatores não é necessária para este sistema.",
             "storageSettingsSaved": "Configurações de armazenamento salvas.",
             "storageSettingsNotSaved": "Não foi possível salvar as configurações de armazenamento.",
             "settingsSaved": "Configurações salvas.",
@@ -318,6 +431,12 @@
                 "integration": "Entre em contato com {companyName}",
                 "ipvd_feedback_device": "Feedback sobre {asset}",
                 "ipvd_feedback_page": "Feedback para a página de câmeras"
+            },
+            "twoFactor": {
+                "required": "A autenticação de dois fatores é necessária.",
+                "configure": "Você pode configurá-lo em seu",
+                "accountLink": "configurações da conta",
+                "codeRequired": "O código é obrigatório"
             }
         },
         "removeSystem": {
@@ -325,21 +444,34 @@
             "message": "Você está prestes a desconectar este sistema de sua conta. Você não poderá mais acessar este Sistema. Tem certeza?",
             "title": "Desconectar o sistema?"
         },
+        "renewAuth": {
+            "action": "Entrar",
+            "message": "Por favor faça login novamente.",
+            "title": "Sua sessão expirou"
+        },
         "titles": {
             "error": "Erro",
             "success": "Sucesso",
             "changeAccount": "Você já está logado como {email}",
+            "changePasswordFor": "Alterar senha para o usuário \"{username}\"",
             "deleteUser": "Deletar usuário?",
+            "failedLoginTo": "Falha ao fazer login em {systemName}",
             "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
-            "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
-            "removeUser": "Remover usuário?",
-            "serversDetach": "Desanexar o servidor \"{ title }\" do sistema atual?",
-            "serversReset": "Redefinir o servidor \"{ title }\" para os padrões?",
-            "serversRestart": "Reiniciar servidor \"{ title }\"?",
-            "changePasswordFor": "Alterar senha para o usuário \"{username}\""
+            "noClientDetected": "Instale %VMS_NAME% para visualizar seu sistema",
+            "removeUser": "Remover usuário",
+            "serversDetach": "Desanexar servidor&nbsp;<strong>{ title }</strong>&nbsp;do sistema atual?",
+            "serversReset": "Redefinir o servidor&nbsp;<strong>{ title }</strong>&nbsp;para os padrões?",
+            "serversRestart": "Reinicie o servidor&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do %CLOUD_NAME% para excluir sua conta."
+            "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do portal %CLOUD_NAME% e desative a autenticação de dois fatores para excluir sua conta."
+        },
+        "twoFactor": {
+            "action": "Entrar",
+            "message": "A autenticação de dois fatores está habilitada para esta conta. Por favor entre.",
+            "title": "Dois fatores são necessários!",
+            "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:",
+            "unsupportedSystem": "Para fazer login neste sistema, desative \"Pedir código de verificação em cada login com %CLOUD_NAME% conta\" nas configurações da sua conta <a href=\"/account/security\"></a>."
         }
     },
     "downloads": {
@@ -422,8 +554,10 @@
         "Connection timed out": "O sistema <strong>{failedSystem}</strong> está offline.",
         "Bad Gateway": "O sistema <strong>{failedSystem}</strong> está inacessível no momento.<br>Tente novamente em alguns minutos ou entre em contato com o <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
         "INCOMPATIBLE": "Os sistemas têm versões de software incompatíveis. Atualize ambos para {downloadHTML}.",
+        "This authorization method is forbidden. Please contact your system administrator.": "Este método de autorização é proibido. Entre em contato com o administrador do sistema.",
         "This user does not exist.": "Esse usuário não existe.",
         "The user is disabled. Please contact your system administrator.": "O usuário está desabilitado. Entre em contato com o administrador do sistema.",
+        "This user has been disabled by a system administrator.": "Este usuário foi desabilitado por um administrador do sistema.",
         "cloud_systems_have_different_owners": "Este sistema está conectado ao %CLOUD_NAME%, mas tem um proprietário diferente. Sistemas de nuvem só podem ser mesclados se a conta do proprietário for a mesma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Um servidor parece estar se listando no sistema selecionado e no sistema atual.</p><p>Remova os servidores off-line e incompatíveis de cada sistema e tente novamente.</p>",
         "fail": "{failedSystem} está inacessível.",
@@ -440,7 +574,8 @@
         "cantChangeAccountPrefix": "Não é possível salvar as alterações",
         "cantChangePasswordPrefix": "Não é possível salvar a senha",
         "cantDeleteAccountOwningSystems": "Não é possível excluir a conta que possui sistemas",
-        "cantDisconnectSystemPrefix": "Não é possível apagar o Sistema",
+        "cantConnectSystemPrefix": "Não é possível conectar o sistema",
+        "cantDisconnectSystemPrefix": "Não é possível excluir o sistema",
         "cantEditAdmin": "Este usuário tem permissões de administrador",
         "cantEditYourself": "Alterar as próprias permissões não é permitido",
         "cantGetSystemInfoPrefix": "As informações do sistema não estão disponíveis",
@@ -453,7 +588,8 @@
         "cantSharePrefix": "Não é possível compartilhar o sistema",
         "cantUnshareWithMeSystemPrefix": "Não é possível excluir sistema",
         "emailNotFound": "Conta não existe.",
-        "failedToAccessSystem": "Nenhum sistema pode ser acessado por este link. Isso pode acontecer quando um sistema foi desconectado de %CLOUD_NAME%, o acesso a este sistema foi revogado ou se você estiver conectado à conta incorreta.",
+        "failedToAccess2FA": "<p class=\"mb-0\">autenticação de dois fatores é necessária para acessar este sistema.</p><p>Você pode habilitar a autenticação de dois fatores em suas <a href=\"/account/security\">configurações de conta</a>.</p>",
+        "failedToAccessSystem": "Nenhum sistema pode ser acessado por este link. Isso pode acontecer quando um sistema foi desconectado de %CLOUD_NAME%, o acesso a este sistema foi revogado, o sistema no link não existe ou se você estiver conectado à conta incorreta.",
         "failedToAccessCamera": "Nenhuma câmera pode ser acessada por este link.",
         "forbidden": "Você não tem permissão para realizar esta ação",
         "lostConnection": "Conexão com {systemName} perdida",
@@ -478,7 +614,8 @@
         "licenseServerError": "Falha ao ativar a licença. O servidor de licença não respondeu. Tente novamente ou entre em contato com o suporte.",
         "networkConnection": "Não foi possível conectar a %CLOUD_NAME%, verifique sua conexão de rede.",
         "archiveEncrypted": "ARQUIVO\nCRIPTOGRAFADO",
-        "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo."
+        "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo.",
+        "webadmin2faRequired": "A autenticação de dois fatores é necessária para acessar este sistema. Você pode habilitar a autenticação de dois fatores nas configurações da sua conta <a href=\"{ cloudHost }/account/security\"></a>."
     },
     "integration": {
         "Access Control": "Controle de Acesso",
@@ -530,10 +667,10 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "Por favor",
-        "b_Link": "enviar uma solicitação",
-        "c_Info": "para perguntas/preocupações adicionais sobre dispositivos suportados."
+        "request": "Por favor, <span id=\"request\">envie uma solicitação</span> para perguntas/preocupações adicionais sobre dispositivos suportados."
     },
+    "systemsCount": "{count, plural, =0{#Sistemas} one{# Sistema} other{#Sistemas}} encontrado",
+    "alertsCount": "{count, plural, =0{#alerta} one{# alerta} other{#alerta}}",
     "ipvdTopXByVolume": "Top {value} por volume:",
     "ipvdDisclaimer": "Esta lista é limitada a dispositivos encontrados em {vmsName} onde os usuários permitiram relatórios automáticos de especificações do dispositivo para {companyName}. Nenhuma informação pessoal é coletada e cada usuário permanece completamente anônimo.",
     "menu": {
@@ -542,8 +679,20 @@
             "systemAdministration": "Administração do Sistema",
             "general": "Geral",
             "licenses": "Licenças",
-            "users": "Usuários"
+            "users": "Usuários",
+            "servers": "Servidores",
+            "alerts": "Alertas",
+            "systems": "Sistema",
+            "storages": "Locais de armazenamento",
+            "networkInterfaces": "Interfaces de rede",
+            "graphs": "Gráficos",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Tipo",
+        "server": "Servidor",
+        "alert": "Alerta"
     },
     "pageTitles": {
         "about": "Sobre",
@@ -552,11 +701,13 @@
         "activateCode": "Ativar conta",
         "activateSuccess": "Conta ativada",
         "articleTitle": "{ARTICLE_TITLE} por {VMS_NAME}",
+        "auth": "Autorização",
         "changePassword": "Mudar Senha",
         "debug": "Depurar",
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% para ",
+        "failedToAccess2FA": "Falha ao acessar o sistema \"{systemName}",
         "failedToAccessSystem": "Falha ao acessar o sistema",
         "failedToAccessCamera": "Falha ao acessar a câmera",
         "integrations": "%VMS_NAME% integrações",
@@ -571,8 +722,11 @@
         "systemShare": "Compartilhar Sistema",
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
-        "view": "Visualizar câmaras",
-        "apiTool": "Ferramenta de teste de API"
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
+        "view": "Ver câmeras",
+        "apiTool": "Ferramenta de teste de API",
+        "security": "Segurança",
+        "twofaRequired": "Autenticação de dois fatores necessária"
     },
     "pageDescriptions": {
         "integrations": "As integrações de Marketplace é um ecossistema centralizado de produtos que se integram perfeitamente com produtos VMS como %VMS_NAME%, todos disponíveis em %CLOUD_NAME% para que você possa encontrar soluções para construir e personalizar seu sistema de Vídeo IP.",
@@ -587,7 +741,7 @@
         "good": "boa",
         "minLength": "muito curto",
         "minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
-        "missingMessage": "Senha requerida",
+        "missingMessage": "Obrigatório",
         "required": "incorreta",
         "requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços iniciais e finais",
         "strongMessage": "Senha forte!",
@@ -610,6 +764,14 @@
         "server": {
             "title": "Servidor não acessível",
             "message": "O sistema está offline e, portanto, os servidores não estão acessíveis."
+        },
+        "noSystemApiTool": {
+            "title": "Nenhum sistema válido encontrado",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "O sistema falhou ao carregar",
+            "message": ""
         }
     },
     "pleaseSelect": "Por favor, selecione...",
@@ -632,6 +794,10 @@
             "backToEditText": "Voltar para as interfaces de edição",
             "previewRibbon": "Esta página é uma prévia das alterações mais recentes e não corresponde à versão disponível publicamente.",
             "publishedRibbon": "Esta página é a versão ao vivo que está disponível publicamente."
+        },
+        "newVersionAvailable": {
+            "notification": "Nova versão de %CLOUD_NAME% está disponível",
+            "installButton": "Atualizar para Atualização"
         },
         "systemOffline": "O sistema está offline. Algumas configurações podem não estar disponíveis.",
         "systemsMerging": "Este sistema está atualmente envolvido em uma operação de mesclagem."
@@ -680,7 +846,9 @@
     "serverTabTitles": {
         "View": "Visualizar",
         "Settings": "Confirgurações",
-        "Information": "Informações"
+        "Information": "Informações",
+        "Bookmarks": "Marcadores",
+        "Monitoring": "Monitoramento"
     },
     "system": {
         "connected": "Conectado",
@@ -694,7 +862,8 @@
             "notAbleToLoadSystem": "Não foi possível carregar as configurações do sistema.",
             "sessionLimitDuration": {
                 "hours": "horas",
-                "minutes": "minutos"
+                "minutes": "minutos",
+                "days": "dias"
             },
             "warningMessages": {
                 "videoEncryption": "A criptografia do tráfego de vídeo aumentará significativamente o uso da CPU."
@@ -741,7 +910,8 @@
             "network": "Rede, adicionada por meio do sistema operacional",
             "smb": "Rede (smb), adicionada por meio de VMS",
             "cloud": "Nuvem"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> deseja transferir a propriedade deste sistema para você"
     },
     "systemStatuses": {
         "activated": "ativado",
@@ -755,6 +925,9 @@
     "toastMessage": {
         "cloudUnavailable": "Algo deu errado. Atualize a página em cerca de 30 segundos.",
         "nameFail": "Falha ao alterar {type} nome",
+        "noConnection": "Restaure a conexão para %CLOUD_NAME% e tente novamente.",
+        "noInternet": "%CLOUD_NAME% está atualmente indisponível. Por favor, tente novamente mais tarde.",
+        "userChangesFail": "Falha ao aplicar as alterações",
         "reviewAccepted": "A revisão foi aceita",
         "system": {
             "deleted": {
@@ -774,6 +947,59 @@
             "rename": {
                 "success": "Nome do sistema salvo"
             }
+        },
+        "webAdminCloudCredentialError": "Faça login com %CLOUD_NAME% para acessar este sistema como usuário da nuvem",
+        "twoFaRequired": "A autenticação de dois fatores foi ativada para esta conta. Por favor, insira seu código de verificação na janela popup.",
+        "loggingIn": "Fazendo login. Aguarde."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Informações",
+            "availability": "Disponibilidade",
+            "load": "Carga",
+            "activity": "Atividade"
+        },
+        "keys": {
+            "name": "Nome",
+            "servers": "Servidores",
+            "cameras": "Canais da câmera",
+            "storages": "Locais de armazenamento",
+            "users": "Usuários",
+            "version": "Versão do sistema",
+            "cloudSystemId": "Código do sistema em nuvem",
+            "status": "Status",
+            "offlineEvents": "Eventos: Servidor Offline (24h)",
+            "uptimeS": "Tempo de atividade",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "% de CPU (servidor VMS)",
+            "ramUsageB": "Uso de RAM",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (servidor VMS)",
+            "serverRamUsageP": "% de RAM (servidor VMS)",
+            "threads": "Threads do servidor",
+            "decodingThreads": "Decodificação de threads",
+            "decodingSpeed3s": "Velocidade de decodificação",
+            "encodingThreads": "Codificação de threads",
+            "encodingSpeed3s": "Velocidade de codificação",
+            "primaryStreams": "Fluxos primários de saída",
+            "secondaryStreams": "Fluxos secundários de saída",
+            "incomingConnections": "Conexões de entrada",
+            "outgoingConnections": "Conexões de saída",
+            "logLevel": "Nível de registro",
+            "publicIp": "IP Público",
+            "os": "SO",
+            "osTime": "Hora do SO",
+            "vmsTime": "Hora do VMS",
+            "cpu": "CPU",
+            "cpuCores": "Núcleos",
+            "ramB": "RAM",
+            "guidConflict": "Conflito de GUID do servidor",
+            "vmsTimeChanged24h": "Eventos: Horário Alterado (24h)",
+            "transactionsPerSecond1m": "Transações/s",
+            "actionsTriggered1m": "Ativações de regras",
+            "apiCalls1m": "Chamadas de API",
+            "thumbnails1m": "Miniaturas",
+            "activePlugins": "Lista de plugins ativos"
         }
     },
     "headerLabels": {
@@ -792,7 +1018,8 @@
             "Starter": "Iniciante",
             "IO Module": "Módulo IO",
             "Bridge": "Ponte",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Inválido"
         },
         "info": {
             "type": "Tipo",
@@ -814,6 +1041,13 @@
             "activated": "Chave de licença ativada",
             "inuse": "A chave de licença já foi ativada e vinculada ao servidor com hardware ID {hwid} em outro sistema",
             "trialActivated": "Licença de teste ativada. A partir de hoje, você pode gravar até 4 câmeras por 30 dias."
+        }
+    },
+    "redirects": {
+        "message": "A rota \"{url}\" foi movida para \"{redirectUrl}\".",
+        "defaultMessage": "Atualize todos os links para fazer referência à nova rota.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -913,6 +1147,15 @@
     },
     "result": "{count, plural, =0{# resultados} one{# resultado} other{# resultados}}",
     "additionalSystems": "{count, plural, =0{+ # Sistemas} one{+ # Sistema} other{+ # Sistemas}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription": "Atualmente você tem <span id=\"target2FaSystems\">{count, plural, =0{# tais sistemas} one{# tal sistema} other{# tais sistemas}}</span>.",
+            "systemsRemainder": "e mais {count}...",
+            "v5Warning": "Você tem <span id=\"targetV5\">{count, plural, =0{#sistemas} one{# sistema} other{#sistemas}}</span> com versão de software inferior a 5.0. {count, plural, =0{Esses sistemas} one{Este sistema} other{Esses sistemas}} ficará inacessível por meio do <strong>%VMS_NAME% Client</strong> , pois as versões anteriores do %VMS_NAME% Client não suportam autenticação de dois fatores.",
+            "v5WarningExplanation": "Fazer {count, plural, =0{esses sistemas} one{este sistema} other{esses sistemas}} atualização totalmente acessível {count, plural, =0{eles} one{isto} other{eles}} para a versão de software 5.0 ou desmarque a caixa de seleção.",
+            "disableWarning": "Você tem {count, plural, one{# sistema} other{# sistemas}} naquela {count, plural, one{requer} other{exigir}} autenticação de dois fatores. Você não poderá fazer login no {count, plural, one{este sistema} other{esses sistemas}}."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Reindexação do armazenamento principal concluída",
@@ -942,5 +1185,100 @@
         "serverOffline": "Falha ao adicionar armazenamento externo - o servidor não responde",
         "success": "Armazenamento externo adicionado",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Portal da nuvem",
+            "description": "%CLOUD_NAME%, uma maneira simples de se conectar, gerenciar e expandir %VMS_NAME% Sistemas."
+        },
+        "/systems": {
+            "title": "Sistemas - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% integrações - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Documentação - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Dispositivos Suportados - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Configurações - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "Visualizar - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Informações - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Monitoramento do Servidor - webadmin - %VMS_NAME%"
+        }
+    },
+    "maintenance": {
+        "description": "Estamos trabalhando em algumas melhorias e novos recursos."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Dom",
+                "Mon": "Seg",
+                "Tue": "Ter",
+                "Wed": "Qua",
+                "Thu": "Qui",
+                "Fri": "Sex",
+                "Sat": "Sab",
+                "Sunday": "Domingo",
+                "Monday": "Segunda-feira",
+                "Tuesday": "Terça-feira",
+                "Wednesday": "Quarta-feira",
+                "Thursday": "Quinta-feira",
+                "Friday": "Sexta-feira",
+                "Saturday": "Sábado"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Fev",
+                "Mar": "Mar",
+                "Apr": "Abr",
+                "May": "Mai",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Ago",
+                "Sep": "Set",
+                "Oct": "Out",
+                "Nov": "Nov",
+                "Dec": "Dez",
+                "January": "Janeiro",
+                "February": "Fevereiro",
+                "March": "Março",
+                "April": "Abril",
+                "June": "Junho",
+                "July": "Julho",
+                "August": "Agosto",
+                "September": "Setembro",
+                "October": "Outubro",
+                "November": "Novembro",
+                "December": "Dezembro"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "am",
+                "pm": "pm",
+                "A": "A",
+                "P": "P",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

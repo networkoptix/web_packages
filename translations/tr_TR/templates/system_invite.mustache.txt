@@ -9,5 +9,5 @@
 {{message.system_name}} adresine erişim izni verildi.
 {{/message.sharer_name}}
 
-Sistemi kaydettirin ve görüntüleyin: {{config.portal_url}} / register / {{message.code}}
+Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
 

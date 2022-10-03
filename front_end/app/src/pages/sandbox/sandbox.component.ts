@@ -1,14 +1,15 @@
-import { Component, ViewChild }          from '@angular/core';
-import { NgForm }                        from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
-import { NxProcessService, Process }     from '../../services/process.service';
-import { NxDialogsService }              from '../../dialogs/dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ISelect } from '@pages/systems/settings/cameras/cameras.component';
+import { NxProcessService, Process } from '@services/process.service';
 
 @Component({
-    selector : 'sandbox-component',
-    templateUrl : 'sandbox.component.html',
-    styleUrls : ['sandbox.component.scss']
+    selector: 'sandbox-component',
+    templateUrl: 'sandbox.component.html',
+    styleUrls: ['sandbox.component.scss']
 })
 
 export class NxSandboxComponent {
@@ -18,7 +19,7 @@ export class NxSandboxComponent {
     agree: boolean;
     show: boolean;
     toggleDisabled: boolean;
-        show5: boolean;
+    show5: boolean;
     edit: boolean;
     sections;
     options;
@@ -27,6 +28,10 @@ export class NxSandboxComponent {
     mode;
     modeSelected;
     ddWidth: number;
+    selectedAspect: ISelect;
+    aspectRatios: ISelect[];
+    selectedRotation: ISelect;
+    rotations: ISelect[];
     filter;
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
@@ -35,15 +40,18 @@ export class NxSandboxComponent {
     theme: string;
     change: Process;
     restore: Process;
+    wholeText: string;
 
     submitted = false;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
+        this.wholeText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+
         this.data = {
-            newPassword : '',
-            email       : ''
+            newPassword: '',
+            email: ''
         };
 
         let host = '//' + window.location.hostname;
@@ -51,7 +59,9 @@ export class NxSandboxComponent {
             host += ':9000';
         }
 
-        this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/ipvd');
+        this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            host + '/embed/ipvd'
+        );
 
         // camera auth should not be used with the same domain as it screws login info - test should be done in external
         // environment like JSFiddle
@@ -67,12 +77,27 @@ export class NxSandboxComponent {
 
         this.theme = 'default';
 
+        this.aspectRatios = [
+            { name: '4:3', value: 1.33333 },
+            { name: '16:9', value: 1.77778 },
+            { name: '1:1', value: 1 }
+        ];
+        this.selectedAspect = this.aspectRatios[0];
+
+        this.rotations = [
+            { name: '0˚', value: 0 },
+            { name: '90˚', value: 90 },
+            { name: '180˚', value: 180 },
+            { name: '270˚', value: 270 }
+        ];
+        this.selectedRotation = this.rotations[0];
+
         this.filter = {
-            query   : '',
-            selects : [
+            query: '',
+            selects: [
                 {
-                    label : 'Minimum Resolution',
-                    items : [
+                    label: 'Minimum Resolution',
+                    items: [
                         { value: '0', name: 'All' },
                         { value: '84480', name: '1CIF' },
                         { value: '168960', name: '2CIF' },
@@ -94,8 +119,8 @@ export class NxSandboxComponent {
             ],
             multiselects: [
                 {
-                    label : 'Types',
-                    items : [
+                    label: 'Types',
+                    items: [
                         { id: 'Camera', label: 'Camera' },
                         { id: 'Multi-Sensor Camera', label: 'Multi-Sensor Camera' },
                         { id: 'Encoder', label: 'Encoder' },
@@ -107,16 +132,16 @@ export class NxSandboxComponent {
             ],
             tags: [
                 {
-                    label : 'Access Control',
-                    value : false
+                    label: 'Access Control',
+                    value: false
                 },
                 {
-                    label : 'Analytics',
-                    value : false
+                    label: 'Analytics',
+                    value: false
                 },
                 {
-                    label : 'PCIM',
-                    value : false
+                    label: 'PCIM',
+                    value: false
                 }
             ]
         };

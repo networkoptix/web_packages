@@ -29,10 +29,10 @@
         (videoError)="videoErrorEventHandler($event)"
         (bufferingChange)="onBufferingChange($event)"
         [mode]="playbackState.mode"
-        [paused]="playbackState.paused"
-        [posterUrl]="playbackState.posterUrl"
+        [paused]="$any(playbackState).paused"
+        [posterUrl]="$any(playbackState).posterUrl"
         [rotation]="rotateDeg"
-        [sourceUrl]="playbackState.sourceUrl"
+        [sourceUrl]="$any(playbackState).sourceUrl"
     >
     </player-js>
 </ng-template>

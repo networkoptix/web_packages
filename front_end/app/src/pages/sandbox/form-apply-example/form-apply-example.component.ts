@@ -1,14 +1,15 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
-import { NxApplyService }        from '../../../services/apply.service';
-import { NxProcessService, Process }                      from '../../../services/process.service';
-import { NxToastService }                                 from '../../../dialogs/toast.service';
-import { IConfig, NxConfigService } from '../../../services/nx-config';
-import { FormArray, FormGroup }     from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+
+import { NxToastService } from '@dialogs/toast.service';
+import { NxApplyService } from '@services/apply.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxProcessService, Process } from '@services/process.service';
 
 @Component({
-    selector : 'form-apply-example',
-    templateUrl : 'form-apply-example.component.html',
-    styleUrls : ['form-apply-example.component.scss']
+    selector: 'form-apply-example',
+    templateUrl: 'form-apply-example.component.html',
+    styleUrls: ['form-apply-example.component.scss']
 })
 export class FormApplyExampleComponent {
     CONFIG: IConfig;
@@ -20,8 +21,11 @@ export class FormApplyExampleComponent {
 
     @ViewChild('form1') form1;
     formWatcher: any;
-    form1Field1Input: string;
-    form1Field2Input: string;
+    account = {
+        form1Field1Input: '',
+        form1Field2Input: ''
+    };
+
     saveForm1 : Process;
 
     @ViewChild('form2') form2;
@@ -39,6 +43,7 @@ export class FormApplyExampleComponent {
     itemsSelected: any;
 
     itemsDDSingle: any[];
+    langCode: string = 'en_US';
     selectedDDItem: any;
 
     tags: any[];
@@ -54,9 +59,9 @@ export class FormApplyExampleComponent {
         this.CONFIG = configService.config;
 
         this.options = {
-            classname : this.CONFIG.toast.success,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.success,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
 
         this.show1 = false;
@@ -104,15 +109,15 @@ export class FormApplyExampleComponent {
     }
 
     ngOnInit() {
-        this.applyService.initPageWatcher(this.pageApply);
+        this.account.form1Field1Input = 'Tsanko';
+        this.account.form1Field2Input = 'Tsolov';
+        this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.form1Field1Input = 'Tsanko';
-        this.form1Field2Input = 'Tsolov';
         this.saveForm1 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
             this.toastService.show('form1 saved', this.options);
-        }, err => {
+        }, _ => {
         });
 
         // ngModel should be ALWAYS initialized -> when comparing form values JSON stingify will omit undefined fields!!!
@@ -121,7 +126,7 @@ export class FormApplyExampleComponent {
             return Promise.resolve();
         }, {}, result => {
             this.toastService.show('form2 saved', this.options);
-        }, err => {
+        }, _ => {
         });
     }
 
@@ -150,5 +155,10 @@ export class FormApplyExampleComponent {
     ddSingleModelChanged(result: {}) {
         // ensure 'change' will be triggered
         this.selectedDDItem = { ...result };
+    }
+
+    changeLanguage(result: string) {
+        // ensure 'change' will be triggered
+        this.langCode = result;
     }
 }

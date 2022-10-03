@@ -1,17 +1,29 @@
 import {
-    Component, AfterViewInit, OnDestroy,
-    ElementRef, ViewChild, Input, Output,
-    EventEmitter, ViewEncapsulation, OnChanges, SimpleChanges
+    Component,
+    OnDestroy,
+    ElementRef,
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    ViewEncapsulation,
+    OnChanges,
+    SimpleChanges,
 } from '@angular/core';
-import { PLAYBACK_MODE }                                    from '../../../datatypes/PlaybackState';
-import { LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
-import videojs                                              from 'video.js';
+import videojs from 'video.js';
+
+import {
+    LoggerDecorator,
+    BASE64_SINGLE_TRANSPARENT_PIXEL
+} from '@vms-client/utils';
+
+import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
 
 @Component({
-    selector      : 'player-js',
-    templateUrl   : 'player-js.component.html',
-    styleUrls     : ['player-js.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'player-js',
+    templateUrl: 'player-js.component.html',
+    styleUrls: ['player-js.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 @LoggerDecorator('JS PLAYER ::', true)
 export class PlayerJsComponent implements OnDestroy, OnChanges {
@@ -29,7 +41,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     @Output() videoEnded = new EventEmitter<boolean>();
     @Output() videoError = new EventEmitter<any>();
 
-    @ViewChild('video', { static: true }) videoView: ElementRef;
+    @ViewChild('video', { static: true }) videoView: ElementRef<HTMLVideoElement>;
 
     actualRotation = 0;
     private player: videojs.Player;
@@ -43,8 +55,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         let stallTimer;
         const waitingTime = 8 * 1000;
         const options = {
-            autoplay          : true,
-            inactivityTimeout : 0
+            autoplay: true,
+            inactivityTimeout: 0
         };
 
         const resetTimer = () => {
@@ -54,7 +66,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
         this.player = videojs(this.videoView.nativeElement, options);
 
-        this.player.on('ready', () => {
+        this.player.on('canplay', () => {
             this.player.play();
         });
 
@@ -64,14 +76,14 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('waiting', () => {
-            if (this.hasPlayed) {
-                resetTimer();
-                this.hasPlayed = false;
-            }
             if (!stallTimer) {
+                this.hasPlayed = false;
                 stallTimer = setTimeout(() => {
                     this.bufferingChange.emit(waitingTime);
                 }, waitingTime);
+            }
+            if (this.hasPlayed) {
+                resetTimer();
             }
         });
 
@@ -106,7 +118,14 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 
-        if (this.videoView && (changes.mode || changes.sourceUrl || changes.posterUrl || changes.paused)) {
+        if (
+            this.videoView && (
+                changes.mode ||
+                changes.sourceUrl ||
+                changes.posterUrl ||
+                changes.paused
+            )
+        ) {
             if (this.sourceUrl) {
                 this.transport = this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm';
             }
@@ -167,8 +186,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const sourceUrl = this.sourceUrl || null;
         let posterUrl = BASE64_SINGLE_TRANSPARENT_PIXEL;
 
-        if (this.posterUrl) {
-            posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' ? this.rotation : 0}`;
+        if (this.posterUrl && !this.posterUrl.includes('rotate')) {
+            posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' && this.rotation || 0}`;
         }
 
         if (!sourceUrl) {

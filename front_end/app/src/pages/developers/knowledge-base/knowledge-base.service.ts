@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { MenuNode, NxMenusService } from '@services/menus.service';
-import { NxAccountService, Account } from '@services/account.service';
-import { filter, skip, take, switchMap, tap } from 'rxjs/operators';
-import { MenuStructure } from '@services/nx-config/base-config';
-import { MenuNodeWithParent } from '@components/left-menu/left-menu.component';
 import { Router } from '@angular/router';
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { MenuStructure } from '@services/nx-config/base-config';
 
 @Injectable({
     providedIn: 'root'
@@ -40,17 +41,6 @@ export class NxKnowledgebaseService {
         this.CONFIG = configService.getConfig();
         this.accountService.get().then(account => {
             this.account = account;
-
-            this.accountService.accountSubject.subscribe(account => {
-                if (account !== this.account) {
-                    this.account = account;
-                    this.menuSubject.next(undefined);
-                    const url = this.router.url;
-                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
-                        this.router.navigateByUrl(url, { skipLocationChange: true });
-                    });
-                }
-            });
         });
     }
 
@@ -79,9 +69,12 @@ export class NxKnowledgebaseService {
     mapParentNodeAndUrl(currentNode, parentNode?) {
         currentNode.parentNode = parentNode;
         if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
-            currentNode.url = this.baseRoute + (currentNode.urlified || currentNode.asset_id);
+            currentNode.url =
+                this.baseRoute + (currentNode.urlified || currentNode.asset_id);
         }
-        currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
+        currentNode.nodes.forEach(childNode =>
+            this.mapParentNodeAndUrl(childNode, currentNode)
+        );
     }
 
     getMenuObservable(): Observable<MenuStructure> {
@@ -89,12 +82,17 @@ export class NxKnowledgebaseService {
             this.loadingMenu = true;
             return from(this.accountService.get()).pipe(
                 switchMap((account: Account) => {
-                    return this.menusService.getMenu(this.menuName || '', false, account?.is_superuser);
+                    return this.menusService.getMenu(
+                        this.menuName || '',
+                        false,
+                        account?.is_superuser
+                    );
                 }),
                 tap(menu => {
                     this.baseRoute = '/docs/' + this.basePath + '/' + this.kbName + '/';
                     menu.nodes = this.menusService.cleanEmptyNodes(menu.nodes, true);
                     menu.nodes.forEach(node => this.mapParentNodeAndUrl(node));
+
                     if (this.account?.is_superuser) {
                         menu.nodes = this.menusService.addDraftAndPending(menu.nodes);
                     }

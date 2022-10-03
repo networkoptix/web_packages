@@ -1,9 +1,9 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart
-Suite Teardown    System Admin Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system
 
 *** Test Cases ***
@@ -23,7 +23,7 @@ Force Tags        system
     Element Text Should Be    //label[@for="trafficEncryptionForced"]//span    ${ALLOW ONLY SECURE TEXT}
     Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
     Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
-    Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
+    Element Text Should Be    //label[@for="sessionLimitMinutesToggle"]//span    ${LIMIT SESSION DURATION TEXT}
 
     Settings on page should match settings on server
 
@@ -49,8 +49,11 @@ Force Tags        system
     Wait Until Settings Are Visible
     Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${system['local auth']}    ${server url}     sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit
+    IF    ${status}==False
+        Evaluate System Settings via API    ${system['local auth']}    ${server url}     sessionLimitMinutes    0
+    ELSE
+        Evaluate Session Limit
+    END
 
 5. Change Time Interval And Verify on Server
     [Tags]    system settings    C65722    cloud    webadmin    threaded
@@ -77,8 +80,7 @@ Force Tags        system
 7. Systems Settings Block is Available for Administrator or Owner
     [Tags]    C69736    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
-
+    Reset Settings To Default    ${system['local auth']}    ${server url}
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Wait Until Settings Are Visible
@@ -94,10 +96,10 @@ Force Tags        system
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]     ${system}[cloud users][custom]
         Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
-        ...    //h2[contains(text(), "${system}[name]")]
+        ...    //nx-text-editable[contains(text(), "${system}[name]")]
         ...    ${DISCONNECT FROM MY ACCOUNT}
         Wait until elements are not visible
-        ...    ${SYSTEM SETTINGS FORM}
+        ...    ${SECURITY FORM}
         ...    ${SECURITY FORM}
         Log Out
     END
@@ -105,7 +107,7 @@ Force Tags        system
 9. Cancel changes in System Settings block
     [Tags]    C69738    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
@@ -123,7 +125,7 @@ Force Tags        system
 10. Moving to a different page after making changes in System Settings without saving them first
     [Tags]    C69739    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
 
     Log    Step 1
@@ -193,9 +195,11 @@ Force Tags        system
     Log    Step 8
     Reload Page
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Wait Until Element Is Visible    ${SECURITY FORM}
     FOR    ${setting}    IN    @{tested settings}
-        Checkbox Is Selected     ${setting}    ${True}
+        Wait Until Element Is Visible    ${setting}/..
+        Checkbox Should Be Selected     ${setting}
     END
 
 11. Changing All Checkboxes Works
@@ -203,7 +207,7 @@ Force Tags        system
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log    Steps 1 - 8
     Log in to system    ${system}    ${system}[owner]
@@ -215,65 +219,69 @@ Force Tags        system
 12. Changes made in the thick client are displayed in System Settings block in Cloud Portal
     [Tags]    C69741    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
-
+    Reset Settings To Default    ${system['local auth']}    ${server url}
     Log    Step 1
-    Set System Settings via API    ${system['local auth']}    ${server url}    autoDiscoveryEnabled    false
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${false}
 
     Log    Step 2
-    Set System Settings via API    ${system['local auth']}    ${server url}    autoDiscoveryEnabled    true
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-
-    Log    Step 3
-    Set System Settings via API    ${system['local auth']}    ${server url}    statisticsAllowed    false
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
-
-    Log    Step 4
-    Set System Settings via API    ${system['local auth']}    ${server url}    statisticsAllowed    true
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-
-    Log    Step 5
-    Set System Settings via API    ${system['local auth']}    ${server url}    cameraSettingsOptimization    false
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
-
-    Log    Step 6
-    Set System Settings via API    ${system['local auth']}    ${server url}    cameraSettingsOptimization    true
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-
-    Log    Step 7
-    ${settings}=   Create Dictionary    autoDiscoveryEnabled=false   statisticsAllowed=false    cameraSettingsOptimization=false
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${true}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
 
-    Log    Step 8
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+    Log    Step 3
+    ${settings}=   Create Dictionary    statisticsAllowed=${false}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
+
+    Log    Step 4
+    ${settings}=   Create Dictionary    statisticsAllowed=${true}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${true}
+
+    Log    Step 5
+    ${settings}=   Create Dictionary    cameraSettingsOptimization=${false}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
+
+    Log    Step 6
+    ${settings}=   Create Dictionary    cameraSettingsOptimization=${true}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${true}
+
+    Log    Step 7
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}   statisticsAllowed=${false}    cameraSettingsOptimization=${false}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
+
+    Log    Step 8
+    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${true}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${true}
 
 13. Checking the dependency of system settings checkboxes
     [Tags]    C69742    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
@@ -311,46 +319,53 @@ Force Tags        system
 14. Changes made in the thick client are displayed in the security block in Cloud Portal
     [Tags]    C65723    cloud    webadmin   system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log    Step 1
-    Set System Settings via API    ${system['local auth']}    ${server url}    autoDiscoveryEnabled    false
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
     Log    Step 2
-    Set System Settings via API    ${system['local auth']}    ${server url}    auditTrailEnabled    true
+    ${settings}=   Create Dictionary    auditTrailEnabled=${true}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
     Log    Step 3
-    Set System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    true
+    ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
 
     Log    Step 4
-    Set System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    true
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${true}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
 
     Log    Step 5
-    Set System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    false
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${False}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
 
     Log    Step 6
-    Set System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    false
+    ${settings}=   Create Dictionary    trafficEncryptionForced=${False}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
 
     Log    Step 7
-    Set System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    30
+    ${settings}=   Create Dictionary    sessionLimitMinutes=${30}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
@@ -358,7 +373,8 @@ Force Tags        system
     Run Keyword If    ${value} != 30    Fail
     
     Log    Step 8
-    Set System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
+    ${settings}=   Create Dictionary    sessionLimitMinutes=${0}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
@@ -366,7 +382,7 @@ Force Tags        system
 15. Security block is available for administrator or owner
     [Tags]    C65697    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log    Step 1, 2
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
@@ -390,7 +406,6 @@ Force Tags        system
     ...    ${MERGE BUTTON SYSTEM}
     ...    ${PLACEHOLDER ICON}
     ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
-    Wait Until Elements Are Not Visible    ${SYSTEM SETTINGS FORM}    ${SECURITY FORM}
     Start Docker Server    ${system}[id]
 
 #System settings block view for different System versions
@@ -425,7 +440,7 @@ Force Tags        system
 17. Cancel changes in Security block
     [Tags]    C65724    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -447,7 +462,10 @@ Force Tags        system
     Log    Step 3
     Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
     Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
-    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Sleep    1
+    ${element_xpath}=       Replace String      ${LIMIT SESSION DURATION CHECKBOX}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}         ${True}
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     ${True}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
@@ -504,7 +522,7 @@ Force Tags        system
 18. Check Limit session duration
     [Tags]    C65703    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -514,12 +532,16 @@ Force Tags        system
     Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Run Keyword If    ${value} != 30    Fail    Interval not 30 minutes as expected
+    # This is here because the save/cancel buttons get in the way in 5.0
+    ${element_xpath}=       Replace String      ${TIME DURATION INTERVAL BUTTON}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     
     Log    Step 2
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -530,14 +552,15 @@ Force Tags        system
     
     
     # Sleep    1
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 1    Fail    Interval not 1 minute as expected
     # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
@@ -547,7 +570,7 @@ Force Tags        system
     Input Text    ${TIME NUMBER INPUT}    hjkl
     Sleep    1 
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 1    Fail    Interval not 1 minute as expected
     # Click Button    ${TIME DURATION INTERVAL BUTTON}
     # Wait Until Elements Are Visible
     # ...    ${TIME DURATION SELECTION HOURS} 
@@ -568,15 +591,16 @@ Force Tags        system
     # Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1 
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 1    Fail    Interval not 1 minute as expected
     # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 5
     Clear Element Text    ${TIME NUMBER INPUT}
-    Input Text    ${TIME NUMBER INPUT}    654
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Input Text    ${TIME NUMBER INPUT}    87840
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -585,15 +609,18 @@ Force Tags        system
     Wait Until Elements Are Visible	 ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Reload Page
+    Wait Until Element Is Visible    ${TIME NUMBER INPUT}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 65    Fail    Interval not 65 minutes as expected
+    Run Keyword If    ${value} != 61    Fail    Interval not 61 days as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    65
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    87840
         
     Log    Step 6
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    1
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -605,7 +632,8 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    1
     
     Log    Step 7
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -620,7 +648,8 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    ${minutes}
     
     Log    Step added by auto qa (CLOUD-5221 found)
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -629,14 +658,15 @@ Force Tags        system
     Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 10    Fail    Interval not 10 hours as expected
+    Run Keyword If    ${value} != 25    Fail    Interval not 25 days as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    600
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    25  #default value is in days
     
     Log    Step 8
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    5
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -652,7 +682,8 @@ Force Tags        system
 19. Check HTTPS traffic encryption
     [Tags]    C65701    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    true
+    ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -673,16 +704,16 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    false
 
     Log    Step 4
-    ${resp}=   Check Connection    http://${QABURBANK IP}:${system}[port]
-    Should Be Equal As Strings    ${resp}    200
-
+    ${resp}=   Check Connection    ${server url}    verify=False
+    Should Be Equal As Strings    ${resp}    200    
+    
     Log    Step 5
     Go To    ${env}/systems/${system}[cloud id]
     Wait Until Settings Are Visible
     Change Setting And Save    ${ALLOW ONLY SECURE CHECKBOX}
 
     Log    Step 6
-    Go To    http://${QABURBANK IP}:${system}[port]
+    Go To    ${server url}
     Run keyword and continue on failure    Wait until location contains    ${server url}
 
     Log    Step 7
@@ -702,7 +733,8 @@ Force Tags        system
 #Security block view for 3 dot 2 System
 #    [Tags]    C65829    cloud    system settings    threaded
 #    Log    Preconditions
-#    Set System Settings via API    ${system['local auth']}    ${3.2 system url}    auditTrailEnabled    true
+#    ${settings}=   Create Dictionary    auditTrailEnabled=true
+#    Set System Settings via API    ${system['local auth']}    ${3.2 system url}    ${settings}
 #    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
 #
 #    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
@@ -712,7 +744,7 @@ Force Tags        system
 20. Changes in System Settings block are displayed in thick client
     [Tags]    C69740    cloud    webadmin    threaded    system settings
     Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
+    Reset Settings To Default    ${system['local auth']}    ${server url}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
 

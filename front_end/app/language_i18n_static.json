@@ -1,12 +1,41 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "For developers",
-	"Integrations (β)": "Integrations (β)",
+    "Integrations (β)": "Integrations (β)",
     "Privacy": "Privacy",
     "Support": "Support",
     "Terms": "Terms",
+    "Developers Console": "Developers Console",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
+    "alarmTypes": {
+        "Servers": "Servers",
+        "Cameras": "Cameras",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Offline",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Server",
+        "cameras": "Cameras",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Unrestricted access including the ability to share",
@@ -66,11 +95,14 @@
         }
     },
     "account": {
+        "account": "Account",
+        "key": "Key",
         "accountSavedSuccess": "Your account is successfully saved",
         "accountSettings": "Account Settings",
         "activationLinkSent": "Activation Link Sent",
-		"agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
+        "security": "Security",
         "newPasswordLabel": "New password",
         "passwordChangedSuccess": "Password successfully saved",
         "saveChanges": "Save"
@@ -80,6 +112,55 @@
         "sendConfirm": "Resend activation link",
         "setNewPassword": "Save password",
         "setNewPasswordLabel": "New password"
+    },
+    "authorize": {
+        "loginCloudHeader": "Log in to %CLOUD_NAME%",
+        "connectHeader": "Connect System to %CLOUD_NAME%",
+        "expiredHeader": "Your session has expired",
+        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
+        "connectSubheader": "To access it from anywhere and enable additional features",
+        "expiredSubheader": "Please, log in again",
+        "connectAdditional": "This account will get owner access level",
+        "createText": "Create Account",
+        "setupText": "Setup Non-cloud System",
+        "asAccountSubheader": "As",
+        "toAccountSubheader": "To",
+        "forAccountSubheader": "For {accountEmail}",
+        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
+        "passwordMerge": "to merge systems",
+        "passwordBackup": "to create backup",
+        "passwordRestore": "to restore system from backup",
+        "passwordReset": "to reset server",
+        "passwordRestart": "to restart server",
+        "passwordDetach": "to detach server",
+        "expiredAccountSubheader": "Please, log in again as",
+        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "activateHeader": "Activate %CLOUD_NAME% Account",
+        "createdText": "Account Created!",
+        "activatedText": "Account Activated!",
+        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
+        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "passResetHeader": "Reset Password",
+        "newPassHeader": "Set New Password",
+        "newPassConfirmText": "Password is set!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "confirmHeader": "System connected to %CLOUD_NAME%!",
+        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "connectErrorAdditional": "Please try again later.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "connectedText": "System connected to %CLOUD_NAME%",
+        "setupConnectedText": "System connected",
+        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
+        "copiedToClipboard": "Copied to clipboard",
+        "authCode": {
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
+            "newPass": "set a new password",
+            "login": "log in"
+        },
+        "emailSent": "Email sent!"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",
@@ -95,13 +176,13 @@
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "common": {
-        "account":{
-            "created":{
+        "account": {
+            "created": {
                 "title": "Account Created",
                 "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
-                "title" : "Account successfully activated"
+                "title": "Account successfully activated"
             }
         },
         "cameraLinks": {
@@ -129,6 +210,7 @@
             "unauthorized": "Authentication required"
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+        "copiedToClipboard": "Copied to clipboard",
         "login": "login",
         "recordingSettingsWarning": "Please update missing recording settings.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
@@ -146,6 +228,7 @@
             "low": "Low"
         },
         "general": "General",
+        "generalError": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Search",
@@ -185,7 +268,22 @@
         },
         "viewingOutdatedReport": "You are viewing an outdated report."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
+    "devConsole": {
+        "create": "Create"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+        },
         "addUser": {
             "alreadyExists": "This email has already been registered in the %systemName% system"
         },
@@ -194,6 +292,8 @@
             "createAccount": "Create New Account",
             "delete": "Delete",
             "deleteAccount": "Delete Account",
+            "disable": "Disable",
+            "enable": "Enable",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
             "ok": "OK",
@@ -252,9 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Checking...",
+            "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
@@ -277,6 +382,11 @@
                 "b_support": "support",
                 "c_proceeding": "before proceeding."
             },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+            },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server at {url}",
@@ -290,12 +400,15 @@
             "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
+            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
+            "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "Storage settings saved.",
             "storageSettingsNotSaved": "Couldn't save storage settings.",
             "settingsSaved": "Settings saved.",
@@ -318,6 +431,12 @@
                 "integration": "Get in touch with {companyName}",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "twoFactor": {
+                "required": "Two-factor authentication is required.",
+                "configure": "You can configure it in your",
+                "accountLink": "account settings",
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
@@ -325,21 +444,34 @@
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
             "title": "Disconnect System?"
         },
+        "renewAuth": {
+            "action": "Login",
+            "message": "Please log in again.",
+            "title": "Your session has expired"
+        },
         "titles": {
             "error": "Error",
             "success": "Success",
             "changeAccount": "You are already logged in as {email}",
+            "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "Delete user?",
+            "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "You will be logged in with a different account",
             "noClientDetected": "Install %VMS_NAME% to view your System",
-            "removeUser": "Remove user?",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?",
-            "changePasswordFor" : "Change Password for User \"{username}\""
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+        },
+        "twoFactor": {
+            "action": "Login",
+            "message": "Two factor authentication is enabled for this account. Please login.",
+            "title": "Two factor is required!",
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -422,8 +554,10 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
         "This user does not exist.": "This user does not exist.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
         "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -440,6 +574,7 @@
         "cantChangeAccountPrefix": "Cannot save changes",
         "cantChangePasswordPrefix": "Cannot save password",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Cannot delete System",
         "cantEditAdmin": "This user has administrator permissions",
         "cantEditYourself": "Changing own permissions is not allowed",
@@ -453,13 +588,14 @@
         "cantSharePrefix": "Cannot share System",
         "cantUnshareWithMeSystemPrefix": "Cannot delete System",
         "emailNotFound": "Account does not exist.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "You do not have permissions to perform this action",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Wrong password",
-        "badUsername":"Account not found",
+        "badUsername": "Account not found",
         "notFound": "Not found",
         "ok": "ok",
         "oldPasswordMistmatch": "Current password is incorrect.",
@@ -478,7 +614,8 @@
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Access Control",
@@ -530,10 +667,10 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "Please",
-        "b_Link": "submit a request",
-        "c_Info": "for additional questions/concerns regarding supported devices."
+        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -542,8 +679,20 @@
             "systemAdministration": "System Administration",
             "general": "General",
             "licenses": "Licenses",
-            "users": "Users"
+            "users": "Users",
+            "servers": "Servers",
+            "alerts": "Alerts",
+            "systems": "System",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Type",
+        "server": "Server",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "About",
@@ -552,11 +701,13 @@
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% for ",
+        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Failed to access system",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
@@ -571,8 +722,11 @@
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "View cameras",
-        "apiTool": "API testing tool"
+        "apiTool": "API testing tool",
+        "security": "Security",
+        "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
@@ -587,7 +741,7 @@
         "good": "good",
         "minLength": "too short",
         "minLengthMessage": "Password must contain at least 8 characters",
-        "missingMessage": "Password is required",
+        "missingMessage": "Required",
         "required": "incorrect",
         "requiredMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
         "strongMessage": "Strong password!",
@@ -610,6 +764,14 @@
         "server": {
             "title": "Server not accessible",
             "message": "System is offline and hence, servers are not accessible."
+        },
+        "noSystemApiTool": {
+            "title": "No Valid System Found",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "System failed to load",
+            "message": ""
         }
     },
     "pleaseSelect": "Please select...",
@@ -632,6 +794,10 @@
             "backToEditText": "Back to the editing interfaces",
             "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
             "publishedRibbon": "This page is the live version that is publicly available."
+        },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "System is offline. Some settings may not be available.",
         "systemsMerging": "This system is currently involved in a merge operation."
@@ -680,7 +846,9 @@
     "serverTabTitles": {
         "View": "View",
         "Settings": "Settings",
-        "Information": "Information"
+        "Information": "Information",
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connected",
@@ -694,7 +862,8 @@
             "notAbleToLoadSystem": "Not able to load system settings.",
             "sessionLimitDuration": {
                 "hours": "hours",
-                "minutes": "minutes"
+                "minutes": "minutes",
+                "days": "days"
             },
             "warningMessages": {
                 "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
@@ -741,7 +910,8 @@
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "activated",
@@ -755,9 +925,12 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",
         "system": {
-            "deleted" :{
+            "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
@@ -774,6 +947,59 @@
             "rename": {
                 "success": "System name saved"
             }
+        },
+        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Info",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Servers",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Users",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "Status",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "OS",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
         }
     },
     "headerLabels": {
@@ -792,7 +1018,8 @@
             "Starter": "Starter",
             "IO Module": "IO Module",
             "Bridge": "Bridge",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Type",
@@ -814,6 +1041,13 @@
             "activated": "License key activated",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -913,6 +1147,15 @@
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
+            "systemsRemainder": "and {count} more...",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
+            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Main storage reindexing completed",
@@ -930,7 +1173,7 @@
             "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage" : "Delete External Storage?",
+        "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
         "invalidPath": "Invalid storage path.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
@@ -942,5 +1185,100 @@
         "serverOffline": "Failed to add external storage - server doesn't respond",
         "success": "External storage added",
         "urlPlaceholder": "\/\/<Computer Name>\/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Cloud Portal",
+            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+        },
+        "/systems": {
+            "title": "Systems - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+        }
+    },
+    "maintenance": {
+        "description": "We are working on some improvements and brand new features."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Sun",
+                "Mon": "Mon",
+                "Tue": "Tue",
+                "Wed": "Wed",
+                "Thu": "Thu",
+                "Fri": "Fri",
+                "Sat": "Sat",
+                "Sunday": "Sunday",
+                "Monday": "Monday",
+                "Tuesday": "Tuesday",
+                "Wednesday": "Wednesday",
+                "Thursday": "Thursday",
+                "Friday": "Friday",
+                "Saturday": "Saturday"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Mar",
+                "Apr": "Apr",
+                "May": "May",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Aug",
+                "Sep": "Sep",
+                "Oct": "Oct",
+                "Nov": "Nov",
+                "Dec": "Dec",
+                "January": "January",
+                "February": "February",
+                "March": "March",
+                "April": "April",
+                "June": "June",
+                "July": "July",
+                "August": "August",
+                "September": "September",
+                "October": "October",
+                "November": "November",
+                "December": "December"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "am",
+                "pm": "pm",
+                "A": "A",
+                "P": "P",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

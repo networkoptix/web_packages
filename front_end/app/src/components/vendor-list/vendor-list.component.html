@@ -2,7 +2,7 @@
 
 <nx-block *ngIf="vendors" id="vendors">
     <header>
-        {{ allVendors.length }} <span translate>manufacturers</span>
+        <h4>{{ allVendors.length }} <span translate>manufacturers</span></h4>
     </header>
 
     <nx-section>
@@ -12,6 +12,7 @@
             <nx-tag element="btn"
                     size="large"
                     link="/ipvd"
+                    static
                     [linkParam]="{vendors: vendor.name}"
                     [value]="null">{{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
             </nx-tag>
@@ -25,7 +26,7 @@
 
 <nx-block *ngIf="cameras" id="cameras">
     <header>
-        <span>{{ cameras }} </span><span translate>devices</span>
+        <h4>{{ cameras }} <span translate>devices</span></h4>
     </header>
 
     <nx-section>

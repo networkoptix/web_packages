@@ -6,7 +6,7 @@
 }
 
 .brand-text {
-    color: theme_variables.$brand_core !important;
+    color: var(--brand-core) !important;
 }
 
 .ellipsis {

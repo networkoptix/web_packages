@@ -1,89 +1,84 @@
-import { NgModule }                  from '@angular/core';
-import { CommonModule }              from '@angular/common';
-import { RouterModule, Routes }      from '@angular/router';
-import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }           from '@ngx-translate/core';
-import { ComponentsModule }          from '@components/components.module';
-import {
-    ApplyGuard, AuthGuard, SystemGuard
-}                                    from '../../../routeGuards';
-import { MenuModule }                from '@src/menu';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+
+import { ComponentsModule } from '@components/components.module';
+import { TwofaGuard } from '@guards/twofaGuard';
+import { MenuModule } from '@src/menu';
+import { PipesModule } from '@src/pipes/pipes.module';
+import { ApplyGuard, AuthGuard } from '@src/routeGuards';
+
+import { NxSystemAdminComponent } from './admin/admin.component';
+import { NxSystemAdminModule } from './admin/admin.module';
+import { NxCamerasComponent } from './cameras/cameras.component';
+import { NxCamerasModule } from './cameras/cameras.module';
+import { NxCloudStorageComponent } from './cloud-storage/cloud-storage.component';
+import { NxCloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { NxSystemLicensesComponent } from './licenses/licenses.component';
-import { NxSystemLicensesModule }    from './licenses/licenses.module';
+import { NxSystemLicensesModule } from './licenses/licenses.module';
+import { NxSystemServersComponent } from './servers/servers.component';
+import { NxSystemServersModule } from './servers/servers.module';
 import { NxSystemSettingsComponent } from './settings.component';
-import { NxSystemAdminComponent }    from './admin/admin.component';
-import { NxSystemUsersComponent }    from './users/users.component';
-import { NxSystemServersComponent }  from './servers/servers.component';
-import { NxCamerasComponent }        from './cameras/cameras.component';
-import { NxCloudStorageComponent }   from './cloud-storage/cloud-storage.component';
-import { NxSystemAdminModule }       from './admin/admin.module';
-import { NxSystemUsersModule }       from './users/users.module';
-import { NxSystemServersModule }     from './servers/servers.module';
-import { NxCamerasModule }           from './cameras/cameras.module';
-import { NxCloudStorageModule }      from './cloud-storage/cloud-storage.module';
-import { NxSettingsService }         from './settings.service';
-import { PipesModule }               from '@src/pipes/pipes.module';
+import { NxSettingsService } from './settings.service';
+import { NxSystemUsersComponent } from './users/users.component';
+import { NxSystemUsersModule } from './users/users.module';
 
 export const cloudSettingsRoutes: Routes = [
     {
-        path        : '',
-        component   : NxSystemSettingsComponent,
-        canActivate : [AuthGuard],
-        children    : [
+        path: '',
+        component: NxSystemSettingsComponent,
+        canActivate: [AuthGuard, TwofaGuard],
+        children: [
             {
-                path          : '',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard]
+                path: '',
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'advanced',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'advanced',
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'users',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'users',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'users/:userId',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'users/:userId',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'servers',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'servers',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'servers/:serverId',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'servers/:serverId',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'cameras',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'cameras',
+                component: NxCamerasComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'cameras/:cameraId',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'cameras/:cameraId',
+                component: NxCamerasComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'cloud-storage',
-                component     : NxCloudStorageComponent,
-                canActivate   : [SystemGuard],
-                canDeactivate : [ApplyGuard]
+                path: 'cloud-storage',
+                component: NxCloudStorageComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path        : 'licenses',
-                component   : NxSystemLicensesComponent,
-                canActivate : [SystemGuard]
+                path: 'licenses',
+                component: NxSystemLicensesComponent
             }
         ]
     }

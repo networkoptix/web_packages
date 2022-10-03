@@ -12,3 +12,13 @@ Resource     front-end-variables/ipvd-variables.robot
 Resource     front-end-variables/integrations-variables.robot
 Resource     front-end-variables/header-variables.robot
 Resource     front-end-variables/system-settings-menu-variables.robot
+Resource     front-end-variables/2fa-variables.robot
+Resource     front-end-variables/view-page-variables.robot
+Resource     front-end-variables/account-variables.robot
+Resource     front-end-variables/footer-variables.robot
+Resource     front-end-variables/login-variables.robot
+Resource     front-end-variables/system-users-variables.robot
+Resource     front-end-variables/activate-variables.robot
+Resource     front-end-variables/downloads-variables.robot
+Resource     front-end-variables/history-variables.robot
+Resource     front-end-variables/integrations-getintouch-form-validation-variables.robot

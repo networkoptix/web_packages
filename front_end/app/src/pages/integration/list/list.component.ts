@@ -1,18 +1,21 @@
 import {
-    Component, OnDestroy,
-    Input, SimpleChanges, OnChanges
-}                                    from '@angular/core';
-import { BehaviorSubject }           from 'rxjs';
+    Component,
+    OnDestroy,
+    Input,
+    SimpleChanges,
+    OnChanges
+} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
-import { NxRibbonService }           from '../../../components/ribbon';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
-    selector    : 'integrations-list-component',
-    templateUrl : 'list.component.html',
-    styleUrls   : ['list.component.scss']
+    selector: 'integrations-list-component',
+    templateUrl: 'list.component.html',
+    styleUrls: ['list.component.scss']
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
@@ -62,9 +65,9 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.ribbonService.show(
             this.LANG.ribbon.integration.previewRibbon?.(),
             [{
-                type  : 'link',
-                text  : this.LANG.ribbon.integration.backToEditText?.(),
-                value : this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
+                type: 'link',
+                text: this.LANG.ribbon.integration.backToEditText?.(),
+                value: this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
             }]
         );
     }

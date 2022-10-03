@@ -1,20 +1,24 @@
 import {
-    Component, OnInit, Input,
-    ViewEncapsulation, OnDestroy
-}                                    from '@angular/core';
-import { Router }                    from '@angular/router';
+    Component,
+    OnInit,
+    Input,
+    ViewEncapsulation,
+    OnDestroy
+} from '@angular/core';
+import { Router } from '@angular/router';
 
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxProcessService, Process } from '../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxUrlProtocolService } from '@services/url-protocol.service';
 
 @Component({
-    selector     : 'nx-client-button',
-    templateUrl  : 'client-button.component.html',
-    styleUrls    : ['client-button.component.scss'],
+    selector: 'nx-client-button',
+    templateUrl: 'client-button.component.html',
+    styleUrls: ['client-button.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
@@ -30,13 +34,16 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     canceled: boolean;
     modalActive: boolean;
     openClient: Process;
+    account: Account;
 
-    constructor(configService: NxConfigService,
-                private processService: NxProcessService,
-                private urlProtocol: NxUrlProtocolService,
-                private language: NxLanguageProviderService,
-                private dialogs: NxDialogsService,
-                private router: Router
+    constructor(
+        configService: NxConfigService,
+        private processService: NxProcessService,
+        private urlProtocol: NxUrlProtocolService,
+        private language: NxLanguageProviderService,
+        private dialogs: NxDialogsService,
+        private accountService: NxAccountService,
+        private router: Router,
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
@@ -48,12 +55,21 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.accountService.get().then((account: Account) => {
+            if (account) {
+                this.account = account;
+            }
+        });
+
         this.modalActive = false;
         this.canceled = false;
 
         this.openClient = this.processService.createProcess(() => {
+            if (this.account.account2faEnabled && !this.system.useRest) {
+                return this.dialogs.client2faWarning();
+            }
             return this.urlProtocol
-                .open(this.system && this.system.id);
+                .open(this.system && this.system.id, this.system.useRest);
         }, {
             errorCodes: {
                 notVisited: () => false

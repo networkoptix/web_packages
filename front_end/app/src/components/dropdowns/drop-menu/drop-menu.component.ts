@@ -1,23 +1,29 @@
-/* eslint-disable camelcase */
 import {
-    Component, Input, SimpleChanges
-}                          from '@angular/core';
-import { UntilDestroy }    from '@ngneat/until-destroy';
+    Component,
+    Input,
+    SimpleChanges
+} from '@angular/core';
+import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
-import { BaseDropdown }              from '../injDropdown';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
+import { NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService }           from '@services/nx-config';
-import { NxUriService }              from '@services/uri.service';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { NxMenusService, MenuNode }  from '@services/menus.service';
-import { NxAccountService }          from '@services/account.service';
+import { NxUriService } from '@services/uri.service';
 
-@UntilDestroy({ checkProperties: true })
+import { BaseDropdown } from '../injDropdown';
+
+@UntilDestroy()
 @Component({
-    selector    : 'nx-drop-menu',
-    templateUrl : 'drop-menu.component.html',
-    styleUrls   : ['drop-menu.component.scss']
+    selector: 'nx-drop-menu',
+    templateUrl: 'drop-menu.component.html',
+    styleUrls: ['drop-menu.component.scss']
 })
 export class NxDropMenu extends BaseDropdown {
     @Input() endpoint: any = {};
@@ -31,10 +37,10 @@ export class NxDropMenu extends BaseDropdown {
 
     systemCounter: number;
     active = {
-        health   : false,
-        register : false,
-        settings : false,
-        view     : false
+        health: false,
+        register: false,
+        settings: false,
+        view: false
     };
 
     params: any;
@@ -42,17 +48,50 @@ export class NxDropMenu extends BaseDropdown {
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
+        private router: Router,
         private uriService: NxUriService,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
     ) {
         super(languageService, configService);
-        this.menusService.currentSystemNode$.subscribe(_ => {
-            this.menusService.getMenu('header', this.systems$.value.length >= 1)
-                .subscribe(header => this.menuNodes$.next(this.menusService.cleanEmptyNodes(header.nodes)));
-        });
+        this.menusService.currentSystemNode$
+            .pipe(
+                untilDestroyed(this)
+            )
+            .subscribe(_ => {
+                this.menusService.getMenu('header', this.systems$.value.length >= 1)
+                    .pipe(
+                        untilDestroyed(this)
+                    )
+                    .subscribe(header => {
+                        const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                        if (environment.isLocal) {
+                            this.replaceCloudHost(nodes);
+                        }
+                        this.menuNodes$.next(nodes);
+                    });
+            });
+
+        this.router
+            .events
+            .pipe(
+                untilDestroyed(this),
+                filter(event => event instanceof ActivationEnd ||
+                    event instanceof NavigationCancel
+                )
+            )
+            .subscribe(() => {
+                this.headerService.show$ = false;
+            });
     }
+
+    replaceCloudHost(nodes) {
+        nodes.forEach(node => {
+            node.url = node.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
+            this.replaceCloudHost(node.nodes);
+        });
+    };
 
     trackItem(index, item) {
         return item ? item.id : undefined;
@@ -94,18 +133,27 @@ export class NxDropMenu extends BaseDropdown {
     updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false) {
         this.headerService.show$ = false;
         this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home)).then(() => {
-            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            const activeSystem = this.headerService.activeSystem ||
+                this.headerService.lastActive$.value ||
+                this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem);
         });
     }
 
     async ngOnChanges(changes: SimpleChanges) {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
-            const { reply: { isAdmin } }: any = await (this.CONFIG.isLocal
-                ? this.accountService.mediaServerApi.getCurrentUser(true)
-                : Promise.resolve({ reply: { isAdmin: false } }));
+            // Todo: Fix so that it checks for admin correctly.
+            let user: any;
+            if (environment.isLocal) {
+                user = await this.accountService.mediaServerApi.getCurrentUser(true);
+            } else {
+                user = await this.accountService.get(true);
+            }
+            const isAdmin = user?.permissions?.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
-            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            const activeSystem = this.headerService.activeSystem ||
+                this.headerService.lastActive$.value ||
+                this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);
         }
         this.systemCounter = this.systems && this.systems.length;

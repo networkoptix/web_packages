@@ -1,13 +1,8 @@
 *** Settings ***
-Library    SSHLibrary
-Resource    ../../resource.robot
-Library    ../../NoptixLibrary/CloudPortalAPI.py
-*** Keywords ***
-Start up
-    [Arguments]    ${url}
-    Reset All Cameras
-    Open Browser and go to URL    ${url}
+Resource          ../../resource.robot
+Resource          system-user-resource.robot
 
+*** Keywords ***
 Reset cameras and log out
     Common Restart Logout    ${url}
 
@@ -24,8 +19,11 @@ Verify on Cameras Page
     ...    ${ROTATION DROPDOWN}
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
-    ...    ${RECORDING CHECK BOX}
     ...    timeout=65
+    IF    '${IMAGE}' != '${IMAGE 5.0}'    # need to remove IF statment once recording setting available for 5 version
+        Wait Until Element Is Visible     ${RECORDING CHECK BOX}
+    END
+    
 
 Verify Authentication Form
     Wait Until Elements are Visible
@@ -128,9 +126,9 @@ Add Software Camera
 
 Create And Add Custom Camera User Type and User
     ${user}=    Register and activate account with random email    mark     hamill    ${BASE PASSWORD}
-    ${role id}=   Save User Role    ${system}[cloud auth]    http://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
+    ${role id}=   Save User Role    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
     #Rest Save User     ${system}[local auth]    h${QA BURBANK IP}:${system}[port]    ${user}    Custom Cameras    ${user}    mark Hamill    ${BASE PASSWORD}
-    Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}
+    Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}    ${permissions}[viewer]
     ${id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]
     @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${system['port']}    ${local auth}
     &{custom permissions}=   Get Custom Permissions    ${custom roles}    Custom Cameras
@@ -147,4 +145,123 @@ Take Camera Offline
 Bring Camera Online
     [Documentation]    Brings the camera back online by removing the blacklisting of its IP on the docker server
     [Arguments]    ${docker name}    ${Camera IP}
-    Execute Command Remotely    docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
+    Execute Command Remotely   docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
+
+Camera Suite Setup
+    #system(name,port,cont,owner,id) 
+    #local auth, cloud auth, server url, 
+    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
+    ${random}=   Generate Random String
+    #Create Base Cloud System    cameras${random}
+    ${owner}=    Register and activate account with random email    mark    hamill    ${password}
+    ${system}     Create Base System    cameras-${random}    owner=${owner}
+    ${system2}    Create Base System    cameras2-${random}    owner=${owner}
+    ${system3}    Create Base System    cameras3-${random}    owner=${owner}
+    Set Suite Variable    ${system}
+    Set Suite Variable    ${system2}
+    Set Suite Variable    ${system3}
+
+    #Log To Console    starting software cam offline
+    #Open Connection    ${QA BURBANK IP}
+    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    #${camera port}=   Get Random Available Port
+    #Close Connection
+    #
+    #Start Software Camera    ${system}[port]    ${camera port}
+    #
+    #Add Software Camera    ${system}[port]    ${camera port}    offline
+    #Sleep    15
+    #Open Connection    ${QA BURBANK IP}
+    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    #${pid}    Execute Command    pgrep -f "port ${camera port}"
+    #Execute Command    kill -9 ${pid}
+    #Close Connection
+    #
+    #Open Connection    ${QA BURBANK IP}
+    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    #${camera port2}=   Get Random Available Port
+    #Close Connection
+    #Start Software Camera    ${system}[port]    ${camera port2}
+    #Add Software Camera    ${system}[port]    ${camera port2}    unauth
+    #Sleep    15
+    #Open Connection    ${QA BURBANK IP}
+    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    #${pid}    Execute Command    pgrep -f "port ${camera port2}"
+    #Execute Command    kill -9 ${pid}
+    #Start Command    camera-venv/bin/python -m software_cameras --port ${camera port2} --user jim --password henson
+    #Close Connection
+    #Sleep    15
+    #
+    #Open Connection    ${QA BURBANK IP}
+    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    #${camera port3}=   Get Random Available Port
+    #Close Connection
+    #Start Software Camera    ${system}[port]    ${camera port3}
+    #Add Software Camera    ${system}[port]    ${camera port3}    online
+    #Sleep    30
+    
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    http://192.168.0.27    ${system}[local auth]    manufacturer=Sony    #SNC-XM636
+    Add Camera    https://${QA BURBANK IP}:${system2}[port]    admin    QAbur777$    00-16-6C-7F-65-67    http://192.168.0.206     ${system}[local auth]    manufacturer=Hanwha_Sunapi    #SND-6084
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    http://192.168.0.201    ${system}[local auth]    manufacturer=Sony    #SNC-CH120
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    http://192.168.0.208    ${system}[local auth]    manufacturer=Sony    #SNC-DH120T
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        78-84-3C-0F-82-76    http://192.168.0.209    ${system}[local auth]    manufacturer=Sony    #SNC-CH280 not connected
+    Sleep    50
+    ${camera id}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+    ${camera id2}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-DH120T    id
+    ${camera id3}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-CH120    id
+    ${camera id4}=   Get Camera Attribute By Camera Name    ${system2}[local auth]    https://${QA BURBANK IP}:${system2}[port]    SND-6084    id
+
+    IF    '${IMAGE}' == '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id}    cameraName    good cam    ${system camera auth1}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    cameraName    unauth cam    ${system camera auth2}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    cameraName    offline cam    ${system camera auth3}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system2}[port]    ${system2}[local auth]    ${camera id4}    cameraName    no license cam    ${system camera auth4}
+        ${data}=   evaluate    json.loads('''[{"name": "credentials", "value": "test:test", "resourceId": "${camera id2}"}]''')
+        Set All Camera Add Params    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
+        
+    ELSE    #Set model values should be removed once VMS-31816 issue will be resolved
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id}    name    good cam    ${system camera auth1}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id}    model    SNC-XM636    ${system camera auth1}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    name    unauth cam    ${system camera auth2}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    model    SNC-DH120T    ${system camera auth2}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    name    offline cam    ${system camera auth3}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    model    SNC-CH120    ${system camera auth3}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system2}[port]    ${system2}[local auth]    ${camera id4}    name    no license cam    ${system camera auth4}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system2}[port]    ${system2}[local auth]    ${camera id4}    model    SND-6084    ${system camera auth4}
+    END
+    
+
+    ${custom cameras}=    Create And Add Custom Camera User Type and User
+    Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
+    Sleep    30
+    Restart Docker Servers    ${system}[name]
+    Sleep    90
+    # Stop Docker Server    ${system2}[id]
+    ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
+    Set Suite Variable    ${no perm}    ${no perm}
+    Set Suite Variable    ${custom cameras}    ${custom cameras}
+    Open Browser and go to URL    ${url}
+    #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
+    #...    ELSE    Web Admin Suite Setup
+    Take Camera Offline    ${system}[name]    192.168.0.201
+    Log To Console    ${system}[port]
+
+Camera Test Setup    
+    [Arguments]    ${user}=${system}[owner]    ${system}=${system}[cloud id]
+    Log in to user and system    ${user}    ${system}
+    Sleep    5
+    Go To Cameras
+
+Offline Server Test Setup
+    Stop Docker Server    ${system3}[name]
+    Camera Test Setup    user=${system3}[owner]    system=${system3}[cloud id]
+
+Camera Suite Teardown
+    Delete Base System    ${system}
+    Delete Base System    ${system2}
+    Delete Base System    ${system3}
+    Close All Browsers
+
+Set Radio Value
+    [Arguments]    ${element}    ${value}
+    ${current value}=   Get Element Attribute    ${element}    value

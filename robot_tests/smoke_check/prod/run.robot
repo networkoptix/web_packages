@@ -30,9 +30,9 @@ Smoke Check Teardown
 
 *** Test Cases ***
 Add users and licenses to the systems
-    ${system 1 admin}=   Get Random Email    ${email base}
-    ${system 2 adviewer}=   Get Random Email    ${email base}
-    ${common user}=      Get Random Email    ${email base}
+    ${system 1 admin}=   Get Random Email Robot    ${email base}
+    ${system 2 adviewer}=   Get Random Email Robot    ${email base}
+    ${common user}=      Get Random Email Robot    ${email base}
     Set Suite Variable    ${system 1 admin}    ${system 1 admin}
     Set Suite Variable    ${system 2 adviewer}    ${system 2 adviewer}
     Set Suite Variable    ${common user}    ${common user}
@@ -125,8 +125,8 @@ Merge systems and check the users and the licenses
 
 Add and delete users
     # Add new - portal
-    ${new cloud user}=   Get Random Email    ${email base}
-    Share    ${cloud owner auth}    ${system 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}
+    ${new cloud user}=   Get Random Email Robot    ${email base}
+    Share    ${cloud owner auth}    ${system 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}     ${permissions}[liveViewer]
 
     # Delete existing - relay
     ${data}=   Create Dictionary    id=${del user id}

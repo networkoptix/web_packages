@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-server-resource.robot
+
 *** Keywords ***
 Merge Suite Setup
     Open Browser and go to url    ${ENV}
@@ -6,11 +10,6 @@ Merge Suite Setup
     Set Suite Variable    ${custom net id 1}    ${id}
     ${id}=   Create Custom Network    custom2   2
     Set Suite Variable    ${custom net id 2}    ${id}
-
-Merge Test Restart
-    Remove Test Containers
-    Close All Browsers
-    Open Browser and go to url    ${ENV}
 
 Merge Test Setup
     Go To    ${ENV}
@@ -40,18 +39,21 @@ Validate Check Merge Dialog
     ...    ${MERGE SYSTEMS HEADER}
     ...    ${MERGE X BUTTON}
     ...    ${MERGE NEXT BUTTON}
-    Run Keyword If    ${lonely}    Wait Until Elements Are Visible
-    ...    ${MERGE FORM SERVER URL LABEL}
-    ...    ${MERGE FORM SERVER URL INPUT}
-    ...    ${MERGE ENTER THE ADDRESS}
-    ...    ELSE    Wait Until Elements are Visible
+    IF    ${lonely}
+        Wait Until Elements Are Visible
+        ...    ${MERGE FORM SERVER URL LABEL}
+        ...    ${MERGE FORM SERVER URL INPUT}
+        ...    ${MERGE ENTER THE ADDRESS}
+    ELSE
+        Wait Until Elements are Visible
         ...    ${MERGE CURRENT SYSTEM WITH}
         ...    ${MERGE SYSTEM DROPDOWN}
+    END
 
 Validate Admin Password Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${MERGE X BUTTON}
-    ...    ${MERGE GO BACK BUTTON}
+    #...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE NEXT BUTTON}
     ...    ${MERGE ADMIN FORM LOGIN LABEL}
     ...    ${MERGE ADMIN FORM LOGIN INPUT}
@@ -68,8 +70,8 @@ Validate Choose Primary Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${MERGE SYSTEMS HEADER}
     ...    ${MERGE X BUTTON}
-    ...    ${MERGE TAKE SYSTEM NAME}
-    ...    ${MERGE GO BACK BUTTON}
+    #...    ${MERGE TAKE SYSTEM NAME}
+    #...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE NEXT BUTTON}
     Run Keyword If    ${from target}    Wait Until Elements Are Visible
         ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem" and text()="${system 1}"]//span[@class="check unchecked"]
@@ -123,7 +125,7 @@ Validate Merge
 #    I beg you, devs, please, stop changing texts
     ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
     ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
-    Run keyword and continue on failure    Check For Alert    ${s}
+    Run keyword and continue on failure    Check For Alert    ${s}    timeout=120
 
 Validate System and Server Merge
     [Arguments]    ${system}    ${server}
@@ -137,15 +139,21 @@ Choose System From Dropdown
     ...    ${input url}=${EMPTY}
     ...    ${check url}=${False}
 
-    Slow    Click Button    ${MERGE SYSTEM DROPDOWN}    timeout=0.5
+    Slow    Click Button    ${MERGE SYSTEM DROPDOWN}    timeout=1
     ${menu shown}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${MERGE SYSTEMS MENU}    timeout=10
-    Run Keyword Unless    ${menu shown}    Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
+    IF    ${menu shown} == ${False}
+        Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
+    END
     Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
     Slow    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]    timeout=0.5
-    Run Keyword Unless     ${check url}==${False}    Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
+    IF    ${check url}==${True}
+        Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
+    END
     ${url placeholder}=   Run Keyword If    ${check url}==${True}    Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
     Run Keyword If    ${check url}==${True}    Should Be Equal As Strings    ${url placeholder}    host:port
-    Run Keyword Unless    '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${input url}
+    IF    '${input url}'!='${EMPTY}'
+        Input Text    ${MERGE FORM SERVER URL INPUT}    ${input url}
+    END
 
 Choose Primary System
     [Arguments]    ${from target}=${False}

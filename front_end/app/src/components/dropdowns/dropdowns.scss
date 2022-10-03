@@ -102,6 +102,14 @@ header {
         }
     }
 
+    &.display-only {
+        pointer-events: none;
+        .arrow-flip {
+            display: none;
+        }
+    }
+
+
     .dropdown-toggle {
         display          : flex !important;
         justify-content  : flex-start;
@@ -287,6 +295,27 @@ header {
         height     : auto !important;
         margin     : 4px 12px;
         border-top : 1px solid $light6;
+    }
+
+    &-api-tool {
+        background-color: $light4;
+        .btn.btn-dropdown-toggle {
+            font-size: rem(14px) !important;
+        }
+        .dropdown-menu {
+            background-color: $light4;
+            .dropdown-item-container .dropdown-item {
+                font-size: rem(14px) !important;
+                &:hover:not(.selected) {
+                    background-color : $light5 !important;
+                }
+                &.selected {
+                    .item-icon .storage-cloud,.api-icon {
+                            fill: $light1;
+                        }
+                }
+            }
+        }
     }
 }
 

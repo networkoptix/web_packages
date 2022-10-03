@@ -8,11 +8,11 @@ export enum LogLevel {
 }
 
 const defaultConfig = {
-    logProduction   : false,
-    logIdentifier   : 'No logIdentifier provided in config',
-    logLevel        : LogLevel.LOG,
-    logLoggerObject : false,
-    prettyPrint     : true
+    logProduction: false,
+    logIdentifier: 'No logIdentifier provided in config',
+    logLevel: LogLevel.LOG,
+    logLoggerObject: false,
+    prettyPrint: true
 };
 
 export class LoggerConfig {
@@ -109,15 +109,15 @@ export class NxLogger<T> {
 
     #prettyPrint = ({ logged, trace }, logLevel, identifier) => {
         const logBackground = {
-            error : 'red',
-            info  : 'green',
-            log   : 'cyan'
+            error: 'red',
+            info: 'green',
+            log: 'cyan'
         };
 
         const logColor = {
-            error : 'white',
-            info  : 'white',
-            log   : 'navy'
+            error: 'white',
+            info: 'white',
+            log: 'navy'
         };
         const background = logBackground[logLevel];
         const color = logColor[logLevel];

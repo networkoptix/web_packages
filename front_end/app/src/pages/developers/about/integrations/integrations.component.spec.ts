@@ -1,25 +1,31 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxIntegrationsComponent } from './integrations.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { WINDOW } from '@services/window-provider';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import {
+    getMockTranslations,
+    HelperMockProvider,
+    sanitizerMock
+} from '../../../../_mocks/helpers.test';
 import {
     integrationsNode
 } from '../../../../_mocks/knowledge_base_landing.mock';
-import { getMockTranslations, MockProvider, sanitizerMock, TranslateTestingModule } from '../../../../_mocks/helpers.test';
-import { Router } from '@angular/router';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxCloudApiService } from '../../../../services/nx-cloud-api';
-import { DomSanitizer } from '@angular/platform-browser';
-import { BehaviorSubject } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { PipesModule } from '@src/pipes/pipes.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 
-describe('For Developers Landing - Integrations Node', () => {
+import { NxIntegrationsComponent } from './integrations.component';
+
+describe('NxIntegrationsComponent', () => {
     let component: NxIntegrationsComponent;
     let fixture: ComponentFixture<NxIntegrationsComponent>;
     let el: DebugElement;
@@ -59,8 +65,8 @@ describe('For Developers Landing - Integrations Node', () => {
         const additionalPlugins = block.querySelector('.more-span > p > strong').innerText;
         const firstPluginBlock = block.querySelector('.integration-block');
         const firstPlugin = {
-            altText : firstPluginBlock.querySelector('img').alt,
-            iconSrc : firstPluginBlock.querySelector('img').src
+            altText: firstPluginBlock.querySelector('img').alt,
+            iconSrc: firstPluginBlock.querySelector('img').src
         };
         return { title, button, additionalPlugins, shownPlugins, firstPlugin };
     };
@@ -68,19 +74,19 @@ describe('For Developers Landing - Integrations Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxIntegrationsComponent, RouterLinkDirectiveStub],
-                imports      : [
+                declarations: [NxIntegrationsComponent, RouterLinkDirectiveStub],
+                imports: [
                     PipesModule,
                     CommonModule,
                     NgbModule,
-                    TranslateTestingModule
+                    TranslateModule.forRoot()
                 ],
-                providers    : [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(WINDOW, {}),
-                    new MockProvider(NxCloudApiService, cloudApiMock),
-                    new MockProvider(DomSanitizer, sanitizerMock)
+                providers: [
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    new HelperMockProvider(WINDOW, {}),
+                    new HelperMockProvider(NxCloudApiService, cloudApiMock),
+                    new HelperMockProvider(DomSanitizer, sanitizerMock)
                 ]
             });
 
@@ -137,16 +143,5 @@ describe('For Developers Landing - Integrations Node', () => {
 
     it('should show the correct plugin icon', () => {
         expect(pluginsBlock.firstPlugin.iconSrc).toBe(firstPluginNode.asset.information.logo);
-    });
-
-    it('should show correct tooltip on hover', async() => {
-        const block = el.nativeElement.querySelector('.integration-block');
-        block.dispatchEvent(new MouseEvent('mouseenter'));
-        await fixture.whenStable();
-        fixture.detectChanges();
-        const tooltip = el.nativeElement.querySelector('ngb-tooltip-window');
-        expect(tooltip.innerText).toBe(firstPluginNode.asset.information.shortDescription.trim());
-        block.dispatchEvent(new MouseEvent('mouseleave'));
-        await fixture.whenStable();
     });
 });

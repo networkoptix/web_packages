@@ -1,5 +1,10 @@
 import {
-    Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 /* Usage
@@ -16,10 +21,10 @@ import {
 */
 
 @Component({
-    selector     : 'nx-section',
-    templateUrl  : 'section.component.html',
+    selector: 'nx-section',
+    templateUrl: 'section.component.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls    : ['section.component.scss']
+    styleUrls: ['section.component.scss']
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
@@ -27,7 +32,7 @@ export class NxContentBlockSectionComponent implements OnInit {
 
     haveSubheader: boolean;
 
-    @ViewChild('subHeaderWrapper', { static: true }) subHeaderWrapper: ElementRef;
+    @ViewChild('subHeaderWrapper', { static: true }) subHeaderWrapper: ElementRef<HTMLDivElement>;
 
     constructor() {
         // this.haveSubheader = true;
@@ -36,6 +41,7 @@ export class NxContentBlockSectionComponent implements OnInit {
     ngOnInit() {
         this.type = this.type || '';
         this.nonPadded = (this.nonPadded !== undefined);
-        this.haveSubheader = (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
+        this.haveSubheader =
+            (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
     }
 }

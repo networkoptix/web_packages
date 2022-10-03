@@ -1,0 +1,20 @@
+:host {
+    display: grid;
+    max-width: 1440px;
+    grid-template-columns: 3fr 9fr;
+    grid-template-areas: "menu content";
+
+    @media screen and (max-width: 992px) {
+        grid-template-columns: 4fr 8fr;
+    }
+
+    @media screen and (max-width: 768px){
+        grid-template-columns: 100%;
+        grid-template-areas: 
+            "menu"
+            "content";
+        console-table {
+            padding-top: 0 !important;
+        }
+    }
+}

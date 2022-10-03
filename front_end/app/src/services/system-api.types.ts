@@ -216,6 +216,22 @@ interface PredefinedRoles {
 };
 interface ec2PredefinedRoles extends Array<PredefinedRoles> {};
 
+export interface User {
+    canBeEdited: boolean;
+    canBeDeleted: boolean;
+    email: string;
+    id: string;
+    isCloud: boolean;
+    isAdmin?: boolean;
+    isEnabled: boolean;
+    userRoleId: string;
+    permissions: string;
+    // TODO: Remove the trash below after #VMS-2968
+    name: string;
+    fullName: string;
+    username?: string;
+}
+
 interface Users {
     cryptSha512Hash: string,
     digest: string,
@@ -645,7 +661,13 @@ export enum EventTypes {
    ANY_CAMERA='AnyCameraEvent',
    ANY_SERVER='AnyServerEvent',
    ANY_BUSINESS='AnyBusinessEvent',
-   ANY_USER_DEFINED='UserDefinedEvent'
+   SOFT_TRIGGER = 'softwareTriggerEvent',
+   ANALYTICS = 'analyticsSdkEvent',
+   PLUGIN_DIAGNOSTIC = 'pluginDiagnosticEvent',
+   POE_OVER_BUDGET = 'poeOverBudgetEvent',
+   FAN_ERROR = 'fanErrorEvent',
+   ANY = 'anyEvent',
+   USER_DEFINED = 'userDefinedEvent',
 }
 
 export enum ActionTypes {
@@ -677,13 +699,28 @@ export interface ServerNetworkSettings {
     netMask: string;
 }
 
-// 0: {name: "cloudAccountName", value: "czach@networkoptix.com"}
-// 1: {name: "cloudHost", value: "dev2.cloud.hdw.mx"}
-// 2: {name: "cloudSystemID", value: "6a80cc7e-42c7-4fe7-bd8a-e7a15e014a93"}
-// 3: {name: "localSystemId", value: "{980d45d0-6fdf-4b45-ab66-143919dd0ee1}"}
-// 4: {name: "specificFeatures", value: "{"advanced_lens_control":1,"camera_auth_server_sid…ion":2,"set_camera_param_post":1,"vms_metrics":1}"}
-// 5: {name: "statisticsAllowed", value: "true"}
-// 6: {name: "statisticsReportLastNumber", value: "2"}
-// 7: {name: "statisticsReportLastTime", value: "2020-05-12T16:18:26Z"}
-// 8: {name: "statisticsReportLastVersion", value: "4.1.0.30697-55bf4a10a585-default-beta"}
-// 9: {name: "systemName", value: "Chris2"}
+interface RuleDefaults {
+    schedule: string
+    system: boolean
+    eventState: string
+    disabled: boolean
+    aggregationPeriod: number
+}
+
+export interface BaseRule extends Partial<RuleDefaults> {
+    actionResourceIds?: string[]
+    actionType: string
+    comment?: string
+    eventResourceIds?: string[]
+    eventType: EventTypes
+    id?: string
+}
+
+export interface RawRule extends BaseRule {
+    actionParams: any
+    eventCondition: any
+}
+export interface EventRule extends BaseRule {
+    actionParams: string
+    eventCondition: string
+}

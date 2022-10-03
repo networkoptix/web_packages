@@ -1,31 +1,44 @@
 import {
-    Component, Input, OnChanges,
+    Component,
+    Input,
+    OnChanges,
     ViewEncapsulation
-}                                          from '@angular/core';
-import { NxHealthService }                 from '../../health.service';
-import { NxConfigService, IConfig }        from '@services/nx-config';
-import { InfoBlockLine, InfoBlockSection } from '@src/components/info-block/info-block.component';
+} from '@angular/core';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import {
+    InfoBlockLine,
+    InfoBlockSection
+} from '@src/components/info-block/info-block.component';
+
+import { NxHealthService } from '../../health.service';
 
 @Component({
-    selector      : 'nx-single-entity',
-    templateUrl   : './single-entity.component.html',
-    styleUrls     : ['./single-entity.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-single-entity',
+    templateUrl: './single-entity.component.html',
+    styleUrls: ['./single-entity.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxSingleEntityComponent implements OnChanges {
     @Input() params;
     @Input() entity;
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     copyParams;
     entityName: string;
     sections: SectionLookup;
 
     constructor(
-        private configService: NxConfigService,
-            private healthService: NxHealthService
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private healthService: NxHealthService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnChanges(): void {
@@ -33,17 +46,29 @@ export class NxSingleEntityComponent implements OnChanges {
         if (this.copyParams.values.length && this.copyParams.values[0].id === '_') {
             this.copyParams.values.shift();
         }
+
+        this.copyParams.values.map(param => {
+            param.name = this.LANG.healthMonitor.groups[param.id]?.() || param.name;
+            param.values.map(key => {
+                key.name = this.LANG.healthMonitor.keys[key.id]?.() || key.name;
+            });
+        });
+
         this.entityName = this.healthService.findEntityName(this.entity);
         if (this.copyParams) {
             const paramGroups = this.copyParams.values.filter(({ id }) => id !== '_');
             this.sections = paramGroups
                 .reduce((reduced: SectionLookup, { id: paramGroupId, values }) => {
                     if (!this.entity[paramGroupId]) {
-                        this.copyParams.values = this.copyParams.values.filter(params => params.id !== paramGroupId);
+                        this.copyParams.values = this.copyParams.values
+                            .filter(params => params.id !== paramGroupId);
                         return reduced;
                     }
                     const lines = values.map(({ id, name }) => {
-                        const param = this.entity[paramGroupId][id] && this.entity[paramGroupId][id] || {};
+                        const param = (
+                            this.entity[paramGroupId][id] &&
+                            this.entity[paramGroupId][id]
+                        ) || {};
                         return new InfoBlockLine(
                             name || id,
                             param.text || '_',
@@ -52,7 +77,11 @@ export class NxSingleEntityComponent implements OnChanges {
                         );
                     });
                     const maxParamWidthPercentage = 42;
-                    reduced[paramGroupId] = [new InfoBlockSection(lines, undefined, maxParamWidthPercentage)];
+                    reduced[paramGroupId] = [new InfoBlockSection(
+                        lines,
+                        undefined,
+                        maxParamWidthPercentage
+                    )];
                     return reduced;
                 }, {});
         }

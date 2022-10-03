@@ -1,46 +1,52 @@
-import { Injectable, Injector }     from '@angular/core';
-import {
-    HttpClient, HttpHeaders, HttpParams
-}                                   from '@angular/common/http';
-import { Router }                   from '@angular/router';
-import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
-import { EMPTY, of, from }          from 'rxjs';
+/* eslint-disable camelcase */
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Inject, Injectable, Injector } from '@angular/core';
+import { Router } from '@angular/router';
+import * as FullStory from '@fullstory/browser';
+import LogRocket from 'logrocket';
+import { WINDOW } from 'ngx-window-token';
+import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
+import { ConsoleSection } from '@components/console-table/console-table.component.types';
+import { PackageStatus } from '@dialogs/download-async/download-async.component.types';
+import { environment } from '@environments/environment';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import { OauthService } from '@services/oauth.service';
+import { NxSwCacheService } from '@services/sw-cache.service';
+
+import { Account } from './account.service/account';
+import type * as t from './nx-cloud-api.types';
+import { InstantSearchOptions } from './nx-cloud-api.types';
 import { NxConfigService, IConfig } from './nx-config';
-import { Account }                  from './account.service';
-import { NxSystemWithUserInfo }     from './systems.service';
-import * as t                       from './nx-cloud-api.types';
-import { NxUriCacheService }        from './uri-cache.service';
-import { MenuNode }                 from './menus.service';
-import { MenuStructure } from '@services/nx-config/base-config';
-import { NxSwCacheService }         from '@services/sw-cache.service';
-import { NxAccountService }         from '@services/account.service';
+import { NxUriCacheService } from './uri-cache.service';
+import { NxUtilsService } from './utils.service';
 
 export const DOC_TYPES = {
-    knowledgebase : 'kb',
-    struct        : 'struct'
+    knowledgebase: 'kb',
+    struct: 'struct'
 };
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    // CLOUD-9104: Firefox does not support service workers in private mode.
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args) {
+    descriptor.value = function (...args) {
         return of('').pipe(
             switchMap(_ => {
                 if (this.currentAccount !== undefined) {
                     return of(this.currentAccount);
                 }
-                return this.accountService.get().then(account => {
-                    if (account) {
-                        this.currentAccount = account;
-                    } else {
-                        this.currentAccount = null;
-                    }
-                    return account;
-                });
+                return this.account(true);
             }),
             switchMap((account: Account) => {
-                // eslint-disable-next-line camelcase
-                if (account?.is_staff) {
+                this.currentAccount = account;
+                if (this.currentAccount?.is_staff) {
                     clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;
                     this.swBypassTimeout = setTimeout(_ => {
@@ -54,8 +60,12 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
 };
 
 const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    // CLOUD-9104: Firefox does not support service workers in private mode.
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args) {
+    descriptor.value = function (...args) {
         const returnPromise = this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
             return originalMethod.apply(this, args);
         });
@@ -87,10 +97,10 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
-    private accountService: any;
-    private currentAccount: Account;
+    public currentAccount: Account; // Used by staffSWBypass decorator
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
+    public customClient: CustomClientAPI;
 
     constructor(
         private configService: NxConfigService,
@@ -98,23 +108,26 @@ export class NxCloudApiService {
         private cacheService: NxUriCacheService,
         private router: Router,
         private nxSwCacheService: NxSwCacheService,
-        private injector: Injector
+        private injector: Injector,
+        private consoleService: NxConsoleService,
+        private oauthService: OauthService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
-        setTimeout(_ => {
-            this.accountService = injector.get(NxAccountService);
-            this.accountService.accountSubject.subscribe(account => {
-                if (account) {
-                    this.currentAccount = account;
-                } else {
-                    this.currentAccount = null;
-                }
-            });
-        });
+        this.customClient = new CustomClientAPI(this, this.CONFIG, this.http, this.consoleService);
     }
 
-    getLanguage() {
-        return this.http.get('/api/utils/language');
+    getSubAPI(route: ConsoleSection) {
+        switch (route) {
+            case 'custom-clients':
+                return this.customClient;
+            default:
+                return {
+                    list: (...args) => new BehaviorSubject([]),
+                    getManifest: () => new BehaviorSubject({ manifest: { contexts: {} } }),
+                    retrieve: (id) => new BehaviorSubject({})
+                };
+        }
     }
 
     checkResponseHasError<T extends any>(data: any) {
@@ -126,45 +139,102 @@ export class NxCloudApiService {
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
-    disconnect(systemId: string, password: string) {
+    disconnect(systemId: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
-            system_id: systemId,
-            password
+            system_id: systemId
         });
     }
 
-    @swClear('cloudSystemAPI', '/systems', true)
+    @swClear('cloudSystemAPI', '/systems', false)
     connect(systemName, email, password) {
+        const accessToken = this.oauthService.cloudApiAccessToken;
+        let headers = new HttpHeaders();
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
         return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
-            name     : systemName,
-            email    : email,
-            password : password
+            name: systemName,
+            email: email,
+            password: password
+        }, { headers }).pipe(
+            tap(() => {
+                if (accessToken) {
+                    return this.oauthService.logoutTokens();
+                }
+            })
+        );
+    }
+
+    verify(password) {
+        return this.http.post(this.CONFIG.apiBase + '/account/verify', {
+            password: password
         }).toPromise();
+    }
+
+    update2fa(
+        password: string,
+        mfaCode: string,
+        action: 'activate' | 'deactivate' | 'toggle'
+    ) {
+        return this.http.post<t.CloudResponse>(
+            this.CONFIG.apiBase + '/account/security',
+            { password, mfaCode, action }
+        ).toPromise();
+    }
+
+    deactivate2FaKey() {
+        return this.http.delete<t.CloudResponse>(this.CONFIG.apiBase + '/account/security').toPromise();
+    }
+
+    get2FaKey() {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/verification', {}).toPromise();
+    }
+
+    get2FaBackupCode() {
+        return this.http.post<t.TwoFactorBackupCodes[]>(this.CONFIG.apiBase + '/2fa/backup', {}).toPromise();
+    }
+
+    verify2FaKey(code, verificationCode) {
+        const uri = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verificationCode}&code=${code}`;
+        return this.http.get(uri).toPromise();
+    }
+
+    updateSessionWith2fa(verificationCode) {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/updateSession', {
+            verification_code: verificationCode
+        }).toPromise();
+    }
+
+    toggle2faForSystem(systemId: string, mfaCode: string) {
+        return this.http.post(
+            this.CONFIG.apiBase + '/systems/toggle2fa',
+            { systemId, mfaCode }
+        ).toPromise();
     }
 
     getStaticLanding() {
         const httpOptions = {
-            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType : 'text' as 'text'
+            headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType: 'text' as 'text'
         };
         return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
     getStatic(url) {
         const httpOptions = {
-            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType : 'text' as 'text'
+            headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType: 'text' as 'text'
         };
         return this.http.get(url, httpOptions);
     }
 
     getCommonPasswords() {
-        return this.http.get('/static/scripts/commonPasswordsList.json');
+        return this.http.get<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
     getIntegrations() {
-        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
+        return this.http.get<{ data: t.Integration[] }>(this.CONFIG.apiBase + '/integrations');
     }
 
     getIntegrationsCount() {
@@ -184,15 +254,25 @@ export class NxCloudApiService {
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
+    getCode(systemId: string) {
+        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/code`, {});
+    }
+
+    @swClear('cloudSystemAPI', '/systems', false)
     getSystemAuth(systemId: string) {
         return this.http.get<t.SystemAuth>(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
+    }
+
+    @swClear('cloudSystemAPI', '/systems', false)
+    getSystemToken(systemId: string) {
+        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/token`, {});
     }
 
     @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
-            master_system_id : masterSystemId,
-            slave_system_id  : slaveSystemId,
+            master_system_id: masterSystemId,
+            slave_system_id: slaveSystemId,
             password
         }).toPromise();
     }
@@ -205,6 +285,11 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @staffSWBypass
+    getOpenAPIJSONs() {
+        return this.http.get<{ data: t.OpenAPIJSON[] }>(this.CONFIG.apiBase + '/openapi_jsons');
+    }
+
     // not used, except in debug
     reloadIPVD() {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});
@@ -215,7 +300,6 @@ export class NxCloudApiService {
         password: string,
         firstName: string,
         lastName: string,
-        subscribe: string,
         code: string
     ) {
         return this.http
@@ -223,9 +307,8 @@ export class NxCloudApiService {
                 {
                     email,
                     password,
-                    first_name : firstName,
-                    last_name  : lastName,
-                    subscribe,
+                    first_name: firstName,
+                    last_name: lastName,
                     code
                 })
             .toPromise();
@@ -241,7 +324,7 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
         }).toPromise().then((result) => {
-            this.systems('clearCache');
+            // this.systems('clearCache');
             return result;
         });
     }
@@ -260,9 +343,9 @@ export class NxCloudApiService {
 
     systems(systemId?: string) {
         if (systemId) {
-            return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems/' + systemId);
+            return this.http.get<any[]>(this.CONFIG.apiBase + '/systems/' + systemId);
         }
-        return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems');
+        return this.http.get<any[]>(this.CONFIG.apiBase + '/systems');
     }
 
     users(systemId: string) {
@@ -272,10 +355,10 @@ export class NxCloudApiService {
     unshare(systemId: string, userEmail: string, password?: string) {
         let url = `${this.CONFIG.apiBase}/systems/${systemId}/users`;
         const data: any = {
-            user_email : userEmail,
-            role       : this.CONFIG.accessRoles.unshare
+            user_email: userEmail,
+            role: this.CONFIG.accessRoles.unshare
         };
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
             data.email = userEmail;
             data.password = password || '';
@@ -299,6 +382,59 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
+    checkIfEmailExistsInCloud(email: string) {
+        return this.http.post<t.CheckEmailExists>(this.CONFIG.apiBase + '/account/check', { email }).toPromise();
+    }
+
+    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string, signature?: string) {
+        const body: any = {
+            email,
+            password,
+            client_id: clientId,
+            redirect_uri: redirectUrl,
+            response_type: responseType
+        };
+        state && (body.state = state);
+        scope && (body.scope = scope);
+        signature && (body.signature = signature);
+
+        return this.http.post<any>('/oauth/authenticate', body).toPromise();
+    }
+
+    verifyCode(verification_code: string, code: string) {
+        const url = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verification_code}&code=${code}`;
+        return this.http.get<any>(url);
+    }
+
+    verifyBackupCode(verification_code: string, code: string) {
+        const url = `${this.CONFIG.apiBase}/2fa/backup?verification_code=${verification_code}&code=${code}`;
+        return this.http.get<any>(url);
+    }
+
+    private logRocketIdentifyUser = tap((account: Account) => {
+        const { isLogRocketActive, isFullStoryActive } = this.CONFIG.cloudMonitoring;
+        if ((isLogRocketActive || isFullStoryActive) && account.email) {
+            // Type is only user here and comes from LogRocket
+            const userInfo: { [propName: string]: string | number | boolean } = {
+                email: account.email,
+            };
+            if (account.first_name) {
+                userInfo.name = account.first_name;
+                if (account.last_name) {
+                    userInfo.name = `${account.first_name} ${account.last_name}`;
+                }
+            } else if (account.last_name) {
+                userInfo.name = account.last_name;
+            }
+            if (isLogRocketActive) {
+                LogRocket.identify(account.email, userInfo);
+            }
+            if (isFullStoryActive) {
+                FullStory.identify(account.email, userInfo);
+            }
+        }
+    });
+
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
@@ -307,7 +443,25 @@ export class NxCloudApiService {
             password,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
-        }).toPromise();
+        }).pipe(this.logRocketIdentifyUser).toPromise();
+    }
+
+    @swClear('apiFresh', '/account', true)
+    loginCode(code: string) {
+        return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
+            tap((account: Account) => { this.currentAccount = account; })
+        ).pipe(this.logRocketIdentifyUser).toPromise();
+    }
+
+    @swClear('apiFresh', '/account', true)
+    loginTokens(tokensInfo) {
+        const options = {
+            headers: {
+                Authorization: `Bearer ${tokensInfo.access_token}`
+            }
+        };
+        return this.http.post(this.CONFIG.apiBase + '/account/loginTokens', tokensInfo, options)
+            .pipe(this.logRocketIdentifyUser).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
@@ -331,8 +485,10 @@ export class NxCloudApiService {
             .pipe(
                 map(account => {
                     account.isCloud = true;
+                    this.currentAccount = account;
                     return account;
-                })
+                }),
+                this.logRocketIdentifyUser
             );
     }
 
@@ -347,9 +503,10 @@ export class NxCloudApiService {
     }
 
     getLanguages() {
-        const endpoint = '/static/languages.json';
-        this.cacheService.addToCache(endpoint);
-        return this.http.get<t.ILanguages>(endpoint).toPromise();
+        const uri = environment.isLocal
+            ? '/static/languages.json'
+            : `${this.window.location.origin}/${this.CONFIG.staticBase}/languages.json`;
+        return this.http.get<t.ILanguages>(uri).toPromise();
     }
 
     @swClear('apiFresh', '/utils/language', true)
@@ -370,21 +527,22 @@ export class NxCloudApiService {
     accountPost(account: Account) {
         // strip unnecessary account info
         const accountInfo = {
-            email        : account.email,
-            first_name   : account.first_name,
-            last_name    : account.last_name,
-            is_staff     : account.is_staff,
-            is_superuser : account.is_superuser || false,
-            language     : account.language,
-            permissions  : account.permissions
+            email: account.email,
+            first_name: account.first_name,
+            last_name: account.last_name,
+            is_staff: account.is_staff,
+            is_superuser: account.is_superuser || false,
+            language: account.language,
+            permissions: account.permissions
         };
         return this.http.post<t.AccountEdit>(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
-    changePassword(newPassword: string, oldPassword: string) {
+    changePassword(newPassword: string, oldPassword: string, mfaCode?: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/changePassword', {
-            new_password : newPassword,
-            old_password : oldPassword
+            new_password: newPassword,
+            old_password: oldPassword,
+            mfaCode
         }).toPromise();
     }
 
@@ -406,10 +564,12 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    restorePassword(code: string, newPassword: string) {
+    restorePassword(code: string, newPassword: string, mfaCode?: string, isBackup = false) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
-            new_password: newPassword
+            new_password: newPassword,
+            mfaCode,
+            isBackup
         }).toPromise();
     }
 
@@ -423,9 +583,40 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/accept_review', {
             review_id: reviewId
         }).toPromise().then(response => {
-            this.cacheService.cachedData.clear();
+            this.cacheService.clearData();
             return response;
         });
+    }
+
+    /* Ownership transfer */
+    getTransfers(): Observable<t.SystemTransferInfo[]> {
+        return this.http.get<t.SystemTransferInfo[]>(
+            `${this.CONFIG.apiBase}/transfer/`
+        );
+    }
+
+    startTransfer(
+        systemId: string,
+        newOwnerEmail: string,
+    ): Observable<t.SystemTransferInfo> {
+        return this.http.post<t.SystemTransferInfo>(
+            `${this.CONFIG.apiBase}/transfer/${systemId}/`,
+            { newOwnerEmail },
+        );
+    }
+
+    cancelTransfer(systemId: string): Observable<unknown> {
+        return this.http.delete<unknown>(`${this.CONFIG.apiBase}/transfer/${systemId}/`);
+    }
+
+    respondToTransfer(
+        systemId: string,
+        action: 'accepted' | 'rejected'
+    ): Observable<t.CloudResponse> {
+        return this.http.put<t.CloudResponse>(
+            `${this.CONFIG.apiBase}/transfer/${systemId}/`,
+            { action },
+        );
     }
 
     // Cloud Storage
@@ -433,20 +624,6 @@ export class NxCloudApiService {
     enableCloudStorage(systemId: string) {
         return this.http.post<t.CloudStorage>(this.CONFIG.apiBase + '/storage/create', {
             systemId
-        }).toPromise();
-    }
-
-    deleteCloudStorage(systemId: string, password: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/delete', {
-            systemId,
-            password
-        }).toPromise();
-    }
-
-    moveCloudStorage(sourceSystemId: string, destinationSystemId: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/move', {
-            sourceSystemId,
-            destinationSystemId
         }).toPromise();
     }
 
@@ -474,7 +651,7 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
+    getDocumentation(name, type, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
@@ -501,6 +678,22 @@ export class NxCloudApiService {
                 return of(error);
             }
         }));
+    }
+
+    @staffSWBypass
+    documentationInstantSearch(name, query, options?: Partial<InstantSearchOptions>) {
+        if (!this.configService.flagsEnabled(FeatureFlagStrings.kbInstantSearch)) {
+            return throwError(new Error('Instant search feature not enabled'));
+        }
+        const params = NxUtilsService.mapValuesToStrings({ query, ...options });
+        const route = `${this.CONFIG.apiBase}/documentation/kb/${name}/search?`;
+        return this.http.get<any>(route, { params });
+    }
+
+    getDocAsset(assetId) {
+        const route = `${this.CONFIG.apiBase}/documentation/${assetId}`;
+        return this.http.get<t.DocAsset>(route)
+            .pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
     }
 
     findArticleKB(assetId) {
@@ -530,7 +723,98 @@ export class NxCloudApiService {
             });
     }
 
-    getMenu(menuName: string) {
-        return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
+    getTimeSinceLogin() {
+        return this.http.get<any>(this.CONFIG.apiBase + '/account/timeSincePassword');
     }
+
+    getTokensFromCloud(code: string) {
+        const params = {
+            code,
+            grant_type: 'authorization_code',
+            response_type: 'token'
+        };
+        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
+    }
+
+    getTokenInfo(token: string) {
+        return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });
+    }
+
+    logoutTokens(accessToken: string, refreshToken: string) {
+        return this.oauthService.logoutTokens(accessToken, refreshToken);
+    }
+
+    getAssets = (maxAge = 0, params) => this.http.get<{ last: string, data: t.ExplorerNode[] }>(`${this.CONFIG.apiBase}/assets`, { params: { maxAge, ...params } });
+
+    testEmailNotification(emailNotificationPayload: t.EmailNotification) {
+        return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);
+    }
+}
+
+export class CustomClientAPI {
+    private readonly apiBase: string;
+
+    constructor(
+        private cloudAPI: NxCloudApiService,
+        private config: IConfig,
+        private http: HttpClient,
+        private consoleService: NxConsoleService,
+    ) {
+        this.apiBase = this.config.apiBase + '/custom_clients/';
+    }
+
+    create = (name: string, baseVms?, values: Record<string, string> = {}) => {
+        if (!Object.keys(values).length) {
+            const id = uuid();
+            this.consoleService.unsavedAssets[id] = { name, base_vms: baseVms, id, unsaved: true, values: {} };
+            return Promise.reject(id);
+        }
+        const body: any = { name };
+        if (Object.entries(values).length) {
+            body.values = values;
+        }
+
+        if (baseVms) {
+            body.base_vms = baseVms;
+        }
+        return this.http.post<t.CustomClient>(this.apiBase, body);
+    }
+
+    retrieve = (id) => {
+        return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
+    }
+
+    list = () => {
+        return this.http.get<t.CustomClient[]>(this.apiBase);
+    }
+
+    update = (id, name, values) => {
+        return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
+    }
+
+    partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
+        if (name !== undefined) {
+            data.name = name;
+        }
+        data.values = { ...(data.values || {}), ...values };
+        return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
+    }
+
+    destroy = (id) => {
+        return this.http.delete(`${this.apiBase}${id}/`);
+    }
+
+    getManifest = () => {
+        return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
+    }
+
+    generatePackage = <Id, DownloadId = { downloadId: string }>(id: Id) => {
+        return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
+    }
+
+    checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
+        return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
+    }
+
+    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`
 }

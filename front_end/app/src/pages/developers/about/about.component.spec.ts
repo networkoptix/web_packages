@@ -1,19 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement, Input, Component } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-
-import { NxAboutComponent } from './about.component';
-import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NxRibbonService } from '../../../components/ribbon';
-import { NxAccountService } from '../../../services/account.service';
-import { NxMenusService } from '../../../services/menus.service';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { NxPageService } from '../../../services/page.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
+
+import { NxRibbonService } from '@components/ribbon';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+
+import { getMockTranslations, HelperMockProvider } from '../../../_mocks/helpers.test';
 import {
     landingRoute,
     docMenuMap,
@@ -22,10 +26,18 @@ import {
     introNode,
     routeLandingMock
 } from '../../../_mocks/knowledge_base_landing.mock';
-import { getMockTranslations, MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
-import { CommonModule } from '@angular/common';
 
-describe('For Developers Landing', () => {
+import { NxAboutComponent } from './about.component';
+
+@Component({
+    selector: 'nx-footer',
+    template: '<div></div>'
+})
+class MockFooterComponent {
+    @Input() center;
+}
+
+describe('NxAboutComponent', () => {
     let component: NxAboutComponent;
     let fixture: ComponentFixture<NxAboutComponent>;
     let el: DebugElement;
@@ -34,8 +46,8 @@ describe('For Developers Landing', () => {
 
     const account = { is_superuser: false };
     const accountMock = {
-        get            : () => Promise.resolve(account),
-        accountSubject : new BehaviorSubject(account)
+        get: () => Promise.resolve(account),
+        accountSubject: new BehaviorSubject(account)
     };
     const ribbonMock: any = {
         hide() {
@@ -58,24 +70,28 @@ describe('For Developers Landing', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxAboutComponent],
-                imports      : [
+                declarations: [
+                    NxAboutComponent,
+                    MockFooterComponent
+                ],
+                imports: [
                     CommonModule,
                     FormsModule,
-                    TranslateTestingModule
+                    TranslateModule.forRoot(),
+                    RouterTestingModule
                 ],
                 providers: [
-                    new MockProvider(NxCloudApiService, cloudApiMock),
+                    new HelperMockProvider(NxCloudApiService, cloudApiMock),
                     NxHeaderService,
-                    new MockProvider(ActivatedRoute, landingRoute),
-                    new MockProvider(Router, routeLandingMock),
-                    new MockProvider(NxRibbonService, ribbonMock),
-                    new MockProvider(NxLanguageProviderService, translateMock),
-                    new MockProvider(NxMenusService, mockMenu),
+                    new HelperMockProvider(ActivatedRoute, landingRoute),
+                    new HelperMockProvider(Router, routeLandingMock),
+                    new HelperMockProvider(NxRibbonService, ribbonMock),
+                    new HelperMockProvider(NxLanguageProviderService, translateMock),
+                    new HelperMockProvider(NxMenusService, mockMenu),
                     NxPageService,
-                    new MockProvider(NxAccountService, accountMock),
-                    new MockProvider(NxConfigService, configMock)
-                ].map(MockProvider.mapServices)
+                    new HelperMockProvider(NxAccountService, accountMock),
+                    new HelperMockProvider(NxConfigService, configMock)
+                ].map(HelperMockProvider.mapServices)
             });
 
             fixture = TestBed.createComponent(NxAboutComponent);

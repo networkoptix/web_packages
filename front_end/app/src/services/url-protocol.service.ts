@@ -1,10 +1,12 @@
-import { Inject, Injectable }        from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
-import { NxConfigService, IConfig }  from './nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+
+import { NxAccountService } from './account.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxAccountService }          from './account.service';
-import { WINDOW }                    from './window-provider';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { WINDOW } from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +19,8 @@ export class NxUrlProtocolService {
         @Inject(WINDOW) private window: Window,
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -28,25 +31,25 @@ export class NxUrlProtocolService {
         const search = this.window.location.search.replace('?', '').split('&');
 
         let fromLocation = '';
-        const from       = search.find((param) => {
-            return param.indexOf('from') >= 0;
+        const from = search.find((param) => {
+            return param.includes('from');
         });
         if (from) {
             fromLocation = from.split('=')[1];
         }
 
         let contextParam = '';
-        const context    = search.find((param) => {
-            return param.indexOf('context') >= 0;
+        const context = search.find((param) => {
+            return param.includes('context');
         });
         if (context) {
             contextParam = from.split('=')[1];
         }
 
         const source = {
-            from    : fromLocation || 'portal',
-            context : contextParam || 'none',
-            isApp   : false
+            from: fromLocation || 'portal',
+            context: contextParam || 'none',
+            isApp: false
         };
         source.isApp = (source.from === 'client' || source.from === 'mobile');
         return source;
@@ -54,14 +57,15 @@ export class NxUrlProtocolService {
 
     generateLink(linkSettings: linkSettings = {}) {
         let settings: linkSettings = {
-            native           : true,
-            from             : 'portal', // client, mobile, portal, webadmin
-            context          : undefined,
-            command          : 'client', // client, cloud, system
-            systemId         : undefined,
-            action           : undefined,
-            actionParameters : {}, // Object with parameters
-            auth             : true // true for request, null for skipping, string for specific value
+            native: true,
+            from: 'portal', // client, mobile, portal, webadmin
+            context: undefined,
+            command: 'client', // client, cloud, system
+            systemId: undefined,
+            action: undefined,
+            actionParameters: {}, // Object with parameters
+            auth: true, // true for request, null for skipping, string for specific value
+            code: undefined
         };
 
         if (linkSettings.systemId) {
@@ -70,20 +74,26 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
-        const host     = this.window.location.host;
+        const protocol = settings.native && this.LANG.clientProtocol
+            ? this.LANG.clientProtocol?.()
+            : this.window.location.protocol;
+        const host = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };
 
         if (settings.from) {
             getParams.from = settings.from;
         }
-        if (settings.auth) {
+        if (typeof settings.auth === 'string') {
             getParams.auth = settings.auth;
         }
 
         if (settings.context) {
             getParams.context = settings.context;
+        }
+
+        if (settings.code) {
+            getParams.code = settings.code;
         }
 
         let url = `${protocol}//${host}/${settings.command}/`;
@@ -104,28 +114,42 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings: linkSettings): Promise<{link: string, authKey: string | undefined}> {
-        return new Promise((resolve, reject) => {
-            this.accountService
-                .authKey()
-                .then((authKey) => {
-                    linkSettings.auth = authKey;
-                    resolve({
-                        link: this.generateLink(linkSettings),
-                        authKey
-                    });
-                }).catch(() => {
-                    resolve({
-                        link    : this.generateLink(linkSettings),
-                        authKey : undefined
-                    });
-                });
-        });
+    getLink(
+        linkSettings: linkSettings
+    ): Promise<{
+        link: string,
+        authKey?: string | undefined,
+        // eslint-disable-next-line camelcase
+        code?: string
+    }> {
+        return Promise.all([
+            linkSettings.useOauth ? Promise.resolve('') : this.accountService.authKey(),
+            this.cloudApiService.getCode('*').toPromise()
+        ]).then(([data, { code }]) => {
+            if (linkSettings.useOauth) {
+                linkSettings.code = code;
+            } else {
+                linkSettings.auth = data;
+                linkSettings.code = code;
+            }
+            const linkData: any = {
+                link: this.generateLink(linkSettings)
+            };
+            if (linkSettings.useOauth) {
+                linkData.code = code;
+            } else {
+                linkData.authKey = data;
+                linkData.code = code;
+            }
+            return linkData;
+        }).catch(() => ({
+            link: this.generateLink(linkSettings)
+        }));
     }
 
-    open(systemId: string) {
+    open(systemId: string, useOauth: boolean) {
         return this.getLink({
-            systemId
+            systemId, useOauth
         }).then((data: { link: string, authKey: string}) => {
             let link      = data.link;
             const authKey = data.authKey;
@@ -168,8 +192,10 @@ export class NxUrlProtocolService {
 
                 // Check on before unload
                 // @ts-ignore
-                // eslint-disable-next-line prefer-promise-reject-errors
-                this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout,
+                this.window.protocolCheck(
+                    link,
+                    this.CONFIG.openClientTimeout,
+                    this.CONFIG.openMobileClientTimeout,
                     () => {
                         this.accountService
                             .checkVisitedKey(authKey)
@@ -178,7 +204,6 @@ export class NxUrlProtocolService {
                                 this.window.onblur = undefined;
                                 this.window.onfocus = undefined;
                                 if (!visited && blurCount > 0) {
-                                    // eslint-disable-next-line prefer-promise-reject-errors
                                     return reject({ resultCode: this.CONFIG.openClientError });
                                 }
                                 return resolve(false);
@@ -197,7 +222,6 @@ export class NxUrlProtocolService {
                                      * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
                                      */
                                     if (!visited && (!hasBlur || hasOpened)) {
-                                        // eslint-disable-next-line prefer-promise-reject-errors
                                         return reject({ resultCode: this.CONFIG.openClientError });
                                     }
                                     return resolve(visited);
@@ -221,5 +245,8 @@ export interface linkSettings {
     systemId?: string,
     action?: {},
     actionParameters?: {},
-    auth?: boolean|string|undefined
+    auth?: boolean|string|undefined,
+    // eslint-disable-next-line camelcase
+    code?: string|undefined,
+    useOauth?: boolean
 }

@@ -38,7 +38,7 @@
                     input.selected + .slider {
                         background-color: $green_l1 !important;
                     }
-                    
+
                     input:focus + .slider {
                         box-shadow: 0 0 1px $green_l1 !important;
                     }
@@ -50,10 +50,10 @@
     &-label {
         cursor: pointer;
         margin: 0;
-        -webkit-touch-callout: none; 
-        -webkit-user-select: none; 
-        -moz-user-select: none; 
-        -ms-user-select: none; 
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         user-select: none;
     }
 }
@@ -146,7 +146,7 @@ input.selected + .slider:before {
     -o-user-select: none;
     user-select: none;
     height: 9px;
-    bottom: 4px;
+    bottom: 6px;
 }
 
 .bar {

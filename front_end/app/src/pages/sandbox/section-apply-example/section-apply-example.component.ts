@@ -1,11 +1,12 @@
-import { Component, ViewChild, ViewContainerRef }          from '@angular/core';
-import { NxApplyService, Watcher, SectionWatcher } from '../../../services/apply.service';
-import { NxProcessService, Process } from '../../../services/process.service';
+import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+
+import { NxApplyService, Watcher, SectionWatcher } from '@services/apply.service';
+import { NxProcessService, Process } from '@services/process.service';
 
 @Component({
-    selector : 'section-apply-example',
-    templateUrl : 'section-apply-example.component.html',
-    styleUrls : ['section-apply-example.component.scss']
+    selector: 'section-apply-example',
+    templateUrl: 'section-apply-example.component.html',
+    styleUrls: ['section-apply-example.component.scss']
 })
 export class SectionApplyExampleComponent {
     // Refs to use for rendering apply component instances
@@ -29,8 +30,8 @@ export class SectionApplyExampleComponent {
 
     // section 2 - Watcher with additional properties
     section2InputWatcher = Watcher.extendedWatcherFactory(null, {
-        additionalProperty1 : 'additionalProperty1',
-        additionalProperty2 : 2
+        additionalProperty1: 'additionalProperty1',
+        additionalProperty2: 2
     });
 
     section2Watcher: SectionWatcher
@@ -68,7 +69,9 @@ export class SectionApplyExampleComponent {
     ngOnInit() {
         // setup section 1
         this.section1Input = 'section1';
-        this.saveSection1 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section1InputWatcher.reset());
+        this.saveSection1 = this.processService
+            .createProcess(() => Promise.resolve())
+            .then(() => this.section1InputWatcher.reset());
         this.section1Watcher = this.applyService.createSectionWatcher(
             this.section1apply,
             this.saveSection1,
@@ -78,7 +81,9 @@ export class SectionApplyExampleComponent {
 
         // setup section 2
         this.section2Input = 'section2';
-        this.saveSection2 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section2InputWatcher.reset());
+        this.saveSection2 = this.processService
+            .createProcess(() => Promise.resolve())
+            .then(() => this.section2InputWatcher.reset());
         this.section2Watcher = this.applyService.createSectionWatcher(
             this.section2apply,
             this.saveSection2,
@@ -88,11 +93,15 @@ export class SectionApplyExampleComponent {
 
         // const availableSectionWatchers = [this.section1Watcher, this.section2Watcher];
         const availableSectionWatchers = [];
-        this.saveAll = this.processService.createProcess(() => Promise.resolve()).then(() => {
-            availableSectionWatchers.forEach((watcher: Watcher<any> | SectionWatcher) => {
-                watcher.reset();
+        this.saveAll = this.processService
+            .createProcess(() => Promise.resolve())
+            .then(() => {
+                availableSectionWatchers.forEach(
+                    (watcher: Watcher<any> | SectionWatcher) => {
+                        watcher.reset();
+                    }
+                );
             });
-        });
         // Init page watcher with sectionWatchers
         this.applyService.initPageWatcher(
             this.pageApply,
@@ -104,7 +113,9 @@ export class SectionApplyExampleComponent {
 
         // setup section 3 - Added using addWatchersAndFunctionsFromChild after page watcher already initialized
         this.section3Input = 'section3';
-        this.saveSection3 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section3InputWatcher.reset());
+        this.saveSection3 = this.processService
+            .createProcess(() => Promise.resolve())
+            .then(() => this.section3InputWatcher.reset());
         this.section3Watcher = this.applyService.createSectionWatcher(
             this.section3apply,
             this.saveSection3,
@@ -114,13 +125,19 @@ export class SectionApplyExampleComponent {
 
         // This is how you would add watchers when the page watcher has already been instantiated earlier.
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.section1Watcher], this.saveSection1, () => this.section1InputWatcher.reset()
+            [this.section1Watcher],
+            this.saveSection1,
+            () => this.section1InputWatcher.reset()
         );
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.section2Watcher], this.saveSection2, () => this.section2InputWatcher.reset()
+            [this.section2Watcher],
+            this.saveSection2,
+            () => this.section2InputWatcher.reset()
         );
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.section3Watcher], this.saveSection3, () => this.section3InputWatcher.reset()
+            [this.section3Watcher],
+            this.saveSection3,
+            () => this.section3InputWatcher.reset()
         );
 
         this.applyService.setVisible();

@@ -9,4 +9,4 @@ Bạn đã được mời đến %CLOUD_NAME%.
 Vui lòng tạo tài khoản trên %CLOUD_NAME%
 sử dụng địa chỉ email hiện tại của bạn và làm theo hướng dẫn thêm.
 
-Đăng ký tài khoản của bạn bằng liên kết này: {{ config.portal_url }}/ đăng ký /{{ message.code }}
+Đăng ký tài khoản của bạn bằng liên kết này: {{ config.portal_url }}/authorize/register/{{ message.code }}

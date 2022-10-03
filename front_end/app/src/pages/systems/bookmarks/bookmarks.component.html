@@ -1,0 +1,16 @@
+<div class="bookmarks-main">
+    <h1 class="screen-reader-only" translate>List of Bookmarks</h1>
+    <div class="bookmarks-filtering">
+        <nx-search
+            name="filterModel"
+            [ngModel]="filterModel"
+            (ngModelChange)="modelChanged($event)"
+            layout="compact"
+            ngDefaultControl>
+        </nx-search>
+    </div>
+
+    <div class="bookmarks-feed">
+        <bookmarks-list-component [restError]="!restEndpointUsed" [list]="elements"></bookmarks-list-component>
+    </div>
+</div>

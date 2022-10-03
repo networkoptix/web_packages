@@ -193,7 +193,7 @@ $preloader_small_circle_distance : 8px;
 
     svg {
         .brand_element {
-            fill : $brand_core;
+            fill : var(--brand-core);
         }
     }
 }

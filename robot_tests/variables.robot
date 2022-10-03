@@ -5,8 +5,8 @@ Resource     variables/cms-variables.robot
 Resource     variables/cloud-merge-variables.robot
 
 *** Variables ***
-${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
-${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/button[contains(@class,'close') and @data-dismiss='alert']
+${ALERT}                              //div[contains(@class,'toast')]//span[contains(@class,'toast-content')]
+${ALERT CLOSE}                        //div[contains(@class,'toast')]/button[contains(@class,'close') and @data-dismiss='alert']
 
 ${BROWSER}                            Chrome
 
@@ -34,21 +34,33 @@ ${APPLY CHANGES DISCARD BUTTON}       //ngb-modal-window//button[contains(text()
 ${APPLY CHANGES CANCEL BUTTON}        //ngb-modal-window//
 
 #Log In Elements
-${LOG IN MODAL}                       //form[@name='loginForm']
-${EMAIL INPUT}                        //form[@name='loginForm']//input[@id='login_email']
-${PASSWORD INPUT}                     //form[@name='loginForm']//input[@id='login_password' and @name="login_password" and @type="password"]
-${LOG IN BUTTON}                      //form[@name='loginForm']//nx-process-button//button
+${LOG IN MODAL}                       //nx-authorize-component/div[@class="authorize-main main-w"]
+${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit"]
+${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
+${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
+${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
+${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//footer//button[@type="button"]//span[text()="${CREATE ACCOUNT BUTTON TEXT}"]
+${LOG IN BTN REGISTER ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN CREATE ACCOUNT PAGE}     //nx-authorize-create-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN ACTIVATE ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//button[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN RESET PASSWORD PAGE}     //nx-authorize-reset-request-component//footer//button[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN SET NEW PASSWORD PAGE}   //nx-authorize-reset-password-component//footer//nx-process-button//button[contains(text(), '${LOG IN BUTTON TEXT}')]
 
 ${REMEMBER ME CHECKBOX VISIBLE}       //form[@name='loginForm']//input[@id='remember']/following-sibling::span[@class="checkmark"]/..
 ${REMEMBER ME CHECKBOX REAL}          //form[@name='loginForm']//input[@id='remember']
 
-${FORGOT PASSWORD}                    //form[@name='loginForm']//a[@href='/restore_password']
-${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
-${ACCOUNT NOT FOUND}                  //form[@name='loginForm']//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
-${RESEND ACTIVATION EMAIL LINK}       //form[@name='loginForm']//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
-${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${WRONG PASSWORD}"]
-${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
-${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
+${FORGOT PASSWORD}                    //nx-authorize-component//button/span[text()='${FORGOT PASSWORD TEXT}']/..
+
+${ACCOUNT NOT FOUND}                  //nx-authorize-component//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
+${ACCOUNT DOES NOT EXIST}             //nx-authorize-component//p[contains(text(),'${ACCOUNT DOES NOT EXIST TEXT}')]
+${YOU CAN CREATE AN ACCOUNT}          //nx-authorize-component//p[contains(text(),'${YOU CAN CREATE ACCOUNT TEXT}')]
+${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
+${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[text()="${WRONG PASSWORD}"]
+${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST TEXT}"]
+${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[text()="${TOO MANY ATTEMPTS TEXT}"]
+${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//form//input[@id="resetPassword"]
+${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
+${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${RESET SUCCESS MESSAGE TEXT}')]
 
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
@@ -73,44 +85,44 @@ ${SYSTEMS DROPDOWN}                   //nx-header//button[@id='systemsDropdown']
 ${SYSTEMS GRID}                       //nx-drop-menu//li[contains(@class, 'systems-grid')]
 ${SYSTEMS GRID TILES}                 ${SYSTEMS GRID}//nx-system-tile
 
-${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
+
 ${LOG OUT BUTTON}                     //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
-${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
+${SECURITY DROPDOWN}                  //header//li//a[@href = "/account/security"]
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
-${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "Open in Nx Witness")]
+${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "${OPEN IN NX WITNESS BUTTON TEXT}")]
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
-${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]
-${CREATE ACCOUNT HEADER}              //header//a[@href='/register']
-${CREATE ACCOUNT BODY}                //div[@class="jumbotron"]//a[@href='/register']
+${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]//landing-display-component/div
+${CREATE ACCOUNT HEADER}              //header//a[@href='/authorize?client_type=create']
+${CREATE ACCOUNT BODY}                //landing-component//a[@href='/authorize?client_type=create']
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
-${FIRST NAME IS REQUIRED}             //span[contains(@class,'input-error') and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}              //span[contains(@class,'input-error') and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
-${EMAIL IS REQUIRED}                  //span[contains(@class,'input-error') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
-${EMAIL ALREADY REGISTERED}           //span[contains(@class,'input-error') and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
-${EMAIL INVALID}                      //span[contains(@class,'input-error') and contains(text(),"${EMAIL INVALID TEXT}")]
-${PASSWORD SPECIAL CHARS}             //div[contains(@class,'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
-${PASSWORD IS WEAK}                   //div[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
-${PASSWORD TOO SHORT}                 //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
-${PASSWORD TOO COMMON}                //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
+${FIRST NAME IS REQUIRED}             ${REGISTER FIRST NAME INPUT}/following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
+${LAST NAME IS REQUIRED}              ${REGISTER LAST NAME INPUT}/following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
+${EMAIL IS REQUIRED}                  ${REGISTER EMAIL INPUT}/../following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
+${EMAIL ALREADY REGISTERED}           //p[contains(@class,'error-label') and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
+${EMAIL INVALID}                      //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
+${PASSWORD SPECIAL CHARS}             //div[contains(@class,'input-error') and contains(text(),"${PASSWORD SPECIAL CHARS TEXT}")]
+${PASSWORD IS WEAK}                   //div[contains(@class,'input-error') and contains(text(),"${PASSWORD IS WEAK TEXT}")]
+${PASSWORD TOO SHORT}                 //div[contains(@class,'input-error') and contains(text(),"${PASSWORD TOO SHORT TEXT}")]
+${PASSWORD TOO COMMON}                //div[contains(@class,'input-error') and contains(text(),"${PASSWORD TOO COMMON TEXT}")]
 
 ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
 
 #targets the open nx witness button presented when logging in after activating with from=mobile or client
 ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON TEXT}"]
 
-${ACTIVATION SUCCESS}                 //h2[@name="ACCOUNT_ACTIVATED" and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
-${ACTIVATION SUCCESS ICON}            //div[@name="ACCOUNT_ACTIVATED"]/svg-icon
-${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-app//button[contains(text(), "${LOG IN BUTTON TEXT}")]
+${ACTIVATION SUCCESS}                 //h3[contains(@class,"authorize-header") and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
+${ACTIVATION SUCCESS ICON}            //nx-authorize-activate-account-component//svg-icon
+${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-authorize-activate-account-component//button[contains(text(), "${LOG IN BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
 
 #In system settings
-${SYSTEM NAME}                        //div/nx-editable-settings-heading//h2
+${SYSTEM NAME}                        //div/nx-editable-heading//nx-text-editable
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${SYSTEM OFFLINE HEADER}              //h2[@name="OFFLINE" and contains(text(),"${SYSTEM OFFLINE TEXT}")]
 ${THIS SYSTEM IS OFFLINE}             //div[@name="OFFLINE" and contains(text(),"${THIS SYSTEM IS OFFLINE TEXT}")]
@@ -127,11 +139,11 @@ ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[c
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
 
-${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
+${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='componentId']
 ${ACCESS LEVEL DROPDOWN MENU}         ${SYSTEM USER DETAILS}//nx-section//ul[contains(@class, "dropdown-menu")]
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//div[@id='user-active-status']
+${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-active-status-switch']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
@@ -141,7 +153,7 @@ ${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"$
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
 
-${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
+
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
 
@@ -152,7 +164,7 @@ ${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button/span[contains(t
 ${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 ${DISCONNECT MODAL BUTTON}               ${MODAL DIALOG}//button/span[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 
-${JUMBOTRON}                          //div[@class='jumbotron']
+${JUMBOTRON}                          //div[@class='mainContainer']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
@@ -160,7 +172,7 @@ ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") an
 ${ADD USER BUTTON SYSTEMS}            //nx-system-settings-component//nx-menu//nx-menu-button//button
 ${ADD USER MODAL}                     //form[@name='addUserForm']
 ${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
-${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
+${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='componentId']
 ${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
 ${ADD USER CANCEL}                    ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
 ${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@data-dismiss='modal']
@@ -179,32 +191,8 @@ ${EDIT PERMISSIONS CUSTOM}            //form[@name='shareForm']//select[@ng-mode
 ${EDIT PERMISSIONS HINT}              //form[@name='shareForm']//span[contains(@class,'help-block')]
 
 #Account Page
-${ACCOUNT EMAIL}                      //account//a[@id='settings']
-${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
-${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
-${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
-${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="reset"]
 
-${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
-${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
-${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
-${DELTE ACCOUNT DIALOG}               //nx-modal-delete-cloud-user-content
-${DELETE ACCOUNT MODAL BUTTON}        ${DELTE ACCOUNT DIALOG}//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
-${DELETE ACCOUNT CANCEL BUTTON}       ${DELTE ACCOUNT DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
-${DELETE ACCOUNT CLOSE BUTTON}        ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
-${DELETE ACCOUNT HEADER}              ${DELTE ACCOUNT DIALOG}//h1[contains(text(),"${DELETE ACCOUNT HEADER TEXT}")]
-${DELETE ACCOUNT INFO}                ${DELTE ACCOUNT DIALOG}//span[contains(text(),"${DELETE ACCOUNT INFO TEXT}")]
-${DELETE ACCOUNT PASSWORD INPUT}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]
-${DELETE ACCOUNT PASSWORD LABEL}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/preceding-sibling::label[@for="password" and contains(text(),"${DELETE ACCOUNT PASSWORD LABEL TEXT}")]
-${DELETE ACCOUNT PASSWORD ERROR}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
 
-${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
-${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
-${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL BUTTON TEXT}')]
-${APPLY CHANGES QUESTION}             //h1[contains(text(), '${APPLY CHANGES QUESTION TEXT}')]
-${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
-${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
@@ -234,20 +222,8 @@ ${RELEASE NOTES HEADER}               //h1[contains(text(), "${RELEASE NOTES TEX
 ${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='${RELEASES TAB TEXT}']/..
 ${PATCHES TAB}                        //span[contains(@class,'tab-heading') and text()='${PATCHES TAB TEXT}']/..
 ${BETAS TAB}                          //span[contains(@class,'tab-heading') and text()='${BETAS TAB TEXT}']/..
-${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
+${RELEASE NUMBER}                     //div//h1[contains(@class,"title")]
 
-
-#Footer
-${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT}")]
-${FOOTER KNOWN LIMITS LINK}           //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
-${FOOTER INTEGRATIONS LINK}           //footer//a[contains(text(),"${INTEGRATIONS TITLE TEXT}")]
-${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]
-${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
-${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]
-${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${COMPANY}")]
-${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}")]
-${FOOTER API DOCUMENTATION LINK}      //footer//a[contains(text(),"${API DOCUMENTATION TEXT}")]
-${FOOTER DOWNLOAD SDK LINK}           //footer//a[contains(text(),"${DOWNLOAD SDK TEXT}")]
 
 #Misc
 ${PAGE NOT FOUND}                     //h2[@name="404" and contains(text(),'${PAGE NOT FOUND TEXT}')]
@@ -255,6 +231,7 @@ ${TAKE ME HOME}                       //button/a[text()="${GO TO MAIN PAGE TEXT}
 ${404 ICON}                           //div[@name="404"]/svg-icon
 ${OFFLINE BADGE}                      //a[contains(@class, "badge") and contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
+${RESET PASSWORD PAGE BUTTON}         //nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '${RESET PASSWORD BUTTON TEXT}')]
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
@@ -265,14 +242,14 @@ ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'
 ${DISABLED}                           \[@disabled]
 
 #Password badges
-${PASSWORD BADGE}                     //nx-tag//a[contains(@class,"badge")]
-${PASSWORD IS WEAK BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
-${PASSWORD IS FAIR BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
-${PASSWORD IS GOOD BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
-${PASSWORD IS TOO SHORT BADGE}        //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
-${PASSWORD IS TOO COMMON BADGE}       //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
-${PASSWORD INCORRECT BADGE}           //nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
-${PASSWORD BADGE TOOLTIP}             //ngb-tooltip-window[@role="tooltip"]
+${PASSWORD BADGE}                     //nx-password-input-tag-validation
+${PASSWORD IS WEAK BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
+${PASSWORD IS FAIR BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
+${PASSWORD IS GOOD BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
+${PASSWORD IS TOO SHORT BADGE}        ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
+${PASSWORD IS TOO COMMON BADGE}       ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
+${PASSWORD INCORRECT BADGE}           ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
+${PASSWORD BADGE TOOLTIP}             //nx-tooltip-component
 
 #Already logged in modal
 ${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
@@ -286,8 +263,8 @@ ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas
 
 #Eye icons for password forms
-${EYE ICON OPEN}             //span[@class="glyphicon glyphicon-eye-open ng-star-inserted"]
-${EYE ICON CLOSED}           //span[@class="glyphicon glyphicon-eye-close ng-star-inserted"]
+${EYE ICON OPEN}             //svg-icon[contains(@data-src,"/images/icons/text_buttons/eye.svg")]
+${EYE ICON CLOSED}           //svg-icon[contains(@data-src,"/images/icons/text_buttons/eye_closed.svg")]
 
 # Form validation passwords
 ${LOWERCASE PASSWORD}    adrhartjad
@@ -328,12 +305,17 @@ ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
 ${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="${CANCEL BUTTON TEXT}"]
 ${USER CANCEL}                        //nx-apply//nx-cancel-button/button[@type="reset"]
+${ACCOUNT CREATION EMAIL SUCCESS}     //nx-authorize-component//nx-authorize-activate-account-component//main//h3
+${ACTIVATE MODAL LOGIN BTN}           //nx-authorize-component//nx-authorize-activate-account-component//main//nx-process-button//button[@type="submit"]
+${LOCAL USER NAME HEADER}             //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
 
 #svg icons
-${USERS ICON}                      *[name()="svg-icon" and @data-src="/static/images/icons/standard/users.svg"]
-${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/standard/user.svg"]
-${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
-${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
-${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
-${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
-${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
+${USERS ICON}                      *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/users.svg")]
+${LOCAL USER ICON}                 *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/user.svg")]
+${CAMERAS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/cameras.svg")]
+${SERVERS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/servers.svg")]
+${SYSTEMS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/systems.svg")]
+${PLACEHOLDER ICON}                //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/section/system_settings_placeholder.svg")]
+${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/page/NoSettings.svg")]
+
+${FROM EMAIL DEFAULT}                   ${False}

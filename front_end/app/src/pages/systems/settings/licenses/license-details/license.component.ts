@@ -1,24 +1,32 @@
+import { DatePipe } from '@angular/common';
 import {
-    Component, OnDestroy, Input,
-    OnChanges, SimpleChanges
-}                                    from '@angular/core';
-import { DatePipe }                  from '@angular/common';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { IConfig, NxConfigService }  from '@services/nx-config';
+    Component,
+    OnDestroy,
+    Input,
+    OnChanges,
+    SimpleChanges,
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import {
+    InfoBlockLine,
+    InfoBlockSection,
+    InfoBlockStyle,
+    InfoDetailClass,
+    InfoLineStyle,
+} from '@components/info-block/info-block.component';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSystem }                  from '@services/system.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import {
-    InfoBlockLine, InfoBlockSection, InfoBlockStyle,
-    InfoDetailClass, InfoLineStyle
-}                                    from '@components/info-block/info-block.component';
-import { getDynamicLicense }         from '../licenses.component';
+import { NxSystem } from '@services/system.service';
+
+import { getDynamicLicense } from '../licenses.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-license-detail-component',
-    templateUrl : 'license.component.html',
-    styleUrls   : ['license.component.scss']
+    selector: 'nx-license-detail-component',
+    templateUrl: 'license.component.html',
+    styleUrls: ['license.component.scss']
 })
 
 export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
@@ -52,7 +60,9 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.licenses && changes.licenses.currentValue) {
             this.orderedLicense = [];
-            this.newlyAddedLicense = this.formatLicenseKey(this.system.licensesModified);
+            this.newlyAddedLicense = this.formatLicenseKey(
+                this.system.licensesModified
+            );
             this.licenses.forEach((lic) => {
                 this.orderedDetails(lic.info);
             });
@@ -88,14 +98,30 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
 
         if (typeof info.expiration === 'string') {
             // Safari doesn't like date format like "2021-04-22 06:59"
-            info.expiration = info.expiration ? new Date(info.expiration.replace(' ', 'T')).getTime() : '';
+            info.expiration = info.expiration
+                ? new Date(info.expiration.replace(' ', 'T')).getTime()
+                : '';
         }
 
-        const warning = info.expiration ? info.expiration < next30days.getTime() : false;
-        const deactivationsRemaining = dynamicLicense[info.class].deactivationsAllowed - (info.deactivations === '-' ? 0 : info.deactivations);
+        const warning = info.expiration
+            ? info.expiration < next30days.getTime()
+            : false;
+
+        let deactivationsRemaining;
+        if (info.status === this.LANG.license.info.error()) {
+            deactivationsRemaining = 0;
+        } else {
+            deactivationsRemaining =
+                    dynamicLicense[info.class].deactivationsAllowed -
+                    (info.deactivations === '-' ? 0 : info.deactivations);
+        }
+
         const block = new InfoBlockSection(
             [
-                new InfoBlockLine(this.LANG.license.info.type(), typeof info.type === 'function' ? info.type() : info.type),
+                new InfoBlockLine(
+                    this.LANG.license.info.type(),
+                    typeof info.type === 'function' ? info.type() : info.type
+                ),
                 new InfoBlockLine(this.LANG.license.info.channels(), info.count),
                 new InfoBlockLine(
                     this.LANG.license.info.server(),
@@ -108,11 +134,18 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 new InfoBlockLine(
                     this.LANG.license.info.status(),
                     info.status,
-                    info.expired || !info.serverStatus ? InfoDetailClass.ERROR : undefined
+                    info.expired ||
+                        info.status === this.LANG.license.info.error() ||
+                        !info.serverStatus ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
                     this.LANG.license.info.expires(),
-                    info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
+                    info.expiration
+                        ? this.datePipe.transform(
+                            info.expiration,
+                            'dd MMM yyyy, hh:mm a'
+                        )
+                        : '-',
                     warning ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(

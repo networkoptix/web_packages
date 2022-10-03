@@ -2,12 +2,12 @@
     <div class="container h-100">
         <h1>SANDBOX</h1>
 
-        <ngb-tabset #tabs>
-            <ngb-tab id="Form Apply Example">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Form Apply Example</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--        <ngb-tabset #tabs>-->
+<!--            <ngb-tab id="Form Apply Example">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Form Apply Example</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="row">
                         <div class="col-12 p-5">
                             <h1>
@@ -16,13 +16,13 @@
                             <form-apply-example></form-apply-example>
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab id="Section Apply Example">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Section Apply Example</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
+<!--            <ngb-tab id="Section Apply Example">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Section Apply Example</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="row">
                         <div class="col-6 p-5">
                             <h1>
@@ -31,13 +31,13 @@
                             <section-apply-example></section-apply-example>
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab id="Multi DD">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Multi DD</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
+<!--            <ngb-tab id="Multi DD">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Multi DD</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="row">
                         <div class="col-3 p-5">
                             <nx-multi-select name="ddMultiSelect"
@@ -79,14 +79,14 @@
                             </nx-select>
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
 
-            <ngb-tab id="Other">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Other</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--            <ngb-tab id="Other">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Other</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="row">
                         <div class="col-12 col-md-4 border-right">
                             <form #testForm="ngForm" (ngSubmit)="onSubmit()" name="testForm" novalidate>
@@ -486,25 +486,34 @@
                                             id="rotations"></nx-select>
                                 </div>
                             </div>
+                            <br>
+                            <br>
+                            <h3>Split text in chunks</h3>
+                            <div style="width: 310px; border: 1px solid gold">
+                                {{'maintenance.description' | translate }}
+                            </div>
+                            <div style="width: 310px; border: 1px solid green"
+                                 [innerHTML]="'maintenance.description' | translateAndSplitText: 35">
+                            </div>
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
 
-            <ngb-tab id="CssGrid">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">CSS Grid</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--            <ngb-tab id="CssGrid">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">CSS Grid</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <nx-grid-layout></nx-grid-layout>
-                </ng-template>
-            </ngb-tab>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
 
-            <ngb-tab id="IFrame">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">IFrame</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--            <ngb-tab id="IFrame">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">IFrame</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="row">
                         <div class="col-6">
                             <br/>
@@ -523,14 +532,14 @@
                             <!--                        </iframe>-->
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
 
-            <ngb-tab id="Toastr">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Toastr</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--            <ngb-tab id="Toastr">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Toastr</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="form-group">
                         <nx-checkbox
                                 name="autohide"
@@ -547,15 +556,15 @@
                         <button class="btn btn-default" (click)="notify('I\'m warning' ,'warning')">Warning</button>
                         <button class="btn btn-default" (click)="notify('I\'m success' ,'success')">Success</button>
                     </div>
-                </ng-template>
-            </ngb-tab>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
 
-            <ngb-tab id="Search">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Search</span>
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="row p-3">nxm
+<!--            <ngb-tab id="Search">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Search</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
+                    <div class="row p-3">
                         <nx-search
                                 name="filter"
                                 [(ngModel)]="filter"
@@ -575,14 +584,14 @@
                             Search tags: {{filter.tags | json}}
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
 
-            <ngb-tab id="Masonry Grid">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Masonry Grid</span>
-                </ng-template>
-                <ng-template ngbTabContent>
+<!--            <ngb-tab id="Masonry Grid">-->
+<!--                <ng-template ngbTabTitle>-->
+<!--                    <span class="tab-heading">Masonry Grid</span>-->
+<!--                </ng-template>-->
+<!--                <ng-template ngbTabContent>-->
                     <div class="container">
                         <div class="card-columns">
                             <div class="card">
@@ -657,8 +666,8 @@
                             </div>
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
-        </ngb-tabset>
+<!--                </ng-template>-->
+<!--            </ngb-tab>-->
+<!--        </ngb-tabset>-->
     </div>
 </div>

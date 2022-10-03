@@ -15,18 +15,23 @@
 
 {% block content%}
 <div>
-    <h3>Download package for asset</h3>
-    <p><a href="{% url 'download_package' asset.id %}"
-          {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}
-    >Download package (zip)</a></p>
-    <p><a href="{% url 'download_package' asset.id %}?draft"
-          {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}
-    >Download package draft (zip)</a></p>
-    <p><a href="{% url 'download_structure_from_db' asset.id %}" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}'})" download>Download structure (json)</a></p>
-    <p><a href="{% url 'download_structure_from_db' asset.id %}?output_format=html" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}', outputFormat: 'html'})" download>Download structure (html)</a></p>
-    <p><a href="{% url 'download_all_asset_structures' asset.asset_type.type %}" onclick="event.preventDefault(); pollStructure({assetType:'{{ asset.asset_type.type }}'})" download>Download all {{ asset.asset_type }} assets (json)</a></p>
+    <h3>Downloads for {{instance_type}}</h3>
+    {% if type_settings %}
+        {% if asset.id %}
+            <p><a href="{% url 'download_structure_from_db' asset.id %}" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}'})" download>Download structure (json)</a></p>
+            <p><a href="{% url 'download_structure_from_db' asset.id %}?output_format=html" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}', outputFormat: 'html'})" download>Download structure (html)</a></p>
+            <p><a href="{% url 'download_all_asset_structures' asset_type.type %}" onclick="event.preventDefault(); pollStructure({assetType:'{{ asset_type.type }}'})" download>Download all {{ asset_type }} assets (json)</a></p>
+        {% else %}
+            <p>No assets exist for this asset type.</p>
+        {% endif %}
+    {% else %}
+        <p><a href="{% url 'download_package' asset.id %}" {% if asset.is_cloud_portal or asset.is_vms or not asset.latest_version%}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}>Download package (zip)</a></p>
+        <p><a href="{% url 'download_package' asset.id %}?draft" {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}>Download package draft (zip)</a></p>
+    {% endif %}
 </div>
-<h3>Update Asset</h3>
+{% if type_settings %}
+{% endif %}
+<h3>Update {{instance_type}}</h3>
 <div>
 Notice root level directory will be ignored. The expected format is :<br>
 <pre style="margin: 5px 0 0 5px; width: 500px">
@@ -79,7 +84,7 @@ Example for vms
             const {assetId = null, assetType = null, outputFormat = null} = config
             const assetIdJSON = "{% url 'download_structure_from_db' asset.id %}"
             const assetIdHTML = "{% url 'download_structure_from_db' asset.id %}?output_format=html"
-            const assetTypeJSON = "{% url 'download_all_asset_structures' asset.asset_type.type %}"
+            const assetTypeJSON = "{% url 'download_all_asset_structures' asset_type.type %}"
             const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
             const generateDownloadUrl = (taskId) => celeryDownloadUrl.replace('task_id', taskId)
             const structureUrl = assetType ? assetTypeJSON : outputFormat === 'html' ? assetIdHTML : assetIdJSON

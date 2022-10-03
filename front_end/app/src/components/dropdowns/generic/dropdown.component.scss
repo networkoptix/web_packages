@@ -99,4 +99,30 @@ nx-select {
             }
         }
     }
+
+    .dropdown-transparent-button > button.btn.btn-dropdown-toggle.dropdown-toggle {
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .item-icon {
+        .storage-cloud {
+            fill: var(--brand-core);
+        }
+    }
+
+    .seperator{
+        display: block;
+        overflow: hidden;
+        height: 8px;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 12px;
+                width: calc(100% - 24px);
+                height: 1.5px;
+                background: $light7;
+            }
+        }
 }

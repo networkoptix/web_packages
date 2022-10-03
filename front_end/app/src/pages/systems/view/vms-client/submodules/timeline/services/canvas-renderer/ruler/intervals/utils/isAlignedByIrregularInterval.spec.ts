@@ -1,6 +1,7 @@
+import IrregularLengthInterval from '../IrregularLengthInterval';
+
 import alignTimeStamp from './alignTimeStamp';
 import isAlignedByIrregularInterval from './isAlignedByIrregularInterval';
-import IrregularLengthInterval from '../IrregularLengthInterval';
 
 xdescribe('isAlignedByIrregularInterval', () => {
     const t = 1594225376896; // "Wed Jul 08 2020 19:23:03 GMT+0300 (Moscow Standard Time"

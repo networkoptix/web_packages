@@ -192,7 +192,7 @@
         }
 
         tr:hover td {
-            background : transparentize($brand_core, 0.9);
+            background : var(--brand-core-t90);
         }
     }
 

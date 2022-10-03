@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { ms, px } from '../../../utils/type-aliases';
-import TimelineService from './timeline.service';
 import { NxUtilsService } from '@services/utils.service';
+import { ms, px } from '@vms-client/utils/type-aliases';
+
+import TimelineService from './timeline.service';
 
 export interface TimelineTimeUnderMouseServiceStatus {
     isMouseInside: boolean,
@@ -25,10 +26,10 @@ export class TimelineTimeUnderMouseService {
 
     protected _emit () {
         this._subject.next({
-            isMouseInside  : this._isMouseInside,
-            timeUnderMouse : this._timeUnderMouse,
-            offsetX        : this._offsetX,
-            pressed        : this._pressed,
+            isMouseInside: this._isMouseInside,
+            timeUnderMouse: this._timeUnderMouse,
+            offsetX: this._offsetX,
+            pressed: this._pressed
         });
     }
 
@@ -59,15 +60,15 @@ export class TimelineTimeUnderMouseService {
 
     public handleMouseDown () {
         if (!this._pressed) {
-            this._pressed = true
-            this._emit()
+            this._pressed = true;
+            this._emit();
         }
     }
 
     public handleMouseUp () {
         if (this._pressed) {
-            this._pressed = false
-            this._emit()
+            this._pressed = false;
+            this._emit();
         }
     }
 

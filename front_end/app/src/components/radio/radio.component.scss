@@ -31,7 +31,7 @@ nx-radio {
             cursor: default !important;
         }
     }
-    
+
     & + label {
         cursor : pointer;
     }
@@ -96,7 +96,7 @@ nx-radio {
     &.checked {
         svg {
             circle {
-                fill    : $brand_core;
+                fill    : var(--brand-core);
                 display : block;
             }
         }
@@ -105,7 +105,7 @@ nx-radio {
     &.tristate {
         svg {
             circle {
-                fill    : rgba($brand_core, .5);
+                fill    : rgba(var(--brand-core--rgb), .5);
                 display : block;
             }
         }
@@ -120,4 +120,3 @@ nx-radio {
         }
     }
 }
-

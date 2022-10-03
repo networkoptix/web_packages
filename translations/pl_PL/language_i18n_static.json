@@ -1,12 +1,41 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
+    "All Servers": "Wszystkie serwery",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "For developers": "Dla programistów",
     "Integrations (β)": "Integracje (β)",
     "Privacy": "Prywatność",
     "Support": "Wsparcie",
     "Terms": "Warunki",
+    "Developers Console": "Konsola deweloperska",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "Upewnij się, że określony serwer jest w trybie online i spróbuj ponownie."
+    },
+    "alarmTypes": {
+        "Servers": "Serwery",
+        "Cameras": "Kamery",
+        "Storage Locations": "Lokalizacje archiwum",
+        "Network Interfaces": "Interfejsy sieciowe"
+    },
+    "alarmLevels": {
+        "offline": "Offline",
+        "error": "Błędy",
+        "warning": "Ostrzeżenia"
+    },
+    "alertFilters": {
+        "all": "Wszystkie powiadomienia",
+        "warning": "Tylko ostrzeżenia",
+        "error": "Tylko błędy"
+    },
+    "deviceTypes": {
+        "All Device Types": "Wszystkie typy urządzeń",
+        "servers": "Serwer",
+        "cameras": "Kamery",
+        "storages": "Archiwum",
+        "networkInterfaces": "Wygląd"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Nieograniczony dostęp, w tym możliwość udostępniania",
@@ -66,11 +95,14 @@
         }
     },
     "account": {
+        "account": "Konto",
+        "key": "Klucz",
         "accountSavedSuccess": "Twoje konto zostało pomyślnie zapisane",
         "accountSettings": "Ustawienia konta",
         "activationLinkSent": "Wysłano link aktywacyjny",
         "agreementAccepted": "Umowa została zaakceptowana",
         "changePassword": "Zmień hasło",
+        "security": "Bezpieczeństwo",
         "newPasswordLabel": "Nowe hasło",
         "passwordChangedSuccess": "Hasło zostało pomyślnie zapisane",
         "saveChanges": "Zachowaj"
@@ -80,6 +112,55 @@
         "sendConfirm": "Wyślij ponownie link aktywacyjny",
         "setNewPassword": "Zapisz hasło",
         "setNewPasswordLabel": "Nowe hasło"
+    },
+    "authorize": {
+        "loginCloudHeader": "Zaloguj do %CLOUD_NAME%",
+        "connectHeader": "Podłącz system do %CLOUD_NAME%",
+        "expiredHeader": "Sesja wygasła",
+        "loginSystemSubheader": "Z kontem %CLOUD_NAME%",
+        "connectSubheader": "Aby uzyskać dostęp z dowolnego miejsca i włączyć dodatkowe funkcje",
+        "expiredSubheader": "Zaloguj się ponownie",
+        "connectAdditional": "To konto otrzyma poziom dostępu właściciela",
+        "createText": "Utwórz konto",
+        "setupText": "Skonfiguruj system bez chmury",
+        "asAccountSubheader": "Jako",
+        "toAccountSubheader": "Do",
+        "forAccountSubheader": "Dla {accountEmail}",
+        "passwordDisconnect": "odłącz system od %CLOUD_NAME%",
+        "passwordMerge": "złącz systemy",
+        "passwordBackup": "stwórz kopię zapasową",
+        "passwordRestore": "przywróć system z kopii zapasowej",
+        "passwordReset": "zresetuj serwer",
+        "passwordRestart": "uruchom ponownie serwer",
+        "passwordDetach": "odłącz serwer",
+        "expiredAccountSubheader": "Proszę, zaloguj się ponownie jako",
+        "createAccountHeader": "Utwórz konto %CLOUD_NAME%",
+        "activateHeader": "Aktywuj konto %CLOUD_NAME%",
+        "createdText": "Konto zostało utworzone!",
+        "activatedText": "Konto aktywowano!",
+        "createdAdditional": "<p class=\"mb-2\">Wiadomość potwierdzająca z linkiem aktywacyjnym zostaje wysłana do {accountEmail}.</p><p>Aktywuj konto i wróć tutaj, aby zakończyć proces.</p>",
+        "activatedAdditional": "<p>Teraz możesz kontynuować logowanie do %CLOUD_NAME% tutaj lub gdzie indziej</p>",
+        "passResetHeader": "Resetuj hasło",
+        "newPassHeader": "Ustaw nowe hasło",
+        "newPassConfirmText": "Hasło zostało ustawione!",
+        "newPassInvalidCode": "Nie można zapisać hasła: kod potwierdzający został już użyty lub jest nieprawidłowy",
+        "notSecureText": "Jeśli będziesz kontynuować, pozwolisz<br><span class='error-label'>{ redirectUrl }</span><br>na dostęp do swojego %CLOUD_NAME% konta.",
+        "confirmHeader": "System podłączono do %CLOUD_NAME%!",
+        "loginError": "Nie można połączyć się z %CLOUD_NAME%",
+        "loginErrorAdditional": "Spróbuj ponownie lub zaloguj się do systemu bezpośrednio na swoje konto lokalne.",
+        "connectErrorAdditional": "Spróbuj ponownie później.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Spróbuj ponownie lub skonfiguruj system bez chmury.</p><p> Będziesz mógł połączyć go z %CLOUD_NAME% później.</p>",
+        "connectedText": "System podłączono do %CLOUD_NAME%",
+        "setupConnectedText": "System podłączony",
+        "stayLoggedInHelpText": "Wybierz, aby pozostać zalogowanym",
+        "termsAndConditionsHelpText": "Wyrażenie zgody na warunki i politykę prywatności",
+        "copiedToClipboard": "Skopiowane do schowka",
+        "authCode": {
+            "message": "Wprowadź kod z aplikacji uwierzytelniającej, aby potwierdzić {suffix}",
+            "newPass": "ustaw nowe hasło",
+            "login": "zaloguj się"
+        },
+        "emailSent": "E-mail wysłany!"
     },
     "cameraFilters": {
         "H265": "Kamery H.265",
@@ -129,6 +210,7 @@
             "unauthorized": "Wymagane uwierzytelnienie"
         },
         "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
+        "copiedToClipboard": "Skopiowano do schowka",
         "login": "zaloguj",
         "recordingSettingsWarning": "Proszę zaktualizować brakujące ustawienia nagrywania.",
         "disableMotionWarning": "Tryb nagrywania zostanie zmieniony na „Zawsze nagrywaj”",
@@ -146,6 +228,7 @@
             "low": "Niski"
         },
         "general": "Ogólne",
+        "generalError": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
         "inaccessibleFeatureMessage": "System jest offline i dlatego informacje nie są dostępne.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} integracji więcej...} one{#{endTag} integracja więcej...} few {#{endTag} integracje więcej...} many {#{endTag} integracji więcej...} other{#{endTag} integracji więcej...}}",
         "searchCamPlaceholder": "Szukaj",
@@ -185,7 +268,22 @@
         },
         "viewingOutdatedReport": "Przeglądasz nieaktualny raport."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Edycja panelu ustawień jest włączona",
+        "dashboardLocked": "Pulpit nawigacyjny jest zablokowany",
+        "unlockToUpload": "Odblokuj pulpit nawigacyjny, aby przesłać konfigurację z json",
+        "unlockToMove": "Odblokuj pulpit aby przenieść widżety"
+    },
+    "devConsole": {
+        "create": "Twórz"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "Po włączeniu uwierzytelniania dwuskładnikowego nie będziesz mógł zalogować się do {count, plural, =0{# systemów} one{# systemu} few {# systemów} many {# systemów} other{# systemów}} od %VMS_NAME% klienta i administratora sieci:",
+            "wizardWarningDescr": "Starsze wersje klienta %VMS_NAME% i administratora sieci nie obsługują uwierzytelniania dwuskładnikowego.",
+            "installAuthApp": "Zainstaluj aplikację uwierzytelniającą na swoim urządzeniu mobilnym, jeśli jeszcze jej nie masz. %CLOUD_NAME% obsługuje <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> lub <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Uwierzytelnianie dwuskładnikowe jest teraz <strong>włączone</strong> dla Twojego %CLOUD_NAME% konta!"
+        },
         "addUser": {
             "alreadyExists": "Ten e-mail został już zarejestrowany w systemie %systemName%"
         },
@@ -194,6 +292,8 @@
             "createAccount": "Utwórz nowe konto",
             "delete": "Usuń",
             "deleteAccount": "Usuń konto",
+            "disable": "Wyłącz",
+            "enable": "Włącz",
             "download": "Pobierz %VMS_NAME%",
             "logoutAuthorised": "Wyloguj",
             "ok": "OK",
@@ -252,9 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Wprowadź hasło konta właściciela w <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Hasło administratora jest nieprawidłowe",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} jest połączony z %CLOUD_NAME%. Systemy chmurowe można łączyć tylko z %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Nie można złączyć dwóch systemów połączonych z chmurą. Przejdź do %CLOUD_NAME% aby złączyć te systemy.",
             "checking": "Sprawdzanie...",
+            "cloud": "Chmura",
             "commonText": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>%cloudName%</strong> lub złącz je lokalnie za pomocą klienta <strong>%vmsName%</strong>.",
+            "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>%CLOUD_NAME%</strong> lub złącz je lokalnie za pomocą klienta <strong>%VMS_NAME%</strong>.",
+            "failedToFindAnySystemHeader": "Nie udało się znaleźć żadnego systemu do połączenia",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",
@@ -277,6 +382,11 @@
                 "b_support": "wsparcie",
                 "c_proceeding": "przed kontynuowaniem."
             },
+            "restError": {
+                "duplicateServer": "Błąd scalania. Oba systemy mają ten sam serwer",
+                "useCloudMerge": "Nie można złączyć systemów powiązanych z chmurą",
+                "differentCloudOwners": "Nie można połączyć dwóch systemów w chmurze z różnymi właścicielami"
+            },
             "secondaryCannotMerge": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym. Zaktualizuj {targetSystem} do {downloadHTML} aby połączyć systemy.",
             "secondarySystemUnavailable": "System {targetSystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
             "serverAtUrl": "serwer {url}",
@@ -290,12 +400,15 @@
             "systemVersionOld": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj %targetSystem% do {downloadHTML} aby połączyć go z bieżącym.",
             "systemVersionNew": "System {targetSystem} ma wersję oprogramowania niezgodną z bieżącym systemem. Zaktualizuj bieżący system do wersji {downloadHTML} aby połączyć go z systemem {targetSystem}.",
             "systemVersionsNotMatch": "Systemy mają niezgodne wersje oprogramowania. Zaktualizuj oba z nich do wersji {downloadHTML}.",
+            "targetSystemBoundToCloud": "Ten system nie jest podłączony do chmury. Nie można połączyć z systemami powiązanymi z chmurą.",
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
             "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów."
         },
         "message": {
+            "system2faEnabled": "Uwierzytelnianie dwuskładnikowe będzie teraz wymuszone w tym systemie.",
+            "system2faDisabled": "W przypadku tego systemu uwierzytelnianie dwuskładnikowe nie jest wymagane.",
             "storageSettingsSaved": "Zapisano ustawienia magazynu.",
             "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
             "settingsSaved": "Ustawienia zostały zapisane.",
@@ -318,6 +431,12 @@
                 "integration": "Skontaktuj się z {companyName}",
                 "ipvd_feedback_device": "Opinie dotyczące {asset}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer"
+            },
+            "twoFactor": {
+                "required": "Wymagane jest uwierzytelnianie dwuskładnikowe.",
+                "configure": "Możesz to skonfigurować w swoim",
+                "accountLink": "ustawienia konta",
+                "codeRequired": "Kod jest wymagany"
             }
         },
         "removeSystem": {
@@ -325,21 +444,34 @@
             "message": "Zamierzasz odłączyć ten system od swojego konta. Nie będziesz już mieć dostępu do tego systemu. Czy na pewno kontynuować?",
             "title": "Odłączyć system?"
         },
+        "renewAuth": {
+            "action": "Login",
+            "message": "Zaloguj się ponownie.",
+            "title": "Twoja sesja wygasła"
+        },
         "titles": {
             "error": "Błąd",
             "success": "Wykonano poprawnie",
             "changeAccount": "Jesteś już zalogowany jako {email}",
+            "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\"",
             "deleteUser": "Usunąć użytkownika?",
+            "failedLoginTo": "Nie udało się zalogować do {systemName}",
             "loggedFromOtherAccount": "Zostaniesz zalogowany przy użyciu innego konta",
             "noClientDetected": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
-            "removeUser": "Usunąć użytkownika?",
-            "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
-            "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
-            "serversRestart": "Restart serwera \"{ title }\"?",
-            "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\""
+            "removeUser": "Usuń użytkownika",
+            "serversDetach": "Odłączyć serwer&nbsp;<strong>{ title }</strong>&nbsp;od obecnego systemu?",
+            "serversReset": "Zresetować serwer&nbsp;<strong>{ title }</strong>&nbsp;do ustawień domyślnych?",
+            "serversRestart": "Zrestartować serwer &nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
+            "deleteAccount": "Odłącz wszystkie systemy, których jesteś właścicielem, od portalu %CLOUD_NAME% i wyłącz uwierzytelnianie dwuskładnikowe, aby usunąć swoje konto."
+        },
+        "twoFactor": {
+            "action": "Login",
+            "message": "Uwierzytelnianie dwuskładnikowe jest włączone dla tego konta. Zaloguj się.",
+            "title": "Wymagane są dwa składniki weryfikacji!",
+            "wizardWarning": "Po włączeniu uwierzytelniania dwuskładnikowego nie będziesz mógł zalogować się do {count, plural, =0{# systemów} one{# systemu} few {# systemów} many {# systemów} other{# systemów}} od %VMS_NAME% klienta i administratora sieci:",
+            "unsupportedSystem": "Aby zalogować się do tego systemu, wyłącz opcję „Pytaj o kod weryfikacyjny przy każdym logowaniu z kontem %CLOUD_NAME%” w ustawieniach <a href=\"/account/security\">konta</a>."
         }
     },
     "downloads": {
@@ -422,8 +554,10 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> jest w trybie offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z działem wsparcia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "INCOMPATIBLE": "Systemy mają niezgodne wersje oprogramowania. Zaktualizuj oba z nich do wersji {downloadHTML}.",
+        "This authorization method is forbidden. Please contact your system administrator.": "Ta metoda autoryzacji jest zabroniona. Skontaktuj się z administratorem systemu.",
         "This user does not exist.": "Ten użytkownik nie istnieje.",
         "The user is disabled. Please contact your system administrator.": "Użytkownik jest wyłączony. Skontaktuj się z administratorem systemu.",
+        "This user has been disabled by a system administrator.": "Ten użytkownik został zablokowany przez administratora systemu.",
         "cloud_systems_have_different_owners": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
         "fail": "{failedSystem} jest niedostępny.",
@@ -440,6 +574,7 @@
         "cantChangeAccountPrefix": "Nie można zapisać zmian",
         "cantChangePasswordPrefix": "Nie można zapisać hasła",
         "cantDeleteAccountOwningSystems": "Nie można usunąć konta, które posiada systemy",
+        "cantConnectSystemPrefix": "Nie można połączyć się z systemem",
         "cantDisconnectSystemPrefix": "Nie można usunąć systemu",
         "cantEditAdmin": "Ten użytkownik ma uprawnienia administratora",
         "cantEditYourself": "Zmiana własnych uprawnień nie jest dozwolona",
@@ -453,6 +588,7 @@
         "cantSharePrefix": "Nie można udostępnić systemu",
         "cantUnshareWithMeSystemPrefix": "Nie można usunąć systemu",
         "emailNotFound": "Konto nie istnieje.",
+        "failedToAccess2FA": "<p class=\"mb-0\">Aby uzyskać dostęp do tego systemu, wymagane jest uwierzytelnianie dwuskładnikowe.</p><p>Możesz włączyć uwierzytelnianie dwuskładnikowe w <a href=\"/account/security\">ustawieniach konta</a>.</p>",
         "failedToAccessSystem": "Nie można uzyskać dostępu do systemu przez ten link. Może się to zdarzyć, gdy system zostanie odłączony od %CLOUD_NAME%, dostęp do tego systemu został odwołany lub jeśli jesteś zalogowany na nieprawidłowe konto.",
         "failedToAccessCamera": "Nie można uzyskać dostępu do kamer poprzez ten link.",
         "forbidden": "Nie masz uprawnień do wykonania tej operacji",
@@ -478,7 +614,8 @@
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
         "archiveEncrypted": "ARCHIWUM\nZASZYFROWANE",
-        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum."
+        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum.",
+        "webadmin2faRequired": "Aby uzyskać dostęp do tego systemu, wymagane jest uwierzytelnianie dwuskładnikowe. Możesz włączyć uwierzytelnianie dwuskładnikowe w <a href=\"{ cloudHost }/account/security\">ustawieniach konta</a>."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -530,10 +667,10 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "Proszę",
-        "b_Link": "wyślij zapytanie",
-        "c_Info": "w przypadku dodatkowych pytań / wątpliwości dotyczących obsługiwanych urządzeń."
+        "request": "Proszę <span id=\"request\">prześlij zgłoszenie</span> w przypadku dodatkowych pytań/wątpliwości dotyczących obsługiwanych urządzeń."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "alertsCount": "{count, plural, =0{# alertów} one{# alert} few {# alertów} many {# alertów} other{# alerty}}",
     "ipvdTopXByVolume": "Max {value} wg ilości:",
     "ipvdDisclaimer": "Ta lista jest ograniczona do urządzeń znalezionych przez serwer {vmsName}, na którym administrator zezwolił na automatyczne raportowanie specyfikacji urządzeń do firmy {companyName}. Żadne dane osobowe nie są gromadzone, a każdy użytkownik pozostaje całkowicie anonimowy.",
     "menu": {
@@ -542,8 +679,20 @@
             "systemAdministration": "Administracja systemem",
             "general": "Ogólne",
             "licenses": "Licencje",
-            "users": "Użytkownicy"
+            "users": "Użytkownicy",
+            "servers": "Serwery",
+            "alerts": "Powiadomienia",
+            "systems": "System",
+            "storages": "Lokalizacje archiwum",
+            "networkInterfaces": "Interfejsy sieciowe",
+            "graphs": "Wykresy",
+            "logs": "Logi"
         }
+    },
+    "tableHeaders": {
+        "type": "Rodzaj",
+        "server": "Serwer",
+        "alert": "Powiadomienie"
     },
     "pageTitles": {
         "about": "Informacje",
@@ -552,11 +701,13 @@
         "activateCode": "Aktywuj konto",
         "activateSuccess": "Konto aktywowano",
         "articleTitle": "{ARTICLE_TITLE} dla {VMS_NAME}",
+        "auth": "Autoryzacja",
         "changePassword": "Zmień hasło",
         "debug": "Debugowanie",
         "default": "%CLOUD_NAME%",
         "download": "Pobierz %VMS_NAME%",
         "downloadPlatform": "Pobierz %VMS_NAME% dla",
+        "failedToAccess2FA": "Nie udało się uzyskać dostępu do systemu „{systemName}”",
         "failedToAccessSystem": "Nie udało się uzyskać dostępu do systemu",
         "failedToAccessCamera": "Nie można uzyskać dostępu do kamery",
         "integrations": "%VMS_NAME% Integracje",
@@ -571,8 +722,11 @@
         "systemShare": "Udostępnij system",
         "systems": "Systemy",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Podgląd kamer",
-        "apiTool": "Narzędzie testowania API"
+        "apiTool": "Narzędzie testowania API",
+        "security": "Ochrona",
+        "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace to scentralizowany ekosystem produktów, które bezproblemowo integrują się z produktami VMS, takimi jak %VMS_NAME%, wszystkie dostępne w %CLOUD_NAME% dzięki czemu można znaleźć rozwiązania umożliwiające zbudowanie i dostosowanie systemu wideo IP.",
@@ -587,7 +741,7 @@
         "good": "dobre",
         "minLength": "za krótkie",
         "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
-        "missingMessage": "Hasło jest wymagane",
+        "missingMessage": "Wymagane",
         "required": "nieprawidłowe",
         "requiredMessage": "Używaj tylko liter łacińskich, cyfr i symboli z klawiatury, unikając spacji na początku i na końcu",
         "strongMessage": "Bezpieczne hasło!",
@@ -610,6 +764,14 @@
         "server": {
             "title": "Serwer niedostępny",
             "message": "System jest offline i dlatego serwery są niedostępne."
+        },
+        "noSystemApiTool": {
+            "title": "Nie znaleziono poprawnego systemu",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "Nie udało się załadować systemu",
+            "message": ""
         }
     },
     "pleaseSelect": "Proszę wybrać...",
@@ -632,6 +794,10 @@
             "backToEditText": "Powrót do edycji interfejsów",
             "previewRibbon": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją.",
             "publishedRibbon": "Ta strona jest wersją dostępną publicznie."
+        },
+        "newVersionAvailable": {
+            "notification": "Dostępna jest nowa wersja %CLOUD_NAME%",
+            "installButton": "Odśwież, aby zaktualizować"
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."
@@ -678,9 +844,11 @@
         "successRename": "Nazwa serwera została zapisana."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Widok",
+        "Settings": "Ustawienia",
+        "Information": "Informacje",
+        "Bookmarks": "Zakładki",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Połączony",
@@ -694,7 +862,8 @@
             "notAbleToLoadSystem": "Nie można załadować ustawień systemowych.",
             "sessionLimitDuration": {
                 "hours": "godziny",
-                "minutes": "minuty"
+                "minutes": "minuty",
+                "days": "dni"
             },
             "warningMessages": {
                 "videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
@@ -741,7 +910,8 @@
             "network": "Sieć, dodana przez system operacyjny",
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> chce przenieść własność tego systemu na Ciebie"
     },
     "systemStatuses": {
         "activated": "aktywny",
@@ -755,6 +925,9 @@
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
         "nameFail": "Nie udało się zmienić {type}",
+        "noConnection": "Przywróć połączenie do %CLOUD_NAME% i spróbuj ponownie.",
+        "noInternet": "%CLOUD_NAME% jest tymczasowo niedostępna. Spróbuj ponownie później.",
+        "userChangesFail": "Nie udało się zapisać zmian",
         "reviewAccepted": "Opinia została przyjęta",
         "system": {
             "deleted": {
@@ -774,6 +947,59 @@
             "rename": {
                 "success": "Zapisana nazwa systemu"
             }
+        },
+        "webAdminCloudCredentialError": "Zaloguj się z %CLOUD_NAME%, aby uzyskać dostęp do tego systemu jako użytkownik chmury",
+        "twoFaRequired": "Uwierzytelnianie dwuskładnikowe zostało włączone dla tego konta. Wprowadź kod weryfikacyjny w wyskakującym okienku.",
+        "loggingIn": "Logowanie. Proszę czekać..."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Info",
+            "availability": "Dostępność",
+            "load": "Załaduj",
+            "activity": "Aktywność"
+        },
+        "keys": {
+            "name": "Nazwa",
+            "servers": "Serwery",
+            "cameras": "Kanały kamery",
+            "storages": "Lokalizacje archiwum",
+            "users": "Użytkownicy",
+            "version": "Wersja systemu",
+            "cloudSystemId": "ID systemu w chmurze",
+            "status": "Status",
+            "offlineEvents": "Zdarzenia: Serwer offline (24h)",
+            "uptimeS": "Czas pracy",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (serwer VMS) %",
+            "ramUsageB": "Użycie RAM",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (serwer VMS)",
+            "serverRamUsageP": "RAM (serwer VMS) %",
+            "threads": "Wątki serwera",
+            "decodingThreads": "Dekodowanie wątków",
+            "decodingSpeed3s": "Prędkość dekodowania",
+            "encodingThreads": "Kodowanie wątków",
+            "encodingSpeed3s": "Prędkość kodowania",
+            "primaryStreams": "Wychodzące strumienie podstawowe",
+            "secondaryStreams": "Wychodzące strumienie dodatkowe",
+            "incomingConnections": "Połączenie przychodzące",
+            "outgoingConnections": "Połączenia wychodzące",
+            "logLevel": "Poziom logowania",
+            "publicIp": "Publiczny adres IP",
+            "os": "OS",
+            "osTime": "Czas systemu operacyjnego",
+            "vmsTime": "Czas VMS",
+            "cpu": "CPU",
+            "cpuCores": "Rdzenie",
+            "ramB": "RAM",
+            "guidConflict": "Konflikt GUID serwera",
+            "vmsTimeChanged24h": "Zdarzenia: Zmiana czasu (24 godz.)",
+            "transactionsPerSecond1m": "Transakcje",
+            "actionsTriggered1m": "Aktywacje reguł",
+            "apiCalls1m": "Wywołania API",
+            "thumbnails1m": "Miniatury",
+            "activePlugins": "Lista aktywnych wtyczek"
         }
     },
     "headerLabels": {
@@ -792,7 +1018,8 @@
             "Starter": "Starter",
             "IO Module": "Moduł I/O",
             "Bridge": "Bridge",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Nieprawidłowy"
         },
         "info": {
             "type": "Rodzaj",
@@ -814,6 +1041,13 @@
             "activated": "Klucz licencyjny aktywowany",
             "inuse": "Klucz licencyjny został już aktywowany i powiązany z serwerem o identyfikatorze sprzętu {hwid} w innym systemie",
             "trialActivated": "Licencja próbna aktywowana. Począwszy od dzisiaj, możesz nagrywać maksymalnie 4 kamery przez 30 dni."
+        }
+    },
+    "redirects": {
+        "message": "Trasa „{url}” została przeniesiona na „{redirectUrl}”.",
+        "defaultMessage": "Zaktualizuj wszystkie linki, aby odwoływały się do nowej trasy.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -913,6 +1147,15 @@
     },
     "result": "{count, plural, =0{# rezultaty} one{# rezultatów} other{# rezultatów}}",
     "additionalSystems": "{count, plural, =0{+ # systemy} one{+ # systemów} other{+ # systemów}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription": "Obecnie masz <span id=\"target2FaSystems\">{count, plural, =0{# takich systemów} one{# taki system} few {# takich systemów} many {# takich systemów} other{# takie systemy}}</span>.",
+            "systemsRemainder": "i jeszcze {count}...",
+            "v5Warning": "Masz <span id=\"targetV5\">{count, plural, =0{# systemów} one{# system} few {# systemów} many {# systemów} other{# systemy}}</span> z oprogramowaniem w wersji niższej niż 5.0. {count, plural, =0{Te systemy} one{Ten system} few {Te systemy} many {Te systemy} other{Te systemy}} będzie niedostępny przez <strong>%VMS_NAME% Client</strong> , ponieważ wcześniejsze wersje %VMS_NAME% Client nie obsługują uwierzytelniania dwuskładnikowego.",
+            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Ukończono reindeksowanie głównego magazynu",
@@ -942,5 +1185,100 @@
         "serverOffline": "Nie udało się dodać archiwum zewnętrznego - serwer nie odpowiada",
         "success": "Dodano archiwum zewnętrzne",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Portal w chmurze",
+            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+        },
+        "/systems": {
+            "title": "Systemy - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% Integracje - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Dokumentacja - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Obsługiwane urządzenia - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Ustawienia - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "Widok - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Informacje - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Monitorowanie serwera - webadmin - %VMS_NAME%"
+        }
+    },
+    "maintenance": {
+        "description": "Pracujemy nad kilkoma ulepszeniami i zupełnie nowymi funkcjami."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Niedz",
+                "Mon": "Pon",
+                "Tue": "Wt",
+                "Wed": "Śr",
+                "Thu": "Czw",
+                "Fri": "Pt",
+                "Sat": "Sob",
+                "Sunday": "Niedziela",
+                "Monday": "Poniedziałek",
+                "Tuesday": "Wtorek",
+                "Wednesday": "Środa",
+                "Thursday": "Czwartek",
+                "Friday": "Piątek",
+                "Saturday": "Sobota"
+            },
+            "monthNames": {
+                "Jan": "St",
+                "Feb": "Lut",
+                "Mar": "Mrz",
+                "Apr": "Kw",
+                "May": "Maj",
+                "Jun": "Cze",
+                "Jul": "Lip",
+                "Aug": "Sier",
+                "Sep": "Wrz",
+                "Oct": "Paź",
+                "Nov": "Lis",
+                "Dec": "Gr",
+                "January": "Styczeń",
+                "February": "Luty",
+                "March": "Marzec",
+                "April": "Kwiecień",
+                "June": "Czerwiec",
+                "July": "Lipiec",
+                "August": "Sierpień",
+                "September": "Wrzesień",
+                "October": "Październik",
+                "November": "Listopad",
+                "December": "Grudzień"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "przed południem",
+                "pm": "po południu",
+                "A": "A",
+                "P": "P",
+                "AM": "PRZED POŁUDNIEM",
+                "PM": "PO POŁUDNIU"
+            }
+        }
     }
 }

@@ -1,44 +1,50 @@
 import {
-    Component, Inject, OnInit,
-    OnDestroy, ViewEncapsulation
-}                                                from '@angular/core';
-import { ActivatedRoute, Router }                from '@angular/router';
+    Component,
+    Inject,
+    OnInit,
+    OnDestroy,
+    ViewEncapsulation
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { UntilDestroy }                          from '@ngneat/until-destroy';
-import { of, Subscription, throwError }          from 'rxjs';
-import { flatMap }                               from 'rxjs/operators';
+import { of, Subscription, throwError } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
-import { NxLanguageProviderService }       from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig }        from '../../../services/nx-config';
-import { NxAccountService, Account }       from '../../../services/account.service';
-import { NxUriService }                    from '../../../services/uri.service';
-import { NxMenuService }                   from '../../../menu';
-import { NxRibbonService }                 from '../../../components/ribbon';
-import { NxHealthService }                 from '../health.service';
-import { NxSystem, NxSystemService }       from '../../../services/system.service';
-import { NxUtilsService }                  from '../../../services/utils.service';
-import { NxAppStateService }               from '../../../services/nx-app-state.service';
-import { NxSystemAPI, NxSystemAPIService } from '../../../services/system-api.service';
-import { NxScrollMechanicsService }        from '../../../services/scroll-mechanics.service';
-import { WINDOW }                          from '../../../services/window-provider';
-import { NxAppSourceService }              from '../../../services/nx-app-source.service';
-import { LanguageI18NStaticTypes }         from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { environment } from '@environments/environment';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxAppSourceService } from '@services/nx-app-source.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
+import { NxMenuService } from '@src/menu';
+import type { Content } from '@src/menu/menu.types';
+
+import { NxHealthService } from '../health.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-system-health-component',
-    templateUrl   : 'health.component.html',
-    styleUrls     : ['health.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-system-health-component',
+    templateUrl: 'health.component.html',
+    styleUrls: ['health.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: Account;
-    system: NxSystem|any;
+    system: NxSystem | any;
     server: NxSystemAPI;
 
-    menu;
+    menu: Content;
 
     reportSnapshot;
 
@@ -70,7 +76,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private sourceService: NxAppSourceService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: any
+        @Inject(WINDOW) private window: Window
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -103,30 +109,30 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.healthService.importedData = false;
         this.menu = {
-            selectedSection : '', // updated by selectedSectionSubject
-            base            : '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
-            level1          : [
+            selectedSection: '', // updated by selectedSectionSubject
+            base: '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
+            level1: [
                 {
-                    id    : 'alerts',
-                    label : 'Alerts',
-                    path  : 'alerts',
-                    svg   : 'alerts'
+                    id: this.CONFIG.menus.systemHealth.alerts.id,
+                    label: this.LANG.menu.titles.alerts(),
+                    path: this.CONFIG.menus.systemHealth.alerts.path,
+                    svg: this.CONFIG.menus.systemHealth.alerts.icon
                 }
             ]
         };
 
+        this.selectedSubscription = this.menuService.selectedSectionSubject
+            .subscribe(selection => {
+                if (this.menu.selectedSection !== selection) {
+                    this.menu.selectedSection = selection;
+                    this.menu = { ...this.menu }; // trigger onChang
+                }
+            });
 
-        this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
-            if (this.menu.selectedSection !== selection) {
-                this.menu.selectedSection = selection;
-                this.menu = { ...this.menu }; // trigger onChang
-            }
-        });
-
-        const currentRoute = this.router.url;
+        const [currentRoute] = this.router.url.split('?');
         if (currentRoute.endsWith('health')) {
             this.uriService
-                .updateURI(`${currentRoute}/alerts`, {}, true)
+                .updateURI(`${currentRoute}/alerts`.replace('//', '/'), {}, true)
                 .catch(error => {
                     console.error(error);
                 });
@@ -144,20 +150,26 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 this.outdatedVersion = false;
                 if (account && typeof account !== 'undefined') {
                     this.account = account;
-                    this.system = this.systemService.createSystem(account.email, systemId);
+                    if (environment.isLocal) {
+                        this.system = this.systemService.createLocalSystem(
+                            this.accountService.mediaServerApi, account.id, account.email
+                        );
+                    } else {
+                        this.system = this.systemService.createSystem(account.email, systemId);
+                    }
                     this.menu.base = this.sourceService.getMenuBase(this.system);
                     infoPromise = this.system.getInfo();
                 } else {
                     // Create a mock system. All we need is the mediaserver.
                     this.system = {
-                        id   : '',
-                        info : {
+                        id: '',
+                        info: {
                             capabilities: {
                                 vms_metrics: true
                             }
                         },
-                        isOnline    : true,
-                        mediaserver : undefined
+                        isOnline: true,
+                        mediaserver: undefined
                     };
                     this.system.mediaserver = this.serverApi.createConnection(
                         undefined, undefined,
@@ -167,6 +179,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 }
                 this.healthService.system = this.system;
                 infoPromise.then(() => {
+                    if (environment.isLocal && !account) {
+                        return;
+                    }
                     if (this.system.isOnline) {
                         this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
                     }
@@ -183,9 +198,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 this.setHeaderHeight();
             }
 
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+            if (
+                this.scrollMechanicsService.mediaQueryMax(
+                    NxScrollMechanicsService.MEDIA.lg
+                )
+            ) {
                 this.mediaLayoutClass = 'mobileLayout';
-            } else if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xl)) {
+            } else if (
+                this.scrollMechanicsService.mediaQueryMin(
+                    NxScrollMechanicsService.MEDIA.xl
+                )
+            ) {
                 this.mediaLayoutClass = 'wideLayout';
             } else {
                 this.mediaLayoutClass = '';
@@ -194,7 +217,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     setHeaderHeight() {
-        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight =
+            document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {
@@ -224,23 +248,29 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         const menu = { ...this.menu };
         Object.keys(this.healthService.manifest).forEach((asset) => {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
-            if (this.healthService.values[asset] && Object.keys(this.healthService.values[asset]).length) {
+            if (
+                this.healthService.values[asset] &&
+                Object.keys(this.healthService.values[asset]).length
+            ) {
+                const svgName = asset === 'cameras'
+                    ? 'camera'
+                    : asset === 'systems' ? 'system' : asset;
                 menu.level1.push({
-                    id    : asset,
-                    label : this.healthService.manifest[asset].name,
-                    path  : asset,
-                    svg   : asset
+                    id: asset,
+                    label: this.LANG.menu.titles[asset](),
+                    path: asset,
+                    svg: svgName
                 });
             }
         });
         menu.level1[0].alerts = [
             {
-                count : this.healthService.alertsCount.error,
-                type  : 'error'
+                count: this.healthService.alertsCount.error,
+                type: 'error'
             },
             {
-                count : this.healthService.alertsCount.warning,
-                type  : 'warning'
+                count: this.healthService.alertsCount.warning,
+                type: 'warning'
             }
         ];
         this.menu = { ...menu };
@@ -280,18 +310,18 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         Object.keys(this.healthService.tableHeaders).forEach(metric => {
             if (!this.healthService.tableHeaders[metric].values._) {
                 this.healthService.tableHeaders[metric].values._ = {
-                    id     : '_',
-                    values : {}
+                    id: '_',
+                    values: {}
                 };
             }
             this.healthService.tableHeaders[metric].values.unshift({
-                id     : '_',
-                name   : '',
-                values : [
+                id: '_',
+                name: '',
+                values: [
                     {
-                        display : 'table',
-                        id      : 'alarm',
-                        name    : ''
+                        display: 'table',
+                        id: 'alarm',
+                        name: ''
                     }
                 ]
             });
@@ -326,8 +356,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 const alarmCount = {
-                    warning : 0,
-                    error   : 0
+                    warning: 0,
+                    error: 0
                 };
                 let highestAlarm;
 
@@ -356,9 +386,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
                                 this.healthService.values[metric][entity][group.id][header.id] = {
                                     ...formattedVal,
-                                    class   : alarm ? alarm.level : '',
-                                    tooltip : alarm ? this.getAlertText(metric, entity, alarm.text) : '',
-                                    icon    : alarm ? alarm.level : ''
+                                    class: alarm ? alarm.level : '',
+                                    tooltip: alarm ? this.getAlertText(metric, entity, alarm.text) : '',
+                                    icon: alarm ? alarm.level : ''
                                 };
 
                                 if (header.display) { // Search by displayed fields
@@ -437,8 +467,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                             }
                             alert._.server.formatClass = 'long-text';
                             alert._.type = {
-                                text        : this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
-                                formatClass : 'text'
+                                text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
+                                formatClass: 'text'
                             };
                             alert._.message = { text: alarm.text, formatClass: unset };
                             alert._.alarm = { icon: alarm.level };
@@ -516,12 +546,16 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 time = new Date(data.time).toUTCString();
             }
             this.importedData = {
-                imported : true,
-                system   : data.system || '-',
+                imported: true,
+                system: data.system || '-',
                 time
             };
             // String is here because it does not need to be translated and probably doesn't belong in CONFIG
-            this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', [], 'alert');
+            this.ribbonService.show(
+                'You are viewing an imported report, refresh the page to get a fresh report',
+                [],
+                'alert'
+            );
             setTimeout(() => {
                 this.setHeaderHeight();
             });
@@ -542,13 +576,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             flatMap((result: any) => this.setupReport(result))
         ).subscribe(() => {}, () => {
             if (!this.system.id) {
-                !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
+                !this.window.parent
+                    ? this.window.location.reload()
+                    : this.window.parent.location.reload();
             }
             this.hasServerError = this.system.isOnline;
         });
     }
 
     canShowOffline() {
-        return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
+        return !this.healthService.ready &&
+            !this.hasServerError &&
+            !this.outdatedVersion;
     }
 }

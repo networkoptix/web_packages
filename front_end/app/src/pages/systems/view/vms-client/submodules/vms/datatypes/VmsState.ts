@@ -1,5 +1,5 @@
-import { ms, GUID } from '../../../utils/type-aliases';
-import Camera from './Camera';
+import { GUID } from '@vms-client/utils/type-aliases';
+
 import ICamera from './ICamera';
 import IMediaServer from './IMediaServer';
 
@@ -41,10 +41,10 @@ export function createCameraNotSelectedState (
     mediaServers: Array<IMediaServer>
 ): CameraNotSelectedVmsState {
     return {
-        mode         : VMS_MODE.CAMERA_NOT_SELECTED,
+        mode: VMS_MODE.CAMERA_NOT_SELECTED,
         systemId,
-        mediaServers : mediaServers,
-        cameras      : (mediaServers || []).reduce((acc, ms) => {
+        mediaServers: mediaServers,
+        cameras: (mediaServers || []).reduce((acc, ms) => {
             ms.cameras.map(c => {
                 acc[c.id] = c;
             });
@@ -69,12 +69,12 @@ export function createCameraSelectedState (
     if (cameraId in currentState.cameras) {
         const newState = {
             ...currentState,
-            mode             : VMS_MODE.CAMERA_SELECTED,
-            selectedCameraId : cameraId,
-            selectedCamera   : currentState.cameras[cameraId]
+            mode: VMS_MODE.CAMERA_SELECTED,
+            selectedCameraId: cameraId,
+            selectedCamera: currentState.cameras[cameraId]
         };
         // console.log('createCameraSelectedState', currentState, newState)
-        return newState as CameraSelectedVmsState
+        return newState as CameraSelectedVmsState;
     } else {
         return currentState;
     }

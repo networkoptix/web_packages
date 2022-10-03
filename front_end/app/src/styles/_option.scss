@@ -72,7 +72,7 @@
     }
 
     & svg circle {
-        fill    : theme_variables.$brand_core;
+        fill    : var(--brand-core);
         display : none;
     }
 }

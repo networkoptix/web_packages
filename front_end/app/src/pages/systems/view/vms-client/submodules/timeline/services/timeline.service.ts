@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
+
 import TimeRange from './TimeRange';
-import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases';
 import cfg from './timeline.config';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 export interface TimelineServiceStatus {
     fullRange: TimeRange,
@@ -29,12 +31,18 @@ export class TimelineService {
     protected _subject = new Subject<TimelineServiceStatus>()
     protected _canvasGeometryUpdateRequested: boolean = true
 
-    public constructor (browserDetector: DeviceDetectorService) {
+    public constructor (
+        protected vms: VideoManagementSystemService,
+        browserDetector: DeviceDetectorService
+    ) {
         const _60fps = Math.ceil(1000 / 17);
         const _30fps = Math.ceil(1000 / 34);
 
         let renderFps = _60fps;
-        if (browserDetector.isMobile() || ['safari', 'firefox'].includes(browserDetector.browser)) {
+        if (
+            browserDetector.isMobile() ||
+            ['safari', 'firefox'].includes(browserDetector.browser)
+        ) {
             renderFps = _30fps;
         }
         this.renderFps = renderFps;
@@ -52,23 +60,34 @@ export class TimelineService {
 
     protected _emit () {
         this._subject.next({
-            fullRange                     : this.fullRange,
-            visibleRange                  : this.visibleRange,
-            canvasGeometry                : this.canvasGeometry,
-            zoom                          : this.zoomStatus,
-            canvasGeometryUpdateRequested : this.canvasGeometryUpdateRequested
+            fullRange: this.fullRange,
+            visibleRange: this.visibleRange,
+            canvasGeometry: this.canvasGeometry,
+            zoom: this.zoomStatus,
+            canvasGeometryUpdateRequested: this.canvasGeometryUpdateRequested
         });
     }
 
     public get zoomStatus () {
         return {
-            canZoomIn  : (this._visibleRange.duration / this.canvasGeometry.dpr) > this.canvasGeometry.width,
-            canZoomOut : this._visibleRange.duration < this._fullRange.duration
+            canZoomIn: (
+                this._visibleRange.duration / this.canvasGeometry.dpr
+            ) > this.canvasGeometry.width,
+            canZoomOut: this._visibleRange.duration < this._fullRange.duration
         };
     }
 
     public get subject () {
         return this._subject;
+    }
+
+    public get archiveRange (): TimeRange {
+        const sc = this.vms.selectedCamera;
+        if (sc?.hasArchive) {
+            return new TimeRange(this.fullRange.start, sc.archiveEnd);
+        } else {
+            return this.fullRange;
+        }
     }
 
     public get fullRange (): TimeRange {
@@ -77,6 +96,12 @@ export class TimelineService {
 
     public get visibleRange (): TimeRange {
         return this._visibleRange.clone();
+    }
+
+    public set visibleRange (r: TimeRange) {
+        this._visibleRange.start = Math.max(r.start, this.fullRange.start);
+        this._visibleRange.end = Math.min(r.end, this.fullRange.end);
+        this._emit();
     }
 
     public get canvasGeometry (): CanvasGeometry {
@@ -126,7 +151,9 @@ export class TimelineService {
     }
 
     public timeToDomOffsetX (t: ms): px {
-        return Math.round((t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr));
+        return Math.round(
+            (t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr)
+        );
     }
 
     public timeToCanvasOffsetX (t: ms): px {
@@ -151,7 +178,10 @@ export class TimelineService {
 
     public shiftVisibleRange (offset: ms) {
         // If the visible start is less than full range ignore the move.
-        if (this.fullRange.start <= this.visibleRange.start + offset && this.visibleRange.end + offset <= this.fullRange.end) {
+        if (
+            this.fullRange.start <= this.visibleRange.start + offset &&
+            this.visibleRange.end + offset <= this.fullRange.end
+        ) {
             this._visibleRange.shift(offset);
             this._emit();
         }
@@ -188,8 +218,13 @@ export class TimelineService {
     public stepScrollToStartTime (targetT: ms, step = cfg.SCROLL_STEP) {
         targetT = this._sanitizeScrollStartTimeAim(targetT);
         const dt = targetT - this._visibleRange.start;
-        const offset = Math.round(dt * step);
-        this._visibleRange.shift(offset);
+        if (dt) {
+            const offset = Math.round(dt * step);
+            this._visibleRange.shift(offset);
+            return true;
+        } else {
+            return false;
+        }
         // TODO: check why not calling emit() here
     }
 
@@ -208,7 +243,7 @@ export class TimelineService {
             this._initialScrollMs = this._visibleRange.start;
             this._targetScrollMs = targetT;
         } else {
-            this.stepScrollToStartTime(targetT, 1.0);
+            return this.stepScrollToStartTime(targetT, 1.0);
         }
     }
 

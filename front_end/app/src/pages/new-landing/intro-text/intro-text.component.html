@@ -1,0 +1,25 @@
+<!-- Hidden elements used to calculate position -->
+<div class="root-container-fixed hidden-element" #rootFixed></div>
+<div class="root-container-absolute hidden-element" #rootAbsolute></div>
+
+
+<div [ngClass]="'root-container-' + cloudShowing" [style.margin-left]="platform.FIREFOX && cloudShowing === 'absolute'?'6px' : null">
+    <div class="svg-container">
+        <svg-icon nx-add-svg-src 
+            [src]="CONFIG.images.dirLanding + 'cloud_icon.svg'"
+            [applyClass]="true"
+            class="cloud-icon">
+        </svg-icon>
+    </div>
+    <div class="cloud-header">
+        {{ CONFIG.cloudName }}
+    </div>
+    <div class="cloud-sub-header" translate>
+        A simple way to connect to, manage and expand any %VMS_NAME% System.
+    </div>
+</div>
+<div [ngClass]="'button-container-' + cloudShowing" [style.margin-left]="platform.FIREFOX && cloudShowing === 'absolute'?'6px' : null">
+    <button #createButton class="btn btn-primary create-button auth-hidden" type="button" (click)="routeToCreate()" (nxOnIntersect)="changeHeaderButton($event)" translate>
+        Create Account
+    </button>
+</div>

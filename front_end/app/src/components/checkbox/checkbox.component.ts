@@ -1,10 +1,17 @@
 import {
-    Component, Input, Output,
-    EventEmitter, forwardRef,
-    OnInit, ViewEncapsulation, SimpleChanges, OnChanges
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    forwardRef,
+    OnInit,
+    ViewEncapsulation,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import {
-    NG_VALUE_ACCESSOR, ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    ControlValueAccessor,
     NG_VALIDATORS,
     FormControl, Validator
 } from '@angular/forms';
@@ -21,19 +28,19 @@ import {
  */
 
 @Component({
-    selector    : 'nx-checkbox',
-    templateUrl : 'checkbox.component.html',
-    styleUrls   : ['checkbox.component.scss'],
-    providers   : [
+    selector: 'nx-checkbox',
+    templateUrl: 'checkbox.component.html',
+    styleUrls: ['checkbox.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxCheckboxComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxCheckboxComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxCheckboxComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxCheckboxComponent),
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -44,6 +51,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() checked;
     @Input() disabled;
     @Input() description: string;
+    @Input() color: string;
     @Output() onClick = new EventEmitter<string>();
 
     public value: any;
@@ -53,10 +61,10 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     private invalid: boolean;
 
     private cbxStates = {
-        false     : 'unchecked',
-        true      : 'checked',
-        disabled  : 'disabled',
-        undefined : 'tristate'
+        false: 'unchecked',
+        true: 'checked',
+        disabled: 'disabled',
+        undefined: 'tristate'
     };
 
     // Placeholders for the callbacks which are later provided
@@ -90,8 +98,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.required = (this.required !== undefined);// optional param
         this.description = this.description || undefined;
 
-        // TODO: Remove hardcoded default state ... it messes up form watcher
-        // state should be controlled by ngModel -- TT
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {

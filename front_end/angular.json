@@ -17,6 +17,27 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "md5",
+              "uuid",
+              "ng2-trim-directive",
+              "qrcode",
+              "@firebase/util",
+              "@firebase/component",
+              "core-js/features/array/is-array",
+              "rxjs/internal/scheduler/animationFrame",
+              "dateformat",
+              "@videojs/xhr",
+              "videojs-vtt.js",
+              "global/document",
+              "@babel/runtime/helpers/possibleConstructorReturn",
+              "@babel/runtime/helpers/inheritsLoose",
+              "@babel/runtime/helpers/construct",
+              "@babel/runtime/helpers/inherits",
+              "mux.js/lib/mp4/probe",
+              "mux.js/lib/tools/ts-inspector.js",
+              "swagger-ui"
+            ],
             "outputPath": "dist",
             "index": "app/index.html",
             "main": "app/main.ts",
@@ -25,9 +46,11 @@
             "aot": true,
             "buildOptimizer": true,
             "assets": [
+              { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" },
               "app/customization",
               "app/images",
               "app/fonts",
+              "app/styles",
               "app/views",
               "app/scripts",
               "app/503.html",
@@ -38,13 +61,14 @@
               "app/language_i18n.json",
               "app/language.json",
               "app/languages.json",
-              "app/openapi_v1.json",
+              "app/supported_languages.json",
               "app/robots.txt"
             ],
             "styles": [
               "app/styles/main.scss"
             ],
             "scripts": [
+              "node_modules/marked/lib/marked.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -54,6 +78,38 @@
             }
           },
           "configurations": {
+            "cloud-test": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.cloud-test.ts"
+                }
+              ]
+            },
+            "dev2": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.dev2.ts"
+                }
+              ]
+            },
+            "dev3": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.dev3.ts"
+                }
+              ]
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.local.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -85,6 +141,14 @@
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             },
+            "stage": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.stage.ts"
+                }
+              ]
+            },
             "webadmin": {
               "fileReplacements": [
                 {
@@ -94,8 +158,16 @@
                 {
                   "replace": "app/src/services/account.service/index.ts",
                   "with": "app/src/services/account.service/index.webadmin.ts"
+                },
+                {
+                  "replace": "app/src/routeGuards/authGuard.ts",
+                  "with": "app/src/routeGuards/authGuard.webadmin.ts"
                 }
-              ]
+              ],
+              "index": {
+                "input": "app/index.tagless.html",
+                "output": "index.html"
+              }
             },
             "webadmin-prod": {
               "fileReplacements": [
@@ -108,6 +180,10 @@
                   "with": "app/src/services/account.service/index.webadmin.ts"
                 }
               ],
+              "index": {
+                "input": "app/index.tagless.html",
+                "output": "index.html"
+              },
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
@@ -144,8 +220,23 @@
             "ssl": true
           },
           "configurations": {
+            "cloud-test": {
+              "browserTarget": "front-end:build:cloud-test"
+            },
+            "dev2": {
+              "browserTarget": "front-end:build:dev2"
+            },
+            "dev3": {
+              "browserTarget": "front-end:build:dev3"
+            },
+            "local": {
+              "browserTarget": "front-end:build:local"
+            },
             "production": {
               "browserTarget": "front-end:build:production"
+            },
+            "stage": {
+              "browserTarget": "front-end:build:stage"
             },
             "webadmin": {
               "port": 9001,
@@ -175,10 +266,13 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/"
+                "node_modules/",
+                "app/src/styles",
+                "app/styles"
               ]
             },
-            "scripts": []
+            "scripts": [],
+            "codeCoverage": true
           }
         },
         "lint": {
@@ -203,6 +297,161 @@
           "configurations": {
             "production": {
               "devServerTarget": "front-end:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "authorization": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/authorization",
+      "sourceRoot": "projects/authorization/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "md5",
+              "uuid"
+            ],
+            "outputPath": "dist/authorization",
+            "index": "projects/authorization/src/index.html",
+            "main": "projects/authorization/src/main.ts",
+            "polyfills": "projects/authorization/src/polyfills.ts",
+            "tsConfig": "projects/authorization/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/authorization/src/favicon.ico",
+              "projects/authorization/src/assets"
+            ],
+            "styles": [
+              "app/styles/main.scss",
+              "projects/authorization/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "deployUrl": "static/authorization/",
+              "fileReplacements": [
+                {
+                  "replace": "projects/authorization/src/environments/environment.ts",
+                  "with": "projects/authorization/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "200kb",
+                  "maximumError": "280kb"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "3mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "20kb",
+                  "maximumError": "28kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "authorization:build:development",
+            "host": "0.0.0.0",
+            "port": 9002,
+            "sourceMap": true,
+            "sslKey": "ssl_keys/server.key",
+            "sslCert": "ssl_keys/server.crt",
+            "ssl": true
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "authorization:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "authorization:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/authorization/src/test.ts",
+            "polyfills": "projects/authorization/src/polyfills.ts",
+            "tsConfig": "projects/authorization/tsconfig.spec.json",
+            "karmaConfig": "projects/authorization/karma.conf.js",
+            "assets": [
+              "projects/authorization/src/favicon.ico",
+              "projects/authorization/src/assets"
+            ],
+            "styles": [
+              "projects/authorization/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/authorization/tsconfig.app.json",
+              "projects/authorization/tsconfig.spec.json",
+              "projects/authorization/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/authorization/e2e/protractor.conf.js",
+            "devServerTarget": "authorization:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "authorization:serve:production"
             }
           }
         }

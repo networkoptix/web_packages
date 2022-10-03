@@ -1,10 +1,15 @@
+import { Component } from '@angular/core';
 import {
-    ComponentFixture, TestBed,
+    ComponentFixture,
+    TestBed,
     waitForAsync
-}                                         from '@angular/core/testing';
-import { Component }                      from '@angular/core';
-import { NxContentBlockComponent }        from './content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+} from '@angular/core/testing';
+
+import {
+    NxContentBlockSectionComponent
+} from '@components/content-block/section/section.component';
+
+import { NxContentBlockComponent } from './content-block.component';
 
 @Component({
     template: `
@@ -25,9 +30,13 @@ describe('NxContentBlockComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [NxContentBlockComponent, TestHostComponent, NxContentBlockSectionComponent]
+            declarations: [
+                NxContentBlockComponent,
+                TestHostComponent,
+                NxContentBlockSectionComponent
+            ]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(TestHostComponent);
         wrapperComponent = fixture.componentInstance;

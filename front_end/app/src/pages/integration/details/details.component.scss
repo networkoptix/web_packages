@@ -1,14 +1,13 @@
 @use 'bootstrap_utils' as bootstrap;
-@use '../../../../styles/theme_palette';
 @use "../../../styles/mixins" as *;
 
 
 integration-detail-component {
 
-    .integration-details {}
+    // .integration-details {}
 
     .menu {
-        background-color : theme_palette.$light5;
+        background-color : var(--light5);
         padding          : .5rem 0 0;
 
         .menu-level-2 {
@@ -25,8 +24,16 @@ integration-detail-component {
     }
 }
 
+a {
+    cursor: pointer;
+}
+
 :host .add-ellipsis {
     @include ellipsis;
+}
+
+.card--body-info .section img {
+    overflow: hidden;
 }
 
 #info- {

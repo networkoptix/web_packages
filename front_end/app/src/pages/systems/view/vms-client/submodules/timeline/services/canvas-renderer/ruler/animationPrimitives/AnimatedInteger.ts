@@ -1,6 +1,6 @@
-import IAnimated     from './IAnimated';
 import AnimatedFloat from './AnimatedFloat';
-import { EASING }    from '@pages/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/animationPrimitives/easing-functions';
+import IAnimated from './IAnimated';
+import { EASING } from './easing-functions';
 
 type int = number
 type durationMs = number
@@ -24,7 +24,8 @@ export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
     }
 
     public reset (v: int) {
-        this._target = this._value = Math.round(v);
+        this._value = Math.round(v);
+        this._target = Math.round(v);
         this._lastChange = Date.now();
     }
 

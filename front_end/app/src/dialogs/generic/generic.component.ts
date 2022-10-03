@@ -1,17 +1,23 @@
 import {
-    Component, OnInit, Input,
+    Component,
+    OnInit,
+    Input,
     ViewEncapsulation
-}                                                from '@angular/core';
-import { DomSanitizer }                          from '@angular/platform-browser';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import {
+    NgbActiveModal,
+    NgbModal,
+    NgbModalRef
+} from '@ng-bootstrap/ng-bootstrap';
 
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
-    selector   : 'nx-modal-generic-content',
+    selector: 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
-    styleUrls  : ['generic.component.scss']
+    styleUrls: ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
     @Input() message;
@@ -43,10 +49,10 @@ export class GenericModalContent implements OnInit {
 }
 
 @Component({
-    selector     : 'nx-modal-general',
-    template     : '',
+    selector: 'nx-modal-general',
+    template: '',
     encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
+    styleUrls: []
 })
 export class NxModalGenericComponent {
     modalRef: NgbModalRef;
@@ -60,15 +66,24 @@ export class NxModalGenericComponent {
         this.LANG = language.translations;
     }
 
-    private dialog(message, title, actionLabel, actionType?, cancelLabel?, footerClass?,
-        hasFooter?, cancellable?, closable?) {
-        this.modalRef = this.modalService.open(GenericModalContent,
-            {
-                windowClass : 'modal-holder',
-                backdrop    : 'static'
-            });
+    private dialog(
+        message,
+        title,
+        actionLabel,
+        actionType?,
+        cancelLabel?,
+        footerClass?,
+        hasFooter?,
+        cancellable?,
+        closable?
+    ) {
+        this.modalRef = this.modalService.open(GenericModalContent, {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        });
 
-        this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
+        this.modalRef.componentInstance.message =
+            message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
         this.modalRef.componentInstance.title = title;
         this.modalRef.componentInstance.actionLabel = actionLabel;
         this.modalRef.componentInstance.buttonType = actionType || 'default';
@@ -83,7 +98,14 @@ export class NxModalGenericComponent {
         return this.modalRef;
     }
 
-    openConfirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {
+    openConfirm(
+        message,
+        title,
+        actionLabel,
+        actionType?,
+        cancelLabel?,
+        footerClass?
+    ) {
         return this.dialog(message, title, actionLabel,
             actionType,
             cancelLabel,

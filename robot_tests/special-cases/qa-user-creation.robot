@@ -31,6 +31,8 @@ create Owner, Admin, Adv Viewer, Viewer, Live Viewer, noperm, notowner
         Run Keyword If    ${present}    Press Keys   ${EMAIL INPUT}    ESCAPE
         Run Keyword If    ${present}    Go To    ${url}/register
         Run Keyword If    ${present}    register and activate    ${user}
-        Run Keyword Unless    ${present}    Validate Log In
-        Run Keyword Unless    ${present}    Log Out
+        IF    ${present} == ${False}
+            Validate Log In
+            Log Out
+        END
     END

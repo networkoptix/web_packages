@@ -1,22 +1,25 @@
 import {
     Component,
-    OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewChild
-}                                    from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+    OnDestroy,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewChild,
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService }          from '../../../../../services/process.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-license-trial-component',
-    templateUrl : 'trial.component.html',
-    styleUrls   : ['trial.component.scss']
+    selector: 'nx-license-trial-component',
+    templateUrl: 'trial.component.html',
+    styleUrls: ['trial.component.scss']
 })
 
 export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
@@ -47,8 +50,10 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                         this.system.licensesModified = this.trialLicense;
                         this.haveTrialLicense = true;
 
-                        this.dialogsService
-                            .notify(this.LANG.license.messages.trialActivated?.(), 'success');
+                        this.dialogsService.notify(
+                            this.LANG.license.messages.trialActivated?.(),
+                            'success'
+                        );
                     }
 
                     if (response.error) {

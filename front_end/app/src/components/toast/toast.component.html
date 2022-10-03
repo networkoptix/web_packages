@@ -1,19 +1,18 @@
-<div *ngFor="let toast of toastService.toasts;" @fadeInOut>
-    <ngb-toast
-        class="alert alert-{{toast.classname}} fade"
-        [ngClass]="{'alert-dismissible': !toast.autohide}"
-        [autohide]="toast.autohide"
-        [delay]="toast.delay"
-        (hide)="remove(toast)">
-        <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
-            <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
-        </ng-template>
-        <ng-template #text>
+
+<div class="alert alert-{{toast.classname}} toast"
+     [ngClass]="{'alert-dismissible': !toast.autohide}">
+    <ng-template *ngIf="isTemplate; else text">
+        <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
+    </ng-template>
+    <ng-template #text>
+        <ng-template #onlyText>
             <span class="toast-content" [innerText]="toast.textOrTpl"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-                *ngIf="!toast.autohide" (click)="remove(toast)">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </ng-template>
-    </ngb-toast>
+        <span *ngIf="toast.showHTML; else onlyText" class="toast-content" [innerHTML]="toast.textOrTpl"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+            *ngIf="!toast.autohide" (click)="remove()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </ng-template>
 </div>
+

@@ -1,20 +1,26 @@
-<nx-pre-loader type="page" *ngIf="account && !system"></nx-pre-loader>
+<nx-pre-loader type="page" *ngIf="account && !system && !showPlaceholder"></nx-pre-loader>
 
-<div *ngIf="systemNoAccess || system && (secondaryMerge || system.show404); else cameras">
+<div *ngIf="showPlaceholder; else cameras">
     <nx-page-placeholder
             *ngIf="system?.show404" type="404"
-            withFooter showMainButton="true">
+            withFooter [showMainButton]="true">
     </nx-page-placeholder>
 
     <nx-page-placeholder
             *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM"
-            withFooter showMainButton="true">
+            withFooter [showMainButton]="true">
     </nx-page-placeholder>
 
     <nx-page-placeholder
             *ngIf="secondaryMerge"
             type="MERGE" [data]="{ systemName: mergeTargetSystem.name }"
             withFooter>
+    </nx-page-placeholder>
+
+    <nx-page-placeholder
+        *ngIf="show2faRequired"
+        type="FAILED_TO_ACCESS_2FA" [data]="{ systemName: systemName }"
+        withFooter [showMainButton]="true">
     </nx-page-placeholder>
 </div>
 

@@ -51,6 +51,11 @@ http {
         default "SAMEORIGIN";
     }
 
+    map ":${DOLLAR}http_x_forwarded_for" ${DOLLAR}real_remote_addr {
+        ":" ${DOLLAR}remote_addr;
+        default ${DOLLAR}http_x_forwarded_for;
+    }
+
     upstream app_server {
         # For a TCP configuration:
         server $PORTAL_HOST:5000 fail_timeout=0;
@@ -93,16 +98,36 @@ http {
 
         access_log /dev/stdout combined if=${DOLLAR}logging;
 
+        location = /myip {
+           default_type text/plain;
+           return 200 "${DOLLAR}real_remote_addr\n";
+
+           expires 1d;
+        }
+
+        location /authorize {
+            try_files /static/authorization/index.html =404;
+        }
+
+        location ~* /(?=ngsw\.json|apple-app-site-association|\.well-known) {
+            root /app/app/static/$CUSTOMIZATION/static;
+            try_files ${DOLLAR}uri ${DOLLAR}uri/ =404;
+        }
+
+        location ~* /ngsw-worker\.js$ {
+            add_header Content-Security-Policy "default-src *; script-src *; img-src *; style-src *; font-src *; frame-src * cox-vms://* demo-vms://* dtv-vms://* dw-vms://* ez-vms://* fly-vms://* hanwha-vms://* mvss-vms://* nvision-vms://* nx-vms://* pcms-vms://* qulu-vms://* ras-vms://* sentry-vms://* sk-vms://* https://*; connect-src * https://www.googletagmanager.com; object-src *; media-src *";
+            try_files /static/scripts/ngsw-worker.js =404;
+        }
+
+        location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$ {
+            root /app/app/static;
+            add_header Cache-Control 'max-age=31449600'; # one year
+            try_files /$CUSTOMIZATION/${DOLLAR}uri /$CUSTOMIZATION/static/${DOLLAR}uri /common/${DOLLAR}uri /$CUSTOMIZATION/static/scripts/vendor/${DOLLAR}uri /$CUSTOMIZATION/static/vendor/${DOLLAR}uri =404;
+            error_page 404 /common/static/index.html;
+        }
+
         location @proxy_to_app {
-            proxy_set_header X-Forwarded-For ${DOLLAR}proxy_add_x_forwarded_for;
-            proxy_set_header Host ${DOLLAR}http_host;
-            proxy_redirect off;
-
-            proxy_connect_timeout 600s;
-            proxy_read_timeout 600s;
-            proxy_send_timeout 600s;
-            send_timeout 600s;
-
+            include proxy.conf;
             proxy_pass   http://app_server;
         }
 
@@ -115,15 +140,18 @@ http {
             proxy_pass   http://app_server;
         }
 
-        location / {
-            index static/index.html;
-
-            # checks for static file, if not found proxy to app
-            try_files ${DOLLAR}uri ${DOLLAR}uri/ @proxy_to_app;
-        }
-
         location ~* .php$ {
             return 404;
+        }
+
+        location ~* ^/(?=api|oauth|swagger|health|zapier|admin_tools|serve) {
+            include proxy.conf;
+            proxy_pass http://app_server;
+        }
+
+        location /admin {
+            root /app/app/static;
+            try_files ${DOLLAR}uri ${DOLLAR}uri/ @proxy_to_app;
         }
 
         location /api/cloud_modules {
@@ -148,6 +176,13 @@ http {
             proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com;
         }
 
+        location /static/$BUILD/ {
+            root /app/app/static;
+            rewrite ^/static/$BUILD/(.*)$ /static/$1 break;
+            try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            error_page 404 /common/static/index.html;
+        }
+
         location /static/ {
             root /app/app/static;
             try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
@@ -167,11 +202,23 @@ http {
 
         location /robots.txt {
             root /app/app/static/$CUSTOMIZATION/static/;
-            error_page 404 /static/index.html;
+            try_files ${DOLLAR}uri @proxy_to_app;
         }
 
         location /static {
             error_page 404 /static/index.html;
+        }
+
+        location / {
+            include proxy.conf;
+            index static/index.html;
+
+            if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot|(.*)AOLBuild(.*)|Baidu(.*)|(.*)bingbot(.*)|(.*)BingPreview(.*)|msnbot(.*)|DuckDuckBot(.*)|AdsBot-Google(.*)|(.*)Googlebot(.*)|(.*)Mediapartners-Google(.*)|(.*)Teoma(.*)|(.*)Slurp(.*)|(.*)Yandex(.*))$") {
+                proxy_pass http://app_server;
+            }
+
+
+            try_files ${DOLLAR}uri ${DOLLAR}uri/ /static/index.html;
         }
 
         # Add HTTP Strict Transport Security for good measure.
@@ -204,6 +251,6 @@ http {
         # I need to change our application code so we can increase security by disabling 'unsafe-inline' 'unsafe-eval'
         # directives for css and js(if you have inline css or js, you will need to keep it too).
         # more: http://www.html5rocks.com/en/tutorials/security/content-security-policy/#inline-code-considered-harmful
-        add_header Content-Security-Policy "default-src blob: 'self'; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' https://*.hotjar.com https://*.google-analytics.com https://www.googletagmanager.com https://sjs.bizographics.com; img-src 'self' blob: data: $DATA_HOSTS_STR https://*.google-analytics.com https://*.hotjar.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://themes.googleusercontent.com https://static.hotjar.com; frame-src * cox-vms://* demo-vms://* dtv-vms://* dw-vms://* ez-vms://* fly-vms://* hanwha-vms://* mvss-vms://* nvision-vms://* nx-vms://* pcms-vms://* qulu-vms://* ras-vms://* sentry-vms://* sk-vms://* https://*; connect-src 'self' https://*.networkoptix.com https://*.google-analytics.com https://*.googleapis.com https://*.hotjar.com:* wss://*.hotjar.com blob: $DATA_HOSTS_STR; object-src 'none'; media-src 'self' blob: $DATA_HOSTS_STR";
+        add_header Content-Security-Policy "default-src blob: 'self'; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' https://*.hotjar.com https://*.google-analytics.com https://*.googletagmanager.com https://sjs.bizographics.com https://*.lr-in-prod.com https://*.fullstory.com; img-src 'self' blob: data: $DATA_HOSTS_STR https://*.google-analytics.com https://www.google.com https://*.hotjar.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://themes.googleusercontent.com https://static.hotjar.com; frame-src * cox-vms://* demo-vms://* dtv-vms://* dw-vms://* ez-vms://* fly-vms://* hanwha-vms://* mvss-vms://* nvision-vms://* nx-vms://* pcms-vms://* qulu-vms://* ras-vms://* sentry-vms://* sk-vms://* https://*; connect-src 'self' ws: wss: https://*.networkoptix.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://*.google-analytics.com https://*.googleapis.com https://*.hotjar.com:* wss://*.hotjar.com https://*.lr-in-prod.com https://*.fullstory.com blob: $DATA_HOSTS_STR; object-src 'none'; media-src 'self' blob: $DATA_HOSTS_STR";
     }
 }

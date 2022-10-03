@@ -1,12 +1,14 @@
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate, Router,
-    RouterStateSnapshot, UrlTree
+    CanActivate,
+    Router,
+    RouterStateSnapshot,
+    UrlTree
 } from '@angular/router';
-import { Injectable }               from '@angular/core';
-import { Observable }               from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { NxConfigService, IConfig } from '../services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Injectable()
 export class DevelopersGuard implements CanActivate {

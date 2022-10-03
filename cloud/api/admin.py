@@ -82,7 +82,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
                     'is_staff', 'language', 'customization']
     # forbid changing all fields which can be edited by user in cloud portal except sub
     readonly_fields = ('email', 'first_name', 'last_name', 'created_date', 'activated_date', 'last_login',
-                       'language', 'customization')
+                       'customization')
 
     exclude = ("user_permissions",)
 
@@ -97,13 +97,11 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
     form = AccountAdminForm
 
     def save_model(self, request, obj, form, change):
-        # forbid creating superusers outside specific domain
-        if obj.is_superuser and not obj.email.endswith(settings.SUPERUSER_DOMAIN):
-            obj.is_superuser = False
+        # forbid creating superusers if their email isn't from the superuser domain
+        obj.is_staff |= obj.email.endswith(settings.SUPERUSER_DOMAIN)
 
-        # if this is superuser - make him is_staff too
-        if obj.is_superuser:
-            obj.is_staff = True
+        # forbid creating superusers if they're not staff
+        obj.is_superuser &= obj.is_staff
 
         obj.save()
 
@@ -127,6 +125,11 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         ):
             return self.list_display + ['user_groups']
         return self.list_display
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return self.readonly_fields
+        return self.readonly_fields + ('language',)
 
     def has_add_permission(self, request):  # Only superuser can add users
         return False
@@ -164,7 +167,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     def invite(self, request):
         group_id = request.GET.get('group_id')
-        group = Group.objects.filter(id=group_id).first() if group_id.isnumeric() else None
+        group = Group.objects.filter(id=group_id).first() if group_id and group_id.isnumeric() else None
         group_name = group.name if group else None
         context = {
             'title': 'Invite User' + (f' to Group "{group_name}"' if group_name else ""),
@@ -192,12 +195,13 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
 
 @admin.register(AccountLoginHistory)
-class AccountLoginHistoryAdmin(admin.ModelAdmin):
+class AccountLoginHistoryAdmin(CMSAdmin, CSVExportAdmin):
     list_display = ('action', 'email', 'ip', 'date')
     list_filter = ('action', 'date')
     search_fields = ('email', 'ip', 'date')
 
-    actions = ['clean_old_records']
+    csv_fields = ('action', 'email', 'ip', 'date')
+    # actions = ['clean_old_records']
 
     def clean_old_records(self, request, queryset):
         from datetime import datetime, timedelta

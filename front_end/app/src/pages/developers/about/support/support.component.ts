@@ -1,19 +1,21 @@
-import {Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ViewEncapsulation, Inject} from '@angular/core';
-import { UntilDestroy }     from '@ngneat/until-destroy';
-import { AboutNode } from '../about.component';
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { Component, Input, OnChanges, SimpleChanges, Inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { UntilDestroy } from '@ngneat/until-destroy';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUtilsService } from '@services/utils.service';
-import { DomSanitizer }        from '@angular/platform-browser';
-import { ErrorStateManager } from '../error-state/error-state-manager';
 import { WINDOW } from '@services/window-provider';
+
+import { AboutNode } from '../about.component';
+import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-support',
-    templateUrl : 'support.component.html',
-    styleUrls   : ['support.component.scss']
+    selector: 'nx-support',
+    templateUrl: 'support.component.html',
+    styleUrls: ['support.component.scss']
 })
 export class NxSupportComponent implements OnChanges {
     @Input() supportNode: AboutNode;
@@ -49,7 +51,12 @@ export class NxSupportComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.cleanSupportNode = NxUtilsService.deepCopy(changes.supportNode.currentValue);
-        this.cleanSupportNode.asset.shortDescription = this.sanitizer.bypassSecurityTrustHtml(this.cleanSupportNode.asset.shortDescription);
+        this.cleanSupportNode = NxUtilsService.deepCopy(
+            changes.supportNode.currentValue
+        );
+        this.cleanSupportNode.asset.shortDescription =
+            this.sanitizer.bypassSecurityTrustHtml(
+                this.cleanSupportNode.asset.shortDescription
+            );
     }
 }

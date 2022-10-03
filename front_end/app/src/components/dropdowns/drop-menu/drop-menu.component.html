@@ -8,7 +8,7 @@
                 [system]="system" 
                 [active]="system && headerService.lastActive$.value && system.id === headerService.lastActive$.value.id"
                 [width]="columnWidth" 
-                (click)="updateURI(system.id)"></nx-system-tile>
+                (click)="updateURI(system.id, undefined)"></nx-system-tile>
             <nx-additional-systems-tile 
                 [additionalSystems$]="additionalSystems$"
                 (click)="updateURI('', undefined, true)"

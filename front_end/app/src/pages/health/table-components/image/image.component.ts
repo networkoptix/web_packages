@@ -1,15 +1,19 @@
 import {
-    Component, EventEmitter,
-    Input, OnChanges, Output,
-    OnDestroy, SimpleChanges
-}                          from '@angular/core';
-import { UntilDestroy }    from '@ngneat/until-destroy';
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    OnDestroy,
+    SimpleChanges
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-health-image',
-    templateUrl : './image.component.html',
-    styleUrls   : ['./image.component.scss']
+    selector: 'nx-health-image',
+    templateUrl: './image.component.html',
+    styleUrls: ['./image.component.scss']
 })
 export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() isPrimary: boolean;
@@ -26,17 +30,17 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     get imageClass() {
         return this.motionPreview
             ? {
-                'motion-preview' : true,
-                'd-none'         : !this.show
+                'motion-preview': true,
+                'd-none': !this.show
             } : {
-                mini                      : !this.isPrimary,
-                'd-none'                  : !this.show,
-                'light-thumbnail-preview' : this.lightBackground,
-                'thumbnail-preview'       : !this.lightBackground,
-                wide                      : this.aspect === '16:9' || this.aspect === 'Auto',
-                normal                    : this.aspect === '4:3',
-                square                    : this.aspect === '1:1',
-                fill                      : this.aspect === 'override'
+                mini: !this.isPrimary,
+                'd-none': !this.show,
+                'light-thumbnail-preview': this.lightBackground,
+                'thumbnail-preview': !this.lightBackground,
+                wide: this.aspect === '16:9' || this.aspect === 'Auto',
+                normal: this.aspect === '4:3',
+                square: this.aspect === '1:1',
+                fill: this.aspect === 'override'
             };
     }
 
@@ -49,12 +53,23 @@ export class NxImageComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges) {
         if (!(Object.keys(changes).length === 1 && changes.state)) {
-            const firstChange = Object.values(changes).reduce((noChanges, { firstChange }) => noChanges && firstChange, true);
+            const firstChange = Object.values(changes)
+                .reduce(
+                    (noChanges, { firstChange }) => noChanges && firstChange,
+                    true
+                );
             if (!firstChange) {
                 this.show = false;
             }
         }
-        if (this.state === 'Unauthorized' || changes.state && !['Online', 'Recording', 'Scheduled'].includes(changes.state.currentValue)) {
+        if (
+            this.state === 'Unauthorized' ||
+            changes.state && ![
+                'Online',
+                'Recording',
+                'Scheduled'
+            ].includes(changes.state.currentValue)
+        ) {
             this.url = '';
             this.loaded.emit(true);
         }

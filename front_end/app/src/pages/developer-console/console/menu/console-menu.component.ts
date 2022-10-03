@@ -1,0 +1,79 @@
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { ConsoleSection } from '@components/console-table/console-table.component.types';
+import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
+import { NxMenusService } from '@services/menus.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+
+export interface ConsoleMenuNode {
+    title: string,
+    url: string,
+    icon?: string
+}
+
+@UntilDestroy()
+@Component({
+    selector: 'console-menu',
+    templateUrl: 'console-menu.component.html',
+    styleUrls: ['console-menu.component.scss']
+})
+export class NxDevConsoleMenuComponent {
+    @Input() menu: ConsoleMenuNode[];
+    @Input() base: string;
+    @Input() type: ConsoleMode;
+    @Input() sectionParam: ConsoleSection;
+
+    CONFIG: IConfig;
+    TYPES = ConsoleMode;
+
+    showAdditionalLinks = false;
+    loading = true;
+    cancel$ = new Subject();
+
+    constructor(
+        configService: NxConfigService,
+        private menusService: NxMenusService
+    ) {
+        this.CONFIG = configService.config;
+    }
+
+    ngOnInit() {
+        this.showAdditionalLinks = ![
+            ConsoleSection.CUSTOM_CLIENTS
+        ].includes(this.sectionParam);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        const {
+            menu: { currentValue: menu }
+        } = changes;
+        this.cancel$.next('cancel');
+
+        this.menusService.getMenu('configuration').pipe(
+            takeUntil(this.cancel$),
+            untilDestroyed(this)
+        ).subscribe(config => {
+            const consoleCmsConfig = (config?.nodes || []).find(({ url }) => url === this.base);
+            for (const section in this.CONFIG.manifest) {
+                const sectionConfig = this.menu.find(({ url }) => url === section);
+                if (sectionConfig) {
+                    const cmsTitle = consoleCmsConfig.nodes.find(({ url }) =>
+                        (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`
+                    )?.name;
+                    sectionConfig.title = cmsTitle || sectionConfig.title;
+                }
+            }
+
+            this.loading = !menu.length;
+        });
+    }
+}
+
+export const forUnitTest = {
+    NxMenusService,
+    NxConfigService,
+    ConsoleMode
+};

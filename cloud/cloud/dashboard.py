@@ -32,7 +32,7 @@ class CustomIndexDashboard(Dashboard):
         # append an app list module for "Applications"
         self.children.append(modules.AppList(
             _('Applications'),
-            exclude=settings.ADMIN_DASHBOARD,
+            models=settings.ADMIN_DASHBOARD,
             deletable=False,
             collapsible=False,
         ))
@@ -40,7 +40,7 @@ class CustomIndexDashboard(Dashboard):
         # append an app list module for "Administration"
         self.children.append(modules.AppList(
             _('Internal'),
-            models=settings.ADMIN_DASHBOARD,
+            exclude=settings.ADMIN_DASHBOARD,
             deletable=False,
             collapsible=False,
         ))

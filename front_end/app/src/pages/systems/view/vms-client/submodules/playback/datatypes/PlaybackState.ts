@@ -1,5 +1,5 @@
-import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
-import { ms }                                 from '../../../utils/type-aliases';
+import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import { ms } from '@vms-client/utils/type-aliases';
 
 export enum PLAYBACK_MODE {
     STOPPED = 0,
@@ -56,11 +56,11 @@ export function createInitialStoppedState (
     transport: PlaybackTransport = 'webm'
 ): StoppedPlaybackState {
     return {
-        mode          : PLAYBACK_MODE.STOPPED,
-        initializedAt : Date.now(),
+        mode: PLAYBACK_MODE.STOPPED,
+        initializedAt: Date.now(),
         quality,
         transport,
-        error         : ''
+        error: ''
     };
 }
 
@@ -72,18 +72,18 @@ export function createInitialArchiveState (
     posterUrl?: string
 ): ArchivePlaybackState {
     return {
-        mode          : PLAYBACK_MODE.ARCHIVE,
+        mode: PLAYBACK_MODE.ARCHIVE,
         sourceUrl,
         posterUrl,
-        started       : false,
-        paused        : false,
-        encrypted     : false,
-        startTime     : t,
-        currentTime   : t,
+        started: false,
+        paused: false,
+        encrypted: false,
+        startTime: t,
+        currentTime: t,
         quality,
         transport,
-        initializedAt : Date.now(),
-        error         : ''
+        initializedAt: Date.now(),
+        error: ''
     };
 }
 
@@ -94,14 +94,14 @@ export function createInitialLiveState (
     posterUrl?: string
 ): LivePlaybackState {
     return {
-        mode          : PLAYBACK_MODE.LIVE,
+        mode: PLAYBACK_MODE.LIVE,
         sourceUrl,
         posterUrl,
-        started       : false,
+        started: false,
         quality,
         transport,
-        currentTime   : Date.now(),
-        initializedAt : Date.now(),
-        error         : ''
+        currentTime: Date.now(),
+        initializedAt: Date.now(),
+        error: ''
     };
 }

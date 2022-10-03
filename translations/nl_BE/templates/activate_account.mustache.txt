@@ -2,7 +2,7 @@ Hallo {{message.userFullName}},
 
   Open de onderstaande link om uw e-mailadres te bevestigen en het account te activeren.
 
-{{config.portal_url}}/activeer/{{message.code}}
+{{config.portal_url}}/machtigen/activeren /{{message.code}}
 
 Als u zich niet voor %CLOUD_NAME% heeft geregistreerd, kunt u deze e-mail negeren.
 Deel het bericht of de link met niemand.

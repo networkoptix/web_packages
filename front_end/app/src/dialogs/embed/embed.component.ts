@@ -1,14 +1,19 @@
 import {
-    Component, OnInit, Input,
-    ViewChild, OnDestroy, AfterViewInit
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+    Component,
+    OnInit,
+    Input,
+    ViewChild,
+    OnDestroy,
+    AfterViewInit
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -16,9 +21,9 @@ interface IParams<Value = any> {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-modal-embed-content',
+    selector: 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',
-    styleUrls  : []
+    styleUrls: []
 })
 export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() systemId;
@@ -32,7 +37,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     embedUrl: string;
     private formChangesSubscription: Subscription;
 
-    @ViewChild('embedForm', { static: true }) embedForm;
+    @ViewChild('embedForm', { static: true }) embedForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,
@@ -40,15 +45,15 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         public activeModal: NgbActiveModal
     ) {
         this.params = {
-            authString : '',
-            nocameras  : false,
-            noheader   : false,
-            nocontrols : false
+            authString: '',
+            nocameras: false,
+            noheader: false,
+            nocontrols: false
         };
 
         this.auth = {
-            email    : '',
-            password : ''
+            email: '',
+            password: ''
         };
 
         this.CONFIG = configService.getConfig();
@@ -63,9 +68,10 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.formChangesSubscription = this.embedForm.form.valueChanges.subscribe((changes) => {
-            this.createEmbedUrl(changes);
-        });
+        this.formChangesSubscription = this.embedForm.form.valueChanges
+            .subscribe((changes) => {
+                this.createEmbedUrl(changes);
+            });
     }
 
     createEmbedUrl(params): void {
@@ -79,7 +85,9 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
                 // filter checkboxes in form
                 if (this.params[paramsKey] !== undefined && !params[paramsKey]) {
                     uri += (uri === '') ? '?' : '&';
-                    uri += (typeof params[paramsKey] === 'boolean') ? paramsKey : params[paramsKey];
+                    uri += (typeof params[paramsKey] === 'boolean')
+                        ? paramsKey
+                        : params[paramsKey];
                 }
             }
         }

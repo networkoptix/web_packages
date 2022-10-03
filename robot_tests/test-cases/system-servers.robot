@@ -1,187 +1,11 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-server-resource.robot
 Suite Setup       Server Settings Suite Setup
 Test Setup        Server Settings Test Setup
 Test Teardown     Server Settings Test Teardown
-Suite Teardown    Server Settings Suite Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Server Settings Suite Tear Down
 Force Tags        system    
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
-@{server auth}   admin    ${password}
-
-*** Keywords ***
-Server Settings Suite Setup
-    ${owner}=    Register and activate account with random email    mark    hamil    ${password}
-    Set Suite Variable    ${user in charge}    ${owner}
-    @{auth}=    Create List    ${user in charge}    ${password}
-    Set Suite Variable    ${auth}
-
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    # We setup one server manually here because we need 2 ports
-    ${random}=    Generate Random String
-    ${port 1}=   Get Random Available Port
-    Set Suite Variable    ${port 1}
-    ${extra port}=  Get Random Available Port
-    Set Suite Variable    ${extra port}
-    IF    '5.0' not in $image
-        Set Local Variable   ${vms}    old
-    ELSE
-        Set Local Variable    ${vms}    new
-    END
-    ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} -e VMS=${vms} ${IMAGE}
-    ${cont id 1}=    Evaluate    $id[:12]
-
-    Sleep    5
-    Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    servers1-${random}
-    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
-    ${server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server 1 id}
-
-    ${server 2}=    Run Keyword If    '''${mode}'''=='''cloud'''    Create Base System    servers2-${random}    owner=${user in charge}
-    ...    ELSE    Create Base System    servers2-${random}
-    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}    Server ${server 2}[id]
-    ${server 3}=    Run Keyword If    '''${mode}'''=='''cloud'''    Create Base System    servers3-${random}    owner=${user in charge}
-    ...    ELSE    Create Base System    servers3-${random}
-
-    Change server name via API    ${server auth}    server 1    ${server 1 id}    https://${QA BURBANK IP}:${port 1}
-    Change server name via API    ${server 2}[local auth]    server 2    ${server 2 id}    https://${QA BURBANK IP}:${server 2}[port]
-    FOR    ${i}    IN RANGE    1    4
-        Set Suite Variable    ${server ${i}}
-    END
-
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
-    ...    ELSE    Web Admin Suite Setup
-
-Web Admin Suite Setup
-    Set Suite Variable    ${user in charge}    admin
-    #sleep    120
-    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1}[port]   ${QA BURBANK IP}:${server 2}[port]    currentPassword=${password}
-    Sleep    120
-    #Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
-    #Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
-    #Log In    admin    ${password}
-    #Wait Until Element is Visible    ${SERVERS LINK}
-    #Click Link    ${SERVERS LINK}
-    #Sleep    5
-    #Select Server By Name    server 1
-    #Wait Until Element is Visible    //header//button[@id="accountSettingsSelect"]
-    #click button    //header//button[@id="accountSettingsSelect"]
-    #Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
-    #Click Link    //header//a/span[text()="Log Out"]/..
-
-    @{local users}=   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    password=${password}
-    Set Suite Variable    ${admin}          Local+${local users[1]}
-    Set Suite Variable    ${viewer}         Local+${local users[4]}
-    Set Suite Variable    ${live viewer}    Local+${local users[3]}
-    Set Suite Variable    ${adv viewer}     Local+${local users[0]}
-    Set Suite Variable    ${custom}         Local+${local users[2]}
-    Execute Command Remotely    docker container stop ${server 2}[id]
-
-Cloud Suite Setup
-
-    Open Browser and go to URL    ${ENV}
-
-    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    2serverstest1    ${user in charge}    ${password}
-    Set To Dictionary    ${server 1}    sysId=${sysId1}
-    Set To Dictionary    ${server 2}    sysId=${server 2}[cloud id]
-    Set To Dictionary    ${server 3}    sysId=${server 3}[cloud id]
-
-    Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
-    Go to Servers
-    Verify on Servers Page    timeout=120
-
-    Go To    ${ENV}/systems/${server 2}[sysId]
-    Sleep    5
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
-    Common Restart Logout    ${ENV}
-    Merge Cloud Systems    ${ENV}    ${server 1}[sysId]    ${server 2}[cloud id]    ${server 2}[owner]    ${password}
-    Sleep    120
-
-    ${users}=    Register and Activate Generic Users    password=${password}
-    Set Suite Variable    ${admin}          ${users}[cloudAdmin]
-    Set Suite Variable    ${viewer}         ${users}[viewer]
-    Set Suite Variable    ${live viewer}    ${users}[liveViewer]
-    Set Suite Variable    ${adv viewer}     ${users}[advancedViewer]
-    Set Suite Variable    ${custom}         ${users}[custom]
-    Add user to cloud system if not there    ${server 1}[sysId]    cloudAdmin        ${admin}          auth=${auth}
-    Add user to cloud system if not there    ${server 1}[sysId]    viewer            ${viewer}         auth=${auth}
-    Add user to cloud system if not there    ${server 1}[sysId]    advancedViewer    ${adv viewer}     auth=${auth}
-    Add user to cloud system if not there    ${server 1}[sysId]    custom            ${custom}         auth=${auth}
-    Add user to cloud system if not there    ${server 1}[sysId]    liveViewer        ${live viewer}    auth=${auth}
-
-    Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
-    Sleep    10
-    Wait Until Element is Visible    ${SERVERS LINK}    300
-    Sleep    5
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
-    Log Out
-
-    Log in to user and system    ${user in charge}    ${server 3}[sysId]    password=${password}
-
-    Wait Until Element is Visible    ${SERVERS LINK}    300
-    Sleep    5
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
-    Log Out
-    Open Browser and go to URL    ${ENV}
-    Execute Command Remotely    docker container stop ${server 2}[id]
-
-
-Server Settings Suite Tear Down
-    FOR    ${i}    IN RANGE    1    4
-        Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server ${i}}[sysId]    ${password}    ${user in charge}
-    END
-
-    Execute Command Remotely     docker container rm -f ${server 1}[contId] ${server 2}[id] ${server 3}[id]
-
-    FOR    ${user}    IN    ${admin}    ${viewer}    ${live viewer}    ${adv viewer}    ${custom}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}    ${password}
-    END
-
-    Close All Connections
-    Close All Browsers
-
-Server Settings Test Setup
-    [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
-    Skip If Irrelevant
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
-    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
-
-Cloud Test Setup
-    [Arguments]    ${server}    ${user}    ${verify}
-    Log in to user and system    ${user}    ${server}[sysId]    password=${password}
-    Sleep    5
-    Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
-    Run Keyword If    ${verify}    Go To Servers
-    Run Keyword If    ${verify}    Verify on Servers Page    timeout=120
-
-Web Admin Test Setup
-    [Arguments]    ${server}    ${user}    ${verify}
-    Open Browser and go to URL    https://${QA BURBANK IP}:${server}[port]
-    Log In Web Admin    ${user}    ${password}    ${verify}
-    Sleep    5
-    Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
-    Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
-
-Server Settings Test Teardown
-    Run Keyword If    '''${mode}'''=='''cloud'''    Common Restart Logout    ${ENV}
-    ...    ELSE    Close Browser
-    Run Keyword If Test Failed    Run Keywords
-        ...    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]    AND
-        ...    Execute Command Remotely    docker container stop ${server 2}[id]
-
-Cloud Test Teardown
-    Common Restart Logout    ${ENV}
-    Run Keyword If Test Failed    Run Keywords
-        ...    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]    AND
-        ...    Execute Command Remotely    docker container stop ${server 2}[id]
-
-Web Admin Test Teardown
-    Close Browser
 
 *** Test Cases ***
 #Rename server requires a name
@@ -199,14 +23,14 @@ Web Admin Test Teardown
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
     Change System Name    server 1 name changed    save=True
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
     Reload Page
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
     Wait Until Element is Visible    //nx-level-3-item//a//span[contains(text(),"server 1 name changed")]     
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Reload Page
-    Wait Until Element Is Visible    //header//h2[contains(text(),"server 1")]/..
+    Wait Until Element Is Visible    //header//nx-text-editable[contains(text(),"server 1")]
 
 2. Server name changed via API updates on cloud
     [Tags]    C70961    cloud    webadmin
@@ -221,8 +45,8 @@ Web Admin Test Teardown
     Reload Page
     Sleep   5
     Select Server By Name    server 1 name changed
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-
+    #Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Element Text Should Be    ${SYSTEM NAME}    server 1 name changed
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
 
@@ -245,7 +69,9 @@ Web Admin Test Teardown
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
 5. Restart server as owner
-    [Tags]    C70968    cloud    webadmin
+    [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
+    [Tags]    C70968    webadmin    # cloud
+    Skip If     '''${mode}'''=='''cloud'''
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -253,18 +79,21 @@ Web Admin Test Teardown
     Click Button    ${RESTART DIALOG RESTART BUTTON}
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
-    Wait Until Elements are Visible
-    ...    ${RESTARTING BANNER}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
-       ...    ELSE   Run Keywords
-           ...    Sleep    60    AND
-           ...    Close Browser    AND
-           ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]    AND
-           ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    Wait Until Elements are Visible     ${RESTARTING BANNER}
+    IF    '''${mode}'''=='''cloud'''
+        Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
+    ELSE
+        Sleep    60
+        Close Browser
+        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]
+        Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    END
 
 6. Restart server as administrator
-    [Tags]    C70968    cloud    webadmin
+    [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
+    [Tags]    C70968    webadmin    # cloud
     [Setup]    Server Settings Test Setup    user=${admin}
+    Skip If    '''${mode}'''=='''cloud'''
     Verify on Servers Page
     Wait Until Element Is Enabled    ${RESTART SERVER BUTTON}
     Click Button    ${RESTART SERVER BUTTON}
@@ -273,12 +102,14 @@ Web Admin Test Teardown
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
     Wait Until Element Is Visible    ${RESTARTING BANNER}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
-        ...    ELSE    Run Keywords
-            ...    Sleep    60    AND
-            ...    Close Browser    AND
-            ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}    AND
-            ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    IF    '''${mode}'''=='''cloud'''
+        Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
+    ELSE
+        Sleep    60
+        Close Browser
+        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+        Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    END
 
 7. Change port is only available for owner
     [Tags]    C70927    cloud    webadmin
@@ -287,7 +118,7 @@ Web Admin Test Teardown
     Element Should Be Disabled    ${PORT INPUT}
 
 8. Port field validation
-    [Tags]    C70929    cloud    webadmin
+    [Tags]    C70929    cloud    webadmin     CLOUD-8753
     Verify on Servers Page
     Verify Server Buttons Are Enabled
 
@@ -308,7 +139,7 @@ Web Admin Test Teardown
     Press Keys    ${PORT INPUT}    0
     Sleep    1
     ${current port}=    Get Value    ${PORT INPUT}
-    Should Be Equal    ${current port}    ${EMPTY}
+    Should Be Equal    ${current port}    1
     Element Should Be Disabled     ${SAVE BUTTON}
 
     Log    Step 3
@@ -323,7 +154,7 @@ Web Admin Test Teardown
     Press Keys    ${PORT INPUT}    77777
     Wait Until Element Is Not Visible    ${PORT TOO LOW ERROR}
     ${current port}=    Get Value    ${PORT INPUT}
-    Should Be Equal    ${current port}    7777
+    Should Be Equal    ${current port}    65535
 
     Log    Step 5
     Click Element    ${PORT INPUT}
@@ -351,7 +182,7 @@ Web Admin Test Teardown
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
-    @{auth}=    Create List    ${user in charge}    ${password}
+    @{auth}=    Create List    admin    ${password}
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${extra port}
     Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    ${7001}    ${server 1}[serverId]
     Log To Console    port changed back
@@ -363,7 +194,7 @@ Web Admin Test Teardown
     Verify on Servers Page
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
-    @{auth}=    Create List    ${admin}    ${password}
+    @{auth}=    Create List    ${server 2}[local users][cloudAdmin][email]    ${password}
     ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${server 1}[sysId].relay.vmsproxy.hdw.mx    7777    ${split[1]}
     ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${server 1}[port]    7777    ${split[1]}
     ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
@@ -398,8 +229,11 @@ Web Admin Test Teardown
     Click Button    ${SERVER DETAILED INFO BUTTON}
     ${loc}=    Get Location
     log    ${loc}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 3}[sysId]/health/servers
-    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 3}[port]/#/health/servers
+    IF    '''${mode}'''=='''cloud'''
+        Wait Until Location Contains    ${ENV}/systems/${server 3}[sysId]/health/servers
+    ELSE
+        Wait Until Location Contains    https://${QA BURBANK IP}:${server 3}[port]/#/health/servers
+    END
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
 
@@ -408,12 +242,15 @@ Web Admin Test Teardown
     Execute Command Remotely   docker container start ${server 2}[id]
     Select Server By Name    server 1
     Click Button    ${SERVER DETAILED INFO BUTTON}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 1}[sysId]/health/servers
-    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
+    IF    '''${mode}'''=='''cloud'''
+        Wait Until Location Contains    ${ENV}/systems/${server 1}[sysId]/health/servers
+    ELSE
+        Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
+    END
     
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 1")]
+    Wait Until Element is Visible    //nx-block//h4[@class="panel-title"]
     Execute Command Remotely    docker container stop ${server 2}[id]
 
 14. Offline system 1 server settings

@@ -1,15 +1,16 @@
-import { NgModule }                 from '@angular/core';
-import { CommonModule }             from '@angular/common';
-import { AngularSvgIconModule }     from 'angular-svg-icon';
-import { RouterModule }             from '@angular/router';
-import { FormsModule }              from '@angular/forms';
-import { NgbModule }                from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }          from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule }         from '../../../../directives/directives.module';
-import { ComponentsModule }         from '../../../../components/components.module';
-import { NxCloudStorageComponent }  from './cloud-storage.component';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxCloudStorageComponent } from './cloud-storage.component';
 
 @NgModule({
     imports: [

@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          systems-page-resource.robot
+
 *** Keywords ***
 # Setups & Teardowns
 Header Suite Setup
@@ -48,14 +52,6 @@ Header Test Teardown
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}    timeout=5
     Run Keyword If    ${logged in}    Log Out
 
-# Header
-Validate Header Button Text
-    [Arguments]    ${expected text}    ${systems}=${True}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Sleep    5
-    ${actual text}=   Get Text    ${SYSTEMS DROPDOWN}/span
-    Run Keyword If    ${systems}    Should be equal as strings    ${expected text}${SPACE}${SYSTEMS TITLE TEXT}    ${actual text}
-        ...    ELSE    Should be equal as strings    ${expected text}    ${actual text}
 
 Validate Active Header Link
     [Arguments]    ${link text}
@@ -127,6 +123,7 @@ Check Drop Menu Systems Grid System
 
     FOR    ${width}    ${columns}    ${max systems}    IN ZIP    ${WIDTHS}    ${COLUMNS SHOWN}    ${MAX SYSTEMS SHOWN}
         Set Window Size    ${width}    1080
+        Sleep    1
         ${tiles}=   Get Element Count    ${SYSTEMS GRID TILES}
         ${tiles to show}=   Get Tiles to Show    ${system list count}    ${max systems}
         Should be Equal As Integers    ${tiles}    ${tiles to show}

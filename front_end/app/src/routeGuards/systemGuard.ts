@@ -1,15 +1,17 @@
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate, Router,
-    RouterStateSnapshot, UrlTree
-}                                    from '@angular/router';
-import { Injectable }                from '@angular/core';
-import { Observable, Subject }       from 'rxjs';
+    CanActivate,
+    Router,
+    RouterStateSnapshot,
+    UrlTree
+} from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { environment }               from '@environments/environment';
-import { NxAccountService }          from '@services/account.service';
+import { environment } from '@environments/environment';
+import { NxSettingsService } from '@pages/systems/settings/settings.service';
+import { NxAccountService } from '@services/account.service';
 import { NxSystem, NxSystemService } from '@services/system.service';
-import { NxSettingsService }         from '@pages/systems/settings/settings.service';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -34,7 +36,15 @@ export class SystemGuard implements CanActivate {
             return true;
         }
 
-        const routesChecked = ['users', 'cloud-storage', 'health', 'licenses', 'servers', 'advanced'];
+        const routesChecked = [
+            'users',
+            'cloud-storage',
+            'health',
+            'licenses',
+            'servers',
+            'advanced',
+            'monitoring'
+        ];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = environment.isLocal || route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
@@ -44,12 +54,13 @@ export class SystemGuard implements CanActivate {
             const permissions: any = system.userManager?.permissions || {};
             const isOwner = system.userManager.isOwner(system.userManager.currentUser);
             const canViewChecks = {
-                users           : permissions.editUsers,
-                'cloud-storage' : system.canUserViewCloudStorage(),
-                health          : system.canViewInfo(),
-                licenses        : permissions.isAdmin || isOwner,
-                advanced        : permissions.isAdmin || isOwner,
-                servers         : permissions.isAdmin || isOwner
+                users: permissions.editUsers,
+                'cloud-storage': system.canUserViewCloudStorage(),
+                health: system.canViewInfo(),
+                licenses: permissions.isAdmin || isOwner,
+                advanced: permissions.isAdmin || isOwner,
+                servers: permissions.isAdmin || isOwner,
+                monitoring: permissions.isAdmin || isOwner,
             };
 
             return canViewChecks[currentRoute] || this.router.navigate(
@@ -68,9 +79,7 @@ export class SystemGuard implements CanActivate {
 
                     return new Promise((resolve) => {
                         if (currSystem) {
-                            currSystem.getInfoAndPermissions().then(_ => {
-                                resolve(checkPermissionsFor(currSystem));
-                            });
+                            resolve(checkPermissionsFor(currSystem));
                         } else {
                             if (environment.isLocal) {
                                 currSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
@@ -79,10 +88,8 @@ export class SystemGuard implements CanActivate {
                             }
 
                             currSystem.update().then(_ => {
-                                currSystem.getInfoAndPermissions().then(_ => {
-                                    this.settingsService.system = currSystem;
-                                    resolve(checkPermissionsFor(currSystem));
-                                });
+                                this.settingsService.system = currSystem;
+                                resolve(checkPermissionsFor(currSystem));
                             });
                         }
                     });

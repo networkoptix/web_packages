@@ -1,153 +1,13 @@
-import { NxUtilsService }   from '@services/utils.service';
-import { ServerManager }    from '../server-manager/server-manager';
+import { NxUtilsService } from '@services/utils.service';
+
+import { ServerManager } from '../server-manager/server-manager';
+
 import {
-    StorageResponses, StorageDataStructure, Storage, SaveStoragePayload
-}                           from './storage';
-
-export enum STORAGE_TYPES {
-    LOCAL = 'local',
-    USB = 'usb',
-    NETWORK = 'smb',
-    SYSTEM_NETWORK = 'network',
-    CLOUD = 'cloud'
-}
-
-export enum MODE {
-    MAIN='main',
-    BACKUP='backup',
-    NOT_IN_USE='notUsed'
-}
-
-/**
- * Add properties and methods here for the current servers storages.
- * Calculated properties like hasAction and onlineMains/onlineBackups should have getters instead of imperatively calculated.
- *
- * CurrentStorageState.locations is an array of Storage's which itself has reference back to the parent on Storage.currentStorageState.
- * This will allow for checking against the parent for things like comparing freeSpace on a storage with total freeSpace on all storages.
- */
-export class CurrentStorageState {
-    locations: Storage[];
-    vmsSpaceLoaded: boolean;
-    storageInfoLoaded: boolean;
-    storageStatsLoaded: boolean;
-    analyticsLoaded: boolean;
-
-    #serverManager: ServerManager;
-    #hasAnalyticsData = false;
-    #hasPlugins = false;
-    #metadataStorageId: string;
-
-    get hasAction() {
-        return this.locations.some(location => location.hasAction);
-    }
-
-    get onlineMains() {
-        return this.locations.filter(this.#countMainAndBackup(true)).length;
-    }
-
-    get onlineBackups() {
-        return this.locations.filter(this.#countMainAndBackup(false)).length;
-    }
-
-    get reindexing(): MODE[] {
-        const reindexingLocations = this.locations.filter(({ reindexing }) => reindexing).map(({ mode }) => mode);
-        const unique = new Set(reindexingLocations);
-        return [...unique];
-    }
-
-    get freeSpace() {
-        return this.locations.reduce((
-            totalFreeSpace,
-            { freeSpace, isBackup, usedForWriting }
-        ) => totalFreeSpace + (!isBackup && usedForWriting ? freeSpace : 0), 0);
-    }
-
-    get serialized(): SaveStoragePayload[] {
-        return this.locations.map(({ serialized }) => serialized).filter(storage => storage);
-    }
-
-    get analyticsDbTargetLocations() {
-        return this.locations.filter(({ canStoreAnalyticsDb }) => canStoreAnalyticsDb);
-    }
-
-    get hasAnalyticsData() {
-        return this.#hasAnalyticsData;
-    }
-
-    get hasCompatibleAnalyticsPlugins() {
-        return this.#hasPlugins;
-    }
-
-    get currentAnalyticsDbLocation() {
-        return this.locations.find(({ storageId }) => storageId === this.#metadataStorageId);
-    }
-
-    get beingChecked() {
-        return !!this.locations.find(({ storageStatus }) => storageStatus.includes('beingChecked'));
-    }
-
-    // Storage save methods
-
-    /**
-     * Saves the serialized version of the current storage state.
-     */
-    saveStorages() {
-        return this.#serverManager.mediaserver.updateStorages(this.serialized);
-    }
-
-    /**
-     * Saves the current analyticsDb location to server.
-     */
-    saveAnalyticsDbLocation(metadataStorageId: string = this.currentAnalyticsDbLocation.storageId) {
-        return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, { metadataStorageId });
-    }
-
-    constructor(
-        state: Partial<CurrentStorageState>,
-        analytics: any,
-        serverManager: ServerManager
-    ) {
-        this.#serverManager = serverManager;
-        state.locations.forEach(location => {
-            location.currentStorageState = this;
-        });
-        state.locations = state.locations.sort(this.#sortByTypeAndUrl);
-        Object.assign(this, state);
-        this.#parseAnalytics(analytics);
-    }
-
-    // Helpers
-    #sortByTypeAndUrl = (
-        { storageType: aType, url: aUrl },
-        { storageType: bType, url: bUrl }
-    ) => {
-        const { LOCAL, USB, NETWORK, SYSTEM_NETWORK, CLOUD } = STORAGE_TYPES;
-        const typeOrder = [LOCAL, USB, SYSTEM_NETWORK, NETWORK, CLOUD];
-        if (aType === bType) {
-            return aUrl < bUrl ? -1 : 1;
-        }
-        return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
-    }
-
-    #countMainAndBackup = (
-        main = true
-    ) => ({
-        isBackup, isOnline, isWritable, usedForWriting
-    }) => isBackup === !main && isOnline && isWritable && usedForWriting;
-
-    #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }) => {
-        this.#metadataStorageId = NxUtilsService.cleanId(metadataStorageId || '');
-        this.#hasAnalyticsData = hasAnalyticsData;
-        this.#hasPlugins = hasPlugins;
-    }
-
-    #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
-
-    checkAnalytics = (storage: Storage) => ({
-        analyticsDbLocation : storage.storageId === this.#metadataStorageId,
-        canStoreAnalyticsDb : this.#checkCanStoreAnalytics(storage)
-    })
-}
+    StorageResponses,
+    StorageDataStructure,
+    Storage,
+    CurrentStorageState
+} from './storage';
 
 /**
  * The storageFactory take the StorageResponses array handles munging the data together.
@@ -159,14 +19,16 @@ export const currentStorageStateFactory = (
     storageServerId: string,
     serverManager: ServerManager
 ) => {
-    const vmsSpace = metrics && Object.entries(metrics?.reply?.storages || {}).reduce((storages, [storageId, value]: [string, any]) => {
-        return {
-            ...storages,
-            [NxUtilsService.cleanId(storageId)]: {
-                vmsSpace: value?.space?.mediaSpaceB || 0
-            }
-        };
-    }, {});
+    const vmsSpace = metrics &&
+        Object.entries(metrics?.reply?.storages || {})
+            .reduce((storages, [storageId, value]: [string, any]) => {
+                return {
+                    ...storages,
+                    [NxUtilsService.cleanId(storageId)]: {
+                        vmsSpace: value?.space?.mediaSpaceB || 0
+                    }
+                };
+            }, {});
 
     const storageInfo = info && info.reduce((
         allInfo,
@@ -183,8 +45,8 @@ export const currentStorageStateFactory = (
             ...info,
             reservedSpace,
             serverId,
-            urlWithCredentials : info.url,
-            totalSpace         : addParams.find(({
+            urlWithCredentials: info.url,
+            totalSpace: addParams.find(({
                 name
             }) => name === 'space')?.value || 0
         }
@@ -197,7 +59,10 @@ export const currentStorageStateFactory = (
             ...storageStats
         }) => ({
         ...storagesStats,
-        [storageId !== '{00000000-0000-0000-0000-000000000000}' ? NxUtilsService.cleanId(storageId) : storageStats.url]: {
+        [storageId !== '{00000000-0000-0000-0000-000000000000}'
+            ? NxUtilsService.cleanId(storageId)
+            : storageStats.url
+        ]: {
             ...storageStats
         }
     }), {});
@@ -229,19 +94,19 @@ export const currentStorageStateFactory = (
         }
     ]: [string, Partial<StorageDataStructure>]) => new Storage({
         storageId,
-        reservedSpace : +(reservedSpace || 0),
-        freeSpace     : +(freeSpace || 0),
-        totalSpace    : +(totalSpace || 0),
-        serverId      : serverId || storageServerId,
+        reservedSpace: +(reservedSpace || 0),
+        freeSpace: +(freeSpace || 0),
+        totalSpace: +(totalSpace || 0),
+        serverId: serverId || storageServerId,
         ...input
     }));
 
     const storages = {
         locations,
-        vmsSpaceLoaded     : !!vmsSpace,
-        storageInfoLoaded  : !!storageInfo,
-        storageStatsLoaded : !!storageStats,
-        analyticsLoaded    : !!analytics
+        vmsSpaceLoaded: !!vmsSpace,
+        storageInfoLoaded: !!storageInfo,
+        storageStatsLoaded: !!storageStats,
+        analyticsLoaded: !!analytics
     };
 
     return new CurrentStorageState(storages, analytics, serverManager);

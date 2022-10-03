@@ -1,0 +1,9 @@
+<div class="banner" *ngIf="false && !cookieBannerReviewed"> <!-- keep false until cookieBanner reimplemented -->
+    <p translate>We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences <a routerLink="/">here</a>. By continuing to use our site you consent to use our cookies.</p>
+    <svg-icon nx-add-svg-src
+        (click)="onCookieBannerClose()"
+        [src]="CONFIG.icons.dirTextButtons + 'close.svg'"  
+        [svgStyle]="{'width.px': '20', 'height.px': '20'}"
+        [applyClass]="true" >
+    </svg-icon>
+</div>

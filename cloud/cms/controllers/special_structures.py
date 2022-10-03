@@ -1,6 +1,14 @@
 from cms.models import get_cloud_portal_asset, Asset, LicenseType, AssetType, DataStructure, get_vms_asset, SpecialStructure
 from util.config import get_config
 
+# Special Structures constants
+
+VMS_WIN_PATH = '%VMS_WIN_PATH%'
+VMS_LIN_PATH = '%VMS_LIN_PATH%'
+VMS_COMPANY_ID = '%VMS_COMPANY_ID%'
+VMS_LIN_SERVICE_NAME = '%VMS_LIN_SERVICE_NAME%'
+VMS_MAC_COMPANY_ID ='%VMS_MAC_COMPANY_ID%'
+VMS_WIN_EXECUTABLE = '%VMS_WIN_EXECUTABLE%'
 
 class SpecialStructures:
     """ Only use this with assets that are single customization.\n
@@ -9,6 +17,17 @@ class SpecialStructures:
         - %CUSTOMIZATION_NAME%
         - %LANGUAGES%
     """
+
+    # Constants removed from methods to be usable in unit test
+    WIN_PATH_PREFIX = 'C:\\Program Files\\'
+    VMS_PATH = '{vms_path}'
+    LIN_PATH = '/opt/{vmsName}'
+    COMPANY_ID = '{companyId}'
+    LIN_SERVICE_NAME = '{companyId}-mediaserver'
+    VMS_MAC_COMPANY_ID = '{macCompanyId}'
+    VMS_WIN_EXECUTABLE = '{win_executable}.exe'
+    VMS_ID = '{vmsId}'
+
     def __init__(self):
         self.function_dict = {}
         self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization, 'Customization Name', 'Name of the current customization')
@@ -24,6 +43,7 @@ class SpecialStructures:
         self.add_function('%VMS_WIN_EXECUTABLE%', self.calc_vms_win_executable, 'VMS Windows Executable', 'VMS executable name on windows')
         self.add_function('%VMS_ID%', self.calc_vms_id, 'VMS Id', 'VMS Id from vms pack')
         self.add_function('%MOBILE_DISPLAY_NAME%', self.calc_mobile_display_name, 'Mobile Client Display Name', 'The name used when referring to the mobile client throughout cloud portal. Does not affect the actual iOS or Android application name', shortcut=True)
+        self.add_function('%ABV%', self.calc_abbreviation, 'VMS Abbreviation', 'VMS abbreviation if applicable, otherwise uses %VMS_NAME%')
 
     def add_function(self, tag: str, function, label='', description='', hidden=False, shortcut=False):
         self.function_dict[tag] = {
@@ -90,82 +110,97 @@ class SpecialStructures:
             return vms_asset, vms_dss, config
 
         return None
+    @staticmethod
+    def filter_ds(ds, config, name):
+        return ds.filter(name=config[name]).first()
+
+    @staticmethod
+    def find_value(ds, asset):
+        return ds.find_actual_value(asset=asset)
 
     @staticmethod
     def get_vms_default_ds_value(asset, ds_name):
         struct_data = SpecialStructures.get_vms_and_config(asset, ds_name=ds_name)
         if struct_data:
             vms_asset, vms_dss, config = struct_data
-            default_ds = vms_dss.filter(name=config['ds']).first()
+            default_ds = SpecialStructures.filter_ds(vms_dss, config, 'ds')
             if default_ds:
-                ds_val = default_ds.find_actual_value(asset=vms_asset)
+                ds_val = SpecialStructures.find_value(default_ds, vms_asset)
                 if ds_val:
                     return ds_val
 
     @staticmethod
     def calc_vms_win_path(asset: Asset):
-        path_prefix = 'C:\\Program Files\\'
         win_path = ''
-        struct_data = SpecialStructures.get_vms_and_config(asset, ds_name='%VMS_WIN_PATH%')
+        struct_data = SpecialStructures.get_vms_and_config(asset, VMS_WIN_PATH)
         if struct_data:
             vms_asset, vms_dss, config = struct_data
-            advanced_path_ds = vms_dss.filter(name=config['advanced_ds']).first()
+            advanced_path_ds = SpecialStructures.filter_ds(vms_dss, config, 'advanced_ds')
             if advanced_path_ds:
-                win_path = advanced_path_ds.find_actual_value(asset=vms_asset)
+                win_path = SpecialStructures.find_value(advanced_path_ds, asset)
             if not win_path:
-                company_name_ds = vms_dss.filter(name=config['default_ds']).first()
+                company_name_ds = SpecialStructures.filter_ds(vms_dss, config, 'default_ds')
                 if company_name_ds:
-                    win_path = company_name_ds.find_actual_value(asset=vms_asset)
+                    win_path = SpecialStructures.find_value(company_name_ds, vms_asset)
 
             if win_path:
-                vms_name_ds = vms_dss.filter(name=config['vms_name_ds']).first()
+                vms_name_ds = SpecialStructures.filter_ds(vms_dss, config, 'vms_name_ds')
                 if vms_name_ds:
-                    vms_name = vms_name_ds.find_actual_value(asset=vms_asset)
+                    vms_name = SpecialStructures.find_value(vms_name_ds, vms_asset)
                     if vms_name:
-                        return f'{path_prefix}{win_path}\\{vms_name}'
+                        return f'{SpecialStructures.WIN_PATH_PREFIX}{win_path}\\{vms_name}'
 
-        return path_prefix + '{vms_path}'
+        return SpecialStructures.WIN_PATH_PREFIX + SpecialStructures.VMS_PATH
 
     @staticmethod
     def calc_vms_lin_path(asset: Asset):
-        lin_path = SpecialStructures.get_vms_default_ds_value(asset, '%VMS_LIN_PATH%')
+        lin_path = SpecialStructures.get_vms_default_ds_value(asset, VMS_LIN_PATH)
         if lin_path:
             return f'/opt/{lin_path}'
-        return '/opt/{vmsName}'
+        return SpecialStructures.LIN_PATH
 
     @staticmethod
     def calc_vms_company_id(asset: Asset):
-        company_id = SpecialStructures.get_vms_default_ds_value(asset, '%VMS_COMPANY_ID%')
+        company_id = SpecialStructures.get_vms_default_ds_value(asset, VMS_COMPANY_ID)
         if company_id:
             return company_id
-        return '{companyId}'
+        return SpecialStructures.COMPANY_ID
 
     @staticmethod
     def calc_vms_lin_service_name(asset: Asset):
-        company_id = SpecialStructures.get_vms_default_ds_value(asset, '%VMS_LIN_SERVICE_NAME%')
+        company_id = SpecialStructures.get_vms_default_ds_value(asset, VMS_LIN_SERVICE_NAME)
         if company_id:
             return f'{company_id}-mediaserver'
-        return '{companyId}-mediaserver'
+        return SpecialStructures.LIN_SERVICE_NAME
 
     @staticmethod
     def calc_vms_mac_company_id(asset: Asset):
-        mac_company_id = SpecialStructures.get_vms_default_ds_value(asset, '%VMS_MAC_COMPANY_ID%')
+        mac_company_id = SpecialStructures.get_vms_default_ds_value(asset, VMS_MAC_COMPANY_ID)
         if mac_company_id:
             return mac_company_id.lower().replace(' ', '-')
-        return '{macCompanyId}'
+        return SpecialStructures.VMS_MAC_COMPANY_ID
 
     @staticmethod
     def calc_vms_win_executable(asset: Asset):
-        win_executable = SpecialStructures.get_vms_default_ds_value(asset, '%VMS_WIN_EXECUTABLE%')
+        win_executable = SpecialStructures.get_vms_default_ds_value(asset, VMS_WIN_EXECUTABLE)
         if win_executable:
             return f'{win_executable}.exe'
-        return '{win_executable}.exe'
+        return SpecialStructures.VMS_WIN_EXECUTABLE
 
     @staticmethod
     def calc_vms_id(asset: Asset):
-        return SpecialStructures.get_vms_default_ds_value(asset, '%VMS_ID%') or '{vmsId}'
+        return SpecialStructures.get_vms_default_ds_value(asset, '%VMS_ID%') or SpecialStructures.VMS_ID
 
     @staticmethod
     def calc_mobile_display_name(asset):
         customization = asset.customizations.first()
         return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%') or 'the mobile client'
+
+    @staticmethod
+    def calc_abbreviation(asset):
+        customization = asset.customizations.first()
+        if customization.name in ['default', 'default_cn', 'default_zh_CN', 'metavms']:
+            return 'Nx'
+        else:
+            vms_name_ds: DataStructure = DataStructure.objects.filter(name='%VMS_NAME%', context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
+            return vms_name_ds.find_actual_value(asset)

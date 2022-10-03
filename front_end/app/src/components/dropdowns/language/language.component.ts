@@ -1,18 +1,22 @@
 import {
-    Component, ViewEncapsulation,
-    Input, forwardRef, Directive
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef,
+    Directive
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LocalStorageService } from 'ngx-webstorage';
 
-import { BaseDropdown }              from '../injDropdown';
-import { environment }               from '@environments/environment';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { environment } from '@environments/environment';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { ILanguage, ILanguages } from '@services/nx-cloud-api.types';
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService }           from '@services/nx-config';
-import { ILanguage, ILanguages }     from '@services/nx-cloud-api.types';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { NxSessionService }          from '@services/session.service';
+import { NxSessionService } from '@services/session.service';
+import { NxUtilsService } from '@services/utils.service';
+
+import { BaseDropdown } from '../injDropdown';
 
 @Directive()
 class BaseLanguageDropdown extends BaseDropdown {
@@ -27,8 +31,8 @@ class BaseLanguageDropdown extends BaseDropdown {
     direction: string;
     langCode: string;
     activeLanguage: ILanguage = {
-        language : '',
-        name     : ''
+        language: '',
+        name: ''
     };
 
     languages: ILanguages = [];
@@ -44,7 +48,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     ) {
         super(languageService, configService);
 
-        this.currentLang = languageService.currentLanguage;
+        this.currentLang = languageService.currentLang;
     }
 
     private splitLanguages() {
@@ -65,18 +69,13 @@ class BaseLanguageDropdown extends BaseDropdown {
     }
 
     setLanguage() {
-        if (this.activeLanguage.language !== this.langCode) {
+        if (this.activeLanguage?.language !== this.langCode) {
             this.activeLanguage = this.languages.find(lang => {
                 return (lang.language === this.langCode);
             });
 
             if (this.instantApply && this.instantReload) {
-                /*  TODO: Currently this is not needed because the language file will
-                 be loaded during page reload. Once we transfer everything to Angular 5
-                 we should use this for seamless change of language
-                 // this.translate.use(lang.replace('_', '-'));
-                 */
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     this.sessionService.language = this.langCode;
                     window.location.reload();
                 } else {
@@ -95,10 +94,12 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
+
         this.cloudApi.getLanguages().then((data) => {
-            this.languages = this.CONFIG.supportedLanguages.length === 0
+            this.languages = this.CONFIG?.supportedLanguages?.length === 0
                 ? data
-                : data.filter((language) => this.CONFIG.supportedLanguages.includes(language.language));
+                : data.filter((language) =>
+                    this.CONFIG.supportedLanguages?.includes(language.language));
             this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
                 return lang.language;
             }, NxUtilsService.sortASC));
@@ -128,30 +129,30 @@ class BaseLanguageDropdown extends BaseDropdown {
 }
 
 @Component({
-    selector      : 'nx-language-select',
-    templateUrl   : 'language.component.html',
-    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-language-select',
+    templateUrl: 'language.component.html',
+    styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxLanguageDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxLanguageDropdown),
+            multi: true
         }
     ]
 })
 export class NxLanguageDropdown extends BaseLanguageDropdown {}
 
 @Component({
-    selector      : 'nx-header-language-select',
-    templateUrl   : 'language.component.html',
-    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-header-language-select',
+    templateUrl: 'language.component.html',
+    styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxLanguageDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxLanguageDropdown),
+            multi: true
         }
     ]
 })

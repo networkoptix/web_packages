@@ -1,10 +1,11 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { DirectivesModule }             from '@directives/directives.module';
-import { NonSupportedBrowserComponent } from './non-supported-browser.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
 const appRoutes: Routes = [
     { path: 'browser', component: NonSupportedBrowserComponent }
@@ -17,11 +18,11 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NonSupportedBrowserComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         NonSupportedBrowserComponent
     ]

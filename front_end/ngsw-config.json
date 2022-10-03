@@ -49,7 +49,6 @@
     {
       "name": "apiFresh",
       "urls": [
-        "/api/account",
         "/api/utils/language"
       ],
       "cacheConfig": {
@@ -70,19 +69,6 @@
         "timeout": "0u",
         "strategy": "freshness"
       }
-    },
-    {
-      "name": "dynamicAssets",
-      "urls": [
-        "**/language_compiled.json",
-        "**/languages.json"
-      ],
-      "cacheConfig": {
-        "maxAge": "2h",
-        "maxSize": 100,
-        "timeout": "0u",
-        "strategy": "freshness"
-      }
     }
   ],
   "navigationUrls": [
@@ -92,6 +78,8 @@
     "!/**/*__*/**",
     "!/api/**",
     "!/admin/**",
-    "!/cdb/**"
+    "!/cdb/**",
+    "!/authorize",
+    "!/authorize/**"
   ]
 }

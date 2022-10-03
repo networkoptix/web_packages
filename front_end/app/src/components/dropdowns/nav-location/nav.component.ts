@@ -1,13 +1,14 @@
-import { Component, Input }          from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { BaseDropdown } from '../injDropdown';
 
 @Component({
-    selector   : 'nx-nav-location',
+    selector: 'nx-nav-location',
     templateUrl: 'nav.component.html',
-    styleUrls  : ['nav.component.scss']
+    styleUrls: ['nav.component.scss']
 })
 
 export class NxNavLocationDropdown extends BaseDropdown {

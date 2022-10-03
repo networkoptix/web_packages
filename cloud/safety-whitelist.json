@@ -2,49 +2,17 @@
   "38834": {
     "name": "urllib3"
   },
-  "38765": {
-    "name": "pip",
-    "note": "The pip package before 19.2 for Python allows Directory Traversal when a URL is given in an install command"
-  },
   "38678": {
     "name": "django-celery-results",
     "note": "Django-celery-results through 1.2.1 stores task results in the database. Among the data it stores are the variables passed into the tasks."
   },
-  "39646": {
-    "name": "django",
-    "note": "Django 2.2.19 fixes a security issue in 2.2.18 (CVE-2021-23336)."
-  },
-  "40072": {
-    "name": "lxml",
-    "note": "The HTML cleaner in lxml 4.6.3 no longer includes the HTML5 'formaction' attribute to avoid it from allowing JavaScript to pass through."
-  },
-  "40158": {
-    "name": "django",
-    "note": "Django 2.2.20 fixes a security issue with severity \"low\" in 2.2.19."
-  },
-  "40163": {
-    "name": "django",
-    "note": "In Django 2.2 before 2.2.20, 3.0 before 3.0.14, and 3.1 before 3.1.8, MultiPartParser allowed directory traversal via uploaded files with suitably crafted file names. Built-in upload handlers were not affected by this vulnerability. See CVE-2021-28658."
-  },
-  "40291": {
-    "name": "pip",
-    "note": "Pip 21.1 stops splitting on unicode separators in git references, which could be maliciously used to install a different revision on the repository."
-  },
-  "40375": {
-    "name": "django",
-    "note": "Django 2.2.21 fixes CVE-2021-31542 in 2.2.20."
-  },
-  "40404": {
-    "name": "django",
-    "note": "In Django 2.2 before 2.2.21, 3.1 before 3.1.9, and 3.2 before 3.2.1, MultiPartParser, UploadedFile, and FieldFile allowed directory traversal via uploaded files with suitably crafted file names. See CVE-2021-31542."
-  },
-  "40414": {
-    "name": "django",
-    "note": "In Django 2.2 before 2.2.22, 3.1 before 3.1.10, and 3.2 before 3.2.2 (with Python 3.9.5+), URLValidator does not prohibit newlines and tabs (unless the URLField form field is used). If an application uses values with newlines in an HTTP response, header injection can occur. Django itself is unaffected because HttpResponse prohibits newlines in HTTP headers."
-  },
   "40965": {
     "name": "pillow",
     "note": "Pillow through 8.2.0 and PIL (aka Python Imaging Library) through 1.1.7 allow an attacker to pass controlled parameters directly into a convert function to trigger a buffer overflow in Convert.c."
+  },
+  "41002": {
+    "name": "coverage",
+    "note": "Coverage 6.0b1 starts to use a modern hash algorithm (sha256) when fingerprinting for high-security environments."
   },
   "41271": {
     "name": "pillow",
@@ -54,8 +22,56 @@
     "name": "pillow",
     "note": "Pillow 8.3.2 fixes a 6-byte out-of-bounds (OOB) read. The previous bounds check in FliDecode.c incorrectly calculated the required read buffer size when copying a chunk, potentially reading six extra bytes off the end of the allocated buffer from the heap. Present since Pillow 7.1.0."
   },
-  "41288": {
-    "name": "sqlparse",
-    "note": "sqlparse is a non-validating SQL parser module for Python. In sqlparse versions 0.4.0 and 0.4.1 there is a regular Expression Denial of Service in sqlparse vulnerability. The regular expression may cause exponential backtracking on strings containing many repetitions of '\\r\\n' in SQL comments. Only the formatting feature that removes comments from SQL statements is affected by this regular expression. As a workaround don't use the sqlformat.format function with keyword strip_comments=True or the --strip-comments command line flag when using the sqlformat command line tool. The issues has been fixed in sqlparse 0.4.2."
+  "42497": {
+    "name": "kombu",
+    "note": "Kombu 5.2.1 updates dependencies to include security fixes. https://github.com/celery/kombu/commit/f3b04558fa0df4ecc383c93e0b3b300d95e17 c47                                                     "
+  },
+  "42498": {
+    "name": "celery",
+    "note": "Celery 5.2.0 updates 'kombu' to v5.2.1, which includes dependencies updates that resolve security issues."
+  },
+  "43738": {
+    "name": "celery",
+    "note": "Celery 5.2.2 includes a fix for CVE-2021-23727: Celery before 5.2.2. by default trusts the messages and metadata stored in backends (result stores). When reading task metadata from the backend, the data is deserialized. Given that an attacker can gain access to, or somehow manipulate the metadata within a celery backend, they could trigger a stored command injection vulnerability and potentially gain further access to the system. https://github.com/celery/celery/blob/master/Changelog.rst#522"
+  },
+  "43975": {
+    "name": "urllib3",
+    "note": "Urllib3 1.26.5 includes a fix for CVE-2021-33503: An issue was discovered in urllib3 before 1.26.5. When provided with a URL containing many @ characters in the authority component, the authority regular expression exhibits catastrophic backtracking, causing a denial of service if a URL were passed as a parameter or redirected to via an HTTP redirect. https://github.com/advisories/GHSA-q2q7-5pp4-w6pg"
+  },
+  "44715": {
+    "name": "numpy",
+    "note": "All versions of Numpy are affected by CVE-2021-41495: A null Pointer Dereference vulnerability exists in numpy.sort, in the PyArray_DescrNew function due to missing return-value validation, which allows attackers to conduct DoS attacks by repetitively creating sort arrays. https://github.com/numpy/numpy/issues/19038"
+  },
+  "46406": {
+    "name": "meilisearch",
+    "note": "Meilisearch 0.26.0 sets a limit to filters to avoid a stack overflow crash when using a huge list of filters. https://github.com/meilisearch/meilisearch/issues/1967"
+  },
+  "47012": {
+    "name": "django-oauth-toolkit",
+    "note": "Django-oauth-toolkit 2.0.0 defaults to hash application client secrets using Django password hashing. https://github.com/jazzband/django-oauth-toolkit/pull/1093"
+  },
+  "47853": {
+    "name": "django-oauth-toolkit",
+    "note": "Django-oauth-toolkit 2.0.0 removes support for insecure 'urn:ietf:wg:oauth:2.0:oob' and 'urn:ietf:wg:oauth:2.0:oob:auto' which are replaced by RFC 8252 \"OAuth 2.0 for Native Apps\" BCP. https://github.com/jazzband/django-oauth-toolkit/pull/1124"
+  },
+  "48517": {
+    "name": "meilisearch",
+    "note": " Meilisearch (python client) 0.18.3 is compatible with Meilisearch 0.27.0, that adds a hard limit of '1000' retrievable documents during search ('GET/POST /indexes/:uid/search'). This limit is a security fix to avoid scraping the Meilisearch DB."
+  },
+  "48542": {
+    "name": "pyjwt",
+    "note": "| PyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify 'jwt.algorithms.get_default_algorithms()' to get support for all algorithms, or specify a single algorithm. The issue is not that big as 'algorithms=jwt.algorithms.get_default_algorithms()' has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding. Conflicts with apns2 0.7.2 requires PyJWT<2.0.0,>=1.4.0"
+  },
+  "49733": {
+    "name": "django",
+    "note": "Django 3.2.14 and 4.0.6 include a fix for CVE-2022-34265: Potential SQL injection via Trunc(kind) and Extract(lookup_name) arguments. https://www.djangoproject.com/weblog/2022/jul/04/security-releases"
+  },
+  "50454": {
+    "name": "django",
+    "note": "Django 3.2.15 and 4.0.7 include a fix for CVE-2022-36359: An issue was discovered in the HTTP FileResponse class in Django 3.2 before 3.2.15 and 4.0 before 4.0.7. An application is vulnerable to a reflected file download (RFD) attack that sets the Content-Disposition header of a FileResponse when the filename is derived from user-supplied input. https://www.djangoproject.com/weblog/2022/aug/03/security-releases"
+  },
+  "50748":{
+    "name": "lxml",
+    "note": "Lxml 4.9.1 include a fix for CVE-2022-2309: NULL Pointer Dereference allows attackers to cause a denial of service (or application crash). This only applies when lxml is used together with libxml2 2.9.10 through 2.9.14. Libxml2 2.9.9 and earlier versions are not affected. It allows triggering crashes through forged input data, given a vulnerable code sequence in the application. The vulnerability is caused by the iterwalk function (also used by the canonicalize function). Such code shouldn't be in wide-spread use, given that parsing + iterwalk would usually be replaced with the more efficient iterparse function. However, an XML converter that serializes to C14N would also be vulnerable, for example, and there are legitimate use cases for this code sequence. If untrusted input is received (also remotely) and processed via iterwalk function, a crash can be triggered."
   }
 }

@@ -1,19 +1,133 @@
+from collections import defaultdict
+from functools import wraps
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from django.conf import settings
 from inlinestyler.utils import inline_css
 import re
 import sass
-
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
-
+import logging
+from bs4 import BeautifulSoup
+from mistletoe import markdown
+from html2text import HTML2Text
+from waffle import switch_is_active
+from cms.controllers.asset_json import get_review_matching_current_version, process_asset_global_contexts
+from cms.feature_flags import SWITCHES
+from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
 from util.base_cache import BaseCache
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
+from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
+from util.helpers import get_meilisearch_client
+
+logger = logging.getLogger(__name__)
+
+def html2md(html):
+    parser = HTML2Text()
+    parser.ignore_images = True
+    parser.ignore_links = True
+    parser.body_width = 0
+    return parser.handle(html)
 
 
+def fixup_markdown_formatting(text):
+    # Strip off table formatting
+    text = re.sub(r'(^|\n)\|\s*', r'\1', text)
+    # Strip off extra emphasis
+    text = re.sub(r'\*\*', '', text)
+    # Remove trailing whitespace and leading newlines
+    text = re.sub(r' *$', '', text)
+    text = re.sub(r'\n\n+', r'\n\n', text)
+    return re.sub(r'^\n+', '', text)
 
 
-DOC_CACHE = BaseCache(cache_key='documentation')
+def html2plain(html):
+    md = html2md(html)
+    html_simple = markdown(md)
+    text = BeautifulSoup(html_simple).getText()
+    return fixup_markdown_formatting(text)
+
+
+# def ignore_index_not_found(func):
+#     """Not sure if this needed anymore
+#     """
+#     @wraps(func)
+#     def _ignore_index_not_found(*args, **kwargs):
+#         try:
+#             return func(*args, **kwargs)
+#         except MeiliSearchApiError as e:
+#             if e.error_code != 'index_not_found':
+#                 raise e
+
+#     return _ignore_index_not_found
+
+class SearchableCache(BaseCache):
+    def __init__(self, *args, **kwargs):
+        self.custom_settings = kwargs.pop('search_settings', {})
+        self.current_settings = None
+        super().__init__(*args, **kwargs)
+        client = get_meilisearch_client()
+        self.search_index = client.index(self.cache_key)
+        self.fields_from_doc = self.custom_settings.pop('fields')
+
+    # @ignore_index_not_found
+    def check_and_update_custom_settings(self):
+        if not settings.CELERY_WORKER and self.custom_settings:
+            try:
+                self.current_settings = self.search_index.get_settings()
+                if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
+                    self.search_index.update_settings(self.custom_settings)
+            except (TypeError, MeiliSearchCommunicationError) as e:
+                # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
+                logger.info(e)
+
+    # @ignore_index_not_found
+    def clear_cache(self):
+        super().clear_cache()
+        try:
+            self.search_index.delete_all_documents()
+        except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError) as e:
+        # MeiliSearchApiError is only raised when running with an empty db
+            # raised when meilisearch service is unavailable
+            logger.warning(e)
+
+    def __setitem__(self, lookup_key, doc):
+        """Sets doc to cache using the lookup_key attribute.
+
+        Args:
+            doc: Doc to be added to cache
+        """
+        self.check_and_update_custom_settings()
+        super().__setitem__(lookup_key, doc)
+
+        if isinstance(doc, list):
+            return
+
+        from_doc = {
+            key_from_doc: doc.get(key_from_doc)
+            for key_from_doc in self.fields_from_doc
+        }
+
+        if switch_is_active(SWITCHES.kb_instant_search) and lookup_key.endswith('release'):
+            try:
+                self.search_index.add_documents(
+                    [{
+                        'cacheKey': lookup_key,
+                        'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks'])),
+                        **from_doc
+                    }],
+                    primary_key='cacheKey'
+                )
+            except (MeiliSearchCommunicationError, TypeError) as e:
+                # MeiliSearchCommunicationError is raised when meilisearch service is unavailable
+                # TypeError is raised when switch is enabled but no master key provided
+                logger.warning(e)
+
+
+SEARCH_SETTINGS = {
+    'fields': ['title', 'shortDescription', 'version', 'id', 'labels', 'kbMenus'],
+    'filterableAttributes': ['labels', 'kbMenus'],
+}
+DOC_CACHE = SearchableCache(cache_key='documentation', search_settings=SEARCH_SETTINGS)
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
@@ -77,10 +191,20 @@ def sub_files(value, datastructures, record_values):
             value = value.replace(ds.name, record_values[ds.name])
     return value
 
+def filter_internal_url(link, base = settings.CLOUD_PORTAL_URL):
+    url = link.get('href', '').replace('%CLOUD_LINK%', '') or '/'
+    if url.startswith('../'):
+        url = f"/{url.split('../')[-1]}"
+    return url if url.startswith('/') or url.startswith(base) else None
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
+def apply_replacements(html, replacements):
+    for replacement in replacements:
+        html = html.replace(replacement['original'], replacement['updated'])
+    return html
+
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False, customization_name=settings.CUSTOMIZATION):
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
-    REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
+    REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.documentation
     )
@@ -95,28 +219,26 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
     docs_json = []
 
     # Get global contexts and fill any matching variables in datarecords
-    cloud_portal = None
+    cloud_portal = get_cloud_portal_asset(customization_name)
 
     for doc in docs:
         version = None
         doc_id = doc if type(doc) is int else doc.id
-        cache_key = f'{settings.CUSTOMIZATION}-{language.code}-{doc_id}-{state}'
-        doc_dict = DOC_CACHE[cache_key]
+        cache_key = f'{customization_name}-{language.code}-{doc_id}-{state}'
+        doc_dict = DOC_CACHE[cache_key] or {}
 
         # Check if we need to query for the asset and version
         if not doc_dict or not trust_cache or review or draft:
             if type(doc) is int:
                 doc = Asset.objects.filter(id=doc, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
             if doc:
-                version = doc.version_id()
+                version = doc.version_id(customization=customization_name)
             else:
                 continue
 
         pending_review = None
         if review:
-            pending_review = AssetCustomizationReview.objects.filter(
-                version__id__gt=version, version__asset=doc, customization__name=settings.CUSTOMIZATION,
-                state=AssetCustomizationReview.REVIEW_STATES.pending).last()
+            pending_review = get_review_matching_current_version(doc, version, customization_name)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -125,40 +247,45 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             # Requested state is published, but no published version exists
             continue
 
-        if not doc_dict or (not trust_cache and (doc_dict.get('version', None) != version or draft)):
+        if force_update or not doc_dict or external_link or not trust_cache or doc_dict.get('version', None) != version or draft:
+            if type(doc) is int:
+                doc = Asset.objects.get(id=doc)
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
-                cloud_portal = get_cloud_portal_asset()
                 global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
                 global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
             # Get values of article for this version
             values = DataStructure.find_actual_values(
-                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=settings.CUSTOMIZATION
+                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=customization_name
             )
             values = {ds.name: val for ds, val in values.items()}
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
+            internal_link_replacements = get_internal_links(external_link, cloud_portal, doc, doc_dict, values)
+
             doc_dict['blocks'] = values['body']
             doc_dict['blocks'] = sub_files(doc_dict['blocks'], doc_file_structures, values)
+            doc_dict['blocks'] = apply_replacements(doc_dict['blocks'], internal_link_replacements)
             doc_dict['blocks'] = doc_dict['blocks'].replace(S3_LINK, REPLACEMENT_LINK)
             doc_dict['script'] = values['script']
+            doc_dict['labels'] = [label.strip() for label in values.get('labels', []) if label.strip()]
             css = values['styling']
 
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
-            process_global_contexts(cloud_portal, doc_dict, doc.version_id(), False,
-                                    global_contexts, global_contexts_dict, language=language)
+
+            process_asset_global_contexts(language, cloud_portal, global_contexts, cloud_portal.version_id(), doc_dict, global_contexts_dict)
+
             doc_dict['version'] = version
-
             doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))
-
-            doc_dict['id'] = doc.id
+            doc_dict['id'] = doc_id
 
             if review and pending_review:
                 doc_dict['reviewId'] = pending_review.id
 
             if not draft:
+                doc_dict['kbMenus'] = [node.get_parent().name for node in doc.nodes.all()]
                 DOC_CACHE[cache_key] = doc_dict
 
         doc_dict_copy = doc_dict.copy()
@@ -166,4 +293,53 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
         docs_json.append(doc_dict_copy)
 
     return docs_json
+
+
+def get_internal_links(external_link, cloud_portal, doc, doc_dict, values):
+    from cms.models import ZendeskArticle
+    from cms.controllers.special_structures import SpecialStructures
+
+    internal_link_replacements = []
+
+    if not external_link:
+        return internal_link_replacements
+
+    doc_dict['external_files'] = [{
+                'id': file.id,
+                'original_url': str(file),
+                'external_file_name': '_'.join(str(file).split('/')[1:])
+            } for file in ExternalFile.objects.filter(asset_ds_pair__asset=doc)]
+    internal_links = list(filter(lambda url: url is not None, [filter_internal_url(href) for href in BeautifulSoup(values['body'], features="lxml").find_all('a')]))
+    for link in internal_links:
+        internal_default = {
+                        'original': link,
+                        'updated': f'{SpecialStructures.calc_cloud_link(cloud_portal)}{link}'
+                }
+        is_doc = link.startswith('/docs')
+        if is_doc:
+            menu_url = ''
+            slug = ''
+            _, _, base_url, *other_segments = link.split('/')
+            if other_segments:
+                menu_url = other_segments[0]
+                if len(other_segments) >= 2:
+                    slug = other_segments[1]
+            asset_id = int(slug.split('-')[0]) if slug else None
+            customization = cloud_portal.customizations.first().name
+            articles = [] if not asset_id else ZendeskArticle.objects.filter(
+                        site__customization__name=customization, asset_id=asset_id)
+            for article in articles:
+                menu = article.menu_node.get_parent()
+                if menu.base_url == base_url and menu.url == menu_url:
+                    internal_link_replacements.append({
+                                'original': link,
+                                'updated': article.html_url
+                            })
+                    break
+            else:
+                internal_link_replacements.append(internal_default)
+        else:
+            internal_link_replacements.append(internal_default)
+
+    return internal_link_replacements
 

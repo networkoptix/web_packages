@@ -16,6 +16,7 @@ RUN set -ex \
 
 ENV CLOUD_PORTAL_BASE_CONF_DIR /app/app/static
 ENV C_FORCE_ROOT true
+ENV VERSION=$VERSION
 
 COPY stage/cloud /app/app
 

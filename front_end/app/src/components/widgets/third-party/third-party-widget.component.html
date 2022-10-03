@@ -1,0 +1,44 @@
+<ng-template #uploadMode>
+    <ng-template #useUrlForm>
+        <h2 translate>From source url</h2>
+        <button class="btn btn-sm btn-default" (click)="switchUploadSource()" translate>Switch to load from widget file</button>
+        <div class="form-group">
+            <div>
+                <label class="control-label" translate>Source Url</label>
+                <input type="text" class="form-control" [(ngModel)]="card.config.sourceUrl">
+            </div>
+            <div>
+                <label class="control-label" translate>Widget title</label>
+                <input type="text" class="form-control" [(ngModel)]="card.title">
+            </div>
+        </div>
+        <button [disabled]="!card.config.sourceUrl || !card.title" (click)="useSourceUrl()" class="btn btn-primary mx-auto" translate>Save Widget</button>
+    </ng-template>
+    <div *ngIf="!card.config.useSourceUrl; else useUrlForm">
+        <h2 translate>From widget file</h2>
+        <button class="btn btn-sm btn-default" (click)="switchUploadSource()" translate>Switch to load from source url</button>
+        <ngx-file-drop dropZoneClassName="import-zone" accept="wgt html" [directory]="false" [multiple]="false"
+            [showBrowseBtn]="!card.config.source" browseBtnLabel="Upload Custom Widget" (onFileLeave)="fileLeave()"
+            (onFileDrop)="fileDropped($event)">
+        </ngx-file-drop>
+    </div>
+</ng-template>
+
+<ng-template #widget>
+    <iframe #widgetFrame [srcdoc]="card.config.source | safe:'html'"></iframe>
+</ng-template>
+
+<ng-template #edit>
+    <iframe #editFrame [srcdoc]="card.config.editSource | safe:'html'"></iframe>
+</ng-template>
+
+<div class="third-party-wrapper">
+    <ng-container *ngIf="card.config.source || card.config.sourceUrl && !card.config.useSourceUrl; else uploadMode">
+        <ng-template #compiledWidget>
+            <iframe #widgetFrame [srcdoc]="(card.editMode ? card.config.editSource : card.config.source) | safe:'html'"
+                (load)="passStateToIframe(widgetFrame)"></iframe>
+        </ng-template>
+        <iframe #widgetFrame *ngIf="card.config.sourceUrl; else compiledWidget"
+            (load)="passStateToIframe(widgetFrame)"></iframe>
+    </ng-container>
+</div>

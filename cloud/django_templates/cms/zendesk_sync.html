@@ -1,0 +1,240 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static static cms_filters %}
+{% block extrahead %}
+<link
+    rel="stylesheet"
+    href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"
+/>
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+<link rel="stylesheet" href="{% static 'css/zendesk_sync.css' %}" />
+{% endblock %} {% block extrastyle %}
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'admin/css/forms.css' %}"
+/>
+{{ block.super }} {% endblock %} {% block content%}
+<div class="loading-placeholder initial-load">
+    <div class="loading-text">
+        Loading latest sync logs...
+    </div>
+    <button class="btn btn-lg btn-primary" id="minimize">Minimize loading overlay</button>
+</div>
+<h2 class="sticky-heading">
+    Zendesk Sync - "{{menu_name}}"
+    <button class="btn btn-primary sync-button" data-menu-id="{{menu_id}}">Force Sync All Customizations</button>
+    <button class="btn btn-sm btn-secondary" id="refresh-button">Refresh Sync States</button>
+    <a href="{{menu_admin}}" target="_blank">
+        <button class="btn btn-sm btn-secondary">
+            Open Menu Admin
+        </button>
+    </a>
+</h2>
+<div class="panel-group" id="accordion">
+    {% csrf_token %}
+    {% for customization in customizations %}
+    <div class="panel panel-default">
+        <span class="anchor" id="{{customization.customization_name}}"></span>
+        <div data-customization-id="{{customization.customization_name}}" class="panel-heading" id="heading_{{customization.customization_name}}">
+            <div>
+                <h4 class="panel-title" title="View recent sync logs for customization {{customization.customization_name}}">
+                    <span class="customization-title">{{customization.customization_name}}</span>
+                    <span class="help">
+                        {% if customization.out_of_sync|length %}
+                        {{customization.out_of_sync|length}} assets out of sync
+                        {% else %}
+                        All assets up to date
+                        {% endif %}
+                    </span>
+                </h4>
+                <span class="label label-{{label_lookup|get_item:customization.state}}">{{customization.state}}</span>
+            </div>
+            <button class="btn btn-sm btn-info header-button force-customization sync-button" data-menu-id="{{menu_id}}" data-customization="{{customization.customization_name}}">Force Sync "{{customization.customization_name}}" customization</button>
+            <a href="{{customization.menu_admin}}" target="_blank" class="header-button">
+                <button class="btn btn-sm header-sync-button">
+                    Open Menu Admin for "{{customization.customization_name}}" customization
+                </button>
+            </a>
+            <a href="{{customization.mapping_admin}}" target="_blank" class="header-button">
+                <button class="btn btn-sm header-sync-button">
+                    Open Zendesk Mapping Admin for "{{customization.customization_name}}" customization
+                </button>
+            </a>
+        </div>
+        <div class="panel-collapse collapse" id="customization_{{customization.customization_name}}">
+            <div class="panel-body">
+                <h4>Assets out of sync</h4>
+                <ul class="list-group panel-group">
+                    {% if customization.out_of_sync|length %}
+                    {% for asset in customization.out_of_sync %}
+                    <li class="list-group-item asset-sync">
+                        <span class="muted">
+                            Asset Title:
+                        </span>
+                        <span class="detail-span">
+                            {{asset.title}}
+                            {% if asset.latest_version == asset.last_sync_version %}
+                            <span class="label label-sm label-info">Force Updated</span>
+                            {% endif %}
+                        </span>
+                        <span class="muted">
+                            Current Version:
+                        </span>
+                        <span class="detail-span">
+                            {{asset.latest_version}}
+                        </span>
+                        {% if asset.latest_version != asset.last_sync_version %}
+                        <span class="muted">
+                            Last Sync Version:
+                        </span>
+                        <span class="detail-span">
+                            {% if asset.last_sync_version %}
+                            {{asset.last_sync_version}}
+                            {% else %}
+                            Not Synced
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                        {% if asset.last_sync_version %}
+                        <span class="muted">
+                            Last Sync Time:
+                        </span>
+                        <span class="detail-span sync-time">
+                            {{asset.last_sync_time}}
+                        </span>
+                        {% endif %}
+                        <span class="muted">
+                            Admin Links:
+                        </span>
+                        <a href="{{asset.admin_link}}" class="btn btn-sm btn-info admin-link-button" target="_blank">Asset</a>
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="list-group-item">All assets up to date</li>
+                    {% endif %}
+                </ul>
+                <h4>Recent Logs</h4>
+                <ul class="list-group panel-group">
+                    {% if customization.logs|length == 0 %}
+                    <li class="list-group-item">No log history</li>
+                    {% endif %}
+                    {% for log in customization.logs %}
+                    <li class="list-group-item panel panel-default" style="padding: 0;">
+                        <div class="panel-heading sync-log" data-log-id="{{log.summary.log_id}}">
+                            <h5 class="panel-title">
+                                <span class="muted">
+                                    Sync Time:
+                                </span>
+                                <span class="detail-span sync-time">
+                                    {{ log.summary.sync_time }}
+                                </span>
+                                <span class="muted">
+                                    State:
+                                </span>
+                                <span class="label label-{{label_lookup|get_item:log.summary.state}}">
+                                    {{log.summary.state}}
+                                </span>
+                                {% if log.summary.state == "In Progress" %}
+                                <button class="btn btn-danger cancel-sync-button" data-log-id="{{log.summary.log_id}}">Cancel Sync</button>
+                                {% endif %}
+                                <span class="muted">
+                                    Progress:
+                                </span>
+                                <span class="detail-span">
+                                    {{ log.summary.progress_percentage }}% Complete ({{ log.summary.success }} out of {{ log.summary.total }}  items synced)
+                                </span>
+                            </h5>
+                        </div>
+                        <div class="panel-collapse collapse" id="log_{{log.summary.log_id}}">
+                            <div class="panel-body" style="padding-top: 4px;">
+                                {% if log.details.sections|length == 0 %}
+                                <h6>Sync Info</h6>
+                                <ul class="item-details-list" style="display: block;">
+                                    <li>
+                                        {% if log.summary.state == 'Failed'%}
+                                        <p>
+                                            Failed to start sync, if issue keeps occurring please ensure that the Zendesk settings are correct in the Cloud Portal asset for this customization.
+                                        </p>
+                                        <p>
+                                            If that doesn't fix the issue then there might be an issue with the celery worker.
+                                        </p>
+                                        {% else %}
+                                        <p>
+                                            This sync task is currently waiting in the queue, it might take a few moments before an updated status will be available.
+                                        </p>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                                {% else %}
+                                <h6 class="inset-heading">Included Sections</h6>
+                                <ul class="item-details-list details-hidden">
+                                    {% for section in log.details.sections %}
+                                    <li>
+                                        <span class="label label-{{label_lookup|get_item:section.state}}">
+                                            {{section.state}}
+                                        </span>
+                                        <span class="muted">
+                                            Section Name:
+                                        </span>
+                                        <span class="detail-span">
+                                            {{section.section_name}}
+                                        </span>
+                                        <span class="muted">
+                                            Admin Links:
+                                        </span>
+                                        <a href="{{section.menu_node_admin}}" class="btn btn-sm btn-info admin-link-button" target="_blank">Menu Node</a>
+                                        <a href="{{section.zd_section_admin}}"class="btn btn-sm btn-info admin-link-button" target="_blank">Zendesk Section</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                <h6 class="inset-heading">Included Articles</h6>
+                                <ul class="item-details-list details-hidden">
+                                    {% if log.details.sections|length == 0 %}
+                                    <li>No articles included</li>
+                                    {% endif %}
+                                    {% for article in log.details.articles %}
+                                    <li>
+                                        <span class="label label-{{label_lookup|get_item:article.state}}">
+                                            {{article.state}}
+                                        </span>
+                                        <span class="muted">
+                                            Asset Title:
+                                        </span>
+                                        <span class="detail-span">
+                                            {{article.asset_title}}
+                                        </span>
+                                        {% if article.failure_message != None %}
+                                        <span class="muted">
+                                            Failure Message:
+                                        </span>
+                                        <pre class="detail-span">
+                                            {{article.failure_message}}
+                                        </pre>
+                                        {% endif %}
+                                        <span class="muted">
+                                            Admin Links:
+                                        </span>
+                                        <a href="{{article.menu_node_admin}}" class="btn btn-sm btn-info admin-link-button" target="_blank">Menu Node</a>
+                                        <a href="{{article.asset_admin}}" class="btn btn-sm btn-info admin-link-button" target="_blank">Asset</a>
+                                        <a href="{{article.review_admin}}" class="btn btn-sm btn-info admin-link-button" target="_blank">Asset Review</a>
+                                        <a href="{{article.zd_article_admin}}" class="btn btn-sm btn-info admin-link-button" target="_blank">Zendesk Article</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<script>
+    const endpoint = "{% url 'menu_force_sync' %}"
+    const cancelEndpoint = "{% url 'menu_cancel_sync' %}"
+</script>
+<script src="{% static 'js/zendeskSync.js' %}"></script>
+{% endblock %}

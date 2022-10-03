@@ -1,0 +1,22 @@
+.live-view-wrapper, .edit-wrapper {
+    height: 100%;
+}
+
+.edit-wrapper {
+    padding: 8px;
+    overflow-y: auto;
+}
+
+img {
+    width: 100%;
+    height: calc(100% + 4px);
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+.camera-name {
+    position: absolute;
+    padding: 4px 8px;
+    background: black;
+    color: white;
+}

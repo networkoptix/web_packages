@@ -4,7 +4,7 @@
 <ng-template #navIcon>
     <div class="navbar-header nav-icon" (resize)="iconWidth$.next($event.width)">
         <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="mainUrl">
-            <img [alt]="CONFIG.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'" src="{{CONFIG.previewPath}}/static/images/logo.png">
+            <img [alt]="environment.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'" src="{{CONFIG.previewPath}}/static/images/logo.png">
         </a>
     </div>
 </ng-template>
@@ -15,7 +15,7 @@
                 <div class="breadcrumb-button">
                     <a class="pl-3 pr-3 d-block w-100 h-100" (click)="headerService.handleNav(breadcrumb, $event)" [innerText]="breadcrumb.display_name"></a>
                 </div>
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'header_arrow.svg'"></svg-icon>
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirHeader + 'header_arrow.svg'"></svg-icon>
             </div>
         </ng-container>
 </ng-template>
@@ -26,15 +26,19 @@
 
 <ng-template #rightNav let-showSmall="showSmall">
     <ul class="nav navbar-nav navbar-right auth-hidden mr-3">
-        <li>
+        <li *ngIf="!environment.isLocal">
             <span>
-                <a routerLink="/register" class="btn btn-primary" [ngClass]="{'small-button': showSmall}">
+                <a class="btn" [href]="createUrl | unsafe"
+                    [ngClass]="[
+                        showSmall?'small-button' : '',
+                        true?'btn-' + (headerService.createAccountButtonType$ | async) : ''
+                ]">
                     <span *ngIf="showSmall" class="glyphicon glyphicon-create-user"></span>
                     <span *ngIf="!showSmall" class="btn-caption text-nowrap" translate>Create Account</span>
                 </a>
             </span>
             <span>
-                <a href class="btn btn-default" (click)="login()" [ngClass]="showSmall ? 'small-button': 'login-button'">
+                <a class="btn btn-default" [href]="authorizeUrl | unsafe" [ngClass]="showSmall ? 'small-button': 'login-button'">
                     <span *ngIf="showSmall" class="glyphicon glyphicon-login"></span>
                     <span *ngIf="!showSmall" class="btn-caption" translate>Log In</span>
                 </a>
@@ -77,7 +81,7 @@
                 <li>
                     <nx-account-settings-select></nx-account-settings-select>
                     <nx-header-language-select
-                        *ngIf="CONFIG.isLocal"
+                        *ngIf="environment.isLocal"
                         class="auto"
                         short="true" altStyle="true"
                         instantReload="true" instantApply="true"></nx-header-language-select>
@@ -113,12 +117,12 @@
                             <div class="breadcrumb-button collapsed-breadcrumb">
                                 <a class="px-2 d-block w-100 h-100" (click)="headerService.handleNav(filteredBreadcrumbs[hiddenBreadcrumbs$.value - 1], $event)">
                                     <ng-template #backButton>
-                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_back.svg'" [svgStyle]="{'width.px': 24}"></svg-icon>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_back.svg'" [svgStyle]="{'width.px': '24'}"></svg-icon>
                                     </ng-template>
                                     <span *ngIf="filteredBreadcrumbs.length !== (hiddenBreadcrumbs$ | async);else backButton">...</span>
                                 </a>
                             </div>
-                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'header_arrow.svg'"></svg-icon>
+                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirHeader + 'header_arrow.svg'"></svg-icon>
                         </div>
                         <ng-container *ngTemplateOutlet="breadcrumbLinks;context:{
                             breadcrumbs:filteredBreadcrumbs,
@@ -135,12 +139,12 @@
                 <ng-container *ngTemplateOutlet="rightNav;context:{showSmall: showSmallRightNav$ | async}"></ng-container>
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
                     <li>
-                            <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
-                            <nx-header-language-select
-                                *ngIf="CONFIG.isLocal"
-                                class="auto"
-                                short="true" altStyle="true"
-                                instantReload="true" instantApply="true"></nx-header-language-select>
+                        <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
+                        <nx-header-language-select
+                            *ngIf="environment.isLocal"
+                            class="auto"
+                            short="true" altStyle="true"
+                            instantReload="true" instantApply="true"></nx-header-language-select>
                     </li>
                 </ul>
             </div>

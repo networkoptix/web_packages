@@ -9,5 +9,5 @@ Meghívják Önt, hogy csatlakozzon %CLOUD_NAME%.
 Hozzáférést kapott a "{{message.system_name}}".
 {{/message.sharer_name}}
 
-Regisztráljon és nézze meg a rendszert: regisztráció/{{config.portal_url}}/{{message.code}}
+Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
 

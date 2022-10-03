@@ -60,7 +60,7 @@ nx-cam-table {
 
             .text-placeholder {
               font-size : 1.25rem;
-              color     : $light16;
+              color     : var(--light16);
             }
           }
 
@@ -99,18 +99,18 @@ nx-cam-table {
           min-height : rem(24px);
 
           &:hover {
-            color      : $dark9;
-            background : transparentize($brand_core, 0.9);
+            color      : var(--dark9);
+            background : var(--brand-core-t90);
           }
 
           &.selected, &:active, &:focus {
-            background : $light16;
+            background : var(--light16);
 
             td {
-              color : $light1 !important;
+              color : var(--light1) !important;
 
               .icon-negative {
-                color : $light1;
+                color : var(--light1);
               }
             }
           }
@@ -131,8 +131,8 @@ nx-cam-table {
       //&-header {
       //  @include typography.regular13;
       //  padding          : 0.5rem 1rem;
-      //  background-color : $additional_light1;
-      //  border           : 1px solid $light3;
+      //  background-color : var(--additional_light1);
+      //  border           : 1px solid var(--light3);
       //  border-bottom    : none;
       //  line-height      : 16px;
       //  text-transform   : none;
@@ -164,7 +164,7 @@ nx-cam-table {
 
           .page-link {
             @include typography.regular13light;
-            background-color: $light4;
+            background-color: var(--light4);
             border-radius: 2px;
             height: 32px;
             padding: 0 12px;
@@ -175,7 +175,7 @@ nx-cam-table {
             border: none;
 
             &:hover {
-              background-color: $light5;
+              background-color: var(--light5);
             }
 
             &[aria-label="Previous"] {
@@ -197,15 +197,15 @@ nx-cam-table {
           }
 
           &.active .page-link {
-            color: $light1 !important;
-            background-color: $light16;
-            border-color: $light16;
+            color: var(--light1) !important;
+            background-color: var(--light16);
+            border-color: var(--light16);
           }
 
           &.disabled .page-link {
             cursor: default;
-            background-color: transparentize($light6, 0.8);
-            color: transparentize($dark9, 0.7) !important;
+            background-color: rgba(var(--light6--rgb), 0.2);
+            color: rgba(var(--dark9--rgb), 0.3) !important;
           }
         }
       }
@@ -214,7 +214,7 @@ nx-cam-table {
 
   .vendor {
     @include media-breakpoint-down(md) {
-      background-color: $light4;
+      background-color: var(--light4);
     }
   }
 }

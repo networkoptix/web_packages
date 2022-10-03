@@ -1,0 +1,84 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header #authCodeHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+    <svg-icon nx-add-svg-src
+        [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header' + (viewType === 'web' ? '' : '_desktop') + '.svg'"
+        [svgStyle]="{'width.px': '320', 'height.px': '80'}"
+        [applyClass]="true"></svg-icon>
+    <div class="for-small">
+        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud', 'system2faAuth'].includes(clientType) && smallView"
+            class="btn mobile-back-button" type="button" (click)="setCurrentState.emit(restore ? 'reset' : 'password')">
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
+                [applyClass]="true"></svg-icon>
+        </button>
+        <h3 class="authorize-header">{{restore ? LANG.authorize.newPassHeader() : header}}</h3>
+    </div>
+    <div class="authorize-subheader" *ngIf="loginEmail">
+        <div class="d-flex justify-content-center align-items-center">
+            <span class="sub-header">{{subHeader}}</span>
+            <span class="for-account" (click)="setCurrentState.emit('email')">{{loginEmail}}</span>
+        </div>
+        <p *ngIf="subHeaderSuffix" class="mt-2 mb-0">{{subHeaderSuffix}}</p>
+    </div>
+</header>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
+    [ngStyle]="{ 'height': 'calc(100% - ' + authCodeHeader.offsetHeight + 'px)' }">
+    <form #authCodeForm="ngForm">
+        <label for="authCode" translate>Verification code</label>
+        <div class="auth-code-input">
+            <input
+                type="text"
+                id="authCode"
+                name="authCode"
+                [ngClass]="{ 'invalid-state': authCode.invalid && (authCode.dirty || authCode.touched) }"
+                [(ngModel)]="code"
+                [readonly]="checkAuthCodeProcess.processing"
+                #authCode="ngModel"
+                autocomplete="off"
+                required
+                nxFocusMe>
+        </div>
+        <div class="mt-2" *ngIf="authCode.invalid && (authCode.dirty || authCode.touched)">
+            <p *ngIf="authCode.errors.required" class="error-label mb-0" translate>Code is required</p>
+            <p *ngIf="authCode.errors.wrongAuthCode" class="error-label mb-0" translate>Invalid code</p>
+            <p *ngIf="authCode.errors.lockedOut" class="error-label mb-0" translate>Too many attempts. Try again in a minute.</p>
+        </div>
+        <div class="mt-2">
+            <p>{{suffixText}}</p>
+        </div>
+    </form>
+    <footer [ngClass]="{
+        'footer-w': viewType === 'web',
+        'footer-d': viewType === 'desktop',
+        'footer-m': viewType === 'mobile'
+    }">
+        <div class="left">
+            <button class="btn text-button no-padding" type="button"
+                (click)="setCurrentState.emit('backup')" [ngClass]="{ 'mt-2': smallView, 'larger-height': needLargerFooter }">
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'question.svg'"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
+                    [applyClass]="true"></svg-icon>
+                <span #backToPasswordSpan class="pl-1" translate>No access to authentication app?</span>
+            </button>
+        </div>
+        <div class="right">
+            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud', 'system2faAuth'].includes(clientType) && !smallView"
+                class="btn text-button" type="button" (click)="setCurrentState.emit(restore ? 'reset' : 'password')">
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
+                    [applyClass]="true"></svg-icon>
+                <span class="pl-1" translate>Back</span>
+            </button>
+            <nx-process-button
+                buttonText="{{ ((restore || clientType === 'connectSystemToCloud') ? 'Next' : 'Log In') | translate }}"
+                [form]="authCodeForm"
+                [clickFn]="sendCode"
+                [process]="checkAuthCodeProcess"
+                [svg]="restore ? { src: 'arrow_right', height: '24', width: '24', color: 'light1' } : null">
+            </nx-process-button>
+        </div>
+    </footer>
+</main>

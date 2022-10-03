@@ -1,0 +1,30 @@
+<section class="{{wrapper}}">
+    {% for item in items %}
+    <details class="{{item.type}}" {% if item.type == "category" %}open{% endif %}>
+        <summary class="{{item.type}}">
+            {% if item.type == 'category' %}
+            <h2><strong class="muted">{{item.type|upper}}:</strong> {{item.name}}</h2>
+            {% elif item.type == 'section' %}
+            <h3><strong class="muted">{{item.type|upper}}:</strong> {{item.name}}</h3>
+            {% else %}
+            <h4><strong class="muted">{{item.type|upper}}:</strong> {{item.name}}</h4>
+            {% endif %}
+            {% for link in item.links%}
+            {% if link.label%}
+            <div class="muted {{link.class}}">{{link.title}}</div>
+            {% elif link.url%}
+            <a href="{{link.url}}" target="_blank"><button class="btn btn-sm btn-{{link.class}}">{{link.title}}</button></a>
+            {% endif %}
+            {% endfor %}
+        </summary>
+        {% if item.type != 'article' %}
+        <h5>{{item.type}} Items:</h5>
+        {% endif %}
+    {% if item.children|length %}
+    {% include "cms/zendesk_mapping_list.html" with items=item.children only %}
+    {% elif item.type != 'article' %}
+    <section class="muted no-children">{% if item.type == 'category' %}Category{% else %}Section{% endif %} contains no children.</section>
+    {% endif %}
+    </details>
+    {% endfor %}
+</section>

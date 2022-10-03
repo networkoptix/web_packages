@@ -1,57 +1,50 @@
 import {
-    Component, OnInit,
-    AfterViewInit, ViewChild,
-    ViewContainerRef, OnDestroy,
-    ViewChildren, QueryList, Inject
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { NgForm }                    from '@angular/forms';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
-import { first }                     from 'rxjs/operators';
+    Component,
+    OnInit,
+    ViewChild,
+    ViewContainerRef,
+    Inject
+} from '@angular/core';
+import { NgForm } from '@angular/forms';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 import { NxAccountService, Account } from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
+import { NxApplyService } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxApplyService, Watcher }   from '@services/apply.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxMenuService }             from '@src/menu';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxStorageService }          from '@services/storage.service';
-import { NxSessionService }          from '@services/session.service';
-import { WINDOW }                    from '@services/window-provider';
+import { NxStorageService } from '@services/storage.service';
+import { NxSystemsService } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
+import { NxMenuService } from '@src/menu';
 
-@UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-account-settings-component',
-    templateUrl : 'settings.component.html',
-    styleUrls   : ['settings.component.scss']
+    selector: 'nx-account-settings-component',
+    templateUrl: 'settings.component.html',
+    styleUrls: ['settings.component.scss']
 })
 
-export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
-    @ViewChildren('accountForm', { read: NgForm }) formQueryList: QueryList<NgForm>;
+export class NxAccountSettingsComponent implements OnInit {
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
+    @ViewChild('accountForm', { read: NgForm }) accountForm;
+    @ViewChild('langForm', { read: NgForm }) langForm;
+
+    accountFormWatcher: any;
+    langFormWatcher: any;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     account: Account;
-    save: Process;
+    saveLang: Process;
+    saveAccount: Process;
     langCode: string;
     isSystemOwner = true;
     hideErrors = true;
-
-    watchers = {
-        firstName : new Watcher<string>(),
-        lastName  : new Watcher<string>(),
-        langCode  : new Watcher<string>()
-    };
-
-    private formSubscription: Subscription;
 
     private setupDefaults() {
         this.menuService.detail = 'settings';
@@ -60,7 +53,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     constructor(
         configService: NxConfigService,
         private languageService: NxLanguageProviderService,
-        private route: ActivatedRoute,
         private storageService: NxStorageService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
@@ -74,71 +66,58 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
+        this.langCode = this.languageService.currentLang;
         this.setupDefaults();
     }
 
-    ngOnDestroy() {}
-
     ngOnInit() {
         this.pageService.pageTitle = this.LANG.pageTitles.account();
+        this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.save = this.processService.createProcess(() => {
-            return this.cloudApiService.accountPost(this.account).then(() => {
-                let lang = Promise.resolve();
-                if (this.langCode !== this.account.language) {
-                    this.account.language = this.langCode;
-
-                    lang = new Promise<any>((resolve) => {
-                        return this.cloudApiService
-                            .changeLanguage(this.langCode)
-                            .then(() => {
-                                this.storageService.langChanged = true;
-                                this.languageService.currentLang = this.langCode;
-                                return resolve(false);
-                            });
-                    });
-                }
-                return lang.then(() => {
-                    if (this.storageService.langChanged) {
-                        // language is already changed ...
-                        // stop process and reload - 'successMessage' will appear after the reload
-                        this.save.cancel();
-                        this.window.location.reload();
-                    }
-                    return this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>;
-                });
-            }).finally(() => {
-                this.watchers.langCode.originalValue = this.watchers.langCode.value = this.langCode;
-                this.accountService.get(true);
-            });
-        }, {
-            successMessage  : this.LANG.account.accountSavedSuccess(),
-            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
-            logoutForbidden : true
-        }).then((result) => {
-            this.applyService.reset(true);
-            this.setOriginal();
-            this.applyService.reset();
-            return result;
+        this.saveLang = this.processService.createProcess(() => {
+            return this.cloudApiService.changeLanguage(this.langCode);
+        }, {}).then((result) => {
+            this.storageService.langChanged = true;
+            this.window.location.reload();
         });
 
-        this.applyService.initPageWatcher(this.applyContainer, this.save, () => {
-            this.account.first_name = this.watchers.firstName.originalValue;
-            this.account.last_name = this.watchers.lastName.originalValue;
-            this.langCode = this.watchers.langCode.originalValue;
-            this.applyService.reset();
-        }, Object.values(this.watchers), undefined, this.displayErrors, true);
+        this.saveAccount = this.processService.createProcess(() => {
+            return this.cloudApiService.accountPost(this.account);
+        }, {
+            successMessage: this.LANG.account.accountSavedSuccess(),
+            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
+            logoutForbidden: true
+        }).then(() => {
+            // account info was changed successful (local and on server)
+            // really no need to force update -- TT
+            // this.accountService.get(true);
+        }, () => {});
 
         this.accountService
-            .get()
+            .get(true)
             .then((account) => {
-                if (account) {
+                if (account?.email) {
                     this.account = account;
-                    this.setOriginal();
-                    if (!this.CONFIG.isLocal && !this.systemsService.isPolling) {
+                    if (!environment.isLocal && !this.systemsService.isPolling) {
                         this.systemsService.getSystems(account.email);
                     }
                     this.isUserASystemOwner();
+
+                    setTimeout(() => {
+                        // both form are inside *ngIf="account"
+                        // otherwise they should be in ngAfterViewInit
+                        this.accountFormWatcher = this.applyService.createFormWatcher(
+                            'accountForm',
+                            this.accountForm,
+                            this.saveAccount
+                        );
+
+                        this.langFormWatcher = this.applyService.createFormWatcher(
+                            'langForm',
+                            this.langForm,
+                            this.saveLang
+                        );
+                    });
                 }
             });
 
@@ -146,35 +125,10 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.storageService.langChanged = false;
         }
-        this.applyService.reset(true);
-        this.applyService.setVisible();
     }
 
-    ngAfterViewInit() {
-        this.formSubscription = this.formQueryList.changes.pipe(first()).subscribe((changes) => {
-            this.applyService.setForm(changes.first);
-        });
-    }
-
-    setOriginal() {
-        this.watchers.firstName.value = this.account.first_name;
-        this.watchers.lastName.value = this.account.last_name;
-        this.watchers.langCode.value = this.langCode;
-    }
-
-    changeLanguage(langCode) {
+    changeLanguage(langCode: string) {
         this.langCode = langCode;
-        this.watchers.langCode.value = langCode;
-    }
-
-    changeFirstName(firstName) {
-        this.account.first_name = firstName;
-        this.watchers.firstName.value = firstName;
-    }
-
-    changeLastName(lastName) {
-        this.account.last_name = lastName;
-        this.watchers.lastName.value = lastName;
     }
 
     isUserASystemOwner() {

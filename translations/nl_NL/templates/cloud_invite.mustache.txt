@@ -9,4 +9,4 @@ U bent uitgenodigd voor %CLOUD_NAME%.
 Maak een account aan op %CLOUD_NAME%
 gebruik je huidige e-mailadres en volg verdere instructies.
 
-Registreer uw account via deze link: {{ config.portal_url }}/ register /{{ message.code }}
+Registreer uw account met deze link: {{ config.portal_url }}/autoriseer/registreer/{{ message.code }}

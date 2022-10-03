@@ -1,68 +1,68 @@
 export const kbMenu = {
-    title       : '',
-    description : '',
-    nodes       : [
+    title: '',
+    description: '',
+    nodes: [
         {
-            subtitle          : '',
-            url               : '/docs/developers/knowledgebase/518-overview',
-            asset_id          : 518,
-            accepted          : true,
-            pending           : false,
-            draft             : false,
-            asset_type        : 'Documentation Page',
-            related_asset_ids : [
+            subtitle: '',
+            url: '/docs/developers/knowledgebase/518-overview',
+            asset_id: 518,
+            accepted: true,
+            pending: false,
+            draft: false,
+            asset_type: 'Documentation Page',
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 0,
-            urlified       : '518-overview',
-            name           : 'Overview',
-            display_name   : 'Overview',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 0,
+            urlified: '518-overview',
+            name: 'Overview',
+            display_name: 'Overview',
+            nodes: [
             ],
             breadcrumbs: [
             ],
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 2,
-            name           : 'Getting Started',
-            display_name   : 'Getting Started',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 2,
+            name: 'Getting Started',
+            display_name: 'Getting Started',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/351-get-a-vms-build',
-                    asset_id          : 351,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/351-get-a-vms-build',
+                    asset_id: 351,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    urlified       : '351-get-a-vms-build',
-                    name           : 'Get a VMS Build',
-                    display_name   : 'Get a VMS Build',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    urlified: '351-get-a-vms-build',
+                    name: 'Get a VMS Build',
+                    display_name: 'Get a VMS Build',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -71,50 +71,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/352-get-a-license-for-developers',
-                    asset_id          : 352,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/352-get-a-license-for-developers',
+                    asset_id: 352,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    urlified       : '352-get-a-license-for-developers',
-                    name           : 'Get a License for Developers',
-                    display_name   : 'Get a License for Developers',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'Getting Started'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/220-explore-platform-architecture',
-                    asset_id          : 220,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 3,
-                    urlified       : '220-explore-platform-architecture',
-                    name           : 'Explore Platform Architecture',
-                    display_name   : 'Explore Platform Architecture',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    urlified: '352-get-a-license-for-developers',
+                    name: 'Get a License for Developers',
+                    display_name: 'Get a License for Developers',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -123,24 +97,50 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/354-submit-an-integration-to-the-marketplace',
-                    asset_id          : 354,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/220-explore-platform-architecture',
+                    asset_id: 220,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 4,
-                    urlified       : '354-submit-an-integration-to-the-marketplace',
-                    name           : 'Submit an Integration to the Cloud Marketplace',
-                    display_name   : 'Submit an Integration to the Cloud Marketplace',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 3,
+                    urlified: '220-explore-platform-architecture',
+                    name: 'Explore Platform Architecture',
+                    display_name: 'Explore Platform Architecture',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'Getting Started'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/354-submit-an-integration-to-the-marketplace',
+                    asset_id: 354,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 4,
+                    urlified: '354-submit-an-integration-to-the-marketplace',
+                    name: 'Submit an Integration to the Cloud Marketplace',
+                    display_name: 'Submit an Integration to the Cloud Marketplace',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -154,42 +154,42 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 3,
-            name           : 'What is Possible?',
-            display_name   : 'What is Possible?',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 3,
+            name: 'What is Possible?',
+            display_name: 'What is Possible?',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/241-custom-solutions',
-                    asset_id          : 241,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/241-custom-solutions',
+                    asset_id: 241,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    urlified       : '241-custom-solutions',
-                    name           : 'Build Custom Solutions',
-                    display_name   : 'Build Custom Solutions',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    urlified: '241-custom-solutions',
+                    name: 'Build Custom Solutions',
+                    display_name: 'Build Custom Solutions',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -198,24 +198,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/225-reusable-integrations',
-                    asset_id          : 225,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/225-reusable-integrations',
+                    asset_id: 225,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    urlified       : '225-reusable-integrations',
-                    name           : 'Develop Reusable Integrations',
-                    display_name   : 'Develop Reusable Integrations',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    urlified: '225-reusable-integrations',
+                    name: 'Develop Reusable Integrations',
+                    display_name: 'Develop Reusable Integrations',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -224,24 +224,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/366-create-new-powered-by-brand-products',
-                    asset_id          : 366,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/366-create-new-powered-by-brand-products',
+                    asset_id: 366,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 3,
-                    urlified       : '366-create-new-powered-by-brand-products',
-                    name           : 'Create new Powered-by-brand Products',
-                    display_name   : 'Create new Powered-by-brand Products',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 3,
+                    urlified: '366-create-new-powered-by-brand-products',
+                    name: 'Create new Powered-by-brand Products',
+                    display_name: 'Create new Powered-by-brand Products',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -255,42 +255,42 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 4,
-            name           : 'Developer Tools',
-            display_name   : 'Developer Tools',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 4,
+            name: 'Developer Tools',
+            display_name: 'Developer Tools',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/418-http-rest-api',
-                    asset_id          : 418,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/418-http-rest-api',
+                    asset_id: 418,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    urlified       : '418-http-rest-api',
-                    name           : 'Server HTTP REST API',
-                    display_name   : 'Server HTTP REST API',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    urlified: '418-http-rest-api',
+                    name: 'Server HTTP REST API',
+                    display_name: 'Server HTTP REST API',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -299,50 +299,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/357-brand-witness-server-plugin-sdk-c',
-                    asset_id          : 357,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/357-brand-witness-server-plugin-sdk-c',
+                    asset_id: 357,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 1,
-                    urlified       : '357-brand-witness-server-plugin-sdk-c',
-                    name           : 'Server Plugin SDK (C++)',
-                    display_name   : 'Server Plugin SDK (C++)',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'Developer Tools'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/358-cloud-api-route-api-calls-via-brand-cloud',
-                    asset_id          : 358,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    urlified       : '358-cloud-api-route-api-calls-via-brand-cloud',
-                    name           : 'Cloud API: Route API Calls via Cloud',
-                    display_name   : 'Cloud API: Route API Calls via Cloud',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 1,
+                    urlified: '357-brand-witness-server-plugin-sdk-c',
+                    name: 'Server Plugin SDK (C++)',
+                    display_name: 'Server Plugin SDK (C++)',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -351,50 +325,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/359-testcamera-ip-camera-emulator',
-                    asset_id          : 359,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/358-cloud-api-route-api-calls-via-brand-cloud',
+                    asset_id: 358,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 3,
-                    urlified       : '359-testcamera-ip-camera-emulator',
-                    name           : 'TestCamera: IP Camera Emulator',
-                    display_name   : 'TestCamera: IP Camera Emulator',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'Developer Tools'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/360-nodejs-integration-library',
-                    asset_id          : 360,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 4,
-                    urlified       : '360-nodejs-integration-library',
-                    name           : 'Node.js Integration Library',
-                    display_name   : 'Node.js Integration Library',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    urlified: '358-cloud-api-route-api-calls-via-brand-cloud',
+                    name: 'Cloud API: Route API Calls via Cloud',
+                    display_name: 'Cloud API: Route API Calls via Cloud',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -403,24 +351,76 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/355-open-source-openvino-analytics-plugin',
-                    asset_id          : 355,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/359-testcamera-ip-camera-emulator',
+                    asset_id: 359,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 5,
-                    urlified       : '355-open-source-openvino-analytics-plugin',
-                    name           : 'Open-Source OpenVINO Analytics Plugin',
-                    display_name   : 'Open-Source OpenVINO Analytics Plugin',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 3,
+                    urlified: '359-testcamera-ip-camera-emulator',
+                    name: 'TestCamera: IP Camera Emulator',
+                    display_name: 'TestCamera: IP Camera Emulator',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'Developer Tools'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/360-nodejs-integration-library',
+                    asset_id: 360,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 4,
+                    urlified: '360-nodejs-integration-library',
+                    name: 'Node.js Integration Library',
+                    display_name: 'Node.js Integration Library',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'Developer Tools'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/355-open-source-openvino-analytics-plugin',
+                    asset_id: 355,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 5,
+                    urlified: '355-open-source-openvino-analytics-plugin',
+                    name: 'Open-Source OpenVINO Analytics Plugin',
+                    display_name: 'Open-Source OpenVINO Analytics Plugin',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -434,61 +434,61 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 5,
-            name           : 'Supported Technology',
-            display_name   : 'Supported Technology',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 5,
+            name: 'Supported Technology',
+            display_name: 'Supported Technology',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/364-brand-witness---supported-operating-systems',
-                    asset_id          : 364,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/364-brand-witness---supported-operating-systems',
+                    asset_id: 364,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    urlified       : '364-brand-witness---supported-operating-systems',
-                    name           : 'Supported Operating Systems',
-                    display_name   : 'Supported Operating Systems',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    urlified: '364-brand-witness---supported-operating-systems',
+                    name: 'Supported Operating Systems',
+                    display_name: 'Supported Operating Systems',
+                    nodes: [
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/454-windows-os-installation-guide',
-                            asset_id          : 454,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/454-windows-os-installation-guide',
+                            asset_id: 454,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 0,
-                            urlified       : '454-windows-os-installation-guide',
-                            name           : 'Windows OS Installation Guide',
-                            display_name   : 'Windows OS Installation Guide',
-                            nodes          : [
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 0,
+                            urlified: '454-windows-os-installation-guide',
+                            name: 'Windows OS Installation Guide',
+                            display_name: 'Windows OS Installation Guide',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -497,24 +497,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/455-ubuntu-linux-os-installation-guide',
-                            asset_id          : 455,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/455-ubuntu-linux-os-installation-guide',
+                            asset_id: 455,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 1,
-                            urlified       : '455-ubuntu-linux-os-installation-guide',
-                            name           : 'Ubuntu Linux OS Installation Guide',
-                            display_name   : 'Ubuntu Linux OS Installation Guide',
-                            nodes          : [
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 1,
+                            urlified: '455-ubuntu-linux-os-installation-guide',
+                            name: 'Ubuntu Linux OS Installation Guide',
+                            display_name: 'Ubuntu Linux OS Installation Guide',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -523,24 +523,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/456-macos-installation-guide',
-                            asset_id          : 456,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/456-macos-installation-guide',
+                            asset_id: 456,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 2,
-                            urlified       : '456-macos-installation-guide',
-                            name           : 'macOS Installation Guide',
-                            display_name   : 'macOS Installation Guide',
-                            nodes          : [
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 2,
+                            urlified: '456-macos-installation-guide',
+                            name: 'macOS Installation Guide',
+                            display_name: 'macOS Installation Guide',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -556,61 +556,61 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '',
-                    asset_id          : null,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : null,
-                    asset_type        : null,
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '',
+                    asset_id: null,
+                    accepted: true,
+                    pending: false,
+                    draft: null,
+                    asset_type: null,
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 1,
-                    name           : 'Supported Platforms',
-                    display_name   : 'Supported Platforms',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 1,
+                    name: 'Supported Platforms',
+                    display_name: 'Supported Platforms',
+                    nodes: [
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/451-arm',
-                            asset_id          : 451,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/451-arm',
+                            asset_id: 451,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 0,
-                            urlified       : '451-arm',
-                            name           : 'ARM',
-                            display_name   : 'ARM',
-                            nodes          : [
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 0,
+                            urlified: '451-arm',
+                            name: 'ARM',
+                            display_name: 'ARM',
+                            nodes: [
                                 {
-                                    subtitle          : '',
-                                    url               : '/docs/developers/knowledgebase/485-arm-support-policy',
-                                    asset_id          : 485,
-                                    accepted          : true,
-                                    pending           : false,
-                                    draft             : false,
-                                    asset_type        : 'Documentation Page',
-                                    related_asset_ids : [
+                                    subtitle: '',
+                                    url: '/docs/developers/knowledgebase/485-arm-support-policy',
+                                    asset_id: 485,
+                                    accepted: true,
+                                    pending: false,
+                                    draft: false,
+                                    asset_type: 'Documentation Page',
+                                    related_asset_ids: [
                                     ],
-                                    next_item      : false,
-                                    new_window     : false,
-                                    icon           : '',
-                                    authentication : 'Both',
-                                    order          : 0,
-                                    urlified       : '485-arm-support-policy',
-                                    name           : 'ARM Support Policy',
-                                    display_name   : 'ARM Support Policy',
-                                    nodes          : [
+                                    next_item: false,
+                                    new_window: false,
+                                    icon: '',
+                                    authentication: 'Both',
+                                    order: 0,
+                                    urlified: '485-arm-support-policy',
+                                    name: 'ARM Support Policy',
+                                    display_name: 'ARM Support Policy',
+                                    nodes: [
                                     ],
                                     breadcrumbs: [
                                     ],
@@ -619,24 +619,24 @@ export const kbMenu = {
                                     }
                                 },
                                 {
-                                    subtitle          : '',
-                                    url               : '/docs/developers/knowledgebase/362-building-linux-based-nvrs',
-                                    asset_id          : 362,
-                                    accepted          : true,
-                                    pending           : false,
-                                    draft             : false,
-                                    asset_type        : 'Documentation Page',
-                                    related_asset_ids : [
+                                    subtitle: '',
+                                    url: '/docs/developers/knowledgebase/362-building-linux-based-nvrs',
+                                    asset_id: 362,
+                                    accepted: true,
+                                    pending: false,
+                                    draft: false,
+                                    asset_type: 'Documentation Page',
+                                    related_asset_ids: [
                                     ],
-                                    next_item      : false,
-                                    new_window     : false,
-                                    icon           : '',
-                                    authentication : 'Both',
-                                    order          : 1,
-                                    urlified       : '362-building-linux-based-nvrs',
-                                    name           : 'Building Linux-based NVRs',
-                                    display_name   : 'Building Linux-based NVRs',
-                                    nodes          : [
+                                    next_item: false,
+                                    new_window: false,
+                                    icon: '',
+                                    authentication: 'Both',
+                                    order: 1,
+                                    urlified: '362-building-linux-based-nvrs',
+                                    name: 'Building Linux-based NVRs',
+                                    display_name: 'Building Linux-based NVRs',
+                                    nodes: [
                                     ],
                                     breadcrumbs: [
                                     ],
@@ -652,24 +652,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/404-docker',
-                            asset_id          : 404,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/404-docker',
+                            asset_id: 404,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 1,
-                            urlified       : '404-docker',
-                            name           : 'Docker',
-                            display_name   : 'Docker',
-                            nodes          : [
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 1,
+                            urlified: '404-docker',
+                            name: 'Docker',
+                            display_name: 'Docker',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -678,24 +678,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/453-virtual-machines',
-                            asset_id          : 453,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/453-virtual-machines',
+                            asset_id: 453,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 2,
-                            urlified       : '453-virtual-machines',
-                            name           : 'Virtual Machines',
-                            display_name   : 'Virtual Machines',
-                            nodes          : [
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 2,
+                            urlified: '453-virtual-machines',
+                            name: 'Virtual Machines',
+                            display_name: 'Virtual Machines',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -711,24 +711,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/361-supported-programming-languages',
-                    asset_id          : 361,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/361-supported-programming-languages',
+                    asset_id: 361,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    urlified       : '361-supported-programming-languages',
-                    name           : 'Supported Programming Languages',
-                    display_name   : 'Supported Programming Languages',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    urlified: '361-supported-programming-languages',
+                    name: 'Supported Programming Languages',
+                    display_name: 'Supported Programming Languages',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -742,60 +742,60 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 6,
-            name           : 'Integrating Video Analytics and Metadata',
-            display_name   : 'Integrating Video Analytics and Metadata',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 6,
+            name: 'Integrating Video Analytics and Metadata',
+            display_name: 'Integrating Video Analytics and Metadata',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '',
-                    asset_id          : null,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : null,
-                    asset_type        : null,
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '',
+                    asset_id: null,
+                    accepted: true,
+                    pending: false,
+                    draft: null,
+                    asset_type: null,
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    name           : 'Integrating Video Analytics - Overview',
-                    display_name   : 'Integrating Video Analytics - Overview',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    name: 'Integrating Video Analytics - Overview',
+                    display_name: 'Integrating Video Analytics - Overview',
+                    nodes: [
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/368-1-integration-capabilities--what-to-expect',
-                            asset_id          : 368,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/368-1-integration-capabilities--what-to-expect',
+                            asset_id: 368,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 0,
-                            urlified       : '368-1-integration-capabilities--what-to-expect',
-                            name           : '1. Integration Capabilities – What to Expect',
-                            display_name   : '1. Integration Capabilities – What to Expect',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 0,
+                            urlified: '368-1-integration-capabilities--what-to-expect',
+                            name: '1. Integration Capabilities – What to Expect',
+                            display_name: '1. Integration Capabilities – What to Expect',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -804,50 +804,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/369-2-integration-architecture---understanding-plugins',
-                            asset_id          : 369,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/369-2-integration-architecture---understanding-plugins',
+                            asset_id: 369,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 1,
-                            urlified       : '369-2-integration-architecture---understanding-plugins',
-                            name           : '2. Integration Architecture - Understanding Plugins',
-                            display_name   : '2. Integration Architecture - Understanding Plugins',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/370-3-exploring-plugin-code-examples',
-                            asset_id          : 370,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 2,
-                            urlified       : '370-3-exploring-plugin-code-examples',
-                            name           : '3. Exploring Plugin Code Examples',
-                            display_name   : '3. Exploring Plugin Code Examples',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 1,
+                            urlified: '369-2-integration-architecture---understanding-plugins',
+                            name: '2. Integration Architecture - Understanding Plugins',
+                            display_name: '2. Integration Architecture - Understanding Plugins',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -856,50 +830,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/371-4-implementation-best-practices',
-                            asset_id          : 371,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/370-3-exploring-plugin-code-examples',
+                            asset_id: 370,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 3,
-                            urlified       : '371-4-implementation-best-practices',
-                            name           : '4. Implementation Best Practices',
-                            display_name   : '4. Implementation Best Practices',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/372-5-configuring-regions-of-interests-for-event-generation',
-                            asset_id          : 372,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 4,
-                            urlified       : '372-5-configuring-regions-of-interests-for-event-generation',
-                            name           : '5. Configuring Regions of Interests for Event Generation',
-                            display_name   : '5. Configuring Regions of Interests for Event Generation',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 2,
+                            urlified: '370-3-exploring-plugin-code-examples',
+                            name: '3. Exploring Plugin Code Examples',
+                            display_name: '3. Exploring Plugin Code Examples',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -908,50 +856,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/373-6-example-integrating-with-face-recognition',
-                            asset_id          : 373,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/371-4-implementation-best-practices',
+                            asset_id: 371,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 5,
-                            urlified       : '373-6-example-integrating-with-face-recognition',
-                            name           : '6. Example: Integrating with Face Recognition',
-                            display_name   : '6. Example: Integrating with Face Recognition',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/374-7-example-create-an-lpr-plugin',
-                            asset_id          : 374,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 6,
-                            urlified       : '374-7-example-create-an-lpr-plugin',
-                            name           : '7. Example: Create an LPR Plugin',
-                            display_name   : '7. Example: Create an LPR Plugin',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 3,
+                            urlified: '371-4-implementation-best-practices',
+                            name: '4. Implementation Best Practices',
+                            display_name: '4. Implementation Best Practices',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -960,50 +882,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/375-8-create-a-smart-ip-camera-plugin',
-                            asset_id          : 375,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/372-5-configuring-regions-of-interests-for-event-generation',
+                            asset_id: 372,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 7,
-                            urlified       : '375-8-create-a-smart-ip-camera-plugin',
-                            name           : '8. Create a Smart IP Camera Plugin',
-                            display_name   : '8. Create a Smart IP Camera Plugin',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/376-9-important-technical-considerations-w-brand-witness',
-                            asset_id          : 376,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 8,
-                            urlified       : '376-9-important-technical-considerations-w-brand-witness',
-                            name           : '9. Important Technical Considerations w/ brand Witness',
-                            display_name   : '9. Important Technical Considerations w/ brand Witness',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 4,
+                            urlified: '372-5-configuring-regions-of-interests-for-event-generation',
+                            name: '5. Configuring Regions of Interests for Event Generation',
+                            display_name: '5. Configuring Regions of Interests for Event Generation',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1012,24 +908,128 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/377-10-development-tools--tips',
-                            asset_id          : 377,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/373-6-example-integrating-with-face-recognition',
+                            asset_id: 373,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 9,
-                            urlified       : '377-10-development-tools--tips',
-                            name           : '10. Development Tools & Tips',
-                            display_name   : '10. Development Tools & Tips',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 5,
+                            urlified: '373-6-example-integrating-with-face-recognition',
+                            name: '6. Example: Integrating with Face Recognition',
+                            display_name: '6. Example: Integrating with Face Recognition',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Integrating Video Analytics - Overview'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/374-7-example-create-an-lpr-plugin',
+                            asset_id: 374,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 6,
+                            urlified: '374-7-example-create-an-lpr-plugin',
+                            name: '7. Example: Create an LPR Plugin',
+                            display_name: '7. Example: Create an LPR Plugin',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Integrating Video Analytics - Overview'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/375-8-create-a-smart-ip-camera-plugin',
+                            asset_id: 375,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 7,
+                            urlified: '375-8-create-a-smart-ip-camera-plugin',
+                            name: '8. Create a Smart IP Camera Plugin',
+                            display_name: '8. Create a Smart IP Camera Plugin',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Integrating Video Analytics - Overview'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/376-9-important-technical-considerations-w-brand-witness',
+                            asset_id: 376,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 8,
+                            urlified: '376-9-important-technical-considerations-w-brand-witness',
+                            name: '9. Important Technical Considerations w/ brand Witness',
+                            display_name: '9. Important Technical Considerations w/ brand Witness',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Integrating Video Analytics - Overview'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/377-10-development-tools--tips',
+                            asset_id: 377,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 9,
+                            urlified: '377-10-development-tools--tips',
+                            name: '10. Development Tools & Tips',
+                            display_name: '10. Development Tools & Tips',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1045,42 +1045,42 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '',
-                    asset_id          : null,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : null,
-                    asset_type        : null,
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '',
+                    asset_id: null,
+                    accepted: true,
+                    pending: false,
+                    draft: null,
+                    asset_type: null,
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 1,
-                    name           : 'How to Create a Video Analytics Plugin',
-                    display_name   : 'How to Create a Video Analytics Plugin',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 1,
+                    name: 'How to Create a Video Analytics Plugin',
+                    display_name: 'How to Create a Video Analytics Plugin',
+                    nodes: [
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/378-introduction-to-creating-a-video-analytics-plugin',
-                            asset_id          : 378,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/378-introduction-to-creating-a-video-analytics-plugin',
+                            asset_id: 378,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 0,
-                            urlified       : '378-introduction-to-creating-a-video-analytics-plugin',
-                            name           : 'Introduction to Creating a Video Analytics Plugin',
-                            display_name   : 'Introduction to Creating a Video Analytics Plugin',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 0,
+                            urlified: '378-introduction-to-creating-a-video-analytics-plugin',
+                            name: 'Introduction to Creating a Video Analytics Plugin',
+                            display_name: 'Introduction to Creating a Video Analytics Plugin',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1089,50 +1089,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/379-plugin-control-flow',
-                            asset_id          : 379,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/379-plugin-control-flow',
+                            asset_id: 379,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 1,
-                            urlified       : '379-plugin-control-flow',
-                            name           : 'Plugin Control Flow',
-                            display_name   : 'Plugin Control Flow',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/380-plugin-subsystem-architecture',
-                            asset_id          : 380,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 2,
-                            urlified       : '380-plugin-subsystem-architecture',
-                            name           : 'Plugin Subsystem Architecture',
-                            display_name   : 'Plugin Subsystem Architecture',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 1,
+                            urlified: '379-plugin-control-flow',
+                            name: 'Plugin Control Flow',
+                            display_name: 'Plugin Control Flow',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1141,50 +1115,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/505-step-0-getting-the-source-code',
-                            asset_id          : 505,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/380-plugin-subsystem-architecture',
+                            asset_id: 380,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 3,
-                            urlified       : '505-step-0-getting-the-source-code',
-                            name           : 'Step 0. Getting the Source Code',
-                            display_name   : 'Step 0. Getting the Source Code',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/381-step-1-preparing-a-workspace',
-                            asset_id          : 381,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 4,
-                            urlified       : '381-step-1-preparing-a-workspace',
-                            name           : 'Step 1. Preparing a Workspace',
-                            display_name   : 'Step 1. Preparing a Workspace',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 2,
+                            urlified: '380-plugin-subsystem-architecture',
+                            name: 'Plugin Subsystem Architecture',
+                            display_name: 'Plugin Subsystem Architecture',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1193,50 +1141,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/382-step-2-adjusting-the-names',
-                            asset_id          : 382,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/505-step-0-getting-the-source-code',
+                            asset_id: 505,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 5,
-                            urlified       : '382-step-2-adjusting-the-names',
-                            name           : 'Step 2. Adjusting the Names',
-                            display_name   : 'Step 2. Adjusting the Names',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/383-step-3-introducing-new-detectable-object-types',
-                            asset_id          : 383,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 6,
-                            urlified       : '383-step-3-introducing-new-detectable-object-types',
-                            name           : 'Step 3. Introducing New Detectable Object Types',
-                            display_name   : 'Step 3. Introducing New Detectable Object Types',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 3,
+                            urlified: '505-step-0-getting-the-source-code',
+                            name: 'Step 0. Getting the Source Code',
+                            display_name: 'Step 0. Getting the Source Code',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1245,24 +1167,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/384-step-4-adding-object-detection',
-                            asset_id          : 384,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/381-step-1-preparing-a-workspace',
+                            asset_id: 381,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 7,
-                            urlified       : '384-step-4-adding-object-detection',
-                            name           : 'Step 4. Adding Object Detection',
-                            display_name   : 'Step 4. Adding Object Detection',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 4,
+                            urlified: '381-step-1-preparing-a-workspace',
+                            name: 'Step 1. Preparing a Workspace',
+                            display_name: 'Step 1. Preparing a Workspace',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1271,24 +1193,102 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/385-step-5-adding-object-tracking',
-                            asset_id          : 385,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/382-step-2-adjusting-the-names',
+                            asset_id: 382,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 8,
-                            urlified       : '385-step-5-adding-object-tracking',
-                            name           : 'Step 5. Adding Object Tracking',
-                            display_name   : 'Step 5. Adding Object Tracking',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 5,
+                            urlified: '382-step-2-adjusting-the-names',
+                            name: 'Step 2. Adjusting the Names',
+                            display_name: 'Step 2. Adjusting the Names',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'How to Create a Video Analytics Plugin'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/383-step-3-introducing-new-detectable-object-types',
+                            asset_id: 383,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 6,
+                            urlified: '383-step-3-introducing-new-detectable-object-types',
+                            name: 'Step 3. Introducing New Detectable Object Types',
+                            display_name: 'Step 3. Introducing New Detectable Object Types',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'How to Create a Video Analytics Plugin'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/384-step-4-adding-object-detection',
+                            asset_id: 384,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 7,
+                            urlified: '384-step-4-adding-object-detection',
+                            name: 'Step 4. Adding Object Detection',
+                            display_name: 'Step 4. Adding Object Detection',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'How to Create a Video Analytics Plugin'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/385-step-5-adding-object-tracking',
+                            asset_id: 385,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 8,
+                            urlified: '385-step-5-adding-object-tracking',
+                            name: 'Step 5. Adding Object Tracking',
+                            display_name: 'Step 5. Adding Object Tracking',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1304,42 +1304,42 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '',
-                    asset_id          : null,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : null,
-                    asset_type        : null,
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '',
+                    asset_id: null,
+                    accepted: true,
+                    pending: false,
+                    draft: null,
+                    asset_type: null,
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    name           : 'Plugin Debugging',
-                    display_name   : 'Plugin Debugging',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    name: 'Plugin Debugging',
+                    display_name: 'Plugin Debugging',
+                    nodes: [
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/386-introduction-to-plugin-debugging',
-                            asset_id          : 386,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/386-introduction-to-plugin-debugging',
+                            asset_id: 386,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 0,
-                            urlified       : '386-introduction-to-plugin-debugging',
-                            name           : 'Introduction to Plugin Debugging',
-                            display_name   : 'Introduction to Plugin Debugging',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 0,
+                            urlified: '386-introduction-to-plugin-debugging',
+                            name: 'Introduction to Plugin Debugging',
+                            display_name: 'Introduction to Plugin Debugging',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1348,50 +1348,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/387-logging-from-the-plugin',
-                            asset_id          : 387,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/387-logging-from-the-plugin',
+                            asset_id: 387,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 1,
-                            urlified       : '387-logging-from-the-plugin',
-                            name           : 'Logging from the Plugin',
-                            display_name   : 'Logging from the Plugin',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Plugin Debugging'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/388-configuring-via-ini-files--iniconfig',
-                            asset_id          : 388,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 2,
-                            urlified       : '388-configuring-via-ini-files--iniconfig',
-                            name           : 'Configuring via .ini files – IniConfig',
-                            display_name   : 'Configuring via .ini files – IniConfig',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 1,
+                            urlified: '387-logging-from-the-plugin',
+                            name: 'Logging from the Plugin',
+                            display_name: 'Logging from the Plugin',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1400,50 +1374,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/389-loading-plugins',
-                            asset_id          : 389,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/388-configuring-via-ini-files--iniconfig',
+                            asset_id: 388,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 3,
-                            urlified       : '389-loading-plugins',
-                            name           : 'Loading Plugins',
-                            display_name   : 'Loading Plugins',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Plugin Debugging'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/390-debugging-reference-counting--refcountableregistry',
-                            asset_id          : 390,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 4,
-                            urlified       : '390-debugging-reference-counting--refcountableregistry',
-                            name           : 'Debugging Reference Counting – RefCountableRegistry',
-                            display_name   : 'Debugging Reference Counting – RefCountableRegistry',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 2,
+                            urlified: '388-configuring-via-ini-files--iniconfig',
+                            name: 'Configuring via .ini files – IniConfig',
+                            display_name: 'Configuring via .ini files – IniConfig',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1452,50 +1400,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/391-using-stub-analytics-plugin-and-sample-analytics-plugin',
-                            asset_id          : 391,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/389-loading-plugins',
+                            asset_id: 389,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 5,
-                            urlified       : '391-using-stub-analytics-plugin-and-sample-analytics-plugin',
-                            name           : 'Using Stub Analytics Plugin and Sample Analytics Plugin',
-                            display_name   : 'Using Stub Analytics Plugin and Sample Analytics Plugin',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Plugin Debugging'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/392-capturing-and-substituting-manifests-and-settings',
-                            asset_id          : 392,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 6,
-                            urlified       : '392-capturing-and-substituting-manifests-and-settings',
-                            name           : 'Capturing and Substituting Manifests and Settings',
-                            display_name   : 'Capturing and Substituting Manifests and Settings',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 3,
+                            urlified: '389-loading-plugins',
+                            name: 'Loading Plugins',
+                            display_name: 'Loading Plugins',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1504,50 +1426,24 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/393-analytics-logs-monitoring-metadata-flow',
-                            asset_id          : 393,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/390-debugging-reference-counting--refcountableregistry',
+                            asset_id: 390,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 7,
-                            urlified       : '393-analytics-logs-monitoring-metadata-flow',
-                            name           : 'Analytics Logs: Monitoring Metadata Flow',
-                            display_name   : 'Analytics Logs: Monitoring Metadata Flow',
-                            nodes          : [
-                            ],
-                            breadcrumbs: [
-                            ],
-                            parentNode: {
-                                name: 'Plugin Debugging'
-                            }
-                        },
-                        {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/394-supplying-test-video-streams-testcamera-and-image-library-plugin',
-                            asset_id          : 394,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
-                            ],
-                            next_item      : true,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 8,
-                            urlified       : '394-supplying-test-video-streams-testcamera-and-image-library-plugin',
-                            name           : 'Supplying test video streams: Testcamera and Image Library Plugin',
-                            display_name   : 'Supplying test video streams: Testcamera and Image Library Plugin',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 4,
+                            urlified: '390-debugging-reference-counting--refcountableregistry',
+                            name: 'Debugging Reference Counting – RefCountableRegistry',
+                            display_name: 'Debugging Reference Counting – RefCountableRegistry',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1556,24 +1452,128 @@ export const kbMenu = {
                             }
                         },
                         {
-                            subtitle          : '',
-                            url               : '/docs/developers/knowledgebase/395-error-handling-in-the-plugin',
-                            asset_id          : 395,
-                            accepted          : true,
-                            pending           : false,
-                            draft             : false,
-                            asset_type        : 'Documentation Page',
-                            related_asset_ids : [
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/391-using-stub-analytics-plugin-and-sample-analytics-plugin',
+                            asset_id: 391,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
                             ],
-                            next_item      : false,
-                            new_window     : false,
-                            icon           : '',
-                            authentication : 'Both',
-                            order          : 9,
-                            urlified       : '395-error-handling-in-the-plugin',
-                            name           : 'Error Handling in the Plugin',
-                            display_name   : 'Error Handling in the Plugin',
-                            nodes          : [
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 5,
+                            urlified: '391-using-stub-analytics-plugin-and-sample-analytics-plugin',
+                            name: 'Using Stub Analytics Plugin and Sample Analytics Plugin',
+                            display_name: 'Using Stub Analytics Plugin and Sample Analytics Plugin',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Plugin Debugging'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/392-capturing-and-substituting-manifests-and-settings',
+                            asset_id: 392,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 6,
+                            urlified: '392-capturing-and-substituting-manifests-and-settings',
+                            name: 'Capturing and Substituting Manifests and Settings',
+                            display_name: 'Capturing and Substituting Manifests and Settings',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Plugin Debugging'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/393-analytics-logs-monitoring-metadata-flow',
+                            asset_id: 393,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 7,
+                            urlified: '393-analytics-logs-monitoring-metadata-flow',
+                            name: 'Analytics Logs: Monitoring Metadata Flow',
+                            display_name: 'Analytics Logs: Monitoring Metadata Flow',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Plugin Debugging'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/394-supplying-test-video-streams-testcamera-and-image-library-plugin',
+                            asset_id: 394,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: true,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 8,
+                            urlified: '394-supplying-test-video-streams-testcamera-and-image-library-plugin',
+                            name: 'Supplying test video streams: Testcamera and Image Library Plugin',
+                            display_name: 'Supplying test video streams: Testcamera and Image Library Plugin',
+                            nodes: [
+                            ],
+                            breadcrumbs: [
+                            ],
+                            parentNode: {
+                                name: 'Plugin Debugging'
+                            }
+                        },
+                        {
+                            subtitle: '',
+                            url: '/docs/developers/knowledgebase/395-error-handling-in-the-plugin',
+                            asset_id: 395,
+                            accepted: true,
+                            pending: false,
+                            draft: false,
+                            asset_type: 'Documentation Page',
+                            related_asset_ids: [
+                            ],
+                            next_item: false,
+                            new_window: false,
+                            icon: '',
+                            authentication: 'Both',
+                            order: 9,
+                            urlified: '395-error-handling-in-the-plugin',
+                            name: 'Error Handling in the Plugin',
+                            display_name: 'Error Handling in the Plugin',
+                            nodes: [
                             ],
                             breadcrumbs: [
                             ],
@@ -1594,42 +1594,42 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 7,
-            name           : 'API Examples',
-            display_name   : 'API Examples',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 7,
+            name: 'API Examples',
+            display_name: 'API Examples',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/396-how-to-add-a-camera-or-a-rtsp-stream-using-api',
-                    asset_id          : 396,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/396-how-to-add-a-camera-or-a-rtsp-stream-using-api',
+                    asset_id: 396,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    urlified       : '396-how-to-add-a-camera-or-a-rtsp-stream-using-api',
-                    name           : 'How to Add a Camera or a RTSP Stream Using API?',
-                    display_name   : 'How to Add a Camera or a RTSP Stream Using API?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    urlified: '396-how-to-add-a-camera-or-a-rtsp-stream-using-api',
+                    name: 'How to Add a Camera or a RTSP Stream Using API?',
+                    display_name: 'How to Add a Camera or a RTSP Stream Using API?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1638,50 +1638,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/397-how-to-create-or-modify-event-rule',
-                    asset_id          : 397,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/397-how-to-create-or-modify-event-rule',
+                    asset_id: 397,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 1,
-                    urlified       : '397-how-to-create-or-modify-event-rule',
-                    name           : 'How to Create or Modify Event Rule?',
-                    display_name   : 'How to Create or Modify Event Rule?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'API Examples'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/398-how-to-export-video-using-api',
-                    asset_id          : 398,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    urlified       : '398-how-to-export-video-using-api',
-                    name           : 'How to Export Video Using API?',
-                    display_name   : 'How to Export Video Using API?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 1,
+                    urlified: '397-how-to-create-or-modify-event-rule',
+                    name: 'How to Create or Modify Event Rule?',
+                    display_name: 'How to Create or Modify Event Rule?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1690,50 +1664,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/399-how-to-change-resource-attributes-using-api',
-                    asset_id          : 399,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/398-how-to-export-video-using-api',
+                    asset_id: 398,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 3,
-                    urlified       : '399-how-to-change-resource-attributes-using-api',
-                    name           : 'How to Change Resource Attributes Using API?',
-                    display_name   : 'How to Change Resource Attributes Using API?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'API Examples'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/400-what-are-camera-identifiers',
-                    asset_id          : 400,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 4,
-                    urlified       : '400-what-are-camera-identifiers',
-                    name           : 'What Are Camera Identifiers?',
-                    display_name   : 'What Are Camera Identifiers?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    urlified: '398-how-to-export-video-using-api',
+                    name: 'How to Export Video Using API?',
+                    display_name: 'How to Export Video Using API?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1742,50 +1690,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/403-how-to-connect-a-system-to-cloud-using-the-api',
-                    asset_id          : 403,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/399-how-to-change-resource-attributes-using-api',
+                    asset_id: 399,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 5,
-                    urlified       : '403-how-to-connect-a-system-to-cloud-using-the-api',
-                    name           : 'How to Connect a System to Cloud Using the API?',
-                    display_name   : 'How to Connect a System to Cloud Using the API?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'API Examples'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/409-how-to-startstop-the-recording-schedule-of-a-specific-camera-via-server-api',
-                    asset_id          : 409,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 6,
-                    urlified       : '409-how-to-startstop-the-recording-schedule-of-a-specific-camera-via-server-api',
-                    name           : 'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
-                    display_name   : 'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 3,
+                    urlified: '399-how-to-change-resource-attributes-using-api',
+                    name: 'How to Change Resource Attributes Using API?',
+                    display_name: 'How to Change Resource Attributes Using API?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1794,50 +1716,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/445-how-to-use-http-generic-events',
-                    asset_id          : 445,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/400-what-are-camera-identifiers',
+                    asset_id: 400,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 7,
-                    urlified       : '445-how-to-use-http-generic-events',
-                    name           : 'How to Use HTTP Generic Events?',
-                    display_name   : 'How to Use HTTP Generic Events?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'API Examples'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/447-how-to-use-do-http-requests',
-                    asset_id          : 447,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 8,
-                    urlified       : '447-how-to-use-do-http-requests',
-                    name           : 'How to Use Do HTTP Requests?',
-                    display_name   : 'How to Use Do HTTP Requests?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 4,
+                    urlified: '400-what-are-camera-identifiers',
+                    name: 'What Are Camera Identifiers?',
+                    display_name: 'What Are Camera Identifiers?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1846,24 +1742,128 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/402-how-to-import-files-to-camera-archive-using-api',
-                    asset_id          : 402,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/403-how-to-connect-a-system-to-cloud-using-the-api',
+                    asset_id: 403,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 9,
-                    urlified       : '402-how-to-import-files-to-camera-archive-using-api',
-                    name           : 'How to Import Files to Camera Archive using API?',
-                    display_name   : 'How to Import Files to Camera Archive using API?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 5,
+                    urlified: '403-how-to-connect-a-system-to-cloud-using-the-api',
+                    name: 'How to Connect a System to Cloud Using the API?',
+                    display_name: 'How to Connect a System to Cloud Using the API?',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'API Examples'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/409-how-to-startstop-the-recording-schedule-of-a-specific-camera-via-server-api',
+                    asset_id: 409,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 6,
+                    urlified: '409-how-to-startstop-the-recording-schedule-of-a-specific-camera-via-server-api',
+                    name: 'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
+                    display_name: 'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'API Examples'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/445-how-to-use-http-generic-events',
+                    asset_id: 445,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 7,
+                    urlified: '445-how-to-use-http-generic-events',
+                    name: 'How to Use HTTP Generic Events?',
+                    display_name: 'How to Use HTTP Generic Events?',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'API Examples'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/447-how-to-use-do-http-requests',
+                    asset_id: 447,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 8,
+                    urlified: '447-how-to-use-do-http-requests',
+                    name: 'How to Use Do HTTP Requests?',
+                    display_name: 'How to Use Do HTTP Requests?',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'API Examples'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/402-how-to-import-files-to-camera-archive-using-api',
+                    asset_id: 402,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 9,
+                    urlified: '402-how-to-import-files-to-camera-archive-using-api',
+                    name: 'How to Import Files to Camera Archive using API?',
+                    display_name: 'How to Import Files to Camera Archive using API?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1877,42 +1877,42 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '',
-            asset_id          : null,
-            accepted          : true,
-            pending           : false,
-            draft             : null,
-            asset_type        : null,
-            related_asset_ids : [
+            subtitle: '',
+            url: '',
+            asset_id: null,
+            accepted: true,
+            pending: false,
+            draft: null,
+            asset_type: null,
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 8,
-            name           : 'Other Articles',
-            display_name   : 'Other Articles',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 8,
+            name: 'Other Articles',
+            display_name: 'Other Articles',
+            nodes: [
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/405-how-does-server-rtsp-streaming-work',
-                    asset_id          : 405,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/405-how-does-server-rtsp-streaming-work',
+                    asset_id: 405,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 0,
-                    urlified       : '405-how-does-server-rtsp-streaming-work',
-                    name           : 'How Does Server RTSP Streaming Work?',
-                    display_name   : 'How Does Server RTSP Streaming Work?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 0,
+                    urlified: '405-how-does-server-rtsp-streaming-work',
+                    name: 'How Does Server RTSP Streaming Work?',
+                    display_name: 'How Does Server RTSP Streaming Work?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1921,50 +1921,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/406-how-to-call-client-using-url',
-                    asset_id          : 406,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/406-how-to-call-client-using-url',
+                    asset_id: 406,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 1,
-                    urlified       : '406-how-to-call-client-using-url',
-                    name           : 'How to Call Client Using URL?',
-                    display_name   : 'How to Call Client Using URL?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'Other Articles'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/477-how-to-launch-desktop-client-with-cli',
-                    asset_id          : 477,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 2,
-                    urlified       : '477-how-to-launch-desktop-client-with-cli',
-                    name           : 'How to Launch Desktop Client with CLI?',
-                    display_name   : 'How to Launch Desktop Client with CLI?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 1,
+                    urlified: '406-how-to-call-client-using-url',
+                    name: 'How to Call Client Using URL?',
+                    display_name: 'How to Call Client Using URL?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -1973,50 +1947,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/407-how-to-embed-video-from-the-vms-on-a-website',
-                    asset_id          : 407,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/477-how-to-launch-desktop-client-with-cli',
+                    asset_id: 477,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 3,
-                    urlified       : '407-how-to-embed-video-from-the-vms-on-a-website',
-                    name           : 'How to Embed Video from the VMS on a Website?',
-                    display_name   : 'How to Embed Video from the VMS on a Website?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'Other Articles'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/408-how-to-startstop-recording-using-generic-event',
-                    asset_id          : 408,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 4,
-                    urlified       : '408-how-to-startstop-recording-using-generic-event',
-                    name           : 'How to Start/Stop Recording using Generic Event?',
-                    display_name   : 'How to Start/Stop Recording using Generic Event?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 2,
+                    urlified: '477-how-to-launch-desktop-client-with-cli',
+                    name: 'How to Launch Desktop Client with CLI?',
+                    display_name: 'How to Launch Desktop Client with CLI?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -2025,50 +1973,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/449-how-to-change-software-logging-level-and-get-logs',
-                    asset_id          : 449,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/407-how-to-embed-video-from-the-vms-on-a-website',
+                    asset_id: 407,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 5,
-                    urlified       : '449-how-to-change-software-logging-level-and-get-logs',
-                    name           : 'How to Change Software Logging Level and Get Logs?',
-                    display_name   : 'How to Change Software Logging Level and Get Logs?',
-                    nodes          : [
-                    ],
-                    breadcrumbs: [
-                    ],
-                    parentNode: {
-                        name: 'Other Articles'
-                    }
-                },
-                {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/471-which-browser-is-built-into-the-vms',
-                    asset_id          : 471,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
-                    ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 6,
-                    urlified       : '471-which-browser-is-built-into-the-vms',
-                    name           : 'Which Browser Is Built Into the VMS?',
-                    display_name   : 'Which Browser Is Built Into the VMS?',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 3,
+                    urlified: '407-how-to-embed-video-from-the-vms-on-a-website',
+                    name: 'How to Embed Video from the VMS on a Website?',
+                    display_name: 'How to Embed Video from the VMS on a Website?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -2077,24 +1999,24 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/470-server-hive-synchronization-',
-                    asset_id          : 470,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/408-how-to-startstop-recording-using-generic-event',
+                    asset_id: 408,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 7,
-                    urlified       : '470-server-hive-synchronization-',
-                    name           : 'Server Hive Synchronization',
-                    display_name   : 'Server Hive Synchronization',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 4,
+                    urlified: '408-how-to-startstop-recording-using-generic-event',
+                    name: 'How to Start/Stop Recording using Generic Event?',
+                    display_name: 'How to Start/Stop Recording using Generic Event?',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -2103,24 +2025,102 @@ export const kbMenu = {
                     }
                 },
                 {
-                    subtitle          : '',
-                    url               : '/docs/developers/knowledgebase/367-meta-release-process',
-                    asset_id          : 367,
-                    accepted          : true,
-                    pending           : false,
-                    draft             : false,
-                    asset_type        : 'Documentation Page',
-                    related_asset_ids : [
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/449-how-to-change-software-logging-level-and-get-logs',
+                    asset_id: 449,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
                     ],
-                    next_item      : false,
-                    new_window     : false,
-                    icon           : '',
-                    authentication : 'Both',
-                    order          : 8,
-                    urlified       : '367-meta-release-process',
-                    name           : 'Meta Release Process',
-                    display_name   : 'Meta Release Process',
-                    nodes          : [
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 5,
+                    urlified: '449-how-to-change-software-logging-level-and-get-logs',
+                    name: 'How to Change Software Logging Level and Get Logs?',
+                    display_name: 'How to Change Software Logging Level and Get Logs?',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'Other Articles'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/471-which-browser-is-built-into-the-vms',
+                    asset_id: 471,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 6,
+                    urlified: '471-which-browser-is-built-into-the-vms',
+                    name: 'Which Browser Is Built Into the VMS?',
+                    display_name: 'Which Browser Is Built Into the VMS?',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'Other Articles'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/470-server-hive-synchronization-',
+                    asset_id: 470,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 7,
+                    urlified: '470-server-hive-synchronization-',
+                    name: 'Server Hive Synchronization',
+                    display_name: 'Server Hive Synchronization',
+                    nodes: [
+                    ],
+                    breadcrumbs: [
+                    ],
+                    parentNode: {
+                        name: 'Other Articles'
+                    }
+                },
+                {
+                    subtitle: '',
+                    url: '/docs/developers/knowledgebase/367-meta-release-process',
+                    asset_id: 367,
+                    accepted: true,
+                    pending: false,
+                    draft: false,
+                    asset_type: 'Documentation Page',
+                    related_asset_ids: [
+                    ],
+                    next_item: false,
+                    new_window: false,
+                    icon: '',
+                    authentication: 'Both',
+                    order: 8,
+                    urlified: '367-meta-release-process',
+                    name: 'Meta Release Process',
+                    display_name: 'Meta Release Process',
+                    nodes: [
                     ],
                     breadcrumbs: [
                     ],
@@ -2134,24 +2134,24 @@ export const kbMenu = {
             parentNode: undefined
         },
         {
-            subtitle          : '',
-            url               : '/docs/developers/knowledgebase/211-developer-support',
-            asset_id          : 211,
-            accepted          : true,
-            pending           : false,
-            draft             : false,
-            asset_type        : 'Documentation Page',
-            related_asset_ids : [
+            subtitle: '',
+            url: '/docs/developers/knowledgebase/211-developer-support',
+            asset_id: 211,
+            accepted: true,
+            pending: false,
+            draft: false,
+            asset_type: 'Documentation Page',
+            related_asset_ids: [
             ],
-            next_item      : false,
-            new_window     : false,
-            icon           : '',
-            authentication : 'Both',
-            order          : 9,
-            urlified       : '211-developer-support',
-            name           : 'Developer Support',
-            display_name   : 'Developer Support',
-            nodes          : [
+            next_item: false,
+            new_window: false,
+            icon: '',
+            authentication: 'Both',
+            order: 9,
+            urlified: '211-developer-support',
+            name: 'Developer Support',
+            display_name: 'Developer Support',
+            nodes: [
             ],
             breadcrumbs: [
             ],

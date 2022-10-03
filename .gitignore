@@ -12,14 +12,17 @@ front_end/app/customization/webadmin_logo.png
 front_end/app/customization/webadmin_config.json
 front_end/test/visual
 front_end/yarn.lock
+front_end/pnpm-lock.yaml
 front_end/app/images/promo
 front_end/app/images/favicon.ico
 front_end/app/images/logo.png
 front_end/app/images/logo_small.png
 front_end/app/styles/custom
+front_end/app/styles/*.css
 front_end/**/*.js.map
 front_end/app/src/**/*.js
 front_end/app/language_compiled.json
+front_end/app/supported_languages.json
 front_end/coverage
 translations/**/language_compiled.json
 
@@ -38,12 +41,18 @@ subinclude:robot_tests/.hgignore
 *.deb
 
 env
+nenv
 venv
 cloud/.idea
 cloud/static
 cloud/node_modules
+cloud/coverage.xml
+cloud/report.xml
 cloud/notifications/static/templates/*.mustache
 cloud/notifications/static/templates/email_logo.png
 tools/docker/external.dat
 .DS_Store
 .vscode
+etc/rabbitmq
+cloud/.coverage
+node_modules

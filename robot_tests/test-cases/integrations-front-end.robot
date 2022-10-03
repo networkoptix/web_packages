@@ -1,23 +1,19 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/integrations-resource.robot
 Resource          ../variables-env.robot
 
 Suite Setup       Open Browser and go to URL    ${ENV}
 Test Setup        Go To    ${ENV}
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        integrations    Threaded 
 
-*** Variables ***
-${url}        ${ENV}/integrations
-${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
-@{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 *** Test Cases ***
 1. Integration Store title and URL are correct
     [Tags]    C54622
     Go To Integrations Page
-    Wait Until Location Is    ${url}
+    Wait Until Location Is    ${url integrations}
     Title Should Be    ${title}
     Validate Integrations Landing Page
 
@@ -31,7 +27,6 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
         ${tile number}=   Evaluate    ${index}+1
         Validate Integration Tile    ${tile number}
     END
-#    Validate Random Tile N times    ${integration tiles}    3
 
 3. Changing page should change the layout to a max of four colunmns
     [Tags]    C54622
@@ -45,8 +40,11 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
         Element Style Should be    ${tile}    width     400px
     END
 
-    Run Keyword if    "${headless}"=="false"    Set Window Size    1456    1080
-    ...    ELSE    Set Window Size    1440    1080
+    IF    "${headless}"=="false"
+        Set Window Size    1456    1080
+    ELSE
+        Set Window Size    1440    1080
+    END
     FOR    ${tile}    IN    @{integration tiles}
         Element Style Should be    ${tile}    flex-basis    25%
         Element Style Should be    ${tile}    width     350px
@@ -78,15 +76,15 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     ${number of tiles}=   Get Number of Integration Tiles
     Should be equal as numbers    ${initial number of tiles}   ${number of tiles}
     ${actual url}=   Get Location
-    Should be equal as strings    ${actual url}    ${url}
+    Should be equal as strings    ${actual url}    ${url integrations}
 
     Input Text     ${INTEGRATIONS SEARCH INPUT}    vis
-    Wait Until Location is    ${url}?search=vis
+    Wait Until Location is    ${url integrations}?search=vis
     Each Integration Tile Contains    vis    Vis
 
     Log    Step 3
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]
-    Wait Until Location Is    ${url}?search=vis&tags=objectDetection
+    Wait Until Location Is    ${url integrations}?search=vis&tags=objectDetection
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
     Each Integration Tile Contains    Object Detection    ${EMPTY}
     ${current}=   Number of Integrations Should be Lower    ${number of tiles}
@@ -94,7 +92,7 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 
     Log    Step 4
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]
-    Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?search=vis&tags=automation,objectDetection
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
     ${current}=   Number of Integrations Should be Higher    ${current}
     Each Integration Tile Contains    vis    Vis
@@ -104,7 +102,7 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     Log    Step 5
     Click Element     ${INTEGRATIONS SEARCH CLOSE BUTTON}
     Textfield Should Contain    ${INTEGRATIONS SEARCH INPUT}    ${EMPTY}
-    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?tags=automation,objectDetection
     Each Integration Tile Contains    Object Detection    ${EMPTY}
     Each Integration Tile Contains    Automation    ${EMPTY}
     ${current}=   Number of Integrations Should be Higher    ${current}
@@ -113,25 +111,25 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
     ${loc}    Get Location
     log    ${loc}
-    Wait Until Location Is    ${url}?tags=automation
+    Wait Until Location Is    ${url integrations}?tags=automation
     Each Integration Tile Contains    Automation    ${EMPTY}
     ${current}=   Number of Integrations Should be Lower    ${current}
 
     Log    Step 7
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
-    Wait Until Location Is    ${url}
+    Wait Until Location Is    ${url integrations}
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=automation
+    Wait Until Location Is    ${url integrations}?tags=automation
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Back
-    Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?search=vis&tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Forward
-    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go To Integrations Page
 
@@ -179,7 +177,6 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     ${dw}=   Replace String    ${loc}    https://    https://dw.
     Go To    ${dw}/integrations
     Log In If Needed    ${EMAIL OWNER}    ${BASE PASSWORD}
-    # Check Language Anonymous
     Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
 
 9. Anonymous and basic user does not see disabled integration store

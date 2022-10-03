@@ -1,4 +1,9 @@
 *** Variables ***
+
+${url}                  ${ENV}
+${name}                 Nx Automated QA
+${message}              This is an automated test message.
+
 #IPVD
 ${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
 ${IPVD LANDING PAGE TEXT}             //ipvd//p
@@ -12,7 +17,7 @@ ${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="
 ${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
-${IPVD ARROW}                         //svg-icon[@data-src="/static/images/icons/standard/arrow_collapse.svg" or @data-src="/static/images/icons/standard/arrow_expand.svg"]
+${IPVD ARROW}                         //svg-icon[contains(@data-src,"/images/icons/test_buttons/arrow_collapse.svg" or contains(@data-src,"/images/icons/text_buttons/arrow_expand.svg")]
 #IPVD Advanced Filters
 ${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
 ${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
@@ -51,8 +56,8 @@ ${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/a[con
 ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
 #IPVD Details
 ${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
-${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
-${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
+${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[1]
+${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[2]
 ${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
 ${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
 ${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[contains(@class,'active-camera-info')]
@@ -82,8 +87,8 @@ ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
 #IPVD Export
 ${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
-${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
-${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//span[@id="request"]
+${IPVD SUBMIT A REQUEST}              //ipvd//span[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
 ${IPVD SEND DEVICE FEEDBACK}          //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']
 ${IPVD FEEDBACK TITLE}                ${IPVD FEEDBACK}//h1

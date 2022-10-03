@@ -1,135 +1,22 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-camera-resource.robot
 Suite Setup       Camera Suite Setup
 Test Setup        Camera Test Setup
 Test Teardown     reset cameras and log out
-Suite Teardown    Camera Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Camera Suite Teardown
 Force Tags        system    cameras
 
-*** Variables ***
-${email}       ${EMAIL OWNER}
-${password}    ${BASE PASSWORD}
-@{auth}        ${email}    ${password}
-${url}         ${ENV}
-
-*** Keywords ***
-Camera Suite Setup
-    #system(name,port,cont,owner,id) 
-    #local auth, cloud auth, server url, 
-    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
-    ${random}=   Generate Random String
-    #Create Base Cloud System    cameras${random}
-    ${owner}=    Register and activate account with random email    mark    hamill    ${password}
-    ${system}     Create Base System    cameras-${random}    owner=${owner}
-    ${system2}    Create Base System    cameras2-${random}    owner=${owner}
-    ${system3}    Create Base System    cameras3-${random}    owner=${owner}
-    Set Suite Variable    ${system}
-    Set Suite Variable    ${system2}
-    Set Suite Variable    ${system3}
-
-    #Log To Console    starting software cam offline
-    #Open Connection    ${QA BURBANK IP}
-    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    #${camera port}=   Get Random Available Port
-    #Close Connection
-    #
-    #Start Software Camera    ${system}[port]    ${camera port}
-    #
-    #Add Software Camera    ${system}[port]    ${camera port}    offline
-    #Sleep    15
-    #Open Connection    ${QA BURBANK IP}
-    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    #${pid}    Execute Command    pgrep -f "port ${camera port}"
-    #Execute Command    kill -9 ${pid}
-    #Close Connection
-    #
-    #Open Connection    ${QA BURBANK IP}
-    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    #${camera port2}=   Get Random Available Port
-    #Close Connection
-    #Start Software Camera    ${system}[port]    ${camera port2}
-    #Add Software Camera    ${system}[port]    ${camera port2}    unauth
-    #Sleep    15
-    #Open Connection    ${QA BURBANK IP}
-    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    #${pid}    Execute Command    pgrep -f "port ${camera port2}"
-    #Execute Command    kill -9 ${pid}
-    #Start Command    camera-venv/bin/python -m software_cameras --port ${camera port2} --user jim --password henson
-    #Close Connection
-    #Sleep    15
-    #
-    #Open Connection    ${QA BURBANK IP}
-    #SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    #${camera port3}=   Get Random Available Port
-    #Close Connection
-    #Start Software Camera    ${system}[port]    ${camera port3}
-    #Add Software Camera    ${system}[port]    ${camera port3}    online
-    #Sleep    30
-    
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    192.168.0.27     manufacturer=Sony    #SNC-XM636
-    Add Camera    http://${QA BURBANK IP}:${system2}[port]    admin    QAbur777$    00-16-6C-7F-65-67    192.168.0.206     manufacturer=Hanwha_Sunapi    #SND-6084
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    192.168.0.201    manufacturer=Sony    #SNC-CH120
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    192.168.0.208    manufacturer=Sony    #SNC-DH120T
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        78-84-3C-0F-82-76    192.168.0.209    manufacturer=Sony    #SNC-CH280 not connected
-    Sleep    50
-    ${camera id}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id}    cameraName    good cam
-    ${camera id2}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-DH120T    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    cameraName    unauth cam
-    ${data}=   evaluate    json.loads('''[{"name": "credentials", "value": "test:test", "resourceId": "${camera id2}"}]''')
-    Set All Camera Add Params    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
-    ${camera id3}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-CH120    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    cameraName    offline cam
-    
-    ${camera id4}=   Get Camera Attribute By Camera Name    ${system2}[local auth]    https://${QA BURBANK IP}:${system2}[port]    SND-6084    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system2}[port]    ${system2}[local auth]    ${camera id4}    cameraName    no license cam
-    
-
-    ${custom cameras}=    Create And Add Custom Camera User Type and User
-    Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
-    Sleep    30
-    Restart Docker Servers    ${system}[name]
-    Sleep    90
-    # Stop Docker Server    ${system2}[id]
-    ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
-    Set Suite Variable    ${no perm}    ${no perm}
-    Set Suite Variable    ${custom cameras}    ${custom cameras}
-    Open Browser and go to URL    ${url}
-    #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
-    #...    ELSE    Web Admin Suite Setup
-    Take Camera Offline    ${system}[name]    192.168.0.201
-    Log To Console    ${system}[port]
-
-Camera Test Setup    
-    [Arguments]    ${user}=${system}[owner]    ${system}=${system}[cloud id]
-    Log in to user and system    ${user}    ${system}
-    Sleep    5
-    Go To Cameras
-    
-Offline Server Test Setup
-    Stop Docker Server    ${system3}[name]
-    Camera Test Setup    user=${system3}[owner]    system=${system3}[cloud id]
-
-Camera Suite Teardown
-    Delete Base System    ${system}
-    Delete Base System    ${system2}
-    Delete Base System    ${system3}
-    Close All Browsers
-
-Set Radio Value
-    [Arguments]    ${element}    ${value}
-    ${current value}=   Get Element Attribute    ${element}    value
 
 *** Test Cases ***
 1. Camera settings is available to owner admin and custom with permission
-    [Tags]    C76252
+    [Tags]    C76252    
     Verify on Cameras Page
-    Log Out
+    Log Out     add_delay=1
     
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Go To Cameras
     Verify on Cameras Page
-    Log Out
+    Log Out     add_delay=1
     
     Log in to user and system    ${custom cameras}    ${system}[cloud id]
     Go To Cameras
@@ -140,7 +27,9 @@ Set Radio Value
     ...    ${ROTATION DROPDOWN}
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
-    ...    ${RECORDING CHECK BOX}
+    IF    '${IMAGE}' != '${IMAGE 5.0}'
+        Wait Until Element Is Visible     ${RECORDING CHECK BOX}
+    END
     Log Out
 
     # Not currentlty being tested
@@ -160,15 +49,15 @@ Set Radio Value
     [Tags]    C76253
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][liveViewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][advancedViewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out    add_delay=1
 
     Log in to user and system    ${system}[cloud users][custom]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
@@ -177,24 +66,24 @@ Set Radio Value
 3. Camera settings is not available by direct link to any viewers
     [Tags]    C76255
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
-    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    id
+    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    id
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible With Retry   ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
 
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][liveViewer]    ${system}[cloud id]
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible With Retry    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][advancedViewer]    ${system}[cloud id]
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible With Retry    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][custom]    ${system}[cloud id]
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
@@ -227,14 +116,14 @@ Set Radio Value
     [Tags]    C76256
     @{auth}=   Create List    admin    ${BASE PASSWORD}
 
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_recording.svg")]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_offline.svg")]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]
     
     Wait Until Elements Are Visible With Retry   
-    #...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[@data-src="/static/images/icons/standard/device_offline.svg"]
-    ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+    #...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_recording.svg")]
+    ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/device_offline.svg")]
+    ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    status
     Should Be Equal As Strings    ${value}    Unauthorized
@@ -247,6 +136,9 @@ Set Radio Value
 
 7. Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Log    Step 1
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -269,7 +161,7 @@ Set Radio Value
     ...    ${APPLY CHANGES CLOSE BUTTON}
     ...    ${APPLY CHANGES QUESTION}  
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     Log    Step 4
     Click Link    ${SERVERS LINK}
@@ -285,7 +177,7 @@ Set Radio Value
     Go To Cameras
     Verify on Cameras Page
     Select Camera By Name    good cam
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     Log    Step 5
     Toggle Recording
@@ -298,7 +190,7 @@ Set Radio Value
     ...    ${APPLY CHANGES QUESTION}  
     Click Button    ${CANCEL CHANGES BUTTON}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     Log    Step 6
     Click Link    ${SERVERS LINK}
@@ -310,7 +202,7 @@ Set Radio Value
     ...    ${APPLY CHANGES QUESTION}  
     Click Button    ${APPLY CHANGES BUTTON}  
     sleep    5
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${True}
     Log    Step 7
     Go to System Administration
@@ -321,24 +213,23 @@ Set Radio Value
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     
 8. Rename Camera
-    [Tags]    C76259 
+    [Tags]    C76259    CLOUD-8269      
     Verify on Cameras Page
     Select Camera by Name    good cam
-    
     Rename System or Hardware    good cam name changed 1
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
-    Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+    Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
     Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    good cam name changed 1
     Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 1
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -355,7 +246,7 @@ Set Radio Value
     Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam name changed 2    id
     Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    good cam name changed 2
     Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 2
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -374,7 +265,11 @@ Set Radio Value
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam name changed 3    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
+    IF    '${IMAGE}' != '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    name    good cam
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
+    END
 
 9. Name change in client changes in cloud
     [Tags]    C76261
@@ -382,14 +277,22 @@ Set Radio Value
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    api name
+    IF    '${IMAGE}' == '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    name    api name    ${system camera auth1}
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    api name    ${system camera auth1}
+    END
     Reload Page
     Wait Until Element Is Visible    ${EDITABLE TITLE}
-    Element Attribute Value Should Be    ${EDITABLE TITLE}    innertext    api name
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
+    Element Text Should Be  ${EDITABLE TITLE}   api name
+    IF    '${IMAGE}' == '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    name    good cam    ${system camera auth1}
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam    ${system camera auth1}
+    END
 
 10. View button
-    [Tags]    C76262
+    [Tags]    C76262     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     Verify on Cameras Page
     Select Camera by Name    good cam
@@ -424,7 +327,7 @@ Set Radio Value
     Verify on Cameras Page
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/health
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Go To Cameras
@@ -434,7 +337,7 @@ Set Radio Value
     Log Out
 
 12. Aspect Ratio
-    [Tags]
+    [Tags]      
     Verify on Cameras Page
     Select Camera By Name    good cam
     Change Aspect Ratio    1:1
@@ -452,7 +355,7 @@ Set Radio Value
 
 
 13. Rotation
-    [Tags]
+    [Tags]      
     Select Camera By Name    good cam
     Verify on Cameras Page
     Change Rotation    90˚
@@ -469,7 +372,7 @@ Set Radio Value
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
 
 14. Audio enable Disabled
-    [Tags]    C76378
+    [Tags]    C76378        
     Verify on Cameras Page
     Select Camera by Name    good cam
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
@@ -478,10 +381,18 @@ Set Radio Value
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${cams}=   Get Cameras    ${auth}    https://${QA BURBANK IP}:${system}[port]
-    FOR    ${camera}  IN  @{cams}
-        ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
-        Exit For Loop If    '''${audio enabled}'''=='''True'''
+    IF    '${IMAGE}' != '${IMAGE 4.2}'
+        FOR    ${camera}  IN  @{cams}
+            ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['options']['isAudioEnabled']}
+            Exit For Loop If    '''${audio enabled}'''=='''True'''
+        END
+    ELSE
+        FOR    ${camera}  IN  @{cams}
+            ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
+            Exit For Loop If    '''${audio enabled}'''=='''True'''
+        END
     END
+
     Should Be True    ${audio enabled}
     Audio Enabled Should Be    True
     Reload Page
@@ -529,7 +440,7 @@ Set Radio Value
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
 18. Changes made in Image settings in thick client appear correctly on cloud portal
-    [Tags]    C76374    Theaded    
+    [Tags]    C76374
     Select Camera by Name    good cam
     Verify on Cameras Page
     Capture Page Screenshot
@@ -547,6 +458,9 @@ Set Radio Value
 
 19. Recording toggle shows correct options
     [Tags]    C76401
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera by Name    offline cam
     Verify on Cameras Page
@@ -580,7 +494,10 @@ Set Radio Value
     Should Be Equal    ${checked}    2
 
 20. Recording Status
-    [Tags]    C76391
+    [Tags]    C76391    deb
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     [Setup]    Camera Test Setup    user=${system2}[owner]    system=${system2}[cloud id] 
     Select Camera by Name    no license cam
     Verify on Cameras Page
@@ -609,6 +526,9 @@ Set Radio Value
     
 21. Record Always
     [Tags]    C76408
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
@@ -633,6 +553,9 @@ Set Radio Value
 
 22. Record Motion
     [Tags]
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
@@ -661,6 +584,9 @@ Set Radio Value
 
 23. Record Motion + Low Quality
     [Tags]    C76408
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page    
     Select Camera By Name    good cam
     Toggle Recording
@@ -682,6 +608,9 @@ Set Radio Value
     
 24. Check recording triple state
     [Tags]
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     ${data} =    Evaluate    json.loads('''${TRIPLE STATE CAM JSON 1}''')
     Set All Camera Attributes    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
@@ -704,6 +633,9 @@ Set Radio Value
 
 25. Recording Mode functionality (with recording schedule set)
     [Tags]    C78982
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     # [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     # ${camera id}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    id
     ${data} =    Evaluate    json.loads('''${TRIPLE STATE CAM JSON 1}''')
@@ -737,6 +669,9 @@ Set Radio Value
 
 26. Disabled Motion With Recording
     [Tags]    C78983
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    motionType    8
@@ -774,9 +709,12 @@ Set Radio Value
     
 27. Change FPS
     [Tags]
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
-    #Temp removed for debuggins
+    #Temp removed for uggins
     #Toggle Recording
     Toggle Recording
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
@@ -801,7 +739,7 @@ Set Radio Value
     Skip    Skipped until we learn if - Current should have been removed
     Verify on Cameras Page
     Select Camera By Name    good cam
-    #Temp removed for debuggins
+    #Temp removed for uggins
     #Toggle Recording
     Toggle Recording
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
@@ -822,6 +760,9 @@ Set Radio Value
 29. Change Quality
     [Tags]    C76410
     #Skip    No no audio cam available
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam    #no audio cam
     Toggle Recording
@@ -881,6 +822,9 @@ Set Radio Value
 
 31. Enable/disable motion detection with recording on
     [Tags]    C76398
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
@@ -913,22 +857,22 @@ Set Radio Value
 #Record motion and record motion low quality radio buttons should be disabled
 
 32. Placeholder shows when system is offline
-    [Tags]    C76254
+    [Tags]    C76254    
     [Setup]    Offline Server Test Setup
     Wait Until Elements are Visible
     ...    ${OFFLINE PLACEHOLDER IAMGE}
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
-    Log Out
-    
+    Log Out     add_delay=1
+
     Log in to user and system    ${system3}[cloud users][cloudAdmin]    ${system3}[cloud id]
-    Wait Until Element is Visible    ${CAMERAS LINK}
+    Wait Until Element is Visible    ${CAMERAS LINK}    timeout=5
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
     ...    ${OFFLINE PLACEHOLDER IAMGE}
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
-    Log Out
+    Log Out    add_delay=1
 
     Log in to user and system    ${system2}[cloud users][custom]    ${system2}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
@@ -936,6 +880,9 @@ Set Radio Value
 
 33. Motion sensitivity block for cameras with different statuses
     [Tags]    C76418
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    offline cam
     Verify on Cameras Page
@@ -955,6 +902,9 @@ Set Radio Value
 
 34. Recording Quality dropdown menu functionality for camera with schedule
     [Tags]    C76417
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     # [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     ${data} =    Evaluate    json.loads('''${TRIPLE STATE CAM JSON 1}''')
     Set All Camera Attributes    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
@@ -1179,7 +1129,7 @@ Set Radio Value
     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
     Reload Page
-    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    180
+    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]    180
     Sleep    120
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${status}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    status

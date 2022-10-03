@@ -1,14 +1,14 @@
-<h1>Hello, </h1>
+<h1>Hej, </h1>
 
-<p>You have been invited to %CLOUD_NAME%</p>
+<p>Du er blevet inviteret til %CLOUD_NAME%</p>
 
 {{#message.message}}
 <p>{{ message.message }}</p>
 {{/message.message}}
 
-<p>Please create account on
+<p>Opret konto på
     <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
-    using your current email address and follow further instructions.
+    ved hjælp af din aktuelle e-mailadresse og følg yderligere instruktioner.
 </p>
 
-<a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">Register Account</a>
+<a class="btn" href="{{ config.portal_url }}/authorize/register/{{ message.code }}">Registrer Konto</a>

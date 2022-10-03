@@ -1,6 +1,6 @@
 <div class="search-box">
   <div class="search-icon"></div>
-  <input placeholder="Search" (input)="onFilterTokenChange($event.target.value)" [(ngModel)]="token">
+  <input [placeholder]="'Search' | translate" (input)="onFilterTokenChange($any($event.target).value)" [(ngModel)]="token">
   <svg *ngIf="token" class="search-reset-icon" viewBox="0 0 20 20" (click)="resetSearch()">
     <line x1="5" x2="15" y1="5" y2="15"/>
     <line x2="5" x1="15" y1="5" y2="15"/>

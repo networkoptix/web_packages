@@ -1,18 +1,23 @@
-import { Component, OnInit }         from '@angular/core';
-import { Router, NavigationEnd }     from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { LocalStorageService } from 'ngx-webstorage';
 import {
-    Subject, BehaviorSubject, interval, empty, Subscription
-}                                          from 'rxjs';
+    Subject,
+    BehaviorSubject,
+    interval,
+    empty,
+    Subscription
+} from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { LocalStorageService }             from 'ngx-webstorage';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxAppStateService }         from '../../services/nx-app-state.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
-import { NxAccountService }          from '../../services/account.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem, NxSystemService } from '@services/system.service';
 
 interface Server {
     name: string,
@@ -24,9 +29,9 @@ interface Server {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-overlay-modal',
-    templateUrl : 'overlay-modal.component.html',
-    styleUrls   : ['overlay-modal.component.scss']
+    selector: 'nx-overlay-modal',
+    templateUrl: 'overlay-modal.component.html',
+    styleUrls: ['overlay-modal.component.scss']
 })
 export class NxOverlayModalComponent implements OnInit {
     system: NxSystem
@@ -34,6 +39,7 @@ export class NxOverlayModalComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     servers: Partial<Server>[] = [];
 
+    currentRoute: string = '';
     serverId: string;
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
@@ -62,11 +68,11 @@ export class NxOverlayModalComponent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {       
+    ngOnInit() {
         if (this.localStorage.retrieve('resetServer') === true) {
             setTimeout(() => window.location.reload(), 2000);
         }
-        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async(state) => {
+        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async (state) => {
             if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available
@@ -80,23 +86,28 @@ export class NxOverlayModalComponent implements OnInit {
         });
 
         this.checkingSubscription = this.checking$.subscribe((state) => {
-            this.refreshMessage = this.LANG.servers[state ? 'refreshing' : 'refresh']();
+            this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
         });
 
         this.accountService.get().then(account => {
             if (!account) {
                 return;
             }
-            const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+            const system = this.systemService.createLocalSystem(
+                this.accountService.mediaServerApi,
+                account.id,
+                account.email
+            );
             system.update().then(() => {
                 this.system = system;
+                this.currentRoute = `/#${this.router.url}`;
                 this.getServers();
-                this.serverId = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : this.system.moduleInfo.id;
+                this.serverId = (environment.isLocal)
+                    ? this.CONFIG.localServerId
+                    : this.system.moduleInfo.id;
                 this.routeSubscription = this.router.events.subscribe(route => {
                     if (route instanceof NavigationEnd) {
-                        this.servers.forEach(server => {
-                            server.url = `${server.url}/#/${route.url}`;
-                        });
+                        this.currentRoute = `/#${route.url}`;
                     }
                 });
             });
@@ -109,7 +120,8 @@ export class NxOverlayModalComponent implements OnInit {
         this.refresh$.pipe(
             // Whenever refresh emits this switches to a new interval observable.
             switchMap(res => {
-                return !res ? empty()
+                return !res
+                    ? empty()
                     : this.appState.systemAvailable$.value ? empty() : interval(1000);
             })
         ).subscribe(() => {
@@ -129,6 +141,8 @@ export class NxOverlayModalComponent implements OnInit {
 
                             if (res.reply) {
                                 this.appState.systemAvailable$.next(true);
+                                this.system.startPoll();
+                                // poll subscription is lost when server goes offline
                             }
                         }
                     })
@@ -150,9 +164,14 @@ export class NxOverlayModalComponent implements OnInit {
         this.appState.systemAvailable$
             .pipe(distinctUntilChanged())
             .subscribe(systemAvailable => {
-                if (!systemAvailable && this.appState.lastErrorStatus$.value === 504) {
+                if (
+                    !systemAvailable &&
+                    this.appState.lastErrorStatus$.value === 504
+                ) {
                     this.system.stopPoll();
                 }
+
+                this.timeoutUntilRefresh$.next(5);
                 this.refresh$.next('refresh');
             });
     }
@@ -160,23 +179,16 @@ export class NxOverlayModalComponent implements OnInit {
     getServers() {
         this.system.getServers().toPromise()
             .then(res => {
-                this.servers = res
-                    ? Object.entries(res)
-                        .map(server => {
-                            const updatedServer: Partial<Server> = server[1];
-                            updatedServer.url = `${updatedServer.url}/#/${this.router.url}`;
-                            return updatedServer;
-                        })
-                        .filter(server => server.id !== this.serverId)
-                    : [];
+                this.servers = (<Server[]>(res as unknown) || [])
+                    .filter(({ id }) => id !== this.serverId);
             })
             .catch(err => console.error(err));
     }
 
     manualRefresh() {
         this.oneCheckAtATime = false;
-        this.checking$.next(false);
-        this.timeoutUntilRefresh$.next(5);
+        this.checking$.next(true);
+        this.timeoutUntilRefresh$.next(0);
         this.nextInterval = 10;
         this.refresh$.next('refresh');
     }

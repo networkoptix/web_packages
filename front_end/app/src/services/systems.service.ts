@@ -1,18 +1,20 @@
-import { Injectable, OnDestroy }                       from '@angular/core';
-import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, OnDestroy } from '@angular/core';
+import { of, ReplaySubject, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from './nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxCloudApiService }         from './nx-cloud-api';
-import { NxPollService }             from './poll.service';
-import { NxToastService }            from '@dialogs/toast.service';
-import { NxUtilsService }            from './utils.service';
-import { NxUriService }              from './uri.service';
-import { NxRibbonService }           from '@components/ribbon/ribbon.service';
-import { NxSystem }                  from './system.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxStorageService }          from './storage.service';
+import { NxPollService } from './poll.service';
+import { NxStorageService } from './storage.service';
+import { NxSystem } from './system.service';
+import { NxUriService } from './uri.service';
+import { NxUtilsService } from './utils.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -26,21 +28,23 @@ export class NxSystemsService implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
     private activeSubscription: Subscription;
     private currentUser: string;
-    private mergingSystems: Set<string>;
+    mergingSystems: Set<string>;
     systems: NxSystemWithUserInfo[];
     systemsPoll: Observable<NxSystemWithUserInfo[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
     systemsSubject = new ReplaySubject<NxSystemWithUserInfo[]>(0);
     finishedMerged = false;
     systemsMerging: { primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo } = {
-        primary   : undefined,
-        secondary : undefined
+        primary: undefined,
+        secondary: undefined
     };
+
+    private _userDisconnectSystem: boolean = false;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         pollService: NxPollService,
-        private cloudApi: NxCloudApiService,
+        private http: HttpClient,
         private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
@@ -48,12 +52,20 @@ export class NxSystemsService implements OnDestroy {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
-        if (!this.CONFIG.isLocal) {
-            this.systemsPoll = pollService.createPoll(() => this.cloudApi.systems(), this.CONFIG.updateInterval);
+        if (!environment.isLocal) {
+            this.systemsPoll = pollService.createPoll(() => this._getSystems(), this.CONFIG.updateInterval);
         } else {
             this.systemsSubject.next([]);
         }
         this.mergingSystems = new Set();
+    }
+
+    get userDisconnectSystem(): boolean {
+        return this._userDisconnectSystem;
+    }
+
+    set userDisconnectSystem(value: boolean) {
+        this._userDisconnectSystem = value;
     }
 
     get isPolling() {
@@ -78,17 +90,24 @@ export class NxSystemsService implements OnDestroy {
                 this.LANG.dialogs.merge.mergeSuccess, { primaryName, secondaryName }
             ) : this.LANG.toastMessage.system.merge.success();
             this.systemsMerging = {
-                primary   : undefined,
-                secondary : undefined
+                primary: undefined,
+                secondary: undefined
             };
             const options = {
-                autohide  : true,
-                classname : this.CONFIG.toast.success,
-                delay     : this.CONFIG.alertTimeout
+                autohide: true,
+                classname: this.CONFIG.toast.success,
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
             this.finishedMerged = true;
         }
+    }
+
+    private _getSystems(systemId?: string) {
+        if (systemId) {
+            return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems/' + systemId);
+        }
+        return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems');
     }
 
     forceUpdateSystems(userEmail?: string): Observable<NxSystemWithUserInfo[]> {
@@ -96,12 +115,12 @@ export class NxSystemsService implements OnDestroy {
             this.currentUser = userEmail;
         }
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             this.systemsSubject.next([]);
             return of([]);
         }
 
-        return this.cloudApi.systems().pipe(tap((systems) => {
+        return this._getSystems().pipe(tap((systems) => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
         }));
@@ -115,28 +134,28 @@ export class NxSystemsService implements OnDestroy {
         return this.CONFIG.accessRoles.adminAccess.includes(userRole.toLowerCase());
     }
 
-    getSystemOwnerName(system: NxSystem, currentUserEmail: string, forOrder?: boolean) {
-        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
+    getSystemOwnerName(
+        system: NxSystemWithUserInfo,
+        currentUserEmail: string,
+        forOrder?: boolean
+    ): string {
         if (system.ownerAccountEmail === currentUserEmail) {
             if (forOrder) {
-                // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
             return this.LANG.system.yourSystem();
         }
-        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
-            // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
             return system.ownerFullName;
         }
-        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
         return system.ownerAccountEmail;
     }
 
-    getMySystems(currentUserEmail: string, currentSystemId: string): NxSystem[] {
-        return this.systems.filter((system) => {
-            return system.ownerAccountEmail === currentUserEmail && system.id !== currentSystemId;
-        }).sort((a, b) => {
+    getMySystems (currentUserEmail: string, currentSystemId: string): NxSystem[] {
+        return this.systems.filter(system =>
+            system.ownerAccountEmail === currentUserEmail &&
+            system.id !== currentSystemId
+        ).sort((a, b) => {
             return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
         });
     }
@@ -152,7 +171,7 @@ export class NxSystemsService implements OnDestroy {
         if (system && useCache) { // Cache success
             return of(system);
         } else { // Cache miss
-            return this.cloudApi.systems(systemId).pipe(map((systems) => {
+            return this._getSystems(systemId).pipe(map((systems) => {
                 return systems[0];
             }));
         }
@@ -196,19 +215,27 @@ export class NxSystemsService implements OnDestroy {
             (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
-            if (system.mergeInfo !== undefined) {
-                this.addToMergeList(system.id);
-            } else if (this.mergingSystems.has(system.id)) {
-                const currentSystemId = this.storageService.systemId;
-                if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
-                    this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
-                }
-                if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
-                    this.ribbonService.hide();
-                }
-                this.removeFromMergeList(system.id);
-            }
+            system.useRest = parseInt(system.version[0] || '0') > 4;
+
+            this.checkMerge(system);
         });
+    }
+
+    checkMerge(system: NxSystem) {
+        if (system.mergeInfo !== undefined) {
+            this.addToMergeList(system.id);
+        } else if (this.mergingSystems.has(system.id)) {
+            const currentSystemId = this.storageService.systemId;
+            if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
+                this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
+            }
+            if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
+                this.ribbonService.hide();
+            }
+            this.removeFromMergeList(system.id);
+            return false;
+        }
+        return true;
     }
 
     private sortSystems(systems: NxSystemWithUserInfo[], currentUserEmail: string): NxSystemWithUserInfo[] {
@@ -235,4 +262,6 @@ export interface NxSystemWithUserInfo extends NxSystem {
     capabilities: IParams;
     state: string;
     stateOfHealth: string;
+    system2faEnabled: boolean;
+    version: string;
 }

@@ -4,6 +4,7 @@ from itertools import chain
 import re
 import requests
 from requests.auth import HTTPDigestAuth
+from robot.api.deco import keyword, library
 
 
 class GenerationError(Exception):
@@ -21,9 +22,9 @@ class ActivationError(Exception):
     def __str__(self):
         return str(self.msg)
 
-
+@library
 class LicenseManagement(object):
-    def __init__(self, base_url, auth, login=True):
+    def __init__(self, base_url='https://nxlicensed.hdw.mx/nxlicensed', auth=['licautotests+owner@gmail.com','qweasd123'], login=True):
         self.base_url = base_url
         self.auth = auth
         self.session = requests.Session()
@@ -48,6 +49,7 @@ class LicenseManagement(object):
         assert '<title>Login</title>' not in r.text, "Invalid credentials"
         assert r.status_code == 200, "Can't log in to licensing server"
 
+    @keyword
     def manual_activate(self, key, hwid):
         data = {
             'license_key': key,
@@ -62,6 +64,17 @@ class LicenseManagement(object):
 
         return response.text
 
+    @keyword
+    def add_license(self, server_auth, server_url, license, hwid):
+        block = self.manual_activate(license, hwid)
+        body = [{
+            "key": license,
+            "licenseBlock": block
+        }]
+        r = requests.post(f'{server_url}/ec2/addLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]), json=body, verify=False)
+        return r.json()
+
+    @keyword
     def deactivate_licenses(self, license_keys, autodeact_reason='1', new_hwid='',
                             integrator='AutoTest Integrator', end_user='AutoTest End User', mode='deactivate',
                             os_version=None, vms_version=None):
@@ -95,6 +108,7 @@ class LicenseManagement(object):
 
             return {'id': int(text[p + 8:p + d])}
 
+    @keyword
     def generate_licenses(self, name='Auto Test', company='Network Optix',
                           order_type='purchase', order_id='Auto Tests', authorized_by='1',
                           brand='hdwitness', license_type='digital',
@@ -136,6 +150,7 @@ class LicenseManagement(object):
         except json.decoder.JSONDecodeError:
             raise GenerationError(text)
 
+    @keyword
     def replace_license(self, license_key):
         data = {
             'license_key': license_key
@@ -154,6 +169,7 @@ class LicenseManagement(object):
 
         return message
 
+    @keyword
     def disable_license(self, license_key):
         data = {
             'license_key': license_key
@@ -166,6 +182,7 @@ class LicenseManagement(object):
         text = r.text
         return text
 
+    @keyword
     def get_license_info(self, license_key):
         params = {
             'license_key': license_key
@@ -176,10 +193,12 @@ class LicenseManagement(object):
         key_data = json.loads(text)
         return key_data['body']
 
+    @keyword
     def is_enabled(self, license_key):
         key_info = self.get_license_info(license_key)
         return key_info['is_enabled']
 
+    @keyword
     def get_activation_report(self, date_from, date_to):
         data = {
             'from': date_from,
@@ -194,10 +213,11 @@ class LicenseManagement(object):
         text = r.text
         return text
 
-    @staticmethod
-    def get_hwid(server_auth, server_url, key):
+    @keyword
+    def get_hwid(self, server_auth, server_url, key):
         """ Get HWID the key is activated to """
-        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]), verify=False)
+        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]),
+                         verify=False)
         assert 200 == r.status_code
         licenses = r.json()
 
@@ -208,13 +228,15 @@ class LicenseManagement(object):
         else:
             return 'Error: the key is not activated on the server'
 
+    @keyword
     def get_key_info_from_server(self, server_auth, server_url, key):
         if '0000-0000-0000' not in key:
             from_license_portal = self.get_license_info(key)
         else:
             from_license_portal = {'count': 4, 'license_type': 'Professional'}
 
-        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]), verify=False)
+        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]),
+                         verify=False)
         assert 200 == r.status_code
         licenses = r.json()
 
@@ -249,7 +271,8 @@ class LicenseManagement(object):
                         if key_info['Type'] != from_license_portal['license_type']:
                             raise ActivationError(f"{key_info['Type']} != {from_license_portal['license_type']}")
                     elif key == 'EXPIRATION' and value:
-                        if ('ORDERTYPE' not in lic['licenseBlock']) and ('0000-0000-0000' not in lic['key']) and (key_info['Type'] != 'Video Wall'):
+                        if ('ORDERTYPE' not in lic['licenseBlock']) and ('0000-0000-0000' not in lic['key']) and (
+                                key_info['Type'] != 'Video Wall'):
                             key_info['Type'] = 'Time'
                         elif '0000-0000-0000' in lic['key']:
                             key_info['Type'] = 'Trial'

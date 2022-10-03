@@ -1,22 +1,29 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Location }                            from '@angular/common';
-import md5                                         from 'md5';
-import { from, of, throwError, Observable, EMPTY } from 'rxjs';
+import { Location } from '@angular/common';
+import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
+import md5 from 'md5';
+import { CookieService } from 'ngx-cookie-service';
+import { from, of, throwError, Observable } from 'rxjs';
 import {
-    flatMap, map, mergeMap, retryWhen, timeout, tap
-}                                                  from 'rxjs/operators';
+    flatMap,
+    map,
+    mergeMap,
+    retryWhen,
+    timeout,
+    tap
+} from 'rxjs/operators';
 
-import { NxConfigService, IConfig }     from './nx-config';
-import { ICamera, NxSystemUser }        from './system.service';
-import * as t                           from './system-api.types';
-import { Account }                      from './account.service';
-import { NxUriCacheService }            from './uri-cache.service';
-import { NxAppStateService }            from './nx-app-state.service';
-import { CookieService }                from 'ngx-cookie-service';
-import { NxHealthService }              from '../pages/health/health.service';
-import { IParams, ResourceParam, User } from './system-api.service';
-import { environment }                  from '@environments/environment';
-import { auth }                         from 'firebase';
+import { environment } from '@environments/environment';
+import { NxHealthService } from '@pages/health/health.service';
+
+import { Account } from './account.service';
+import { NxAppStateService } from './nx-app-state.service';
+import { NxConfigService, IConfig } from './nx-config';
+import type { APIDocVersion } from './nx-config/base-config';
+import { IParams, ResourceParam } from './system-api.service';
+import * as t from './system-api.types';
+import { User } from './system-api.types';
+import { ICamera, NxSystemUser } from './system.service';
+import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemAPI {
     /*
@@ -48,10 +55,13 @@ export class NxSystemAPI {
      * TODO (v 3.2): Support websocket connection to server as well
      * */
     authGet: string;
-    protected authPost: string;
+    authPost: string;
     protected authPlay: string;
 
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
+    protected readonly forbiddenMsg = 'Using legacy API calls for owner actions are forbidden.';
+    private readonly notImplementedMsg = 'Not implemented in the legacy api.';
+    public readonly requiresPassword: boolean = true;
 
     protected CONFIG: IConfig;
     protected http: HttpClient;
@@ -59,11 +69,11 @@ export class NxSystemAPI {
 
     protected serverId: string;
     protected systemId: string;
-    protected currentUser: t.NormalResponse<User>;
+    protected currentUser: any;
     protected userEmail: string;
     protected userRequest: Promise<t.NormalResponse<User>>;
-    protected urlBase: string;
-    unauthorizedCallback: (params: unknown) => any;
+    urlBase: string;
+    unauthorizedCallback: (params: unknown) => Promise<any>;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
     healthService: NxHealthService;
@@ -76,7 +86,7 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => any,
+        unauthorizedCallback: (params: IParams) => Promise<any>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -91,11 +101,21 @@ export class NxSystemAPI {
         this.appState = appState;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
-        // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
+        // This is to make it easy to access the systemService from the console for testing,
+        // uncomment to add systemService to global context.
+        // @ts-ignore
         // window.systemService = this;
         // console.log('systemService added to window');
         // console.log('to test system system api method just access the systemService from console');
         // console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
+    }
+
+    public get isSessionOauth() {
+        return false;
+    }
+
+    public setAccessTokenAsCookie() {
+        throw (this.notImplementedMsg);
     }
 
     protected cookieLogin(auth, remember = false, maxAge = 365) {
@@ -139,6 +159,10 @@ export class NxSystemAPI {
         return urlBase;
     }
 
+    generateHeaders() {
+        return false;
+    }
+
     protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
         let params = new HttpParams();
         Object.keys(data).forEach((key: string) => {
@@ -153,14 +177,14 @@ export class NxSystemAPI {
         } else {
             url = `${this.urlBase}${url}`;
         }
-        return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
+        return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
 
     protected get<ResponseType = any>(
         url: string,
         params?: any,
         customHttpHeaders: IParams<string> = {},
-        requestTimeout = 8000
+        requestTimeout = 60000
     ) {
         let headers = new HttpHeaders();
         params = params || {};
@@ -187,14 +211,18 @@ export class NxSystemAPI {
             headers = headers.set(...entry);
         });
         const fullUrl = `${this.urlBase}${url}`;
+        const responseType = <any>(customHttpHeaders?.responseType || 'json');
         return this.http
-            .get<ResponseType>(fullUrl, { headers, params })
+            .get<ResponseType>(fullUrl, { headers, params, responseType })
             .pipe(
                 retryWhen((request) => this.retryHandler(request)),
                 timeout(requestTimeout),
                 tap(undefined, (error) => {
                     // 'Gateway Timeout' is added for 'local' testing of webadmin
-                    if (this.CONFIG.isLocal && (error.name === 'TimeoutError' || error.statusText === 'Gateway Timeout')) {
+                    if (
+                        environment.isLocal && (error.name === 'TimeoutError' ||
+                        error.statusText === 'Gateway Timeout')
+                    ) {
                         this.appState.systemAvailable$.next(false);
                     }
                 })
@@ -205,7 +233,7 @@ export class NxSystemAPI {
         url: string,
         data?: any,
         paramsToAdd = {},
-        customTimeout = 8000
+        customTimeout = 60000
     ) {
         let headers = new HttpHeaders();
         let params = new HttpParams();
@@ -216,7 +244,7 @@ export class NxSystemAPI {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        if (!environment.isLocal && this.authGet) {
+        if (!environment.isLocal && this.authPost) {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
@@ -278,7 +306,7 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => void
+        unauthorizedCallback: (params: IParams) => Promise<any>
     ) {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;
@@ -292,20 +320,14 @@ export class NxSystemAPI {
         return id.replace('{', '').replace('}', '');
     }
 
-    // TODO: Doesn't look like this is being used, maybe delete
-    protected apiHost() {
-        if (this.systemId) {
-            return this.CONFIG.trafficRelayHost
-                .replace('{host}', window.location.host)
-                .replace('{systemId}', this.systemId);
-        }
-        return window.location.host;
-    }
-
     /* Authentication */
     getAuthKeys() {
         const { authGet, authPost, authPlay } = this;
         return { authGet, authPost, authPlay };
+    }
+
+    public isSessionFresh(): Observable<any> {
+        throw Error(this.notImplementedMsg);
     }
 
     public getCurrentUser(forceReload?: boolean) {
@@ -364,12 +386,20 @@ export class NxSystemAPI {
         return this.userRequest;
     }
 
+    public getCurrentServerInfo(): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
+    public checkIfConnectedToServer(serverId: string): Observable<boolean> {
+        throw Error(this.notImplementedMsg);
+    }
+
     protected getNonce(login: string, url?: string) {
         const params: any = {
             userName: login
         };
         if (url) {
-            if (url.indexOf('http') < 0) {
+            if (!url.includes('http')) {
                 url = 'http://' + url;
             }
             params.url = url;
@@ -382,25 +412,18 @@ export class NxSystemAPI {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    getApiDoc() {
-        // return this.get<JSON>('/static/api.json'); // current API
-        // mock response
-        return this.http.get<JSON>('/static/openapi_v1.json');
+    getApiDoc(type: APIDocVersion) {
+        if (type === 'main') {
+            return this.get<JSON>('/static/openapi_legacy.json').toPromise();
+        }
     }
 
-    authCurrentUser(username: string, password: string) {
-        let auth, nonce, realm;
+    public getApiPreamble() {
+        throw (this.notImplementedMsg);
+    }
 
-        username = username.toLowerCase();
-
-        return this.getNonce(username).pipe(
-            mergeMap((response: any) => {
-                nonce = response.reply.nonce;
-                realm = response.reply.realm;
-                auth = this.digest(username, password, realm, nonce);
-                return this.cookieLogin(auth, false);
-            })
-        );
+    public getApiChangelog() {
+        throw (this.notImplementedMsg);
     }
 
     login(
@@ -430,6 +453,18 @@ export class NxSystemAPI {
         );
     }
 
+    loginToken(username: string, password: string, remember: boolean): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
+    loginTokenUrl(token: string): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
+    loginOauth(code: string, skipSetting?: boolean): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
     logout() {
         return this.post('/api/cookieLogout')
             .pipe(
@@ -440,11 +475,11 @@ export class NxSystemAPI {
             .toPromise();
     }
 
-    logUrl(params: { id?: number; lines?: number }) {
+    logUrl(params: { name?: string; lines?: number }) {
         return this.get<string>(
             '/api/showLog',
             { ...params },
-            { 'Content-Type': 'text' }
+            { 'Content-Type': 'text', responseType: 'text' }
         ).toPromise();
     }
 
@@ -470,21 +505,6 @@ export class NxSystemAPI {
             cloudAccountName
         } = await this.getSystemSettings();
         return { cloudSystemID, cloudAccountName };
-    }
-
-    disconnectFromCloud(
-        currentPassword: string,
-        newAdminLogin: string = 'admin',
-        newAdminPassword?: string
-    ) {
-        const [login, password] = [newAdminLogin, newAdminPassword];
-        const params = newAdminPassword
-            ? { currentPassword, login, password }
-            : { currentPassword };
-
-        return NxConfigService.isLocal
-            ? this.post('/web/api/detachFromCloud', params).toPromise()
-            : this.post('/api/detachFromCloud', params).toPromise();
     }
 
     setupCloudSystem(
@@ -551,7 +571,7 @@ export class NxSystemAPI {
                     'GET'
                 );
 
-                if (url.indexOf('http') !== 0) {
+                if (!url.startsWith('http')) {
                     url = 'http://' + url;
                 }
 
@@ -560,23 +580,22 @@ export class NxSystemAPI {
     }
 
     getStatistics() {
-        return this.get('/api/statistics', { salt: Date.now() }).toPromise();
+        return this.get('/api/statistics', { salt: Date.now() });
     }
 
     getTimeZones() {
         return this.get('/api/getTimeZones').toPromise();
     }
 
+    /**
+        @deprecated
+     */
     saveCloudSystemCredentials(
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string
     ) {
-        return this.post('/web/api/saveCloudSystemCredentials', {
-            cloudSystemID,
-            cloudAuthKey,
-            cloudAccountName
-        }).toPromise();
+        throw Error(this.forbiddenMsg);
     }
 
     checkInternet(reload = true) {
@@ -643,19 +662,6 @@ export class NxSystemAPI {
         return this.post('/api/ifconfig', networkSettings).toPromise();
     }
 
-    // TODO: This doesn't look like it's being used
-    // protected checkPermissions(flag) {
-    //     // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
-    //     return this.getCurrentUser().then((user) => {
-    //         if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
-    //             return this.getRolePermissions(user.userRoleId).subscribe((role: unknown) => {
-    //                 return role.permissions.indexOf(flag) > -1;
-    //             });
-    //         }
-    //         return user.isAdmin || user.permissions.indexOf(flag) > -1;
-    //     });
-    // }
-
     setAuthKeys(authGet: string, authPost: string, authPlay: string) {
         this.authGet = authGet;
         this.authPost = authPost;
@@ -666,7 +672,7 @@ export class NxSystemAPI {
 
     /* Server settings */
     public getServerTimes() {
-        return this.get<t.SystemTime>('/ec2/getTimeOfServers', '', {}, this.CONFIG.extendedRequestTimeout);
+        return this.get<t.SystemTime>('/ec2/getTimeOfServers', '', {});
     }
 
     protected getSystemTime() {
@@ -698,8 +704,8 @@ export class NxSystemAPI {
         ]).pipe(
             map(({ reply }: any) => {
                 return {
-                    hasAnalyticsData : !!reply[analyticsEndpoint]?.length,
-                    hasPlugins       : reply[getCamerasEndpoint]?.reduce(
+                    hasAnalyticsData: !!reply[analyticsEndpoint]?.length,
+                    hasPlugins: reply[getCamerasEndpoint]?.reduce(
                         (hasPlugins, { addParams, parentId }) =>
                             hasPlugins ||
                             addParams.find(
@@ -764,14 +770,18 @@ export class NxSystemAPI {
 
     checkForAnalyticsData() {
         const queryParams = {
-            startTime : 0,
-            endTime   : Number.MAX_SAFE_INTEGER,
-            limit     : 1
+            startTime: 0,
+            endTime: Number.MAX_SAFE_INTEGER,
+            limit: 1
         };
         return this.get('/ec2/analyticsLookupObjectTracks', queryParams);
     }
 
     // End of storage
+
+    getCameraHistoryItems() {
+        return this.get('/ec2/getCameraHistoryItems');
+    }
 
     getRecordStats(useCache = false) {
         return this.get('/api/recStats', undefined, {
@@ -820,7 +830,7 @@ export class NxSystemAPI {
         }).toPromise();
     }
 
-    restartServer() {
+    restartServer(serverId?: string) {
         return this.post<t.RestartServer>('/api/restart')
             .toPromise()
             .catch((err) => Promise.reject(err));
@@ -832,7 +842,13 @@ export class NxSystemAPI {
         );
     }
 
-    detachFromSystem(currentPassword: string) {
+    getModuleInfoUsingUrl(url: string) {
+        return this.http.get<t.NormalResponse<t.ModuleInformationReply>>(
+            `${url}/api/moduleInformation`
+        );
+    }
+
+    detachFromSystem(currentPassword: string, serverId?: string) {
         return this.post<t.NormalResponse<any>>('/api/detachFromSystem', {
             currentPassword
         });
@@ -843,7 +859,7 @@ export class NxSystemAPI {
         return this.post('/ec2/removeResource', { id });
     }
 
-    restoreFactorySettings(currentPassword: string) {
+    restoreFactorySettings(currentPassword: string, serverId?: string) {
         return this.post('/api/restoreState', { currentPassword });
     }
 
@@ -858,8 +874,8 @@ export class NxSystemAPI {
         ]).pipe(
             map(({ reply }: any) => {
                 return {
-                    licenses : reply['ec2/getLicenses'],
-                    hwids    :
+                    licenses: reply['ec2/getLicenses'],
+                    hwids:
                         reply['ec2/getHardwareIdsOfServers'].reply
                             .reduce((ids: any[], { hardwareIds }) => {
                                 ids.push(...hardwareIds);
@@ -944,22 +960,22 @@ export class NxSystemAPI {
         if (!cleanedUser.userRoleId) {
             cleanedUser.userRoleId = this.emptyId;
         }
-        cleanedUser.email = cleanedUser.email.toLowerCase();
+
         return cleanedUser;
     }
 
     userObject(fullName: string, email: string): User {
         return {
-            canBeEdited  : true,
-            canBeDeleted : true,
+            canBeEdited: true,
+            canBeDeleted: true,
             email,
-            id           : '',
-            isCloud      : true,
-            isEnabled    : true,
-            userRoleId   : this.emptyId,
-            permissions  : '',
+            id: '',
+            isCloud: true,
+            isEnabled: true,
+            userRoleId: this.emptyId,
+            permissions: '',
             // TODO: Remove the trash below after #VMS-2968
-            name         : email,
+            name: email,
             fullName
         };
     }
@@ -972,10 +988,6 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        if (!environment.isLocal && !this.authGet) {
-            return EMPTY; // prevent unauthorized calls in cloud-portal
-        }
-
         return this.getRequestAggregator<
             t.NormalResponse<[t.SystemTime, t.GetCameras]>
         >(['ec2/getTimeOfServers', 'ec2/getCamerasEx']).pipe(
@@ -1097,7 +1109,7 @@ export class NxSystemAPI {
             data.height = height;
         }
 
-        if (rotate !== null) {
+        if (rotate) {
             data.rotate = rotate;
         }
 
@@ -1142,6 +1154,30 @@ export class NxSystemAPI {
         return this.generateGetUrl(url, data, force);
     }
 
+    public getExportUrl ({ transport, cameraId, pos, endPos, duration }) {
+        let url = '';
+        cameraId = cameraId?.replace(/{|}/g, '');
+        switch (transport) {
+            case 'hls':
+                url = `/web/hls/${cameraId}.mkv`;
+                break;
+            default:
+                url = `/web/media/${cameraId}.${transport}`;
+        }
+        const params = {
+            auth: this.authGet,
+
+            pos,
+            endPos,
+            duration,
+
+            // see VMS-29347
+            download: true,
+            export: true
+        };
+        return this.generateGetUrl(url, params);
+    }
+
     /* End of formatting urls */
 
     /* Working with archive */
@@ -1181,8 +1217,7 @@ export class NxSystemAPI {
         // RecordedTimePeriods
         return this.get(
             `/ec2/recordedTimePeriods?keepSmallChunks&${label || ''}`,
-            params, {}, this.CONFIG.extendedRequestTimeout
-        );
+            params, {});
     }
 
     /* End of Working with archive */
@@ -1190,7 +1225,7 @@ export class NxSystemAPI {
     setCameraPath(cameraId: string) {
         let systemLink = '';
         const route =
-            this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
+            this.location.path().startsWith('/embed') ? '/embed/' : '';
 
         if (this.systemId) {
             if (route !== '') {
@@ -1243,35 +1278,17 @@ export class NxSystemAPI {
     }
     // End of Health Monitor
 
-    public checkCameraThumbnail(cameraId, width = 70, height = 40) {
-        // it expects JSON yet normally gets JPG, thus rejects,
-        const _checker = (response) => {
-            if (!response || response.status !== 200) {
-                return Promise.reject(response);
-            } else {
-                return Promise.resolve(response);
-            }
-        };
-        return this.get(
-            `/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}`
-        )
-            .toPromise()
-            .then(_checker)
-            .catch(_checker);
-    }
-
-    public getCameraThumbnailUrl(cameraId, width = 128, height = 128, t?) {
-        return `${
-            this.urlBase
-        }/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${
-            this.authGet
-        }&time=${t || 'now'}`;
-    }
-
-    public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
+    public getPlaybackUrl(
+        cameraId,
+        transport = 'webm',
+        resolution = 'low',
+        position = undefined
+    ) {
         let url;
         function hlsResolutionOrEmpty(res) {
-            if (res === 'hi' || res === 'lo') { return res; }
+            if (res === 'hi' || res === 'lo') {
+                return res;
+            }
             return '';
         }
         switch (transport) {
@@ -1284,9 +1301,23 @@ export class NxSystemAPI {
                     url += `pos=${position}&`;
                 }
                 return url;
+            case 'rtsp':
+                let urlBase = this.getUrlBase();
+                // If we are in webadmin we need to have the origin or else https is not replaced with rtsp.
+                if (!urlBase) {
+                    urlBase = window.location.origin;
+                }
+                url = `${urlBase}/${this.cleanId(cameraId)}?stream=${resolution}&`.replace(/https?:\/\//, 'rtsp://');
+                if (this.authGet) {
+                    url += `auth=${this.authGet}&`;
+                }
+                if (position) {
+                    url += `pos=${position}&`;
+                }
+                return url;
             default:
                 // Rtsp plays as webm but does not support transcoding.
-                if (['rtsp', 'mjpeg'].includes(transport)) {
+                if (transport === 'mjpeg') {
                     transport = 'webm';
                 }
                 url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
@@ -1307,7 +1338,21 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
+    getServerInfo(serverId: string) {
+        throw (this.notImplementedMsg);
+    }
+
+    getRemoteServerInfo(remoteEndpoint: string) {
+        return of({});
+    }
+
+    mergeSystems(
+        url: string,
+        targetSystemId: string,
+        dryRun: boolean,
+        currentPassword?: string,
+        takeRemoteSettings = false
+    ) {
         const data = {
             url,
             currentPassword,
@@ -1361,4 +1406,35 @@ export class NxSystemAPI {
     renameSystem(_, systemName: string) {
         return this.get('/api/systemSettings', { systemName }).toPromise();
     }
+
+    getBookmarks(params = {
+        order: 'desc',
+        column: 'creationTime',
+        deviceId: '*',
+        _keepDefault: 'true',
+        _orderBy: 'creationTimeMs'
+    }): Observable<any> {
+        throw new Error('should only be using rest version');
+    }
+
+    getBookmarkTags(limit: number = 100): Observable<any> {
+        throw new Error('should only be using rest version');
+    }
+
+    getDevices(): Observable<any> {
+        throw new Error('should only be using rest version');
+    }
+
+    getEventRules() {
+        return this.get<t.EventRule[]>('/ec2/getEventRules');
+    }
+
+    saveEventRule(eventRule: t.EventRule) {
+        return this.post('/ec2/saveEventRule', eventRule);
+    }
+
+    /**
+     * Alias removeResource which is used for deleting event rules.
+     */
+    removeEventRule = this.removeResource
 }

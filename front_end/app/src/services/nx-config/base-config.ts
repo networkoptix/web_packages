@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // To parse this data:
 //
 //   import { Convert, BaseConfig } from "./file";
@@ -7,19 +8,32 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-import { MenuNode } from '../menus.service';
+import {
+    ConsoleManifest,
+    ConsoleSection
+} from '@components/console-table/console-table.component.types';
+
+import { MenuNode } from '../menus.service.types';
+
+interface OauthStoreFlags {
+    code: string;
+    verify2fa: string;
+}
 
 export interface BaseConfig {
+    staticBase: string;
     commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;
     previewPath?: string;
     alertTimeout: number;
+    longAlertTimeout: number;
     maxNumberServerChecked: number;
     extendedRequestTimeout: number;
     apiRequestAttempts: number;
     animations: Animations;
     apiBase: string;
+    apiDocURL: APIDocURL;
     cameraCredentialUpdateTimeout: number;
     cameraSettings: CameraSettings;
     clientMode: ClientMode;
@@ -27,6 +41,8 @@ export interface BaseConfig {
     dialogs: Dialogs;
     developers: Developers;
     downloads: Downloads;
+    featureFlags: FeatureFlags;
+    featureFlagStrings: Record<FeatureFlagType, FeatureFlagType>
     healthMonitoring: HealthMonitoring;
     icons: Icons;
     images: Images;
@@ -40,10 +56,12 @@ export interface BaseConfig {
     landing: Landing;
     layout: Layout;
     maintenanceTimeout: number;
+    manifest: Record<ConsoleSection, ConsoleManifest>
     maxServers: number;
     meta: Meta;
     menus: Menus;
     newSystem: boolean;
+    oauthStore: OauthStoreFlags;
     permissions: Permissions;
     pollingTimeout: number;
     redirect: Redirect;
@@ -87,8 +105,14 @@ export interface BaseConfig {
     headerHeight: number;
     ribbonHeight: number;
     browserNotSupported: boolean;
+    sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;
+    metaDefaults: Record<string, Record<string, string>>,
+    webadminRoutesLookup: RouteCheckTuple[],
+    cloudMonitoring: CloudMonitoring;
 }
+
+export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string]
 
 export interface Developers {
     landing: {
@@ -141,6 +165,41 @@ export interface Capabilities {
     integrationStore: boolean;
     publicDownloads: boolean;
     publicReleases: boolean;
+}
+
+// Feature flags go here
+const FeatureFlagKeys = [
+    'customClients',
+    'landingPage',
+    'bookmarks',
+    'kbInstantSearch',
+    'dashboard',
+    'archiveSelection',
+    'readonlyAPIs',
+    'dashboardRedirect',
+    'cloudOwnershipTransfer',
+    'viewCameraDetails',
+    'logRocket',
+    'fullStory',
+    'cloudStorage'
+] as const;
+
+export type FeatureFlagType = typeof FeatureFlagKeys[number];
+
+export const FeatureFlagStrings = FeatureFlagKeys.reduce((obj, key) => {
+    obj[key] = key;
+    return obj;
+}, {}) as Record<FeatureFlagType, FeatureFlagType>;
+
+export type FeatureFlags = {
+    [key in FeatureFlagType]?: boolean
+}
+
+export type APIDocVersion = 'main' | 'legacy' | 'deprecated'
+export interface APIDocURL {
+    main: string;
+    legacy: string;
+    deprecated: string;
 }
 
 export interface AccessRoles {
@@ -199,6 +258,16 @@ export interface CloudCapabilities {
     publicReleases: boolean;
     cloudStorageEnabled: boolean;
     cloudStorageSize: number;
+    customClientsEnabled: boolean;
+    alexaIntegrationEnabled: boolean;
+    bookmarksEnabled: boolean;
+}
+
+export interface CloudMonitoring {
+    fullStory: string;
+    isFullStoryActive: boolean;
+    isLogRocketActive: boolean;
+    logRocket: string;
 }
 
 export interface Company {
@@ -370,21 +439,27 @@ export interface Bps {
 export interface Icons {
     default: string;
     platforms: Platform[];
-    devTools: string;
     backgrounds: string;
+    devTools: string;
     dir: string;
     dirDevtools: string;
     dirButtons: string;
+    dirTextButtons: string;
+    dirHeader: string;
     dirNonStandard: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
     dirDevCapabilities: string;
+    dirLandingIcons: string;
 }
 
 export interface Images {
     dir: string;
     dirDevelopers: string;
+    dirDevelopersDevtools: string;
+    dirLanding: string;
+    dirLandingGraphic: string;
 }
 
 export interface Platform {
@@ -450,22 +525,31 @@ export interface Menus {
     account: Account;
     systemHealth: SystemHealth;
     systemSettings: SystemSettings;
+    systemMonitoring: SystemMonitoring;
 }
 
 export interface Account {
     baseUrl: string;
     icon: string;
-    settings: Password;
-    password: Password;
+    settings: Path;
+    password: Path;
+    security: Path;
 }
 
-export interface Password {
+export interface Path {
     id: string;
     path: string;
 }
 
 export interface SystemHealth {
     baseUrl: string;
+    alerts: Admin;
+}
+
+export interface SystemMonitoring {
+    baseUrl: string;
+    graphs: Admin;
+    logs: Admin;
 }
 
 export interface SystemSettings {
@@ -539,6 +623,7 @@ export interface Servers {
     minLoaderTime: number;
     port: Port;
     status: ServersStatus;
+    errors: ServerError;
 }
 
 export interface Port {
@@ -547,12 +632,18 @@ export interface Port {
     restrictedMax: number;
 }
 
+export interface ServerError {
+    oldSessionErrorId: string;
+    unauthorized: string;
+}
+
 export interface ServersStatus {
     online: string;
     offline: string;
     restarting: string;
     resetting: string;
     checking: string;
+    mismatchedcertificate: string
 }
 
 export interface System {

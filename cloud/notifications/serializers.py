@@ -3,11 +3,12 @@ import json
 from django.conf import settings
 from django.core.cache import caches
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
 
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
 from cms.models import get_cloud_portal_asset
-from notifications.models import PushSubscription, PushDevice, PushNotification
+from notifications.models import PushSubscription, PushDevice, PushNotification, SystemEmail
 from notifications.conf import get_sns_client
 
 import botocore
@@ -110,7 +111,7 @@ class SubscriptionSerializer(serializers.Serializer):
                 return ['all']
 
             try:
-                systems = System.list(email=request_data['username'], password=request_data['password'])
+                systems = System.list(self.context['request'], email=request_data.get('username'), password=request_data.get('password'))
                 systems = [system['id'] for system in systems['systems']]
 
                 for system in value[:]:
@@ -261,3 +262,37 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
 
     def get_provider(self, obj):
         return PROVIDERS_REVERSE_MAP[obj.provider]
+
+
+def validate_attachment(attachment):
+    required = ['filename', 'content']
+    chars_in_mb = 1_048_576
+
+    if missing := [field for field in required if not attachment[field]]:
+        return f'{attachment.get("filename", "")} Attachment is missing the following fields: {missing}'.lstrip()
+
+    if len(attachment['content'].encode('utf-8')) > chars_in_mb:
+        return f'{attachment["filename"]} is too large. Must be < 400KB'
+
+
+def validate_serialized_attachments(attachments):
+    if errors := [error for attachment in attachments if (error := validate_attachment(attachment))]:
+        raise ValidationError(errors)
+
+
+class SystemEmailSerializer(serializers.ModelSerializer):
+    systemId = serializers.CharField(source='system_id', required=False, allow_blank=True)
+    subject = serializers.CharField()
+    messageHtml = serializers.CharField(source='message_html', required=False, allow_blank=True)
+    messageText = serializers.CharField(source='message_text', required=False, allow_blank=True)
+    targets = serializers.ListField(required=True, child=serializers.EmailField(), allow_empty=False)
+    attachments = serializers.ListField(validators=[validate_serialized_attachments], required=False)
+    messageId = serializers.IntegerField(source='pk', required=False, read_only=True)
+
+    class Meta:
+        model = SystemEmail
+        fields = ('systemId', 'subject', 'messageHtml', 'messageText', 'targets', 'attachments', 'messageId')
+
+    def create(self, customization=settings.CUSTOMIZATION):
+        self.is_valid(True)
+        return SystemEmail(**self.validated_data, customization=customization)

@@ -21,14 +21,14 @@
                            [placeholder]="placeholder | translate"/>
                     <span class="glyphicon web-icon-search icon-search"></span>
                     <button class="inset search-clear btn btn-clear" *ngIf="localFilter.query" (click)="resetQuery()">
-                        <svg-icon [src]="CONFIG.icons.dir + 'close.svg'"
+                        <svg-icon [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
                                   [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                     </button>
                 </div>
                 <div class="float-left btn btn-big btn-tag-selected mt-3 mt-md-0 mr-1"
                         *ngIf="numberFilters != 0 && layout == 'full'">
 
-                    <span class="filter-label" [innerHTML]="filterSelected" dir="auto"></span>
+                    <span class="filter-label" [innerHTML]="filterSelected" [dir]="$any('auto')"></span>
                     <span class="close-button" (click)="resetFilters()">
                         <span class="glyphicon tag-close-icon"></span>
                     </span>
@@ -39,7 +39,7 @@
                         (click)="toggleOptions()"
                         *ngIf="layout == 'full'">
                     <div class="arrow-flip">
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
                     </div>
                     <span class="btn-tag-label" translate>Advanced Search</span>
                 </div>

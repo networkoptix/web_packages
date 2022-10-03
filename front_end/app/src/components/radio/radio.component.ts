@@ -1,11 +1,18 @@
 import {
-    Component, Input, Output,
-    EventEmitter, forwardRef,
-    OnInit, ViewEncapsulation, ViewChild
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    forwardRef,
+    OnInit,
+    ViewEncapsulation,
+    ViewChild
 } from '@angular/core';
 import {
-    NG_VALUE_ACCESSOR, ControlValueAccessor,
-    FormControl, Validator
+    NG_VALUE_ACCESSOR,
+    ControlValueAccessor,
+    FormControl,
+    Validator
 } from '@angular/forms';
 
 /* Usage
@@ -19,14 +26,14 @@ import {
  */
 
 @Component({
-    selector     : 'nx-radio',
-    templateUrl  : 'radio.component.html',
-    styleUrls    : ['radio.component.scss'],
-    providers    : [
+    selector: 'nx-radio',
+    templateUrl: 'radio.component.html',
+    styleUrls: ['radio.component.scss'],
+    providers: [
         {
-            provide    : NG_VALUE_ACCESSOR,
+            provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxRadioComponent),
-            multi      : true
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -35,7 +42,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() componentId: string;
     @Input() name: string;
     @Input() label: string;
-    @Input() value: 'tristate' | string;
+    @Input() value: string | number;
     @Input() disabled;
     @Output() onClick = new EventEmitter<string>();
 
@@ -44,10 +51,10 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     public state: string;
     private _value; // ngModel representation
     private _rbxStates = {
-        rbFalse    : 'unchecked',
-        rbTrue     : 'checked',
-        rbDisabled : 'disabled',
-        rbOrElse   : 'tristate'
+        rbFalse: 'unchecked',
+        rbTrue: 'checked',
+        rbDisabled: 'disabled',
+        rbOrElse: 'tristate'
     };
 
     // the method set in registerOnChange to emit changes back to the form
@@ -67,7 +74,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     /**
      * Write a new value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value) {
         if (value === 'tristate' || value === 1) {
             this.state = this._rbxStates.rbOrElse; // 'checked'
         } else if ((value && this.value === value)) {
@@ -104,6 +111,6 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
 
         // Propagate component's value attribute (model)
         this.propagateChange(this.value);
-        this.onClick.emit(this.value);
+        this.onClick.emit(this.value.toString());
     }
 }

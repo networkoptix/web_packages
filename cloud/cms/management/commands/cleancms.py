@@ -8,10 +8,14 @@ from cms.models import DataStructure, Language
 logger = logging.getLogger(__name__)
 
 
+def check_if_debug():
+    return settings.DEBUG
+
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        if not settings.DEBUG:
-            self.stdout.write(self.style.ERROR(f'Command not allowed if DEBUG=False'))
+        if not check_if_debug():
+            self.stdout.write(self.style.ERROR('Command not allowed if DEBUG=False'))
             return
         self.stdout.write('Cleaning unused CMS records(no version, not latest)')
         cleaned_count = 0

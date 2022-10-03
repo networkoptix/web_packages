@@ -1,5 +1,5 @@
 *** Variables ***
-${LM HOST}        http://nxlicensed.test.hdw.mx
+${LM HOST}        ${LM HOSTS}[stage]
 ${LM OWNER}       licautotests+owner@gmail.com
 ${LM PASSWORD}    qweasd123
 @{LOCAL AUTH}     admin    ${BASE PASSWORD}
@@ -12,6 +12,11 @@ ${LM PASSWORD}    qweasd123
 ...    advancedViewer=licautotests+adviewer@gmail.com
 ...    custom=licautotests+custom@gmail.com
 ...    liveViewer=licautotests+liveviewer@gmail.com
+
+&{LM HOSTS}
+   ...    prod=https://licensing.vmsproxy.com
+   ...    stage=https://nxlicensed.hdw.mx
+   ...    test=https://nxlicensed.test.hdw.mx
 
 &{LIC TYPES}
 ...    digital=Professional

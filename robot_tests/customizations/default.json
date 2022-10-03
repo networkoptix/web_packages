@@ -1,4 +1,5 @@
 {
+    "CUSTOMIZATION"              :    "default",
     "PRODUCT_NAME"               :    "Nx Cloud",
     "VMS_NAME"                   :    "Nx Witness",
     "TRIAL LICENSE"              :    "0000-0000-0000-0005",
@@ -9,7 +10,7 @@
     "PRIVACY POLICY URL HREF"    :    "https://www.networkoptix.com/privacy-policy/",
     "PRIVACY POLICY URL FULL"    :    "https://www.networkoptix.com/privacy-policy/",
     "SUPPORT URL"                :    "https://support.networkoptix.com",
-    "WEBSITE URL"                :    "https://www.networkoptix.com",
+    "WEBSITE URL"                :    "https://networkoptix.com",
     "RELEASE NOTES URL"	         :	  "https://www.networkoptix.com/all-nx-witness-release-notes/",
     "RELEASE NOTES LATEST"       :	  "//*[contains(text(),'%version%')]",
     "ABOUT URL"                  :    "/content/about",
@@ -30,7 +31,7 @@
     "ERROR COLOR WITH OPACITY"   :    "rgba(240, 44, 44, 1)",
     "INTEGRATION REQUIRED FIELDS":    "Ya Basic",
     "INTEGRATION ALL FIELDS"     :    "vis - QA - face_recognition",
-    "AUTO TESTS GOOD CAM ID"     :    "{838a6c54-76aa-cd65-e20c-79e5bfd3b85f}",
+    "AUTO TESTS GOOD CAM ID"     :    "{a836b98b-65e2-2304-57e9-a09fc55a50a4}",
     "CUST LANGUAGE LIST"	     :	  "default_lang_list.json",
     "DEFAULT LANGUAGE"		     :	  "en_US",
     "DISABLED STORAGE COLOR"     :    "rgba(165, 183, 192, 1)",
@@ -55,8 +56,10 @@
     "COLOR LIGHT16"              : "#698796",
     "COLOR LIGHT16 RGB"          : "rgba(105, 135, 150, 1)",
 
-    "COLOR ALIGHT2 RGB"          : "rgba(240, 243, 244, 1)",
+    "COLOR ALIGHT2 RGBA"         : "rgba(240, 242, 244, 1)",
+    "COLOR ALIGHT2 RGB"          : "rgba(240, 242, 244, 1)",
     "COLOR ALIGHT3 RGB"          : "rgba(230, 235, 237, 1)",
+    "COLOR ALIGHT4 RGB"          : "rgba(240, 242, 244, 1)",
 
     "COLOR DARK9 RGB"            : "rgba(43, 56, 63, 1)",
 
@@ -65,7 +68,7 @@
 
     "SEARCH FONT SIZE"           : "14px",
     "SEARCH PLEFT"               : "40px",
-    "SEARCH PRIGHT"              : "10px",
+    "SEARCH PRIGHT"              : "40px",
     "SEARCH HEIGHT"              : "32px",
 
     "MENU L1 FONT SIZE"          :    "15px",

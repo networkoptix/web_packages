@@ -1,0 +1,5 @@
+<console-menu [menu]="menu" [base]="base" [type]="selectedMode" [sectionParam]="sectionParam"></console-menu>
+<ng-container [ngSwitch]="selectedMode">
+    <console-edit *ngSwitchCase="CONSOLE_MODE.EDIT" [contextList]="manifest?.manifest?.contexts || []" [asset]="currentEdit"></console-edit>
+    <console-table *ngSwitchDefault [sectionParam]="sectionParam" (editValues)="currentEdit=$event" [contextList]="manifest?.manifest?.contexts || []"></console-table>
+</ng-container>

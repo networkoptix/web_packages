@@ -1,4 +1,3 @@
-import collections
 from math import log2
 import datetime
 import json
@@ -12,13 +11,16 @@ from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import serializers
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from waffle import flag_is_active, switch_is_active, sample_is_active
 
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
-from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
+from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType
+from cms.feature_flags import *
 
 logger = logging.getLogger(__name__)
 
@@ -51,11 +53,14 @@ def get_settings_from_cache():
         'availableDownloadsPlatform': customization_cache.get('available_downloads_platform', []),
         'cloudName': customization_cache.get('cloud_name', ''),
         'vmsName': customization_cache.get('vms_name', ''),
+        'alexaIntegrationEnabled': customization_cache.get('alexa_integration_enabled', False),
+        'bookmarksEnabled': customization_cache.get('bookmarks_enabled', False),
         'cloudStorageEnabled': customization_cache.get('cloud_storage_enabled', False),
         'cloudStorageSize': customization_cache.get('cloud_storage_size', '53687091200'),
         'copyrightYear': customization_cache.get('copyright_year', ''),
         'companyName': customization_cache.get('company_name', ''),
         'companyLink': customization_cache.get('company_link', ''),
+        'customClientsEnabled': customization_cache.get('public_custom_clients', False),
         'developersEnabled': customization_cache.get('developers_enabled', False),
         'feedbackEnabled': customization_cache.get('feedback_enabled', False),
         'integrationFilterItems': customization_cache.get('integration_filter_items', []),
@@ -79,6 +84,8 @@ def get_settings_from_cache():
         'vendorsShown': customization_cache.get('vendors_shown', '30'),
         'pushConfig': customization_cache.get('push_config', {}),
         'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
+        'logRocket': customization_cache.get('log_rocket', ''),
+        'fullStory': customization_cache.get('full_story', ''),
         'trialLicenseKey': customization_cache.get('trial_license_key', ''),
     }
 
@@ -163,7 +170,7 @@ def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
         lang = detect_language_by_request(request)
-        language_file = f'/static/lang_{lang}/language_compiled.json'
+        language_file = f'/static/lang_{lang}/language_compiled.json?version={settings.VERSION}'
         # Return: redirect to language.json file for selected language
         response = redirect(language_file)
 
@@ -187,6 +194,16 @@ def language(request):
         response.set_cookie('language', lang, 60 * 60 * 24 * 7)  # Cookie for one week
         return response
 
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Gets supported languages. Redirects to languages.json but with version query param for cache busting. When possible /static/{{version}}/languages.json should be required directly.",
+                     deprecated=True,
+                     responses={'302': 'Redirect to languages file with cache busting'})
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@handle_exceptions
+def languages(request):
+    return redirect(f'/static/languages.json?version={settings.VERSION}')
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns a list of builds and patch notes for the current cloud portal.")
@@ -225,7 +242,7 @@ def downloads_history(request):
                                            "cloud portal.",
                      manual_parameters=[build__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated, ))
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
@@ -363,6 +380,14 @@ def downloads(request):
     return Response(downloads_json)
 
 
+def get_feature_flags(request):
+    return {
+        **{FLAGS.json_key(key): flag_is_active(request, FLAGS[key]) for key in FLAGS.all_keys},
+        **{SWITCHES.json_key(key): switch_is_active(SWITCHES[key]) for key in SWITCHES.all_keys},
+        **{SAMPLES.json_key(key): sample_is_active(SAMPLES[key]) for key in SAMPLES.all_keys}
+    }
+
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns cloud config information to the web client.")
 @api_view(['GET'])
@@ -389,6 +414,12 @@ def get_settings(request):
             UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'cms.access_developers'):
         settings_object['developersEnabled'] = True
+    if not settings_object.get('customClientsEnabled', False) and \
+            UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.custom_clients'):
+        settings_object['customClientsEnabled'] = True
+
+    settings_object['featureFlags'] = get_feature_flags(request)
     return Response(settings_object)
 
 
@@ -523,7 +554,32 @@ def get_ipvd(request):
                      operation_description="Returns what capabilities cloud portal supports. This is used "
                                            "mainly for vms.")
 @api_view(['GET'])
+@permission_classes((AllowAny, ))
 def cloud_capabilities(request):
     capabilities = get_cloud_capabilities_from_cache()
 
     return Response(capabilities)
+
+
+CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the {settings.SUPERUSER_DOMAIN} domain'
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns list of customizations.",
+                     responses={
+                         '200': serializers.ListSerializer(child=serializers.CharField()),
+                         '401': openapi.Schema(type=openapi.TYPE_OBJECT, properties={
+                             'details': openapi.Schema(type=openapi.TYPE_STRING, default='Authentication credentials were not provided.')}),
+                         '403': openapi.Schema(type=openapi.TYPE_OBJECT, properties={
+                             'resultCode': openapi.Schema(type=openapi.TYPE_STRING, default='notAuthorized'),
+                             'errorText': openapi.Schema(type=openapi.TYPE_STRING, default=CUSTOMIZATIONS_STAFF_ONLY),
+                             'errorData': openapi.Schema(type=openapi.TYPE_STRING)})
+                    })
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+@handle_exceptions
+def get_customizations(request):
+    if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):
+        raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
+
+    return Response(Customization.objects.filter(enabled=True).values_list('name', flat=True))

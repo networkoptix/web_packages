@@ -1,6 +1,15 @@
 *** Variables ***
+${email}                                     ${EMAIL OWNER}
+${password}                                  ${BASE PASSWORD}
+@{auth}                                      ${email}    ${password}
+${url}                                       ${ENV}
+@{system camera auth1}=                      admin    QAbur777$
+@{system camera auth2}=                      admin    wrongPass
+@{system camera auth3}=                      admin    admin
+@{system camera auth4}=                      admin    QAbur777$
+
 ${CAMERAS LINK}                              //nx-menu//a[@id="cameras"]
-${EDITABLE TITLE}                            //h2[@id="editable-title"]
+${EDITABLE TITLE}                            //nx-text-editable
 ${CAMERAS VIEW BUTTON}                       //nx-block//header//button[@id="view-camera"]
 ${CAMERAS DETAILED INFO BUTTON}              //nx-block//header//button[@id="detailed-info"]
 ${ASPECT RATIO DROPDOWN}                     //button[@id="aspect-ratios"]
@@ -13,12 +22,12 @@ ${EDIT CREDENTIALS PASSWORD INPUT}           ${EDIT CREDENTIALS FORM}//input[@id
 ${EDIT CREDENTIALS X BUTTON}                 ${EDIT CREDENTIALS FORM}//button[contains(@class,"close")]
 ${EDIT CREDENTIALS CANCEL BUTTON}            ${EDIT CREDENTIALS FORM}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${EDIT CREDENTIALS SAVE BUTTON}              ${EDIT CREDENTIALS FORM}//button[contains(text(),"${SAVE BUTTON TEXT}")]
-${RECORDING CHECK BOX}                       //nx-switch/div[@id="recording"]
+${RECORDING CHECK BOX}                       //nx-switch/div[@id="recording-switch-wrapper"]
 ${ENABLED RECORDING SLIDER}                  //span[contains(@class,"slider round")]
 ${RECORD ALWAYS RADIO BUTTON}                //nx-radio//input[@id="always"]
 ${RECORD MOTION RADIO BUTTON}                //nx-radio//input[@id="motion"]
 ${RECORD MOTION LOW QUALITY RADIO BUTTON}    //nx-radio//input[@id="motionLowRes"]
-${FPS INPUT}                                 //input[@id="fps"]
+${FPS INPUT}                                 //input[@id="fps-numeric"]
 ${QUALITY DROPDOWN}                          //button[@id="recording-quality"]
 ${DOT-MENU}                                  //button[@class="dot-menu"]
 ${ENABLE MOTION DETECTION BUTTON}            //button[@id="enable-motion-detection"]
@@ -30,15 +39,15 @@ ${OFFLINE MESSAGE}                           //nx-page-placeholder//div[contains
 ${NO CAMERAS PLACEHOLDER IMAGE}              //nx-page-placeholder//div[contains(@class,"placeholder-icon") and @name="NO_CAMS"]
 ${NO CAMERAS TITLE}                          //nx-page-placeholder//h2[contains(@class,"placeholder-title") and @name="NO_CAMS"]
 ${NO CAMERAS MESSAGE}                        //nx-page-placeholder//div[contains(@class,"placeholder-message") and @name="NO_CAMS"]
-${RECORDING SVG}                             //svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-${OFFLINE SVG}                               //svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-${UNAUTH SVG}                                //svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+${RECORDING SVG}                             //svg-icon[contains(@data-src,"/images/icons/standard/camera_recording.svg")]
+${OFFLINE SVG}                               //svg-icon[contains(@data-src,"/images/icons/standard/camera_offline.svg")]
+${UNAUTH SVG}                                //svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]
 ${NO IMAGE PLACEHOLDER}                      //nx-health-image//div[contains(text(),"${NO IMAGE TEXT}" )]
 ${CAMERA ERROR BAR}                          //nx-alert-block/div[@class="card simple-error"]
-${CAMERA ERROR ICON}                         ${CAMERA ERROR BAR}//svg-icon[@data-src="/static/images/icons/error.svg"]
+${CAMERA ERROR ICON}                         ${CAMERA ERROR BAR}//svg-icon[contains(@data-src,"/images/icons/error.svg")]
 ${CAMERA ERROR TEXT}                         ${CAMERA ERROR BAR}//div[@class="warning-margin"]/span
-${LICENSE REQUIRED WARNING}                  //nx-switch[@componentid="recording"]/following-sibling::div[contains(text(),"${PROFESSIONAL LICENSE REQUIRED TEXT}")]
-${ONE LICENSE WILL BE USED WARNING}          //nx-switch[@componentid="recording"]/following-sibling::div[contains(text(),"${ONE LICENSE WILL BE USED TEXT}")]
+${LICENSE REQUIRED WARNING}                  //*[contains(text(),"${PROFESSIONAL LICENSE REQUIRED TEXT}")]
+${ONE LICENSE WILL BE USED WARNING}          //*[contains(text(),"${ONE LICENSE WILL BE USED TEXT}")]
 ${MOTION DETECTION DISABLED WARNING}         //nx-section//span[contains(@class,"input-error") and contains(text(),"${MOTION DETECTION DISABLED TEXT}")]
 ${MOTION SENSITIVITY IMAGE}                  //nx-block//div[contains(@class,"preview-wrapper")]//nx-health-image//img
 ${RECORDING MODE ERROR}                      ${RECORD MOTION LOW QUALITY RADIO BUTTON}/../../../span[contains(text(),"${SELECT RECORDING MODE TEXT}")]

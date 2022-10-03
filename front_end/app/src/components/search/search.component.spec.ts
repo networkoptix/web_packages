@@ -1,39 +1,44 @@
-import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { CommonModule, Location } from '@angular/common';
-
-import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
-import { getMockTranslations, MockProvider } from '../../_mocks/helpers.test';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { DirectivesModule } from '../../directives/directives.module';
-import { PipesModule } from '../../pipes/pipes.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed,
+    fakeAsync
+} from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
+import { BehaviorSubject } from 'rxjs';
+
+import { DirectivesModule } from '@directives/directives.module';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSearchService } from '@services/search.service';
+import { NxUriService } from '@services/uri.service';
+import { HelperMockProvider } from '@src/_mocks/helpers.test';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxSearchComponent } from './search.component';
-import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
-import { ActivatedRoute } from '@angular/router';
-import { NxSearchService } from '../../services/search.service';
-import { NxUriService } from '../../services/uri.service';
-import { BehaviorSubject } from 'rxjs';
-import { DebugElement } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 
-describe('Search Component', () => {
+describe('NxSearchComponent', () => {
     let component: NxSearchComponent;
     let fixture: ComponentFixture<NxSearchComponent>;
     let el: DebugElement;
     let inputElement: HTMLInputElement;
 
-    const configMock = { config: nxConfig, getConfig: () => nxConfig };
-    const langMock = getMockTranslations();
     let params = { search: 'initial search' };
     let url = '/mock/url';
     const locationMock = new BehaviorSubject(null);
     const routeMock = { queryParams: new BehaviorSubject(params) };
     const uriMock = {
-        getURI    : () => params,
-        getURL    : () => url,
-        updateURI : (newUrl, newParams, replaceUrl) => {
+        getParams: () => params,
+        getURL: () => url,
+        updateURI: (newUrl, newParams, replaceUrl) => {
             url = newUrl;
             params = newParams;
             routeMock.queryParams.next(params);
@@ -45,24 +50,29 @@ describe('Search Component', () => {
 
     beforeEach(
         waitForAsync(() => {
-            const spyCreateSearch = jasmine.createSpyObj('NxSearchService', ['getMatchPatterns']);
+            const spyCreateSearch = jasmine.createSpyObj(
+                'NxSearchService',
+                ['getMatchPatterns']
+            );
             TestBed.configureTestingModule({
-                declarations : [NxSearchComponent],
-                imports      : [
+                declarations: [NxSearchComponent],
+                imports: [
                     CommonModule,
                     FormsModule,
                     DirectivesModule,
                     PipesModule,
-                    TranslateModule.forRoot()
+                    TranslateModule.forRoot(),
+                    AngularSvgIconModule,
+                    HttpClientTestingModule
                 ],
-                providers    : [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(ActivatedRoute, routeMock),
-                    new MockProvider(Location, locationMock),
-                    new MockProvider(NxUriService, uriMock),
-                    new MockProvider(NxSearchService, spyCreateSearch),
-                    new MockProvider(NxScrollMechanicsService)
+                providers: [
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService),
+                    MockProvider(NxScrollMechanicsService),
+                    new HelperMockProvider(ActivatedRoute, routeMock),
+                    new HelperMockProvider(Location, locationMock),
+                    new HelperMockProvider(NxUriService, uriMock),
+                    new HelperMockProvider(NxSearchService, spyCreateSearch)
                 ]
             });
 

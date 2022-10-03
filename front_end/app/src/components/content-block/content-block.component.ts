@@ -1,6 +1,12 @@
 import {
-    Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges,
-    ViewChild, ViewEncapsulation
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 /* Usage
@@ -32,10 +38,10 @@ import {
  */
 
 @Component({
-    selector      : 'nx-block',
-    templateUrl   : 'content-block.component.html',
-    styleUrls     : ['content-block.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-block',
+    templateUrl: 'content-block.component.html',
+    styleUrls: ['content-block.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxContentBlockComponent implements OnInit, OnChanges {
     @Input('type') type: string;
@@ -48,8 +54,8 @@ export class NxContentBlockComponent implements OnInit, OnChanges {
     haveFooter: boolean;
     headerClasses: string;
 
-    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
-    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
+    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef<HTMLDivElement>;
 
     constructor() {
         this.haveHeader = true;

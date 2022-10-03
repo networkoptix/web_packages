@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keywordspec name="CloudPortalAPI" type="LIBRARY" format="HTML" scope="TEST" generated="2022-01-26T19:33:21Z" specversion="3" source="c:\develop\cloud_portal\robot_tests\NoptixLibrary\CloudPortalAPI.py" lineno="25">
+<version/>
+<doc>&lt;p&gt;Documentation for library &lt;code&gt;CloudPortalAPI&lt;/code&gt;.&lt;/p&gt;</doc>
+<tags>
+</tags>
+<inits>
+<init name="Init" lineno="27">
+<arguments repr="env, customization, password, email">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="env">
+<name>env</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="customization">
+<name>customization</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+</arguments>
+<doc>&lt;p&gt;Initialize self.  See help(type(self)) for accurate signature.&lt;/p&gt;</doc>
+<shortdoc>Initialize self.  See help(type(self)) for accurate signature.</shortdoc>
+</init>
+</inits>
+<keywords>
+<kw name="Activate Account" lineno="498">
+<arguments repr="email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Add Camera" lineno="335">
+<arguments repr="serverUrl, camuser, campassword, uniqueId, url, manufacturer=None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverUrl">
+<name>serverUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="camuser">
+<name>camuser</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="campassword">
+<name>campassword</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="uniqueId">
+<name>uniqueId</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="url">
+<name>url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="manufacturer=None">
+<name>manufacturer</name>
+<default>None</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Add Fake Camera" lineno="382">
+<arguments repr="serverUrl, cameras, user=mark, password=hamill">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverUrl">
+<name>serverUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="cameras">
+<name>cameras</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="user=mark">
+<name>user</name>
+<default>mark</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="password=hamill">
+<name>password</name>
+<default>hamill</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Api Log In" lineno="34">
+<arguments repr="email, password, env=None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="env=None">
+<name>env</name>
+<default>None</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Api Log Out" lineno="40">
+<arguments repr="session_id, csrftoken">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="session_id">
+<name>session_id</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="csrftoken">
+<name>csrftoken</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Api Restore Password" lineno="71">
+<arguments repr="email, code=None, new_password=None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="code=None">
+<name>code</name>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="new_password=None">
+<name>new_password</name>
+<default>None</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Bind System" lineno="409">
+<arguments repr="auth, cloudUrl, name=API made system">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="cloudUrl">
+<name>cloudUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="name=API made system">
+<name>name</name>
+<default>API made system</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Camera Search" lineno="325">
+<arguments repr="serverUrl, cameraPort, camFile, serverIp, user=mark, password=hamill">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverUrl">
+<name>serverUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="cameraPort">
+<name>cameraPort</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="camFile">
+<name>camFile</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverIp">
+<name>serverIp</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="user=mark">
+<name>user</name>
+<default>mark</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="password=hamill">
+<name>password</name>
+<default>hamill</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Camera Status" lineno="330">
+<arguments repr="serverUrl, uuid">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverUrl">
+<name>serverUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="uuid">
+<name>uuid</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Cdb Merge Cloud Systems" lineno="59">
+<arguments repr="master_id, slave_id, email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="master_id">
+<name>master_id</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="slave_id">
+<name>slave_id</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Change Password" lineno="64">
+<arguments repr="email, old_password, new_password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="old_password">
+<name>old_password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="new_password">
+<name>new_password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Check Connection" lineno="317">
+<arguments repr="url, verify=True">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="url">
+<name>url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="verify=True">
+<name>verify</name>
+<default>True</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Create Systems Json" lineno="265">
+<arguments repr="env, email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="env">
+<name>env</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Delete Account" lineno="124">
+<arguments repr="email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Disconnect" lineno="117">
+<arguments repr="email, password, system_id">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="system_id">
+<name>system_id</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Disconnect From Account" lineno="137">
+<arguments repr="email, password, system_id">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="system_id">
+<name>system_id</name>
+</arg>
+</arguments>
+<doc>&lt;p&gt;Doesn't completely remove user from system users, but sets their role to none instead. Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page.&lt;/p&gt;</doc>
+<shortdoc>Doesn't completely remove user from system users, but sets their role to none instead. Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page.</shortdoc>
+</kw>
+<kw name="Disconnect Server Via Api" lineno="506">
+<arguments repr="auth, sysId, password, email">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="sysId">
+<name>sysId</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Account Data" lineno="92">
+<arguments repr="email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Account Info" lineno="466">
+<arguments repr="email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Account Language" lineno="86">
+<arguments repr="email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Account Systems" lineno="98">
+<arguments repr="email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Cloud System Id" lineno="151">
+<arguments repr="server_url, local_auth">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="server_url">
+<name>server_url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="local_auth">
+<name>local_auth</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Cloud System Settings" lineno="455">
+<arguments repr="auth, systemId">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="systemId">
+<name>systemId</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Cloud System Users" lineno="460">
+<arguments repr="auth, systemId">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="systemId">
+<name>systemId</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Code From Email" lineno="131">
+<arguments repr="email, message_type">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="message_type">
+<name>message_type</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Language Anonymous" lineno="81">
+<arguments repr="env">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="env">
+<name>env</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Local System Name" lineno="160">
+<arguments repr="server_url, local_auth">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="server_url">
+<name>server_url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="local_auth">
+<name>local_auth</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get Local System Owner" lineno="169">
+<arguments repr="server_url, local_auth">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="server_url">
+<name>server_url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="local_auth">
+<name>local_auth</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get New FCM Token" lineno="195">
+<arguments repr="key, auth, body">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="key">
+<name>key</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="body">
+<name>body</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Get System Settings" lineno="145">
+<arguments repr="server_url, local_auth">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="server_url">
+<name>server_url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="local_auth">
+<name>local_auth</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Integration Store Is Enabled" lineno="482">
+<arguments repr="auth">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Merge Cloud Systems" lineno="49">
+<arguments repr="master_id, slave_id, email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="master_id">
+<name>master_id</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="slave_id">
+<name>slave_id</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Push Notifications Requests" lineno="204">
+<arguments repr="env, email, password, process, min, max">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="env">
+<name>env</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="process">
+<name>process</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="min">
+<name>min</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="max">
+<name>max</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Register Account" lineno="487">
+<arguments repr="firstName, lastName, email, password">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="firstName">
+<name>firstName</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="lastName">
+<name>lastName</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Rename System" lineno="436">
+<arguments repr="auth, systemId, newName">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="systemId">
+<name>systemId</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="newName">
+<name>newName</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Save Cloud System Credentials" lineno="426">
+<arguments repr="auth, serverUrl, authKey, cloudSystemId, ownerEmail">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverUrl">
+<name>serverUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="authKey">
+<name>authKey</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="cloudSystemId">
+<name>cloudSystemId</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="ownerEmail">
+<name>ownerEmail</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Set Account Language" lineno="104">
+<arguments repr="email, password, new_language=en_US">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="new_language=en_US">
+<name>new_language</name>
+<default>en_US</default>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Set Account Name" lineno="111">
+<arguments repr="email, password, first_name, last_name">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="first_name">
+<name>first_name</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="last_name">
+<name>last_name</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Set Account Password" lineno="471">
+<arguments repr="email, oldPassword, newPassword">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="oldPassword">
+<name>oldPassword</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="newPassword">
+<name>newPassword</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Share" lineno="445">
+<arguments repr="auth, systemId, accessRole, accountEmail, customPermissions">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="systemId">
+<name>systemId</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="accessRole">
+<name>accessRole</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="accountEmail">
+<name>accountEmail</name>
+</arg>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="customPermissions">
+<name>customPermissions</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Subscribe Push Notification" lineno="178">
+<arguments repr="env, email, password, token, name">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="env">
+<name>env</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
+<name>email</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password">
+<name>password</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="token">
+<name>token</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="name">
+<name>name</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Turn On Analytics" lineno="391">
+<arguments repr="serverUrl, value, resourceId">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="serverUrl">
+<name>serverUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="value">
+<name>value</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="resourceId">
+<name>resourceId</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+<kw name="Unbind System" lineno="421">
+<arguments repr="auth, cloudUrl, systemId">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
+<name>auth</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="cloudUrl">
+<name>cloudUrl</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="systemId">
+<name>systemId</name>
+</arg>
+</arguments>
+<doc/>
+<shortdoc/>
+</kw>
+</keywords>
+<datatypes>
+</datatypes>
+</keywordspec>

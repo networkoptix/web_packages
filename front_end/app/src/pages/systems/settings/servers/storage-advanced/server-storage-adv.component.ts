@@ -1,24 +1,33 @@
 import {
-    Component, Inject, OnDestroy, LOCALE_ID,
-    Input, OnChanges, SimpleChanges
-}                                    from '@angular/core';
-import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { NxSystem }                  from '@services/system.service';
-import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_types';
+    Component,
+    Inject,
+    OnDestroy,
+    LOCALE_ID,
+    Input,
+    OnChanges,
+    SimpleChanges,
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { Watcher } from '@services/apply.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Watcher }                   from '@services/apply.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxDialogsService }          from '@services/../dialogs/dialogs.service';
-import { IConfig, NxConfigService }  from '@services/nx-config';
-import { CurrentStorageState }       from '@services/system.service/system/storage-manager/current-storage-state';
+import { NxSystem } from '@services/system.service';
+import {
+    CurrentStorageState,
+    STORAGE_STATUS
+} from '@services/system.service/system/storage-manager/storage';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-server-advanced-storage-component',
-    templateUrl : 'server-storage-adv.component.html',
-    styleUrls   : ['server-storage-adv.component.scss']
+    selector: 'nx-server-advanced-storage-component',
+    templateUrl: 'server-storage-adv.component.html',
+    styleUrls: ['server-storage-adv.component.scss']
 })
 export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
@@ -35,6 +44,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     storages = [];
     watchers: Watcher<any>[] = [];
     failedToLoad = false;
+
+    Math = Math;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -65,8 +76,15 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
     }
 
+    isInacessible(storage): boolean {
+        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !storage.isOnline;
+    }
+
     clamp(input, storage) {
-        const max = storage.freeSpace[storage.reservedSpace.uom];
+        const max = Math.min(
+            storage.maxReserve[storage.reservedSpace.uom],
+            storage.totalSpace[storage.reservedSpace.uom],
+        );
         const current = storage.reservedSpace.unitsInCurrentUom;
         const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
         const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
@@ -96,7 +114,11 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     get watchersChanged() {
-        return this.watchers.reduce((changed, watcher) => changed || watcher.originalValue !== watcher.value, false);
+        return this.watchers.reduce(
+            (changed, watcher) =>
+                changed || watcher.originalValue !== watcher.value,
+            false
+        );
     }
 
     updateAndGetStorage() {
@@ -126,40 +148,61 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         });
     }
 
-    updateSaveProcess() {
-        this.saveSettings = this.processService.createProcess(() => {
-            this.storages.forEach(({ storageId: id, isUsedForWriting, reservedSpace }) => {
-                const storage = this.currentStorageState.locations.find(({ storageId }) => storageId === id);
-                storage.usedForWriting = isUsedForWriting.value;
-                storage.reservedSpace = Math.round(reservedSpace.bits);
-            });
+    private saveStorages() {
+        this.storages.forEach(({ storageId: id, isUsedForWriting, reservedSpace }) => {
+            const storage = this.currentStorageState.locations
+                .find(({ storageId }) => storageId === id);
+            storage.usedForWriting = isUsedForWriting.value;
+            storage.reservedSpace = Math.round(reservedSpace.bits);
+        });
 
-            return this.currentStorageState.saveStorages()
-                .toPromise().then(response => {
-                    if (typeof (response.error) !== 'undefined' && response.error !== '0') {
-                        const errorToShow = response.errorString;
-                        this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error?.())
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    } else {
-                        this.dialogsService
-                            .alert(this.LANG.dialogs.message.storageSettingsSaved?.(), this.LANG.dialogs.titles.success?.())
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    }
-                }, () => {
+        this.currentStorageState.saveStorages()
+            .toPromise().then(response => {
+                if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                    const errorToShow = response.errorString;
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.storageSettingsNotSaved?.(), this.LANG.dialogs.titles.error?.())
+                        .alert(errorToShow, this.LANG.dialogs.titles.error?.())
                         .catch(error => {
                             console.error(error);
                         });
-                }).then((res) => {
-                    this.updateWatchers();
-                    Promise.resolve(res);
-                });
+                } else {
+                    this.dialogsService
+                        .alert(
+                            this.LANG.dialogs.message.storageSettingsSaved?.(),
+                            this.LANG.dialogs.titles.success?.()
+                        ).catch(error => {
+                            console.error(error);
+                        });
+                }
+            }, () => {
+                this.dialogsService
+                    .alert(
+                        this.LANG.dialogs.message.storageSettingsNotSaved?.(),
+                        this.LANG.dialogs.titles.error?.()
+                    ).catch(error => {
+                        console.error(error);
+                    });
+            }).then(() => {
+                this.updateWatchers();
+            });
+    }
+
+    updateSaveProcess() {
+        this.saveSettings = this.processService.createProcess(() => {
+            const overwrite = this.storages.some(s =>
+                s.remainingSpace.bits < 0
+            );
+            if (overwrite) {
+                return this.dialogsService.reserveSpaceWarning()
+                    .then((res: string | void) => {
+                        if (res === 'accept') {
+                            this.saveStorages();
+                        }
+                    });
+            } else {
+                this.saveStorages();
+                return Promise.resolve();
+            }
         });
     }
 
@@ -169,37 +212,79 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
         const { locale } = this;
-        return fromBits(bits, { locale, roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824 });
+        return fromBits(
+            bits,
+            {
+                locale,
+                roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824
+            }
+        );
     }
 
     ngOnDestroy() {}
 }
 
-export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, maxReserve, ...storage }) => ({
-    addParams      : [{ name: 'space', value: `${totalSpace}` }],
-    id             : storageId,
-    isBackup       : isBackup,
-    parentId       : serverId,
-    spaceLimit     : Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
-    storageType    : storageType,
-    // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
-    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
-    url            : url,
-    usedForWriting : isUsedForWriting.value
-});
+export const toParams = (serverId) =>
+    ({
+        totalSpace,
+        isBackup,
+        reservedSpace,
+        isUsedForWriting,
+        url,
+        storageType,
+        storageId,
+        maxReserve,
+        ...storage
+    }) => ({
+        addParams: [{ name: 'space', value: `${totalSpace}` }],
+        id: storageId,
+        isBackup: isBackup,
+        parentId: serverId,
+        spaceLimit: Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
+        storageType: storageType,
+        // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
+        typeId: '{f8544a40-880e-9442-b78a-9da6db6862b4}',
+        url: url,
+        usedForWriting: isUsedForWriting.value
+    });
 
-export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, usedForWriting: ufw, ...storage }) => {
+export const mapStorages = (storages) => storages.map(({
+    freeSpace: free,
+    reservedSpace: reserved,
+    totalSpace: total,
+    vmsSpace,
+    usedForWriting: ufw,
+    ...storage
+}) => {
+    const totalSpace = new BitConverter(total);
     const reservedSpace = new BitConverter(reserved);
     const freeSpace = new BitConverter(free);
-    const remainingSpace = new FreeSpace(new BitConverter(freeSpace.bits - reservedSpace._bits.originalValue), reservedSpace);
-    const maxReserve = new BitConverter(freeSpace.bits + reservedSpace.bits);
+    const remainingSpace = new FreeSpace(
+        new BitConverter(freeSpace.bits - reservedSpace._bits.originalValue),
+        reservedSpace
+    );
+    const maxReserve = new BitConverter(freeSpace.bits + vmsSpace);
     const isUsedForWriting = new Watcher<boolean>();
     isUsedForWriting.value = ufw;
-    return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, remainingSpace, watchers: [...reservedSpace.watcher, isUsedForWriting] };
-}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => moreWatchers ? ({
-    storages : [...storages, storage],
-    watchers : [...watchers, ...moreWatchers]
-}) : { storages, watchers }, { storages: [], watchers: [] });
+    return {
+        ...storage,
+        freeSpace,
+        reservedSpace,
+        totalSpace,
+        isUsedForWriting,
+        maxReserve,
+        remainingSpace,
+        watchers: [...reservedSpace.watcher, isUsedForWriting]
+    };
+}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) =>
+    moreWatchers
+        ? ({
+            storages: [...storages, storage],
+            watchers: [...watchers, ...moreWatchers]
+        })
+        : { storages, watchers },
+{ storages: [], watchers: [] }
+);
 
 export class BitConverter {
     _bits = new Watcher<number>()
@@ -229,9 +314,13 @@ export class BitConverter {
         this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
 
         if (this._uom.value === 'GB') {
-            this._bits.value = Math.round((Math.round(initialBits / this.bitsGb)) * this.bitsGb);
+            this._bits.value = Math.round(
+                (Math.round(initialBits / this.bitsGb)) * this.bitsGb
+            );
         } else {
-            this._bits.value = (Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb) / 1000;
+            this._bits.value = (
+                Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb
+            ) / 1000;
         }
     }
 
@@ -347,9 +436,9 @@ export const fromBits = (
     }
 
     const unitList = {
-        bit  : BIT_UNITS,
-        byte : BYTE_UNITS,
-        bps  : BPS_UNITS
+        bit: BIT_UNITS,
+        byte: BYTE_UNITS,
+        bps: BPS_UNITS
     };
     const UNITS = unitList[options.unitType];
     const base = options.unitType === 'byte' ? 1024 : 1000;

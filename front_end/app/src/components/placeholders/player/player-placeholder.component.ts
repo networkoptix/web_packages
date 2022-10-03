@@ -1,6 +1,6 @@
-import { Component, Input, OnInit }  from '@angular/core';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { Component, Input, OnInit } from '@angular/core';
+
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 /* Usage
  <nx-player-placeholder
@@ -12,9 +12,9 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
  */
 
 @Component({
-    selector    : 'nx-player-placeholder',
-    templateUrl : 'player-placeholder.component.html',
-    styleUrls   : ['player-placeholder.component.scss']
+    selector: 'nx-player-placeholder',
+    templateUrl: 'player-placeholder.component.html',
+    styleUrls: ['player-placeholder.component.scss']
 })
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
@@ -25,10 +25,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
     CONFIG: IConfig;
     isUrl: boolean;
 
-    constructor(
-        languageService: NxLanguageProviderService,
-        configService: NxConfigService
-    ) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
     }
 

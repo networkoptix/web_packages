@@ -1,32 +1,17 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-user-resource.robot
 #Resource    ../special-cases/qa-user-creation.robot
 Suite Setup       Users Suite Setup
 Test Setup        Skip If Irrelevant
 Test Teardown     Users Test Tear Down
-Suite Teardown    users Teardown
+Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded
-
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-@{TMP USERS}
-@{server auth}    admin    qweasd 123
-${mode}    cloud
-
-*** Keywords ***
-
-Reset
-    Close All Browsers
-    Run Keyword If    '''${mode}'''=='''cloud'''    Open Browser and go to URL    ${url}
-    ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
-
 
 *** Test Cases ***
 1. Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884    cloud
     ${random user}=    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}      ${permissions}[viewer]
     Log in to user and system    ${random user}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
@@ -81,6 +66,7 @@ Reset
     Go To    ${url}/systems/${server 2['cloud id']}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In    ${user 1}    ${password}    button=None
     ...    ELSE    Log In Web Admin    admin    ${password}
+    Reload Page
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}    65
     Disconnect from my account    ${server 2['name']}
     Log out
@@ -104,7 +90,7 @@ Reset
     Log Out
 
     Log    C41897: Step 2 - make sure viewer has no systems
-    ${systems}=   Get Account Systems    ${ENV}    ${user 2}    ${password}
+    ${systems}=   Get Account Systems    ${user 2}    ${password}
     Should Be Empty    ${systems}
     Log In   ${user 2}    ${password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
@@ -125,7 +111,7 @@ Reset
     [Tags]    email    cloud
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}     ${permissions}[cloudAdmin]
 
     #verify user name displayed correctly in users list
     Log in    ${random email}    ${password}
@@ -139,7 +125,7 @@ Reset
 4. Should display same user data as shown in user account
     [Tags]    C41884    cloud
     ${random user}    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}      ${permissions}[viewer]
     Log in to user and system    ${random user}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
@@ -185,7 +171,7 @@ Reset
         Click Link    ${USERS LIST LINK}
         Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
         Sleep    1
-        Click Button    ${ADD USER BUTTON SYSTEMS}
+        Wait Until Keyword Succeeds    10    0.5    Click Button    ${ADD USER BUTTON SYSTEMS}
         Wait Until Element is Visible    ${ADD USER MODAL}
         Click Button    ${ADD USER CLOSE}
         Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
@@ -197,7 +183,7 @@ Reset
     [Tags]    C78228    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
-    ${random user}=   Get Random Email    ${BASE EMAIL}
+    ${random user}=   Get Random Email Robot    ${BASE EMAIL}
     Log    Check Cancel Button
     FOR    ${user}  IN  @{list}
         Log In    ${user}    ${password}
@@ -332,7 +318,7 @@ Reset
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
         Append To List    ${TMP USERS}    ${random email}
-        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -375,7 +361,7 @@ Reset
 13. Change role for Cloud User
     [Tags]    C41900    webadmin    cloud
     ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
-    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}
+    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}     ${permissions}[viewer]
     Log in to system    ${server 1}    ${server 1}[owner]
     Verify In System    ${server 1}[name]
 
@@ -423,10 +409,10 @@ Reset
 
 14. Edit permission works
     [Tags]    C30657    C47041    webadmin    cloud
-    ${random email}=   Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}    ${permissions}[liveViewer]
     
     # Check that the user's role is added correctly in vms
     FOR    ${user}    IN    @{list}
@@ -448,12 +434,12 @@ Reset
     END
 
 15. Delete user works
-    [Tags]    email    C41903    webadmin    cloud
+    [Tags]    email    C41903    webadmin    cloud    smoke
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
+        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}     ${permissions}[liveViewer]
         #Sleep    10
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
@@ -467,21 +453,25 @@ Reset
         Log Out
         Sleep    20
         Log In    ${random email}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}    65
-        ...    ELSE    Wait Until Element is Visible    //input[@id="login_email"]
+        IF    '''${mode}'''=='''cloud'''
+            Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}    65
+        ELSE
+            Wait Until Element is Visible    //input[@id="login_email"]
+        END
         Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
         Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
     END
 
 16. Share with registered user works and sends him notification
-    [Tags]    email    C41888    cloud
-    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    [Tags]    email    C41888    cloud    smoke
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
-    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Append to List    ${TMP USERS}    ${random email}
-    Verify In System    ${server 1['name']}
-    ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
+    Set Account Language    ${random email}    ${password}    ${LANGUAGE}
+    Append to List    ${TMP USERS}    ${random email}
+    Go To    ${url}
+    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    Verify In System    ${server 1['name']}
     Share To    ${user}    ${ADMIN TEXT}
     # Might not be necessary after CLOUD-6113
     ${role}=   Get Cloud User Role    ${server 1['cloud auth']}    ${user}    ${server 1['cloud id']}
@@ -498,15 +488,17 @@ Reset
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
     ...    ${server 1['name']}
-    # ${emailID}    Wait For Email    recipient=${random email}    timeout=120
-    # Check Email Subject
-    # ...    ${emailID}
-    # ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
-    # ...    ${BASE EMAIL}
-    # ...    ${BASE EMAIL PASSWORD}
-    # ...    ${BASE HOST}
-    # ...    ${BASE PORT}
-    # Delete Email    ${emailID}
+    ${emailID}    Wait For Email    recipient=${user}    timeout=120
+    ${check email status}=    Run Keyword And Ignore Error    Check Email Subject
+    ...    ${emailID}
+    ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
+    ...    ${BASE EMAIL}
+    ...    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
+    IF    ${check email status} == "PASS"
+        Delete Email    ${emailID}
+    END
     ${emailID}    Wait For Email    recipient=${user}    timeout=120
     Check Email Subject
     ...    ${emailID}
@@ -522,9 +514,9 @@ Reset
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 17. Share with registered user gives user access to system
-    [Tags]    email    C41888    cloud
+    [Tags]    email    C41888    cloud    smoke
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}      ${permissions}[viewer]
     Log in to user and system    ${random email}    ${server 1['cloud id']}
     Go to System Administration
 
@@ -535,29 +527,30 @@ Reset
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 18. Share with unregistered user - brings them to registration page with code with correct email locked
-    [Tags]    email    C41889    cloud
+    [Tags]    email    C41889    cloud    CLOUD-8643    smoke
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
-    Share To    ${random email}    Administrator
+    Share To    ${random email}    ${ADMIN TEXT}
+    Sleep    3
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${url}    ${server 1['cloud auth']}    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
-    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
+    ${text}=   Get Text    ${LOCAL USER NAME HEADER}
     Should Be Empty    ${text}
     Log Out
     
     Log    Step 2
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${random email}    timeout=120
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
-
+    ${invite link}=   Get Nx Links From Email    ${email}    system_invite
+    #${link}=   Get Email Link    ${random email}    system_invite
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
@@ -576,13 +569,13 @@ Reset
     Close Mailbox
 
     Log    Step 5-6
-    Go To    ${url}/register/${code}
+    Go To    ${invite link}
     Wait Until Elements Are Visible
     ...    ${REGISTER FIRST NAME INPUT}
     ...    ${REGISTER LAST NAME INPUT}
     ...    ${REGISTER PASSWORD INPUT}
     ...    ${CREATE ACCOUNT BUTTON}
-    ...    ${REGISTER EMAIL INPUT LOCKED} 
+    ...    ${REGISTER EMAIL INPUT LOCKED}
 
     ${populated email}=   Get Value    ${REGISTER EMAIL INPUT LOCKED} 
     Should be equal as strings    ${populated email}    ${random email}
@@ -591,19 +584,43 @@ Reset
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
-    # New user gets logged in right away
-    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-    Wait Until Element is Visible    ${SYSTEM NAME}
-    Element Text Should Be    ${SYSTEM NAME}    ${server 1['name']}
-    Log    Step 7 skipped thick client login
-    Log    Step 8
-    Log Out
-    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    # Modifying the flow according to CLOUD-8444, user will no longer login automatically after account creation, Activation of the account is needed first
+    #Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    #Wait Until Element is Visible    ${SYSTEM NAME}
+    #Element Text Should Be    ${SYSTEM NAME}    ${server 1['name']}
+    #Log    Step 7 skipped thick client login
+    #Log    Step 8
+    #Log Out
+    #Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    Wait Until Element Is Visible    ${ACCOUNT CREATION EMAIL SUCCESS}
+    ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
+    Sleep    5
+    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email text}    Get Email Body    ${email}
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
+    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
+    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
+    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
+    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
+    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    ${activation link}    Get Links From Email    ${email}
+    @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/authorize/activate
+    FOR    ${link}  IN  @{activation link}
+        check in list    ${expected links}    ${link}
+    END
+    ${link2}=   Get Email Link    ${random email}    activate_account
+    Delete Email    ${email}
+    Close Mailbox
+    Go To    ${link2}
+    Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
+    Go To    ${ENV}/systems/${server 1['cloud id']}
     Go To Users List
-    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
-    Click Element    //span[contains(text(),"${random email}")]
-    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
-    Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
+    Wait Until Element Is Visible     //nx-menu//span[contains(text(),"${random email}")]
+    Click Element    //nx-menu//span[contains(text(),"${random email}")]
+    ${text}=   Get Text    ${LOCAL USER NAME HEADER}
+    Element Text Should Be    ${LOCAL USER NAME HEADER}    ${TEST FIRST NAME} ${TEST LAST NAME}
 
 19. Share System with the same user twice
     [Tags]    C41892    cloud
@@ -625,7 +642,7 @@ Reset
 
 20. Check share email for registered user
     [Tags]    C47297    cloud
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${random email}    ${BASE PASSWORD}
     Append To List    ${TMP USERS}    ${random email}
     Open Mailbox
@@ -643,8 +660,8 @@ Reset
     ...    ${BASE PORT}
     Delete email    ${email}
 
-    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+    Set Account Language    ${random email}    ${password}    ${LANGUAGE}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
@@ -682,7 +699,7 @@ Reset
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
         Append To List    ${TMP USERS}    ${random email}
         #Save User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}    
-        Share     ${server 1['cloud auth']}    ${server 1['cloud id']}    ${role}    ${random email}
+        Share     ${server 1['cloud auth']}    ${server 1['cloud id']}    ${role}    ${random email}    ${permissions}[${role}]
         Sleep    5
         Log In    ${random email}    ${password}
         Wait until element is visible    ${SYSTEM NAME}    300
@@ -721,7 +738,7 @@ Reset
 
 23. User can be invited with client custom permissions
     [Tags]    webadmin    cloud
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${random email}    ${BASE PASSWORD}
     Append To List    ${TMP USERS}    ${random email}
     ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${server 1['owner']}
@@ -866,7 +883,7 @@ Reset
 #    END
     
 26. Cloud Owner Can Change Local User Full Name
-    [Tags]    local_user    C76244    webadmin    cloud
+    [Tags]    local_user    C76244    webadmin    cloud    debug
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
@@ -1087,7 +1104,7 @@ Reset
         Click Button    ${USER CANCEL}
         Sleep    .1
         Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
-        Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
+        Element Text Should Be    //*[@id="permissionsSelect"]//span    ${role names}[advancedViewer]
         Page Should Not Contain Element   ${USER DISABLED MSG}
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
@@ -1157,7 +1174,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Input Text    ${LOCAL USER NAME}    ${EMPTY}
+        Delete All Text     ${LOCAL USER NAME}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -1185,7 +1202,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Input Text    ${LOCAL USER EMAIL}    ${EMPTY}
+        Delete All Text     ${LOCAL USER NAME}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -1378,8 +1395,9 @@ Reset
         ...    noptixautoqa+local_advancedViewer@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
+        ...    userId=${id}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=65
         Log    Step 5
         Save User    
@@ -1390,8 +1408,9 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
+        ...    userId=${id}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
         Log    Step 6
         Save User    
@@ -1402,8 +1421,9 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
+        ...    userId=${id}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
         Log    Step 7
         Save User    
@@ -1414,9 +1434,10 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
-        ...    is enabled=${False}
+        ...    userId=${id}    
+        ...    isCloud=${False}    
+        ...    isEnabled=${False}
+        ...    patch=${True}
         Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 8
         Save User    
@@ -1427,8 +1448,9 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}
+        ...    userId=${id}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 9
         Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
@@ -1440,11 +1462,11 @@ Reset
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+newApiUser   
         ...    ${permissions}[advancedViewer]    
-        ...    noptixautoqa+local_advancedViewer@gmail.com    
+        ...    noptixautoqa+local_advancedViewer@gmail.com
         ...    New Api   
         ...    ${BASE PASSWORD}    
-        ...    is cloud=${False}      
-        Wait Until Elements Are Visible    
+        ...    isCloud=${False}
+        Wait Until Elements Are Visible
         ...    //span[text()="Local+newApiUser"]    
         ...    //span[text()="Local+newApiUser"]//preceding-sibling::${LOCAL USER ICON}
         ...    timeout=45   
@@ -1455,13 +1477,13 @@ Reset
         ...    ${LOCAL USER LOGIN}
         ...    ${LOCAL USER NAME}
         ...    ${LOCAL USER EMAIL}    
-        ...    ${DISABLE USER SWITCH}
+        ...    ${DISABLE USER SWITCH}/..
         ...    ${LOCAL USER DELETE BUTTON}
         ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
         Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+newApiUser
         Wait Until Textfield Contains    ${LOCAL USER NAME}    New Api
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
-        Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]    
+        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[advancedViewer]
         
         Log    Clean up
         ${id}    Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+newApiUser
@@ -1483,7 +1505,7 @@ Reset
     FOR    ${user}    IN    @{local users}
         Element Should Not Be Visible    //span[text()="local+${user}"]
     END    
-    Log    Step 2   
+    Log    Step 2
     ${results}    Execute Command    docker container start ${server 2['name']}
     FOR    ${user}    IN    @{local users}
         Wait Until Element Is Visible   //span[text()="Local+${user}"]    125

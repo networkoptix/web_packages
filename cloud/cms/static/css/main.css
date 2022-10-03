@@ -425,3 +425,8 @@ img.light {
     font-style: italic;
     color: lightcoral;
 }
+
+
+.mt-2 {
+    margin-top: .5em !important;;
+}

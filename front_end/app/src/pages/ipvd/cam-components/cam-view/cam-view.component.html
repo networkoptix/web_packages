@@ -4,10 +4,10 @@
 
     <nx-block type='gray' >
         <header>
-            <div class="camera-vendor-model">
+            <h4 class="camera-vendor-model">
                 <span>{{ activeCamera.vendor }}</span>
                 <span class="ml-1">{{ activeCamera.model }}</span>
-            </div>
+            </h4>
             <span class="glyphicon close-icon detailsClose"
                 (click)="closeView()">
             </span>
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 mb-2 error-label disclaimer" translate>This information is based on what camera reports through API. Actual list of events supported by this camera may be different.</div>
+                <div class="col-12 mb-2 disclaimer" translate>This information is based on what camera reports through API. Actual list of events supported by this camera may be different.</div>
                 <div class="analytics-label col-12"
                      *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow"
                      [innerText]="event">
@@ -86,7 +86,7 @@
 
                 <ng-container *ngFor="let firmware of firmwares | slice:0:firmwaresToShow">
                     <div class="row" *ngIf="firmware.name">
-                        <div class="col-7 no-linewrap" title="{{ firmware.name }}">{{ firmware.name }}</div>
+                        <div class="col-7" title="{{ firmware.name }}">{{ firmware.name }}</div>
                         <div class="col-5" title="{{ firmware.percentage }}">
                             <div class="icon w-100" role="img" >
                                 <canvas class="icon-canvas" height="4"></canvas>
@@ -121,8 +121,7 @@
             <div class="camview-link">
                 <a href translate (click)="sendFeedback()">Send feedback about this device</a>
             </div>
-            <div style="color: gray;"><span translate>Updated</span> {{ activeCamera.timestamp | date:'fullDate'}}</div>
+            <div class="info-label"><span translate>Updated</span> {{ activeCamera.timestamp | date:'fullDate'}}</div>
         </nx-section>
     </nx-block>
 </div>
-

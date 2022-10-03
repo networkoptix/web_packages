@@ -1,13 +1,16 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import * as df from 'dateformat';
+import { Subscription } from 'rxjs';
+
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { px } from '@vms-client/utils/type-aliases';
+
+import TimelineService from '../../services/timeline.service';
 import {
     TimelineTimeUnderMouseService,
     TimelineTimeUnderMouseServiceStatus
 } from '../../services/timeline.time-under-mouse.service';
-import TimelineService from '../../services/timeline.service';
-import { Subscription } from 'rxjs';
-import * as df from 'dateformat';
-import { px } from '../../../../utils/type-aliases';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
 
 const dateformat = df.default || df;
 
@@ -18,9 +21,9 @@ const PRIMARY_WIDTH = 140;
 const MAIN_MOUSE_BUTTON = 0;
 
 @Component({
-    selector    : 'time-under-mouse',
-    templateUrl : './time-under-mouse.component.html',
-    styleUrls   : ['./time-under-mouse.component.scss']
+    selector: 'time-under-mouse',
+    templateUrl: './time-under-mouse.component.html',
+    styleUrls: ['./time-under-mouse.component.scss']
 })
 export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     protected subscription: Subscription
@@ -32,17 +35,21 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     protected _visualOffset: px
 
     constructor(
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
         public timeUnderMouse: TimelineTimeUnderMouseService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     public ngOnInit (): void {
-        this.subscription = this.timeUnderMouse.subject.subscribe(this.onSubjectChange);
+        this.subscription = this.timeUnderMouse.subject.subscribe(
+            this.onSubjectChange
+        );
     }
 
     public ngOnDestroy (): void {
@@ -56,7 +63,9 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             if (offset < MARGIN + PRIMARY_WIDTH / 2) {
                 offset = MARGIN + PRIMARY_WIDTH / 2;
             }
-            if (offset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2) {
+            if (
+                offset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2
+            ) {
                 offset = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2;
             }
             this._honestOffset = s.offsetX;
@@ -66,7 +75,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             try {
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'ddd mmm dd yyyy';
-                const tweakedT = this.vms.tweakT(s.timeUnderMouse)
+                const tweakedT = this.vms.tweakT(s.timeUnderMouse);
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
                 if (s.pressed) {

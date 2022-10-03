@@ -42,22 +42,22 @@
 <style
    type="text/css"
    id="style10">
-	.st0{fill:#2B383F;}
+	.st0-exit-fullscreen{fill:#2B383F;}
 </style>
 <path
-   class="st0"
+   class="st0-exit-fullscreen"
    d="m 4.2,8.2 v 2 h 6 v -6 h -2 V 6.8 L 5.4,4 4,5.4 6.8,8.2 Z"
    id="path12" />
 <path
-   class="st0"
+   class="st0-exit-fullscreen"
    d="M 15.8,17.2 18.6,20 20,18.6 17.2,15.8 h 2.6 v -2 h -6 v 6 h 2 z"
    id="path14" />
 <path
-   class="st0"
+   class="st0-exit-fullscreen"
    d="m 19.8,10.2 v -2 H 17.2 L 20,5.4 18.6,4 15.8,6.8 V 4.2 h -2 v 6 z"
    id="path16" />
 <path
-   class="st0"
+   class="st0-exit-fullscreen"
    d="m 5.4,20 2.8,-2.8 v 2.6 h 2 v -6 h -6 v 2 H 6.8 L 4,18.6 Z"
    id="path18" />
 </svg>

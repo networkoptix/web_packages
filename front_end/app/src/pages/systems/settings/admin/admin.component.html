@@ -5,27 +5,39 @@
 
         <nx-block type="mb-3" header-style="extended">
             <header>
-                <div class="d-flex">
-                    <nx-editable-settings-heading
-                            (editModeState)="editMode = $event"
-                            [nameWatcher]="systemNameWatcher"
-                            [editEnabled]="system.isOnline && system.userManager.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
-                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
-                </div>
+                <form #systemNameForm="ngForm"
+                      name="systemNameForm"
+                      novalidate>
+                    <div class="header-editable">
+                            <nx-editable-heading
+                                name="systemName" id="systemName"
+                                [(editMode)]="editMode"
+                                [(ngModel)]="systemName"
+                                [editEnabled]="enableEdit"></nx-editable-heading>
+                        <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
+                    </div>
+                </form>
 
-                <span class="system-owner" *ngIf="!CONFIG.isLocal">
+                <span class="system-owner" *ngIf="!environment.isLocal">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
                         <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
                         <ng-container *ngIf="!system.userManager.isMine">
-                            <span class="system-header-bold">{{system.info.ownerFullName}}</span>
-                            <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                            <span class="fs-mask system-header-bold">{{system.info.ownerFullName}}</span>
+                            <span class="fs-mask">&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </ng-container>
                     </span>
+                    <span
+                        *ngIf="ownershipTransferEnabled && system.userManager.isMine"
+                        id="change-ownership"
+                        class="ml-1"
+                        (click)="transferOwnership()"
+                        translate
+                    >(change)</span>
                 </span>
             </header>
 
-            <nx-section *ngIf="system.isMine; else notOwner">
+            <nx-section *ngIf="system.isMine">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
@@ -36,9 +48,9 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!CONFIG.isLocal && !CONFIG.cloudSystemId">
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!environment.isLocal && !CONFIG.cloudSystemId">
                         <div class="float-xl-right">
-                            <button [disabled]="settings.disconnectDisabled"
+                            <button [disabled]="settings.disconnectDisabled || getCloudStorageUsagePromise"
                                     class="btn btn-default"
                                     (click)="disconnectFromCloud()">
                                 <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
@@ -47,12 +59,35 @@
                     </div>
                 </div>
             </nx-section>
+            <nx-section
+                *ngIf="!environment.isLocal && ownershipTransferEnabled && systemTransferInProcess
+                    else notOwner"
+            >
+                <div
+                    class="fs-mask system-owner mb-2"
+                    [innerHTML]="'system.transferNotification' | translate: {
+                        ownerName: system.userManager.currentOwner.fullName
+                    }"
+                ></div>
+                <div class="d-flex">
+                    <button
+                        class="btn btn-primary mr-2"
+                        (click)="acceptOwnershipTransfer()"
+                        translate
+                    >Accept</button>
+                    <button
+                        class="btn btn-default"
+                        (click)="rejectOwnershipTransfer()"
+                        translate
+                    >Reject</button>
+                </div>
+            </nx-section>
             <ng-template #notOwner>
-                <nx-section>
+                <nx-section *ngIf="!system.isMine">
                     <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
                         <span class="name" [innerText]="updateUserRole()"></span>
                     </span>
-                    <div class="mt-2" *ngIf="!CONFIG.isLocal || user?.isCloud">
+                    <div class="mt-2" *ngIf="!environment.isLocal || user?.isCloud">
                         <button [disabled]="settings.disconnectDisabled"
                                 class="btn btn-default"
                                 (click)="delete()" translate>Disconnect from My Account</button>
@@ -61,7 +96,7 @@
             </ng-template>
         </nx-block>
 
-        <nx-block header-style="extended" *ngIf="CONFIG.isLocal">
+        <nx-block header-style="extended" *ngIf="environment.isLocal">
             <header>
                 <div class="system-cloud-tag float-right">
                     <nx-tag static type="success"
@@ -81,11 +116,9 @@
                 <div class="row m-0">
                     <div class="col-12 pl-0">
                         <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
-                            <button [disabled]="settings.disconnectDisabled"
-                                    class="btn btn-default"
-                                    (click)="connectLocalToCloud()">
-                                <span class="ellipsis" translate>Connect to %CLOUD_NAME%</span>
-                            </button>
+                            <nx-process-button buttonText="{{ 'Connect to %CLOUD_NAME%' | translate }}"
+                                               [actionType]="'default'"
+                                               [process]="connectToCloudProcess"></nx-process-button>
                         </div>
                         <div *ngIf="CONFIG.cloudSystemId">
                             <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
@@ -98,7 +131,6 @@
                             </span>
                             <button *ngIf="system.isMine"
                                     [disabled]="settings.disconnectDisabled"
-                                    title="BOOM!"
                                     class="btn btn-default mt-3"
                                     (click)="disconnectFromCloud()">
                                 <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
@@ -132,3 +164,5 @@
         </nx-system-advanced-admin-component>
     </div>
 </div>
+
+<ng-container #pageApply></ng-container>

@@ -69,7 +69,9 @@ Get Tokens
         ${status} =    Run Keyword And Return Status    OperatingSystem.File Should Exist    async/${device count}_${browser count}.txt
         Run Keyword If    '${status}' == 'False'    Log To Console    ${device count}_${browser count} Failed to create file
         Sleep    1
-        Run Keyword Unless    '${status}' == 'True'     Create File    async/${device count}_${browser count}.txt    Done with token registration
+        IF    ${status} == ${False}
+            Create File    async/${device count}_${browser count}.txt    Done with token registration
+        END
     END   
     
     Log To Console    ${device count}, ${browser count}, Done with token registration ${registrations}
@@ -102,7 +104,9 @@ Receive Notifications
         ${status} =    Run Keyword And Return Status    OperatingSystem.File Should Exist    async/${device count}_${browser count}_${received FCM}.txt
         Run Keyword If    '${status}' == 'False'    Log To Console    ${device count}_${browser count}_${received FCM} Failed to create file
         Sleep     1
-        Run Keyword Unless    '${status}' == 'True'     Create File    async/${device count}_${browser count}_${received FCM}.txt    Done with count
+        IF    ${status} == ${False}
+            Create File    async/${device count}_${browser count}_${received FCM}.txt    Done with count
+        END
     END   
     Append To File    received.txt    ${device count}, ${browser count}, ${received FCM}, First: ${first msg}, Last: ${last msg} \n
     Log To Console    ${device count} ${browser count} ${received FCM} First: ${first msg} Last: ${last msg}
@@ -152,7 +156,7 @@ Push Notifications To Browsers
         #Bind Users to Browsers    ${device count}    ${locust time}    ${sleep}            
         Sleep    2
     END
-    ${wait} =    Evaluate    ${total browsers}+1
+    ${wait} =    Evaluate    ${total browsers}+0
     #Sleep    ${timeout}   
     Wait Until Keyword Succeeds    2 min    1 sec    Async Check    ${wait}
     #Sleep    120

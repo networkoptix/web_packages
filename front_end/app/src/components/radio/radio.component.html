@@ -1,13 +1,13 @@
-<label class="nx-radio" [for]="componentId" (click)="changeState()" [ngClass]="{'disabled': disabled}">
+<label class="nx-radio" [for]="componentId" [ngClass]="{'disabled': disabled}">
     <input type="radio"
         #inputRadioFocus
         [id]="componentId"
         [value]="value"
         [disabled]="disabled"
-        (click)="!disabled && changeState()">
+        (click)="changeState()"
+    >
 
-    <span class="check"
-          [ngClass]="state">
+    <span class="check" [ngClass]="state">
 
         <svg viewBox="0 0 20 16">
             <path class="circle"

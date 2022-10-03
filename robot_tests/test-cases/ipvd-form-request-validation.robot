@@ -1,51 +1,23 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/ipvd-resource.robot
 Suite Setup       Open IPVD Page
 Test Template     Test Submit Request Message
-Test Teardown     NONE
-Suite Teardown    Close All Browsers
+Test Teardown     
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        form    Threaded
 
-*** Variables ***
-${url}                  ${ENV}
-${name}                 Nx Automated QA
-${message}              This is an automated test message.
-
-
 *** Test Cases ***                   Expect Success     Your Name       Email                  Message
-1. Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
+1. IPVD Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
     [tags]    C48969    Valid    IPVD
-2. Invalid email with all required data 1    False         ${name}         myemail                ${message}
+2. IPVD Invalid email with all required data 1    False         ${name}         myemail                ${message}
     [tags]    C48969    Invalid    IPVD
-3. Invalid email with all required data 2    False         ${name}         myemail@               ${message}
+3. IPVD Invalid email with all required data 2    False         ${name}         myemail@               ${message}
     [tags]    C48969    Invalid    IPVD
-4. Invalid email with all required data 3    False         ${name}         myemail@gmail          ${message}
+4. IPVD Invalid email with all required data 3    False         ${name}         myemail@gmail          ${message}
     [tags]    C48969    Invalid    IPVD
-5. Invalid email with all required data 4    False         ${name}         my@email@gmail.com     ${message}
+5. IPVD Invalid email with all required data 4    False         ${name}         my@email@gmail.com     ${message}
     [tags]    C48969    Invalid    IPVD
-6. Invalid email with all required data 5    False         ${name}         myemail@ gmail.com     ${message}
+6. IPVD Invalid email with all required data 5    False         ${name}         myemail@ gmail.com     ${message}
     [tags]    C48969    Invalid    IPVD
-7. Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
+7. IPVD Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
     [tags]    C48969    Invalid    IPVD
-
-
-*** Keywords ***
-Test Submit Request Message
-    [Arguments]    ${Expect Success}    ${Your Name}    ${Email}    ${Message}
-    Go To IPVD page
-    Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
-    Click Element    ${IPVD SUBMIT A REQUEST}
-    Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    Element Text Should Be    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK FOR CAMERAS PAGE}
-    Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
-    Run Keyword If    ${Expect Success}==True    On Success    ${Email}
-    ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent
-
-On Success
-    [Arguments]    ${email}
-    Validate Message Sent
-    # Commented out as we don't have access to the current email and it gets changed at random
-    #Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    #${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
-    #Delete Email    ${email}
-

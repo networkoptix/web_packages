@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { NxConfigService, IConfig }        from '../nx-config';
-import { NxLanguageProviderService }       from '../nx-language-provider';
-import { NxCloudApiService }               from '../nx-cloud-api';
-import { NxSystemsService }                from '../systems.service';
-import { NxSystemAPIService }              from '../system-api.service';
-import { NxPollService }                   from '../poll.service';
-import { NxAppStateService }               from '../nx-app-state.service';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
-import { NxRibbonService }                 from '@components/ribbon';
-import { NxSystem }                        from './system/system';
-import { NxSystemRestAPI }                 from '@services/system-rest-api.service';
-import { Router }                          from '@angular/router';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { environment } from '@environments/environment';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxConfigService, IConfig } from '../nx-config';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxPollService } from '../poll.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxSystemsService } from '../systems.service';
+
+import { NxSystem } from './system/system';
 
 @Injectable({
     providedIn: 'root'
@@ -42,18 +45,21 @@ export class NxSystemService {
         return this.system;
     }
 
-    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
+    createSystem(
+        currentUserEmail: string,
+        systemId: string,
+        serverId?: string,
+        skipPoll?: boolean,
+        skipSettingSystem?: boolean
+    ): NxSystem {
         const id = systemId || serverId;
-        const cloudSystemInfo: any = (this.systemsService.systems || []).filter((system) => system.id === id)?.shift();
-        let useRest = false;
-        if (cloudSystemInfo) {
-            // TODO: Once clouddb has versions for system use that instead of capabilities
-            useRest = Object.keys(cloudSystemInfo.capabilities).some((key) => key.includes('4_3'));
-        }
+        const cloudSystemInfo: any =
+            (this.systemsService.systems || []).find((system) => system.id === id);
+        let system;
         if (id in this.systemsCache) {
-            this.system = this.systemsCache[id];
+            system = this.systemsCache[id];
         } else {
-            this.system = new NxSystem(
+            system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
                 this.cloudApi,
@@ -66,10 +72,28 @@ export class NxSystemService {
                 systemId,
                 serverId,
                 undefined,
-                useRest
+                cloudSystemInfo?.useRest
             );
-            this.systemsCache[id] = this.system;
+            this.systemsCache[id] = system;
         }
+
+        // This is done to set the auth keys for video. Local doesn't need auth keys
+        // because cookies are same site and will be attached to all requests.
+        if (!environment.isLocal) {
+            system.updateSystemAuth(true).catch(() => {});
+        }
+
+        if (environment.isLocal || skipSettingSystem) {
+            return system;
+        }
+
+        if (cloudSystemInfo?.useRest) {
+            (system.mediaserver as NxSystemRestAPI)
+                .setAccessTokenAsCookie()
+                .subscribe(() => {});
+        }
+
+        this.system = system;
         this.system.lostConnection = false;
         if (!skipPoll) {
             this.system.startPoll(systemId);
@@ -77,7 +101,7 @@ export class NxSystemService {
         return this.system;
     }
 
-    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
+    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = ''): NxSystem {
         if (this.system === undefined) {
             this.system = new NxSystem(
                 this.CONFIG,
@@ -97,7 +121,6 @@ export class NxSystemService {
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
-            this.system.update().catch(() => {});
         }
 
         if (this.system.subscriberCount === 0) {

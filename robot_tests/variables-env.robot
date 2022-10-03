@@ -16,6 +16,7 @@ ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 @{AUTO SYS AUTH}                      admin    qweasd 123
 
+
 ${BROWSER}                            Chrome
 
 ${MODE}                               cloud
@@ -24,11 +25,14 @@ ${QA BURBANK SYSTEM IP}                10.1.5.106
 ${QA BURBANK SYSTEM ID}                032c7c41-0ddd-48d7-ab09-616bfad7b5cc
 
 #Emails
-${BASE EMAIL}                         ${TEST EMAIL}@gmail.com
+${BASE EMAIL}                         ${TEST EMAIL}+sendemail@gmail.com
+${BASE EMAIL NO SEND}                 ${TEST EMAIL}@gmail.com
 ${BASE EMAIL DOMAIN}                  @gmail.com
-${BASE EMAIL PASSWORD}                qweasd!@#$%
+${BASE EMAIL PASSWORD}                lvhnwgmuoofzmvza
+
 ${BASE HOST}                          imap.gmail.com
 ${BASE PORT}                          993
+${FROM EMAIL DEFAULT}                      ${False}
 ${EMAIL VIEWER}                       ${TEST EMAIL}+viewer${BASE EMAIL DOMAIN}
 ${EMAIL ADV VIEWER}                   ${TEST EMAIL}+advviewer${BASE EMAIL DOMAIN}
 ${EMAIL LIVE VIEWER}                  ${TEST EMAIL}+liveviewer${BASE EMAIL DOMAIN}
@@ -96,8 +100,7 @@ ${EMAIL NOPERM}                       ${TEST EMAIL}+noperm${BASE EMAIL DOMAIN}
 ${BASE PASSWORD}                      qweasd 123
 ${ALT PASSWORD}                       qweasd1234
 
-${TEST FIRST NAME}                    testFirstName
-${TEST LAST NAME}                     testLastName
+
 
 #Related to Auto Tests system
 ${AUTO TESTS}                         Auto Tests
@@ -125,6 +128,6 @@ ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-
 ${NOAUTH CAMERA PASSWORD}             qweasd123
 
 #Docker server machine info
-${QA BURBANK IP}                      10.1.5.238
+${QA BURBANK IP}                      10.1.5.34
 ${QA BURBANK USER}                    qaburbank
 ${QA BURBANK PASS}                    QABurbank777$

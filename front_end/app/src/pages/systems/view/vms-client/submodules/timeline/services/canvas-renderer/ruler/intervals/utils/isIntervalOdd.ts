@@ -1,5 +1,6 @@
-import { timeStampMs, durationMs } from './alignTimeStamp';
 import IrregularLengthInterval from '../IrregularLengthInterval';
+
+import { timeStampMs, durationMs } from './alignTimeStamp';
 
 export function isIntervalOdd (
     t: timeStampMs,

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { NxAccountService } from '@services/account.service';
 import { LocalStorageService } from 'ngx-webstorage';
+
+import { NxAccountService } from '@services/account.service';
+
 import { PlaybackQuality } from '../view.types';
 
 @Injectable({
@@ -18,11 +20,16 @@ export class CameraQualityStorageService {
     }
 
     public get (cameraId: string) {
-        return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || '';
+        return this.localStorageService.retrieve(
+            `${this.user}_quality_${cameraId}`
+        ) || '';
     }
 
     public set (cameraId: string, quality: PlaybackQuality) {
-        this.localStorageService.store(`${this.user}_quality_${cameraId}`, quality);
+        this.localStorageService.store(
+            `${this.user}_quality_${cameraId}`,
+            quality
+        );
     }
 }
 

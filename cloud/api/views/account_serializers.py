@@ -52,13 +52,18 @@ class AccountSerializer(serializers.ModelSerializer):  # ModelSerializer
 
     class Meta:
         model = Account
-        fields = ('email', 'first_name', 'last_name', 'language', 'is_staff', 'is_superuser',
+        fields = ('email', 'first_name', 'last_name', 'language', 'is_staff', 'is_superuser', 'cookie_reviewed',
                   'permissions', 'can_publish_integration', 'is_authenticated')
 
     def get_can_publish_integration(self, obj):
         return UserGroupsToAssetPermissions.check_customization_publish(obj) and \
                UserGroupsToAssetType.check_asset_type(obj, AssetType.ASSET_TYPES.integration, 'cms.publish_version'
     )
+
+
+class AccountSecuritySerializer(serializers.Serializer):
+    action = serializers.CharField(required=True)
+    mfaCode = serializers.CharField(required=True)
 
 
 class AccountUpdateSerializer(serializers.ModelSerializer):  # ModelSerializer

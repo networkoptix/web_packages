@@ -1,9 +1,9 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/header-resource.robot
 Suite Setup       Header Suite Setup
 Test Setup        Header Test Setup
 Test Teardown     Header Test Teardown
-Suite Teardown    Header Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Header Suite Teardown
 Force Tags        cloud
 
 *** Test Cases ***
@@ -22,18 +22,11 @@ Force Tags        cloud
     Should Be Equal as Strings    ${logo src}    ${LOGO ICON SOURCE}
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
 
-2. Anonymous: Logo goes to landing page
-    [Tags]        anon    
-    Go to    ${ENV}/register
-    Wait Until Element is Visible    ${HEADER ICON LINK}
-    Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${ENV}/
-
-3. Anonymous: Header button text is correct
+2. Anonymous: Header button text is correct
     [Tags]        anon    
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
 
-4. Anonymous: Clicking on the main header button closes the dropdown
+3. Anonymous: Clicking on the main header button closes the dropdown
     [Tags]        anon    
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Click Element    ${SYSTEMS DROPDOWN}
@@ -56,17 +49,17 @@ Force Tags        cloud
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
-    Click Element    ${LARGE CREATE ACCOUNT BUTTON}
+    Click Element    //header
     Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
-5. Anonymous: Different page widths
+4. Anonymous: Different page widths
     [Tags]        anon    ui    
     Go To    ${knowledge base}[url]
     Check Header Items    False
     Go Back
 
 # User has no systems connected to cloud
-6. No systems: Header button text is correct
+5. No systems: Header button text is correct
     [Tags]        no_sys    
     IF    '''${mode}''' == '''cloud'''
         go to     ${ENV}
@@ -77,14 +70,14 @@ Force Tags        cloud
     Sleep    5
     Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
 
-7. No systems: Logo goes to landing page
+6. No systems: Logo goes to landing page
     [Tags]        no_sys    
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Validate Header Button Text    0    systems=True
     Click Element    ${HEADER ICON LINK}
     Wait Until Location is    ${ENV}/systems
 
-8. No systems: Check Dropdown Content
+7. No systems: Check Dropdown Content
     [Tags]        no_sys    
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Validate Header Button Text    0    systems=True
@@ -94,28 +87,31 @@ Force Tags        cloud
     Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
 
-9. No systems: Different page widths
+8. No systems: Different page widths
     [Tags]        no_sys    ui    
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Validate Header Button Text    0    systems=True
     Check Header Items    True
 
 # User has one system connected to cloud
-10. One system: Logo goes to view for that system
+9. One system: Logo goes to view for that system
     [Tags]        one_sys    cloud    webadmin
     Log in to system    ${main system}    ${main system}[owner]
     Verify In System    ${main system}[name]
     Wait Until Element is Visible    ${HEADER ICON LINK}
     Click Element    ${HEADER ICON LINK}/..
-    Run Keyword If    '''${mode}''' == '''cloud'''    Wait Until Location Is    ${ENV}/systems/${main system}[cloud id]/view
-        ...    ELSE    Verify In System    ${main system}[name]
+    IF    '''${mode}''' == '''cloud'''
+        Wait Until Location Is    ${ENV}/systems/${main system}[cloud id]/view
+    ELSE
+        Verify In System    ${main system}[name]
+    END
 
-11. One system: Header button displays the system name
+10. One system: Header button displays the system name
     [Tags]        one_sys        webadmin
     Log in to system    ${main system}    ${main system}[owner]
     Run keyword and continue on failure    Validate Header Button Text    ${main system}[name]    systems=False
 
-12. One system: Check Dropdown content
+11. One system: Check Dropdown content
     [Tags]        one_sys        webadmin
     Log in to system    ${main system}    ${main system}[owner]
     Run keyword and continue on failure    Validate Header Button Text    ${main system}[name]    systems=False
@@ -128,7 +124,7 @@ Force Tags        cloud
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
     Wait until element is visible    ${EXTERNAL LINKS TITLE}
 
-13. One system: Check header links - System
+12. One system: Check header links - System
     [Tags]        one_sys        webadmin
     Log in to system    ${main system}    ${main system}[owner]
     Run keyword and continue on failure    Validate Header Button Text    ${main system}[name]    systems=False
@@ -147,7 +143,7 @@ Force Tags        cloud
         Validate System Navigation Tile    ${main system}[name]    active link=${name}
     END
 
-14. One system: Check header links - For Developers
+13. One system: Check header links - For Developers
     [Tags]        one_sys    
     Log In    ${one system owner}    ${BASE PASSWORD}
     Go To    ${ENV}/docs/developers
@@ -164,7 +160,7 @@ Force Tags        cloud
         Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}    active link=${page}[title]
     END
 
-15. One system: Check header links - Services
+14. One system: Check header links - Services
     [Tags]        one_sys    
     Log In    ${one system owner}    ${BASE PASSWORD}
     Go To    ${ENV}/download
@@ -179,7 +175,7 @@ Force Tags        cloud
         Click Element    ${SYSTEMS DROPDOWN}
     END
 
-16. One system: Check navigation links - System
+15. One system: Check navigation links - System
     [Tags]        one_sys   CLOUD-7200        webadmin
     Log in to system    ${main system}    ${main system}[owner]
     Validate Header Button Text    ${main system}[name]    systems=False
@@ -194,7 +190,7 @@ Force Tags        cloud
         Validate System Navigation Tile    ${main system}[name]    active link=${page text}
     END
 
-17. One system: Check navigation links - For Developers
+16. One system: Check navigation links - For Developers
     [Tags]        one_sys    
     Log In    ${one system owner}    ${BASE PASSWORD}
     Validate Header Button Text    ${main system}[name]    systems=False
@@ -210,7 +206,7 @@ Force Tags        cloud
         Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}    active link=${page}[title]
     END
 
-18. One system: Check navigation links - Services
+17. One system: Check navigation links - Services
     [Tags]        one_sys    
     Log In    ${one system owner}    ${BASE PASSWORD}
     Validate Header Button Text    ${main system}[name]    systems=False
@@ -226,7 +222,7 @@ Force Tags        cloud
         Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}    active link=${page}[title]
     END
 
-19. One System: Different page widths
+18. One System: Different page widths
     [Tags]        one_sys    ui    
     Log in to user and system    ${one system owner}    ${main system}[cloud id]
     Verify In System    ${main system}[name]
@@ -236,7 +232,7 @@ Force Tags        cloud
 
 
 # User has many systems connected to cloud
-20. Many systems: Logo goes to Systems page
+19. Many systems: Logo goes to Systems page
     [Tags]        many_sys    
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
@@ -245,13 +241,13 @@ Force Tags        cloud
     Click Element    ${HEADER ICON LINK}
     Wait Until Location is    ${ENV}/systems
 
-21. Many systems: Header button displays number of systems
+20. Many systems: Header button displays number of systems
     [Tags]        many_sys    
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
     Validate Header Button Text    16    systems=True
 
-22. Many systems: Check dropdown content if 16 or less systems
+21. Many systems: Check dropdown content if 16 or less systems
     [Tags]        many_sys    
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
@@ -263,9 +259,9 @@ Force Tags        cloud
         Validate System Info Tile    ${sys}[name]    Many Systems
     END
 
-23. Many systems: Check dropdown content if 17 or more systems
+22. Many systems: Check dropdown content if 17 or more systems
     [Tags]        many_sys   CLOUD-6778    
-    Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}
+    Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}      ${permissions}[cloudAdmin]
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Reload Page    # User doesn't see the system shared with them without reloading the page
     Validate on Systems Page    search=True
@@ -276,8 +272,11 @@ Force Tags        cloud
     Log    Check all tiles in Systems grid
     ${grid systems}=   Get systems names from Systems grid
     FOR    ${sys}    IN    @{grid systems}
-        Run Keyword If    '''${sys}''' == '''${main system}[name]'''    Validate System Info Tile    ${sys}    One System
-           ...    ELSE    Validate System Info Tile    ${sys}    Many Systems
+        IF    '''${sys}''' == '''${main system}[name]'''
+            Validate System Info Tile    ${sys}    One System
+        ELSE
+            Validate System Info Tile    ${sys}    Many Systems
+        END
     END
 
     Log    Online system is displayed first in Systems Grid and shown in Navigation grid
@@ -289,42 +288,42 @@ Force Tags        cloud
     Click Element    ${EXTRA SYSTEM TILE}
     Validate on Systems Page    search=True
 
-24. Many systems: Links in Systems grid lead to proper pages
+23. Many systems: Links in Systems grid lead to proper pages
     [Tags]        many_sys    
     Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
 
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
-    Click Element    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
     Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
     ${grid systems}=   Get systems names from Systems grid
     FOR    ${sys}    IN    @{grid systems}
         Click Element    //div[contains(@class, "system-info")]/span[contains(text(), "${sys}")]
-        Wait Until Element Is Visible    //h2[contains(text(), "${sys}")]
+        Wait Until Element Is Visible    //span[contains(text(), "${sys}")]
         Validate Header Button Text    ${sys}    systems=False
         Click Element    ${SYSTEMS DROPDOWN}
         Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
         Validate System Navigation Tile    ${sys}    active link=${SETTINGS TEXT}
     END
 
-25. Many systems: Different page widths
+24. Many systems: Different page widths
     [Tags]        diff_width    ui    
     Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
     Log in to user and system    ${many systems owner}    ${main system}[cloud id]
-    Wait until element is visible    //h2[text()="${main system}[name]"]
+    Wait until element is visible    //span[text()="${main system}[name]"]
 
     Wait Until Element is Visible    ${VIEW TAB}
     Click Element    ${VIEW TAB}
     Run keyword and continue on failure    Check Header Items    True
 
-    ${systems}=   Get Account Systems    ${ENV}    ${many systems owner}    ${base password}
+    ${systems}=   Get Account Systems    ${many systems owner}    ${base password}
     ${system list count}=    Get Length     ${systems}
     Go To    ${ENV}/account
     Check Drop Menu Systems Grid System    ${system list count}
 
 # Other cases
-26. Check header and dropdown content for not admins
+25. Check header and dropdown content for not admins
     [Tags]        other    CLOUD-6794    CLOUD-7200    
     FOR    ${user}    IN
         ...    ${main system}[cloud users][viewer]
@@ -351,7 +350,7 @@ Force Tags        cloud
         Log Out
     END
 
-27. Check external links - For Developers
+26. Check external links - For Developers
     [Tags]        other    
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Click Element    ${SYSTEMS DROPDOWN}
@@ -365,7 +364,7 @@ Force Tags        cloud
     END
     Click Element    ${SYSTEMS DROPDOWN}
 
-28. Check External links
+27. Check External links
     [Tags]        other    
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}

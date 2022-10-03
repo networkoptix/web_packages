@@ -28,19 +28,22 @@
                         <tr class="table-row-spacer"></tr>
                         <tr *ngFor="let storage of storages; index as i">
                             <td title="{{storage.url}}">{{storage.url}}</td>
-                            <td>{{friendlyBytes( storage.totalSpace )}}</td>
-                            <td>{{friendlyBytes( storage.remainingSpace.bits )}}</td>
+                            <td>{{friendlyBytes( Math.max(storage.totalSpace.bits, 0) )}}</td>
+                            <td
+                                [ngClass]="{ overwrite: storage.remainingSpace.bits < 0 }"
+                            >{{friendlyBytes( Math.max(storage.remainingSpace.bits, 0) )}}</td>
                             <td class="reserved-cell">
                                 <nx-numeric
                                         style="width: 60px;"
-                                        [componentId]="'reservedSpace' + i"
+                                        [name]="'reservedSpace' + i"
                                         [class]="'w-50 p-0 text-right'"
                                         [min]="0"
-                                        [max]="storage.freeSpace[storage.reservedSpace.uom]"
+                                        [max]="storage.maxReserve[storage.reservedSpace.uom]"
                                         [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
                                         [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
                                         [ngModelOptions]="{standalone: true}"
-                                        (onChange)="clamp($event, storage)"></nx-numeric>
+                                        (onChange)="clamp($event, storage)"
+                                        [disabled]="isInacessible(storage)"></nx-numeric>
 
                                 <div class="position-relative">
                                     <select
@@ -49,21 +52,23 @@
                                             [(ngModel)]="storage.reservedSpace.uom"
                                             [ngModelOptions]="{standalone: true}"
                                             class="form-control input-sm w-50"
-                                            style="margin-left: -1px; background-color: white; min-width: 58px;">
+                                            style="margin-left: -1px; background-color: white; min-width: 58px;"
+                                            [disabled]="isInacessible(storage)">
                                         <option selected value="GB">GB</option>
                                         <option value="TB">TB</option>
                                     </select>
                                     <div class="arrow-flip">
-                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
                                     </div>
                                 </div>
                             </td>
                             <td>{{storage.storageType}}</td>
                             <td>
                                 <nx-switch
-                                        componentId="isUsedForWriting{{ i }}"
+                                        id="isUsedForWriting{{ i }}"
                                         name="isUsedForWriting{{ i }}"
-                                        [(ngModel)]="storage.isUsedForWriting.value">
+                                        [(ngModel)]="storage.isUsedForWriting.value"
+                                        [disabled]="isInacessible(storage)">
                                 </nx-switch>
                             </td>
                         </tr>

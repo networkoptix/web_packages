@@ -1,11 +1,12 @@
-import { NgModule }              from '@angular/core';
-import { CommonModule }          from '@angular/common';
-import { TranslateModule }       from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxGridLayoutComponent } from './layout.component';
-import { ComponentsModule }      from '../../components/components.module';
-import { DirectivesModule }      from '../../directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
 
 // const appRoutes: Routes = [
 //     { path: 'layout', component: NxGridLayoutComponent },
@@ -20,11 +21,11 @@ import { PipesModule } from '@src/pipes/pipes.module';
         PipesModule
         // RouterModule.forChild(appRoutes)
     ],
-    providers : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxGridLayoutComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         NxGridLayoutComponent
     ]

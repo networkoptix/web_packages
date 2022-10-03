@@ -9,5 +9,5 @@ Sie wurden eingeladen, sich bei %CLOUD_NAME% anzuschließen.
 Ihnen wurde der Zugriff auf {{message.system_name}} gewährt.
 {{/message.sharer_name}}
 
-Registrieren und System ansehen: {{config.portal_url}}/register/{{message.code}}
+Registrieren Sie sich und sehen Sie sich das System an: {{config.portal_url}}/authorize/register/{{message.code}}
 

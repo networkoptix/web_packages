@@ -1,7 +1,14 @@
-import { CanActivate, Router }      from '@angular/router';
-import { Injectable }               from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    RouterStateSnapshot
+} from '@angular/router';
+
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxAppStateService }        from '@services/nx-app-state.service';
+import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class ManualAccessGuard implements CanActivate {
@@ -9,15 +16,22 @@ export class ManualAccessGuard implements CanActivate {
 
     constructor(
         configService: NxConfigService,
+        @Inject(WINDOW) private window: Window,
         private router: Router,
         private appStateService: NxAppStateService
     ) {
         this.CONFIG = configService.getConfig();
     }
 
-    canActivate(): boolean {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> | boolean {
+        if (state.url.includes('/activate/') || state.url.includes('/restore_password/')) {
+            return this.router.navigateByUrl(`/authorize${state.url}`).then(() => {
+                this.window.location.reload();
+                return false;
+            });
+        }
         if (!this.appStateService.canManuallyAccess) {
-            this.router.navigate([this.CONFIG.redirect.unauthorised]);
+            return this.router.navigate([this.CONFIG.redirect.unauthorised]);
         }
         return this.appStateService.canManuallyAccess;
     }

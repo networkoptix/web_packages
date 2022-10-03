@@ -1,12 +1,41 @@
 {
-    "language": "en_US",
+    "language": "英语_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
+    "All Servers": "所有服务器",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
     "For developers": "开发人员适用",
-    "Integrations (β)": "Integrations (β)",
+    "Integrations (β)": "整合（β）",
     "Privacy": "隐私政策",
     "Support": "技术支持",
     "Terms": "条款",
+    "Developers Console": "开发者控制台",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "请确保指定的服务器在线并重试。"
+    },
+    "alarmTypes": {
+        "Servers": "服务器",
+        "Cameras": "摄像机",
+        "Storage Locations": "存储位置",
+        "Network Interfaces": "网络接口"
+    },
+    "alarmLevels": {
+        "offline": "离线",
+        "error": "错误",
+        "warning": "警告"
+    },
+    "alertFilters": {
+        "all": "所有告警",
+        "warning": "仅限警告",
+        "error": "仅限错误"
+    },
+    "deviceTypes": {
+        "All Device Types": "所有设备类型",
+        "servers": "服务器",
+        "cameras": "摄像机",
+        "storages": "存储设备",
+        "networkInterfaces": "接口"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "不受限制地的访问包括共享的能力",
@@ -66,11 +95,14 @@
         }
     },
     "account": {
+        "account": "帐户",
+        "key": "Key",
         "accountSavedSuccess": "您的帐户已成功保存",
         "accountSettings": "帐户设置",
         "activationLinkSent": "激活链接已发送",
         "agreementAccepted": "协议已被接受",
         "changePassword": "更改密码",
+        "security": "安全性",
         "newPasswordLabel": "新密码",
         "passwordChangedSuccess": "密码成功保存",
         "saveChanges": "保存"
@@ -80,6 +112,55 @@
         "sendConfirm": "重新发送激活链接",
         "setNewPassword": "保存密码",
         "setNewPasswordLabel": "新密码"
+    },
+    "authorize": {
+        "loginCloudHeader": "登录到 %CLOUD_NAME%",
+        "connectHeader": "将系统连接到 %CLOUD_NAME%",
+        "expiredHeader": "您的登录已过期。",
+        "loginSystemSubheader": "使用您的 %CLOUD_NAME% 帐户",
+        "connectSubheader": "To access it from anywhere and enable additional features",
+        "expiredSubheader": "请再次登录",
+        "connectAdditional": "此帐户将获得所有者访问级别",
+        "createText": "创建帐户",
+        "setupText": "设置非云系统",
+        "asAccountSubheader": "用户名",
+        "toAccountSubheader": "发送至",
+        "forAccountSubheader": "为 {accountEmail}",
+        "passwordDisconnect": "系统断开 %CLOUD_NAME%",
+        "passwordMerge": "合并系统",
+        "passwordBackup": "创建备份",
+        "passwordRestore": "从备份恢复系统",
+        "passwordReset": "重置服务器",
+        "passwordRestart": "重启服务器",
+        "passwordDetach": "分离服务器",
+        "expiredAccountSubheader": "请重新登录为",
+        "createAccountHeader": "创建 %CLOUD_NAME% 帐户",
+        "activateHeader": "创建 %CLOUD_NAME% 帐户",
+        "createdText": "帐户已创建!",
+        "activatedText": "Account Activated!",
+        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
+        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "passResetHeader": "重置密码",
+        "newPassHeader": "设定新密码",
+        "newPassConfirmText": "密码已设置!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "confirmHeader": "系统连接到 %CLOUD_NAME%!",
+        "loginError": "无法连接到 %CLOUD_NAME%",
+        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "connectErrorAdditional": "请稍后重试。",
+        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "connectedText": "系统连接到 %CLOUD_NAME%",
+        "setupConnectedText": "System connected",
+        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
+        "copiedToClipboard": "Copied to clipboard",
+        "authCode": {
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
+            "newPass": "set a new password",
+            "login": "登录"
+        },
+        "emailSent": "邮件已发送！"
     },
     "cameraFilters": {
         "H265": "H.265 摄像机",
@@ -129,7 +210,8 @@
             "unauthorized": "需要身份验证"
         },
         "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
-        "login": "login",
+        "copiedToClipboard": "Copied to clipboard",
+        "login": "登录",
         "recordingSettingsWarning": "请更新遗失的录像设置。",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -146,10 +228,11 @@
             "low": "低"
         },
         "general": "一般",
+        "generalError": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
         "inaccessibleFeatureMessage": "系统处于离线状态，无法读取资讯",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "搜索",
-        "system": "system",
+        "system": "系统",
         "systemHasNoCameras": "无摄像机",
         "systemHasNoCamerasMessage": "系统中没有可连接的摄像机。<br><br>请连接摄像机至服务器的本地网络以利搜寻，或要求系统管理员变更您的访问权限。",
         "systemNewVersion": "更新您的系统",
@@ -185,7 +268,22 @@
         },
         "viewingOutdatedReport": "您目前所查看的是旧版报告。"
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
+    "devConsole": {
+        "create": "创建"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+        },
         "addUser": {
             "alreadyExists": "This email has already been registered in the %systemName% system"
         },
@@ -194,6 +292,8 @@
             "createAccount": "新增帐户",
             "delete": "删除",
             "deleteAccount": "删除帐户",
+            "disable": "停用",
+            "enable": "启用",
             "download": "下载 %VMS_NAME%",
             "logoutAuthorised": "退出登录",
             "ok": "确定",
@@ -251,17 +351,22 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordWrong": "管理员密码错误",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "unknownBothSystemsConnectedToCloud": "无法合并连接到云端的两个系统。请到 %CLOUD_NAME% 合并这些系统。",
             "checking": "检查中...",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "cloud": "云",
+            "commonText": "无法合并系统 <strong>{primarySystem}</strong> 和 <strong>{secondarySystem}</strong>",
+            "connectToCloud": "请将要与此合并的系统连接到 <strong>%CLOUD_NAME%</strong> 或使用 <strong>%VMS_NAME%</strong>客户端进行本地合并。",
+            "failedToFindAnySystemHeader": "找不到要合并的系统",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "所选系统和当前系统都连接到 %CLOUD_NAME% 并且分属不同的所有者。仅当所有者帐户相同时，才可以合并云系统。",
             "duplicateServers": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "enterSystemAddressTitle": "请输入服务器地址于要合并服务器的系统中.",
+            "latestBuild": "最新版本",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "系统合并失败",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "系统 {primaryName} 和 {secondaryName} 合并完成",
             "mergeSystemsTitle": "合并当前系统",
             "noServerFound": "找不到服务器",
             "newSystemDisplayName": "新系统",
@@ -277,25 +382,33 @@
                 "b_support": "技术支持",
                 "c_proceeding": "在继续执行之前："
             },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+            },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "serverVersionOld": "该服务器的软件版本较旧，与当前系统不兼容。请更新为最新版本再行合并。",
+            "serverVersionNew": "此服务器的软件版本比当前系统更新。请将两个系统更新到同一版本再行合并。",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
             "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
             "urlEmpty": "输入服务器地址",
             "urlNotValid": "请输入有效的URL。",
             "unknownError": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
+            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
+            "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "存储设置已保存。",
             "storageSettingsNotSaved": "无法保存存储设置。",
             "settingsSaved": "设置已保存.",
@@ -318,28 +431,47 @@
                 "integration": "Get in touch with {companyName}",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "摄像机页面反馈"
+            },
+            "twoFactor": {
+                "required": "请先启用双重验证。",
+                "configure": "You can configure it in your",
+                "accountLink": "帐户设置",
+                "codeRequired": "必须输入验证码"
             }
         },
         "removeSystem": {
             "action": "断开连接",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
+            "title": "断开系统吗？"
+        },
+        "renewAuth": {
+            "action": "登录",
+            "message": "请再次登录.",
+            "title": "您的登录已过期。"
         },
         "titles": {
             "error": "错误",
             "success": "成功",
             "changeAccount": "您已经以{email} 的身份登录。",
+            "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "删除用户？",
+            "failedLoginTo": "无法连接到 {systemName}",
             "loggedFromOtherAccount": "您将使用其他帐户登录",
             "noClientDetected": "安装%VMS_NAME%来查看您的系统",
-            "removeUser": "是否删除用户？",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "请经由%CLOUD_NAME%断开您为所有者的全部系统，以删除您的帐户。"
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+        },
+        "twoFactor": {
+            "action": "登录",
+            "message": "Two factor authentication is enabled for this account. Please login.",
+            "title": "Two factor is required!",
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -422,8 +554,10 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This user does not exist.": "This user does not exist.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "This authorization method is forbidden. Please contact your system administrator.": "此授权方式被禁止。请联系系统管理员。",
+        "This user does not exist.": "该用户不存在",
+        "The user is disabled. Please contact your system administrator.": "此用户為未激活状态。请联系系统管理员。",
+        "This user has been disabled by a system administrator.": "此用户已被系统管理员禁用.",
         "cloud_systems_have_different_owners": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -440,6 +574,7 @@
         "cantChangeAccountPrefix": "无法保存更改",
         "cantChangePasswordPrefix": "无法保存密码",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "无法连接到系统",
         "cantDisconnectSystemPrefix": "不能删除系统",
         "cantEditAdmin": "此用户具有管理员权限",
         "cantEditYourself": "不允许更改自己的权限",
@@ -453,13 +588,14 @@
         "cantSharePrefix": "不能共享系统",
         "cantUnshareWithMeSystemPrefix": "不能删除系统",
         "emailNotFound": "帐户不存在.",
-        "failedToAccessSystem": "此连结无法连接至任何系统。可能当系统断开 %CLOUD_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
+        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您没有权限执行此操作",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "错误的密码。",
-        "badUsername": "Account not found",
+        "badUsername": "未找到该用户",
         "notFound": "找不到",
         "ok": "ok",
         "oldPasswordMistmatch": "当前密码不正确.",
@@ -478,7 +614,8 @@
         "licenseServerError": "无法激活授权。授权服务器未响应。请重试或联系支持人员。",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "门禁管理",
@@ -530,10 +667,10 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "请",
-        "b_Link": "提交申请",
-        "c_Info": "有关支持设备的其他问题/疑虑。"
+        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -542,8 +679,20 @@
             "systemAdministration": "系统管理",
             "general": "一般",
             "licenses": "授权",
-            "users": "用户"
+            "users": "用户",
+            "servers": "服务器",
+            "alerts": "警告",
+            "systems": "系统",
+            "storages": "存储位置",
+            "networkInterfaces": "网络接口",
+            "graphs": "图表",
+            "logs": "日志"
         }
+    },
+    "tableHeaders": {
+        "type": "类型",
+        "server": "服务器",
+        "alert": "警告"
     },
     "pageTitles": {
         "about": "关于",
@@ -552,11 +701,13 @@
         "activateCode": "激活帐户",
         "activateSuccess": "帐户已激活",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "身份验证",
         "changePassword": "更改密码",
         "debug": "调试",
         "default": "%CLOUD_NAME%",
         "download": "下载 %VMS_NAME%",
         "downloadPlatform": "下载 %VMS_NAME% ",
+        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "无法访问系统",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
@@ -571,8 +722,11 @@
         "systemShare": "共享系统",
         "systems": "系统",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - 网络管理员 - %VMS_NAME%",
         "view": "查看摄像机",
-        "apiTool": "API testing tool"
+        "apiTool": "API testing tool",
+        "security": "安全性",
+        "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
@@ -587,7 +741,7 @@
         "good": "良好",
         "minLength": "太短",
         "minLengthMessage": "密码必须包含至少 8 个字符",
-        "missingMessage": "密码为必填项",
+        "missingMessage": "必填",
         "required": "不正确",
         "requiredMessage": "使用只有拉丁文字母、 数字和符号键盘，避免前导和尾随空格",
         "strongMessage": "强密码 ！",
@@ -610,6 +764,14 @@
         "server": {
             "title": "无法访问服务器",
             "message": "系统处于离线状态，无法访问服务器。"
+        },
+        "noSystemApiTool": {
+            "title": "No Valid System Found",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "System failed to load",
+            "message": ""
         }
     },
     "pleaseSelect": "请选择...",
@@ -627,11 +789,15 @@
         },
         "finishingMerge": "完成系统合并",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "同意",
+            "reject": "拒绝",
             "backToEditText": "返回编辑界面",
             "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。",
             "publishedRibbon": "This page is the live version that is publicly available."
+        },
+        "newVersionAvailable": {
+            "notification": "可用新版本%CLOUD_NAME%",
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "系统离线。某些设置可能无法使用。",
         "systemsMerging": "此系统正在合并中。"
@@ -659,9 +825,9 @@
         "beginReset": "Server is now resetting.",
         "detachSystemFailed": "无法从系统分离服务器。请检查输入密码是否正确以及服务器是否在线，然后重试。",
         "detachSystemSuccess": "服务器已成功从系统分离。",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "portWarning": "若使用小于1024的端口号, 可能无法访问服务器。",
+        "refresh": "刷新",
+        "refreshing": "正在刷新...",
         "removeMediaserverFailed": "无法从系统中删除服务器。",
         "resetFailed": "无法重置服务器。请检查输入密码是否正确以及服务器是否在线，然后重试。",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -678,12 +844,14 @@
         "successRename": "服务器名称已保存。"
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "查看",
+        "Settings": "设置",
+        "Information": "信息",
+        "Bookmarks": "书签",
+        "Monitoring": "监测中"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "连接",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "未知的系统名称（由云合并引起）",
@@ -694,7 +862,8 @@
             "notAbleToLoadSystem": "无法加载系统设置.",
             "sessionLimitDuration": {
                 "hours": "小时",
-                "minutes": "分"
+                "minutes": "分",
+                "days": "天"
             },
             "warningMessages": {
                 "videoEncryption": "加密视频通信量将显著增加 CPU 使用率。"
@@ -736,12 +905,13 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "本地",
             "usb": "USB",
             "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
-        }
+            "smb": "网络（smb），已通过VMS添加",
+            "cloud": "云"
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "激活",
@@ -755,6 +925,9 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "noConnection": "恢复与%CLOUD_NAME%的连线并请重试.",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "userChangesFail": "应用更改失败",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
@@ -764,16 +937,69 @@
                 "success": "系统已成功从 %CLOUD_NAME%断线"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "系统连接到 %CLOUD_NAME%",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "系统合并失败",
-                "success": "System merge completed"
+                "success": "系统合并完成"
             },
             "rename": {
                 "success": "保存的系统名称"
             }
+        },
+        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "详情",
+            "availability": "Availability",
+            "load": "载入",
+            "activity": "活动"
+        },
+        "keys": {
+            "name": "名称",
+            "servers": "服务器",
+            "cameras": "Camera channels",
+            "storages": "存储位置",
+            "users": "用户",
+            "version": "系统版本",
+            "cloudSystemId": "云系统ID",
+            "status": "状态",
+            "offlineEvents": "事件：服务器离线（24 小时）",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS服务器) %",
+            "ramUsageB": "RAM 使用量",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS服务器)",
+            "serverRamUsageP": "RAM (VMS服务器) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "操作系统",
+            "osTime": "OS 时间",
+            "vmsTime": "VMS时间",
+            "cpu": "CPU",
+            "cpuCores": "核心",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "事件：时间改变（24 小时）",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "激活插件列表"
         }
     },
     "headerLabels": {
@@ -792,7 +1018,8 @@
             "Starter": "Starter",
             "IO Module": "I/O模块",
             "Bridge": "桥接",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "无效"
         },
         "info": {
             "type": "类型",
@@ -807,13 +1034,20 @@
             "expired": "已经到期",
             "ok": "确定",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "未找到服务器。"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "还需要 {number}",
             "activated": "授权已激活",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "试用授权已激活。从今天开始，您最多可以录制30天4台摄像机的试用。"
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -913,6 +1147,15 @@
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
+            "systemsRemainder": "和 {count} 更多...",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
+            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Main storage reindexing completed",
@@ -921,26 +1164,121 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "main": "主要",
+            "backup": "备份",
+            "notInUse": "未使用",
+            "reserved": "保留",
+            "inaccessible": "不可访问",
+            "changing": "正在更改模式...",
+            "disabled": "禁用"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "failed": "无法添加外部存储",
+        "invalidPath": "无效的存储路径.",
+        "stillHasArchivesPreWarning": "将停止录像到该存储装置上, 而且旧的录像资料将继续被删除.",
+        "stillHasArchives": "已停止录像到该存储装置上, 而且旧的录像资料将继续被删除.",
         "storageDeleted": "Storage {url} deleted",
         "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedTooSmallTooltip": "该存储位置太小，无法用于录像，还有其他较大的存储位置可用。",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
         "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "success": "外部存储已添加",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Cloud Portal",
+            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+        },
+        "/systems": {
+            "title": "Systems - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "网络管理员 - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "设置 - 网络管理员 - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "查看 - 网络管理员 - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "信息 - 网络管理员 - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "服务器监测 - 网络管理员 - %VMS_NAME%"
+        }
+    },
+    "maintenance": {
+        "description": "We are working on some improvements and brand new features."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "周日",
+                "Mon": "周一",
+                "Tue": "周二",
+                "Wed": "周三",
+                "Thu": "周四",
+                "Fri": "周五",
+                "Sat": "周六",
+                "Sunday": "周日",
+                "Monday": "周一",
+                "Tuesday": "周二",
+                "Wednesday": "周三",
+                "Thursday": "周四",
+                "Friday": "Friday",
+                "Saturday": "Saturday"
+            },
+            "monthNames": {
+                "Jan": "一月",
+                "Feb": "二月",
+                "Mar": "三月",
+                "Apr": "四月",
+                "May": "五月",
+                "Jun": "六月",
+                "Jul": "七月",
+                "Aug": "八月",
+                "Sep": "九月",
+                "Oct": "十月",
+                "Nov": "十一月",
+                "Dec": "十二月",
+                "January": "January",
+                "February": "February",
+                "March": "March",
+                "April": "April",
+                "June": "June",
+                "July": "July",
+                "August": "August",
+                "September": "September",
+                "October": "October",
+                "November": "November",
+                "December": "十二月"
+            },
+            "timeNames": {
+                "a": "上午",
+                "p": "下午",
+                "am": "上午",
+                "pm": "下午",
+                "A": "上午",
+                "P": "下午",
+                "AM": "上午",
+                "PM": "下午"
+            }
+        }
     }
 }

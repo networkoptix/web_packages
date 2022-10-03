@@ -11,7 +11,7 @@
         <div class="form-group">
             <label for="addUserEmail" translate>Email</label>
             <nx-email-input
-                class="form-component"
+                class="fs-mask form-component"
                 id="addUserEmail"
                 name="addUserEmail"
                 componentId="addUserEmail"
@@ -37,11 +37,12 @@
             <label for="permissionsSelect" translate>Access Level</label>
             <nx-permissions-select
                     id="permissionsSelect"
+                    name="permissionsSelect"
                     [user]="user"
                     [system]="system"
                     [roles]="system.accessRoles"
-                    [selected]="user.role"
-                    (onSelected)="setPermission($event)">
+                    [ngModel]="user.role"
+                    (ngModelChange)="setPermission($event)">
             </nx-permissions-select>
             <span class="help-block" [innerText]="accessDescription"></span>
         </div>

@@ -1,24 +1,23 @@
-import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
-import { Router }                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
 
-import { IntegrationService }        from './integration.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUtilsService }            from '../../services/utils.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountService } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+
+import { IntegrationService } from './integration.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'integrations-component',
-    templateUrl : 'integrations.component.html',
-    styleUrls : ['integrations.component.scss']
+    selector: 'integrations-component',
+    templateUrl: 'integrations.component.html',
+    styleUrls: ['integrations.component.scss']
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
@@ -31,11 +30,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     params: any;
     account: any;
     selectors = {
-        access   : false,
+        access: false,
         analytics: false,
-        cameras  : false,
-        home     : false,
-        psim     : false
+        cameras: false,
+        home: false,
+        psim: false
     };
 
     private emptyFilter: any = {};
@@ -75,7 +74,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         // Example URI
         // /integrations?search=node
         this.uriSubscription = this.uri
-            .getURI()
+            .getParams()
             .subscribe(params => {
                 this.params = { ...params };
                 this.filterModel.query = this.params.search || '';
@@ -114,8 +113,15 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         const haveMyIntegration = (found && found.mine) || false;
 
         this.CONFIG.integration.filter.items.forEach(item => {
-            if (item.enabled || (item.id === this.CONFIG.integration.myTagId && haveMyIntegration)) {
-                this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
+            if (
+                item.enabled ||
+                (item.id === this.CONFIG.integration.myTagId && haveMyIntegration)
+            ) {
+                this.filterModel.tags.push({
+                    id: item.id,
+                    label: item.name,
+                    value: false
+                });
             }
         });
 
@@ -124,14 +130,22 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     setFilter() {
-        const IGNORE_KEYS = ['downloadFilesOrder', 'id', 'lastModified', 'link', 'mine'];
+        const IGNORE_KEYS = [
+            'downloadFilesOrder',
+            'id',
+            'lastModified',
+            'link',
+            'mine'
+        ];
         const searchBy = (item, query) => {
             return Object.keys(item).find((key) => {
                 // Ignore values that are undefined or that dont help the search.
-                if (!item[key] || IGNORE_KEYS.indexOf(key) > -1) {
+                if (!item[key] || IGNORE_KEYS.includes(key)) {
                     return false;
                 }
-                return JSON.stringify(Object.values(item[key])).toLowerCase().indexOf(query) > -1;
+                return JSON.stringify(Object.values(item[key]))
+                    .toLowerCase()
+                    .includes(query);
             });
         };
 
@@ -166,6 +180,9 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     markMatch(item, text) {
         const pattern = new RegExp(text, 'gm');
-        item.name = item.name.replace(pattern, '<span class="marked">' + text + '</span>');
+        item.name = item.name.replace(
+            pattern,
+            '<span class="marked">' + text + '</span>'
+        );
     }
 }

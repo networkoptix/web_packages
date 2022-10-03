@@ -1,21 +1,24 @@
 import {
-    Component, Input,
-    Renderer2, ViewChild
-}                         from '@angular/core';
+    Component,
+    Input,
+    Renderer2,
+    ViewChild
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { environment }                     from '@environments/environment';
-import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxConfigService, IConfig }        from '@services/nx-config';
-import { NxProcessService }                from '@services/process.service';
-import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
-import { NxToastService }                  from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { NxSystemAPI } from '@services/system-api.service';
 
 @Component({
-    selector    : 'nx-modal-remove-model-content',
-    templateUrl : 'remove-system.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-remove-model-content',
+    templateUrl: 'remove-system.component.html',
+    styleUrls: []
 })
 export class RemoveSystemModalContent {
     @Input() system;
@@ -28,14 +31,14 @@ export class RemoveSystemModalContent {
     password: string;
     wrongPassword: boolean;
     auth = {
-        username : '',
-        password : ''
+        username: '',
+        password: ''
     };
 
     hideErrors = true;
     mediaServerApi: NxSystemAPI;
 
-    @ViewChild('disconnectAccountForm', { static: true }) disconnectAccountForm: HTMLFormElement;
+    @ViewChild('disconnectAccountForm', { static: true }) disconnectAccountForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,
@@ -43,7 +46,6 @@ export class RemoveSystemModalContent {
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private renderer: Renderer2,
-        private systemApiService: NxSystemAPIService,
         private toastService: NxToastService
     ) {
         this.LANG = language.translations;
@@ -68,20 +70,22 @@ export class RemoveSystemModalContent {
             this.wrongPassword = false;
             return this.system.deleteFromCurrentAccount(this.auth.password);
         }, {
-            ignoreUnauthorized : true,
-            errorCodes         : {
-                accountBlocked : this.credentialErrorHandler,
-                notAuthorized  : this.credentialErrorHandler
+            ignoreUnauthorized: true,
+            errorCodes: {
+                accountBlocked: this.credentialErrorHandler,
+                notAuthorized: this.credentialErrorHandler
             },
             errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
         }, () => {
             this.activeModal.close(true);
             const options = {
-                classname : this.CONFIG.toast.success,
-                autohide  : true,
-                delay     : this.CONFIG.alertTimeout
+                classname: this.CONFIG.toast.success,
+                autohide: true,
+                delay: this.CONFIG.alertTimeout
             };
-            const msg = this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name });
+            const msg = this.LANG.toastMessage.system.deleted.success({
+                systemName: this.system.info.systemName || this.system.info.name
+            });
             this.toastService.show(msg, options);
         }, err => console.error(err));
     }

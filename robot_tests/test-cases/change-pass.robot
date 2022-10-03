@@ -1,62 +1,11 @@
 *** Settings ***
-Resource          ../resource.robot
-Suite Setup       Setup
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Clean up
+Resource          ../Resources/front-end-resources/change-pass-resource.robot
+Suite Setup       change-pass-resource.Setup
+Test Setup        change-pass-resource.Restart
+Test Teardown     Run Keyword If Test Failed    change-pass-resource.Reset DB and Open New Browser On Failure
+Suite Teardown    Run Keyword and Ignore Error    change-pass-resource.Clean up
 Force Tags        Threaded
 
-*** Variables ***
-${password}            ${BASE PASSWORD}
-${symbol password}     pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
-${space password}      qwea sd 123
-#${email}               ${EMAIL VIEWER}
-${url}                 ${ENV}
-
-*** Keywords ***
-Setup
-    ${email} =    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${email} =    Set Suite Variable    ${email}
-    Open browser and set user language to current
-    
-Open browser and set user language to current
-    Open Browser and go to URL    ${url}
-    Log In    ${email}    ${password}
-    sleep    3
-    Log Out
-
-Log In To Change Password Page
-    Log In    ${email}    ${BASE PASSWORD}
-    Go To    ${url}/account/password
-    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
-
-Discard Changes and Log Out
-    Click Button    ${ACCOUNT DROPDOWN}
-    Wait Until Element Is Visible    ${LOG OUT BUTTON}
-    Click Link    ${LOG OUT BUTTON}
-    Wait until Elements are Visible    ${MODAL DIALOG}    ${DISCARD CHANGES BUTTON}
-    Click Button    ${DISCARD CHANGES BUTTON}
-    Validate Log Out
-
-Reset user password to base
-    [Arguments]    ${email}    ${current password}
-    CLoudPortalAPI.Change Password    ${url}    ${email}    ${current password}    ${BASE PASSWORD}
-
-Restart
-    Common Restart Logout    ${url}
-
-Clean up
-    Register Keyword To Run On Failure    NONE
-    # ${status}    Run Keyword And Return Status    Validate Log In    ${email}
-    # Register Keyword To Run On Failure    Failure Tasks
-    # Run Keyword If    ${status}    Log Out
-    # Restore Password using API    ${email}    ${password}
-    Close All Browsers
-
-Reset DB and Open New Browser On Failure
-    Restore Password using API    ${email}    ${BASE PASSWORD}
-    Close Browser
-    Open Browser and go to URL    ${url}
 
 *** Test Cases ***
 1. Can be accessed via dropdown or direct link
@@ -77,7 +26,7 @@ Reset DB and Open New Browser On Failure
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
     Log Out
-    Delete Account    ${ENV}    ${random user}    ${password}
+    CloudPortalApi.Delete Account    ${random user}    ${password}
 
 2. password can be changed
     Log In To Change Password Page
@@ -91,7 +40,7 @@ Reset DB and Open New Browser On Failure
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     
 3. password is actually changed, so login works with new password
-    [tags]    C41576
+    [tags]    C41576    smoke
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
@@ -104,7 +53,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
+    API Log In    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
 
 4. password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
@@ -120,7 +69,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
+    API Log In    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
 
 5. password with space in the middle is valid
@@ -136,7 +85,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
+    API Log In    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
 
 6. more than 255 symbols can be entered in new password field and then are cut to 255
@@ -193,10 +142,11 @@ Reset DB and Open New Browser On Failure
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
+    Api Log In       ${email}    ${BASE PASSWORD}
 
 11. should open change password page in anonymous state
     [tags]    anonymous
-    Open page anonymously    ${url}/account/password    ${PRODUCT_NAME}
+    Open page anonymously    ${url}/account/password    ${REGISTER TITLE TEXT}
     Wait Until Element Is Visible    ${LOG IN MODAL}
+
     Check Log In    button=None

@@ -1,4 +1,10 @@
-import { Directive, Input, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import {
+    Directive,
+    Input,
+    ElementRef,
+    OnChanges,
+    SimpleChanges
+} from '@angular/core';
 
 @Directive({
     selector: '[nx-add-svg-src]'

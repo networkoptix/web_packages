@@ -5,7 +5,7 @@
 .server-info {
     font-family : $font-family-regular;
     font-size   : $font-size-base;
-    color       : $dark9;
+    color       : var(--dark9);
 
     .header-top-bar {
         display       : flex;
@@ -33,7 +33,7 @@
             }
 
             .online {
-                background-color : $brand_core;
+                background-color : var(--brand-core);
             }
 
             .offline {
@@ -41,7 +41,7 @@
             }
 
             .checking {
-                background-color : $light16;
+                background-color : var(--light16);
             }
         }
     }
@@ -61,7 +61,7 @@
 
             .cell-ellipsis {
                 margin-bottom : 2px;
-                border-bottom : 1px dotted $light6;
+                border-bottom : 1px dotted var(--light6);
                 flex-grow     : 1;
             }
         }

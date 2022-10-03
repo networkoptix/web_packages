@@ -1,12 +1,18 @@
-import {
-    ComponentFixture, TestBed,
-    waitForAsync
-}                                              from '@angular/core/testing';
-import { Component }                           from '@angular/core';
-import { NxContentBlockSectionComponent }      from '@components/content-block/section/section.component';
-import { NxAlertBlockComponent }               from '@components/content-block/alert/block.component';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+import {
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import {
+    NxAlertBlockComponent
+} from '@components/content-block/alert/block.component';
+import {
+    NxContentBlockSectionComponent
+} from '@components/content-block/section/section.component';
 
 @Component({
     template: `
@@ -31,10 +37,17 @@ describe('NxAlertBlockComponent (error)', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxAlertBlockComponent, TestHostComponent, NxContentBlockSectionComponent]
+            imports: [
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule
+            ],
+            declarations: [
+                NxAlertBlockComponent,
+                TestHostComponent,
+                NxContentBlockSectionComponent
+            ]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(TestHostComponent);
         wrapperComponent = fixture.componentInstance;

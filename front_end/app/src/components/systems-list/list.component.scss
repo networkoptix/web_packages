@@ -1,0 +1,70 @@
+@use '../../../styles/theme_variables' as theme_vars;
+@use '../../styles/_mixins';
+
+//nx-systems-list-component {
+    .input-overlay {
+        input {
+            padding-right : 30px;
+            padding-left  : 30px;
+        }
+
+        .input-overlay-left {
+            position    : absolute;
+            color       : var(--light8);
+            left        : 17px;
+            display     : flex;
+            align-items : center;
+        }
+
+        .input-overlay-right {
+            position    : absolute;
+            color       : var(--light8);
+            right       : 17px;
+            display     : flex;
+            align-items : center;
+        }
+    }
+
+    .system-button {
+        user-select : none;
+        cursor      : pointer;
+        overflow    : hidden;
+
+        h2 {
+            @include mixins.ellipsis;
+        }
+
+        .card-condensed {
+            .card-body {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+
+        .user-name {
+            font-size     : theme_vars.$h6-font-size;
+            line-height   : 16px;
+            display       : block;
+            margin-bottom : 12px;
+        }
+    }
+
+    .search-block {
+        padding-top    : 10px;
+        padding-bottom : 10px;
+        /*border-top:1px solid var(--common-border-color);
+        border-bottom:1px solid var(--common-border-color);*/
+        margin-bottom  : 10px;
+    }
+
+    .system-list-bottom-bar {
+        display: flex;
+        svg-icon {
+            margin-top: 24px;
+            margin-left: -3px;
+        }
+        .margin-system-list-status {
+            margin-left: 4px;
+        }
+    }
+//}

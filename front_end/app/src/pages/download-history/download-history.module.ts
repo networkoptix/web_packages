@@ -1,15 +1,15 @@
-import { Injectable, NgModule }                  from '@angular/core';
-import { CommonModule }                          from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Injectable, NgModule } from '@angular/core';
 import { Resolve, Router, RouterModule, Routes } from '@angular/router';
-import { NgbModule }                             from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }                       from '@ngx-translate/core';
-import { EMPTY as empty }                        from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
+import { EMPTY as empty } from 'rxjs';
 
-import { ComponentsModule }                      from '../../components/components.module';
-import { DirectivesModule }                      from '../../directives/directives.module';
-import { ReleaseComponent }                      from './release/release.component';
-import { DownloadHistoryComponent }              from './download-history.component';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { DownloadHistoryComponent } from './download-history.component';
+import { ReleaseComponent } from './release/release.component';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -35,7 +35,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        NgbModule,
         TranslateModule,
         DirectivesModule,
         PipesModule,
@@ -49,7 +48,7 @@ const appRoutes: Routes = [
         DownloadHistoryComponent,
         ReleaseComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         DownloadHistoryComponent
     ]

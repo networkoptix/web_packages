@@ -41,8 +41,7 @@ def create(request):
     if int(storage_size) < 1:
         raise APIInternalException('Storage size not set.')
 
-    storage_info = cloud_api.Storage.create(request.session['login'],
-                                            request.session['password'],
+    storage_info = cloud_api.Storage.create(request,
                                             request.data.get('systemId'),
                                             storage_size)
     return api_success(storage_info)
@@ -62,9 +61,8 @@ def create(request):
 @permission_classes((IsAuthenticated, ))
 def delete(request):
     require_params(request, ['systemId', 'password'])
-    cloud_api.Storage.delete_from_system(request.user.email,
-                                         request.data.get('password'),
-                                         request.data.get('systemId'))
+    with cloud_api.TempLogin(request.user.email, request.data.get('password')) as credentials:
+        cloud_api.Storage.delete_from_system(credentials.tokens, request.data.get('systemId'))
     return api_success()
 
 
@@ -82,8 +80,7 @@ def delete(request):
 @permission_classes((IsAuthenticated, ))
 def move(request):
     require_params(request, ["destinationSystemId", "sourceSystemId"])
-    cloud_api.Storage.move(request.session["login"],
-                           request.session["password"],
+    cloud_api.Storage.move(request,
                            request.data.get("destinationSystemId"),
                            request.data.get("sourceSystemId"))
     return api_success()
@@ -96,8 +93,7 @@ def move(request):
 @permission_classes((IsAuthenticated, ))
 def usage_stats(request):
     require_params(request, ['systemId'])
-    storages = cloud_api.Storage.list_system_storages(request.session['login'],
-                                                      request.session['password'],
+    storages = cloud_api.Storage.list_system_storages(request,
                                                       request.query_params.get('systemId'))
 
     if len(storages) == 0:
@@ -119,9 +115,7 @@ def usage_stats(request):
         if storage_id is None:
             continue
 
-        storage_info = cloud_api.Storage.statistics(request.session['login'],
-                                                    request.session['password'],
-                                                    storage_id)
+        storage_info = cloud_api.Storage.statistics(request, storage_id)
 
         aggregated_storage_info['cameraCount'] += storage_info.get('cameraCount', 0)
         aggregated_storage_info['maxCameraRetention'] += storage_info.get('maxCameraRetention', 0)

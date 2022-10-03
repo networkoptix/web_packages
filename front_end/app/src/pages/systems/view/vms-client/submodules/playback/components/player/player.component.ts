@@ -1,20 +1,35 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, ElementRef } from '@angular/core';
-import PlaybackService from '../../services/playback.service';
-import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE, LivePlaybackState } from '../../datatypes/PlaybackState';
+import {
+    Component,
+    OnInit,
+    AfterViewInit,
+    OnDestroy,
+    Output,
+    EventEmitter,
+    ElementRef,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PlaybackTransport } from '@pages/systems/view/view.types';
-import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
-import VmsState from '../../../vms/datatypes/VmsState';
-import generateClickDubleClickPair from '../../../../utils/generateClickDubleClickPair';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { PlaybackTransport } from '@view/view.types';
+import { LoggerDecorator } from '@view/vms-client/utils';
+import VmsState from '@vms-client/submodules/vms/datatypes/VmsState';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import generateClickDubleClickPair from '@vms-client/utils/generateClickDubleClickPair';
+
+import {
+    ArchivePlaybackState,
+    PlaybackState,
+    PLAYBACK_MODE,
+    LivePlaybackState,
+} from '../../datatypes/PlaybackState';
+import PlaybackService from '../../services/playback.service';
 
 @Component({
-    selector    : 'player',
-    templateUrl : './player.component.html',
-    styleUrls   : ['./player.component.scss']
+    selector: 'player',
+    templateUrl: './player.component.html',
+    styleUrls: ['./player.component.scss']
 })
 @LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -41,8 +56,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     public handleClick: (e: MouseEvent) => void
 
     private serverErrors = {
-        cannotDecrypt : 'Cannot decrypt media',
-        setupPassword : 'Please set up camera password'
+        cannotDecrypt: 'Cannot decrypt media',
+        setupPassword: 'Please set up camera password'
     }
 
     constructor (
@@ -55,7 +70,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.LANG = translateService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
-        this.handleClick = generateClickDubleClickPair((e) => this.onClick(e), (e) => this.onDblClick(e));
+        this.handleClick = generateClickDubleClickPair(
+            (e) => this.onClick(e),
+            (e) => this.onDblClick(e)
+        );
     }
 
     public ngOnInit (): void {
@@ -64,8 +82,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngAfterViewInit (): void {
-        this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange);
+        this.playbackSubscription = this.playback.subject.subscribe(
+            this.onPlaybackSubjectChange
+        );
+        this.vmsSubscription = this.vms.subject.subscribe(
+            this.onVmsSubjectChange
+        );
     }
 
     public ngOnDestroy (): void {
@@ -83,7 +105,9 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.errorPlaybackDescription = (<ArchivePlaybackState> s).error;
 
         this.errorEncryption = (<ArchivePlaybackState> s).encrypted;
-        this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
+        this.showOverlay = !this.errorEncryption && !this.errorPlayback
+            ? this.showOverlay
+            : false;
     }
 
     public onVmsSubjectChange (s: VmsState) {
@@ -101,13 +125,18 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => { this.showOverlay = s === 0; }, 0);
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
-            setTimeout(() => this.playback.playArchive((<ArchivePlaybackState|LivePlaybackState> this.playback.state).currentTime - s));
+            setTimeout(() => this.playback.playArchive(
+                (<ArchivePlaybackState|LivePlaybackState> this.playback.state).currentTime - s
+            ));
         } else if (s === 1) {
             switch (this.playback.state.mode) {
                 case PLAYBACK_MODE.LIVE:
                 case PLAYBACK_MODE.ARCHIVE:
                     this.transportChangeByError = false;
-                    if (!this.playback.state.started && !(<ArchivePlaybackState> this.playback.state).paused) {
+                    if (
+                        !this.playback.state.started &&
+                        !(<ArchivePlaybackState> this.playback.state).paused
+                    ) {
                         this._log('triggering handle started');
                         this.playback.handleStarted();
                     }
@@ -124,10 +153,18 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         const { player } = event.target;
         const toggleTransport = () => {
             this.transportChangeByError = true;
-            this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
+            this.playback.changeTransport(
+                this.playback.state.transport !== 'hls' ? 'hls' : 'webm'
+            );
         };
         const errorCode = player?.error()?.code;
-        if ([MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED, MediaError.MEDIA_ERR_DECODE].includes(errorCode) && !this.transportChangeByError) { // code: 4, 3
+        if (
+            [
+                MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
+                MediaError.MEDIA_ERR_DECODE
+            ].includes(errorCode) && // code: 4, 3
+            !this.transportChangeByError
+        ) {
             toggleTransport();
         } else if (player && ['abort', 'error'].includes(event.type)) {
             if (event.type === 'error' && this.transportChangeByError) {
@@ -140,7 +177,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
                         case '4':
                             if (response.errorString === this.serverErrors.cannotDecrypt) {
                                 this.playback.unplayableArchive();
-                            } else if (!this.transportChangeByError && response.errorString !== this.serverErrors.setupPassword) {
+                            } else if (
+                                !this.transportChangeByError &&
+                                response.errorString !== this.serverErrors.setupPassword
+                            ) {
                                 toggleTransport();
                             } else {
                                 this.playback.setError(response.errorString);

@@ -139,7 +139,7 @@
             <p class="overlay-modal-title mb-3" translate>You can try to connect to other servers in this system:</p>
             <ul class="overlay-modal-servers pl-0 mb-0">
                 <li *ngFor="let server of servers">
-                    <a target="_blank" [href]="server.url">
+                    <a target="_blank" [href]="server.url + currentRoute">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                              viewBox="0 0 24 24" style="enable-background:new 0 0 24 24; width: 20px; height: 20px" xml:space="preserve">

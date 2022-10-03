@@ -65,7 +65,7 @@
         cursor: pointer;
 
         .step-text h3 {
-            color: $brand_core !important;
+            color: var(--brand-core) !important;
         }
     }
     &:active {

@@ -253,6 +253,18 @@
               "width_le": 240,
               "size": 5242880
             }
+          },
+          {
+            "label": "Restricted Keywords",
+            "name": "Restricted",
+            "type": "array",
+            "value": [
+              "witness",
+              "nx cloud",
+              "network optix",
+              "nxvms"
+            ],
+            "description": "Show warnings when these keywords is used within assets"
           }
         ]
       },
@@ -666,6 +678,16 @@
             "fieldset": "Downloads"
           },
           {
+            "label": "Public Custom Clients",
+            "name": "%PUBLIC_CUSTOM_CLIENTS%",
+            "value": false,
+            "description": "Allows all users to view the Custom Clients page. If unchecked users must have a special permission to view the Custom Clients page.",
+            "advanced": true,
+            "optional": true,
+            "type": "check_box",
+            "fieldset": "Open Source"
+          },
+          {
             "label": "Show All Betas",
             "name": "%SHOW_ALL_BETAS%",
             "value": false,
@@ -783,6 +805,36 @@
             "fieldset": "Features"
           },
           {
+            "label": "Enable Alexa integration",
+            "name": "%ALEXA_INTEGRATION_ENABLED%",
+            "description": "Allows users to enable Alexa skill integration",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Features"
+          },
+          {
+            "label": "Enable Bookmarks page",
+            "name": "%BOOKMARKS_ENABLED%",
+            "description": "Allows users to see a feed of all bookmarks.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Features"
+          },
+          {
+            "label": "Enable Dashboard",
+            "name": "%DASHBOARD_ENABLED%",
+            "description": "Enables drag and drop dashboard for user.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Features"
+          },
+          {
             "old_name": "supportEmail",
             "name": "%SUPPORT_EMAIL%",
             "label": "Support E-mail",
@@ -802,6 +854,24 @@
             "type": "text",
             "value": "GTM-5MRNWP",
             "optional": false,
+            "advanced": true
+          },
+          {
+            "label": "Log Rocket Project",
+            "name": "%LOGROCKET_PROJECT%",
+            "description": "String used for identifying the LogRocket project",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true
+          },
+          {
+            "label": "FullStory Org ID",
+            "name": "%FULLSTORY_ID%",
+            "description": "String used for identifying the FullStory ord ID",
+            "type": "text",
+            "value": "",
+            "optional": true,
             "advanced": true
           },
           {
@@ -833,6 +903,56 @@
             "meta": {
               "regex": "^[0-9A-Z]{4}[-][0-9A-Z]{4}[-][0-9A-Z]{4}[-][0-9A-Z]{4}$"
             }
+          },
+          {
+            "label": "Enable Zendesk Article Syncing",
+            "name": "%ZENDESK_SYNC_ARTICLES%",
+            "description": "Enables syncing articles with a zendesk knowledgebase if connection info is provided.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Zendesk"
+          },
+          {
+            "label": "Zendesk Domain",
+            "name": "%ZENDESK_DOMAIN%",
+            "description": "Domain to send Zendesk API requests to",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Zendesk"
+          },
+          {
+            "label": "Zendesk API Email",
+            "name": "%ZENDESK_API_EMAIL%",
+            "description": "Email of account to make the API requests as",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Zendesk"
+          },
+          {
+            "label": "Zendesk API Key",
+            "name": "%ZENDESK_API_KEY%",
+            "description": "API key for the zendesk instance",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Zendesk"
+          },
+          {
+            "label": "Zendesk Permission Group ID",
+            "name": "%ZENDESK_PERM_GROUP_ID%",
+            "description": "Default permission group to assign to articles",
+            "type": "integer",
+            "value": "0",
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Zendesk"
           }
         ]
       },

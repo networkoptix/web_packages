@@ -99,7 +99,8 @@ do
             # On non-prod instances block webcrawlers
             if [ $INSTANCE_NAME != "prod" ]; then
                 sed -i 's$<base href="/">$<base href="/"><meta name="robots" content="noindex,nofollow">$g' static/_source/*/static/index.html
-                sed -i 's/allow/disallow/g' static/_source/*/static/robots.txt
+                # Delete robots.txt for non prod instances to allow nginx to serve from django app instead
+                rm static/_source/*/static/robots.txt
 
                 # Hash needs to be recalculated since index.html was changed
                 for skinDir in static/_source/*/
@@ -109,6 +110,7 @@ do
                 done
 
             fi
+            python manage.py update_host
             python manage.py filldata
             python manage.py filldata --preview=True &
 
@@ -147,15 +149,22 @@ do
             echo $'\n'Broadcast notifications started: Version $VERSION$'\n'
             exec celery worker -Q broadcast-notifications -A notifications -l info -B --concurrency=1 --pidfile=/tmp/celery-broadcast-w1.pid
             ;;
+        system_notifications)
+            write_my_cnf
+            rm -f /tmp/*.pid
+
+            echo $'\n'System notifications started: Version $VERSION$'\n'
+            exec celery worker -Q system-notifications -A notifications -l info -B --concurrency=1 --pidfile=/tmp/celery-system-w1.pid
+            ;;
         push_notifications)
             write_my_cnf
             rm -f /tmp/*.pid
 
             echo $'\n'Push Notifications started: Version $VERSION$'\n'
-            exec celery worker -A notifications -Q push-notification -l info --pidfile=/tmp/celery-push-w1.pid
+            exec celery worker -Q push-notification -A notifications -l info --pidfile=/tmp/celery-push-w1.pid
             ;;
         *)
-            echo Usage: cloud_portal '[web|broadcast_notifications|push_notifications|celery|celery_beat|config|copystatic|migratedb]'
+            echo Usage: cloud_portal '[web|broadcast_notifications|system_notifications|push_notifications|celery|celery_beat|config|copystatic|migratedb]'
             ;;
     esac
 done

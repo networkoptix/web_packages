@@ -1,12 +1,13 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }      from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
-import { Nx503Component }       from './503.component';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { Nx503Component } from './503.component';
 
 const appRoutes: Routes = [
     { path: '503', component: Nx503Component }
@@ -21,11 +22,11 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
+    providers: [],
     declarations: [
         Nx503Component
     ],
-    bootstrap      : [],
+    bootstrap: [],
     exports: [
         Nx503Component
     ]

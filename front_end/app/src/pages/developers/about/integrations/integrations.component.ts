@@ -1,20 +1,21 @@
-import { Component, Input, HostListener, OnInit, Output, EventEmitter, ViewChild, ElementRef, Inject } from '@angular/core';
-import { UntilDestroy, untilDestroyed }                           from '@ngneat/until-destroy';
-
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { AboutNode } from '../about.component';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { WINDOW } from '@services/window-provider';
+import { Component, Input, HostListener, OnInit, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { WINDOW } from '@services/window-provider';
+
+import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-integrations',
-    templateUrl : 'integrations.component.html',
-    styleUrls   : ['integrations.component.scss']
+    selector: 'nx-integrations',
+    templateUrl: 'integrations.component.html',
+    styleUrls: ['integrations.component.scss']
 })
 export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;
@@ -51,23 +52,38 @@ export class NxIntegrationsComponent implements OnInit {
         };
         const { maxPlugins, perRow } = getPluginsToShow();
         const show = Math.min(allPlugins.length, maxPlugins);
-        const translatedCount = this.sanitizer.bypassSecurityTrustHtml(NxLanguageProviderService.translate(
-            this.LANG.common.morePlugins,
-            {
-                count    : this.pluginCount - show,
-                startTag : '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
-                endTag   : '</strong>'
-            }
-        ));
+        const translatedCount = this.sanitizer.bypassSecurityTrustHtml(
+            NxLanguageProviderService.translate(
+                this.LANG.common.morePlugins,
+                {
+                    count: this.pluginCount - show,
+                    startTag: '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
+                    endTag: '</strong>'
+                }
+            )
+        );
         const plugins = allPlugins.slice(0, show);
-        const getColSpan = (numPlugins: number, maxPlugins: number, perRow: number) => {
+        const getColSpan = (
+            numPlugins: number,
+            maxPlugins: number,
+            perRow: number
+        ) => {
             let variant = numPlugins - maxPlugins - 1;
             while (Math.abs(variant) > perRow) {
                 variant += perRow;
             }
             return variant;
         };
-        return { plugins, more, translatedCount, moreStart: `more-span more-span${getColSpan(plugins.length, maxPlugins, perRow)}` };
+        return {
+            plugins,
+            more,
+            translatedCount,
+            moreStart: `more-span more-span${getColSpan(
+                plugins.length,
+                maxPlugins,
+                perRow
+            )}`
+        };
     }
 
     navigate(url: string) {
@@ -88,14 +104,17 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.cloudApi.getIntegrationsCount().pipe(untilDestroyed(this)).subscribe(data => {
-            this.pluginCount = data.count || 0;
-            this.integrations = this.integrationsDetails();
-        });
+        this.cloudApi.getIntegrationsCount()
+            .pipe(untilDestroyed(this))
+            .subscribe(data => {
+                this.pluginCount = data.count || 0;
+                this.integrations = this.integrationsDetails();
+            });
         this.currentWindowWidth = window.innerWidth;
-        this.integrationsShortDescription = (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '').split(
-            '\n'
-        ).reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
+        this.integrationsShortDescription =
+            (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '')
+                .split('\n')
+                .reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
 
         const integrationsConfig = this.errorManager.buildConfig(
             ['title'],

@@ -1,17 +1,19 @@
-import { Component, OnInit }         from '@angular/core';
-import { Router }                    from '@angular/router';
+import { Component, OnInit, Inject } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
-    selector    : 'landing-component',
-    templateUrl : 'landing.component.html',
-    styleUrls   : ['landing.component.scss']
+    selector: 'landing-component',
+    templateUrl: 'landing.component.html',
+    styleUrls: ['landing.component.scss']
 })
 
 export class NxLandingComponent implements OnInit {
@@ -21,50 +23,62 @@ export class NxLandingComponent implements OnInit {
     params;
     userEmail;
     login;
+    createUrl: string;
 
     loaded: boolean;
+    startParams;
+    startUrl;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
     }
 
-    constructor(configService: NxConfigService,
-                private dialogs: NxDialogsService,
-                private accountService: NxAccountService,
-                private pageService: NxPageService,
-                private language: NxLanguageProviderService,
-                private router: Router
+    constructor(private configService: NxConfigService,
+        private accountService: NxAccountService,
+        private pageService: NxPageService,
+        private language: NxLanguageProviderService,
+        @Inject(WINDOW) private window: Window,
+        private router: Router
     ) {
-        this.setupDefaults(configService);
+        this.setupDefaults(this.configService);
+        this.startUrl = this.router.url;
+        this.startParams = this.router.parseUrl(this.router.url).queryParams;
+        if (this.configService.flagsEnabled('landingPage')) {
+            this.router.navigateByUrl('new-landing', { skipLocationChange: true });
+        }
+
+        this.createUrl = environment.production
+            ? '/authorize?client_type=create'
+            : `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}&client_type=create`;
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        this.pageService.pageTitle = this.LANG.productName();
         this.pageService.pageDescription = this.CONFIG.landing.description;
-        if (this.router.url === '/logout') {
+        if (this.startUrl === '/logout') {
             this.accountService.logout();
-        } else if (this.router.url.includes('/content/about')) {
+        } else if (this.startUrl.includes('/content/about')) {
             this.loaded = true;
             this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
         } else {
             this.accountService
                 .get(/* forceUpdate */true)
                 .then(account => {
-                    if (account) {
+                    if (account && !this.startParams.next) {
                         this.accountService.redirectAuthorised();
                         this.userEmail = this.accountService.email;
                     } else {
-                        if (this.router.url.includes('/login')) {
-                            this.login = this.dialogs.login(this.accountService, false, false);
-                            this.pageService.pageTitle = this.LANG.pageTitles.login?.();
-                            this.pageService.pageDescription = '';
+                        if (this.startUrl.includes('/login') && !this.startParams.code) {
+                            this.accountService.showLogin(false, false);
+                        } else if (this.startParams.next) {
+                            return this.router.navigate([this.startParams.next]);
                         } else {
                             this.loaded = true;
                         }
                     }
                 }).catch(() => {
-                    this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+                    this.pageService.pageTitle = this.LANG.productName();
                     this.pageService.pageDescription = this.CONFIG.landing.description;
                     this.loaded = true;
                 });

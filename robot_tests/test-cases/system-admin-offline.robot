@@ -1,32 +1,10 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Offline Suite Setup
-Test Setup        Restart
-Suite Teardown    System Offline Suite Teardown
+Test Setup        System Offline Restart
+Suite Teardown    Run Keyword and Ignore Error    System Offline Suite Teardown
 Force Tags        system
 
-*** Keywords ***
-System Offline Suite Setup
-    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String
-    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
-    Set Suite Variable    ${system}
-    Stop Docker Server    ${system}[id]
-
-    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
-    Set Suite Variable    ${extra system}
-    Sleep    30
-    Open browser and go to URL    ${ENV}
-
-System Offline Suite Teardown
-    Delete Base System    ${system}
-    Delete Base System    ${extra system}
-    Close All Browsers
-
-Restart
-    Common Restart Logout    ${ENV}
-    Log in to user and system   ${system}[owner]    ${system}[cloud id]
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
 
 *** Test Cases ***
 1. The page is opened and shows the user list to owner
@@ -91,8 +69,9 @@ Restart
     [Tags]    Threaded    system_offline
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
-    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    Click Button    ${LOG IN CLOSE BUTTON}
+    #Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    #Click Button    ${LOG IN CLOSE BUTTON}
+    Go To    ${ENV}
     Wait Until Element Is Visible    ${JUMBOTRON}
     Wait Until Location Contains    ${ENV}
 
@@ -101,7 +80,7 @@ Restart
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]    ${base password}    button=None
-    Wait until element is visible    //h2[contains(text(), "${system}[name]")]
+    Wait until element is visible    //nx-text-editable[contains(text(), "${system}[name]")]
 
 9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded    system_offline
@@ -147,7 +126,7 @@ Restart
     Log Out
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]
         Log in to user and system    ${user}    ${system}[cloud id]
-        Wait Until Element is Visible    //h2[contains(text(), "${system}[name]")]
+        Wait Until Element is Visible    //nx-text-editable[contains(text(), "${system}[name]")]
         Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
         Log Out
     END

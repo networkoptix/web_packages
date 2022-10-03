@@ -1,31 +1,34 @@
+import { isPlatformBrowser, TitleCasePipe } from '@angular/common';
 import {
-    Component, OnInit, OnDestroy,
-    ViewChild, Inject, PLATFORM_ID
-}                                    from '@angular/core';
+    Component,
+    OnInit,
+    OnDestroy,
+    Inject,
+    PLATFORM_ID
+} from '@angular/core';
 import {
-    ActivatedRoute, ActivationEnd, Router
-}                                    from '@angular/router';
-import {
-    isPlatformBrowser, TitleCasePipe
-}                                    from '@angular/common';
-import { NgbNav, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
-import * as isArray                  from 'core-js/features/array/is-array';
+    ActivatedRoute,
+    ActivationEnd,
+    Router
+} from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import * as isArray from 'core-js/features/array/is-array';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountService, isAccount } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAccountService }          from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxUriService }              from '@services/uri.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxPageService } from '@services/page.service';
+import { NxUriService } from '@services/uri.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'download-history',
-    templateUrl : 'download-history.component.html',
-    styleUrls   : ['download-history.component.scss']
+    selector: 'download-history',
+    templateUrl: 'download-history.component.html',
+    styleUrls: ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
@@ -48,8 +51,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     linkbase;
     private routerSubscription: Subscription;
 
-    @ViewChild('tabs', { static: false })
-    public tabs: NgbNav;
+    currentTab: string;
 
     private setupDefaults() {
         this.tabsVisible = false;
@@ -78,8 +80,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     filter(event => event instanceof ActivationEnd)
                 )
                 .subscribe((event: ActivationEnd) => {
-                    if (this.tabs && event.snapshot.params.type) {
-                        this.tabs.select(event.snapshot.params.type);
+                    if (event.snapshot.params.type) {
+                        this.currentTab = event.snapshot.params.type;
                     }
                 });
         }
@@ -110,29 +112,15 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.downloadsData[data.type] = this.activeBuilds;
                 }
 
-                this.pageService.pageTitle = new TitleCasePipe().transform(this.noteTypes[0]); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
+                this.pageService.pageTitle = new TitleCasePipe().transform(this.currentTab || this.noteTypes[0]);
 
                 setTimeout(() => {
                     this.tabsVisible = true;
-                    if (this.tabs) {
-                        this.tabs.select(this.section);
-                    }
                 });
             }, this.pageService.show404
             )
             .finally(() => {
                 this.sub.unsubscribe();
-            });
-    }
-
-    public beforeChange($event: NgbNavChangeEvent) {
-        this.activeBuilds = this.downloadsData[$event.nextId];
-        this.pageService.pageTitle = new TitleCasePipe().transform($event.nextId);
-
-        this.uriService
-            .updateURI('/downloads/' + $event.nextId, {})
-            .catch(error => {
-                console.error(error);
             });
     }
 
@@ -162,7 +150,12 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.accountService
                     .requireLogin()
                     .then(account => {
-                        this.canViewRelease = account && (account.is_superuser || account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
+                        this.canViewRelease = isAccount(account) && (
+                            account.is_superuser ||
+                            account.permissions.includes(
+                                this.CONFIG.permissions.canViewRelease
+                            )
+                        );
 
                         if (this.canViewRelease) {
                             this.getData();
@@ -172,10 +165,30 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     });
             } else {
                 this.canViewRelease = true;
-                (this.build === undefined ? Promise.resolve() : this.accountService.requireLogin())
-                    .then(() => this.getData());
+                if (this.build === undefined) {
+                    this.getData();
+                } else {
+                    this.accountService.requireLogin().then(account => {
+                        if (isAccount(account)) {
+                            this.getData();
+                        }
+                    });
+                }
             }
         });
+    }
+
+    public switchTo(name: string) {
+        this.currentTab = name;
+        this.activeBuilds = this.downloadsData[name];
+        this.pageService.pageTitle = new TitleCasePipe().transform(name);
+
+        this.uriService
+            .updateURI('/downloads/' + name, {})
+            .catch(error => {
+                console.error(error);
+            });
+        return false;
     }
 
     ngOnDestroy() {}

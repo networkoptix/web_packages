@@ -45,7 +45,7 @@
 
 <div class="column-wrapper d-flex flex-wrap mw-100" [ngClass]="removeTopMargin && 'remove-top-margin'">
     <ng-container
-        *ngFor="let column of singleColumn ? [sectionsOrColumns] : sectionsOrColumns; let columnIndex=index"
+        *ngFor="let column of singleColumn ? $any([sectionsOrColumns]) : sectionsOrColumns; let columnIndex=index"
         [ngTemplateOutlet]="infoColumn"
         [ngTemplateOutletContext]="{column: column, columnIndex: columnIndex}"
     ></ng-container>

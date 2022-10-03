@@ -37,12 +37,12 @@ nx-system-health-component {
       }
     }
 
-    .gridContent {
-      //border: 1px solid green;
+    // .gridContent {
+    //   //border: 1px solid green;
 
-      &Component {
-      }
-    }
+    //   &Component {
+    //   }
+    // }
   }
 
   @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
@@ -124,16 +124,16 @@ nx-system-health-component {
       }
 
       svg * {
-        fill: $light16;
+        fill: var(--light16);
       }
 
       &:hover svg * {
-        fill: $dark15;
+        fill: var(--dark15);
       }
 
       &:focus, &:active {
         svg * {
-          fill: $light16;
+          fill: var(--light16);
         }
       }
     }

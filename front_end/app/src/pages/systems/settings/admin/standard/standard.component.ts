@@ -1,53 +1,112 @@
 import {
-    Component, OnInit, Input,
-    ViewChild, ElementRef, OnChanges, SimpleChanges
-}                                    from '@angular/core';
+    Component,
+    OnInit,
+    Input,
+    ViewChild,
+    ElementRef,
+    OnChanges,
+    SimpleChanges
+} from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
-import { NxMenuService }             from '../../../../../menu';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxSystemsService } from '@services/systems.service';
+import { delayInitial } from '@services/utils.service';
+import { NxMenuService } from '@src/menu';
 
+const HR_MINS = 60;
+const DAY_HRS = 24;
+const DAY_MINS = HR_MINS * DAY_HRS;
+
+type LimitSessionTimeUnit = 'days' | 'hours' | 'minutes';
+type LimitSessionTimeItem = {
+    value: LimitSessionTimeUnit;
+    name: string;
+    id: number;
+    max: number;
+    default?: number;
+}
+
+class AlexaSettings {
+    static CUSTOM_PROPERTY_ENDPOINT = 'alexa'
+
+    constructor(
+        public enabled = false,
+        public selectedSystem: string = null,
+        public accountLinked = false,
+        public eventRulesSetup = false
+    ) {}
+
+    static clean = (selectedSystem) =>
+        (input) => new AlexaSettings(
+            input.enabled || false,
+            input.selectedSystem || selectedSystem,
+            input.accountLinked || false,
+            input.eventRulesSetup || false
+        )
+
+    static cleanObservable = (selectedSystem) => map(
+        AlexaSettings.clean(selectedSystem),
+        AlexaSettings.clean(selectedSystem)
+    )
+}
+
+@UntilDestroy()
 @Component({
-    selector    : 'nx-system-standard-admin-component',
-    templateUrl : 'standard.component.html',
-    styleUrls   : ['standard.component.scss']
+    selector: 'nx-system-standard-admin-component',
+    templateUrl: 'standard.component.html',
+    styleUrls: ['standard.component.scss']
 })
 
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     @Input() settings;
     @Input() system: NxSystem;
     CONFIG: IConfig;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
-    selectedTimeUnit;
+    selectedTimeUnit: LimitSessionTimeItem;
     sessionLimitToggle: boolean;
     timeValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
-    limitSessionTimeUnits;
-    limitSessionTimeItems;
+    limitSessionTimeUnits: Record<LimitSessionTimeUnit, LimitSessionTimeItem>;
+    limitSessionTimeItems: LimitSessionTimeItem[];
     saveSettings: Process;
-    setWarningMessageThroughApplyService;
-    timeUnitTracker;
+    setWarningMessageThroughApplyService: () => void;
     selectElement;
+    alexaSettings: Partial<AlexaSettings>;
+    eventRulesBeingSetup = false;
 
+    is2faDialogActive: Promise<any>;
+    system2faEnabled = false;
     settingsWatchersSet = false;
-    settingsWatchers: any = {
-        autoDiscoveryEnabled         : new Watcher<boolean>(),
-        statisticsAllowed            : new Watcher<boolean>(),
-        cameraSettingsOptimization   : new Watcher<boolean>(),
-        auditTrailEnabled            : new Watcher<boolean>(),
-        trafficEncryptionForced      : new Watcher<boolean>(),
-        videoTrafficEncryptionForced : new Watcher<boolean>(),
-        sessionLimitMinutes          : new Watcher<number>()
+    canChange2fa = false;
+
+    systemAndSecuritySettings = {
+        autoDiscoveryEnabled: false,
+        statisticsAllowed: false,
+        cameraSettingsOptimization: false,
+        auditTrailEnabled: false,
+        trafficEncryptionForced: false,
+        videoTrafficEncryptionForced: false,
+        sessionLimitMinutes: 0
     };
 
-    readonly minutes: string = 'minutes';
-    readonly hours: string = 'hours';
+    systemAndSecuritySettingsFormWatcher: FormWatcher;
+
+    @ViewChild('systemAndSecuritySettingsForm', { read: NgForm }) systemAndSecuritySettingsForm: NgForm;
 
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
@@ -58,65 +117,89 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private router: Router,
         private applyService: NxApplyService,
+        private cloudApi: NxCloudApiService,
+        private dialogService: NxDialogsService,
+        private menuService: NxMenuService,
         private processService: NxProcessService,
-        private menuService: NxMenuService
+        private systemsService: NxSystemsService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
+    DAY_MINS = DAY_MINS // For template access
+
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
+            days: {
+                value: 'days',
+                name: this.LANG.system.settings.sessionLimitDuration.days(),
+                id: 1,
+                max: 999999,
+                default: 30
+            },
             hours: {
-                value   : this.hours,
-                name    : this.LANG.system.settings.sessionLimitDuration.hours(),
-                id      : 1,
-                max     : 600,
-                default : 24
+                value: 'hours',
+                name: this.LANG.system.settings.sessionLimitDuration.hours(),
+                id: 2,
+                max: 999999
             },
             minutes: {
-                value : this.minutes,
-                name  : this.LANG.system.settings.sessionLimitDuration.minutes(),
-                id    : 2,
-                max   : 600
+                value: 'minutes',
+                name: this.LANG.system.settings.sessionLimitDuration.minutes(),
+                id: 3,
+                max: 999999
             }
         };
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
-        this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
-        this.initApplyService();
+        this.limitSessionTimeItems = [...Object.values(this.limitSessionTimeUnits)];
+        this.initProcess();
+
+        if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
+            delayInitial(
+                this.cloudApi.getCustomAccountProperty(
+                    AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
+                )
+            )
+                .pipe(
+                    AlexaSettings.cleanObservable(this.system.id),
+                    untilDestroyed(this)
+                ).subscribe(
+                    settings => { this.alexaSettings = settings; },
+                    _ => { this.alexaSettings = {}; }
+                );
+        }
+
+        this.system2faEnabled = this.systemsService.systems
+            .find((system) => system.id === this.system.id)?.system2faEnabled;
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.settings) {
+        if (changes.settings && this.system.isOnline) {
             const { previousValue, currentValue, firstChange } = changes.settings;
-            if (previousValue === undefined && currentValue) {
-                this.cleanUpWatchers(currentValue);
-            }
-            if ((JSON.stringify(previousValue) !== JSON.stringify(currentValue) || !this.settingsWatchersSet) && !firstChange && !this.applyService.locked) {
-                this.setWatcherValues(currentValue);
+            if (
+                (JSON.stringify(previousValue) !== JSON.stringify(currentValue) ||
+                !this.settingsWatchersSet) && !firstChange && !this.applyService.locked
+            ) {
+                if (currentValue && Object.keys(currentValue).length) {
+                    this.setValues(currentValue);
+                }
             }
         }
     }
 
     ngOnDestroy() {
-        this.applyService.removeWatchers();
+        // this.applyService.removeWatchers();
     }
 
-    // removes watcher(s) if setting does not exist
-    cleanUpWatchers(settings) {
-        Object.keys(this.settingsWatchers).forEach(sw => {
-            if (!(sw in settings)) {
-                delete this.settingsWatchers[sw];
-            }
-        });
-    }
+    setValues(settings) {
+        this.systemAndSecuritySettingsFormWatcher &&
+            this.applyService.removeFormWatcher('systemAndSecuritySettingsForm');
 
-    setWatcherValues(settings) {
-        this.applyService.setVisible(false);
-        // this.applyService.reset(true);
-        const sw = this.settingsWatchers;
+        const sw = this.systemAndSecuritySettings;
         Object.keys(sw).forEach(setting => {
             let curr = settings[setting];
             if (curr) {
@@ -126,80 +209,81 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                  * so it needs custom code to handle
                  */
                 if (isNaN(curr)) {
-                    sw[setting].originalValue = curr === 'true';
+                    sw[setting] = curr === 'true';
                 } else if (this.limitSessionTimeUnits) {
                     curr = parseInt(curr);
                     this.sessionLimitToggle = Boolean(curr);
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                     this.updateTimeUnitInput(this.selectedTimeUnit);
-                    sw[setting].originalValue = curr;
+                    sw[setting] = curr;
                     this.timeValue = curr;
-                    if (this.timeValue % 60 === 0) {
-                        this.timeValue /= 60;
-                        this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
-                    }
+                    this.divideTimeValue(this.timeValue);
                 }
             }
         });
         this.settingsWatchersSet = true;
-        this.applyService.reset();
-        this.applyService.setVisible(true);
+
+        setTimeout(() => {
+            this.systemAndSecuritySettingsFormWatcher = this.applyService.createFormWatcher(
+                'systemAndSecuritySettingsForm',
+                this.systemAndSecuritySettingsForm,
+                this.saveSettings,
+                () => {
+                    if (this.systemAndSecuritySettings.sessionLimitMinutes) {
+                        this.sessionLimitToggle = true;
+                        this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+                        this.updateTimeUnitInput(this.selectedTimeUnit);
+                        this.timeValue = this.systemAndSecuritySettings.sessionLimitMinutes;
+                        this.divideTimeValue(this.timeValue);
+                    } else {
+                        this.sessionLimitToggle = false;
+                    }
+                });
+        });
     }
 
-    initApplyService(): void {
+    private updateSettings() {
+        const sw = this.systemAndSecuritySettings;
+        // handle sessionLimitMinutes when saving an empty value
+        if (this.timeValue === null || this.timeValue === 0) {
+            this.sessionLimitToggle = false;
+            sw.sessionLimitMinutes = 0;
+        } else {
+            this.divideTimeValue(sw.sessionLimitMinutes);
+        }
+        const changes = { ...sw };
+
+        return this.system.updateOrGetSystemSettings(changes).toPromise();
+    }
+
+    initProcess(): void {
         this.setWarningMessageThroughApplyService = () => {
-            if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
-                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption?.());
+            if (this.systemAndSecuritySettings.videoTrafficEncryptionForced) {
+                this.applyService.setWarn(
+                    this.LANG.system.settings.warningMessages.videoEncryption?.()
+                );
             } else {
                 this.applyService.setWarn('');
             }
         };
 
         this.saveSettings = this.processService.createProcess(() => {
-            const sw = this.settingsWatchers;
-            // handle sessionLimitMinutes when saving an empty value
-            if (this.timeValue === null || this.timeValue === 0) {
-                this.sessionLimitToggle = false;
-                sw.sessionLimitMinutes.value = 0;
-            }
-            const changes = {};
-            const settings = Object.keys(sw);
-            for (const setting of settings) {
-                const obj = sw[setting];
-                if (obj.value !== obj.originalValue) {
-                    changes[setting] = obj.value;
-                    obj.originalValue = obj.value;
-                }
-            }
-            return this.system.updateOrGetSystemSettings(changes).toPromise();
+            return this.updateSettings();
         });
+    }
 
-        this.applyService.addWatchersAndFunctionsFromChild(
-            Object.values(this.settingsWatchers),
-            this.saveSettings,
-            // handles the cancel button
-            () => {
-                this.applyService.reset();
-                const { sessionLimitMinutes } = this.settingsWatchers;
-                if (sessionLimitMinutes?.originalValue) {
-                    this.sessionLimitToggle = true;
-                    this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
-                    this.updateTimeUnitInput(this.selectedTimeUnit);
-                    this.timeValue = sessionLimitMinutes.originalValue;
-                    if (this.timeValue % 60 === 0) {
-                        this.timeValue /= 60;
-                        this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
-                    }
-                } else if (sessionLimitMinutes && sessionLimitMinutes.originalValue === 0) {
-                    this.sessionLimitToggle = false;
-                }
-            });
-
-        this.applyService.setVisible(false);
+    divideTimeValue(minutesValue: number): void {
+        if (minutesValue % DAY_MINS === 0) { // Whole days
+            this.timeValue = minutesValue / DAY_MINS;
+            this.selectedTimeUnit = this.limitSessionTimeUnits.days;
+        } else if (minutesValue % HR_MINS === 0) { // Whole hours
+            this.timeValue = minutesValue / HR_MINS;
+            this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
+        }
     }
 
     // sets input max value and updates hour/minutes
-    updateTimeUnitInput(timeUnit) {
+    updateTimeUnitInput(timeUnit): void {
         this.currentMaxTimeUnit = timeUnit.max;
 
         if (this.selectedTimeUnit.value !== timeUnit.value) {
@@ -208,26 +292,14 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         }
     }
 
-    storePreviousValue(e) {
-        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
-            e.preventDefault();
-        }
-        this.previousInputValue = this.timeValue;
-    }
-
-    updateLimitSessionValue(newTimeValue) {
-        const sw = this.settingsWatchers;
-        if (this.selectedTimeUnit.value === this.hours) {
-            sw.sessionLimitMinutes.value = newTimeValue * 60;
-        } else if (newTimeValue && newTimeValue % 60 === 0) {
-            sw.sessionLimitMinutes.value = newTimeValue;
-            newTimeValue /= 60;
-            this.timeValue = newTimeValue;
-            // handler for when minutes gets changed to hours in the same change
-            // 120 hours --> 120 minutes --> 2 hours
-            this.selectElement.change(this.limitSessionTimeUnits.hours);
+    updateLimitSessionValue(newTimeValue: number) {
+        const sw = this.systemAndSecuritySettings;
+        if (this.selectedTimeUnit.value === 'days') {
+            sw.sessionLimitMinutes = newTimeValue * DAY_MINS;
+        } else if (this.selectedTimeUnit.value === 'hours') {
+            sw.sessionLimitMinutes = newTimeValue * HR_MINS;
         } else {
-            sw.sessionLimitMinutes.value = newTimeValue;
+            sw.sessionLimitMinutes = newTimeValue;
         }
         this.timeValue = newTimeValue;
     }
@@ -235,13 +307,123 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle() {
         if (this.sessionLimitToggle) {
-            this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
-            this.timeValue = this.selectedTimeUnit.default;
-            this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;
-            this.updateTimeUnitInput(this.selectedTimeUnit);
+            if (!this.timeValue) { // prevent overwriting current value with default (in case of late init of the checkbox)
+                this.selectedTimeUnit = this.limitSessionTimeUnits.days;
+                this.timeValue = this.selectedTimeUnit.default;
+                this.systemAndSecuritySettings.sessionLimitMinutes =
+                    this.selectedTimeUnit.default * DAY_MINS;
+                this.updateTimeUnitInput(this.selectedTimeUnit);
+            }
         } else {
             this.timeValue = 0;
-            this.settingsWatchers.sessionLimitMinutes.value = 0;
+            this.systemAndSecuritySettings.sessionLimitMinutes = 0;
         }
+    }
+
+    check2fa(event) {
+        event.preventDefault();
+        this.handleMandatory2fa();
+    }
+
+    // handle mandatory 2fa
+    async handleMandatory2fa(): Promise<any> {
+        if (this.is2faDialogActive) {
+            return;
+        }
+
+        // @ts-ignore
+        this.is2faDialogActive = await this.dialogService
+            .toggleSystem2fa(this.system, !this.system2faEnabled) // using !this.system2faEnabled as click event was canceled --TT
+            .then((res) => {
+                if (res === 'success') {
+                    this.system2faEnabled = !this.system2faEnabled;
+                }
+
+                if (res === 'GOTO_SECURITY') {
+                    // let apply service process to finish
+                    setTimeout(() => {
+                        this.router
+                            .navigate(['/account/security'])
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    });
+                }
+            }).finally(() => {
+                this.is2faDialogActive = undefined;
+                return Promise.resolve();
+            });
+    }
+
+    // Alexa Methods
+    updateEventRules = (settings = { enabled: true }) => {
+        this.eventRulesBeingSetup = settings.enabled;
+        return delayInitial(this.system.updateAlexaRules(settings.enabled))
+            .pipe(
+                catchError(error => {
+                    console.error(error);
+                    return delayInitial(Promise.resolve(false));
+                }),
+                tap(setup => {
+                    this.alexaSettings.eventRulesSetup = !!setup;
+                    this.eventRulesBeingSetup = false;
+                })
+            ).toPromise();
+    }
+
+    #updateAlexa = (settings: AlexaSettings) =>
+        this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
+            this.cloudApi.saveCustomAccountProperty(
+                settings,
+                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
+            )
+        ).pipe(
+            tap(settings => {
+                this.alexaSettings = settings;
+            }),
+            switchMap(this.updateEventRules),
+            map(setup => ({ ...settings, eventRulesSetup: !!setup })),
+            untilDestroyed(this)
+        ).subscribe(settings => {
+            this.alexaSettings = settings;
+            this.cloudApi.saveCustomAccountProperty(
+                this.alexaSettings,
+                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
+            );
+        });
+
+    toggleAlexaEnabled = () => {
+        const {
+            enabled,
+            selectedSystem,
+            accountLinked = false,
+            eventRulesSetup = false
+        } = this.alexaSettings;
+        this.alexaSettings = null;
+        this.#updateAlexa({
+            enabled: !enabled,
+            accountLinked,
+            eventRulesSetup,
+            selectedSystem: enabled ? this.system.id : selectedSystem
+        });
+    }
+
+    toggleSystemSelected = () => {
+        if (this.alexaSettings.selectedSystem === this.system.id) {
+            return;
+        }
+        const {
+            enabled,
+            accountLinked = false,
+            eventRulesSetup = false
+        } = this.alexaSettings;
+        this.alexaSettings = null;
+        this.#updateAlexa({
+            enabled,
+            accountLinked,
+            eventRulesSetup,
+            selectedSystem:
+            this.system.id
+        });
     }
 }

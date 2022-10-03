@@ -26,6 +26,8 @@ def setup_periodic_tasks(sender, **kwargs):
                              clean_logs.s(), name="clean logs", queue='broadcast-notifications')
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='tue'),
                              clean_push_logs.s(), name="clean push logs", queue='broadcast-notifications')
+    sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='wed'),
+                             clean_old_portal_notifications.s(), name="clean push logs", queue='portal-notifications')
 
 
 @app.task(bind=True)
@@ -50,8 +52,16 @@ def clean_push_logs():
     call_command('cleanoldpush')
 
 
+@app.task
+def clean_old_portal_notifications():
+    logger.info(
+        'Cleaning portal notifications over two weeks old or targeting old build version')
+    call_command('cleanportalnotifications')
+
+
 @signals.after_setup_logger.connect
 def setup_logger(logger, format, *args, **kwargs):
     sh = logger.handlers[0]
-    formatter = logging.Formatter('[%(levelname)s] %(processName)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s')
+    formatter = logging.Formatter(
+        '[%(levelname)s] %(processName)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s')
     sh.setFormatter(formatter)

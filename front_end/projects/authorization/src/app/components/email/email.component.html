@@ -1,0 +1,101 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header #emailHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+    <svg-icon nx-add-svg-src
+        [ngStyle]="{'minWidth.px': '280', 'minHeight.px': '80'}"
+        [src]="CONFIG.icons.dirSectionPlaceholder + (environment.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'"
+        [svgStyle]="{'width.px': '280', 'height.px': '80'}"
+        [applyClass]="true"></svg-icon>
+    <h3 class="authorize-header">{{ header }}</h3>
+    <h4 *ngIf="subHeader" class="authorize-subheader">{{ subHeader }}</h4>
+</header>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
+    *ngIf="emailHeader" [ngStyle]="{ 'height': 'calc(100% - ' + emailHeader.offsetHeight + 'px)' }">
+    <form #emailForm="ngForm" name="emailForm" class="form">
+        <ng-container *ngIf="!environment.isLocal; else webadmin">
+            <label for="authorizeEmail" class="mb-2" translate>Email</label>
+            <!-- TODO: Look into using the NxEmailComponent; may have some issues with css or error messages -->
+            <input
+                type="email"
+                id="authorizeEmail"
+                name="email"
+                [ngClass]="{ 'invalid-state': email.invalid && (email.dirty && email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
+                [(ngModel)]="loginEmail"
+                #email="ngModel"
+                required
+                [pattern]="CONFIG.credentialsValidation.emailRegex"
+                [readonly]="emailProcess.processing"
+                email
+                nxFocusMe>
+            <div *ngIf="email.invalid && (email.dirty && email.touched)" class="mt-2">
+                <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
+                <p *ngIf="email.errors.email || email.errors.pattern" class="error-label" translate>Invalid email</p>
+                <ng-container *ngIf="email.errors.accountNotActivated">
+                    <p class="mb-2 error-label" translate>Account not activated.</p>
+                    <p class="fake-link" (click)="reactivate()" translate>Resend activation email.</p>
+                </ng-container>
+                <ng-container *ngIf="email.errors.accountDoesNotExist">
+                    <p class="mb-2" translate>Account does not exist.</p>
+                    <p translate>You can create an account with this email address or try to enter a different one.</p>
+                </ng-container>
+                <p *ngIf="email.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't have access to this system.</p>
+                <p *ngIf="email.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
+            </div>
+            <p *ngIf="['connectSystemToCloud', 'setupWizard'].includes(clientType)" class="mt-2" translate>This account will get owner access level</p>
+        </ng-container>
+        <ng-template #webadmin>
+            <label for="authorizeLogin" translate>Login</label>
+            <input
+                type="text"
+                id="authorizeLogin"
+                name="login"
+                [(ngModel)]="loginEmail"
+                [ngClass]="{ 'invalid-state': login.errors?.required || login.errors?.accountNotAccessSystem }"
+                #login="ngModel"
+                [readonly]="emailProcess.processing"
+                required
+                nxFocusMe>
+            <ng-container *ngIf="login.invalid && (login.dirty && login.touched)">
+                <p *ngif="login.errors.required" class="error-label" translate>Enter login</p>
+                <ng-container *ngIf="login.errors.accountNotActivated">
+                    <p class="mb-2 error-label" translate>Account not activated.</p>
+                    <p translate>Look for the email with the activation link in your inbox or login to %CLOUD_NAME% and follow provided instructions.</p>
+                </ng-container>
+                <p *ngIf="login.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't exist in this system.</p>
+                <p *ngIf="login.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
+            </ng-container>
+        </ng-template>
+        <input type="password" name="password" style="display: none;">
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="left">
+            <button 
+                *ngIf="
+                    ['loginToCloud', 'loginToWebadmin', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)
+                    && !isMobile
+                "
+                class="btn text-button no-padding"
+                (click)="setCurrentState.emit('create')"
+                type="button"
+            >
+                <svg-icon nx-add-svg-src
+                    [ngStyle]="{'minWidth.px': '20', 'minHeight.px': '20'}"
+                    [src]="CONFIG.icons.dir + 'plus.svg'"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
+                    [applyClass]="true"></svg-icon>
+                <span class="pl-1" style="padding-top: 1px" translate>Create Account</span>
+            </button>
+            <button *ngIf="clientType === 'setupWizard'" class="btn text-button" (click)="setupNonCloudSystem()" type="button">
+                <span translate>Setup Non-cloud System</span>
+            </button>
+        </div>
+        <div class="right">
+            <nx-process-button
+                buttonText="{{ 'Next' | translate }}"
+                [clickFn]="sendEmail"
+                [form]="emailForm"
+                [process]="emailProcess"
+                [svg]="{ src: 'arrow_right', height: '20', width: '20', color: 'light1' }">
+            </nx-process-button>
+        </div>
+    </footer>
+</main>

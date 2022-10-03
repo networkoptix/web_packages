@@ -1,10 +1,25 @@
-import { GetStorages }                              from '@services/system-api.types';
-import { CurrentStorageState, MODE, STORAGE_TYPES } from './current-storage-state';
+import { GetStorages } from '@services/system-api.types';
+import { ServerManager } from '@services/system.service/system/server-manager/server-manager';
+import { NxUtilsService } from '@services/utils.service';
 
 /**
  * TODO: Need to add better types to some of the system-api methods
  */
 export type StorageResponses = [GetStorages[], any, any, any]
+
+export enum STORAGE_TYPES {
+    LOCAL = 'local',
+    USB = 'usb',
+    NETWORK = 'smb',
+    SYSTEM_NETWORK = 'network',
+    CLOUD = 'cloud'
+}
+
+export enum MODE {
+    MAIN='main',
+    BACKUP='backup',
+    NOT_IN_USE='notUsed'
+}
 
 export enum STORAGE_STATUS {
     IN_USE='inUse',
@@ -31,6 +46,137 @@ export interface SaveStoragePayload {
 }
 
 /**
+ * Add properties and methods here for the current servers storages.
+ * Calculated properties like hasAction and onlineMains/onlineBackups should have getters instead of imperatively calculated.
+ *
+ * CurrentStorageState.locations is an array of Storage's which itself has reference back to the parent on Storage.currentStorageState.
+ * This will allow for checking against the parent for things like comparing freeSpace on a storage with total freeSpace on all storages.
+ */
+export class CurrentStorageState {
+    locations: Storage[];
+    vmsSpaceLoaded: boolean;
+    storageInfoLoaded: boolean;
+    storageStatsLoaded: boolean;
+    analyticsLoaded: boolean;
+
+    #serverManager: ServerManager;
+    #hasAnalyticsData = false;
+    #hasPlugins = false;
+    #metadataStorageId: string;
+
+    get hasAction() {
+        return this.locations.some(location => location.hasAction);
+    }
+
+    get onlineMains() {
+        return this.locations.filter(this.#countMainAndBackup(true)).length;
+    }
+
+    get onlineBackups() {
+        return this.locations.filter(this.#countMainAndBackup(false)).length;
+    }
+
+    get reindexing(): MODE[] {
+        const reindexingLocations = this.locations.filter(({ reindexing }) => reindexing).map(({ mode }) => mode);
+        const unique = new Set(reindexingLocations);
+        return [...unique];
+    }
+
+    get freeSpace() {
+        return this.locations.reduce((
+            totalFreeSpace,
+            { freeSpace, isBackup, usedForWriting }
+        ) => totalFreeSpace + (!isBackup && usedForWriting ? freeSpace : 0), 0);
+    }
+
+    get serialized(): SaveStoragePayload[] {
+        return this.locations.map(({ serialized }) => serialized).filter(storage => storage);
+    }
+
+    get analyticsDbTargetLocations() {
+        return this.locations.filter(({ canStoreAnalyticsDb }) => canStoreAnalyticsDb);
+    }
+
+    get hasAnalyticsData() {
+        return this.#hasAnalyticsData;
+    }
+
+    get hasCompatibleAnalyticsPlugins() {
+        return this.#hasPlugins;
+    }
+
+    get currentAnalyticsDbLocation() {
+        return this.locations.find(({ storageId }) => storageId === this.#metadataStorageId);
+    }
+
+    get beingChecked() {
+        return !!this.locations.find(({ storageStatus }) => storageStatus.includes('beingChecked'));
+    }
+
+    // Storage save methods
+
+    /**
+     * Saves the serialized version of the current storage state.
+     */
+    saveStorages() {
+        return this.#serverManager.mediaserver.updateStorages(this.serialized);
+    }
+
+    /**
+     * Saves the current analyticsDb location to server.
+     */
+    saveAnalyticsDbLocation(metadataStorageId: string = this.currentAnalyticsDbLocation.storageId) {
+        return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, { metadataStorageId });
+    }
+
+    constructor(
+        state: Partial<CurrentStorageState>,
+        analytics: any,
+        serverManager: ServerManager
+    ) {
+        this.#serverManager = serverManager;
+        state.locations.forEach(location => {
+            location.currentStorageState = this;
+        });
+        state.locations = state.locations.sort(this.#sortByTypeAndUrl);
+        Object.assign(this, state);
+        this.#parseAnalytics(analytics);
+    }
+
+    // Helpers
+    #sortByTypeAndUrl = (
+        { storageType: aType, url: aUrl },
+        { storageType: bType, url: bUrl }
+    ) => {
+        const { LOCAL, USB, NETWORK, SYSTEM_NETWORK, CLOUD } = STORAGE_TYPES;
+        const typeOrder = [LOCAL, USB, SYSTEM_NETWORK, NETWORK, CLOUD];
+        if (aType === bType) {
+            return aUrl < bUrl ? -1 : 1;
+        }
+        return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
+    }
+
+    #countMainAndBackup = (
+        main = true
+    ) => ({
+        isBackup, isOnline, isWritable, usedForWriting
+    }) => isBackup === !main && isOnline && isWritable && usedForWriting;
+
+    #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }) => {
+        this.#metadataStorageId = NxUtilsService.cleanId(metadataStorageId || '');
+        this.#hasAnalyticsData = hasAnalyticsData;
+        this.#hasPlugins = hasPlugins;
+    }
+
+    #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
+
+    checkAnalytics = (storage: Storage) => ({
+        analyticsDbLocation: storage.storageId === this.#metadataStorageId,
+        canStoreAnalyticsDb: this.#checkCanStoreAnalytics(storage)
+    })
+}
+
+/**
  * The StorageDataStructure class is used as both a type and as a helper class to handle initializing the Storage class with defaults and to encapsulate the data structure used by Storage.
  */
 export class StorageDataStructure {
@@ -54,22 +200,22 @@ export class StorageDataStructure {
         // The status field was added to 4.3 systems but isn't really needed here
         delete inputs.status;
         const defaults: StorageDataStructure = {
-            isBackup           : false,
-            reservedSpace      : 0,
-            serverId           : '',
-            storageType        : null,
-            totalSpace         : 0,
-            url                : '',
-            usedForWriting     : false,
-            freeSpace          : null,
-            isExternal         : false,
-            isOnline           : false,
-            isWritable         : false,
-            storageStatus      : '',
-            vmsSpace           : 0,
-            storageId          : '',
-            canUpdate          : null,
-            urlWithCredentials : ''
+            isBackup: false,
+            reservedSpace: 0,
+            serverId: '',
+            storageType: null,
+            totalSpace: 0,
+            url: '',
+            usedForWriting: false,
+            freeSpace: null,
+            isExternal: false,
+            isOnline: false,
+            isWritable: false,
+            storageStatus: '',
+            vmsSpace: 0,
+            storageId: '',
+            canUpdate: null,
+            urlWithCredentials: ''
         };
         Object.assign(this, { ...defaults, ...inputs });
     }
@@ -173,17 +319,17 @@ export class Storage extends StorageDataStructure {
     #serialize = (): SaveStoragePayload => {
         return this.canUpdate ? {
             addParams: {
-                name  : 'space',
-                value : this.totalSpace.toString()
+                name: 'space',
+                value: this.totalSpace.toString()
             },
-            id             : `{${this.storageId}}`,
-            isBackup       : this.isBackup,
-            parentId       : this.serverId,
-            spaceLimit     : this.reservedSpace.toString(),
-            storageType    : this.storageType,
-            typeId         : this.#typeId,
-            url            : this.urlWithCredentials,
-            usedForWriting : this.usedForWriting
+            id: `{${this.storageId}}`,
+            isBackup: this.isBackup,
+            parentId: this.serverId,
+            spaceLimit: this.reservedSpace.toString(),
+            storageType: this.storageType,
+            typeId: this.#typeId,
+            url: this.urlWithCredentials,
+            usedForWriting: this.usedForWriting
         } : null;
     }
 

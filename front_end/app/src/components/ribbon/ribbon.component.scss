@@ -3,10 +3,10 @@
 
 .ribbon {
     @include typography.regular13light1;
-    background-color : $brand_d1;
+    background-color : var(--brand-d1);
     line-height      : 1rem;
     //border-top       : 1px solid $brand_d2;
-    border-bottom    : 1px solid $brand_d2;
+    border-bottom    : 1px solid var(--brand-d2);
     padding          : .5rem 1rem;
     display          : flex;
     align-items      : center;
@@ -45,9 +45,8 @@
 }
 
 .alert-ribbon {
-    //border-top: 1px solid #EEDC9E;
-    border-bottom: 1px solid #EEDC9E;
-    background-color: #FFEEB5 !important;
+    border-bottom: 1px solid $warning-message-border;
+    background-color: $warning-message-bg !important;
 
     .message {
         color: $dark9;
@@ -61,6 +60,7 @@
         opacity: .8;
     }
 }
+
 .message-content-wrapper {
     display: flex;
     align-items: center;

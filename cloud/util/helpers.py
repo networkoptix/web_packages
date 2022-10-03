@@ -1,10 +1,15 @@
+import re
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from api.models import Account
 from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language
 from django.urls import reverse
+from meilisearch import Client
 
+
+def get_meilisearch_client():
+    return Client(settings.MEILISEARCH_ENDPOINT, settings.MEILISEARCH_MASTER_KEY)
 
 def get_languages(customization=None):
     if not customization:
@@ -75,3 +80,11 @@ def get_admin_url(obj_instance):
     """
     return reverse(f'admin:{obj_instance._meta.app_label}_{obj_instance._meta.model_name}_change',
                    args=[obj_instance.id])
+
+
+def substitute_branding(repl_dict, text):
+    if not text:
+        return ''
+    # Searches for any the keys from replacement dict
+    # When one is found, the lambda function returns the value for that key and it is used as the replacement
+    return re.sub("|".join(repl_dict.keys()), lambda match: repl_dict[re.escape(match.group(0))], text)

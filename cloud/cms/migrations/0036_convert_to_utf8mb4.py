@@ -10,7 +10,8 @@ def convert_apps_to_utf8mb(apps, schema_editor):
     tables.extend([model._meta.db_table for model in apps.get_app_config('notifications').get_models()])
 
     with connection.cursor() as cursor:
-        cursor.execute('ALTER DATABASE cloudportal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
+        db_alias = connection.settings_dict['NAME']  # should default to cloud_portal
+        cursor.execute(f'ALTER DATABASE {db_alias} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
         for table in tables:
             cursor.execute(f'ALTER TABLE {table} CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
 

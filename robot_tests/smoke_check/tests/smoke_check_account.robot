@@ -8,7 +8,7 @@ Suite Teardown   Account Suite Teardown
 *** Keywords ***
 Account Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email}=   Get Random Email    ${email base}
+    ${email}=   Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    Acc    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email acc}    ${email}
@@ -59,7 +59,7 @@ Change Account Settings
     Should Be Equal As Strings    ${current language}    ru_RU
 
     Log    Verifying changes are saved - API
-    ${account data}=   Get Account Data    ${ENV}    ${email acc}    ${password}
+    ${account data}=   Get Account Data    ${email acc}    ${password}
     Should Be Equal as Strings    firstnameChanged    ${account data}[first_name]
     Should Be Equal as Strings    lastnameChanged    ${account data}[last_name]
     Should Be Equal as Strings    ru_RU    ${account data}[language]
@@ -113,7 +113,7 @@ Restore Password
 
     Log    Step 3: Check email inbox
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email acc}    ${email password}    restore_password
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${email acc}    restore_password
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${email acc}    restore_password
 
     Log    Step 4: Click on Restore Password button
     Run Keyword If    'nxvms' in $env    Go To    ${link}

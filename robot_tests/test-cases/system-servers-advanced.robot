@@ -1,56 +1,11 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-server-resource.robot
 Suite Setup       Server Advanced Settings Suite Setup
 Test Setup        Advanced Server Settings Test Setup
 Test Teardown     Advanced Server Test Teardown
-Suite Teardown    Server Advanced Settings Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Server Advanced Settings Suite Teardown
 Force Tags        advanced server
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Server Advanced Settings Suite Setup
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
-    Set Suite Variable     ${random}    ${random}
-    ${owner}=    Register and activate account with random email    mark    hamil    ${password}
-    ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
-    Set Suite Variable    &{server}    &{server} 
-    Open Browser and go to URL    ${url}
-    
-    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server}[owner]
-    ...    ELSE   Set Suite Variable     ${user in charge}    admin
-    Sleep    20
-
-Advanced Server Settings Test Setup
-    [Arguments]    ${server}=&{server}    ${user}=${user in charge}    ${verify}=${True}
-    Skip If Irrelevant
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
-    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
-
-Cloud Test Setup
-    [Arguments]    ${server}    ${user}    ${verify}
-    Log in to system    ${server}    ${user}    validate=${True}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Sleep    1
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page
-
-Web Admin Test Setup
-    [Arguments]    ${server}    ${user}    ${verify}
-    Log in to system    ${server}    ${user}    validate=${True}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Sleep    1
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page
-
-Advanced Server Test Teardown
-    Log out
-
-Server Advanced Settings Suite Teardown
-    Close All Browsers
-    Delete Base System    ${server}
 
 *** Test Cases ***
 1. Advanced server settings availability
@@ -71,11 +26,14 @@ Server Advanced Settings Suite Teardown
     Log    Step 3
     Log Out
     
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log in to system    ${server}    ${server}[cloud users][cloudAdmin]    
-    ...    ELSE    Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
+    IF    '''${mode}'''=='''cloud'''
+        Log in to system    ${server}    ${server}[cloud users][cloudAdmin] 
+    ELSE
+        Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
+    END
     Wait Until Element is Visible    ${SERVERS LINK}
     Sleep    1
-    Click Link    ${SERVERS LINK}
+    Click Element    ${SERVERS LINK}
     Verify on Servers Page
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
@@ -91,8 +49,11 @@ Server Advanced Settings Suite Teardown
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 4
     Log Out
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log in to system    ${server}    ${server}[cloud users][advancedViewer]    validate=${True}
-    ...    ELSE    Log in to system    ${server}    ${server}[local users][advancedViewer][login]    validate=${True}
+    IF    '''${mode}'''=='''cloud'''
+        Log in to system    ${server}    ${server}[cloud users][advancedViewer]    validate=${True}
+    ELSE
+        Log in to system    ${server}    ${server}[local users][advancedViewer][login]    validate=${True}
+    END
     sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
     Reload Page
@@ -136,7 +97,9 @@ Server Advanced Settings Suite Teardown
     Log    Step 1
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    false
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
-    Element Style Should Be    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
+    Capture Element Screenshot    ${STORAGE ENABLE SWITCH STYLE}
+    # new color being used only for this line below - with your eyes the difference is not discernable
+    Element Style Should Be    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${SERVER ADVANCED DISABLED COLOR}
     Click Button     ${STORAGE CANCEL BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH ENABLED COLOR}
@@ -147,6 +110,7 @@ Server Advanced Settings Suite Teardown
     Wait Until Element Is Visible    ${ADVANCED SAVE MODAL CLOSE BUTTON}
     Click Button    ${ADVANCED SAVE MODAL CLOSE BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
+    Capture Element Screenshot    ${STORAGE ENABLE SWITCH STYLE}
     Wait Until Element Has Style    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
     Log    Step 3
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    true
@@ -209,8 +173,11 @@ Server Advanced Settings Suite Teardown
 
     Log    Step 5 & 6
     Click Element    ${RESERVED SPACE DROPDOWN}
-    Run Keyword If    '${bytes}' == 'GB'    Click Element    ${RESERVED DROPDOWN OPTION TB}
-    ...    ELSE IF    '${bytes}' == 'TB'    Click Element    ${RESERVED DROPDOWN OPTION GB}
+    IF    '${bytes}' == 'GB'
+        Click Element    ${RESERVED DROPDOWN OPTION TB}
+    ELSE IF    '${bytes}' == 'TB'
+        Click Element    ${RESERVED DROPDOWN OPTION GB}
+    END
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Sleep    1
     Click Element    ${STORAGE SAVE BUTTON}

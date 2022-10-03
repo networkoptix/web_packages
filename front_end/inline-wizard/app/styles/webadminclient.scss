@@ -7,6 +7,9 @@
   border-top-color:$dark12;
 }
 
+a {
+  color: var(--brand-core) !important;
+}
 
 body {
   padding          : 0 !important;

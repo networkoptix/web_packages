@@ -1,82 +1,38 @@
+<ng-container *ngIf="(APIToolService.loadingFailure$ | async); then loadingError"></ng-container>
 
-<ng-container>
-    <div class="block-container mt-3">
+<ng-container *ngIf="!(APIToolService.loadingFailure$ | async)">
+    <ng-container *ngTemplateOutlet="mainPage;context{ menuNodes: APIToolService.menuNodes }"></ng-container>
+</ng-container>
+
+<ng-template #mainPage let-menuNodes="menuNodes">
+    <div class="page-wrapper">
+    <div class="block-container">
         <div class="row">
-            <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
-
-                <div class="mb-3">
-                    <nx-select
-                            [id]="'avail-systems'"
-                            [stillLoading]="!serversLoaded"
-                            [items]="systemsDropdown"
-                            (onSelected)="onSystemChange($event)"
-                            [selected]="selectedSystem">
-                    </nx-select>
-
-                    <nx-select
-                            class="mt-2"
-                            [id]="'avail-systems'"
-                            [stillLoading]="!serversLoaded"
-                            [items]="serversDropdown"
-                            (onSelected)="onServerChange($event)"
-                            [selected]="selectedServer">
-                    </nx-select>
-
-                    <div *ngIf="selectedServer.incompatible" class="mt-2"
-                         style="border: 1px solid #eedc9e; background-color: #ffeeb5; padding: 0.5rem 1rem; text-align: center">
-                        The system uses the old API version. We recommend that you update the system
-                        to the new version in order to get
-                        access to new functions.
-                    </div>
-                </div>
-
-
-                <nx-pre-loader *ngIf="!content"></nx-pre-loader>
-                <nx-menu-api *ngIf="content"
-                         [content]="content"
-                         [searchable]="content.searchable"></nx-menu-api>
+                <nx-system-dropdown></nx-system-dropdown>
+                <span #developersMenu></span>
+                <nx-developers-menu 
+                    *ngIf="!APIToolService.outDatedSystem" 
+                    [service]="APIToolService" 
+                    [offsetHeight]="menuOffset"
+                    [queryParamsOnInternalRoute]="'merge'"
+                    (onClick)="APIToolService.handleMenuClick($event)" 
+                    #developersMenu> 
+                </nx-developers-menu>
             </div>
-            <!-- Offset for the fixed menu -->
-            <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
-                <nx-pre-loader *ngIf="!apiDoc"></nx-pre-loader>
-
-                <div *ngIf="this.content && this.content.selectedSection !== 'api_information'">
-                    <div style="padding: 0 1rem 1rem">
-                        <h2>{{this.content?.selectedSection}}</h2>
-                        <p class="mt-3">Section description not yet provided by backend</p>
-                    </div>
-                    <div id="swagger-ui" ></div>
-                </div>
-
-                <div *ngIf="this.content?.selectedSection === 'api_information'">
-                    <h2>API Information</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur quis ex nec velit dictum
-                        elementum sed eget odio. Vivamus placerat tincidunt enim, a rutrum urna feugiat nec. Maecenas
-                        dapibus posuere tellus. Proin ut posuere ante. In a rhoncus quam. Integer posuere ex quis mauris
-                        rhoncus mattis. Aenean interdum ante magna, eget pellentesque tortor vehicula vel. Aliquam
-                        placerat justo eros. Vivamus vitae iaculis lorem, a accumsan odio. Vivamus ac libero aliquet,
-                        vestibulum tellus quis, vestibulum augue. Phasellus vestibulum metus quis elit ullamcorper, sed
-                        blandit leo condimentum. Sed ac ipsum aliquam, ullamcorper tortor nec, congue ante. Suspendisse
-                        potenti. Nulla mattis ligula sit amet tincidunt dignissim. Aliquam volutpat tempor eros, non
-                        cursus ipsum tempor nec. Mauris dictum, ligula eget vulputate auctor, libero magna lobortis
-                        mauris, eu faucibus ipsum mauris sit amet ex.
-                    </p>
-
-                    <h2>API Changes</h2>
-                    <p>Nulla at risus id sem mollis eleifend vitae eu eros. Phasellus egestas eros diam, at aliquam sem
-                        imperdiet eget. Curabitur tempor, massa in vulputate commodo, arcu magna accumsan diam, ut
-                        mattis magna turpis eget ante. Donec aliquam euismod tempus. Phasellus eros mauris, faucibus
-                        tempus consectetur a, dictum id nunc. Suspendisse porttitor ante non turpis feugiat lobortis. In
-                        a ante nulla. Aliquam gravida mauris et erat mattis, eu viverra ex sodales. Integer id orci
-                        volutpat, egestas nisi at, cursus nisl. Pellentesque vel fringilla leo. Curabitur neque nisi,
-                        condimentum eget bibendum sed, placerat in eros. Nulla aliquam nunc et neque ornare condimentum.
-                        Fusce sed scelerisque ligula. Fusce et tincidunt ligula, non cursus nulla. Ut sed ex at elit
-                        consectetur mollis sit amet a nibh.
-                    </p>
-                </div>
+            <div class="swagger-container col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
+                <nx-swagger [activeNode]="APIToolService.activeNode"></nx-swagger>
             </div>
         </div>
     </div>
-</ng-container>
+</div>
+</ng-template>
+
+<ng-template #loadingError>
+    <nx-page-placeholder [type]="APIToolService.loadingErrorType">
+        <button class="btn btn-primary main-button mx-auto">
+            <a routerLink="/" translate>Go to Main Page</a>
+        </button>
+    </nx-page-placeholder>
+</ng-template>

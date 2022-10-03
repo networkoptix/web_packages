@@ -1,7 +1,39 @@
-// Karma configuration
-// Generated on Thu Feb 25 2021 17:29:11 GMT-0800 (Pacific Standard Time)
+// The watch config has been updated to allow attaching remote debuggers
 
-module.exports = function(config) {
+// To configure debugger for vs code you'll need to add the configurations below to your launch.json
+// Depending on how your have your if your workspaceFolder is not the front_end folder
+// or if you don't have workspaces setup you'll probably need to add /front_end to each place
+// that ${workspaceFolder} is referenced
+
+// This attaches the debugger to a Karma instance currently running in watch mode
+// {
+//     'type': 'pwa-chrome',
+//     'request': 'attach',
+//     'name': 'Debug: Currently running Karma test',
+//     'address': 'localhost',
+//     'port': 9222,
+//     'timeout': 600000,
+//     'sourceMaps': true,
+//     'webRoot': '${workspaceFolder}',
+//     'pathMapping': {
+//         '/_karma_webpack_': '${workspaceFolder}'
+//     }
+// }
+
+// This launches Karma in watch mode with the currently open file.
+// To debug, you'll need to also run the debug command.
+// {
+//     'type': 'node',
+//     'request': 'launch',
+//     'name': 'Start: Karma tests for currently open spec file',
+//     'skipFiles': ['<node_internals>/**'],
+//     'console': 'integratedTerminal',
+//     'program': '${workspaceFolder}/node_modules/.bin/ng',
+//     'args': ['test', '--include', '${relativeFile}', '--karma-config', 'karma.conf.watch.js'],
+//     'outFiles': ['${workspaceFolder}/**/*.js']
+// }
+
+module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -9,7 +41,7 @@ module.exports = function(config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine', '@angular-devkit/build-angular'],
+        frameworks: ['jasmine', '@angular-devkit/build-angular', 'viewport'],
 
         plugins: [
             require('karma-jasmine'),
@@ -19,22 +51,54 @@ module.exports = function(config) {
             require('karma-jasmine-html-reporter'),
             require('karma-coverage-istanbul-reporter'),
             require('@angular-devkit/build-angular/plugins/karma'),
-            require( 'karma-spec-reporter' )
+            require('karma-spec-reporter'),
+            require('karma-viewport')
         ],
 
+        // Viewport configuration
+        viewport: {
+            breakpoints: [
+                {
+                    name: 'mobile',
+                    size: {
+                        width: 320,
+                        height: 480
+                    }
+                },
+                {
+                    name: 'tablet',
+                    size: {
+                        width: 768,
+                        height: 1024
+                    }
+                },
+                {
+                    name: 'screen',
+                    size: {
+                        width: 1440,
+                        height: 900
+                    }
+                }
+            ]
+        },
+
         client: {
-            clearContext : false, // leave Jasmine Spec Runner output visible in browser
-            jasmine      : {
+            clearContext: false, // leave Jasmine Spec Runner output visible in browser
+            jasmine: {
                 // seed             : '4321',
                 // timeoutInterval  : 1000,
-                random            : false,
-                oneFailurePerSpec : true,
-                failFast          : true
+                random: false,
+                oneFailurePerSpec: true,
+                failFast: true
             }
         },
 
         // list of files / patterns to load in the browser
         files: [],
+
+        proxies: {
+            '/static/images/': 'images/'
+        },
 
         // list of files / patterns to exclude
         exclude: [],
@@ -51,9 +115,9 @@ module.exports = function(config) {
         // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
 
         coverageIstanbulReporter: {
-            dir                   : require( 'path' ).join( __dirname, './coverage/test-karma' ),
-            reports               : ['html', 'lcovonly', 'text-summary'],
-            fixWebpackSourcePaths : true
+            dir: require('path').join(__dirname, './coverage/test-karma'),
+            reports: ['html', 'lcovonly', 'text-summary'],
+            fixWebpackSourcePaths: true
         },
 
         // web server port
@@ -76,8 +140,21 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['ChromeHeadless'],
-
+        browsers: ['ChromeHeadlessNoSandbox'],
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                // This custom launcher is required to allow attaching a debugger to the test
+                base: 'ChromeHeadless',
+                flags: [
+                    '--no-sandbox', // required to run without privileges in docker
+                    '--user-data-dir=/tmp/chrome-test-profile',
+                    '--disable-web-security',
+                    '--remote-debugging-address=0.0.0.0',
+                    '--remote-debugging-port=9222'
+                ],
+                debug: true
+            }
+        },
         restartOnFileChange: true,
 
         // Concurrency level

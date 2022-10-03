@@ -1,14 +1,32 @@
 <div class="row auth-visible">
-    <nx-page-placeholder class="placeholder-section" type="NO_SETTINGS" *ngIf="(isOffline || !system.isAvailable) && !selectedServer"></nx-page-placeholder>
-    <div *ngIf="serverOffline || selectedServer?.internalStatus === CONFIG.servers.status.restarting || checking" class="col-12">
+    <nx-page-placeholder
+        class="placeholder-section"
+        type="NO_SETTINGS"
+        *ngIf="(isOffline || !system.isAvailable) && !selectedServer"
+    ></nx-page-placeholder>
+    <nx-alert-block
+            *ngIf="certError"
+            class="col-12"
+            type="error"
+            id="certificate-error"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [line1]="'Server is offline due to certificate error' | translate">
+    </nx-alert-block>
+    <div
+        *ngIf="
+            serverOffline ||
+            selectedServer?.internalStatus === CONFIG.servers.status.restarting ||
+            checking"
+        class="col-12"
+    >
         <ng-container *ngIf="!checking">
             <nx-alert-block
-                *ngIf="serverOffline"
+                *ngIf="serverOffline && !certError"
                 type="error"
                 id="server-offline"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
                 [line1]="'Server offline' | translate"
-                [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
                 (onAction)="checkStatus()">
             </nx-alert-block>
@@ -18,7 +36,7 @@
                 id="restarting"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
                 [line1]="'Restarting' | translate"
-                [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
                 (onAction)="checkStatus()">
             </nx-alert-block>
@@ -34,27 +52,34 @@
     </div>
     <ng-template #preloader>
         <ng-template #offlinePlaceholder>
-            <nx-page-placeholder *ngIf="system.isAvailable" class="placeholder-section" type="SERVER_OFFLINE"></nx-page-placeholder>
+            <nx-page-placeholder
+                *ngIf="system.isAvailable"
+                class="placeholder-section"
+                type="SERVER_OFFLINE"
+            ></nx-page-placeholder>
         </ng-template>
-        <div *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder" class="col-12 placeholder-section">
+        <div
+            *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder"
+            class="col-12 placeholder-section"
+        >
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>
     <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded; else preloader">
         <nx-block header-style="extended">
             <header>
-                <div class="header-top-bar">
-                    <nx-editable-settings-heading
-                        [nameWatcher]="serverNameWatcher"
-                        (editModeState)="editMode = $event"
-                        [editEnabled]="system.userManager.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
-                    <!-- <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center"> -->
+                <div class="header-editable">
+                    <nx-editable-heading
+                            name="serverName"
+                            [(editMode)]="editMode"
+                            [(nameWatcherValue)]="serverNameWatcher.value"
+                            [editEnabled]="enableEdit"></nx-editable-heading>
                     <div *ngIf="!editMode" class="d-flex pb-2">
                         <button *ngIf="system.canViewInfo()" class="server-buttons"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
                                 <span>
-                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
                                         [applyCss]="true"></svg-icon>
                                 </span>
                                 <span class="ml-1 header-button-span" translate>Detailed Info</span>
@@ -65,7 +90,7 @@
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
             </header>
-            <nx-section>
+            <nx-section *ngIf="system.userManager.isMine || system.userManager.permissions.isAdmin">
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
                         <button
@@ -76,17 +101,16 @@
                             <span class="ellipsis" translate>Restart</span>
                         </button>
                     </div>
-                    <div class="right setting-buttons">
+                    <div class="right setting-buttons" *ngIf="environment.isLocal">
                         <button
                             class="btn btn-default"
                             (click)="detachServer()"
                             [disabled]="detachDisabled || serverUnavailable"
-                            *ngIf="(CONFIG.isLocal || betaMode) && system.servers.length > 1"
+                            *ngIf="system.servers.length > 1"
                         >
                             <span class="ellipsis" translate>Detach from the System</span>
                         </button>
                         <button
-                            *ngIf="CONFIG.isLocal || betaMode"
                             class="btn btn-default"
                             (click)="resetServer()"
                             [disabled]="resetDisabled || serverUnavailable"
@@ -107,6 +131,7 @@
                     <div class="server-settings-port">
                         <div style="width: 85px;">
                             <nx-numeric
+                                    name="server-port"
                                     [class]="'pl-2'"
                                     [min]="CONFIG.servers.port.min"
                                     [max]="CONFIG.servers.port.max"
@@ -132,7 +157,8 @@
                             [stillLoading]="checkingForDataAnalytics || storagesLoading"
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
-                            (onSelected)="changeAnalyticsStorage($event)"></nx-select>
+                            (onSelected)="changeAnalyticsStorage($event)"
+                        ></nx-select>
                         <ng-container *ngIf="systemStorageChosen">
                             <span></span>
                             <div class="error-label">

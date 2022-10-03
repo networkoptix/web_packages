@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { PlaybackState, PLAYBACK_MODE, LivePlaybackState } from '../../datatypes/PlaybackState';
-import PlaybackService from '../../services/playback.service';
 import { Subscription } from 'rxjs';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+
+import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
+import PlaybackService from '../../services/playback.service';
 
 @Component({
-    selector    : 'playback-state-indicator',
-    templateUrl : './playback-state-indicator.component.html',
-    styleUrls   : ['./playback-state-indicator.component.scss']
+    selector: 'playback-state-indicator',
+    templateUrl: './playback-state-indicator.component.html',
+    styleUrls: ['./playback-state-indicator.component.scss']
 })
 export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
     protected subscription: Subscription

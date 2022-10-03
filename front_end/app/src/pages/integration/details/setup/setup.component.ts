@@ -1,19 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../menu';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
-import { NxPageService }                from '../../../../services/page.service';
-import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
-import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
-import { SubscriptionLike }             from 'rxjs';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { SubscriptionLike } from 'rxjs';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxMenuService } from '@src/menu';
+
+import { IntegrationService } from '../../integration.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'setup-component',
-    templateUrl : 'setup.component.html',
-    styleUrls   : ['setup.component.scss']
+    selector: 'setup-component',
+    templateUrl: 'setup.component.html',
+    styleUrls: ['setup.component.scss']
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {
@@ -41,14 +42,19 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
-            this.plugin = plugin;
-            this.pageService.pageDescription = NxLanguageProviderService.translate(
-                this.LANG.pageDescriptions.integrationSetup, {
-                    PLUGIN_NAME              : this.plugin.information?.name,
-                    PLUGIN_SHORT_DESCRIPTION : this.plugin.information?.shortDescription
-                });
-        });
+        this.pluginSubscription = this.integrationService.pluginSubject
+            .subscribe(plugin => {
+                this.plugin = plugin;
+                this.pageService.pageDescription =
+                    NxLanguageProviderService.translate(
+                        this.LANG.pageDescriptions.integrationSetup,
+                        {
+                            PLUGIN_NAME: this.plugin.information?.name,
+                            PLUGIN_SHORT_DESCRIPTION:
+                                this.plugin.information?.shortDescription
+                        }
+                    );
+            });
     }
 
     ngOnDestroy() {

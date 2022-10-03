@@ -30,11 +30,11 @@ nx-dynamic-table {
       position         : absolute;
       left             : 50%;
       transform        : translateX(-50%);
-      border           : 1px solid $light14;
+      border           : 1px solid var(--light14);
       padding          : 4px 8px;
       bottom           : 35px;
       z-index          : 9;
-      background-color : $light1;
+      background-color : var(--light1);
       transition       : opacity, .2s linear;
     }
 
@@ -52,11 +52,11 @@ nx-dynamic-table {
     .table-header {
       @include typography.medium15dark9;
       font-weight      : 500 !important;
-      background-color : $additional_light1;
+      background-color : var(--additional_light1);
       padding          : 1rem;
       line-height      : rem(15px);
       height           : 3rem;
-      border           : 1px solid $light3;
+      border           : 1px solid var(--light3);
       border-bottom    : none;
     }
 
@@ -87,8 +87,8 @@ nx-dynamic-table {
             }
 
             .group-1 {
-              color        : $light10;
-              border-color : $light10;
+              color        : var(--light10);
+              border-color : var(--light10);
             }
 
             .group-2 {
@@ -112,8 +112,8 @@ nx-dynamic-table {
             }
 
             .group-6 {
-              color        : $light10;
-              border-color : $light10;
+              color        : var(--light10);
+              border-color : var(--light10);
             }
           }
         }
@@ -141,7 +141,7 @@ nx-dynamic-table {
 
             .text-placeholder {
               font-size : 1.25rem;
-              color     : $light16;
+              color     : var(--light16);
             }
           }
 
@@ -197,30 +197,30 @@ nx-dynamic-table {
           height : rem(24px);
 
           &:hover {
-            color      : $dark9;
-            background : transparentize($brand_core, 0.9);
+            color      : var(--dark9);
+            background : var(--brand-core-t90);
           }
 
           &.selected, &:active, &:focus {
-            background : $light16;
+            background : var(--light16);
 
             td {
               &, span {
-                color : $light1 !important;
+                color : var(--light1) !important;
               }
 
               svg {
                 path {
-                  fill : $light1 !important;
+                  fill : var(--light1) !important;
                 }
 
                 rect, polygon {
-                  fill : $light16 !important;
+                  fill : var(--light16) !important;
                 }
               }
 
               .icon-negative {
-                color : $light1;
+                color : var(--light1);
               }
             }
           }
@@ -246,8 +246,8 @@ nx-dynamic-table {
       &-header {
         @include typography.regular13dark9;
         padding          : 0.5rem 1rem;
-        background-color : $additional_light1;
-        border           : 1px solid $light3;
+        background-color : var(--additional_light1);
+        border           : 1px solid var(--light3);
         border-bottom    : none;
         line-height      : 16px;
         text-transform   : none;
@@ -279,7 +279,7 @@ nx-dynamic-table {
 
           .page-link {
             @include typography.regular13light;
-            background-color : $light4;
+            background-color : var(--light4);
             border-radius    : 2px;
             height           : 32px;
             padding          : 0 12px;
@@ -290,7 +290,7 @@ nx-dynamic-table {
             border           : none;
 
             &:hover {
-              background-color : $light5;
+              background-color : var(--light5);
             }
 
             &[aria-label="Previous"] {
@@ -315,15 +315,15 @@ nx-dynamic-table {
           }
 
           &.active .page-link {
-            color            : $light1 !important;
-            background-color : $light16;
-            border-color     : $light16;
+            color            : var(--light1) !important;
+            background-color : var(--light16);
+            border-color     : var(--light16);
           }
 
           &.disabled .page-link {
             cursor           : default;
-            background-color : transparentize($light6, 0.8);
-            color            : transparentize($dark9, 0.7) !important;
+            background-color : rgba(var(--light6--rgb), 0.2);
+            color            : rgba(var(--dark9--rgb), 0.3) !important;
           }
         }
       }
@@ -332,7 +332,7 @@ nx-dynamic-table {
 
   .vendor {
     @include media-breakpoint-down(md) {
-      background-color : $light4;
+      background-color : var(--light4);
     }
   }
 

@@ -1,0 +1,63 @@
+<ng-template #enable2fa>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Cannot enable mandatory two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="activeModal.close()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <p translate>You can enable mandatory two-factor authentication for cloud users only if two-factor authentication is enabled for your account.</p>
+        <p><span translate>Enable it in your</span>&nbsp;<span class="pseudo-anchor" (click)="activeModal.close('GOTO_SECURITY')" translate>account settings</span></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="activeModal.close()" translate>OK</button>
+    </div>
+</ng-template>
+
+<form *ngIf="!showError; else enable2fa" #mandatory2faForm="ngForm" name="mandatory2faForm" novalidate>
+    <div class="modal-header">
+        <ng-template #disable2fa>
+            <h1 class="modal-title" translate>Disable mandatory two-factor authentication</h1>
+        </ng-template>
+        <h1 *ngIf="system2faEnabled; else disable2fa" class="modal-title" translate>Enable mandatory two-factor authentication</h1>
+
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="activeModal.close()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-group">
+            <div>
+                <p *ngIf="usersWithout2fa > 0" class="input-error"
+                   translate="{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system."
+                   [translateParams]="{numUsers: usersWithout2fa}"></p>
+                <span translate>Enter a verification code from your authentication app or a backup code to continue</span><span>.</span>
+            </div>
+            <input class="form-control" #verificationCodeInput="ngModel"
+                   [(ngModel)]="verificationCode"
+                   (ngModelChange)="notAuthorized = false"
+                   id="verificationCode"
+                   name="verificationCode"
+                   required nxFocusMe autocomplete="off">
+            <ng-container *ngIf="verificationCodeInput.invalid">
+                <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                <div class="input-error"
+                     *ngIf="!verificationCodeInput.pristine && verificationCodeInput.errors?.required"
+                     [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button [process]="mandatory2fa"
+                           [form]="mandatory2faForm"
+                           [actionType]="system2faEnabled ? 'primary' : 'danger'"
+                           [buttonText]="system2faEnabled ? LANG.dialogs.buttons.enable() : LANG.dialogs.buttons.disable()"></nx-process-button>
+        <nx-cancel-button [process]="mandatory2fa" [discardFn]="cancel"></nx-cancel-button>
+    </div>
+</form>

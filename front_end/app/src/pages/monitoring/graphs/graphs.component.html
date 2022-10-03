@@ -1,0 +1,5 @@
+<nx-pre-loader type="page" *ngIf="!system; else graph"></nx-pre-loader>
+
+<ng-template #graph>
+    <monitoring-graph [system]="system" [selectedServerId]="selectedServerId"></monitoring-graph>
+</ng-template>

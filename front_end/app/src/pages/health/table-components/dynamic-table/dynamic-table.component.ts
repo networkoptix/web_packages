@@ -1,45 +1,61 @@
+import { Location } from '@angular/common';
 import {
-    Component, Input, Output,
-    EventEmitter, OnChanges, SimpleChanges,
-    OnInit, ViewEncapsulation,
-    ViewChild, ElementRef, AfterViewInit
-}                                   from '@angular/core';
-import { Location }                 from '@angular/common';
-import { ActivatedRoute, Router }   from '@angular/router';
-import { DeviceDetectorService }    from 'ngx-device-detector';
-import { UntilDestroy }             from '@ngneat/until-destroy';
-import { SubscriptionLike }         from 'rxjs';
-import { delay }                    from 'rxjs/operators';
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    OnChanges,
+    SimpleChanges,
+    OnInit,
+    ViewEncapsulation,
+    ViewChild,
+    ElementRef,
+    AfterViewInit
 
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxUriService }             from '../../../../services/uri.service';
-import { NxHealthService }          from '../../health.service';
-import { NxHealthLayoutService }    from '../../health-layout.service';
-import { NxRibbonService }          from '../../../../components/ribbon';
-import { NxUtilsService }           from '../../../../services/utils.service';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { SubscriptionLike } from 'rxjs';
+import { delay } from 'rxjs/operators';
+
+import { NxRibbonService } from '@components/ribbon';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+
+import { NxHealthLayoutService } from '../../health-layout.service';
+import { NxHealthService } from '../../health.service';
 
 interface Params {
     [key: string]: any;
 }
 
 const ALARM_ORDER = {
-    error   : 2,
-    warning : 1,
-    ''      : 0
+    error: 2,
+    warning: 1,
+    '': 0
 };
 
-const TEXT_FORMATS = ['longText', 'long-text', 'shortText', 'short-text', 'text', 'no-max-width'];
+const TEXT_FORMATS = [
+    'longText',
+    'long-text',
+    'shortText',
+    'short-text',
+    'text',
+    'no-max-width'
+];
 const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-dynamic-table',
-    templateUrl   : './dynamic-table.component.html',
-    styleUrls     : ['./dynamic-table.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-dynamic-table',
+    templateUrl: './dynamic-table.component.html',
+    styleUrls: ['./dynamic-table.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit {
     @Input() tableHeader = '';
@@ -90,17 +106,16 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     @ViewChild('nxTable', { static: false }) tableElement: ElementRef;
     @ViewChild('tooltip', { static: false }) tableTooltip: ElementRef;
 
-    constructor(configService: NxConfigService,
-                private ribbonService: NxRibbonService,
-                private uri: NxUriService,
-                private utilsService: NxUtilsService,
-                private router: Router,
-                private route: ActivatedRoute,
-                private location: Location,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private deviceDetectorService: DeviceDetectorService,
-                private healthLayoutService: NxHealthLayoutService,
-                public healthService: NxHealthService
+    constructor(
+        configService: NxConfigService,
+        private ribbonService: NxRibbonService,
+        private uri: NxUriService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private deviceDetectorService: DeviceDetectorService,
+        private healthLayoutService: NxHealthLayoutService,
+        public healthService: NxHealthService
     ) {
         this.CONFIG = configService.getConfig();
         this.elements = this.elements || [];
@@ -110,33 +125,39 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.healthService.tableReady = false;
         this.showHorizontalTooltip = false;
 
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
-            this.mobileDetailMode = this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg);
-            if (this.tableElement) {
-                this.healthLayoutService.tableWidth = this.tableElement.nativeElement.offsetWidth;
-            }
-
-            this.setPagerSize();
-        });
-
-        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
-            // force view component update without URI update
-            setTimeout(() => {
-                this.params = { ...this.route.snapshot.queryParams };
-
-                this.startIndex = this.params.index || 0;
-
-                if (this.params.sortBy) {
-                    this.sortBy(this.params.sortBy);
-                } else {
-                    this.sortOrderASC = true;
-                    this.selectedGroup = undefined;
-                    this.selectedHeader = undefined;
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
+            .subscribe(() => {
+                this.mobileDetailMode = this.healthLayoutService.activeEntity &&
+                this.scrollMechanicsService.mediaQueryMax(
+                    NxScrollMechanicsService.MEDIA.lg
+                );
+                if (this.tableElement) {
+                    this.healthLayoutService.tableWidth =
+                        this.tableElement.nativeElement.offsetWidth;
                 }
 
-                this.selectPage(undefined, this.startIndex);
+                this.setPagerSize();
             });
-        });
+
+        this.locationSubscription = this.location
+            .subscribe((event: PopStateEvent) => {
+            // force view component update without URI update
+                setTimeout(() => {
+                    this.params = { ...this.route.snapshot.queryParams };
+
+                    this.startIndex = this.params.index || 0;
+
+                    if (this.params.sortBy) {
+                        this.sortBy(this.params.sortBy);
+                    } else {
+                        this.sortOrderASC = true;
+                        this.selectedGroup = undefined;
+                        this.selectedHeader = undefined;
+                    }
+
+                    this.selectPage(undefined, this.startIndex);
+                });
+            });
     }
 
     ngOnInit() {
@@ -152,7 +173,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.healthLayoutService.activeEntity) {
             this.setPagerSize();
             this.startIndex = this._elements.findIndex(elem => {
-                return this.healthLayoutService.activeEntity === elem || this.healthLayoutService.activeEntity.id === elem.entity;
+                return this.healthLayoutService.activeEntity === elem ||
+                    this.healthLayoutService.activeEntity.id === elem.entity;
             });
             if (this.startIndex !== -1) {
                 this.selectedEntity = this._elements[this.startIndex];
@@ -188,14 +210,22 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 }
             });
 
-        this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
-            this.setActiveEntity(activeEntity);
-        });
+        this.healthLayoutService.activeEntitySubject
+            .subscribe((activeEntity: any) => {
+                this.setActiveEntity(activeEntity);
+            });
     }
 
     private setPagerSize() {
-        if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.md) ||
-            (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl) && this.selectedEntity)) {
+        if (
+            this.scrollMechanicsService.mediaQueryMax(
+                NxScrollMechanicsService.MEDIA.md
+            ) || (
+                this.scrollMechanicsService.mediaQueryMax(
+                    NxScrollMechanicsService.MEDIA.xl
+                ) && this.selectedEntity
+            )
+        ) {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeMedium;
             this.pagerEllipses = false;
         } else {
@@ -207,13 +237,18 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     private setActiveEntity(activeEntity) {
         if (activeEntity) {
             this.selectedEntity = this._elements.find(elem => {
-                return this.healthLayoutService.activeEntity === elem || this.healthLayoutService.activeEntity.id === elem.entity;
+                return this.healthLayoutService.activeEntity === elem ||
+                    this.healthLayoutService.activeEntity.id === elem.entity;
             });
         } else {
             this.selectedEntity = activeEntity;
         }
 
-        if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+        if (
+            this.scrollMechanicsService.mediaQueryMax(
+                NxScrollMechanicsService.MEDIA.lg
+            )
+        ) {
             this.mobileDetailMode = !!this.selectedEntity;
         }
 
@@ -235,7 +270,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedHeader = undefined;
 
             if (changes.headers.previousValue !== undefined &&
-                !NxUtilsService.isEqual(changes.headers.previousValue, changes.headers.currentValue)) {
+                !NxUtilsService.isEqual(
+                    changes.headers.previousValue,
+                    changes.headers.currentValue
+                )
+            ) {
                 resetURI = true;
             }
         }
@@ -307,7 +346,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.selectedGroup = sortBy[GROUP_ID];
         this.selectedHeader = sortBy[PARAM_ID];
 
-        this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false, undefined, true);
+        this.toggleSort(
+            sortBy[GROUP_ID],
+            sortBy[PARAM_ID],
+            false,
+            undefined,
+            true
+        );
     }
 
     setClickedRow(element) {
@@ -346,7 +391,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     setPage(page: number, startIndex?, fromComponent = false) {
         // TODO: possible optimization - we may not need snapshot params here
-        if (this.mobileDetailMode || startIndex === 0 && this.params.index === undefined) {
+        if (
+            this.mobileDetailMode ||
+            startIndex === 0 && this.params.index === undefined
+        ) {
             return;
         }
 
@@ -392,12 +440,16 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             switch (paramId) {
                 case 'alarm':
                     return (elm) => {
-                        return elm[groupId]?.[paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
+                        return (
+                            elm[groupId]?.[paramId] &&
+                            ALARM_ORDER[elm[groupId][paramId].icon]
+                        ) || '';
                     };
                 case 'resolution':
                     return (elm) => {
                         if (elm[groupId]?.[paramId]?.value) {
-                            const res = elm[groupId][paramId].value.toLowerCase().split('x');
+                            const res = elm[groupId][paramId]
+                                .value.toLowerCase().split('x');
 
                             if (res.length === 2) {
                                 return res[0] * res[1];
@@ -411,7 +463,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 case 'displayAddress':
                     return (elm) => {
                         if (!(elm[groupId]?.[paramId])) {
-                            return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
+                            return Number.NEGATIVE_INFINITY;
+                            // metric does not exist - visual representation is "-"
                         }
                         const value = elm[groupId]?.[paramId]?.value;
                         return parseInt(value.replace(/\./g, '')) || 0;
@@ -419,7 +472,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 default:
                     return (elm) => {
                         if (!(elm[groupId]?.[paramId])) {
-                            return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
+                            return Number.NEGATIVE_INFINITY;
+                            // metric does not exist - visual representation is "-"
                         }
 
                         const format = elm[groupId]?.[paramId]?.formatClass || undefined;
@@ -457,7 +511,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     getTitle(item, headerGroupId, headerId) {
         let title;
         if (item?.[headerGroupId]?.[headerId]) {
-            title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;
+            title = item[headerGroupId][headerId].tooltip ||
+                item[headerGroupId][headerId].text;
         }
         if (title === undefined) {
             title = '';

@@ -1,16 +1,23 @@
-import { Injectable }               from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { Router, NavigationStart }  from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { BehaviorSubject } from 'rxjs';
 
-import { environment }              from '../../environments/environment';
-import { NxMenusService, MenuNode } from './menus.service';
+import { environment } from '@environments/environment';
 
-enum systemRoutes {
-    SETTINGS='settings',
-    VIEW='view',
-    HEALTH='health'
+import { NxMenusService } from './menus.service';
+import { MenuNode } from './menus.service.types';
+import { ContextManifest } from './nx-cloud-api.types';
+
+type createButtonType = 'default' | 'primary'
+interface MenuNodeNavProps {
+    url: string;
+    // eslint-disable-next-line camelcase
+    new_window: boolean;
+    queryParamsHandling
 }
 
+@UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root'
 })
@@ -18,38 +25,45 @@ export class NxHeaderService {
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject(null);
     public lastActive$ = new BehaviorSubject(null);
-    private unsub$ = new Subject();
     public nodes: MenuNode[] = [];
-    public currentLocation$ = new BehaviorSubject<any>({})
+    public currentLocation$ = new BehaviorSubject<any>({});
+    public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
+
+    public dynamicRoutes = {}
+
+    constructor(
+        private router: Router,
+        private menusService: NxMenusService
+    ) {
+        this.router.events
+            .pipe(untilDestroyed(this))
+            .subscribe(event => {
+                if (event instanceof NavigationStart) {
+                    this.setLocation(event.url);
+                }
+            });
+
+        this.menusService.currentSystemNode$
+            .pipe(untilDestroyed(this))
+            .subscribe(_ => {
+                this.setLocation(this.router.url);
+            });
+    }
 
     set currentLocation(value) {
         this.currentLocation$.next(value);
     }
 
     get currentLocation() {
-        return this.currentLocation$.value;
+        return this.currentLocation$.getValue();
     }
 
-    // Only to communicate with AJS
-    systemIdSubject = new BehaviorSubject<string>(undefined);
-
-    constructor(
-        private router: Router,
-        private menusService: NxMenusService
-    ) {
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationStart) {
-                this.setLocation(event.url);
-            }
-        });
-
-        this.menusService.currentSystemNode$.subscribe(_ => {
-            this.setLocation(this.router.url);
-        });
+    set createAccountButtonType(value: createButtonType) {
+        this.createAccountButtonType$.next(value);
     }
 
-    ngOnDestroy() {
-        this.unsub$.next('done');
+    get createAccountButtonType() {
+        return this.createAccountButtonType$.getValue();
     }
 
     get show$() {
@@ -61,7 +75,7 @@ export class NxHeaderService {
     }
 
     get activeSystem() {
-        return this.activeSystem$.value;
+        return this.activeSystem$.getValue();
     }
 
     set activeSystem(system) {
@@ -72,14 +86,74 @@ export class NxHeaderService {
         this.setLocation(this.router.url);
     }
 
+    get lastActive() {
+        return this.lastActive$.getValue();
+    }
+
+    getDynamicRoute(url: string) {
+        return this.dynamicRoutes[url.split('?')[0]];
+    }
+
+    setDynamicRoute(routes: string[], node, url?) {
+        for (const route of routes) {
+            this.dynamicRoutes[route] = JSON.parse(JSON.stringify(node));
+            this.dynamicRoutes[route].path = route;
+        }
+        if (url) {
+            this.setLocation(url);
+        }
+    }
+
+    addDynamicDevConsoleNode<Asset extends Record<any, any>>(
+        asset: Asset,
+        editBaseUrl,
+        contexts: ContextManifest[],
+        url?
+    ) {
+        const { id, name } = asset;
+        const editUrl = `${editBaseUrl}/${id}`;
+        for (const { name: contextName } of contexts) {
+            const matchedRoute = `${editUrl}/${contextName}`;
+            if (!this.getDynamicRoute(matchedRoute)) {
+                const baseNode = new MenuNode(
+                    name,
+                    matchedRoute,
+                    name,
+                    true
+                );
+                const { breadcrumbs, childNode } = this.currentLocation;
+                childNode.queryParamsHandling = 'merge';
+                baseNode.breadcrumbs = [...breadcrumbs, { ...childNode }];
+                const dynamicNode = {
+                    isSystem: false,
+                    breadcrumbs: [...baseNode.breadcrumbs],
+                    childNode: { ...baseNode },
+                    parentNode: { ...childNode }
+                };
+
+                dynamicNode.parentNode.nodes = [{ ...baseNode, url: matchedRoute }];
+                const matchedRoutes = this.getDynamicRoute(editUrl)
+                    ? [matchedRoute]
+                    : [matchedRoute, editUrl];
+                this.setDynamicRoute(matchedRoutes, dynamicNode, url);
+            }
+        }
+    }
+
     setLocation(url?) {
         const bestMatch: any = {};
         // Check if system url or go through nodes
         const settingsBase = environment.isLocal ? '/settings' : '/systems';
-        if (url.startsWith(settingsBase) ||
+        const dynamicRoute = this.getDynamicRoute(url);
+        if (dynamicRoute) {
+            this.currentLocation = dynamicRoute;
+            return;
+        } else if (url.startsWith(settingsBase) ||
             (environment.isLocal && (
                 url.startsWith('/view') ||
-                url.startsWith('/health')
+                url.startsWith('/health') ||
+                url.startsWith('/bookmarks') ||
+                url.startsWith('/monitoring')
             ))
         ) {
             bestMatch.isSystem = true;
@@ -88,12 +162,21 @@ export class NxHeaderService {
             const systemUrl = `${settingsBase}${environment.isLocal ? '' : '/'}${systemId}`;
             const viewUrl = environment.isLocal ? '/view' : systemUrl + '/view';
             const healthUrl = environment.isLocal ? '/health' : systemUrl + '/health';
+            const bookmarkUrl = environment.isLocal ? '/bookmarks' : systemUrl + '/bookmarks';
+            const monitoringUrl = environment.isLocal ? '/monitoring' : systemUrl + '/monitoring';
+
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };
                 bestMatch.path = viewUrl;
             } else if (url.startsWith(healthUrl)) {
                 this.menusService.endpoint = { information: true };
                 bestMatch.path = healthUrl;
+            } else if (url.startsWith(bookmarkUrl)) {
+                this.menusService.endpoint = { bookmarks: true };
+                bestMatch.path = bookmarkUrl;
+            } else if (url.startsWith(monitoringUrl)) {
+                this.menusService.endpoint = { monitoring: true };
+                bestMatch.path = monitoringUrl;
             } else if (url.startsWith(systemUrl)) {
                 this.menusService.endpoint = { settings: true };
                 bestMatch.path = systemUrl;
@@ -104,32 +187,53 @@ export class NxHeaderService {
         } else {
             bestMatch.isSystem = false;
 
-            const recursivelyFindMatch = (startingNodes) => {
-                const nodes = [...startingNodes];
-                for (let i = 0; i < nodes.length; i++) {
-                    const parentNode = nodes[i];
-                    for (let j = 0; j < nodes[i].nodes.length; j++) {
-                        const node = parentNode.nodes[j];
-                        nodes.push(node);
-                        if (node.url) {
-                            const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
-                            if (nodeUrl === url || url.startsWith(nodeUrl) && (!bestMatch.path || bestMatch.path.length < nodeUrl.length)) {
-                                bestMatch.path = node.url;
-                                bestMatch.assetId = node.asset_id;
-                                bestMatch.parentNode = parentNode;
-                                bestMatch.childNode = node;
-                                bestMatch.breadcrumbs = node.breadcrumbs;
-                                if (nodeUrl === url) {
-                                    break;
-                                }
+            const recursivelyFindMatch = NxHeaderService.findMatchFactory(url, bestMatch);
+            recursivelyFindMatch(this.nodes);
+        }
+        this.currentLocation = bestMatch;
+    }
+
+    static findMatchFactory(
+        url: any,
+        target: Record<any, any> = {},
+        removeFirstBreadcrumb = true
+    ) {
+        return (startingNodes) => {
+            const nodes = [...startingNodes];
+            for (let i = 0; i < nodes.length; i++) {
+                const parentNode = nodes[i];
+                for (let j = 0; j < nodes[i].nodes.length; j++) {
+                    const node = parentNode.nodes[j];
+                    nodes.push(node);
+                    if (node.url) {
+                        const nodeUrl = node.url.startsWith('/')
+                            ? node.url
+                            : `/${node.url}`;
+                        if (
+                            nodeUrl === url ||
+                            (
+                                url.startsWith(nodeUrl) &&
+                                (!target.path || target.path.length < nodeUrl.length)
+                            )
+                        ) {
+                            target.path = node.url;
+                            target.assetId = node.asset_id;
+                            target.parentNode = parentNode;
+                            target.childNode = node;
+                            if (removeFirstBreadcrumb) {
+                                node.breadcrumbs.pop();
+                            }
+                            target.breadcrumbs = node.breadcrumbs;
+                            if (nodeUrl === url) {
+                                break;
                             }
                         }
                     }
                 }
-            };
-            recursivelyFindMatch(this.nodes);
-        }
-        this.currentLocation = bestMatch;
+            }
+
+            return target;
+        };
     }
 
     /**
@@ -137,7 +241,7 @@ export class NxHeaderService {
      *
      * @param param0 - Accepts MenuNode which contains a url property
      */
-    handleNav({ url, new_window: newWindow }: MenuNode, event) {
+    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event) {
         const openNewWindow = newWindow || event?.metaKey || event?.ctrlKey;
         this.showSubject.next(false);
         const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
@@ -150,7 +254,7 @@ export class NxHeaderService {
             const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
             window.open(serializedUrl, '_blank');
         } else {
-            this.router.navigate([url])
+            this.router.navigate([url], { queryParamsHandling })
                 .catch((ex) => {
                     console.error(ex);
                 });

@@ -1,30 +1,38 @@
-import { Injectable }                 from '@angular/core';
-import { Observable, Subject, defer } from 'rxjs';
-import { takeUntil, tap }                  from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import {
+    Observable,
+    Subject,
+    defer,
+    race,
+    timer
+} from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxToastService } from '@dialogs/toast.service';
+
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxToastService }            from '../dialogs/toast.service';
-import { NxCloudApiService }         from './nx-cloud-api';
-import { NxConfigService, IConfig }  from './nx-config';
-import { NxSessionService }          from './session.service';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { NxSessionService } from './session.service';
 
 type Handler = (...args: any[]) => any
 
 const logError = (...args) => console.error(args);
+
 export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     public settings: ProcessSettings = {
-        errorCodes         : {},
-        errorMessage       : '',
-        errorPrefix        : '',
-        holdAlerts         : false,
-        ignoreUnauthorized : false,
-        logoutForbidden    : false,
-        successMessage     : '',
-        ignoreError        : false,
-        name               : ''
+        errorCodes: {},
+        errorMessage: '',
+        errorPrefix: '',
+        holdAlerts: false,
+        ignoreUnauthorized: false,
+        logoutForbidden: false,
+        successMessage: '',
+        ignoreError: false,
+        name: '',
+        timeoutMs: 0
     };
 
     // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
@@ -41,7 +49,6 @@ export class Process {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        private cloudApiService: NxCloudApiService,
         private toastService: NxToastService,
         caller$: Observable<any>,
         settings: Partial<ProcessSettings> = {},
@@ -56,7 +63,15 @@ export class Process {
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
-    run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
+    private checkResponseHasError<T extends any>(data: any) {
+        // this is not a repetition
+        if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
+            return data;
+        }
+        return false;
+    }
+
+    public run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
         this.processing = true;
         this.error = false;
         this.success = false;
@@ -66,7 +81,14 @@ export class Process {
             first(data);
             second(data);
         };
-        this.caller$.subscribe(
+        const obs = this.settings.timeoutMs ? race(
+            timer(this.settings.timeoutMs)
+                .pipe(map(() => {
+                    throw Error(`timeout of ${this.settings.timeoutMs}ms`);
+                })),
+            this.caller$
+        ) : this.caller$;
+        obs.subscribe(
             chain(successHandler, this.onSuccess),
             chain(errorHandler, this.onError),
             this.onComplete
@@ -76,34 +98,34 @@ export class Process {
 
     // Handler method wrappers
 
-    onSuccess = async(res) => {
-        if (this.canceled) return;
+    public onSuccess = async (res) => {
+        if (this.canceled) { return; }
         const data = await res;
-        const error = this.cloudApiService.checkResponseHasError(data);
+        const error = this.checkResponseHasError(data);
         if (error || data?.error && data.error !== '0') {
-            this.errorHelper(error || data);
+            return this.errorHelper(error || data);
         } else {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
                 const options = {
-                    classname : this.CONFIG.toast.success,
-                    autohide  : !this.settings.holdAlerts,
-                    delay     : this.CONFIG.alertTimeout
+                    classname: this.CONFIG.toast.success,
+                    autohide: !this.settings.holdAlerts,
+                    delay: this.CONFIG.alertTimeout
                 };
                 this.toastService.show(this.settings.successMessage, options);
             }
-            this._successHandler(data);
+            return this._successHandler(data);
         }
     };
 
-    onError = (error) => {
+    public onError = (error) => {
         if (error && error.error) {
             error = error.error;
         }
-        this.errorHelper(error);
+        return this.errorHelper(error);
     };
 
-    onComplete = () => {
+    public onComplete = () => {
         this.processing = false;
         this.finished = true;
     };
@@ -118,7 +140,7 @@ export class Process {
      * @param successHandler
      * @param errorHandler
      */
-    then(successHandler, errorHandler = logError) {
+    public then (successHandler, errorHandler = logError) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
         return this;
@@ -132,7 +154,7 @@ export class Process {
      *
      * @param catchHandler
      */
-    catch(catchHandler) {
+    public catch (catchHandler) {
         this._catchHandler = catchHandler;
         return this;
     }
@@ -140,14 +162,16 @@ export class Process {
     /**
      * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
      */
-    cancel() {
+    public  cancel () {
         this.processing = false;
         this.canceled = true;
         this.canceled$.next(true);
     }
 
-    private errorHelper(data) {
-        if (this.canceled) return;
+    private errorHelper (data) {
+        if (this.canceled) {
+            return;
+        }
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&
@@ -166,12 +190,14 @@ export class Process {
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
             // @ts-ignore
-            const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${this.settings.errorMessage}`;
+            const message = `${this.settings.errorPrefix
+                ? this.settings.errorPrefix + ': '
+                : ''}${this.settings.errorMessage}`;
 
             const options = {
-                autohide  : !this.settings.holdAlerts,
-                classname : this.CONFIG.toast.danger,
-                delay     : this.CONFIG.alertTimeout
+                autohide: !this.settings.holdAlerts,
+                classname: this.CONFIG.toast.danger,
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }
@@ -190,7 +216,6 @@ export class NxProcessService {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        private cloudApiService: NxCloudApiService,
         private toastService: NxToastService
     ) { }
 
@@ -205,7 +230,7 @@ export class NxProcessService {
      * @param errorHandler - Error handler can be assigned here or on .then(successHandler, errorHandler) method.
      * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
      */
-    createProcess(
+    public createProcess (
         caller: (() => PromiseLike<any>) | Observable<any>,
         settings?: Partial<ProcessSettings>,
         successHandler: Handler = () => {},
@@ -217,7 +242,6 @@ export class NxProcessService {
             this.configService,
             this.languageService,
             this.sessionService,
-            this.cloudApiService,
             this.toastService,
             _caller,
             settings,
@@ -242,17 +266,42 @@ export interface ProcessSettings {
     successMessage: string;
     ignoreError?: boolean;
     name?: string;
+    timeoutMs: number;
 }
 
-export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
-    const errorCode = (error?.data?.resultCode) ||
-        (error?.resultCode) ||
-        (error?.type === 'error' &&
-        'networkConnection') ||
-        error?.errorText || error?.errorString || error;
+export const formatError = (
+    error,
+    errorCodes,
+    lang: LanguageI18NStaticTypes
+): string | false => {
+    if (error.error && typeof error.error === 'object') {
+        error = error.error;
+        // Unpack nested error
+    }
+    if (error.error !== '4' && errorCodes && error?.errorString &&
+        (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
+    ) {
+        delete error.errorString;
+    }
+    const errorCode =
+        error?.data?.resultCode ||
+        error?.resultCode ||
+        error?.type === 'error' && 'networkConnection' ||
+        error?.errorText ||
+        error?.errorString ||
+        error?.errorId ||
+        error;
     if (!errorCode) {
         return lang.errorCodes.unknownError();
     }
+
+    if (
+        error.errorText === 'second_factor_required' &&
+        lang.dialogs?.message?.twoFactor
+    ) {
+        return lang.dialogs.message.twoFactor.required();
+    }
+
     if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
         if (typeof (errorCodes[errorCode]) === 'function') {
             const result = (errorCodes[errorCode])(error) || false;
@@ -263,6 +312,8 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
             return errorCodes[errorCode];
         }
     }
-    const errorText = typeof lang.errorCodes[errorCode] === 'function' ? lang.errorCodes[errorCode]() : lang.errorCodes[errorCode];
+    const errorText = typeof lang.errorCodes[errorCode] === 'function'
+        ? lang.errorCodes[errorCode]()
+        : lang.errorCodes[errorCode];
     return errorText || lang.errorCodes.unknownError();
 };

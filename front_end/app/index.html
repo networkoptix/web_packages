@@ -12,9 +12,7 @@
 
     <link rel="icon" href="static/images/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
-
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
+    <link rel="stylesheet" href="static/styles/skin.css" />
     <link rel="stylesheet" href="static/fonts/fonts.css"/>
 
     <style>
@@ -44,12 +42,12 @@
 </noscript>
 
 <script type="application/javascript">
-    if (/msie|trident|edge/.test( window.navigator.userAgent.toLowerCase() )) {
+    if (/msie|trident|edge/.test(window.navigator.userAgent.toLowerCase() )) {
         window.document.write( '<div class="container d-flex flex-column">\n' +
                                '<div class="jumbotron error-page" style="width: 60%; margin: 0 auto">\n' +
                                '    <img alt="Maintenance is in progress picture" src="/static/images/placeholders/page/Wrong.svg">\n' +
                                '</div>' +
-                               '    <h1 class="d-flex flex-column justify-content-center" translate>Your browser is not supported</h1>\n' +
+                               '    <h1 class="d-flex flex-column justify-content-center text-center" translate>Your browser is not supported</h1>\n' +
                                '\n' +
                                '    <div class="row">\n' +
                                '        <h4 class="offset-1 col-10 offset-md-3 col-md-6 d-flex flex-column justify-content-center text-center" translate>\n' +
@@ -80,22 +78,26 @@
 </nx-app>
 
 <!-- Google Tag Manager -->
-<!--<script async>-->
-<!--    (function (w, d, s, l, i) {-->
-<!--    if (i && i !== 'N/A') {-->
-<!--        w[l] = w[l] || [];-->
-<!--        w[l].push({-->
-<!--            'gtm.start':-->
-<!--                new Date().getTime(), event: 'gtm.js'-->
-<!--        });-->
-<!--        var f = d.getElementsByTagName(s)[0],-->
-<!--            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';-->
-<!--        j.async = true;-->
-<!--        j.src =-->
-<!--            '//www.googletagmanager.com/gtm.js?id=' + i + dl;-->
-<!--        f.parentNode.insertBefore(j, f);-->
-<!--    }-->
-<!--})(window, document, 'script', 'dataLayer', CONFIG.googleTagManagerId);</script>-->
+<script async>
+    const addTag = (w, d, s, l, i) => {
+        if (i && i !== 'N/A') {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        }
+    };
+    fetch('/api/utils/settings')
+        .then((res) => res.json())
+        .then((data) => data && addTag(window, document, 'script', 'dataLayer', data?.googleTagManagerId?.trim()));
+</script>
 <!-- End Google Tag Manager -->
 
 </body>

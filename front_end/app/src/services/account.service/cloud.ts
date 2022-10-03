@@ -1,27 +1,28 @@
+import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
-import { DOCUMENT, Location }           from '@angular/common';
-import { Router }                       from '@angular/router';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
-import { BaseAccount }               from './base';
-import { Exactly }                   from '../utils.service';
-import { NxConfigService }           from '../nx-config';
-import { NxCloudApiService }         from '../nx-cloud-api';
+import { Account } from '@services/account.service/account';
+import { NxLoginService } from '@services/login.service';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { OauthService } from '@services/oauth.service';
+
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxConfigService } from '../nx-config';
 import { NxLanguageProviderService } from '../nx-language-provider';
-import { NxSessionService }          from '../session.service';
-import { WINDOW }                    from '../window-provider';
-import { NxAppStateService }         from '../nx-app-state.service';
-import { NxUriService }              from '../uri.service';
-import { NxPollService }             from '../poll.service';
-import { NxSystemAPIService }        from '../system-api.service';
-import { NxStorageService }          from '../storage.service';
-import { Account }                   from '@services/account.service/account';
+import { NxPollService } from '../poll.service';
+import { NxSessionService } from '../session.service';
+import { NxStorageService } from '../storage.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxUriService } from '../uri.service';
+import { WINDOW } from '../window-provider';
 
-/**
- * CloudAccount overrides BaseAccount, should maintain the same interface.
- * This is enforced using the Exactly<BaseAccount, CloudAccount> type.
- */
+import { BaseAccount } from './base';
+
 @Injectable()
-export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, CloudAccount> {
+export class CloudAccount extends BaseAccount {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -36,7 +37,11 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
         injector: Injector,
-        protected nxSystemAPIService: NxSystemAPIService
+        protected nxSystemAPIService: NxSystemAPIService,
+        protected loginService: NxLoginService,
+        protected oauthService: OauthService,
+        protected cookieService: CookieService,
+        protected bootstrapProviderService: NxBootstrapProvider
     ) {
         super(
             configService,
@@ -52,12 +57,16 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             appStateService,
             pollService,
             injector,
-            nxSystemAPIService
+            nxSystemAPIService,
+            loginService,
+            oauthService,
+            cookieService,
+            bootstrapProviderService
         );
     }
 
-    get(forceUpdate = false) {
-        if (this.requestingLogin) {
+    get(forceUpdate = false): Promise<Account> {
+        if (!forceUpdate && this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
                 .then(() => {
@@ -83,36 +92,34 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                 this.account = { ...account, isCloud: true };
                 return this.account;
             })
-            .catch(() => {
+            .catch((res) => {
+                const expiredSession = res?.error?.resultCode === 'badUsername';
                 this.account = undefined;
+
+                if (expiredSession) {
+                    // We explicitly check if account is null to determine if session has expired
+                    // We should probably refactor account since it's a little unclear that null and undefined have different behavior
+                    return null;
+                }
+
                 this.router
                     .navigate([this.CONFIG.redirect.unauthorised])
                     .catch(error => {
                         console.error(error);
                     });
-                return undefined;
             });
     }
 
     login(email: string, password: string, remember: boolean, navigateHome = false) {
         this.sessionService.email = email;
-
-        if (this.CONFIG.isLocal) {
-            this.requestingLogin = this.mediaServerApi.login(email, password).toPromise();
-        } else {
-            this.requestingLogin = this.cloudApi.login(email, password, remember);
-        }
+        this.requestingLogin = this.cloudApi.login(email, password, remember);
 
         return this.requestingLogin.then((result: any) => {
             if (!this.cloudApi.checkResponseHasError(result)) {
-                if (this.CONFIG.isLocal) {
-                    this.account = result;
-                    this.sessionService.loginState = result.email || result.name;
-                }
                 if (this.sessionService.loginState) {
                     // If the user that logged in matches the current session there's no need to show
                     // the logout dialog.
-                    if (!this.CONFIG.isLocal && result.email !== this.sessionService.loginState) {
+                    if (result.email !== this.sessionService.loginState) {
                         return this.logoutAuthorised();
                     }
 
@@ -136,8 +143,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                     }
                 });
             }
-            // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject({ error : { resultCode : result.resultCode } });
+            return Promise.reject({ error: { resultCode: result.resultCode } });
         }).then(result => {
             // Add the reload back until we solve the issues with configservice
             // TODO: CLOUD-7267: Handle account changes without reload
@@ -147,27 +153,9 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             return result;
         }).catch((result: any) => {
             if (this.cloudApi.checkResponseHasError(result.error)) {
-                // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ resultCode : result.error.resultCode });
+                return Promise.reject({ resultCode: result.error.resultCode });
             }
         });
-    }
-
-    logout(doNotRedirect = false, skipReload = false) {
-        this.account = undefined;
-
-        if (this.loggingOut) {
-            return;
-        }
-
-        this.applyService
-            .canMove()
-            .then((allowed: boolean) => {
-                if (allowed) {
-                    this.loggingOut = true;
-                    this.logoutHelper(doNotRedirect, skipReload);
-                }
-            });
     }
 
     logoutHelper(doNotRedirect = false, skipReload = false) {
@@ -175,40 +163,42 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             .logout()
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
-                if (!doNotRedirect) {
-                    this.router
-                        .navigate([this.CONFIG.redirect.unauthorised])
-                        .finally(() => {
-                            setTimeout(() => !skipReload && this.window.location.reload());
-                        });
-                } else if (!skipReload) {
-                    setTimeout(() => {
-                        this.window.location.reload();
-                    });
+                // cookieService.deleteAll doesn't remove all the cookies most of the time
+                // known cookies getting deleted here are the csrftoken and system/code cookies
+                const cookies = this.cookieService.getAll();
+                for (const cookie in cookies) {
+                    if (cookie !== 'language') {
+                        this.cookieService.delete(cookie);
+                    }
                 }
+
+                this.redirectAfterLogout(doNotRedirect, skipReload);
             });
     }
 
-    requireLogin() {
-        return this.get()
-            .then((account: Account) => {
-                if ((!account || !account.is_authenticated) && !this.loginDialogActive) {
-                    this.loginDialogActive = true;
-                    return this.dialogs
-                        .login(this, true, true).then((result) => {
-                            if (result === 'register') {
-                                return this.router.navigate(['/register']).then(() => result);
-                            } else if (!result) {
-                                this.storageService.loginRegister = true;
-                            }
-                            return this.get();
-                        })
-                        .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
-                        .finally(() => {
-                            this.loginDialogActive = false;
-                        });
+    showLogin(
+        _keepPage?: boolean,
+        _redirectClose?: boolean,
+        _redirectHome?: boolean,
+        _blockNavigation?: boolean
+    ): void {
+        // Cloud portal no longer uses login dialog
+        this.oauthService.redirectOauth();
+    }
+
+    requireLogin(): Promise<void | Account> {
+        return this.get(false)
+            .then(account => {
+                if (account === null) {
+                    this.logoutHelper(true, true);
+                } else if (!account?.is_authenticated) {
+                    this.oauthService.redirectOauth();
+                } else if (account.is_authenticated) {
+                    return account;
                 }
-                return this.loginDialogActive ? undefined : account;
+            }).catch((err) => {
+                console.error(err);
+                this.router.navigate([this.CONFIG.redirect.unauthorised]).catch(_ => {});
             });
     }
 }

@@ -1,0 +1,17 @@
+@use '../../../../../styles/theme_variables' as *;
+
+.copy-button {
+	background-color: none !important;
+	box-shadow: none !important;
+	position: absolute;
+	bottom: 3px;
+	right: 4px;
+	width: 25px;
+	height: 25px;
+    &:hover {
+        cursor: pointer;
+    }
+	svg .st7 {
+		fill: $light16 !important;
+	}
+}

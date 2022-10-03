@@ -1,0 +1,30 @@
+variables:
+  NODE_JS_IMAGE: "$DOCKER_REGISTRY/nx/cloud_portal_node_js"
+  NODE_JS_IMAGE_TAG: "1.0"
+
+docker:build-node-chrome:
+  extends: .docker.template
+  before_script:
+  - |
+    DOCKER_DIR="ci/Docker/node-chrome"
+    touch build.env
+    if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" ]]; then
+      NODE_JS_IMAGE_TAG="${NODE_JS_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}.SNAPSHOT"
+      echo "NODE_JS_IMAGE_TAG=${NODE_JS_IMAGE_TAG}" > build.env
+    fi
+    TARGET_IMAGE="${NODE_JS_IMAGE}"
+    TARGET_IMAGE_TAG="${NODE_JS_IMAGE_TAG}"
+  artifacts:
+    reports:
+      # `dotenv` is used to register `NODE_JS_IMAGE_TAG` as a runtime-created variable
+      # to use it at the next pipeline stages.
+      dotenv: build.env
+    # set expire time to match docker image retention period
+    # artifact is required to allow to restart pipeline
+    # when docker image modified
+    expire_in: 14 days
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
+      ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+    changes:
+    - ci/Docker/node-chrome/*

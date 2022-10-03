@@ -27,6 +27,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from notifications import urls as notifications_urls
+from cloud.views.meta import app_view, robots_txt
+from cloud.views.utils import serve_static
 
 
 def redirect_login(request):
@@ -60,6 +62,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view.with_ui(), name='swagger'),
     url(r'^health/', health_check),
     url(r'^admin/login/', redirect_login),
     url(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),
@@ -70,6 +73,7 @@ urlpatterns = [
     url(r'^api/', include('cms.urls')),
     url(r'^api/notifications/', include(notifications_urls.public_patterns)),
     url(r'^notifications/', include('notifications.urls')),
+    url(r'^oauth/', include('oauth.urls')),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^zapier/', include('zapier.urls')),
 
@@ -95,12 +99,13 @@ urlpatterns = [
     url(r'^ngsw-worker.js$',
         TemplateView.as_view(template_name='static/scripts/ngsw-worker.js',
                              content_type='application/javascript')),
-
-    url(r'^(?!static|preview|admin).*',
-        TemplateView.as_view(template_name="static/index.html"))
+    url(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
+    url(r'^robots.txt', robots_txt),
+    url(r'^serve/(?P<static_path>.+?)/?$', serve_static, name="serve_static"),
+    url(r'^(?!static|preview|admin).*', app_view)
 ]
 
-if settings.LOCAL_ENVIRONMENT:
+if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
     urlpatterns.insert(0, url(r'^profiler/', include('silk.urls')))
 

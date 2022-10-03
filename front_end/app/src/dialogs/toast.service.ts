@@ -1,5 +1,6 @@
 import { Injectable, TemplateRef }  from '@angular/core';
-import { IConfig, NxConfigService } from '../services/nx-config';
+
+import { IConfig, NxConfigService } from '@services/nx-config';
 
 @Injectable({ providedIn: 'root' })
 export class NxToastService {
@@ -29,9 +30,9 @@ export class NxToastService {
 
     notify(message: string, type = this.CONFIG.toast.info, hold = false) {
         const options = {
-            autohide  : !hold,
-            classname : type,
-            delay     : this.CONFIG.alertTimeout
+            autohide: !hold,
+            classname: type,
+            delay: this.CONFIG.alertTimeout
         };
 
         return this.show(message, options);

@@ -1,25 +1,39 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, OnInit, HostListener } from '@angular/core';
+import {
+    Component,
+    AfterViewInit,
+    OnDestroy,
+    ElementRef,
+    ViewChild,
+    HostListener
+} from '@angular/core';
 import { Subscription } from 'rxjs';
-import PlaybackService from '../../../playback/services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState';
+
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
+import { LoggerDecorator } from '@view/vms-client/utils';
+import {
+    PlaybackState,
+    PLAYBACK_MODE
+} from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { float, px } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineScrollbarAbsoluteService,
     TimelineScrollbarAbsoluteServiceStatus
 } from '../../services/timeline.scrollbarAbsolute.service';
 import TimelineScrollbarRelativeService from '../../services/timeline.scrollbarRelative.service';
+import TimelineSelectionService, {
+    TimelineSelectionServiceStatus
+} from '../../services/timeline.selection.service';
 import TimelineService from '../../services/timeline.service';
-import { float, px } from '../../../../utils/type-aliases';
-import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
-import { NxUtilsService } from '@services/utils.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
 
 const MIN_BAR_WIDTH_PX = 50;
 
 @Component({
-    selector    : 'timeline-scrollbar',
-    templateUrl : './timeline-scrollbar.component.html',
-    styleUrls   : ['./timeline-scrollbar.component.scss']
+    selector: 'timeline-scrollbar',
+    templateUrl: './timeline-scrollbar.component.html',
+    styleUrls: ['./timeline-scrollbar.component.scss']
 })
 @LoggerDecorator('TIMELINE SCROLLBAR ::', true)
 export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
@@ -28,15 +42,17 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
 
     CONFIG: IConfig;
 
-    @ViewChild('background') backgroundView: ElementRef;
-    @ViewChild('bar') barView: ElementRef;
-    @ViewChild('honestBar') honestBarView: ElementRef;
-    @ViewChild('currentPlayback') currentPlaybackView: ElementRef;
-    @ViewChild('left') leftView: ElementRef;
-    @ViewChild('right') rightView: ElementRef;
+    @ViewChild('background') backgroundView: ElementRef<HTMLDivElement>;
+    @ViewChild('bar') barView: ElementRef<HTMLDivElement>;
+    @ViewChild('honestBar') honestBarView: ElementRef<HTMLDivElement>;
+    @ViewChild('currentPlayback') currentPlaybackView: ElementRef<HTMLDivElement>;
+    @ViewChild('left') leftView: ElementRef<HTMLDivElement>;
+    @ViewChild('right') rightView: ElementRef<HTMLDivElement>;
+    @ViewChild('currentSelection') currentSelectionView: ElementRef<HTMLDivElement>;
 
     protected scrollbarSubscription: Subscription;
     protected playbackSubscription: Subscription;
+    protected selectionSubscription: Subscription;
 
     public canScrollLeft: boolean = false;
     public canScrollRight: boolean = false;
@@ -53,23 +69,33 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
         protected scrollbarRelative: TimelineScrollbarRelativeService,
         protected playback: PlaybackService,
+        protected selection: TimelineSelectionService,
         configService: NxConfigService,
         nxUtilsService: NxUtilsService
     ) {
         this.CONFIG = configService.getConfig();
         this.onScrollBarSubjectChange = this.onScrollBarSubjectChange.bind(this);
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
+        this.onSelectionSubjectChange = this.onSelectionSubjectChange.bind(this);
         this.useTouch = nxUtilsService.isTablet() || nxUtilsService.isMobile();
     }
 
     public ngAfterViewInit (): void {
-        this.scrollbarSubscription = this.scrollbarAbsolute.subject.subscribe((s:TimelineScrollbarAbsoluteServiceStatus) => {
-            setTimeout(() => {
-                this.onScrollBarSubjectChange(s);
+        this.scrollbarSubscription = this.scrollbarAbsolute.subject
+            .subscribe((s:TimelineScrollbarAbsoluteServiceStatus) => {
+                setTimeout(() => {
+                    this.onScrollBarSubjectChange(s);
+                });
             });
-        });
-        this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+        this.playbackSubscription = this.playback.subject.subscribe(
+            this.onPlaybackSubjectChange
+        );
+        this.selectionSubscription = this.selection.subject.subscribe(
+            this.onSelectionSubjectChange
+        );
+        this._animationFrameRequestHandler = requestAnimationFrame(() =>
+            this.onAnimationFrame()
+        );
         setTimeout(() => this.onResize(), 0);
     }
 
@@ -104,6 +130,10 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public isPlaying: boolean = false;
     public playbackLeftPixel: px = -1;
 
+    public isSelected: boolean = false;
+    public selectionLeftPixel: px = -1;
+    public selectionWidthPixel: px = 0;
+
     public onPlaybackSubjectChange (s: PlaybackState) {
         if (s.mode === PLAYBACK_MODE.STOPPED) {
             this.isPlaying = false;
@@ -122,7 +152,9 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
                 } else if (ct > vr.end) {
                     // after the bar
                     const duration = this.timeline.fullRange.end - vr.end;
-                    const width = this.backgroundView.nativeElement.getBoundingClientRect().width - (this.barLeftPx + this.barWidthPx);
+                    const width = this.backgroundView.nativeElement
+                        .getBoundingClientRect().width -
+                        (this.barLeftPx + this.barWidthPx);
                     const x0 = this.barLeftPx + this.barWidthPx;
                     const t = ct - vr.end;
                     this.playbackLeftPixel = x0 + width * t / duration;
@@ -136,6 +168,23 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
                 }
                 this.isPlaying = true;
             }, 0);
+        }
+    }
+
+    public onSelectionSubjectChange (s: TimelineSelectionServiceStatus) {
+        this.isSelected = s.isActive;
+        if (s.isActive) {
+            const bgw = this.backgroundView.nativeElement
+                .getBoundingClientRect().width;
+            this.selectionLeftPixel =  bgw *
+                (s.range.start - this.timeline.fullRange.start) /
+                this.timeline.fullRange.duration;
+            this.selectionWidthPixel = bgw *
+                s.range.duration /
+                this.timeline.fullRange.duration;
+        } else {
+            this.selectionLeftPixel = -1;
+            this.selectionWidthPixel = 0;
         }
     }
 
@@ -154,7 +203,10 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
         const lastTouched = this.lastTouched;
         // Detect and handle double touches
-        if (lastTouched?.target === e.target && lastTouched?.timeStamp + 500 > e.timeStamp) {
+        if (
+            lastTouched?.target === e.target &&
+            lastTouched?.timeStamp + 500 > e.timeStamp
+        ) {
             switch (e.target) {
                 case this.leftView.nativeElement:
                     this.buttonLeftDblClickHandler();
@@ -239,25 +291,27 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     protected _prevMouseUpTime: number
     protected _doubleClickDelay: number = 300 // ms
     public buttonLeftHandleMouseUp () {
-        const now = Date.now()
+        const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
-            this.buttonLeftDblClickHandler()
+            this.buttonLeftDblClickHandler();
         }
-        this._prevMouseUpTime = now
+        this._prevMouseUpTime = now;
     }
+
     public buttonRightHandleMouseUp () {
-        const now = Date.now()
+        const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
-            this.buttonRightDblClickHandler()
+            this.buttonRightDblClickHandler();
         }
-        this._prevMouseUpTime = now
+        this._prevMouseUpTime = now;
     }
+
     public barHandleMouseUp (e: MouseEvent|TouchEvent) { // this UX is a bit doubtful
-        const now = Date.now()
+        const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
-            this.barDblClickHandler(e)
+            this.barDblClickHandler(e);
         }
-        this._prevMouseUpTime = now
+        this._prevMouseUpTime = now;
     }
 
     public buttonLeftDblClickHandler () {
@@ -273,7 +327,9 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public onAnimationFrame (): void {
         this.scrollbarRelative.updateIfMouseIsDown();
         setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+            this._animationFrameRequestHandler = requestAnimationFrame(() =>
+                this.onAnimationFrame()
+            );
         }, this.timeline.renderFps);
     }
 
@@ -281,7 +337,8 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public onResize (): void {
         setTimeout(() => {
             // wait native element to actually resize ... otherwise we're measuring old size -- TT
-            this.scrollbarAbsolute.backgroundWidth = this.backgroundView.nativeElement.getBoundingClientRect().width;
+            this.scrollbarAbsolute.backgroundWidth =
+                this.backgroundView.nativeElement.getBoundingClientRect().width;
         });
     }
 }

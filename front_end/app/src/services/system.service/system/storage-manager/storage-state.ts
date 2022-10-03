@@ -1,11 +1,21 @@
-import { filter, map, retry, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable, Subject }       from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import {
+    filter,
+    map,
+    retry,
+    startWith,
+    switchMap,
+    takeUntil
+} from 'rxjs/operators';
 
-import { ServerManager }                                    from '../server-manager/server-manager';
-import { StateManager }                                     from '@src/utils';
-import { BaseManager }                                      from '../base/base-manager';
-import { CurrentStorageState, currentStorageStateFactory }  from './current-storage-state';
-import { NxLogger, fallback }                               from '@services/utils.service';
+import { NxLogger, fallback } from '@services/utils.service';
+import { StateManager } from '@src/utils';
+
+import { BaseManager } from '../base/base-manager';
+import { ServerManager } from '../server-manager/server-manager';
+
+import { currentStorageStateFactory } from './current-storage-state';
+import { CurrentStorageState } from './storage';
 
 export enum UpdateTriggers {
     INFO='info',
@@ -48,10 +58,36 @@ export class StorageState extends BaseManager {
     #updateOn = (trigger: UpdateTriggers) => this.#updater$.pipe(startWith(trigger), filter(updater => updater === trigger), switchMap(() => this.serverId$))
 
     // State update handlers - These need to be arrow functions because "this" is fun.
-    #getStorageInfoHandler = (id) => this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(startWith(false), map(info => typeof info === 'boolean' ? info : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))));
-    #getStorageStatsHandler = (id) => this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
-    #getStorageMetricsHandler = (id) => this.serverManager.getServerStats(id).pipe(startWith(false));
-    #getAnalyticsHandler = (id) => this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
+    #getStorageInfoHandler = (id) => this.serverManager.mediaserver
+        .getStoragesInfo({ id })
+        .pipe(startWith(false),
+            map(info => typeof info === 'boolean'
+                ? info
+                : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))
+            ));
+
+    isServerOffline = (id) => this.serverManager.servers.find((server) => server.id === id).status === 'Offline';
+
+    #getStorageStatsHandler = (id) => {
+        if (this.isServerOffline(id)) {
+            return of({});
+        }
+        return this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
+    }
+
+    #getStorageMetricsHandler = (id) => {
+        if (this.isServerOffline(id)) {
+            return of({});
+        }
+        return this.serverManager.getServerStats(id).pipe(startWith(false));
+    };
+
+    #getAnalyticsHandler = (id) => {
+        if (this.isServerOffline(id)) {
+            return of({});
+        }
+        return this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
+    }
 
     /**
      * StateManagers:
@@ -75,7 +111,7 @@ export class StorageState extends BaseManager {
     refresh$ = new Subject<boolean>();
 
     /**
-     * The storageState$ contains an instance of the CurrentStorageState which has a locations property with an array of Storage.
+     * The storageState$ contains an instance of the CurrentStorageState which has a locations' property with an array of Storage.
      * The remaining properties on the CurrentStorage state are for properties that apply to the storages as a whole and not an individual storage.
      * The individual storages should be updated from methods on the StorageState class.
      * This way edge cases can be checked before calling the appropriate update method on the individual Storage.
@@ -88,7 +124,6 @@ export class StorageState extends BaseManager {
             this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
         ]
     ).pipe(
-        takeUntil(this.refresh$),
         filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
         map((cur) => {
@@ -102,14 +137,15 @@ export class StorageState extends BaseManager {
             }
             this.storageState = cur;
             return cur;
-        })
+        }),
+        takeUntil(this.refresh$)
     );
 
     statsUpdated$ = new Subject<any>();
 
     /**
      * A hack specifically for an edge case in server-storage-standard.component.ts
-     * Reinitializes in the situation when previous server was offline, but still loaded
+     * Reinitialized in the situation when previous server was offline, but still loaded
      * Only addresses and should only be used for this edge case where
      *   previous offline server was loaded and update tick also occurred
      */
@@ -130,7 +166,6 @@ export class StorageState extends BaseManager {
                 this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
             ]
         ).pipe(
-            takeUntil(this.refresh$),
             filter((res: any) => res[2]),
             map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
             map((cur) => {
@@ -144,22 +179,20 @@ export class StorageState extends BaseManager {
                 }
                 this.storageState = cur;
                 return cur;
-            })
+            }),
+            takeUntil(this.refresh$)
         );
-        this.storageState$.subscribe(NxLogger.logCustom({
-            logIdentifier : 'Storage State',
-            prettyPrint   : false
-        }));
 
         this.statsUpdated$ = new Subject<any>();
     }
 
     constructor(public serverManager: ServerManager) {
         super();
-        this.storageState$.subscribe(NxLogger.logCustom({
-            logIdentifier : 'Storage State',
-            prettyPrint   : false
-        }));
+        // Uncomment this for debugging ... otherwise let's keep console clean :)
+        // this.storageState$.subscribe(NxLogger.logCustom({
+        //     logIdentifier: 'Storage State',
+        //     prettyPrint: false
+        // }));
         this.#storageStatsStateManager.state$.subscribe(this.statsUpdated$);
     }
 }

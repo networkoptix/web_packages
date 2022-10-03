@@ -18,6 +18,8 @@
     </div>
 </ng-template>
 
+<!-- Doesn't appear to be currently used -->
+
 <!--<ng-template #outlinedCard let-node="node">-->
 <!--    <nx-block type="mt-3">-->
 <!--        <header>{{node.title}}</header>-->
@@ -34,7 +36,7 @@
             <div *ngIf="node.cardIcon" class="heading-icon">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + node.cardIcon"
-                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
                 ></svg-icon>
             </div>
             <p>{{node.cardLead}}</p>
@@ -46,9 +48,6 @@
     </nx-block>
 </ng-template>
 
-<ng-template #articleBlock  let-index="index">
-    <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
-</ng-template>
 
 <!-- End of Card Templates -->
 
@@ -67,7 +66,8 @@
 </ng-template>
 
 <ng-template #searchResultsTemplate let-results="results">
-    <h2 class="results-heading">{{results.length ? ('Search Results:' | translate) : ('No Matching Search Results' | translate)}}</h2>
+    <ng-template #noResults><span translate>No Matching Search Results</span></ng-template>
+    <h2 *ngIf="results.length; else noResults" class="results-heading" translate>Search Results:</h2>
     <ng-container *ngFor="let doc of results">
         <ng-container *ngTemplateOutlet="resultBlock;context{doc:doc}"></ng-container>
     </ng-container>
@@ -81,11 +81,13 @@
 <!-- End of Search Results Templates -->
 
 <div *ngIf="kbService.basePath" [ngClass]="kbService.basePath !== 'content' ? 'page-wrapper' : 'content-only'">
-    <nx-left-menu *ngIf="kbService.menuName"
+    <nx-developers-menu *ngIf="kbService.menuName"
         [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
-        (onClick)="clearSearch()"
+        [service]="kbService"
+        [searchEnabled]="false"
+        (onClick)="handleClick($event)"
         (relatedLinks)="relatedLinks$.next($event)"
-        (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
+        (handlePrefetch)="prefetchDocument($event)"></nx-developers-menu>
     <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
             <nx-search *ngIf="!kbService.contentAssetId"
@@ -93,7 +95,7 @@
                 (ngModelChange)="updateSearchQuery($event)"
                 [placeholder]="'Knowledgebase Search' | translate"
                 layout="compact"></nx-search>
-            <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
+            <ng-container *ngIf="pageNode.cardClass !== 'article'">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading; else preloader">
                         <ng-container *ngTemplateOutlet="searchResultsTemplate;context{results:(searchResults$ | async)}"></ng-container>

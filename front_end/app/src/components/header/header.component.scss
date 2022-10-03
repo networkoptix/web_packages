@@ -34,10 +34,14 @@ $header-collapsing-width-1 : 1px;
     border-radius : 0;
     border-bottom : 1px solid $light4;
     padding-right : 1rem !important;
+    // Position relative and z-index are needed for the landing page, the expanding svgs on the landing page will not respect the stacking context of a position:static element.
+    position: relative;
+    z-index: 5;
 
     &.navbar-default {
         background-color : #fff;
         padding          : 0;
+        z-index          : 100;
     }
 
     .dropdown .dropdown-toggle {
@@ -154,7 +158,7 @@ $header-collapsing-width-1 : 1px;
             background-color : white !important;
 
             & > a {
-                color : $brand_core;
+                color : var(--brand-core);
 
                 &:hover {
                     background-color : transparent !important;
@@ -165,7 +169,7 @@ $header-collapsing-width-1 : 1px;
                     position         : absolute;
                     bottom           : 0;
                     height           : $active-border-width;
-                    background-color : $brand_core;
+                    background-color : var(--brand-core);
                     left             : 1rem;
                     right            : 1rem;
                 }

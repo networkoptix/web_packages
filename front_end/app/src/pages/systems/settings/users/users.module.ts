@@ -1,15 +1,16 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
-import { RouterModule }         from '@angular/router';
-import { FormsModule }          from '@angular/forms';
-import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }      from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule }       from '../../../../directives/directives.module';
-import { ComponentsModule }       from '../../../../components/components.module';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+
 import { NxSystemUsersComponent } from './users.component';
-import { PipesModule }            from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -21,7 +22,7 @@ import { PipesModule }            from '@src/pipes/pipes.module';
         ComponentsModule,
         PipesModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot()
     ],
     providers: [
     ],

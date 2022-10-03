@@ -1,11 +1,17 @@
-import { NxSystemRestAPI }                              from '@services/system-rest-api.service';
-import { NxUtilsService }                               from '@services/utils.service';
-import { ServerManager }                                from '../server-manager/server-manager';
-import { NxSystemServer, ModuleInfo }                   from '../system-types';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxUtilsService } from '@services/utils.service';
+
+import { ServerManager } from '../server-manager/server-manager';
+import { NxSystemServer, ModuleInfo } from '../system-types';
+
 import {
-    ICamera, MotionType, IRecordingSettings, ITask,
-    StreamQuality, RecordingType
-}                                                       from  './camera-manager-types';
+    ICamera,
+    MotionType,
+    IRecordingSettings,
+    ITask,
+    StreamQuality,
+    RecordingType
+} from  './camera-manager-types';
 
 export class CameraManager {
     servers: NxSystemServer[];
@@ -44,6 +50,12 @@ export class CameraManager {
                     }
                     [serverTimes, cameras] = response;
                 });
+        }
+        let camerasHealth;
+        try {
+            camerasHealth = (await this.serverManager.mediaserver.getHealthValues().toPromise())?.reply?.cameras || {};
+        } catch (e) {
+            camerasHealth = {};
         }
         const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
             const backupType = deprecatedBackupType || (<any>camera).backupQuality;
@@ -106,22 +118,23 @@ export class CameraManager {
             const motionLowRes = newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW;
 
             const recordingSettings: IRecordingSettings = {
-                recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
-                quality   : this.parseRecordingQuality(camera.scheduleTasks),
-                fps       : this.parseFps(camera.scheduleTasks, maxFps),
+                recording: camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
+                quality: this.parseRecordingQuality(camera.scheduleTasks),
+                fps: this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
-                modes     : [
+                modes: [
                     { name: 'always', id: RecordingType.ALWAYS, value: this.parseRecordingMode(camera, [RecordingType.ALWAYS]), enabled: true },
                     { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
                     {
-                        name    : 'motionLowRes',
-                        id      : motionLowRes,
-                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
-                        enabled : motionLowResEnabled && motionEnabled
+                        name: 'motionLowRes',
+                        id: motionLowRes,
+                        value: !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
+                        enabled: motionLowResEnabled && motionEnabled
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
+            const deviceType = camerasHealth[id.replace(/{|}/g, '')]?.info?.type || 'Camera';
+            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
         });
         this.cameras = mappedCameras;
         return mappedCameras;
@@ -130,15 +143,15 @@ export class CameraManager {
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
         cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
         const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = updatedTask && cameraSettings.scheduleEnabled ? {
-            bitrateKbps   : 0,
-            endTime       : 86400,
-            startTime     : 0,
-            recordingType : updatedTask.recordingType
+            bitrateKbps: 0,
+            endTime: 86400,
+            startTime: 0,
+            recordingType: updatedTask.recordingType
         } : {
-            bitrateKbps   : 0,
-            endTime       : 0,
-            startTime     : 0,
-            recordingType : RecordingType.NEVER
+            bitrateKbps: 0,
+            endTime: 0,
+            startTime: 0,
+            recordingType: RecordingType.NEVER
         };
 
         const updateParams: Partial<ICamera> | any = cameraSettings;

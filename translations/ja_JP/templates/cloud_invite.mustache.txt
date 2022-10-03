@@ -1,4 +1,4 @@
-こんにちは
+こんにちは、
 
 %CLOUD_NAME% に登録されました。
 {{#message.message}}
@@ -9,4 +9,4 @@
 %CLOUD_NAME%アカウントを作成してください
 メールアドレスを使用して指示に従ってください
 
-このリンクを使用してアカウント登録してください: {{ config.portal_url }}/登録/{{ message.code }}
+このリンクを使用してアカウント登録してください: {{ config.portal_url }}/authorize/register/{{ message.code }}

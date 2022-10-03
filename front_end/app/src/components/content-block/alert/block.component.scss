@@ -192,8 +192,8 @@
 
     &.simple-info {
         @include typography.regular13dark9;
-        background-color : rgba($brand_core, .1);
-        border           : 1px solid rgba($brand_core, .3);
+        background-color : rgba(var(--brand-core--rgb), .1);
+        border           : 1px solid rgba(var(--brand-core--rgb), .3);
         margin-bottom    : 8px;
         line-height      : 18px;
 
@@ -202,12 +202,12 @@
         }
 
         .card--body {
-            background-color : rgba($brand_core, .1);
-            border-top       : 1px solid rgba($brand_core, .3);
+            background-color : rgba(var(--brand-core--rgb), .1);
+            border-top       : 1px solid rgba(var(--brand-core--rgb), .3);
         }
 
         .card--footer {
-            background-color : rgba($brand_core, .1);
+            background-color : rgba(var(--brand-core--rgb), .1);
         }
     }
 
@@ -303,4 +303,3 @@
 .warning-margin {
     margin-left: 10px
 }
-

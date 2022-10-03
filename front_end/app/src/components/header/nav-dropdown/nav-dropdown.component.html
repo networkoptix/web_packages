@@ -5,13 +5,12 @@
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
         #dropDownButton
-        (click)="updateOffset(); show = !show;"
         [disabled]="hideDropdown"
         [ngClass]="{'hide-dropdown': hideDropdown}"
         type="button" id="activeSystemDropdown" data-toggle="dropdown">
         {{name}}
         <div *ngIf="!hideDropdown" id="nav-sub-menu-dropdown" class="arrow-flip" (click)="dropdownNode && $event.stopPropagation();updateOffset(); show = !show;">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
     <div *ngIf="show" class="popup arrow up"></div>

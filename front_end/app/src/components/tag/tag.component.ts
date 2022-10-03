@@ -1,10 +1,13 @@
 import {
-    Component, ElementRef, EventEmitter, forwardRef,
-    Input, OnInit, Output, Renderer2, SimpleChanges
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+    SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NavigationEnd, Router }                   from '@angular/router';
-import { Subscription }                            from 'rxjs';
 
 /* Usage
  <nx-tag
@@ -21,19 +24,19 @@ import { Subscription }                            from 'rxjs';
  */
 
 @Component({
-    selector   : 'nx-tag',
+    selector: 'nx-tag',
     templateUrl: 'tag.component.html',
-    styleUrls  : ['tag.component.scss'],
-    providers  : [{
-        provide    : NG_VALUE_ACCESSOR,
+    styleUrls: ['tag.component.scss'],
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => NxTagComponent),
-        multi      : true
+        multi: true
     }]
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string;
-    @Input() size: string;
+    @Input() size: string = 'small';
     @Input() clickable: boolean = true;
     @Input() static;
     @Input() link;
@@ -45,9 +48,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     public badgeType: string;
     public tagHref: string;
 
-    constructor(
-        private renderer: Renderer2,
-    ) {
+    constructor() {
         this.linkParam = {};
     }
 

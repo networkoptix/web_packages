@@ -1,0 +1,15 @@
+{
+    "default": {
+        "image": "/static/images/logo.png",
+        "type": "website"
+    },
+    "/integrations/": {
+        "type": "article"
+    },
+    "/docs/": {
+        "type": "article"
+    },
+    "/content/": {
+        "type": "article"
+    }
+}

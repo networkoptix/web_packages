@@ -90,3 +90,7 @@ def get_form_item(form, key):
 @register.filter
 def dict_key(d, key):
     return d.get(key, None)
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

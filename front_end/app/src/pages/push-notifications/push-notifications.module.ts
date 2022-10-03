@@ -1,18 +1,19 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule }          from '@angular/forms';
-import { TranslateModule }      from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
-import { PushComponent }        from './push-notifications.component';
-import { NxConfigService }      from '../../services/nx-config';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { NxConfigService } from '@services/nx-config';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { PushComponent } from './push-notifications.component';
 
 const appRoutes: Routes = [
     {
-        path: 'push-notifications', component: PushComponent
+        path: '', component: PushComponent
     }
 ];
 

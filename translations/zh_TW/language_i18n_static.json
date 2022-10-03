@@ -1,12 +1,41 @@
 {
-    "language": "en_US",
+    "language": "zh_TW",
     "About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
+    "All Servers": "所有伺服器",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
     "For developers": "開發人員使用",
     "Integrations (β)": "整合（β）",
     "Privacy": "隱私政策",
     "Support": "支援",
     "Terms": "條款",
+    "Developers Console": "開發者工具",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
+    "alarmTypes": {
+        "Servers": "伺服器",
+        "Cameras": "攝影機",
+        "Storage Locations": "儲存位置",
+        "Network Interfaces": "網路介面"
+    },
+    "alarmLevels": {
+        "offline": "離線",
+        "error": "錯誤",
+        "warning": "警告"
+    },
+    "alertFilters": {
+        "all": "所有警報",
+        "warning": "僅顯示警告事件",
+        "error": "僅顯示錯誤事件"
+    },
+    "deviceTypes": {
+        "All Device Types": "所有設備類型",
+        "servers": "伺服器",
+        "cameras": "攝影機",
+        "storages": "儲存裝置",
+        "networkInterfaces": "網路介面"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "不受限的權限包括共用的能力",
@@ -66,11 +95,14 @@
         }
     },
     "account": {
+        "account": "帳號",
+        "key": "Key",
         "accountSavedSuccess": "您的帳號已成功儲存",
         "accountSettings": "帳號設定",
         "activationLinkSent": "啟用連結已發送",
         "agreementAccepted": "協議已被同意",
         "changePassword": "變更密碼",
+        "security": "安全性",
         "newPasswordLabel": "新密碼",
         "passwordChangedSuccess": "密碼已成功儲存",
         "saveChanges": "儲存"
@@ -80,6 +112,55 @@
         "sendConfirm": "重新發送啟用連結",
         "setNewPassword": "儲存密碼",
         "setNewPasswordLabel": "新密碼"
+    },
+    "authorize": {
+        "loginCloudHeader": "登入到 %CLOUD_NAME%",
+        "connectHeader": "將系統連接到 %CLOUD_NAME%",
+        "expiredHeader": "您的登入已過期。",
+        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
+        "connectSubheader": "To access it from anywhere and enable additional features",
+        "expiredSubheader": "Please, log in again",
+        "connectAdditional": "This account will get owner access level",
+        "createText": "新建帳號",
+        "setupText": "Setup Non-cloud System",
+        "asAccountSubheader": "As",
+        "toAccountSubheader": "發送到",
+        "forAccountSubheader": "For {accountEmail}",
+        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
+        "passwordMerge": "to merge systems",
+        "passwordBackup": "to create backup",
+        "passwordRestore": "to restore system from backup",
+        "passwordReset": "to reset server",
+        "passwordRestart": "to restart server",
+        "passwordDetach": "to detach server",
+        "expiredAccountSubheader": "Please, log in again as",
+        "createAccountHeader": "新建 %CLOUD_NAME% 帳號",
+        "activateHeader": "Activate %CLOUD_NAME% Account",
+        "createdText": "帳號已新增!",
+        "activatedText": "Account Activated!",
+        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
+        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "passResetHeader": "重置密碼",
+        "newPassHeader": "設定新密碼",
+        "newPassConfirmText": "Password is set!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "confirmHeader": "系統連接到 %CLOUD_NAME%!",
+        "loginError": "無法連接到 %CLOUD_NAME%",
+        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "connectErrorAdditional": "請稍後再試。",
+        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "connectedText": "系統連接到 %CLOUD_NAME%",
+        "setupConnectedText": "System connected",
+        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
+        "copiedToClipboard": "Copied to clipboard",
+        "authCode": {
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
+            "newPass": "set a new password",
+            "login": "登入"
+        },
+        "emailSent": "Email sent!"
     },
     "cameraFilters": {
         "H265": "H.265攝影機",
@@ -129,7 +210,8 @@
             "unauthorized": "需要身份驗證"
         },
         "chromeCastWarning": "Chromecast佔用過多資源, 可能會導致您的伺服器出現問題.",
-        "login": "login",
+        "copiedToClipboard": "Copied to clipboard",
+        "login": "登入帳號",
         "recordingSettingsWarning": "請更新遺失的錄影設定。",
         "disableMotionWarning": "錄影模式將變更為“全時錄影”",
         "recordingModes": {
@@ -146,10 +228,11 @@
             "low": "低 (L)"
         },
         "general": "一般",
+        "generalError": "發生錯誤，請稍後重試。如果問題仍然發生，請聯繫您的支援團隊。",
         "inaccessibleFeatureMessage": "系統處於離線狀態，無法讀取資訊。",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "搜尋",
-        "system": "system",
+        "system": "系統",
         "systemHasNoCameras": "無攝影機",
         "systemHasNoCamerasMessage": "系統中沒有可連接的攝影機。<br><br>請連接攝影機至伺服器的本地網絡以利搜尋，或要求系統管理員變更您的存取權限。",
         "systemNewVersion": "更新您的系統",
@@ -185,7 +268,22 @@
         },
         "viewingOutdatedReport": "您目前所查看的是舊版報告。"
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
+    "devConsole": {
+        "create": "建立"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+        },
         "addUser": {
             "alreadyExists": "該電子郵件已在 %systemName% 系統中註冊"
         },
@@ -194,6 +292,8 @@
             "createAccount": "新增帳號",
             "delete": "刪除",
             "deleteAccount": "刪除帳號",
+            "disable": "停用",
+            "enable": "啟用",
             "download": "下載 %VMS_NAME%",
             "logoutAuthorised": "登出",
             "ok": "確定",
@@ -252,16 +352,21 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
+            "knownBothSystemsConnectedToCloud": "{targetSystem} 已連接到 %CLOUD_NAME%，請使用 %CLOUD_NAME% 入口網頁進行合併。",
+            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "檢查中...",
+            "cloud": "雲端",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "找不到或沒有可供合併的系統",
+            "failedToFindAnySystem": "若您要合併的遠端系統有連接到Cloud，則請再次確認您使用系統所有者帳號與密碼進行操作。或者要進行合併的兩個系統在同一個區域網路中且可互相連線。",
             "differentOwners": "所選系統和當前系統都連接到 %CLOUD_NAME% 但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
             "duplicateServers": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "enterSystemAddressTitle": "請輸入伺服器地址於欲合併該伺服器的系統中。",
+            "latestBuild": "最新版本",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "系統合併失敗",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "系統 {primaryName} 和 {secondaryName} 合併完成",
             "mergeSystemsTitle": "合併當前系統",
             "noServerFound": "找不到伺服器",
             "newSystemDisplayName": "新系統",
@@ -277,25 +382,33 @@
                 "b_support": "支援",
                 "c_proceeding": "在繼續執行之前。"
             },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+            },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "serverVersionOld": "該伺服器軟體版本較舊, 與當前系統不相容。請更新為最新版本再行合併。",
+            "serverVersionNew": "該伺服器軟體版本較當前系統為新。請將兩個系統更新為同一版本再行合併。",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
             "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
             "urlEmpty": "請輸入伺服器位址",
             "urlNotValid": "請輸入有效的 URL",
             "unknownError": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
+            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
+            "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "儲存設定已保存。",
             "storageSettingsNotSaved": "無法保存儲存設定。",
             "settingsSaved": "設定已儲存.",
@@ -318,28 +431,47 @@
                 "integration": "Get in touch with {companyName}",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "攝影機頁面的回饋意見"
+            },
+            "twoFactor": {
+                "required": "請先啟用雙重驗證。",
+                "configure": "You can configure it in your",
+                "accountLink": "帳號資訊",
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
             "action": "斷線",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "您正要從您的帳號斷開此系統. 您將再也無法存取此系統. 確定?",
+            "title": "斷開系統?"
+        },
+        "renewAuth": {
+            "action": "登入帳號",
+            "message": "Please log in again.",
+            "title": "您的登入已過期。"
         },
         "titles": {
             "error": "錯誤",
             "success": "成功",
             "changeAccount": "您已經以{email} 的帳號登入。",
+            "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "刪除使用者?",
+            "failedLoginTo": "未能登錄到 {systemName}",
             "loggedFromOtherAccount": "您將使用其他帳號登入",
             "noClientDetected": "安裝 %VMS_NAME% 來查看您的系統",
-            "removeUser": "是否要移除使用者？",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "removeUser": "Remove user",
+            "serversDetach": "是否允許伺服器&nbsp;<strong>{ title }</strong>&nbsp;從目前系統中脫離？",
+            "serversReset": "是否還原此伺服器&nbsp;<strong>{ title }</strong>&nbsp;回預設值?",
+            "serversRestart": "是否重啟此伺服器&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "請經由%CLOUD_NAME%中斷您為所有者的全部系統，以刪除您的帳號。"
+            "deleteAccount": "請先登入%CLOUD_NAME%介面，並將您所有的系統與%CLOUD_NAME%脫離，然後停用雙重認證，才能將您的帳號自%CLOUD_NAME%刪除"
+        },
+        "twoFactor": {
+            "action": "登入帳號",
+            "message": "Two factor authentication is enabled for this account. Please login.",
+            "title": "Two factor is required!",
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -422,8 +554,10 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This user does not exist.": "This user does not exist.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "This authorization method is forbidden. Please contact your system administrator.": "該授權方式不被允許。請聯繫系統管理員。",
+        "This user does not exist.": "此用戶不存在",
+        "The user is disabled. Please contact your system administrator.": "該用戶為未啟用狀態。請聯繫系統管理員。",
+        "This user has been disabled by a system administrator.": "此用戶已被系統管理員停用.",
         "cloud_systems_have_different_owners": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -440,6 +574,7 @@
         "cantChangeAccountPrefix": "無法儲存變更",
         "cantChangePasswordPrefix": "無法儲存密碼",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "無法刪除系統",
         "cantEditAdmin": "此使用者具有管理員權限",
         "cantEditYourself": "不允許變更自己的權限",
@@ -453,13 +588,14 @@
         "cantSharePrefix": "無法共用系統",
         "cantUnshareWithMeSystemPrefix": "無法刪除系統",
         "emailNotFound": "帳號不存在.",
-        "failedToAccessSystem": "此連結無法連接至任何系統。可能當系統中斷 %CLOUD_NAME%時，取消了對該系統的登入權限, 或您登入了錯誤的帳號。",
+        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccessSystem": "此連結無法連接至任何系統。可能是由於系統已經從 %CLOUD_NAME% 中脫離，或該系統已經不存在，或者是此帳號訪問權限已經被移除，請檢查您的登入帳號是否正確，並與系統所有者再次確認。",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您沒有權限執行此操作",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "密碼不正確",
-        "badUsername": "Account not found",
+        "badUsername": "該帳號不存在",
         "notFound": "找不到",
         "ok": "ok",
         "oldPasswordMistmatch": "目前密碼不正確.",
@@ -478,7 +614,8 @@
         "licenseServerError": "無法啟用授權。授權伺服器未回應。請重試或聯繫支援人員。",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "門禁管理",
@@ -530,10 +667,10 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "請",
-        "b_Link": "提交申請",
-        "c_Info": "有關支援設備的其他問題/疑慮。"
+        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "搜尋到 {count, plural, =0{# 個系統} one{# 個系統} other{# 個系統}}",
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -542,8 +679,20 @@
             "systemAdministration": "系統管理",
             "general": "一般",
             "licenses": "授權",
-            "users": "使用者"
+            "users": "使用者",
+            "servers": "伺服器",
+            "alerts": "警報",
+            "systems": "系統",
+            "storages": "儲存位置",
+            "networkInterfaces": "網路介面",
+            "graphs": "圖表",
+            "logs": "日誌"
         }
+    },
+    "tableHeaders": {
+        "type": "型態",
+        "server": "伺服器",
+        "alert": "警報"
     },
     "pageTitles": {
         "about": "關於",
@@ -552,11 +701,13 @@
         "activateCode": "啟用帳號",
         "activateSuccess": "帳號已啟用",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "認證",
         "changePassword": "變更密碼",
         "debug": "除錯",
         "default": "%CLOUD_NAME%",
         "download": "下載 %VMS_NAME%",
         "downloadPlatform": "下載 %VMS_NAME% ",
+        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "連接系統失敗",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% 整合",
@@ -571,8 +722,11 @@
         "systemShare": "共用系統",
         "systems": "系統",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - 網頁管理介面 - %VMS_NAME%",
         "view": "查看攝影機",
-        "apiTool": "API testing tool"
+        "apiTool": "API testing tool",
+        "security": "安全性",
+        "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
@@ -587,7 +741,7 @@
         "good": "好",
         "minLength": "太短",
         "minLengthMessage": "密碼必須包含至少 8 個字元",
-        "missingMessage": "密碼是必填的",
+        "missingMessage": "Required",
         "required": "不正確",
         "requiredMessage": "只能使用拉丁字母, 數字和符號鍵盤, 避免前後空格",
         "strongMessage": "理想的密碼!",
@@ -610,6 +764,14 @@
         "server": {
             "title": "無法連接伺服器",
             "message": "系統處於離線狀態，因此無法連接伺服器。"
+        },
+        "noSystemApiTool": {
+            "title": "No Valid System Found",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "System failed to load",
+            "message": ""
         }
     },
     "pleaseSelect": "請選擇...",
@@ -627,11 +789,15 @@
         },
         "finishingMerge": "正完成系統合併",
         "integration": {
-            "accept": "Accept",
+            "accept": "同意",
             "reject": "Reject",
             "backToEditText": "返回編輯頁面",
             "previewRibbon": "此頁面可預覽最新版本的更新，與公開版本不相符。",
             "publishedRibbon": "This page is the live version that is publicly available."
+        },
+        "newVersionAvailable": {
+            "notification": "有新版本的 %CLOUD_NAME% 可以安裝",
+            "installButton": "重新載入以更新"
         },
         "systemOffline": "系統離線。某些設定可能無法使用。",
         "systemsMerging": "此系統正在合併中。"
@@ -659,9 +825,9 @@
         "beginReset": "Server is now resetting.",
         "detachSystemFailed": "無法從系統中卸載伺服器。請確認輸入密碼是否正確以及伺服器是否在線，並重試。",
         "detachSystemSuccess": "伺服器已成功從系統卸載。",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "portWarning": "若使用小於1024的埠號, 伺服器可能無法連接。",
+        "refresh": "重新整理",
+        "refreshing": "重新整理...",
         "removeMediaserverFailed": "無法從系統中刪除伺服器。",
         "resetFailed": "重置伺服器失敗。請確認輸入密碼是否正確以及伺服器是否在線，並重試。",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -678,12 +844,14 @@
         "successRename": "伺服器名稱已儲存."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "瀏覽",
+        "Settings": "設定",
+        "Information": "資訊",
+        "Bookmarks": "書籤",
+        "Monitoring": "系統監控"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "連線",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "未知的系統名稱（由雲合併引起）",
@@ -694,7 +862,8 @@
             "notAbleToLoadSystem": "無法載入系統設定.",
             "sessionLimitDuration": {
                 "hours": "小時",
-                "minutes": "分"
+                "minutes": "分",
+                "days": "日"
             },
             "warningMessages": {
                 "videoEncryption": "對影像串流通訊加密會大幅提高CPU使用率。"
@@ -736,12 +905,13 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "本地",
             "usb": "USB",
             "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
-        }
+            "smb": "網絡（smb），已透過VMS新增",
+            "cloud": "雲端"
+        },
+        "transferNotification": "<strong>{ ownerName }</strong>欲將此系統的擁有權轉讓給您"
     },
     "systemStatuses": {
         "activated": "啟用",
@@ -755,25 +925,81 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "noConnection": "恢復與%CLOUD_NAME%的連線並請重試.",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "userChangesFail": "套用變更時失敗",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "從您的帳戶成功刪除系統 {systemName}"
             },
             "disconnected": {
                 "success": "系統已成功從 %CLOUD_NAME%斷線"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "系統連接到 %CLOUD_NAME%",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "系統合併失敗",
-                "success": "System merge completed"
+                "success": "系統合併完成"
             },
             "rename": {
                 "success": "系統名稱已儲存"
             }
+        },
+        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "資訊",
+            "availability": "目前狀態",
+            "load": "負載",
+            "activity": "活動"
+        },
+        "keys": {
+            "name": "名稱",
+            "servers": "伺服器",
+            "cameras": "攝影機數量",
+            "storages": "儲存裝置數量",
+            "users": "使用者",
+            "version": "系統版本",
+            "cloudSystemId": "系統Cloud ID",
+            "status": "狀態",
+            "offlineEvents": "伺服器離線事件(24小時內)",
+            "uptimeS": "運行時間",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU(VMS 伺服器) %",
+            "ramUsageB": "記憶體使用",
+            "ramUsageP": "記憶體 %",
+            "serverRamUsageB": "記憶體(VMS伺服器使用)",
+            "serverRamUsageP": "記憶體(VMS伺服器使用) %",
+            "threads": "伺服器執行緒",
+            "decodingThreads": "解碼執行緒",
+            "decodingSpeed3s": "解碼速度",
+            "encodingThreads": "編碼執行緒",
+            "encodingSpeed3s": "編碼速度",
+            "primaryStreams": "輸出的主碼流總數",
+            "secondaryStreams": "輸出的次碼流總數",
+            "incomingConnections": "連入連線",
+            "outgoingConnections": "連外連線",
+            "logLevel": "日誌等級",
+            "publicIp": "公開IP",
+            "os": "作業系統",
+            "osTime": "作業系統時間",
+            "vmsTime": "VMS伺服器時間",
+            "cpu": "CPU",
+            "cpuCores": "核心數",
+            "ramB": "記憶體",
+            "guidConflict": "伺服器GUID 衝突",
+            "vmsTimeChanged24h": "伺服器時間變更事件(24小時內)",
+            "transactionsPerSecond1m": "每秒資料讀寫操作次數",
+            "actionsTriggered1m": "觸發事件/秒",
+            "apiCalls1m": "API請求/秒",
+            "thumbnails1m": "縮圖/秒",
+            "activePlugins": "啟用套件列表"
         }
     },
     "headerLabels": {
@@ -792,7 +1018,8 @@
             "Starter": "Starter",
             "IO Module": "I/O 模組",
             "Bridge": "橋接",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "無效"
         },
         "info": {
             "type": "型態",
@@ -807,13 +1034,20 @@
             "expired": "已過期",
             "ok": "確定",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "找不到伺服器>"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "還需要{number}",
             "activated": "授權已啟用",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "測試授權已啟用。即日起可享有4台攝影機錄影30天的試用。"
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -913,6 +1147,15 @@
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
+            "systemsRemainder": "與另外 {count} 個...",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
+            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Main storage reindexing completed",
@@ -922,25 +1165,120 @@
         },
         "modes": {
             "main": "主要設定",
-            "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "backup": "備份",
+            "notInUse": "未使用",
+            "reserved": "保留",
+            "inaccessible": "無法存取",
+            "changing": "更改模式...",
+            "disabled": "停用"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "failed": "無法新增外部儲存空間。",
+        "invalidPath": "無效的儲存路徑.",
+        "stillHasArchivesPreWarning": "將停止錄影到此儲存裝置, 但舊的錄影資料將繼續被刪除.",
+        "stillHasArchives": "已停止錄影到此儲存裝置, 但舊的錄影資料將繼續被刪除.",
         "storageDeleted": "Storage {url} deleted",
         "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedTooSmallTooltip": "該存儲位置太小，無法用於錄影，還有其他較大的存儲空間可用。",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
         "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "success": "已增加外部存儲空間",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Cloud Portal",
+            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+        },
+        "/systems": {
+            "title": "Systems - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "網頁管理介面 - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "設定 - 網頁管理介面 - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "查看 - 網頁管理介面 - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "系統資訊 - 網頁管理介面 - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "伺服器監控 - 網頁管理介面 - %VMS_NAME%"
+        }
+    },
+    "maintenance": {
+        "description": "We are working on some improvements and brand new features."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Sun",
+                "Mon": "Mon",
+                "Tue": "Tue",
+                "Wed": "Wed",
+                "Thu": "Thu",
+                "Fri": "Fri",
+                "Sat": "Sat",
+                "Sunday": "Sunday",
+                "Monday": "Monday",
+                "Tuesday": "Tuesday",
+                "Wednesday": "Wednesday",
+                "Thursday": "Thursday",
+                "Friday": "Friday",
+                "Saturday": "Saturday"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Mar",
+                "Apr": "Apr",
+                "May": "May",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Aug",
+                "Sep": "Sep",
+                "Oct": "Oct",
+                "Nov": "Nov",
+                "Dec": "Dec",
+                "January": "January",
+                "February": "February",
+                "March": "March",
+                "April": "April",
+                "June": "June",
+                "July": "July",
+                "August": "August",
+                "September": "September",
+                "October": "October",
+                "November": "November",
+                "December": "December"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "上午",
+                "pm": "下午",
+                "A": "A",
+                "P": "P",
+                "AM": "上午",
+                "PM": "下午"
+            }
+        }
     }
 }

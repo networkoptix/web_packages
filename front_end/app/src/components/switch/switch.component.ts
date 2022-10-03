@@ -1,26 +1,34 @@
 import {
-    Component, EventEmitter, forwardRef,
-    Input, OnInit, Output, SimpleChanges
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+    SimpleChanges
 } from '@angular/core';
 import {
-    ControlValueAccessor, FormControl,
-    NG_VALUE_ACCESSOR, Validator
+    ControlValueAccessor,
+    FormControl,
+    NG_VALUE_ACCESSOR,
+    Validator
 } from '@angular/forms';
 
 @Component({
-    selector   : 'nx-switch',
+    selector: 'nx-switch',
     templateUrl: 'switch.component.html',
-    styleUrls  : ['switch.component.scss'],
-    providers  : [
+    styleUrls: ['switch.component.scss'],
+    providers: [
         {
-            provide    : NG_VALUE_ACCESSOR,
+            provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxSwitchComponent),
-            multi      : true
+            multi: true
         }
     ]
 })
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
-    @Input() componentId: string;
+    @Input() id: string;
+    @Input() name: string;
     @Input() required: boolean;
     @Input() checked: boolean;
     @Input() disabled: any;
@@ -32,8 +40,9 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
 
     private _invalid: boolean;
     private _touched: boolean;
+    componentId: string;
 
-    _value: boolean;
+    _value: boolean = false;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -63,6 +72,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     }
 
     ngOnInit() {
+        this.componentId = (this.id || this.name) + '-switch';
         this.disabled = (this.disabled !== undefined) ? this.disabled : false; // optional param
         this.required = (this.required !== undefined); // optional param
 

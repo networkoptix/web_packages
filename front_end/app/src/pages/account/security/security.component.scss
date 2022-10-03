@@ -1,0 +1,49 @@
+@use "../../../../styles/theme_variables" as theme_vars;
+@import "../account.component";
+
+:host {
+     .tfauth-status-switch-wrapper {
+         display : flex;
+     }
+
+     .system-name {
+         font-family: theme_vars.$font-family-medium;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+     }
+
+    .reminder {
+        font-family : theme_vars.$font-family-medium;
+        color: var(--light16);
+        margin-left: 28px;
+    }
+}
+
+$border-blue: rgba(theme_vars.$blue10, 0.3);
+$body-blue: rgba(theme_vars.$blue10, 0.1);
+
+.tfauth-v5-warning {
+    border: 1px solid $border-blue;
+    border-radius: 2px;
+    background-color: $body-blue;
+
+    padding: 1rem;
+
+    h4 {
+        line-height: 1rem;
+        padding-left: 1.6rem;
+
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+    h4:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 1.4rem;
+        height: 1.4rem;
+        background-image: url("/static/images/icons/error.svg");
+    }
+}

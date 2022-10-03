@@ -1,3 +1,8 @@
+import { ConfigType } from '@components/console-table/console-table.component.types';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import type { APIDoc } from '@pages/api-tool/api-tool-types';
+
+/* eslint-disable camelcase */
 export interface ILanguage{
     language: string;
     name: string;
@@ -130,7 +135,8 @@ export interface IPVDCameras {
 }
 
 export interface RegisterUser {
-    activated: boolean
+    activated: boolean,
+    resultCode?: string
 }
 
 export interface System {
@@ -188,6 +194,17 @@ export interface Downloads {
     releaseUrl: string
 }
 
+export type OpenAPIJSONType = 'VMS'
+
+export interface OpenAPIJSON {
+    id: number,
+    type: OpenAPIJSONType,
+    name: string,
+    version: string,
+    content: APIDoc,
+    enabled: boolean
+}
+
 interface Installers {
     platform: string,
     appType: string,
@@ -231,4 +248,110 @@ export interface CloudStorageUsage extends CloudResponse {
     recordingBitrate: number,
     delayFromLive: number,
     spaceUsed: number
+}
+
+export interface CheckEmailExists {
+    active: boolean,
+    emailExists: boolean
+}
+
+export interface CustomClient {
+    id?: number;
+    last_modified: string;
+    name: string;
+    created_on: string
+    created_by: string;
+    values: {
+        [field: string]: string
+    };
+}
+
+export interface FieldManifest {
+    name: string;
+    label: string;
+    description: string;
+    type: ConfigType;
+    metaOnly: boolean;
+    optional: boolean;
+    placeholder?: string;
+}
+
+export interface ContextManifest {
+    name: string;
+    label: string;
+    icon?: string;
+    fields: FieldManifest[];
+    global: boolean;
+}
+
+export interface ContentSettings {
+    [key: string]: {
+        hidden?: boolean,
+        label?: string,
+        options?: DropdownItem[]
+    }
+}
+
+export interface ContentManifest {
+    manifest: {
+        contexts: ContextManifest[]
+        settings?: ContentSettings
+    }
+}
+
+export interface DocBlock {
+    content: string,
+    contentHTML: string,
+    type: string;
+}
+
+export interface DocAsset {
+    id: number,
+    shortDescription: string,
+    title: string,
+    blocks: DocBlock[]
+}
+
+export interface TwoFactorBackupCodes {
+    backup_code: string
+}
+
+export interface ExplorerNode {
+    name: string;
+    id?: number;
+    type?: string;
+    baseVmsId?: number;
+    children?: ExplorerNode[];
+}
+
+export interface InstantSearchOptions {
+    query: string;
+    kbMenus?: string[],
+    labels?: string[];
+    cropLength?: number;
+    perPage?: number;
+    page?: number;
+}
+export interface NotificationAttachment {
+    filename: string,
+    content: string,
+    mimetype: string
+}
+
+export interface EmailNotification {
+    targets: string[],
+    subject: string,
+    systemId?: string,
+    messageHtml?: string,
+    messageText?: string,
+    attachments?: NotificationAttachment[]
+}
+
+export interface SystemTransferInfo {
+    comment: string;
+    fromAccount: string;
+    status: string;
+    systemId: string;
+    systemName: string;
+    toAccount: string;
 }

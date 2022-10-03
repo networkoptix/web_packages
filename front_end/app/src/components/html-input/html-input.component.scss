@@ -1,0 +1,9 @@
+:host {
+    width: 100%;
+}
+
+editor::ng-deep {
+    .tox-edit-area {
+        border-top: 1px solid #ccc;
+    }
+}

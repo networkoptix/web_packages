@@ -1,0 +1,37 @@
+variables:
+  DJANGO_PYTHON_IMAGE: "$DOCKER_REGISTRY/nx/cloud_portal_django_python"
+  DJANGO_PYTHON_IMAGE_TAG: "1.1"
+
+# Required CI/CD variables, which should be defined on Gitlab instance layer
+# https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-an-instance:
+# - PIP_TRUSTED_HOST
+# - PIP_INDEX_URL
+# - ARTIFACTORY_URL
+docker:build-django-python:
+  extends: .docker.template
+  variables:
+    BUILD_OPTIONS: |
+      --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
+      --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
+      --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
+  before_script:
+  - |
+    DOCKER_DIR="ci/Docker/django-python"
+    cp cloud/requirements.txt .
+    touch build-django.env
+    if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" ]]; then
+      DJANGO_PYTHON_IMAGE_TAG="${DJANGO_PYTHON_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}.SNAPSHOT"
+      echo "DJANGO_PYTHON_IMAGE_TAG=${DJANGO_PYTHON_IMAGE_TAG}" > build-django.env
+    fi
+    TARGET_IMAGE="${DJANGO_PYTHON_IMAGE}"
+    TARGET_IMAGE_TAG="${DJANGO_PYTHON_IMAGE_TAG}"
+  artifacts:
+    reports:
+      dotenv: build-django.env
+    expire_in: 14 days
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
+      ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+    changes:
+    - ci/Docker/django-python/*
+    - cloud/requirements.txt

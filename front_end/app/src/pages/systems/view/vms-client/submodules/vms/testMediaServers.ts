@@ -1,30 +1,30 @@
-import TestCamera from './datatypes/TestCamera'
-import MediaServer from './datatypes/MediaServer'
-import { SimpleTimeRange } from './datatypes/ICamera'
+import { SimpleTimeRange } from './datatypes/ICamera';
+import MediaServer from './datatypes/MediaServer';
+import TestCamera from './datatypes/TestCamera';
 
-const TEST_THUMBNAIL_URL = 'https://upload.wikimedia.org/wikipedia/commons/5/54/Europa-moon.jpg'
-const now = Date.now()
-const DURATION = 12 * 31 * 24 * 60 * 60 * 1000
-const TEST_ARCHIVE_RANGE = new SimpleTimeRange(now - DURATION, now)
-const TEST_ARCHIVE = [ TEST_ARCHIVE_RANGE, ]
+const TEST_THUMBNAIL_URL = 'https://upload.wikimedia.org/wikipedia/commons/5/54/Europa-moon.jpg';
+const now = Date.now();
+const DURATION = 12 * 31 * 24 * 60 * 60 * 1000;
+const TEST_ARCHIVE_RANGE = new SimpleTimeRange(now - DURATION, now);
+const TEST_ARCHIVE = [TEST_ARCHIVE_RANGE];
 
 function generateGappedArchive (start, end, count) {
-    const result = []
-    const len = Math.round((end - start) / (count * 2))
-    const gap = len
+    const result = [];
+    const len = Math.round((end - start) / (count * 2));
+    const gap = len;
     for (let t = start; t <= end; t += len + gap) {
-        result.push(new SimpleTimeRange(t, t + len))
+        result.push(new SimpleTimeRange(t, t + len));
     }
     if (result[result.length - 1].end > now) {
         result[result.length - 1] = new SimpleTimeRange(
             result[result.length - 1].start,
-            now,
-        )
+            now
+        );
     }
-    return result
+    return result;
 }
 
-const TEST_GAPPED_ARCHIVE = generateGappedArchive(TEST_ARCHIVE_RANGE.start, TEST_ARCHIVE_RANGE.end, 20)
+const TEST_GAPPED_ARCHIVE = generateGappedArchive(TEST_ARCHIVE_RANGE.start, TEST_ARCHIVE_RANGE.end, 20);
 
 export const fakeMediaServerData: Array<MediaServer> = [
     {
@@ -40,7 +40,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Recording',
                 TEST_THUMBNAIL_URL,
                 TEST_ARCHIVE_RANGE,
-                TEST_ARCHIVE,
+                TEST_ARCHIVE
             ),
             new TestCamera(
                 'live-no-archive-test-camera',
@@ -48,7 +48,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Live Recording test camera with no archive',
                 'http://fake.media-server.local/live-no-archive-test-camera',
                 'Recording',
-                TEST_THUMBNAIL_URL,
+                TEST_THUMBNAIL_URL
             ),
             new TestCamera(
                 'not-live-not-recording-test-camera-with-archive',
@@ -58,14 +58,14 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Archive',
                 undefined,
                 TEST_ARCHIVE_RANGE,
-                TEST_ARCHIVE,
+                TEST_ARCHIVE
             ),
             new TestCamera(
                 'offline-test-camera-with-no-archive',
                 'fake-media-server',
                 'Offline test camera with no archive',
                 'http://fake.media-server.local/offline-test-camera-with-no-archive',
-                'Offline',
+                'Offline'
             ),
             new TestCamera(
                 'live-not-recording-test-camera-with-no-archive',
@@ -73,8 +73,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Live, not recording test camera with no archive',
                 'http://fake.media-server.local/live-not-recording-test-camera-with-no-archive',
                 'Live',
-                TEST_THUMBNAIL_URL,
-            ),
+                TEST_THUMBNAIL_URL
+            )
         ]
     },
     {
@@ -97,7 +97,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 TEST_ARCHIVE_RANGE,
-                TEST_GAPPED_ARCHIVE,
+                TEST_GAPPED_ARCHIVE
             ),
             new TestCamera(
                 'offline-twice-gapped-test-camera',
@@ -188,7 +188,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
                 generateGappedArchive(now - DURATION * 2, now, 1e7)
-            ),
+            )
             // new TestCamera(
             //     'offline-100M-chunks-test-camera',
             //     '100M-chunks-fake-media-server',
@@ -209,8 +209,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
             //     new SimpleTimeRange(now - DURATION * 200, now),
             //     generateGappedArchive(now - DURATION * 200, now, 1e9)
             // ),
-        ],
+        ]
     }
-]
+];
 
-export default fakeMediaServerData
+export default fakeMediaServerData;

@@ -22,7 +22,7 @@
                                     <div [ngClass]="{'cam-table-show': !sortOrderASC}"
                                         [style.visibility]="header == selectedHeader ? 'visible' : 'hidden'">
                                         <div class="sort-dir arrow-flip">
-                                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
+                                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
                                         </div>
                                     </div>
                                 </div>
@@ -63,21 +63,15 @@
                 <div class="csv">
                     <nx-csv-button [data]="csvCameraData"
                                 filename="camera_list_{{ csvFilename | date:'yyyy-MM-dd' }}"
-                                [options]="csvOptions">
+                                [options]="$any(csvOptions)">
                     </nx-csv-button>
                 </div>
             </div>
 
-            <div class=""
-                *ngIf="pagedItems.length">
-
+            <div *ngIf="pagedItems.length">
                 <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-                    <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
-                    <span>
-                        <ng-container>{{LANG.ipvdFeedback.a_Please()}}&nbsp;</ng-container>
-                        <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvdFeedback.b_Link()}}</a>
-                        <ng-container>&nbsp;{{LANG.ipvdFeedback.c_Info()}}</ng-container>
-                    </span>
+                    <span>{{'ipvdDisclaimer' | translate:disclaimerParams}} </span>
+                    <span #ipvdRequest [innerHTML]="LANG.ipvdFeedback.request() | safe : 'html'"></span>
                 </p>
                 <button *ngIf="debug">reset</button>
             </div>

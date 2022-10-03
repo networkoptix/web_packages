@@ -1,19 +1,21 @@
-import { Injectable, NgModule }          from '@angular/core';
-import { CommonModule }                  from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Injectable, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Resolve, RouterModule, Routes } from '@angular/router';
-import { FormsModule }                   from '@angular/forms';
-import { TranslateModule }               from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }              from '../../components/components.module';
-import { DirectivesModule }              from '../../directives/directives.module';
-import { ApplyGuard, AuthGuard }         from '../../routeGuards';
-import {
-    NxAccountComponent,
-    NxAccountSettingsModule, NxAccountSettingsComponent,
-    NxAccountPasswordModule, NxAccountPasswordComponent
-}                                        from './';
-import { MenuModule }                    from '../../menu';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { NxAccountComponent } from '@pages/account/account.component';
+import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
+import { NxAccountPasswordModule } from '@pages/account/password/password.module';
+import { NxAccountSecurityComponent } from '@pages/account/security/security.component';
+import { NxAccountSecurityModule } from '@pages/account/security/security.module';
+import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
+import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
+import { MenuModule } from '@src/menu';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -26,12 +28,25 @@ export class TypeResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     {
-        path        : 'account',
-        component   : NxAccountComponent,
-        canActivate : [AuthGuard],
-        children    : [
-            { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
-            { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] }
+        path: 'account',
+        component: NxAccountComponent,
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: '',
+                component: NxAccountSettingsComponent,
+                canDeactivate: [ApplyGuard]
+            },
+            {
+                path: 'password',
+                component: NxAccountPasswordComponent,
+                canDeactivate: [ApplyGuard]
+            },
+            {
+                path: 'security',
+                component: NxAccountSecurityComponent,
+                canDeactivate: [ApplyGuard]
+            }
         ]
     }
 ];
@@ -46,17 +61,19 @@ const appRoutes: Routes = [
         FormsModule,
         NxAccountSettingsModule,
         NxAccountPasswordModule,
+        NxAccountSecurityModule,
+
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers      : [
+    providers: [
         TypeResolver
     ],
-    declarations   : [
+    declarations: [
         NxAccountComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap: [],
+    exports: [
         NxAccountComponent
     ]
 })

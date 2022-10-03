@@ -12,10 +12,10 @@
   width: 140px;
   top: 5px;
   padding-left: 5px;
-  background: rgba(43,56,63, 0.9); // $dark9
-  color: #fff;
+  background: rgba(var(--dark9--rgb), 0.9);
+  color: var(--light1);
   pointer-events: none;
-  z-index: 10;
+  z-index: 12;
   transform: translateX(-50%);
 
   * {
@@ -26,7 +26,7 @@
     content: '';
     width: 2px;
     height: 30px;
-    background-color: rgba(43,56,63, 0.9);
+    background-color: rgba(var(--dark9--rgb), 0.9);
     position: absolute;
     left: 50%;
     bottom: -33px;
@@ -50,7 +50,7 @@
     height: 5px;
 
     > polygon {
-      fill: rgba(43,56,63, 0.9);
+      fill: rgba(var(--dark9--rgb), 0.9);
     }
   }
 
@@ -89,7 +89,7 @@
     > .side-arrow {
       display: block;
       left: -8px;
-      border-right: 8px solid rgba(43,56,63, 0.9); // $dark9
+      border-right: 8px solid rgba(var(--dark9--rgb), 0.9);
     }
   }
 
@@ -109,7 +109,7 @@
     > .side-arrow {
       display: block;
       right: -8px;
-      border-left: 8px solid rgba(43,56,63, 0.9); // $dark9
+      border-left: 8px solid rgba(var(--dark9--rgb), 0.9);
     }
   }
 }

@@ -1,8 +1,15 @@
-import { IConfig }                                          from '../../../nx-config';
-import {NxSystemAPI, NxSystemRestAPI} from '../../../system-api.service';
-import { NxUtilsService }                                   from '../../../utils.service';
-import { LanguageI18NStaticTypes }                          from '@app/language_i18n_static_types';
-import { NxSystemRole, NxSystemUser, SystemPermissions }    from './user-manager-types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+
+import { IConfig } from '../../../nx-config';
+import { NxSystemAPI, NxSystemRestAPI } from '../../../system-api.service';
+import { NxUtilsService } from '../../../utils.service';
+
+import {
+    NxSystemRole,
+    NxSystemUser,
+    SystemPermissions
+} from './user-manager-types';
 
 export class UserManager {
     CONFIG: IConfig;
@@ -19,7 +26,13 @@ export class UserManager {
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
-    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI | NxSystemRestAPI, currentUserEmail: string, userId: string) {
+    constructor(
+        config: IConfig,
+        lang: LanguageI18NStaticTypes,
+        mediaserver: NxSystemAPI | NxSystemRestAPI,
+        currentUserEmail: string,
+        userId: string
+    ) {
         this.CONFIG = config;
         this.LANG = lang;
         this.mediaserver = mediaserver;
@@ -42,13 +55,21 @@ export class UserManager {
         this.checkPermissions();
     }
 
+    // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
-        this.isMine = (email && this.currentUserEmail === email) || this.currentUser?.isLocalOwner;
+        this.isMine =
+            (email && this.currentUserEmail === email) ||
+            this.currentUser?.isLocalOwner;
+    }
+
+    get currentOwner(): NxSystemUser {
+        return this.users.find(user => user.isCloudOwner);
     }
 
     isAdmin(user: NxSystemRole) {
-        return user.permissions && user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
+        return user.permissions &&
+            user.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
     }
 
     isEmptyGuid(guid?: string) {
@@ -63,22 +84,29 @@ export class UserManager {
 
     checkPermissions() {
         const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
-        let isAdmin = isMine || this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
+        let isAdmin = isMine ||
+            this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
         if (!isAdmin && this.currentUser) {
             isAdmin = this.isAdmin(this.currentUser);
         }
         const permissions: SystemPermissions = {
-            editAdmins   : isMine,
-            editUsers    : isAdmin,
-            isAdmin      : isAdmin,
-            editCameras  : isAdmin,
-            viewArchives : isAdmin
+            editAdmins: isMine,
+            editUsers: isAdmin,
+            isAdmin: isAdmin,
+            editCameras: isAdmin,
+            viewArchives: isAdmin
         };
 
         if (!isAdmin && this.currentUser) {
-            permissions.editUsers = this.currentUser.permissions.includes(this.CONFIG.accessRoles.editUserPermissionFlag);
-            permissions.editCameras = this.currentUser.permissions.includes(this.CONFIG.accessRoles.editCameraPermissionFlag);
-            permissions.viewArchives = this.currentUser.permissions.includes(this.CONFIG.accessRoles.viewArchivesPermissionFlag);
+            permissions.editUsers = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.editUserPermissionFlag
+            );
+            permissions.editCameras = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.editCameraPermissionFlag
+            );
+            permissions.viewArchives = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.viewArchivesPermissionFlag
+            );
         }
 
         this.permissions = permissions;
@@ -128,7 +156,6 @@ export class UserManager {
     getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string | false> {
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
             const data = result.reply;
@@ -141,7 +168,6 @@ export class UserManager {
                 return resolve(this.processUsers(users, accessRights));
             });
         }, () => {
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject('Media server cloud not be reached.');
         });
     }
@@ -181,7 +207,7 @@ export class UserManager {
             // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
             user.isCloudOwner = this.isOwner(user);
-            user.isMe = !this.CONFIG.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
+            user.isMe = !environment.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
             user.isAdmin = this.isAdmin(user);
             // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
@@ -220,20 +246,10 @@ export class UserManager {
         return this.users;
     }
 
-    authCurrentUser(username, password) {
-        return this.mediaserver
-            .authCurrentUser(username, password).toPromise()
-            .then(result => {
-                return result;
-            });
-    }
-
     saveUser(user: NxSystemUser, role: NxSystemRole) {
-        user.email = user.email.toLowerCase();
         let userCreated = false;
         const isSelf = user.id === this.currentUser.id;
         if (isSelf && user.isCloud) {
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
         }
 
@@ -249,7 +265,6 @@ export class UserManager {
         }
 
         if (!isSelf && !user.canBeEdited && !this.isMine) {
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 
@@ -262,8 +277,6 @@ export class UserManager {
             delete user.permissions;
         }
 
-        // TODO: remove later
-        // this.cloudApi.share(this.id, user.email, accessRole);
         return this.mediaserver.saveUser(user).toPromise().then(result => {
             user.id = result.id;
             user.role = role;
@@ -289,7 +302,11 @@ export class UserManager {
             return userRoleA.name < userRoleB.name ? -1 : 1;
         });
 
-        const newRoles = Array.from(new Set([...predefinedRoles, ...userRolesList, this.CONFIG.accessRoles.customPermission]));
+        const newRoles = Array.from(new Set([
+            ...predefinedRoles,
+            ...userRolesList,
+            this.CONFIG.accessRoles.customPermission
+        ]));
         if (!NxUtilsService.isEqual(newRoles, this.accessRoles)) {
             this.accessRoles = newRoles;
         }

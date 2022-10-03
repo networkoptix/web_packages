@@ -15,7 +15,7 @@
             <div *ngIf="canSeeDetailInfo && currentStorageState?.locations.length" class="buttons">
                 <button class="server-buttons pr-0" [routerLink]="infoPath">
                     <span>
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
                                   [applyClass]="true"></svg-icon>
                     </span>
                     <span class="ml-1 header-button-span" translate>Detailed Info</span>
@@ -48,11 +48,11 @@
                                 (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
                                         nx-add-svg-src
-                                        [ngClass]="{'animate-rotation': updatingModes.includes(store.storageId)}"
                                         class="mr-1"
-                                        [ngbTooltip]="getStorageTypeTooltip(store.storageType)"
-                                        [src]="getIconSrc(store)">
-                                </svg-icon>
+                                        [ngClass]="{'animate-rotation': updatingModes.includes(store.storageId)}"
+                                        [nxTooltip]="getStorageTypeTooltip(store.storageType)"
+                                        [src]="getIconSrc(store)"
+                                ></svg-icon>
                                 <span class="ellipsis">{{cleanUrl(store.url)}}</span>
                             </td>
                             <td *ngIf="!updatingModes.includes(store.storageId) || reindexingStorages.includes(store.mode); else updatingMode" [ngClass]="{'px-0' : store.status === STATUS.IN_USE}" [style.width.px]="ddWidth">
@@ -62,12 +62,8 @@
                                             <span translate>Reserved</span>
                                             <svg-icon nx-add-svg-src
                                                       class="ml-1"
-                                                      [ngbTooltip]="getStatusTooltip(store.statusTooltip)"
-                                                      [openDelay]="300"
-                                                      [closeDelay]="100"
-                                                      placement="top"
-                                                      triggers="hover"
-                                                      [src]="CONFIG.icons.dirNonStandard + 'info.svg'">
+                                                      [nxTooltip]="getStatusTooltip(store.statusTooltip)"
+                                                      [src]="CONFIG.icons.dirTextButtons + 'info.svg'">
                                             </svg-icon>
                                         </div>
                                         <div *ngSwitchCase="STATUS.IN_USE" [style.minWidth.px]="ddWidth" [style.paddingLeft.px]="8" >
@@ -82,9 +78,9 @@
                                                 *ngIf="checkArchiveWarning(store)"
                                                 class="archive-warning"
                                                 [style.left.px]="(dropdownOffsetCalc$ | async) + ddWidth - 20"
-                                                [ngbTooltip]="LANG.storage.stillHasArchives()"
-                                                [src]="CONFIG.icons.dirNonStandard + 'error.svg'">
-                                            </svg-icon>
+                                                [nxTooltip]="LANG.storage.stillHasArchives()"
+                                                [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                                            ></svg-icon>
                                         </div>
                                         <div *ngSwitchDefault class="error-label" translate>Inaccessible</div>
                                     </ng-container>
@@ -135,7 +131,8 @@
         <div class="header-top-bar">
             <nx-switch
                 [(ngModel)]="backupState"
-                componentId="archive-backup"
+                id="archive-backup"
+                name="archive-backup"
             ></nx-switch>
             <h4 class="ml-2" translate>Archive Backup</h4>
         </div>
@@ -171,7 +168,7 @@
                 *ngIf="!reindexingMain; else reindexMainProgress"
                 [disabled]="modeReindexDisabled(storageModes.MAIN)"
                 type="button"
-                [ngbTooltip]="tooltipContent"
+                [nxTooltip]="tooltipContent"
                 (click)="reindexingMain = true; reindexStorage(storageModes.MAIN)"
                 translate>Reindex Main Storage</button>
             <ng-template #reindexMainProgress>
@@ -193,11 +190,11 @@
                 </section>
             </ng-template>
             <ng-container *ngIf="doesModeExist(storageModes.BACKUP)">
-                <button class="btn btn-default mt-2"
-                    *ngIf="!reindexingBackup; else reindexBackupProgress"
-                    [disabled]="modeReindexDisabled(storageModes.BACKUP)"
+                <button *ngIf="!reindexingBackup; else reindexBackupProgress"
+                    class="btn btn-default mt-2"
                     type="button"
-                    [ngbTooltip]="tooltipContent"
+                    [disabled]="modeReindexDisabled(storageModes.BACKUP)"
+                    [nxTooltip]="tooltipContent"
                     (click)="reindexingBackup = true; reindexStorage(storageModes.BACKUP)"
                     translate>Reindex Backup Storage</button>
                 <ng-template #reindexBackupProgress>

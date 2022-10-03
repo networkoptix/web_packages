@@ -1,26 +1,28 @@
-import { Injectable }                from '@angular/core';
-import { BehaviorSubject }           from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxAppStateService {
     readySubject = new BehaviorSubject(false);
+    authorizeSubject = new BehaviorSubject(false);
     ribbonSubject = new BehaviorSubject(false);
+    headerContainerHeight$ = new BehaviorSubject(48);
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
     manualAccessSubject$ = new BehaviorSubject(false);
-
-    // Header height is hardcoded everywhere to 48px :(
-    // Ribbon height is 33px ... for one row
-    // Do we have multiple row ribbon? -- TT
-    heightWithRibbon = 'calc(100% - 81px)';
-    heightWithoutRibbon = 'calc(100% - 48px)';
+    appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
 
-    constructor() {}
+    constructor() {
+        this.headerContainerHeight$.pipe(debounceTime(50)).subscribe((value) => {
+            this.appContainerHeight = `calc(100% - ${value}px)`;
+        });
+    }
 
     set footerVisibility(visible: boolean) {
         this.footerVisibleSubject.next(visible);
@@ -61,4 +63,13 @@ export class NxAppStateService {
     set canManuallyAccess(canAccess: boolean) {
         this.manualAccessSubject$.next(canAccess);
     }
+
+    // TODO: Remove as not used
+    // set authorizing(authorize: boolean) {
+    //     this.authorizeSubject.next(authorize);
+    // }
+    //
+    // get authorizing() {
+    //     return this.authorizeSubject.getValue();
+    // }
 }

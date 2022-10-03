@@ -5,9 +5,16 @@
 
 {% block extrahead %}
     {{ block.super }}
+    <style>
+        .restricted-warning {
+            border: red 1px solid !important;
+        }
+    </style>
     <script src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script src="{% static 'split.js/dist/split.min.js' %}"></script>
     <script src="{% static 'csstree-validator/dist/csstree-validator.js' %}"></script>
+    <script src="{% static 'uuid/dist/umd/uuidv4.min.js' %}"></script>
+
 {% endblock %}
 <{% block breadcrumbs %}
     <div class="breadcrumbs">
@@ -161,8 +168,91 @@
         </div>
     {% endif %}
 </form>
-
 <script>
+    const brandingVariables = {{default_branding|safe}}
+    const reviewButton = document.querySelector('button[name="SendReview"]')
+
+    const checkInput = (
+        inputText,
+        branding = brandingVariables
+    ) => {
+        const text = inputText.toLowerCase()
+        return branding.filter(term => text.includes(term)).join(', ')
+    }
+
+    const checkValue = elementOrEvent => {
+        const element = elementOrEvent.target || elementOrEvent
+        const matched = checkInput(element.value)
+        const errorId = `${element.name}-restricted-error`
+        const isEditor = element.classList.contains('tinymce')
+        const existingError = document.getElementById(errorId)
+        if (matched) {
+            const messageText = `Input contains restricted keyword(s) \"${matched}\"`
+            if (!existingError) {
+                const message = document.createElement('p')
+                message.id = errorId
+                message.innerText = messageText
+                message.classList.add('text-warning')
+                try {
+                    element.after(message)
+                } catch(e) {
+                    console.log(element)
+                }
+                (isEditor ? element.parentNode: element).classList.add('restricted-warning')
+            } else {
+                existingError.innerText = messageText
+            }
+        } else if (!matched && existingError) {
+            try {
+                existingError.parentNode.removeChild(existingError)
+            } catch (e) {
+                console.error(e)
+            }
+            (isEditor ? element.parentNode: element).classList.remove('restricted-warning')
+        }
+    }
+
+    const textInputs = [
+    ...document.querySelectorAll('input[type="text"]'),
+    ...document.querySelectorAll('textarea')
+    ]
+
+    textInputs.forEach(input => {
+        checkValue(input)
+        input.addEventListener('change', checkValue)
+    })
+
+    const getErrors = () => {
+        const inputs = textInputs.map(({ name, value }) => ({ name, matched: checkInput(value) })).filter(({ matched }) => matched)
+
+        return inputs.map(({ name, matched }) => `${name}: ${matched}`)
+    }
+
+    const buildErrorMessage = errors => {
+        return [
+        'The following branding variables were found within this form:\n',
+        ...errors,
+        '\nPlease confirm that you want to save or cancel to modify changes.'
+        ].join('\n')
+    }
+
+    const checkForBranding = event => {
+        const errors = getErrors()
+        if (errors.length && !confirm(buildErrorMessage(errors))) {
+            event.preventDefault();
+        }
+
+    }
+    reviewButton.addEventListener('click', checkForBranding)
+</script>
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRFToken': document.cookie.split('csrftoken=')[1].split(' ')[0]
+        }
+    });
+
+    let imagesBeingUploaded = 0
     var bytesToMb = "{{ BYTES_TO_MB }}";
     function openPreview() {
         let screen = window.screen;
@@ -281,101 +371,50 @@
         disableSubmitButtons(false);
     });
 
-    function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat){
-        if(!pasteEvent.clipboardData){
-            if(typeof(callback) == "function"){
-                callback(undefined);
+    const uploadImage = (image_upload_url, file, options={}, successCB=console.log) => {
+        imagesBeingUploaded++
+        disableSubmitButtons(true)
+        const body = new FormData()
+        const headers = new Headers()
+
+        body.append('file', file)
+        body.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').attr('value'));
+        headers.append('X-CSRFToken', document.cookie.split('csrftoken=')[1].split(' ')[0]);
+
+        fetch(image_upload_url, { method: 'POST', headers, body}).then(
+            res => res.json()
+        ).then(
+            ({ location }) => location
+        ).then(location => {
+            if (options.editor && options.imageSrc) {
+                const currentContent = options.editor.getContent()
+                const updatedContent = currentContent.replace(options.imageSrc, location)
+                options.editor.setContent(updatedContent)
             }
-        }
-
-        var items = pasteEvent.clipboardData.items;
-
-        if(!items){
-            if(typeof(callback) == "function"){
-                callback(undefined);
-            }
-        }
-
-        for (let i = 0; i < items.length; i++) {
-            // Skip content if not image
-            if (items[i].type.indexOf("image") === -1) continue;
-            // Retrieve image on clipboard as blob
-            const blob = items[i].getAsFile();
-
-            // Create an abstract canvas and get context
-            const mycanvas = document.createElement("canvas");
-            const ctx = mycanvas.getContext('2d');
-
-            // Create an image
-            const img = new Image();
-
-            // Once the image loads, render the img on the canvas
-            img.onload = function(){
-                // Update dimensions of the canvas with the dimensions of the image
-                mycanvas.width = this.width;
-                mycanvas.height = this.height;
-
-                // Draw the image
-                ctx.drawImage(img, 0, 0);
-
-                // Execute callback with the base64 URI of the image
-                if(typeof(callback) == "function"){
-                    callback(mycanvas.toDataURL(
-                        (imageFormat || "image/png")
-                    ));
-                }
-            };
-
-            // Crossbrowser support for URL
-            const URLObj = window.URL || window.webkitURL;
-
-            // Creates a DOMString containing a URL representing the object given in the parameter
-            // namely the original Blob
-            img.src = URLObj.createObjectURL(blob);
-        }
+            imagesBeingUploaded--
+            disableSubmitButtons(!!imagesBeingUploaded)
+            successCB(location)
+        })
     }
 
-
-    function paste_handle_images(pasteEvent, editor) {
-        clipContent = pasteEvent.clipboardData.getData('text/html');
-        const file = [...pasteEvent.clipboardData.items].find(({ type }) => type === 'image/png')
-
-        const addBase64Image = (b64Image) => {
-            if (b64Image) {
+    function paste_handle_images(clipContent, file, textOrHtml, files, editor, image_upload_url) {
+        const uploadFile = (file) => {
+            if (file) {
                 const srcAttr = /src="(.*?)"/igm.exec(clipContent)
                 const imageSrc = srcAttr ? srcAttr[1] : '';
                 const pastedImg = $(editor.getBody()).find(`img[src="${imageSrc}"]`);
-                // This isn't efficient and can be slow
-                // TODO: CLOUD-6917: Upload images in the background
-                if (pastedImg.length) {
-                    $(pastedImg).each(function() {
-                        $(this).attr('src', b64Image);
-                        this.dataset.mceSrc = b64Image;
-                    });
-                } else {
+                if (!pastedImg.length) {
                     // CSP or something else blocked it, so we reinsert the image without the URL this time
-                    const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + b64Image + '$3');
+                    const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + imageSrc + '$3');
                     editor.insertContent(newContent);
                 }
+                uploadImage(image_upload_url, file, { editor, imageSrc })
             }
         }
-        if (pasteEvent.clipboardData.types.includes('text/html')) {
-            retrieveImageFromClipboardAsBase64(pasteEvent, addBase64Image)
+        if (textOrHtml) {
+            files.forEach(uploadFile)
         } else if (file) {
-            const blob = file.getAsFile()
-            const tempCanvas = document.createElement("canvas");
-            const ctx = tempCanvas.getContext('2d');
-            const img = new Image();
-            const url = window.URL || window.webkitURL;
-            img.onload = function(){
-                tempCanvas.width = this.width;
-                tempCanvas.height = this.height;
-                ctx.drawImage(img, 0, 0);
-                clipContent = `<meta charset="utf-8"><img src="" alt="${blob.name} (${this.width}×${this.height})"/>`
-                addBase64Image(tempCanvas.toDataURL("image/png"))
-            };
-            img.src = url.createObjectURL(blob);
-
+            uploadFile(file.getAsFile())
         }
     }
 
@@ -389,7 +428,7 @@
             selector: '[id="{{ field.id_for_label }}"]',
             paste_preprocess : function(plugin, args) {
                 const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
-                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img'];
 
                 function replaceElements(matched, tagName) {
                     if (validPasteElements.indexOf(tagName) === -1) {
@@ -448,11 +487,20 @@
             closed : /^(br|hr|input|meta|img|link|param|area|path|line)$/,
             protect: [/<svg.*\/svg>/],
             relative_urls: false,
-            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
+            images_upload_url: "{% url 'upload_image' asset.id data_structure.id %}",
+            images_reuse_filename: true,
+            images_upload_handler: function (blobInfo, success, failure) {
+                const imageUploadUrl = "{% url 'upload_image' asset.id data_structure.id %}"
+                const file = blobInfo.blob()
+                uploadImage(imageUploadUrl, file, {}, success)
+            },
+            {% if admin_uploads %} image_list: {{admin_uploads|safe}}, {% endif %}
+            {% if admin_files %} link_list: {{admin_files|safe}}, {% endif %}
+            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code | sanitize | removeformat paste pastetext preview image table ',
             menubar: false,
             resize: 'both',
             theme: 'silver',
-            plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists',
+            plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists, image, table',
             theme_advanced_resizing: true,
             init_instance_callback : function(editor) {
                 $(editor.getElement())
@@ -471,8 +519,19 @@
                     tinymce.triggerSave();
                 });
 
-                editor.on('paste', function(event) {
-                    paste_handle_images(event, editor);
+                editor.on('paste', function(pasteEvent) {
+                    const image_upload_url = "{% url 'upload_image' asset.id data_structure.id %}"
+                    const clipContent = pasteEvent.clipboardData.getData('text/html');
+                    const items = [...pasteEvent.clipboardData.items]
+                    const file = items.find(({ type }) => type === 'image/png')?.getAsFile()
+                    const textOrHtml = pasteEvent.clipboardData.types.includes('text/html')
+                    const files = items.reduce((files, item) => {
+                        if (!(item.type.indexOf("image") === -1)) {
+                            files.push(item.getAsFile())
+                        }
+                        return files
+                    }, [])
+                    setTimeout(() => paste_handle_images(clipContent, file, textOrHtml, files, editor, image_upload_url))
                 });
 
                 editor.on('postProcess', function (e) {
@@ -494,6 +553,24 @@
 
                 // Set initial width of editor to width of original textarea
                 editor.settings.width = $(editor.getElement()).width();
+
+                editor.ui.registry.addButton('sanitize', {
+                    text: 'Sanitize HTML',
+                    onAction: function (_) {
+                        const content = editor.getContent();
+                        editor.mode.set('readonly');
+                        const timeout = setTimeout(() => {
+                            editor.mode.set('design');
+                            console.log('here');
+                        }, 5000);
+
+                        $.post('/api/sanitize_html', {'html': content}, function(data) {
+                            editor.setContent(data.sanitizedHTML);
+                            editor.mode.set('design');
+                            clearTimeout(timeout);
+                        });
+                    }
+                });
             }
         });
         {% endif %}
@@ -541,7 +618,7 @@
     if (customPreview) {
         const customPreviewInput = document.getElementById('customPreviewInput')
         customPreviewInput.value = previewFrame.src = customPreview
-        
+
     }
 </script>
 <script type="text/javascript">

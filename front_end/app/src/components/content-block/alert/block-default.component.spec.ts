@@ -1,12 +1,18 @@
-import {
-    ComponentFixture, TestBed,
-    waitForAsync
-}                                              from '@angular/core/testing';
-import { Component }                           from '@angular/core';
-import { NxContentBlockSectionComponent }      from '@components/content-block/section/section.component';
-import { NxAlertBlockComponent }               from '@components/content-block/alert/block.component';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+import {
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import {
+    NxAlertBlockComponent
+} from '@components/content-block/alert/block.component';
+import {
+    NxContentBlockSectionComponent
+} from '@components/content-block/section/section.component';
 
 @Component({
     template: `
@@ -30,10 +36,17 @@ describe('NxAlertBlockComponent (default)', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxAlertBlockComponent, TestHostComponent, NxContentBlockSectionComponent]
+            imports: [
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule
+            ],
+            declarations: [
+                NxAlertBlockComponent,
+                TestHostComponent,
+                NxContentBlockSectionComponent
+            ]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(TestHostComponent);
         wrapperComponent = fixture.componentInstance;
@@ -104,7 +117,8 @@ describe('NxAlertBlockComponent (default)', () => {
 
         it('should set text', () => {
             expect(leftSectionText.className).toContain('ml-2');
-            expect(leftSectionText.innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe('<span>Settings displayed below are advanced.</span><br><span>Changing them may cause server to work incorrectly.</span>');
+            expect(leftSectionText.innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                .toBe('<span>Settings displayed below are advanced.</span><br><span>Changing them may cause server to work incorrectly.</span>');
         });
 
         it('should set right section', () => {

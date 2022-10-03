@@ -1,9 +1,13 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Reset DB and Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
 
 Users Suite Setup
+    Open Browser and go to URL    ${url}
     ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
     #system(name,port,cont,owner,id) 
@@ -23,17 +27,21 @@ Users Suite Setup
     # ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
     # Set Suite Variable    ${system 2}    &{system 2}
 
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
-    ...    ELSE    Web Admin Suite Setup
+    IF    '''${mode}'''=='''cloud'''
+        system-user-resource.Cloud Suite Setup
+    ELSE
+        system-user-resource.Web Admin Suite Setup
+    END
 
 Web Admin Suite Setup
     Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Suite Setup
-    Open Browser and go to URL    ${url}
+    Go To    ${url}
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}     65
-    Click Link    ${SERVERS LINK}
+    Sleep    1
+    Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
     Log Out
 
@@ -46,7 +54,9 @@ Users Test Tear Down
     Run Keyword If Test Failed    Reset
     ${status}=    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword And Return Status    validate log out
     ...     ELSE    Run Keyword And Return Status    validate log out web admin
-    Run keyword unless    ${status}    Log Out
+    IF    ${status} == ${False}
+        Log Out
+    END
 
 Users Teardown
     # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
@@ -64,7 +74,9 @@ Remove Temporary Users
     [Arguments]    ${sysID}=${AUTO TESTS SYSTEM ID}    ${sysIP}=${AUTO SYS IP}
     FOR    ${user}    IN     @{TMP USERS}
         ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${sysID}
-        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${sysIP}    ${user id}
+        IF    '${user id}'!='None'
+            Remove User    ${auth}    ${sysIP}    ${user id}
+        END
     END
     # Open Browser and go to URL    ${url}
     # Log in to Auto Tests System    ${email}
@@ -87,35 +99,6 @@ Edit User Permissions In Systems
     Sleep    3
     Wait Until Element Is Not Visible    ${ACCOUNT SAVE}
 
-Check User Permissions
-    [arguments]    ${user email address}    ${permissions}    ${timeout}=${selenium_timeout}
-    ${original timeout}=   Set Selenium Timeout    ${timeout}
-
-    Select user in Users List    ${user email address}
-
-    ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
-    Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
-
-    Run Keyword If    '${permissions}'=='${OWNER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
-    Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
-    Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
-    Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT VIEWER}
-    Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
-    Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
-
-    Set Selenium Timeout    ${original timeout}
 
 
 Change User Permissions
@@ -129,26 +112,7 @@ Change User Permissions
     Click Link    ${p}
     Sleep    1
 
-Remove User Permissions
-    [Arguments]    ${user email address}
-    ${User In List}=   Select user in Users List    ${user email address}
-    Wait Until Element Is Visible    ${REMOVE USER BUTTON}
-    Click Button    ${REMOVE USER BUTTON}
-    Wait Until Element Is Visible    ${REMOVE BUTTON}
-    Click Button    ${REMOVE BUTTON}
-#    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
-    Wait Until Element Is Not Visible    ${User In List}
 
-Select user in Users List
-    [Arguments]    ${user email address}
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
-    Run Keyword Unless    ${status}   Go To Users List
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
-    Wait Until Element Is Visible    ${User In List}
-    Click Link    ${User In List}
-    Wait Until Element Is Visible    ${USER EMAIL}
-    Wait Until Element Contains    ${USER EMAIL}    ${user email address}
-    [Return]    ${user email address}
 
 Check Special Hint
     [Arguments]    ${type}
@@ -161,19 +125,21 @@ Check Special Hint
     Click Link    ${dropdown type}/..
     # Commented this out because it caused a proble but can't remember why it was here
     # ${type}    Convert To Uppercase    ${type}
-    Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
-    ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
-    ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
-    ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
-    ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
-    ...    ELSE IF    "${type}"=="Client Custom"          Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
-    ...    ELSE    Fail    msg=User type did not match any expected types
+    IF    "${type}"=="${ADMIN TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
+    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
+    ELSE IF    "${type}"=="${VIEWER TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
+    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
+    ELSE IF    "${type}"=="${CUSTOM TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
+    ELSE IF    "${type}"=="Client Custom"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
+    ELSE    
+        Fail    msg=User type did not match any expected types
+    END
 
 Verify Changed Info Via API
     [Arguments]    ${new locals}    ${ip}    ${local user}=ocal+
@@ -181,7 +147,16 @@ Verify Changed Info Via API
     @{users} =    Get Users     ${server auth}    ${ip}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
-        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
+        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
+        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
+        IF      ${isCloud key}
+            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
+        ELSE IF    ${type key}
+            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
+        ELSE
+            ${local state} =    Set Variable    ${True}
+        END
+        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
     END
     FOR    ${user}    IN    @{locals}
         Keep in Dictionary    ${user}    name    fullName    permissions    email
@@ -217,26 +192,35 @@ Verify In Local Users UI
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${server 1['cloud users']}[cloudAdmin]' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
-	    ...    ${DISABLE USER SWITCH}
-	    ...    ${LOCAL USER DELETE BUTTON}
-	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
-	    Run Keyword If    '${status}' == '${TRUE}'    Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-	    ...    ELSE    Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
+        IF    '${email}' != '${server 1['cloud users']}[cloudAdmin]' and '${role names}[${user}]' != '${ADMIN TEXT}'
+            Wait Until Elements Are Visible
+            ...    ${DISABLE USER SWITCH}/..
+	        ...    ${LOCAL USER DELETE BUTTON}
+	        ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        END
+        IF    '${status}' == '${TRUE}'
+            Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        ELSE
+            Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
+        END
+        Capture Page Screenshot
+        Capture Element Screenshot    ${LOCAL USER NAME}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
         log    ${email}
         log    ${user}
         # log    ${users['cloudAdmin']}
-	    Run Keyword If    '${email}' == '${server 1['owner']}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-        ...    ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-        ...    ELSE IF    '${email}' == 'admin'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
+        IF    '${email}' == '${server 1['owner']}'
+            Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+        ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
+            Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+        ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
+	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+        ELSE IF    '${email}' == 'admin'
+	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+		ELSE
+            Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..    
+        END
     END
 
 Modify Local Users via Cloud UI
@@ -253,7 +237,7 @@ Modify Local Users via Cloud UI
         #${new login} =    Change Login for Local User    Local+${user}_changed
         ${new full name} =    Change Full Name for Local User     Changed User
         ${new permission} =    Change Permission Level for Local User    ${user}    ${email}
-        ${email}=       Get Random Email    ${BASE EMAIL}
+        ${email}=       Get Random Email Robot    ${BASE EMAIL}
         ${new local user email} =     Change Email for Local User    ${email}
 	    #Log To Console    You should be able to save now. ${user}
         #Sleep    100
@@ -347,20 +331,34 @@ Reset Local Users
     @{users} =    Get Users     ${auth}    ${server}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
-        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
+        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
+        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
+        IF      ${isCloud key}
+            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
+        ELSE IF    ${type key}
+            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
+        ELSE
+            ${local state} =    Set Variable    ${True}
+        END
+        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
     END
     ${count} =    Get Length    ${locals}
     ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    5
-    Run Keyword If    ${status}==${true}    Reset Local Users API    ${locals}    ${auth}    ${server}
-    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
+    IF    ${status}==${true}
+        Reset Local Users API    ${locals}    ${auth}    ${server}
+    ELSE
+        Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
+    END
     [Return]    ${local users}
 
 Create New Local Users
     [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}    ${password}
-    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
-    ...    ELSE    Run Keywords
-    ...    Delete All Local Users via API    ${auth}    ${server}    ${locals}    AND
-    ...    Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+    IF    ${count}==0
+        Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+    ELSE
+        Delete All Local Users via API    ${auth}    ${server}    ${locals}
+        Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+    END
 
 Delete All Local Users via API
     [Arguments]    ${auth}    ${server}    ${locals}
@@ -377,12 +375,14 @@ Reset Local Users API
         ...    '${variable}' == 'liveviewer'    liveViewer
         ...    '${variable}' == 'advancedviewer'    advancedViewer
         ...    ${variable}
-        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    user id=${user}[id]    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}   patch=${True}
     END
 
 Check Special Hints
     FOR    ${type}    IN    @{USER TYPE LIST}
-        Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
+        IF    "${type}"!="${OWNER TEXT}"
+            Check Special Hint    ${type}
+        END
     END
 
 Get Custom Permissions
@@ -491,8 +491,8 @@ Change All Local User Info
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
 	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
         ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
-        Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
-        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
+        Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}/..    ${LOCAL USER DELETE BUTTON}
+        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}/..     ${LOCAL USER DELETE BUTTON}
     END
 
 Get Local User Id By Name
@@ -518,7 +518,16 @@ Get Local Users
     @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
-        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
+        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
+        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
+        IF      ${isCloud key}
+            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
+        ELSE IF    ${type key}
+            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
+        ELSE
+            ${local state} =    Set Variable    ${True}
+        END
+        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
     END
     [Return]    ${locals}
 
@@ -526,7 +535,9 @@ Check User Full Name is None
     [Arguments]    ${name}    ${check info}
     FOR    ${user}    IN    @{check info}
         ${full name} =    Set Variable If    '${name}' in '${user}[name]'    ${user}[fullName]
-        Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
+        IF    '${full name}' != 'None'
+            Exit For Loop
+        END
     END
     Should Be Equal    ${full name}    ${None}
 
@@ -535,7 +546,9 @@ Check User Email is None
     [Arguments]    ${name}    ${check info}
     FOR    ${user}    IN    @{check info}
         ${email field} =    Set Variable If    'name' in '${user}[name]'    ${user}[email]
-        Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
+        IF    '${email field}' != 'None'
+            Exit For Loop
+        END
     END
     Should Be Equal    ${email field}    ${None}
 
@@ -552,3 +565,11 @@ Check If User Is Enabled/Disabled
         Exit For Loop If    '${state}'=='${True}' or '${state}'=='${False}'
     END
     [Return]    ${state}
+
+Reset
+    Close All Browsers
+    IF    '''${mode}'''=='''cloud'''
+        Open Browser and go to URL    ${url}
+    ELSE
+        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+    END

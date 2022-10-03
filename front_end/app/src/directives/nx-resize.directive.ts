@@ -1,8 +1,10 @@
 import {
-    Directive, ElementRef,
-    EventEmitter, Output,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Output,
     OnDestroy
-}                     from '@angular/core';
+} from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 
 const entriesMap = new WeakMap();

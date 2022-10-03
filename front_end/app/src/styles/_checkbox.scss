@@ -94,7 +94,7 @@
 
     & svg polyline.tick {
         fill              : none;
-        stroke            : theme_variables.$brand_core;
+        stroke            : var(--brand-core);
         stroke-width      : 2px;
         stroke-linecap    : round;
         stroke-linejoin   : round;

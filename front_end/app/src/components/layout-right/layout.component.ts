@@ -35,10 +35,10 @@ import { Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/cor
 */
 
 @Component({
-    selector     : 'nx-layout-right',
-    templateUrl  : 'layout.component.html',
+    selector: 'nx-layout-right',
+    templateUrl: 'layout.component.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls    : ['layout.component.scss']
+    styleUrls: ['layout.component.scss']
 })
 export class NxLayoutRightComponent {
     @Input('loading') loading;

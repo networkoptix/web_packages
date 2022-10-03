@@ -2,7 +2,7 @@ Hola, {{message.userFullName}},
 
   Obriu l'enllaç següent per confirmar l'email i activar el compte.
 
-{{config.portal_url}}/activate/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 Si no us heu registrat a %CLOUD_NAME%, ignoreu aquest correu electrònic.
 No compartiu el missatge ni l'enllaç amb ningú.

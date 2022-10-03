@@ -12,7 +12,7 @@
                         <div *ngIf="deviceToken && registered === false" class="form-group">
                             <div class="form-group">
                                 <label for="currentDeviceName">Name</label>
-                                <input class="form-control" type="text" name="currentDeviceName" id="currentDeviceName"
+                                <input class="fs-mask form-control" type="text" name="currentDeviceName" id="currentDeviceName"
                                        maxlength="255"
                                        [(ngModel)]="currentDeviceName">
                             </div>
@@ -58,7 +58,7 @@
                         </div>
                         <div class="form-group">
                             <label for="deviceName">Name*</label>
-                            <input class="form-control" type="text" name="deviceName" id="deviceName" maxlength="255" required
+                            <input class="fs-mask form-control" type="text" name="deviceName" id="deviceName" maxlength="255" required
                             [(ngModel)]="newDevice.name">
                         </div>
                         <div class="form-group">

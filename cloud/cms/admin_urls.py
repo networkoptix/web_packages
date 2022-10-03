@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.urls import path
 
-from cms.views import asset, celery, menu
+from cms.views import asset, celery, menu, utils
 
 urlpatterns = [
     url(r'download/(?P<path>.*)$', asset.download_file, name="download_file"),
@@ -17,10 +18,18 @@ urlpatterns = [
     url(r'^package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
     url(r'^async_package/(?P<asset_id>.+?)/?$', asset.download_async_package, name="download_package_async"),
 
+    url(r'^upload_image/(?P<asset_id>.+?)/(?P<ds_id>.+?)/?$', asset.upload_image, name="upload_image"),
+
     url(r'asset_settings/(?P<asset_id>.+?)/$', asset.asset_settings, name="asset_settings"),
+    url(r'asset_type_settings/(?P<asset_type_id>.+?)/$', asset.asset_type_settings, name="asset_type_settings"),
     url(r'get_asset_ids/?$', asset.get_asset_ids_by_asset_type, name="asset_ids_by_type"),
     path('asset_autocomplete', asset.MenuAssetAutocomplete.as_view(create_field='name'), name='asset_autocomplete'),
     path('asset_info/<int:asset_id>', asset.get_asset_info, name='asset_info'),
     path('asset_info/by_menu/<int:menu_id>', asset.get_asset_info_by_menu, name='asset_info_by_menu'),
     path('menu_node_autocomplete', menu.MenuNodeAutocomplete.as_view(), name='menu_node_autocomplete')
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('qa_settings', utils.QASettings.as_view(), name='qa_settings')
+    ]

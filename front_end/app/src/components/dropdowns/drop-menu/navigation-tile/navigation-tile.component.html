@@ -1,4 +1,4 @@
-<div class="navigation-tile" [style.width.px]="width">
+<div class="navigation-tile" [style.width.px]="width" [attr.id]="node['htmlID']">
     <div class="d-flex align-middle mw-100">
         <svg-icon
                 class="section-title-icon"
@@ -24,19 +24,25 @@
                 [style.padding-right.px]="link.new_window || link.icon ? 0 : 8"
                 [ngClass]="{'active': headerService.currentLocation.path === link.url || checkActive(link.url) }">
                 <ng-template #internalLink>
-                    <a [routerLink]="link.url" [ngClass]="{'has-icon': link.new_window || link.icon}">
+                    <a
+                        [routerLink]="link.url"
+                        [ngClass]="{'has-icon': link.new_window || link.icon}"
+                        [attr.id]="link['htmlID']"
+                    >
                         {{link.display_name || link.name}}
                     </a>
                 </ng-template>
                 <a *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink"
                     [href]="link.url" [target]="link.new_window ? '_blank' : '_self'"
-                    [ngClass]="{'has-icon': link.new_window || link.icon}">
+                    [ngClass]="{'has-icon': link.new_window || link.icon}"
+                    [attr.id]="link['htmlID']"
+                >
                     {{link.display_name || link.name}}
                 </a>
                 <svg-icon
                         style="width: 24px; height: 24px;"
                         *ngIf="link.new_window || link.icon"
-                        [src]="iconsDir + (link.icon ? link.icon : 'external.svg')"
+                        [src]="link.icon ? iconsDir + link.icon : CONFIG.icons.dirTextButtons + 'external.svg'"
                         [svgStyle]="{
                             'margin-top.px': '-1',
                             'width.px': '24',

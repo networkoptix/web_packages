@@ -1,7 +1,7 @@
-@use '../../styles/theme_variables' as *;
-@use '../styles/typography';
-@use '../../src/components/content-block/content-block.component';
-@use 'app/src/styles/_bootstrap_utils' as bootstrap;
+@use "../../styles/theme_variables" as *;
+@use "../styles/typography";
+@use "../../src/components/content-block/content-block.component";
+@use "app/src/styles/_bootstrap_utils" as bootstrap;
 
 .section-placeholder {
     position: relative;
@@ -134,7 +134,7 @@
 
         @for $i from 1 through 9 {
             &:nth-of-type(#{$i}) h2 {
-                background-image : url('/static/images/promo/landing_promo_#{$i}.png');
+                background-image : url("/static/images/promo/landing_promo_#{$i}.png");
             }
         }
 
@@ -148,10 +148,19 @@
             line-height : 1.4;
         }
 
-        &[href=''] {
+        &[href=""] {
             pointer-events: none;
         }
     }
+}
+
+.header-editable {
+    display         : flex;
+    justify-content : space-between;
+    margin-right    : auto;
+    flex            : 0 1 auto;
+    min-width       : 0;
+    max-width       : 100%;
 }
 
 landing-display-component {
@@ -177,5 +186,19 @@ landing-display-component {
 
     .row {
         justify-content: center;
+    }
+}
+
+.ngx-charts-outer {
+    display : flex;
+    
+    .ngx-charts {
+        float  : none !important;
+        height : 500px;
+    }
+    
+    .chart-legend .legend-labels {
+        background-color : $additional_light1;
+        border: 1px solid $light4;
     }
 }

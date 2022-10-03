@@ -1,12 +1,12 @@
 @use "../../../../../../styles/typography";
-@use '../../../../../../../styles/theme_variables' as *;
+@use "styles/theme_variables" as theme_vars;
 
 $stripes : repeating-linear-gradient(
                 -45deg,
-                $light3,
-                $light3 4.25px,
-                $light4 4.25px,
-                $light4 9px
+                var(--light3),
+                var(--light3) 4.25px,
+                var(--light4) 4.25px,
+                var(--light4) 9px
 );
 
 :host {
@@ -24,15 +24,21 @@ $stripes : repeating-linear-gradient(
     padding          : 0;
     position         : relative;
     width            : 100%; /* Full width */
-    background-color : $light1; /* Grey background */
+    background-color : var(--light1); /* Grey background */
     height           : 20px;
     display          : flex;
     align-items      : center;
+    
+    &-overlay {
+        width    : 100%;
+        height   : 100%;
+        position : absolute;
+    }
 
     .total-label {
         @include typography.regular13dark9;
         position : absolute;
-        z-index  : 9;
+        z-index  : 1;
         left     : 8px;
     }
 
@@ -48,19 +54,19 @@ $stripes : repeating-linear-gradient(
         }
 
         &.available {
-            background-color           : $additional_light1;
-            border                     : 1px solid $light3;
+            background-color           : var(--additional_light1);
+            border                     : 1px solid var(--light3);
             border-bottom-right-radius : 0;
             border-top-right-radius    : 0;
 
             &.full {
-                border-right : 1px solid $light3;;
+                border-right : 1px solid var(--light3);;
             }
         }
 
         &.archive {
-            background-color : rgba($green_l2, 0.3);
-            border           : 1px solid rgba($green_l1, 0.4);
+            background-color : rgba(theme_vars.$green_l2, 0.3);
+            border           : 1px solid rgba(theme_vars.$green_l1, 0.4);
             margin-left      : -1px;
         }
 
@@ -68,15 +74,15 @@ $stripes : repeating-linear-gradient(
             left                      : auto;
             right                     : 0;
             background                : $stripes;
-            border                    : 1px solid $light5;
+            border                    : 1px solid var(--light5);
             border-left               : none;
             border-bottom-left-radius : 0;
             border-top-left-radius    : 0;
         }
 
         &.used {
-            background-color           : $light7;
-            border                     : 1px solid $light9;
+            background-color           : var(--light7);
+            border                     : 1px solid var(--light9);
             border-bottom-right-radius : 0;
             border-top-right-radius    : 0;
         }
@@ -88,6 +94,10 @@ $stripes : repeating-linear-gradient(
     border-collapse       : collapse;
     min-width             : 100%;
     grid-template-columns : 20px auto auto;
+    
+    tbody, tr {
+        display : contents;
+    }
 
     tr td {
         background : none;
@@ -104,29 +114,29 @@ $stripes : repeating-linear-gradient(
 
             rect.box {
                 fill              : none;
-                stroke            : #2B383F;
+                stroke            : var(--dark9);
                 stroke-linecap    : round;
                 stroke-linejoin   : round;
                 stroke-miterlimit : 10;
 
                 &.archive {
-                    fill : rgba($green_l2, 0.7);
-                    stroke : rgba($green_l1, 0.6);
+                    fill : rgba(theme_vars.$green_l2, 0.7);
+                    stroke : rgba(theme_vars.$green_l1, 0.6);
                 }
 
                 &.used {
-                    fill : $light7;
-                    stroke : $light9;
+                    fill : var(--light7);
+                    stroke : var(--light9);
                 }
 
                 &.available {
-                    fill : $additional_light1;
-                    stroke : $light3;
+                    fill : var(--additional_light1);
+                    stroke : var(--light3);
                 }
 
                 &.reserved {
-                    fill : $light3;
-                    stroke : $light5;
+                    fill : var(--light3);
+                    stroke : var(--light5);
                 }
             }
         }

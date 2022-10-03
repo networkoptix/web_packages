@@ -8,7 +8,7 @@ Suite Teardown   VMS Suite Teardown
 *** Keywords ***
 VMS Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email}=    Get Random Email    ${email base}
+    ${email}=    Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    VMS    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email vms}    ${email}
@@ -126,7 +126,7 @@ Disconnect System From Cloud - Client
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     Log    Step 2: Verify system is disconnected from cloud
-    ${user systems}=   Get Account Systems    ${ENV}    ${email vms}    ${password}
+    ${user systems}=   Get Account Systems    ${email vms}    ${password}
     Should Not Contain    ${user systems}    ${system id}
 
     Go To    ${ENV}/systems/

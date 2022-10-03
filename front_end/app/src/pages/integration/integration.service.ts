@@ -1,12 +1,10 @@
-import { Injectable, OnDestroy }     from '@angular/core';
-import {
-    BehaviorSubject, Observable, Subscription
-}                                    from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService, Account } from '../../services/account.service';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
 
 interface Platform {
     file: string;
@@ -57,7 +55,7 @@ export class IntegrationService implements OnDestroy {
                         plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
 
                         plugin.link = '/integrations/' + (plugin.urlified || plugin.id);
-                        plugin.queryParams = plugin.state ? { state : plugin.state } : {};
+                        plugin.queryParams = plugin.state ? { state: plugin.state } : {};
                     });
                     this.pluginsSubject.next(plugins);
                 });
@@ -69,7 +67,7 @@ export class IntegrationService implements OnDestroy {
     }
 
     formatVersion(elm) {
-        if (!elm || elm && elm !== '' && elm.indexOf('v.') !== 0) {
+        if (!elm || elm && elm !== '' && !elm.startsWith('v.')) {
             elm = (elm) ? 'v.&nbsp;' + elm : '';
         }
 
@@ -151,9 +149,9 @@ export class IntegrationService implements OnDestroy {
 
             if (matchScreenshot) {
                 processed.push({
-                    id      : item[0].replace('overview', ''),
-                    value   : item[1],
-                    sortKey : parseInt(matchScreenshot[1], 10)
+                    id: item[0].replace('overview', ''),
+                    value: item[1],
+                    sortKey: parseInt(matchScreenshot[1], 10)
                 });
             }
         });
@@ -187,7 +185,7 @@ export class IntegrationService implements OnDestroy {
                 .platforms
                 .find(platform => {
                     // 32 or 64 bit? ... it doesn't matter :)
-                    return platform.toLowerCase().indexOf(icon.name) > -1;
+                    return platform.toLowerCase().includes(icon.name);
                 });
             if (platform) {
                 platformIcons.push({ name: platform, src: icon.src });
@@ -242,7 +240,9 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = NxUtilsService.htmlToEntity(this.formatVersion(plugin.versionDetails.version));
+            plugin.versionDetails.version = NxUtilsService.htmlToEntity(
+                this.formatVersion(plugin.versionDetails.version)
+            );
         } else {
             plugin.versionDetails = {
                 version: '&nbsp;'
@@ -250,7 +250,8 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.requirementsAndCompatibility?.platforms) {
-            plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
+            plugin.requirementsAndCompatibility.platforms.icons =
+                this.setPlatformIcons(plugin);
         }
 
         this.formatScreenshots(plugin.instructions);

@@ -2,7 +2,7 @@ Hej, {{message.userFullName}},
 
   Vänligen klicka på knappen nedan för att bekräfta din e-postadress och aktivera kontot.
 
-{{config.portal_url}}/ aktivera /{{message.code}}
+{{config.portal_url}}/auktorisera/aktivera/{{message.code}}
 
 Om du inte registrerade dig i %CLOUD_NAME%, ignorerar du bara det här e-postmeddelandet.
 Dela inte meddelandet eller länken med någon.

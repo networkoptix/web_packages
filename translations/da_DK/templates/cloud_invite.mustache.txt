@@ -1,12 +1,12 @@
-Hello,
+Hej,
 
-You have been invited to %CLOUD_NAME%.
+Du er blevet inviteret til %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %CLOUD_NAME%
-using your current email address and follow further instructions.
+Opret venligst en konto på %CLOUD_NAME%
+bruge din nuværende e-mailadresse og følge yderligere instruktioner.
 
-Register your account using this link: {{ config.portal_url }}/register/{{ message.code }}
+Registrer din konto vha. dette link: {{ config.portal_url }}/authorize/register/{{ message.code }}

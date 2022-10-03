@@ -1,14 +1,10 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/health-monitor-resource.robot
 Suite Setup       Start
 Test Template     Check Details Panel Alerts
 #Test Teardown     Run Keyword If Test Failed    Start
-Suite Teardown    Health Monitor Details Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Health Monitor Details Tear Down
 Force Tags        email    form    Threaded    hm
-
-*** Variables ***
-${url}    ${ENV}
-${password}    ${BASE PASSWORD}
 
 *** Test Cases ***                 TYPE     HARDWARE      NAME                         CATEGORY     METRIC
 #errors
@@ -52,73 +48,3 @@ ${password}    ${BASE PASSWORD}
 30. Warning with Error Interface       warning    Interface     test network both          I/O Rates    IN Rate
 31. Two Warnings On Interface A        warning    Interface     test network 2 warnings    Info         State
 32. Two Warnings On Interface B        warning    Interface     test network 2 warnings    I/O Rates    OUT Rate
-
-
-*** Keywords ***
-Health Monitor Details Setup
-    ${random}=    Generate Random String
-    ${owner}=    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
-    ${server} =    Create Base System      hmdetails-${random}    owner=${owner}
-    Set Suite Variable    &{server}    &{server}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Open Browser and Go To URL    ${url}
-    ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
-    ...    AND    Sleep    20
-    ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300
-    ...    AND    Go To Servers
-    ...    AND    Verify on Servers Page    timeout=120
-    ...    AND    Log Out
-    
-Health Monitor Details Tear Down
-    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['cloud id']}    ${password}    ${server['owner']}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server}[id]
-    ${results}    Execute Command    docker container rm ${server}[id]
-    FOR    ${user}    IN    @{server['cloud users'].values()}
-         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}          ${password}  
-    END
-    Close All Connections
-    Close All Browsers
-  
-Start
-    Health Monitor Details Setup
-    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Go To   ${url}/systems/${server['cloud id']}
-    ...    AND    Log In     ${server['owner']}    ${password}    button=None
-    ...    ELSE    Run Keywords
-    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server['port']}
-    ...    AND    Log In     ${server['local auth'][0]}    ${server['local auth'][1]}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
-    Click Link    ${HM INFORMATION TAB LINK}
-    Validate Alerts Page
-    Upload Json    one-of-each
-    Validate Uploaded Alerts Page
-    Wait Until Elements are Visible
-    ...    ${HM ALERTS PAGE LINK}
-    ...    ${HM SYSTEM PAGE LINK}
-    ...    ${HM SERVERS PAGE LINK}
-    ...    ${HM CAMERAS PAGE LINK}
-    ...    ${HM STORAGES PAGE LINK}
-    ...    ${HM INTERFACES PAGE LINK}
-
-Check Details Panel Alerts
-    [Arguments]    ${type}    ${hardware}    ${name}    ${category}    ${metric}
-    ${color}=   Set Variable If    '''${type}'''=='''error'''    ${ERROR COLOR WITH OPACITY}    ${WARNING COLOR}
-    ${svg}=   Set Variable If    '''${type}'''=='''error'''    ${HM ERROR ICON}    ${HM WARNING ICON}
-    ${match}=   Get Regexp Matches    ${TEST_NAME}    with
-    ${color}=   Set Variable If    ${match}    ${ERROR COLOR WITH OPACITY}    ${color}
-
-    Click Link    ${HM ${hardware}s Page Link}
-    Wait Until Element is Visible    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]
-    Wait Until Element has Style    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]   color    ${color}
-    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]
-    ${color}=   Set Variable If    '''${type}'''=='''error'''    ${ERROR COLOR WITH OPACITY}    ${WARNING COLOR}
-    Wait Until Elements are Visible
-    ...    ${HM DETAILS PANEL}
-    ...    ${HM DETAILS PANEL}//h6[contains(text(),"${category}")]/..//p[contains(text(), "${metric}")]/../../..//p[@title="${hardware} ${name} is broken"]
-    ...    ${HM DETAILS PANEL}//h6[contains(text(),"${category}")]/..//p[contains(text(), "${metric}")]/../../..${svg}
-    Wait Until Element has Style    ${HM DETAILS PANEL}//h6[contains(text(),"${category}")]/..//p[contains(text(), "${metric}")]/../following-sibling::div/p[@title="${hardware} ${name} is broken" and contains(@class,"${type}")]    color    ${color}
-    Sleep    1
-    Click Link    ${HM ALERTS PAGE LINK}

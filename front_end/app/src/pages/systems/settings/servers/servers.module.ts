@@ -1,21 +1,29 @@
-import { NgModule }                         from '@angular/core';
-import { CommonModule }                     from '@angular/common';
-import { RouterModule }                     from '@angular/router';
-import { FormsModule }                      from '@angular/forms';
-import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
-import { AngularSvgIconModule }             from 'angular-svg-icon';
-import { TranslateModule }                  from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule }                 from '@directives/directives.module';
-import { ComponentsModule }                 from '@components/components.module';
-import { NxSystemServersComponent }         from './servers.component';
-import { NxSystemStandardServerComponent }  from './standard/server-standard.component';
-import { NxServerLoggerComponent }          from './logger/logger.component';
-import { NxSystemStorageComponent }         from './storage/server-storage-standard.component';
-import { NxSystemAdvancedStorageComponent } from './storage-advanced/server-storage-adv.component';
-import { NxStorageSizeComponent }           from './storage-advanced/size/size.component';
-import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage.module';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxCloudStorageModule } from '../cloud-storage/cloud-storage.module';
+
+import { NxServerLoggerComponent } from './logger/logger.component';
+import { NxSystemServersComponent } from './servers.component';
+import {
+    NxSystemStandardServerComponent
+} from './standard/server-standard.component';
+import {
+    NxSystemAdvancedStorageComponent
+} from './storage-advanced/server-storage-adv.component';
+import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
+import {
+    NxSystemStorageComponent
+} from './storage/server-storage-standard.component';
 
 @NgModule({
     imports: [
@@ -38,7 +46,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
         NxServerLoggerComponent,
         NxSystemStorageComponent,
         NxSystemAdvancedStorageComponent,
-        NxStorageSizeComponent,
+        NxStorageSizeComponent
     ],
     bootstrap: [
     ],

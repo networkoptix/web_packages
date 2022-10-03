@@ -1,20 +1,22 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { NxAccountService } from '../../../services/account.service';
-import { NxCloudApiService, DOC_TYPES } from '../../../services/nx-cloud-api';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { AboutNode } from '../about/about.component';
 import { takeWhile } from 'rxjs/operators';
-import { ErrorStateManager } from '../about/error-state/error-state-manager';
+
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
+
+import { AboutNode } from '../about/about.component';
+import { ErrorStateManager } from '../about/error-state/error-state-manager';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-dev-tools',
-    templateUrl : 'dev-tools.component.html',
-    styleUrls   : ['dev-tools.component.scss']
+    selector: 'nx-dev-tools',
+    templateUrl: 'dev-tools.component.html',
+    styleUrls: ['dev-tools.component.scss']
 })
 export class NxDevToolsComponent implements OnInit {
     @Input() devToolsNode: Partial<AboutNode>;
@@ -41,7 +43,8 @@ export class NxDevToolsComponent implements OnInit {
         while (!snapshot.paramMap.get('name')) {
             snapshot = snapshot.parent;
         }
-        this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
+        this.menuName =
+            this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
 
         if (!this.devToolsNode) {
             const mapToDevToolsNode = ({
@@ -55,11 +58,11 @@ export class NxDevToolsComponent implements OnInit {
                 icon,
                 nodes
             }): AboutNode => ({
-                title       : displayName || name || asset?.title,
+                title: displayName || name || asset?.title,
                 subtitle,
-                displayName : displayName || name,
-                nodes       : nodes && nodes.map(mapToDevToolsNode),
-                url         : url || `/docs/content/${assetId}`,
+                displayName: displayName || name,
+                nodes: nodes && nodes.map(mapToDevToolsNode),
+                url: url || `/docs/content/${assetId}`,
                 assetId,
                 asset,
                 icon,

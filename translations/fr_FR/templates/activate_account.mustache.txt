@@ -2,7 +2,7 @@ Bonjour {{message.userFullName}},
 
   S. V. P ouvrir le lien ci-dessous pour confirmer votre email et activer le compte.
 
-{{config.portal_url}}/activer/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 Si vous n'avez pas enregistré sur %CLOUD_NAME%, ignorez cette email.
 Ne partagez pas le message ou le lien avec qui que ce soit.

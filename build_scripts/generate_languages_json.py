@@ -7,7 +7,6 @@ import sys
 
 def make_dir(filename):
     dirname = os.path.dirname(filename)
-    print ("make dir " + dirname + " for " + filename)
     if not os.path.exists(dirname):
         try:
             os.makedirs(dirname)
@@ -27,48 +26,19 @@ def save_content(filename, content):
 
 def generate_languages_files():
     languages_json = []
-    languages_names = []
     current_generate_path = os.path.dirname(os.path.realpath(__file__))
-    translations_path = os.path.join(current_generate_path, "..", "translations")
-    for lang in os.listdir(translations_path):
 
-        if '.' in lang:
-            continue
+    with codecs.open(os.path.join(current_generate_path, "..", "translations", "language_codes.json"), "r") as codes:
+        codes_to_lang = json.load(codes)
 
-        language_json_filename = os.path.join(current_generate_path, "..", "translations", lang, 'language.json')
+    for code in codes_to_lang:
+        languages_json.append({
+            "language": code,
+            "name": codes_to_lang[code]
+        })
 
-        if not os.path.isfile(language_json_filename): # ignore incomplete languages without language.json
-            if lang != 'en_US':
-                sys.stderr.write('ERROR: For BORIS to fix: language.json is missing. '
-                                 'File: ' + language_json_filename + '\n')
-                continue
-            language_json_filename = os.path.join('static/language.json')
-
-        print("Load: " + language_json_filename)
-
-        with codecs.open(language_json_filename, 'r', 'utf-8') as file_descriptor:
-            data = json.load(file_descriptor)
-            name = data["language_name"]
-
-            # validate that there are no dublicates in languages_json structure
-            if (not name or name == 'LANGUAGE_NAME') and lang != 'en_US':
-                sys.stderr.write('ERROR: For BORIS to fix: language.json has wrong or missing language_name. '
-                                 'File: ' + language_json_filename + '\n')
-                name = lang
-            elif lang == 'en_US':
-                name = 'English (US)'
-            if name in languages_names:
-                raise ValueError('CRITICAL ERROR: For BORIS to fix: language.json has not unique language_name. '
-                                 'File: ' + language_json_filename)
-            languages_names.append(name)
-
-            languages_json.append({
-                "language": lang,
-                "name": name
-            })
-
-    print(languages_json)
-    save_content('static/languages.json', json.dumps(languages_json, indent=4, ensure_ascii=False))
+        save_content("static/languages.json",
+                     json.dumps(languages_json, indent=4, ensure_ascii=False, sort_keys=True))
 
 
 generate_languages_files()

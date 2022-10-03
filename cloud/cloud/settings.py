@@ -43,7 +43,11 @@ from cloud.logger import downgrade_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+CI = os.getenv('CI', False)
+TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
+USE_SQLITE = os.getenv('USE_SQLITE', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
+MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
@@ -64,6 +68,9 @@ STATICFILES_FINDERS = [
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
     CUSTOMIZATION = conf['customization']
+
+META_CUSTOMIZATION = 'metavms'
+META = CUSTOMIZATION == META_CUSTOMIZATION
 
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
@@ -98,6 +105,7 @@ INSTALLED_APPS = (
     'django.forms',
 
     'drf_yasg',
+    'waffle',
 
     'storages',
 
@@ -105,6 +113,7 @@ INSTALLED_APPS = (
     'django_celery_beat',
     'rest_framework',
     'rest_hooks',
+    # 'oauth2_provider',
     'corsheaders',
     'push_notifications',
     'api',
@@ -121,12 +130,14 @@ INSTALLED_APPS = (
 MIDDLEWARE = (
     'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'waffle.middleware.WaffleMiddleware',
     'cloud.middleware.CatchExceptionMiddleware',
     'cloud.middleware.FilterErrorMiddleware',
 )
@@ -158,6 +169,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'cloud.context_processors.flags_processor'
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
@@ -187,13 +199,17 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             'NAME': cloud_db['database'],
             'OPTIONS': {
                 'sql_mode': 'TRADITIONAL',
-                'charset': 'utf8mb4',
                 'init_command': 'SET \
                     character_set_server=utf8mb4,\
                     collation_server = utf8mb4_unicode_ci'
             }
         }
     }
+    if CI:
+        DATABASES['default']['HOST'] = 'mysql'
+
+    if not LOCAL_ENVIRONMENT and not TESTING:
+        DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'
 
     if '--test-live-db' in sys.argv or '-tld' in sys.argv and INSTANCE not in ('prod', 'stage'):
         DATABASES['default']['TEST'] = {'NAME': cloud_db['database']}
@@ -204,6 +220,13 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             'notifications': None,
             'zapier': None
         }
+
+    elif USE_SQLITE:
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 REDIS_CACHE = {
     "BACKEND": "django_redis.cache.RedisCache",
@@ -305,13 +328,40 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/12',
         "KEY_PREFIX": 'agreement'
-    }
+    },
+    "emails": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/14',
+        "KEY_PREFIX": "emails",
+        "TIMEOUT": 60 * 60  # 1 hour
+    },
+    "release_notes": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 24 * 60 * 60,  # 1 day
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
+        "KEY_PREFIX": 'release_notes'
+    },
 }
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
+if DEBUG:
+    CACHES["testing"] = {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": None,
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
+        "KEY_PREFIX": 'testing'
+    }
 
-if LOCAL_ENVIRONMENT:
+if TESTING:
+    for key, cache in CACHES.items():
+        cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
+        cache['OPTIONS'] = {}
+        cache['LOCATION'] = key
+
+
+if LOCAL_ENVIRONMENT and not TESTING:
     INSTALLED_APPS += ('silk',)
     # MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
 
@@ -436,12 +486,15 @@ IP_WHITELISTS = {
 }
 
 AUTH_USER_MODEL = 'api.Account'
-AUTHENTICATION_BACKENDS = ('api.account_backend.AccountBackend', )
+AUTHENTICATION_BACKENDS = (
+    'api.account_backend.AccountBackend',
+)
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
-AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
+# Don't access this directly, use function in cloud/utils
+_AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 30 * 2  # 2 months
 
 ADMINS = conf['admins']
 
@@ -453,6 +506,8 @@ EMAIL_PORT = conf['smtp']['port']
 EMAIL_USE_TLS = conf['smtp']['tls']
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
+TEST_RUNNER = 'cloud.tests.NxRunner'
 
 
 # Package Settings
@@ -474,40 +529,27 @@ on a part of your site, e.g. an API at /api/.
 Regex allows cors for the following api calls:
 1) /api/ping
 2) /api/account/login
-3) /api/systems/connect
-4) /api/systems/disconnect
-5) /api/systems/{cloud_system_id}/users
+3) /api/account/authKey
+4) /api/systems/connect
+5) /api/systems/disconnect
+6) /api/systems/revokeToken
+7) /api/systems/{cloud_system_id}/users
+8) /api/systems/{cloud_system_id}/auth
+9) /api/systems/{cloud_system_id}/code
+10) /api/systems/{cloud_system_id}/token
+11) /oauth/*
 These urls need to be whitelisted because mediaserver use them.
 """
 # Comment out for swagger-ui local.
-CORS_URLS_REGEX = r'^/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?)'
+CORS_URLS_REGEX = r'^(?:/oauth.*|/api/(?:account/(?:login|authKey)|ping|systems/(?:(?:dis)?connect|revokeToken|(?:[\w\d-]+/(?:users|auth|code|token)?))?))'
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
-ADMIN_DASHBOARD = ('cms.models.ContentVersion',
-                   'cms.models.Context',
-                   'cms.models.ContextProxy',
-                   'cms.models.ContextTemplate',
-                   'cms.models.Customization',
-                   'cms.models.DataRecord',
-                   'cms.models.DataStructure',
-                   'cms.models.ExternalFile',
-                   'cms.models.Language',
-                   'cms.models.MenuNode',
-                   'cms.models.AssetType',
-                   'cms.models.LicenseType',
-                   'cms.models.SpecialStructure',
-                   'cms.models.UserGroupsToAssetPermissions',
-                   'cms.models.UserGroupsToAssetType',
-                   'cms.models.ContributorAgreement',
-                   'cms.models.Zendesk*',
-                   '*.auth.models.Permission',
-                   'django_celery_beat.*',
-                   'django_celery_results.*',
-                   'notifications.models.*',
-                   'push_notifications.models.*',
-                   'rest_hooks.*',
-                   'zapier.models.*'
+ADMIN_DASHBOARD = ('cms.models.Asset',
+                   'cms.models.AssetCustomizationReview',
+                   'api.models.AccountLoginHistory',
+                   'api.models.Account',
+                   'api.models.ProxyGroup'
                    )
 
 # START s3 config
@@ -544,8 +586,9 @@ SNS_CLIENT = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.account_backend.BearerAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -619,12 +662,21 @@ if LOCAL_ENVIRONMENT:
 NPM_FILE_PATTERNS = {
     'bootstrap': ['dist/*'],
     'split.js': ['dist/*'],
+    'uuid': ['dist/*'],
     'csstree-validator': ['dist/*']
 }
 
 SILKY_AUTHENTICATION = True
 SILKY_AUTHORISATION = True
 SILKY_PYTHON_PROFILER = True
+
+# Waffle Settings
+WAFFLE_FLAG_MODEL = 'cms.Flag'
+WAFFLE_CREATE_MISSING_FLAGS = True
+WAFFLE_CREATE_MISSING_SAMPLES = True
+WAFFLE_CREATE_MISSING_SWITCHES = True
+# End Waffle Settings
+
 
 # In House Settings
 
@@ -645,9 +697,10 @@ DEFAULT_SKIN = 'blue'
 
 if LOCAL_ENVIRONMENT:
     _HOST = 'https://cloud-test.hdw.mx'
+    CLOUD_PORTAL_URL = _HOST
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
-    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
-    conf["cloud_storages"]["url"] = f"{_HOST}/storages"
+    conf["cloud_storage"]["url"] = f"{_HOST}/cdb/storage"
+    conf["cloud_storages"]["url"] = f"{_HOST}/cdb/storages"
 
     # CELERY_BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
@@ -667,14 +720,15 @@ CLOUD_CONNECT = {
 CLOUD_STORAGE_URL = conf['cloud_storage']['url']
 CLOUD_STORAGES_URL = conf['cloud_storages']['url']
 
-USE_ASYNC_QUEUE = True
+USE_ASYNC_QUEUE = not LOCAL_ENVIRONMENT and not TESTING
 
 LINKS_LIVE_TIMEOUT = 300  # Five minutes
 
 PASSWORD_REQUIREMENTS = {
     'minLength': 8,
     'requiredRegex': re.compile("^[\x21-\x7E]|[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$"),
-    'commonList': 'static/_source/blue/static/scripts/commonPasswordsList.json'
+    'commonList': 'static/_source/blue/static/scripts/commonPasswordsList.json',
+    'common_passwords': {}
 }
 
 common_list_file = PASSWORD_REQUIREMENTS['commonList']
@@ -694,6 +748,10 @@ NOTIFICATIONS_CONFIG = {
     'cloud_notification': {
         'engine': 'email',
         'queue': 'broadcast-notifications'
+    },
+    'system_notification': {
+        'engine': 'email',
+        'queue': 'system-notifications'
     },
     'sales_inquiry': {
         'engine': 'email'
@@ -727,7 +785,10 @@ NOTIFICATIONS_CONFIG = {
     },
     'system_shared': {
         'engine': 'email'
-    }
+    },
+    'portal_notification': {
+        'queue': 'portal-notifications'
+    },
 }
 
 CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
@@ -752,3 +813,13 @@ FILLDATA_TIMEOUT = 60
 
 # Only user from this domain can have superuser permissions
 SUPERUSER_DOMAIN = '@networkoptix.com'
+
+# Instant Search Configuration
+if not LOCAL_ENVIRONMENT:
+    MEILISEARCH_ENDPOINT = os.getenv('MEILISEARCH_ENDPOINT')
+    MEILISEARCH_MASTER_KEY = os.getenv('MEILISEARCH_MASTER_KEY')
+else:
+    MEILISEARCH_ENDPOINT = 'http://localhost:7700'
+    MEILISEARCH_MASTER_KEY = 'qweasd1234'
+
+VERSION = os.getenv('VERSION', '0')

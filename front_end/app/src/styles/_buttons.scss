@@ -1,10 +1,10 @@
-@use '../styles/typography';
+@use "../styles/typography";
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
-@use '../../styles/theme_variables' as *;
-@use '../styles/mixins';
-@forward '../../styles/theme_variables';
-@import '~bootstrap/scss/mixins';
+@use "../../styles/theme_variables" as *;
+@use "../styles/mixins";
+@forward "../../styles/theme_variables";
+@import "~bootstrap/scss/mixins";
 
 @mixin button {
     font-family     : $font-family-medium;
@@ -57,6 +57,16 @@ button, .btn {
     background-color : $light4 !important;
     box-shadow       : inset 0 -1px 0 0 $light7 !important;
     font-family      : $font-family-medium;
+    
+    &.has-icon {
+        position     : relative;
+        padding-left : 36px !important;
+    
+        svg-icon {
+            position : absolute;
+            left     : 6px;
+        }
+    }
 
     &:hover:not([disabled]):not(.disabled) {
         background-color : $light5 !important;
@@ -90,13 +100,13 @@ button, .btn {
 
 .btn.btn-primary {
     color            : $light1 !important;
-    background-color : $brand_core !important;
+    background-color : var(--brand-core) !important;
     border-color     : transparent !important;
-    box-shadow       : inset 0 -1px 0 0 $brand_d2 !important;
+    box-shadow       : inset 0 -1px 0 0 var(--brand-d2) !important;
 
     &:hover:not([disabled]):not(.disabled) {
-        background-color : $brand_d1 !important;
-        box-shadow       : inset 0 -1px 0 0 $brand_d3;
+        background-color : var(--brand-d1) !important;
+        box-shadow       : inset 0 -1px 0 0 var(--brand-d3);
     }
 
     &:focus,
@@ -106,8 +116,12 @@ button, .btn {
 
     &:active,
     &.active {
-        background-color : $brand_d2 !important;
-        box-shadow       : inset 0 1px 0 0 $brand_d4 !important;
+        background-color : var(--brand-d2) !important;
+        box-shadow       : inset 0 1px 0 0 var(--brand-d4) !important;
+    }
+    
+    &.disabledInProgress {
+        opacity: 1;
     }
 }
 
@@ -194,7 +208,7 @@ button, .btn {
     .back-arrow {
         width               : 20px;
         height              : 20px;
-        background-image    : url('/static/images/tutorial_arrow.png') !important;
+        background-image    : url("/static/images/tutorial_arrow.png") !important;
         background-repeat   : no-repeat;
         background-size     : 20px 20px;
         background-position : center;
@@ -204,7 +218,19 @@ button, .btn {
         margin-right        : .5rem;
 
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-            background-image : url('/static/images/tutorial_arrow@2x.png') !important;
+            background-image : url("/static/images/tutorial_arrow@2x.png") !important;
+        }
+    }
+}
+
+.btn-next {
+    svg-icon {
+        width       : 24px;
+        margin-left : 8px;
+        
+        svg .st0 {
+            stroke : $light1;
+            fill   : $light1;
         }
     }
 }

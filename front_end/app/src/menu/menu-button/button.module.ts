@@ -1,5 +1,5 @@
-import { NgModule }              from '@angular/core';
-import { CommonModule }          from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { NxMenuButtonComponent } from './button.component';
 
@@ -10,8 +10,8 @@ import { NxMenuButtonComponent } from './button.component';
     declarations: [
         NxMenuButtonComponent
     ],
-    providers      : [],
-    exports        : [
+    providers: [],
+    exports: [
         NxMenuButtonComponent
     ]
 })

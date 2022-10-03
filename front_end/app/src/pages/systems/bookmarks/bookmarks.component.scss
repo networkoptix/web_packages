@@ -1,0 +1,19 @@
+.bookmarks-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+
+    .bookmarks-filtering {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px 0 20px 0;
+    }
+
+    .bookmarks-feed {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+}

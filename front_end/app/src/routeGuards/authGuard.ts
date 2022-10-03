@@ -1,13 +1,14 @@
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivate,
-    RouterStateSnapshot, UrlTree
-}                                   from '@angular/router';
-import { Injectable }               from '@angular/core';
-import { Observable }               from 'rxjs';
+    RouterStateSnapshot,
+    UrlTree
+} from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { NxAccountService }         from '../services/account.service';
-import { NxConfigService, IConfig } from '../services/nx-config';
+import { NxAccountService } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -29,7 +30,7 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        if (state.root.queryParams.auth) {
+        if (state.root.queryParams.auth || state.root.queryParams.code) {
             return true;
         }
 
@@ -38,8 +39,10 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        return this.accountService.requireLogin().then((account) => {
-            return account !== undefined;
-        });
+        return this.accountService
+            .requireLogin()
+            .then(account => {
+                return account !== undefined;
+            });
     }
 }

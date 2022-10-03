@@ -9,4 +9,4 @@
 请在 %CLOUD_NAME%上创建帐户
 请使用您的电子邮件, 并依照说明进行操作。
 
-请使用此链接注册您的帐户： {{ config.portal_url }}/ register /{{ message.code }}
+Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}

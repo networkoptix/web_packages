@@ -1,16 +1,16 @@
-import { NgModule }               from '@angular/core';
-import { CommonModule }           from '@angular/common';
-import { RouterModule, Routes }   from '@angular/router';
-import { FormsModule }            from '@angular/forms';
-import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }        from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule }       from '../../../directives/directives.module';
-import { ComponentsModule }       from '../../../components/components.module';
-import { AuthGuard }              from '../../../routeGuards';
-import { NxSystemsListComponent } from './list.component';
-import { NxNoSystemsComponent }   from '../no-systems/no-systems.component';
+import { ComponentsModule } from '@components/components.module';
+import { NxSystemsListComponent } from '@components/systems-list/list.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { AuthGuard } from '@src/routeGuards';
 
 const appRoutes: Routes = [
     {
@@ -28,20 +28,15 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         PipesModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        AngularSvgIconModule.forRoot()
     ],
     providers: [
     ],
-    declarations: [
-        NxSystemsListComponent,
-        NxNoSystemsComponent
-    ],
+    declarations: [],
     bootstrap: [
     ],
-    exports: [
-        NxSystemsListComponent,
-        NxNoSystemsComponent
-    ]
+    exports: []
 })
 export class NxSystemsListModule {
 }

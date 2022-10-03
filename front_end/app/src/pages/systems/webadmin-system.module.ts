@@ -1,82 +1,84 @@
-import { NgModule }                         from '@angular/core';
-import { CommonModule }                     from '@angular/common';
-import { RouterModule, Routes }             from '@angular/router';
-import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }                  from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }                 from '../../components/components.module';
-import { NxSystemAdminModule }              from './settings/admin/admin.module';
-import { NxSystemUsersModule }              from './settings/users/users.module';
-import { NxSystemServersModule }            from './settings/servers/servers.module';
-import { NxCamerasModule }                  from './settings/cameras/cameras.module';
-import { NxSystemLicensesModule }           from './settings/licenses/licenses.module';
-import { NxSystemSettingsComponent }        from './settings/settings.component';
-import { NxSystemAdminComponent }           from './settings/admin/admin.component';
-import { NxSystemUsersComponent }           from './settings/users/users.component';
-import { NxSystemServersComponent }         from './settings/servers/servers.component';
-import {
-    ApplyGuard, AuthGuard, SystemGuard
-}                                           from '../../routeGuards';
-import { NxCamerasComponent }               from './settings/cameras/cameras.component';
-import { MenuModule }                       from '../../menu';
-import { NxSystemLicensesComponent }        from './settings/licenses/licenses.component';
+import { ComponentsModule } from '@components/components.module';
+import { MenuModule } from '@src/menu';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { ApplyGuard, AuthGuard } from '@src/routeGuards';
+
+import { NxSystemAdminComponent } from './settings/admin/admin.component';
+import { NxSystemAdminModule } from './settings/admin/admin.module';
+import { NxCamerasComponent } from './settings/cameras/cameras.component';
+import { NxCamerasModule } from './settings/cameras/cameras.module';
+import { NxSystemLicensesComponent } from './settings/licenses/licenses.component';
+import { NxSystemLicensesModule } from './settings/licenses/licenses.module';
+import { NxSystemServersComponent } from './settings/servers/servers.component';
+import { NxSystemServersModule } from './settings/servers/servers.module';
+import { NxSystemSettingsComponent } from './settings/settings.component';
+import { NxSystemUsersComponent } from './settings/users/users.component';
+import { NxSystemUsersModule } from './settings/users/users.module';
 
 export const localSettingsRoutes: Routes = [
     {
-        path        : '',
-        component   : NxSystemSettingsComponent,
-        canActivate : [AuthGuard],
-        children    : [
+        path: '',
+        component: NxSystemSettingsComponent,
+        canActivate: [AuthGuard],
+        runGuardsAndResolvers: 'always',
+        children: [
             {
-                path          : '',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard]
+                path: '',
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'advanced',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'advanced',
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path          : 'users',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'users',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path          : 'users/:userId',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'users/:userId',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path          : 'servers',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'servers',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path          : 'servers/:serverId',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'servers/:serverId',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path          : 'cameras',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'cameras',
+                component: NxCamerasComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path          : 'cameras/:cameraId',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'cameras/:cameraId',
+                component: NxCamerasComponent,
+                canDeactivate: [ApplyGuard],
+                runGuardsAndResolvers: 'always'
             },
             {
-                path        : 'licenses',
-                component   : NxSystemLicensesComponent,
-                canActivate : [SystemGuard]
+                path: 'licenses',
+                component: NxSystemLicensesComponent,
+                runGuardsAndResolvers: 'always'
             }
         ]
     }
@@ -98,7 +100,8 @@ export const localSettingsRoutes: Routes = [
         RouterModule.forChild(localSettingsRoutes),
         MenuModule
     ],
-    providers: [],
+    providers: [
+    ],
     declarations: [
     ],
     bootstrap: [

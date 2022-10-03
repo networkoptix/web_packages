@@ -1,0 +1,75 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static static cms_filters %}
+
+{% block extrahead %}
+<link
+    rel="stylesheet"
+    href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"
+/>
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+<link rel="stylesheet" href="{% static 'css/zendesk_mapping.css' %}" />
+{% endblock %}
+
+{% block extrastyle %}
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'admin/css/forms.css' %}"
+/>
+{{ block.super }}
+{% endblock %}
+
+{% block content%}
+<h1>Zendesk Sync -> Knowledge Base Mapping</h1>
+<details class="advanced">
+    <summary>
+        <h4>Advanced</h4>
+    </summary>
+    <div>
+        <button class="btn btn-danger zendesk-clean" value="{{unmapped}}">Delete Unmapped Items</button>
+        <button class="btn btn-danger zendesk-clean" value="{{empty}}">Delete Empty Sections/Categories</button>
+    </div>
+</details>
+{% csrf_token %}
+{% if error_message %}
+<h2 class="error-message">
+    <span>{{error_message}}</span>
+    <a href="{{settings_page}}" target="_blank">Update zendesk settings for this customization</a>
+</h2>
+{% endif %}
+{% include "cms/zendesk_mapping_list.html" with items=items wrapper="outer-level" only %}
+<script>
+    const runClean = (event) => {
+        const payload = event.target.value
+        const cleanItems = confirm(`DANGER: Are you sure that you want to ${event.target.innerText.toLowerCase()}? \n\nThis cannot be undone`)
+        if (cleanItems) {
+            const csrf = document.querySelector('[name="csrfmiddlewaretoken"]').value
+            fetch("{% url 'menu_clean_zd' %}", {
+                method: 'post',
+                body: payload,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "X-CSRFToken": csrf
+                }
+            }).then(res => res.json()).then(message => {
+                alert(message)
+                window.location.reload()
+            })
+        }
+    }
+    document.querySelectorAll('button.zendesk-clean').forEach(cleanButton => cleanButton.addEventListener('click', runClean))
+    const originalRefreshValue = window.localStorage.getItem('forceRefresh')
+    function confirmReload() {
+        window.removeEventListener('focus', confirmReload)
+        if (window.confirm('Additional nodes have been mapped or created on a another window. Do you want to refresh to show latest data?')) {
+            window.location.reload()
+        }
+    }
+    window.addEventListener('storage', () => {
+        if (window.localStorage.getItem('forceRefresh') !== originalRefreshValue) {
+            window.addEventListener('focus', confirmReload)
+        }
+    })
+</script>
+{% endblock %}
+    

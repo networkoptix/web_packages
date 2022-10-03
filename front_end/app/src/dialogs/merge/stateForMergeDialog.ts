@@ -8,123 +8,128 @@ export const State: {
         errorText: Partial<DialogsMerge>
     }
 } = Object.assign({
-    thisSystemHasOutdatedServerError : { show: {}, showUpdates: {}, template: {}, errorText: {} },
-    checkMerge                       : {
+    thisSystemHasOutdatedServerError: { show: {}, showUpdates: {}, template: {}, errorText: {} },
+    failedToFindAnySystem: { show: {}, showUpdates: {}, template: {}, errorText: {} },
+    checkMerge: {
         show: {
-            systemDropdown                    : true,
-            helpText                          : true,
-            serverUrlInput                    : false,
-            serverUrlInputValidationErrorText : false,
-            checkingErrorText                 : false
+            systemDropdown: true,
+            helpText: true,
+            serverUrlInput: false,
+            serverUrlInputValidationErrorText: false,
+            checkingErrorText: false
         },
         showUpdates: {
             checkMergeDefault: {
-                systemDropdown : true,
-                helpText       : true
+                systemDropdown: true,
+                helpText: true
             },
             checkMergeError: {
-                systemDropdown    : true,
-                checkingErrorText : true
+                systemDropdown: true,
+                checkingErrorText: true
             },
             serverUrl: {
-                systemDropdown : true,
-                serverUrlInput : true
+                systemDropdown: true,
+                serverUrlInput: true
             },
             serverUrlValidationError: {
-                systemDropdown                    : true,
-                serverUrlInput                    : true,
-                serverUrlInputValidationErrorText : true
+                systemDropdown: true,
+                serverUrlInput: true,
+                serverUrlInputValidationErrorText: true
             },
             serverUrlMergeError: {
-                systemDropdown    : true,
-                serverUrlInput    : true,
-                checkingErrorText : true
+                systemDropdown: true,
+                serverUrlInput: true,
+                checkingErrorText: true
             },
             noOtherSystemServerUrl: {
                 serverUrlInput: true
             },
             noOtherSystemValidationError: {
-                serverUrlInput                    : true,
-                serverUrlInputValidationErrorText : true
+                serverUrlInput: true,
+                serverUrlInputValidationErrorText: true
             },
             noOtherSystemMergeError: {
-                serverUrlInput    : true,
-                checkingErrorText : true
+                serverUrlInput: true,
+                checkingErrorText: true
             }
         },
         template: {
-            bodyTitle                         : '',
-            checkingErrorText                 : '',
-            helpText                          : '',
-            selectedTarget                    : '',
-            serverUrlInputValue               : '',
-            serverUrlInputValidationErrorText : ''
+            bodyTitle: '',
+            checkingErrorText: '',
+            helpText: '',
+            selectedTarget: '',
+            serverUrlInputValue: '',
+            serverUrlInputValidationErrorText: ''
         },
         errorText: {
-            duplicateServers           : '',
-            noServerFound              : '',
-            primarySystemOffline       : '',
-            primarySystemUnavailable   : '',
-            secondaryCannotMerge       : '',
-            secondarySystemUnavailable : '',
-            serverNotAvailable         : '',
-            serverNotYours             : '',
-            systemOffline              : '',
-            systemsIncompatible        : '',
-            systemVersionOld           : '',
-            systemVersionNew           : '',
-            unknownError               : '',
-            urlEmpty                   : '',
-            urlNotValid                : ''
+            knownBothSystemsConnectedToCloud: '',
+            unknownBothSystemsConnectedToCloud: '',
+            differentOwners: '',
+            duplicateServers: '',
+            noServerFound: '',
+            primarySystemOffline: '',
+            primarySystemUnavailable: '',
+            secondaryCannotMerge: '',
+            secondarySystemUnavailable: '',
+            serverNotAvailable: '',
+            serverNotYours: '',
+            systemOffline: '',
+            systemsIncompatible: '',
+            systemVersionOld: '',
+            systemVersionNew: '',
+            targetSystemBoundToCloud: '',
+            unknownError: '',
+            urlEmpty: '',
+            urlNotValid: ''
         }
     },
     adminPassword: {
-        show        : { passwordError: false },
-        showUpdates : {
-            default              : { passwordError: false },
-            confirmPasswordError : { passwordError: true }
+        show: { passwordError: false },
+        showUpdates: {
+            default: { passwordError: false },
+            confirmPasswordError: { passwordError: true }
         },
         template: {
-            passwordErrorText : '',
-            passwordValue     : ''
+            passwordErrorText: '',
+            passwordValue: ''
         },
         errorText: {
-            passwordRequired : '',
-            passwordWrong    : '',
-            unknownError     : ''
+            passwordRequired: '',
+            passwordWrong: '',
+            unknownError: ''
         }
     },
     serverUrlErrors: {
-        show        : {},
-        showUpdates : { serverUrlErrors: {} },
-        template    : {
+        show: {},
+        showUpdates: { serverUrlErrors: {} },
+        template: {
             urlErrorText: ''
         },
         errorText: {
-            differentOwners    : '',
-            duplicateServers   : '',
-            serverNotAvailable : '',
-            systemOffline      : '',
-            systemOfflineUrl   : '',
-            unknownError       : ''
+            differentOwners: '',
+            duplicateServers: '',
+            serverNotAvailable: '',
+            systemOffline: '',
+            systemOfflineUrl: '',
+            unknownError: ''
         }
     },
-    choosePrimary : { show: {}, showUpdates: {}, template: {}, errorText: {} },
-    confirmMerge  : {
-        show        : { passwordError: false },
-        showUpdates : {
-            default              : { passwordError: false },
-            confirmPasswordError : { passwordError: true }
+    choosePrimary: { show: {}, showUpdates: {}, template: {}, errorText: {} },
+    confirmMerge: {
+        show: { passwordError: false },
+        showUpdates: {
+            default: { passwordError: false },
+            confirmPasswordError: { passwordError: true }
         },
         template: {
-            passwordErrorText : '',
-            passwordValue     : ''
+            passwordErrorText: '',
+            passwordValue: ''
         },
         errorText: {
-            adminPasswordWrong : '',
-            passwordRequired   : '',
-            passwordWrong      : '',
-            unknownError       : ''
+            adminPasswordWrong: '',
+            passwordRequired: '',
+            passwordWrong: '',
+            unknownError: ''
         }
     }
 });

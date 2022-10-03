@@ -1,8 +1,8 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/systems-page-resource.robot
 Suite Setup       Systems Page Suite Setup
 Test Setup        Common Restart Logout    ${ENV}
-Suite Teardown    Systems Page Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Systems Page Suite Teardown
 Force Tags        system    cloud
 
 *** Test Cases ***
@@ -56,7 +56,7 @@ Force Tags        system    cloud
     Verify Number Of Tiles Is Correct    1
 
     Log    Clear input, search for another system and check the result
-    Click Link    ${SYSTEM SEARCH X BUTTON}
+    Click Button    ${SYSTEM SEARCH X BUTTON}
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${extra system}[name]
@@ -83,7 +83,7 @@ Force Tags        system    cloud
     Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    Not Existing
     Verify Number Of Tiles Is Correct    0
     Wait Until Element Is Visible    ${SYSTEM SEARCH X BUTTON}
-    Click Link    ${SYSTEM SEARCH X BUTTON}
+    Click Button    ${SYSTEM SEARCH X BUTTON}
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
     Verify Number Of Tiles Is Correct    9
@@ -104,7 +104,7 @@ Force Tags        system    cloud
 
 11. Should update owner name in systems list, if it's changed
     [Tags]    threaded
-    Set Account Name    ${ENV}    ${extra system}[owner]    ${base password}    newFirstName    newLastName
+    Set Account Name    ${extra system}[owner]    ${base password}    newFirstName    newLastName
 
     Log In    ${system}[owner]     ${base password}
     Go To    ${ENV}/systems
@@ -113,7 +113,7 @@ Force Tags        system    cloud
 
 12. Search should only be visible with 9 or more systems
     [Tags]    C41890
-    Disconnect from account    ${ENV}    ${system}[owner]    ${base password}    ${extra system}[cloud id]
+    Disconnect from account    ${system}[owner]    ${base password}    ${extra system}[cloud id]
     Log In    ${system}[owner]    ${base password}
     Go To    ${ENV}/systems
     Validate on Systems Page    search=False

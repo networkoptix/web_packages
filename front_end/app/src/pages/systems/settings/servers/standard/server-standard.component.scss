@@ -1,14 +1,15 @@
-@use '../../../../../styles/typography';
-@use '../../../../../styles/mixins';
-@use '../../../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../../../styles/typography";
+@use "../../../../../styles/mixins";
+@use "../../../../../../styles/theme_variables" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .server-info {
     font-family : typography.$font-family-regular;
     font-size   : typography.$font-size-base;
-    color: $dark9;
-    .header-top-bar {
+    color: var(--dark9);
+
+    .header-editable {
         display: flex;
         flex-direction : column;
         align-items    : flex-start;
@@ -102,11 +103,11 @@
             height        : 30px;
             width         : 80px;
             border-radius : 2px;
-            border        : 1px solid $light6;
+            border        : 1px solid var(--light6);
 
             &:disabled {
-                background-color : $light2;
-                border           : 1px solid $light4;
+                background-color : var(--light2);
+                border           : 1px solid var(--light4);
             }
         }
     }
@@ -118,7 +119,7 @@
 }
 
 .header-button-span {
-    color: $light16 !important;
+    color: var(--light16) !important;
 }
 
 nx-select.storages-loading {

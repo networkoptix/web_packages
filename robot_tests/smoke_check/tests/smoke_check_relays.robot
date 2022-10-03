@@ -22,13 +22,15 @@ Check All Relays
     ${retest}=   Create List
     FOR    ${relay}    IN    @{relays}
         ${pingable}=   Run keyword and return status    Ping Server    https://${QABURBANK IP}:${system}[port]    ${auth}
-        Run Keyword Unless    ${pingable}    Run Keywords
-            ...    Append To List    ${retest}    ${relay}    AND
-            ...    Continue For Loop
+        IF    ${pingable} == ${False}
+            Append To List    ${retest}    ${relay}
+            Continue For Loop
+        END
         ${relay works}=   Run keyword and return status    Get System Settings    ${auth}    https://${system}[id].${relay}
-        Run Keyword Unless    ${relay works}    Run Keywords
-            ...    Append To List    ${retest}    ${relay}    AND
-            ...    Continue For Loop
+        IF    ${relay works} == ${False}
+            Append To List    ${retest}    ${relay}
+            Continue For Loop
+        END
     END
     FOR    ${relay}    IN    @{retest}
         Run keyword and continue on failure    Get System Settings    ${auth}    https://${system}[id].${relay}

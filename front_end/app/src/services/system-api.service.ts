@@ -1,31 +1,19 @@
-import { Injectable }                          from '@angular/core';
-import { HttpClient }                          from '@angular/common/http';
-import { Location }                            from '@angular/common';
-import { NxConfigService, IConfig }            from './nx-config';
-import { NxUriCacheService }                   from './uri-cache.service';
-import { NxAppStateService }                   from './nx-app-state.service';
-import { NxSystemRestAPI }                     from './system-rest-api.service';
-import { NxSystemAPI }                         from './system-legacy-api.service';
-import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '../pages/health/health.service';
+import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
+
+import { environment } from '@environments/environment';
+import { NxHealthService } from '@pages/health/health.service';
+
+import { NxAppStateService } from './nx-app-state.service';
+import { NxConfigService, IConfig } from './nx-config';
+import { NxSystemAPI } from './system-legacy-api.service';
+import { NxSystemRestAPI } from './system-rest-api.service';
+import { NxUriCacheService } from './uri-cache.service';
 
 export interface IParams<Value = any> {
     [key: string]: Value;
-}
-
-export interface User {
-    canBeEdited: boolean;
-    canBeDeleted: boolean;
-    email: string;
-    id: string;
-    isCloud: boolean;
-    isAdmin?: boolean;
-    isEnabled: boolean;
-    userRoleId: string;
-    permissions: string;
-    // TODO: Remove the trash below after #VMS-2968
-    name: string;
-    fullName: string;
 }
 
 export interface AddResponseTypeHere extends IParams {}
@@ -46,7 +34,8 @@ export class NxSystemAPIService {
         protected cacheService: NxUriCacheService,
         protected cookieService: CookieService,
         protected healthService: NxHealthService,
-        protected appState: NxAppStateService
+        protected appState: NxAppStateService,
+        protected injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
@@ -66,10 +55,25 @@ export class NxSystemAPIService {
         // } else if (serverId in this.systemConnections) {
         //     return this.systemConnections[serverId];
         // } else {
-        //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
+        //     const mediaserverConnection = new NxSystemAPI(
+        //         this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback
+        //     );
         //     this.systemConnections[sysServe]
         // }
-        return new (useRest || this.CONFIG.isLocal ? NxSystemRestAPI : NxSystemAPI)(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState);
+        return new (useRest || environment.isLocal ? NxSystemRestAPI : NxSystemAPI)(
+            this.http,
+            this.CONFIG,
+            this.location,
+            user,
+            systemId,
+            serverId,
+            unauthorizedCallback,
+            this.cacheService,
+            this.cookieService,
+            this.healthService,
+            this.appState,
+            this.injector
+        );
     }
 }
 

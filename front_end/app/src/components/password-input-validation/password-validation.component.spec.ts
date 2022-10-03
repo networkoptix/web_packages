@@ -1,49 +1,31 @@
+import { DebugElement } from '@angular/core';
 import {
-    ComponentFixture, inject, TestBed,
+    ComponentFixture,
+    inject,
+    TestBed,
     waitForAsync
-}                                        from '@angular/core/testing';
+} from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+
+import { NxTagComponent } from '@components/tag/tag.component';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import { NxPasswordValidationComponent } from './password-validation.component';
-import { DebugElement }                  from '@angular/core';
-import { nxConfig }                      from '@services/nx-config/config';
-import { NxLanguageProviderService }     from '@services/nx-language-provider';
-import { NxConfigService }               from '@services/nx-config';
-import { NxTagComponent }                from '@components/tag/tag.component';
-import { NxRibbonService }               from '@components/ribbon';
 
 describe('NxPasswordValidationComponent', () => {
     let component: NxPasswordValidationComponent;
     let fixture: ComponentFixture<NxPasswordValidationComponent>;
     let el: DebugElement;
 
-    let LANG;
-    const translateMock = {
-        translations: {
-            passwordRequirements: {
-                common           : () => 'too common',
-                commonMessage    : () => 'This password is in top most popular passwords in the world',
-                fair             : () => 'fair',
-                fairMessage      : () => 'Use numbers, upper and lower case letters and special characters to make your password stronger',
-                good             : () => 'good',
-                minLength        : () => 'too short',
-                minLengthMessage : () => 'Password must contain at least 8 characters',
-                missingMessage   : () => 'Password is required',
-                required         : () => 'incorrect',
-                requiredMessage  : () => 'Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces',
-                strongMessage    : () => 'Strong password!',
-                weak             : () => 'weak',
-                weakMessage      : () => 'Use numbers, upper and lower case letters and special characters to make your password stronger'
-            }
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
-
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxPasswordValidationComponent, NxTagComponent],
-                providers    : [
-                    { provide: NxLanguageProviderService, useValue: translateMock },
-                    { provide: NxConfigService, useValue: configMock }
+                declarations: [NxPasswordValidationComponent, NxTagComponent],
+                providers: [
+                    // default mocks are in test.ts
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService)
                 ]
             })
             .compileComponents()
@@ -53,14 +35,14 @@ describe('NxPasswordValidationComponent', () => {
                 el = fixture.debugElement;
 
                 component.forElement = {
-                    valid  : true,
+                    valid: true,
                     touched: true,
-                    errors : {
+                    errors: {
                         minlength: false,
-                        common   : false,
-                        weak     : false,
-                        pattern  : false,
-                        required : false
+                        common: false,
+                        weak: false,
+                        pattern: false,
+                        required: false
                     }
                 };
 

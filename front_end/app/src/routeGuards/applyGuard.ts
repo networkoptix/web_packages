@@ -1,10 +1,12 @@
+import { Injectable } from '@angular/core';
 import {
-    ActivatedRouteSnapshot, CanActivate,
-    CanDeactivate, RouterStateSnapshot,
+    ActivatedRouteSnapshot,
+    CanActivate,
+    CanDeactivate,
+    RouterStateSnapshot,
     UrlTree
-}                         from '@angular/router';
-import { Injectable }     from '@angular/core';
-import { Observable }     from 'rxjs';
+} from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { NxApplyService } from '@services/apply.service';
 

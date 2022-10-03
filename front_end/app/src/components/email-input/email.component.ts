@@ -1,32 +1,35 @@
 import {
-    Component, Input,
-    forwardRef, ViewEncapsulation
-}                                    from '@angular/core';
+    Component,
+    Input,
+    forwardRef,
+    ViewEncapsulation
+} from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator, FormControl
-}                                    from '@angular/forms';
+    Validator,
+    FormControl
+} from '@angular/forms';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
-    selector    : 'nx-email-input',
-    templateUrl : 'email.component.html',
-    styleUrls   : ['email.component.scss'],
-    providers   : [
+    selector: 'nx-email-input',
+    templateUrl: 'email.component.html',
+    styleUrls: ['email.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxEmailComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxEmailComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxEmailComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxEmailComponent),
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -35,8 +38,10 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() form;
     @Input() componentId: string;
     @Input() lockEmail: boolean;
+    @Input() readonly = false;
     @Input() hideErrors = false;
     @Input() setFocus = false;
+    @Input() authorize = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

@@ -1,14 +1,23 @@
 import {
-    Component, EventEmitter, forwardRef,
-    Input, OnInit, Output
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output
 } from '@angular/core';
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator
+    ControlValueAccessor,
+    FormControl,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator
 } from '@angular/forms';
 
 /* Usage
  <nx-numeric
-     componentId="remember"
+     id?="remember"
+     name="remember"
      [class]="'pl-2'"
      [min]="CONFIG.servers.port.min"
      [max]="CONFIG.servers.port.max"
@@ -20,34 +29,36 @@ import {
  */
 
 @Component({
-    selector    : 'nx-numeric',
-    templateUrl : 'numeric.component.html',
-    styleUrls   : ['numeric.component.scss'],
-    providers   : [
+    selector: 'nx-numeric',
+    templateUrl: 'numeric.component.html',
+    styleUrls: ['numeric.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxNumericComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxNumericComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxNumericComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxNumericComponent),
+            multi: true
         }
     ]
 })
 export class NxNumericComponent implements OnInit, ControlValueAccessor, Validator {
+    @Input() id: string;
+    @Input() name: string;
     @Input() class: string;
     @Input() min: number;
     @Input() max: number;
     @Input() step: number;
-    @Input() componentId: string;
     @Input() disabled;
     @Input() required;
-    @Input() placeholder = '- -';
+    @Input() placeholder: string | number = '- -';
 
     @Output() onChange = new EventEmitter<number>();
 
+    componentId: string;
     _value: number;
     _previousValue: number;
     _invalid: boolean;
@@ -81,6 +92,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     }
 
     ngOnInit() {
+        this.componentId = (this.id || this.name || 'generic') + '-numeric';
         this.required = (this.required !== undefined);// optional param
     }
 
@@ -126,7 +138,17 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     }
 
     setValue(event?) {
-        if (this._value === null || this._value >= this.min && this._value <= this.max) {
+        if (
+            this._value === null ||
+            (typeof this._value === 'number' && !Number.isNaN(this._value))
+        ) {
+            if (typeof this._value === 'number') {
+                if (this._value < this.min) {
+                    this._value = this.min;
+                } else if (this._value > this.max) {
+                    this._value = this.max;
+                }
+            }
             if (event) {
                 event.target.value = this._value;
             }
@@ -135,6 +157,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
             this.onChangeCallback(this._value);
             this.onChange.emit(this._value);
         } else {
+            // parseInt('') => NaN
             this._value = this._previousValue;
         }
     }

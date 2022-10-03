@@ -1,19 +1,22 @@
 *** Settings ***
-Library    String
-*** Keywords ***
+Resource          ../../resource.robot
+Resource          system-camera-resource.robot
+Resource          storage-resource.robot
 
+*** Keywords ***
 # Setups and teardowns
 System Admin Suite Setup
+    Open browser and go to URL    ${ENV}
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
     ${rand}=   Generate Random String
     ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE}
     Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
-    Open browser and go to URL    ${ENV}
+    Go To    ${url}
 
 System Admin Suite Teardown
     Delete Base System    ${system}
@@ -29,6 +32,7 @@ System Admin Test Restart
     Close Modal If There
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out
+    Sleep    1
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out via API
 
@@ -37,7 +41,8 @@ System Admin Test Restart
         ...    AND    Sleep    10
 
     Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
-    Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Set System Settings    ${system}[local auth]    ${server url}    ${default advanced settings}
 # Waits
 Wait until settings are visible
@@ -62,6 +67,11 @@ Wait until settings are visible
 
 Wait Until Advanced Settings Are Visible
     [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
+    IF    '${block number}'=='ONE' or '${block number}'=='THREE' or '${block number}'=='FOUR'
+        IF    '${IMAGE}'=='5.0_test' 
+            ${block number}=   Set Variable    ${block number} ${IMAGE}
+        END
+    END
     Run keyword and continue on failure    Wait Until Elements Are Visible
         ...    @{ADVANCED SETTINGS ALERT BAR}
         ...    @{ADVANCED SETTING ELEMENT BLOCK ${block number}}
@@ -74,10 +84,11 @@ Validate Disconnect Form
         ...    ${DISCONNECT FORM CLOSE BUTTON}
         ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
         ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
-        ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
-        ...    ${DISCONNECT PASSWORD INPUT}
+      #    Below web elements commented out since Disconnect form no longer contains password field
+      # ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
+      # ...    ${DISCONNECT PASSWORD INPUT}
         ...    ${DISCONNECT FORM CANCEL BUTTON}
-        ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+        ...    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
 
 Validate Success Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -89,16 +100,19 @@ Validate Success Dialog
 # UI - actions
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
-    Click Element    ${SYSTEM NAME}
-    Execute JavaScript    document.getElementById("editable-title").innerHTML = "${new name}";
-    Press Keys    ${SYSTEM NAME}    ENTER
+    Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=1
+    Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=${new name}
+#    Press Keys    ${SYSTEM NAME}    ${new name}
+    #Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
+#    Press Keys    ${SYSTEM NAME}    ENTER
     Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Run Keyword If    ${save}    Run Keywords
-        ...    Click Button    ${SAVE BUTTON}    AND
-        ...    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
-        ...    Wait until element is visible    ${NO UNSAVED CHANGES}    AND
-        ...    Sleep    1
-
+    IF    ${save}
+        Click Button    ${SAVE BUTTON}
+        Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+        Wait until element is visible    ${NO UNSAVED CHANGES}
+        Sleep    1
+    END
+    
 Change Input for Advanced Setting
     [Arguments]    ${locator}    ${value}
     Input Text    ${locator}    ${value}
@@ -106,14 +120,16 @@ Change Input for Advanced Setting
     Click Button    ${SAVE BUTTON}
     Validate Success Dialog
     Click Element    ${SUCCESS DIALOG CLOSE BUTTON}
-    Run Keyword Unless    '${value}' == '${EMPTY}'
-    ...    Wait Until Textfield Contains    ${locator}    ${value}
+    IF    '${value}' != '${EMPTY}'
+        Wait Until Textfield Contains    ${locator}    ${value}
+    END
 
 Change Setting
     [Arguments]    ${locator}    ${buttons}=${True}
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected     ${locator}    ${True}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
+    ${selected}=   Set Variable If    ${status}==True    False
+    ...    ${status}==False    True
+    Wait Until Page Contains Element    ${locator}
     Set Checkbox Value    ${locator}    ${selected}
     Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     [Return]    ${selected}
@@ -147,12 +163,21 @@ Change Setting Encrypt video traffic
     ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
     ...    ${status}==True and ${status2}==True     false
 
-    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
-    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
-    ...    ELSE    Run Keywords
-       ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
-       ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
-       ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    #Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    #...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
+    #...    ELSE    Run Keywords
+    #   ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
+    #   ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+    #   ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    IF    ${status}==True and ${status2}==False
+        Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    ELSE IF    ${status}==True and ${status2}==True
+        Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
+    ELSE
+        Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
+        Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+        Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    END
 
     Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button    ${SAVE BUTTON}
@@ -191,8 +216,11 @@ Change Duration Time Interval
     Input Text    ${TIME NUMBER INPUT}    ${random}
     FOR    ${i}    IN RANGE    2
            ${status}=   Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
-           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
-           ...    ELSE    Exit For Loop
+           IF    ${status}==False
+               Input Text    ${TIME NUMBER INPUT}    ${random}
+           ELSE
+               Exit For Loop
+           END
     END
     FOR    ${i}    IN RANGE    9
            ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
@@ -202,8 +230,10 @@ Change Duration Time Interval
            ...    Click Link    ${TIME DURATION NEW SELECTION}
            ...    ELSE    Exit For Loop
     END
-
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    
+    ${element_xpath}=       Replace String      ${TIME DURATION INTERVAL BUTTON}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
     Click Link    ${TIME DURATION NEW SELECTION}
     Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -220,18 +250,23 @@ Elements Text Should Be
 Settings on page should match settings on server
     [Arguments]    ${server url}=${server url}
     FOR    ${setting}    IN    @{default settings.keys()}
-        Run Keyword Unless    '''${setting}''' == '''sessionLimitMinutes'''    Setting on page matches server    //*[@id="${setting}"]    ${setting}
+        IF    '''${setting}''' != '''sessionLimitMinutes'''
+            Setting on page matches server    //*[@id="${setting}"]    ${setting}
+        END
     END
     Log    Limit session duration to
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit
+    IF    ${status}==False
+        Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    ELSE
+        Evaluate Session Limit
+    END
 
 Setting on page matches server
     [Arguments]    ${locator}    ${key}    ${server url}=${server url}
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${locator}    ${True}
-    ${string}=   Convert To String    ${status}
-    ${selected}=   Convert To Lowercase    ${string}
+    ${selected}=   Convert To String    ${status}
+    #${selected}=   Convert To Lowercase    ${string}
     Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${selected}
 
 Input on page matches server
@@ -251,6 +286,7 @@ Evaluate Session Limit
     ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
     ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
     ...    "${interval}"=="${MINUTES TEXT}"    1
+    ...    "${interval}"=="${DAYS TEXT}"     1440
     ${number}=   Evaluate    ${multiplier}*${value}
     Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
 
@@ -331,7 +367,25 @@ Connect To Cloud
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    Dictionary should contain item    ${settings}    ${key}    ${expected value}
+    IF    '${IMAGE}' == '5.0_test'
+        ${expected value}=   Convert To String    ${expected value}
+        ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
+        ${expected value}=   Replace String    ${expected value}    true    True
+        ${expected value}=   Replace String    ${expected value}    false    False
+        ${expected value}=   Replace String    ${expected value}    "    '
+        ${value}=   Convert To String    ${settings}[${key}]
+        ${status}=   Run Keyword and Return Status    Should Contain    ${value}    {
+        IF    ${status}
+            ${value}=   Remove String    ${value}    ${SPACE}
+        END
+        Should Be Equal As Strings    ${value}    ${expected value}
+        #Dictionary should contain item    ${settings}    ${key}    ${expected value}
+    ELSE
+        IF    '${expected value}' == 'True' or '${expected value}' == 'False'
+            ${expected value}=   Convert To Lower Case    ${expected value}
+        END
+        Dictionary should contain item    ${settings}    ${key}    ${expected value}
+    END
 
 Evaluate Log Level via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${value}
@@ -344,14 +398,38 @@ Evaluate Log Level via API
 Checkbox Is Selected
     [Arguments]    ${locator}    ${state}
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
-    Should Be True    $selected == $state
+    Should Be True    ${selected} == ${state}
 
-Close Modal If There
-    ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
-    Run Keyword If     ${modal is visible}    Run Keywords
-        ...    Click Element    ${COMMON CLOSE BUTTON}   AND
-        ...    Wait until element is not visible    ${COMMON CLOSE BUTTON}
 
 Show Advanced Settings
     ${location}=   Get Location
     Go To    ${location}${ADVANCED SETTINGS}
+
+Reset Settings To Default
+    [Arguments]    ${auth}    ${server url}
+    IF    "${IMAGE}" == "5.0_test"
+        Set System Settings    ${auth}    ${server url}    ${default settings5}
+    ELSE
+        Set System Settings    ${auth}    ${server url}    ${default settings}
+    END
+System Offline Suite Setup
+    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
+    ${rand}=   Generate Random String
+    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
+    Set Suite Variable    ${system}
+    Stop Docker Server    ${system}[id]
+
+    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
+    Set Suite Variable    ${extra system}
+    Sleep    30
+    Open browser and go to URL    ${ENV}
+
+System Offline Suite Teardown
+    Delete Base System    ${system}
+    Delete Base System    ${extra system}
+    Close All Browsers
+
+System Offline Restart
+    Common Restart Logout    ${ENV}
+    Log in to user and system   ${system}[owner]    ${system}[cloud id]
+    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}

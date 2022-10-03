@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
+
+export type InfoBlockSizeType = 'compact' | 'full';
 
 export enum InfoBlockSize {
     COMPACT='compact',
@@ -23,9 +25,9 @@ export enum InfoDetailClass {
 }
 
 @Component({
-    selector    : 'nx-info-block',
-    templateUrl : 'info-block.component.html',
-    styleUrls   : ['info-block.component.scss']
+    selector: 'nx-info-block',
+    templateUrl: 'info-block.component.html',
+    styleUrls: ['info-block.component.scss']
 })
 export class NxInfoBlockComponent implements OnInit {
     @Input() sectionsOrColumns: InfoBlockColumns | InfoBlockSections;
@@ -82,7 +84,11 @@ export class InfoBlockLine <Name = string, Value = string> {
 }
 
 export class InfoBlockSection<Heading = string> {
-    constructor(public lines: InfoBlockLine[], public heading?: Heading, public maxParamWidth?: number) {}
+    constructor(
+        public lines: InfoBlockLine[],
+        public heading?: Heading,
+        public maxParamWidth?: number
+    ) {}
 }
 
 export type InfoBlockSections = InfoBlockSection[];

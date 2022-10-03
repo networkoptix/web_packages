@@ -1,0 +1,409 @@
+<ng-container [ngTemplateOutlet]="templateType"></ng-container>
+
+<ng-template #changePassword>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Change Password</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="loginForm" novalidate>
+            <div class="form-group">
+                <label for="tfaCodeInput" translate>Enter a verification code from your authentication app or a backup code to continue</label>
+                <input type="text" class="form-control" #tfaCodeInputChangePassword="ngModel"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       autocomplete="off"
+                       maxlength="255"
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputChangePassword.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                    <div class="input-error"
+                         *ngIf="!tfaCodeInputChangePassword.pristine && tfaCodeInputChangePassword.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="changePasswordProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'OK' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="changePasswordProcess"
+            [discardFn]="closeWizard"
+        ></nx-cancel-button>
+    </div>
+</ng-template>
+
+<ng-template #code>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Backup codes</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="close()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div id="backupText">
+            <p translate>If you don't have access to your mobile authentication app, you can use these codes to verify your identity.</p>
+            <p translate>Previously generated codes are no longer valid.</p>
+        </div>
+
+        <div class="code-area">
+            <div class="code-area-code" *ngFor="let code of newCodes; let idx=index;">
+                <span class="code-area-code-idx">{{scrambledIndexes[idx]}}</span>{{ code }}
+            </div>
+        </div>
+        <div class="code-area-copy">
+            <button class="btn btn-text" (click)="copyToClipboard()">
+                <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                        [svgStyle]="{'width.px': '22', 'height.px': '22'}"
+                        [applyClass]="true"></svg-icon>
+                <span translate>Copy all</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-footer justify-end">
+        <button type="button" class="btn btn-primary"
+                (click)="close()"
+                translate>OK</button>
+    </div>
+</ng-template>
+
+<!-- It's removed form spec but let;s keep it just in case -- TT -->
+<!--<ng-template #wizardWarning>-->
+<!--    <div class="modal-header">-->
+<!--        <h1 class="modal-title" translate>Two-factor authentication</h1>-->
+<!--        <button type="button" class="close"-->
+<!--                data-dismiss="modal" aria-label="Close"-->
+<!--                (click)="closeWizard()" *ngIf="closable">-->
+<!--            <span class="close-content"><span class="close-icon"></span></span>-->
+<!--        </button>-->
+<!--    </div>-->
+
+<!--    <div class="modal-body">-->
+<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarning({ count: incompatibleSystems.length })"></span></div>-->
+<!--        <div class="my-3">-->
+<!--            <div *ngFor="let system of incompatibleSystems" class="d-flex align-items-center">-->
+<!--                <svg-icon nx-add-svg-src-->
+<!--                        class="d-inline-block"-->
+<!--                        [src]="CONFIG.icons.dir + 'system.svg'"-->
+<!--                        [svgStyle]="{'width.px': '32', 'height.px': '32'}"-->
+<!--                        [applyClass]="true"></svg-icon>-->
+<!--                <span class="system-name">{{system.name}}</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr()"></span></div>-->
+<!--    </div>-->
+
+<!--    <div class="modal-footer justify-end">-->
+<!--        <button id="nextWizardLogin" class="btn btn-danger btn-next" (click)="next()">-->
+<!--            <span translate>Next</span>-->
+<!--            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>-->
+<!--        </button>-->
+<!--    </div>-->
+<!--</ng-template>-->
+
+<ng-template #wizardLogin>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #loginForm="ngForm" name="login_form" novalidate>
+            <div class="form-group">
+                <label for="login_password" translate>Enter your password to verify your identity</label>
+                <input type="password" class="form-control"
+                       name="login_password" id="login_password"
+                       [(ngModel)]="password"
+                       #loginPassword="ngModel"
+                       maxlength="255"
+                       [pattern]="CONFIG.credentialsValidation.passwordRequirements.requiredRegex"
+                       required nxFocusMe>
+                <ng-container *ngIf="loginPassword.invalid">
+                    <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
+                        minute.
+                    </div>
+                    <div
+                        class="input-error"
+                        *ngIf="!wrongPassword && !accountBlocked && loginPassword.touched && loginPassword.errors?.required"
+                        translate
+                    >Password is required</div>
+                    <div class="input-error" *ngIf="!wrongPassword && !accountBlocked && loginPassword.touched && loginPassword.errors?.pattern">
+                        {{LANG.passwordRequirements.requiredMessage()}}</div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer justify-end">
+        <nx-process-button
+            [process]="loginProcess"
+            [form]="loginForm"
+            actionType="primary"
+            [buttonText]="'Next' | translate"
+            [svg]="{ src: 'arrow_right', width: '24', color: 'light1' }"
+        ></nx-process-button>
+    </div>
+</ng-template>
+
+<ng-template #wizardQR>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard('deactivate')" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body" *ngIf="showQR; else showParams">
+        <div id="qrText">
+            <p translate>Scan this QR code with the authentication app on your mobile device to link the app to your %CLOUD_NAME% account.</p>
+            <p [innerHTML]="LANG.dialogs.twoFa.installAuthApp()"></p>
+        </div>
+
+        <div id="qrBadge" class="fs-exclude d-flex justify-content-center">
+            <qr-code [value]="valueQR" size="200" errorCorrectionLevel="H"></qr-code>
+        </div>
+    </div>
+
+    <ng-template #showParams>
+        <div class="modal-body">
+            <div id="paramsText" translate>Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.</div>
+
+            <div id="paramsBlock">
+                <nx-info-block [sectionsOrColumns]="[credentials]" [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="modal-footer justify-between">
+        <button id="qrMode" class="btn btn-text" (click)="showQR = !showQR">
+            <span *ngIf="showQR" translate>Cannot scan QR code?</span>
+            <span *ngIf="!showQR" translate>Show QR code</span>
+        </button>
+
+        <button id="nextWizardCode" class="btn btn-primary btn-next" (click)="next()">
+            <span translate>Next</span>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #wizardCode>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard('deactivate')" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="code_form" novalidate>
+            <div id="codeText" translate>Get a code from the authentication app and enter it below to complete the verification process.</div>
+            <div class="form-group mt-3">
+                <label for="tfaCodeInput" translate>Enter verification code</label>
+                <input type="text" class="fs-mask form-control" #tfaCodeInputWizardCode="ngModel"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       (ngModelChange)="notAuthorized = false"
+                       autocomplete="off"
+                       maxlength="255"
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputWizardCode.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                    <div class="input-error" *ngIf="!tfaCodeInputWizardCode.pristine && tfaCodeInputWizardCode.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer justify-between">
+        <button id="previousWizardQR" class="btn btn-default btn-back" (click)="prev()">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'"></svg-icon>
+        </button>
+        <nx-process-button
+            [process]="codeProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'Verify' | translate"
+        ></nx-process-button>
+    </div>
+</ng-template>
+
+<ng-template #wizardFinish>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="close('enabled')" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="line1" [innerHTML]="LANG.dialogs.twoFa.nowEnabled()"></div>
+
+        <div class="mt-3">
+            <p><strong translate>Save these single-use backup codes in a safe place.</strong></p>
+            <p translate>You can use them instead of the verification code if you don’t have access to your mobile authentication app.</p>
+        </div>
+
+        <div class="code-area">
+            <div class="code-area-code" *ngFor="let code of newCodes; let idx=index;">
+                <span class="code-area-code-idx">{{scrambledIndexes[idx]}}</span>{{ code }}
+            </div>
+        </div>
+        <div class="code-area-copy">
+            <button class="btn btn-text" (click)="copyToClipboard()">
+                <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                        [svgStyle]="{'width.px': '22', 'height.px': '22'}"
+                        [applyClass]="true"></svg-icon>
+                <span translate>Copy all</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-footer justify-end">
+        <button id="wizardDone" type="button" class="btn btn-primary" (click)="next()">
+            <span translate>Ok</span>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #verificationToggle>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication settings</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="code_form" novalidate>
+            <p translate *ngIf="type === 'verification-enable' else disableText">
+                Verification code from the authentication app will be requested on every login with %CLOUD_NAME% account.
+            </p>
+            <ng-template #disableText>
+                <p translate>
+                    Verification code from the authentication app will be requested only to log in to systems that require two-factor authentication.
+                </p>
+            </ng-template>
+            <div class="form-group mt-3">
+                <label
+                    *ngIf="type === 'verification-enable' else authOrBackup"
+                    for="tfaCodeInput"
+                    translate
+                >Enter a verification code from your authentication app to continue</label>
+                <ng-template #authOrBackup>
+                    <label for="tfaCodeInput" translate>Enter a verification code from your authentication app or a backup code to continue</label>
+                </ng-template>
+                <input type="text" class="form-control" #tfaCodeInputCodeForm="ngModel"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       (ngModelChange)="notAuthorized = false"
+                       autocomplete="off"
+                       maxlength="255"
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputCodeForm.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                    <div class="input-error"
+                         *ngIf="tfaCodeInputCodeForm.touched && tfaCodeInputCodeForm.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="verificationProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'Apply' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="verificationProcess"
+            [discardFn]="closeWizard"
+        ></nx-cancel-button>
+    </div>
+</ng-template>
+
+<ng-template #disable2FaCode>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Disable two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="code_form" novalidate>
+            <p *ngIf="num2FaSystems" class="danger mb-3">
+                {{ LANG.security.twoFa.disableWarning({count: num2FaSystems}) }}
+            </p>
+            <div class="form-group">
+                <label for="tfaCodeInput" translate>Enter a verification code from your authentication app or a backup code to continue</label>
+                <input type="text" class="form-control" #tfaCodeInputDisable="ngModel"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       (ngModelChange)="notAuthorized = false"
+                       autocomplete="off"
+                       maxlength="255"
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputDisable.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                    <div class="input-error" *ngIf="tfaCodeInputDisable.touched && tfaCodeInputDisable.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="codeProcess"
+            [form]="codeForm"
+            actionType="danger"
+            [buttonText]="'Disable' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="codeProcess"
+            [discardFn]="closeWizard"
+        ></nx-cancel-button>
+    </div>
+</ng-template>

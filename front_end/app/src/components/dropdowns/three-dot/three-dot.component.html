@@ -4,10 +4,9 @@
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
                     <a class="dropdown-item inset"
-                        [ngClass]="{ 'selected': _selected && _selected.name === item.name }"
                         [id]="item.id"
                        (click)="show = false; change(item)">
-                        <span [innerText]="item.name"></span>
+                        <span [innerText]="item.name || name"></span>
                     </a>
             </li>
         </ul>

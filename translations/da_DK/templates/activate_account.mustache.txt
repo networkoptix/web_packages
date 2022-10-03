@@ -1,8 +1,8 @@
-Hello {{message.userFullName}},
+Hej, {{message.userFullName}},
 
-  Please open the link below to confirm your email address and activate the account.
+  Åbn venligst linket nedenfor for at bekræfte din e-mailadresse og aktivere kontoen.
 
-{{config.portal_url}}/activate/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
-If you didn't register in %CLOUD_NAME%, just ignore this email.
-Do not share the message or the link with anyone.
+Hvis du ikke har registreret dig i %CLOUD_NAME%, så ignorér blot denne e-mail.
+Del ikke beskeden eller linket med nogen.

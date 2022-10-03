@@ -1,11 +1,23 @@
-import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
-import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
-import PlaybackService from '../../../playback/services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState';
-import { assertNever, ms, px } from '../../../../utils';
-import { Subscription } from 'rxjs';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    ElementRef,
+    HostListener,
+} from '@angular/core';
 import * as df from 'dateformat';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+import { Subscription } from 'rxjs';
+
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import {
+    PlaybackState,
+    PLAYBACK_MODE
+} from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { assertNever, ms, px } from '@vms-client/utils';
+
+import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
 
 const dateformat = df.default || df;
 
@@ -14,9 +26,9 @@ const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
 
 @Component({
-    selector    : 'timeline-playback-indicator',
-    templateUrl : './timeline-playback-indicator.component.html',
-    styleUrls   : ['./timeline-playback-indicator.component.scss']
+    selector: 'timeline-playback-indicator',
+    templateUrl: './timeline-playback-indicator.component.html',
+    styleUrls: ['./timeline-playback-indicator.component.scss']
 })
 export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     protected playbackSubscription: Subscription
@@ -29,11 +41,13 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     public visibleOffset: px
 
     constructor(
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         private timeline: TimelineService,
         private vms: VideoManagementSystemService,
         public playback: PlaybackService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }
@@ -41,13 +55,21 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     @HostListener('click', ['$event'])
     onClick (e) {
         if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
-            this.timeline.jumpScrollTo(this.playback.state.currentTime - Math.round(this.timeline.visibleRange.duration / 2), true);
+            this.timeline.jumpScrollTo(
+                this.playback.state.currentTime -
+                    Math.round(this.timeline.visibleRange.duration / 2),
+                true
+            );
         }
     }
 
     public ngOnInit (): void {
-        this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange);
+        this.playbackSubscription = this.playback.subject.subscribe(
+            this.onPlaybackSubjectChange
+        );
+        this.timelineSubscription = this.timeline.subject.subscribe(
+            this.onTimelineSubjectChange
+        );
     }
 
     public ngOnDestroy (): void {
@@ -58,9 +80,10 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     public get edgeCaseClasses () {
         this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible');
         return {
-            'left-most' : this.honestOffset <= 0,
-            leftish     : this.honestOffset > 0 && this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
-            rightish    : this.honestOffset < this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
+            'left-most': this.honestOffset <= 0,
+            leftish: this.honestOffset > 0 &&
+                this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
+            rightish: this.honestOffset < this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
                 this.honestOffset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - (MARGIN + PRIMARY_WIDTH),
             'right-most': this.honestOffset >= this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr
         };
@@ -122,11 +145,11 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public onTimelineSubjectChange (s: TimelineServiceStatus) {
-        const ps = this.playback.state
+        const ps = this.playback.state;
         if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
-            this.timeMs = ps.currentTime // prevents the weired jitter
-            const ho = this.honestOffset
-            const vo = this.visibleOffset
+            this.timeMs = ps.currentTime; // prevents the weired jitter
+            const ho = this.honestOffset;
+            const vo = this.visibleOffset;
             this.honestOffset = this.timeline.timeToDomOffsetX(this.timeMs);
             this.visibleOffset = Math.max(
                 MARGIN + PRIMARY_WIDTH / 2,
@@ -166,7 +189,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                 this.timeMs = s.currentTime;
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'dd mmmm yyyy';
-                const tweakedT = this.vms.tweakT(this.timeMs)
+                const tweakedT = this.vms.tweakT(this.timeMs);
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
 

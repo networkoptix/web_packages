@@ -1,68 +1,82 @@
+import { DOCUMENT, Location } from '@angular/common';
 import {
-    Component, Inject, OnInit,
-    Input, ViewChild, Renderer2
-}                                    from '@angular/core';
-import { DOCUMENT, Location }        from '@angular/common';
-import { Router }                    from '@angular/router';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+    Component,
+    Inject,
+    OnInit,
+    Input,
+    ViewChild,
+    Renderer2
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
 
-import { NxModalGenericComponent }   from '../generic/generic.component';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import type { NxAccountService } from '@services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxProcessService }          from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxStorageService }          from '@services/storage.service';
-import { WINDOW }                    from '@services/window-provider';
-import { CookieService }             from 'ngx-cookie-service';
-import { NxAppStateService }         from '@services/nx-app-state.service';
+import { OauthService } from '@services/oauth.service';
+import { NxProcessService } from '@services/process.service';
+import type { Process } from '@services/process.service';
+import { NxStorageService } from '@services/storage.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
-    selector    : 'nx-login-webadmin-modal',
-    templateUrl : 'login-webadmin.component.html',
-    styleUrls   : ['login-webadmin.component.scss']
+    selector: 'nx-login-webadmin-modal',
+    templateUrl: 'login-webadmin.component.html',
+    styleUrls: ['login-webadmin.component.scss']
 })
 export class LoginWebadminModalContent implements OnInit {
-    @Input() account;
-    @Input() login;
-    @Input() keepPage;
+    @Input() account: NxAccountService;
+    @Input() keepPage: boolean;
+    @Input() blockNavigation: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    loading: boolean = true;
+
     locationService: Location;
-    auth;
+    auth: { email: string };
+    login: Process;
     next: string;
     password: string;
-    remember: boolean;
     hideErrors: boolean = true;
 
-    wrongPassword: boolean;
+    wrongCredentials: boolean;
     accountBlocked: boolean;
+    accountNotOnSystem: boolean;
+    account2faRequired: boolean;
 
-    @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
+    private readonly urlUpdateTimeout: number = 150;
 
-    private setupDefaults() {
+    @ViewChild('loginForm', { static: true }) loginForm: NgForm;
+
+    private setupDefaults(): void {
         this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
-        this.remember = true;
-        this.wrongPassword = false;
+        this.wrongCredentials = false;
     }
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
+        private oauthService: OauthService,
+        private renderer: Renderer2,
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
-        private genericModal: NxModalGenericComponent,
-        private renderer: Renderer2,
+        private simpleDialogService: NxSimpleDialogsService,
         private router: Router,
         private cookieService: CookieService,
         public activeModal: NgbActiveModal,
-        @Inject(DOCUMENT) private document: any,
+        @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -72,76 +86,135 @@ export class LoginWebadminModalContent implements OnInit {
         this.setupDefaults();
     }
 
-    resendActivation(email) {
-        this.activeModal.close();
+    // resendActivation(email) {
+    //     this.activeModal.close();
 
-        this.processService.createProcess(() => {
-            return this.account.reactivate(email);
-        }, {
-            errorCodes: {
-                forbidden : this.LANG.errorCodes.accountAlreadyActivated(),
-                notFound  : this.LANG.errorCodes.emailNotFound()
-            },
-            holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix()
-        });
+    //     this.processService.createProcess(() => {
+    //         return this.account.reactivate(email);
+    //     }, {
+    //         errorCodes: {
+    //             forbidden: this.LANG.errorCodes.accountAlreadyActivated(),
+    //             notFound: this.LANG.errorCodes.emailNotFound()
+    //         },
+    //         holdAlerts: true,
+    //         errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix()
+    //     });
+    // }
+
+    private removeParamFromUrl(url: URL, hash: string, params: URLSearchParams, paramName: string): void {
+        params.delete(paramName);
+        const paramString = params.toString();
+        url.hash = hash + (paramString ? '?' + paramString : '');
+        this.window.location.href = url.toString();
+    };
+
+    private displayCloudConnectionError() {
+        this.simpleDialogService.notify(
+            this.LANG.toastMessage.noInternet(),
+            'warning',
+            true
+        );
     }
 
-    resetForm() {
-        const { errors } = this.loginForm.controls.login_email;
-        if (errors) {
-            this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
-        }
+    resetForm(): void {
         if (!this.loginForm.valid) {
+            this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
-            this.wrongPassword = false;
+            this.wrongCredentials = false;
             this.accountBlocked = false;
         }
     }
 
-    setEmail(email) {
+    setEmail(email: string): void {
         this.auth.email = email;
         this.storageService.email = this.auth.email;
     }
 
-    ngOnInit() {
-        // remove leftover cookie
+    ngOnInit(): void {
+        const url = new URL(this.document.location.href);
+        const [hash, query] = url.hash.split('?');
+        const params = new URLSearchParams(query || '');
+        const code = params.get('code');
+        const token = params.get('token');
+        if (code) {
+            this.removeParamFromUrl(url, hash, params, 'code');
+            this.oauthLogin(code);
+            return;
+        } else if (token) {
+            this.removeParamFromUrl(url, hash, params, 'token');
+            this.tokenLogin(token);
+            return;
+        } else {
+            this.loading = false;
+        }
+
+        // remove any leftovers  *****************************
         this.cookieService.delete('x-runtime-guid');
+        this.storageService.clear('refreshToken');
+        this.storageService.clear('cloudAccessToken');
+        this.storageService.clear('cloudApiAccessToken');
+        this.storageService.clear('cloudApiRefreshToken');
+        // ****************************************************
+
         // Check the url queryParams for next. if it exists set next equal to it.
-        const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
+        const nextUrl = /\?next=(.*)/.exec(
+            this.document.location.search.replace(/%2F/g, '/')
+        );
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }
         this.password = '';
-        const showWrongLoginError = () => {
-            this.wrongPassword = true;
-            this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
+
+        const showAccountBlockedError = () => {
+            this.loginForm.controls.login_password.markAsPristine();
+            this.loginForm.controls.login_password.markAsUntouched();
+
+            this.accountBlocked = true;
+            this.loginForm.controls.login_password.setErrors({
+                nx_account_blocked: true
+            });
+        };
+
+        const showWrongCredentialsError = () => {
             this.password = '';
+            this.wrongCredentials = true;
+            this.loginForm.controls.login_email.setErrors({
+                nx_wrong_credentials: true
+            });
+            this.loginForm.controls.login_password.setErrors({
+                nx_wrong_credentials: true
+            });
             this.renderer.selectRootElement('#login_password').focus();
         };
 
+        const cloudLogin = this.LANG.errorCodes['This authorization method is forbidden. Please contact your system administrator.']();
+        const errorCodes = {
+            notFound: showWrongCredentialsError,
+            invalidParameter: showWrongCredentialsError,
+            notAuthorized: showWrongCredentialsError,
+            serviceUnavailable: showAccountBlockedError,
+            accountBlocked: showAccountBlockedError
+        };
+        errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError();
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
-            this.wrongPassword = false;
+            this.wrongCredentials = false;
             this.accountBlocked = false;
 
-            return this.account.login(this.auth.email, this.password, this.remember);
+            return this.account.login(
+                this.auth.email,
+                this.password,
+                true
+            );
         }, {
-            ignoreUnauthorized : true,
-            errorCodes         : {
-                'This user does not exist.' : showWrongLoginError,
-                notAuthorized               : showWrongLoginError,
-                accountBlocked              : () => {
-                    this.loginForm.controls.login_password.markAsPristine();
-                    this.loginForm.controls.login_password.markAsUntouched();
-
-                    this.accountBlocked = true;
-                    this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
-                }
-            }
+            ignoreUnauthorized: true,
+            errorCodes
         }, (result) => {
             this.activeModal.close(result);
+            if (this.blockNavigation) {
+                return;
+            }
             const isRootPath = ['/', ''].includes(this.locationService.path());
 
             // prevent manual input of url for activate routes
@@ -172,9 +245,11 @@ export class LoginWebadminModalContent implements OnInit {
             } else {
                 setTimeout(() => {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised], { replaceUrl: isRootPath })
-                        .then(() => {
-                            // ensure language reload as translations are loaded on page load
+                        .navigate(
+                            [this.CONFIG.redirect.authorised],
+                            { replaceUrl: isRootPath }
+                        ).then(() => {
+                        // ensure language reload as translations are loaded on page load
                             this.window.location.reload();
                         });
                 });
@@ -182,5 +257,63 @@ export class LoginWebadminModalContent implements OnInit {
         }, (error) => {
             console.error(error);
         });
+    }
+
+    redirectOauthLogin(): void {
+        this.account.mediaServerApi.getServerInfo('*')
+            .subscribe((data) => {
+                const systemHasInternet = data.some((system) => system.serverFlags.includes('SF_HasPublicIP'));
+                if (this.window.navigator.onLine && systemHasInternet) {
+                    this.account.mediaServerApi.redirectOauth();
+                } else {
+                    this.displayCloudConnectionError();
+                }
+            }, () => this.displayCloudConnectionError());
+    }
+
+    oauthLogin(code: string): void {
+        this.account.mediaServerApi
+            .loginOauth(code)
+            .subscribe((res: Record<string, string>) => {
+                this.accountNotOnSystem = res.scope === '';
+
+                if (
+                    !this.accountNotOnSystem &&
+                    res.error === 'second_factor_required'
+                ) {
+                    this.oauthService.redirectOauth(
+                        'system2faAuth',
+                        '',
+                        code,
+                        res.access_token,
+                        this.window.location.href
+                    );
+                    return;
+                }
+
+                this.account2faRequired = res.error === '2fa_disabled_for_the_user';
+                this.loading = !(this.accountNotOnSystem || this.account2faRequired);
+
+                if (!this.accountNotOnSystem && !this.account2faRequired) {
+                    this.account.get(true).then((res) => {
+                        if (res) {
+                            this.window.location.reload();
+                        } else {
+                            this.loading = false;
+                            this.displayCloudConnectionError();
+                        }
+                    });
+                }
+            });
+    }
+
+    tokenLogin(token: string): void {
+        this.account.mediaServerApi.loginTokenUrl(token)
+            .subscribe(() => {
+                // If the page reloads too soon. Webadmin redirects to /
+                setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
+            }, () => {
+                this.loading = false;
+            });
     }
 }

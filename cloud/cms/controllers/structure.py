@@ -17,6 +17,7 @@ from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
     Menu, AssetCustomizationReview, Permission
+from util.helpers import substitute_branding
 
 logger = logging.getLogger(__name__)
 
@@ -183,10 +184,9 @@ def read_menu_structure(filename):
         for menu in menu_structure:
             menu_obj = Menu.objects.filter(name=menu['name']).first()
             if not menu_obj:
-                menu_obj = Menu(name=menu['name'], depth=menu['depth'])
+                menu_obj = Menu.objects.create(name=menu['name'], depth=menu['depth'])
             else:
-                menu_obj.depth = max(menu_obj.depth, menu['depth'])
-            menu_obj.save()
+                continue
 
             for node_structure in menu.get('nodes', []):
                 node_obj = menu_obj.nodes.filter(name=node_structure['name']).first()
@@ -194,7 +194,7 @@ def read_menu_structure(filename):
                     last_node = menu_obj.nodes.order_by('id').last()
                     node_obj = MenuNode(parent_menu=menu_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
                 process_node(node_obj, node_structure)
-    Menu.cache_all_customizations()
+    Menu.clear_all_customizations_cache()
 
 
 def process_data_structure_type(data_structure, name, value):
@@ -371,7 +371,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                             Split up the structure name and use it as keys.
                             1. Remove the % from the start and end.
                             2. Split the string by . to get all of the keys.
-                            
+
                             Ex: %mobile.ios.bundleIdentifier% -> ['mobile', 'ios', 'bundleIdentifier']
                             1. %mobile.ios.bundleIdentifier% -> mobile.ios.bundleIdentifier
                             2. mobile.ios.bundleIdentifier -> ['mobile', 'ios', 'bundleIdentifier']
@@ -501,11 +501,16 @@ def update_asset_type(asset_type, asset_type_structure):
     asset_type.save()
 
 
-def external_file_to_content_file(url):
-    file_request = requests.get(url)
+def external_file_to_content_file(url, branding={}):
+    request_url = substitute_branding(branding, url) if branding else url
+
+    if request_url.startswith('//'):
+        request_url = f'https:{request_url}'
+
+    file_request = requests.get(request_url.replace('\\', ''))
     file_content = file_request.content
     content_type = file_request.headers.get('Content-Type', 'image/png')
-    filename = url.split('/')[-1]
+    filename = request_url.split('/')[-1]
     content_file = ContentFile(file_content, name=filename)
     content_file.content_type = content_type
     return content_file
@@ -542,6 +547,7 @@ def sub_vars(asset):
 
 
 def update_asset_by_json(asset, asset_json, user):
+    errors = False
     def sub_image_sources(match_obj):
         file_id = str(uuid.uuid4())
         files[file_id] = external_file_to_content_file(match_obj[2])
@@ -570,7 +576,9 @@ def update_asset_by_json(asset, asset_json, user):
                             ds["value"] = re.sub(r'(<img [^>]*?src=")([^%].*?)"', sub_image_sources, ds["value"])
                         ds["value"] = re.sub(r'{%(.*?)%}', sub_vars(asset), ds["value"])
                     data_records[ds["name"]] = ds["value"]
-        save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
+        if save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user):
+            errors = True
+    return errors
 
 
 def import_assets_from_json(assets_list, user, publish=False, increment_progress=None):
@@ -589,14 +597,14 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         asset_obj.name = asset_dict['name']
         try:
             asset_obj.save()
-            update_asset_by_json(asset_obj, asset_dict, user)
+            errors = update_asset_by_json(asset_obj, asset_dict, user)
         except Exception as e:
             # Fallback in case some exception occurs and is not caught during save or update.
             # If an exception is ever caught here we should add better handling for it in update_asset_by_json or asset.save
             increment_progress(f'Failed to import <b>"{asset_obj.name}"</b>: {str(e)}')
             continue
 
-        if publish and asset_obj.is_dirty:
+        if publish and asset_obj.is_dirty and not errors:
             published = False
             # Send for review
             send_version_for_review(asset_obj, user, notify=False)

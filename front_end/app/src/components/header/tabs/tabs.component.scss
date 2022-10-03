@@ -2,9 +2,9 @@
 
 .active {
     position: relative;
-    color: $brand_core;
+    color: var(--brand-core);
     & > a {
-        color: $brand_core !important;
+        color: var(--brand-core) !important;
     }
     &::after {
         content: "";
@@ -12,7 +12,7 @@
         bottom: 0;
         left: 16px;
         right: 16px;
-        border-bottom: 2px solid $brand_core;
+        border-bottom: 2px solid var(--brand-core);
     }
 }
 

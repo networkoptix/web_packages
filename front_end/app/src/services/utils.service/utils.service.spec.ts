@@ -1,20 +1,20 @@
-import { waitForAsync, TestBed }             from '@angular/core/testing';
-import { LOCALE_ID }                         from '@angular/core';
-import { DOCUMENT }                          from '@angular/common';
-import { DeviceDetectorService }             from 'ngx-device-detector';
+import { DOCUMENT } from '@angular/common';
+import { LOCALE_ID } from '@angular/core';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { NxUtilsService } from './utils.service';
 
-describe('Xyz  Utils Service', () => {
+describe('NxUtilsService', () => {
     let utilsService: NxUtilsService;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers    : [
+            providers: [
                 NxUtilsService,
                 DeviceDetectorService,
                 { provide: LOCALE_ID, useValue: 'id' },
-                { provide: DOCUMENT, useValue: {}}
+                { provide: DOCUMENT, useValue: {} }
             ]
         });
         utilsService = TestBed.inject(NxUtilsService);

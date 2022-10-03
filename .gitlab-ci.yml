@@ -1,26 +1,232 @@
+image: nx/ci:1.20
+
+include:
+  - project: "dev/ci"
+    file: "pipelines/infra-templates.yml"
+  - project: "dev/ci"
+    file: "pipelines/secrets.yml"
+  - local: "ci/Docker/**/.gitlab-ci.yml"
+
+default:
+  tags:
+    - service
+
 variables:
-  JENKINS_URL: http://jenkins.lan.hdw.mx
   JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
 
 workflow:
   rules:
-  # Enable for merge requests.
-  - if: $CI_MERGE_REQUEST_ID
-  # Enable for protected branch.
-  - if: $CI_COMMIT_REF_PROTECTED
-  - when: never
+    - if: $CI_PROJECT_NAMESPACE != "dev"
+      when: never
+    # Enable for merge requests.
+    - if: $CI_MERGE_REQUEST_ID
+    # Enable for protected branch.
+    - if: $CI_COMMIT_REF_PROTECTED
+    - when: never
 
 stages:
-- build
+  - docker image
+  - check
+  - build
+  - test
+  - fail-fast
 
-build-webadmin:
+.frontend-changes:
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*
+
+.get_target_branch_script:
+  script:
+  - set -e
+  - if [[ "$CI_COMMIT_REF_PROTECTED" == "true" ]]; then
+  -   TARGET_BRANCH_NAME=${CI_COMMIT_REF_NAME}
+  - else
+  -   TARGET_BRANCH_NAME=$(get_target_protected_branch.py
+        --gitlab-server-url=${CI_SERVER_URL}
+        --gitlab-token="${GITLAB_API_TOKEN}"
+        --project-id=${CI_PROJECT_ID}
+        --merge-request-iid=${CI_MERGE_REQUEST_IID})
+  - fi
+
+no-changes:
+  stage: check
+  # rules:
+  #   - if:
+  #     changes:
+  #       - front_end/**/*
+  #       - cloud/**/*
+  #     when: never
+  script:
+    - echo "If this is the only job that runs then no changes were made that requires the pipeline"
+
+.backend-changes:
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/*
+
+.frontend-test-changes:
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
+
+.frontend-node:
+  extends: .frontend-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.frontend-test:
+  extends: .frontend-test-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.django-python:
+  extends: .backend-changes
+  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  services:
+    - name: mysql:5.7
+      alias: mysql
+    - name: redis:3.2.8-alpine
+      alias: redis
+  variables:
+    TESTING: "true"
+    MYSQL_DATABASE: "cloudportal"
+    MYSQL_ROOT_PASSWORD: ""
+    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    MYSQL_PASSWORD: ""
+  before_script:
+    - cd cloud
+    - echo "Waiting for mysql server to be ready"
+    - >
+      for i in {1..60}; do
+        if ! mysql --host=mysql -u root -e ";"
+        then
+          if [ $i == 60 ]
+          then
+            echo "Could not connect to mysql server after 60 attempts"
+            exit 1
+          else
+            echo "Attempt $i to connect to mysql server failed"
+          fi
+        else
+          echo "Attempt $i Successfully connected to mysql server"
+          break
+        fi
+
+        sleep 5
+      done
+
+.django-unit-test:
+  extends: .django-python
+  stage: test
+  coverage: /^TOTAL.+?(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit: cloud/report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: cloud/coverage.xml
+
+django-checks:
+  extends: .backend-changes
+  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  stage: check
+  variables:
+    USE_SQLITE: "true"
+  script:
+    - cd cloud
+    - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
+    - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
+
+nx-mentions-check:
+  extends: .frontend-changes
+  stage: check
+  script: ci/nx_mentions.sh
+
+language-check:
+  extends: .frontend-node
+  stage: check
+  script:
+    - cd front_end
+    - npm install
+    - npm run lang-ci-check
+
+frontend-lint-check:
+  extends: .frontend-node
+  stage: check
+  script:
+    - cd front_end
+    - npm install
+    - npm run lint:ci app
+
+fe-lint-tests-check:
+  extends: .frontend-test
+  stage: check
+  script:
+    - cd front_end
+    - npm install
+    - npm run lint:ci:tests app
+
+django-unit-test-slow:
+  extends: .django-unit-test
+  script:
+    - pytest -m "not integration" -m slow --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
+
+django-unit-test-fast:
+  extends: .django-unit-test
+  script:
+    - pytest -m "not integration" -m "not slow" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
+
+frontend-unit-test:
+  extends: .frontend-node
+  stage: test
+  variables:
+    CHROME_BIN: /usr/bin/google-chrome
+  script:
+    - cd front_end
+    - npm install
+    - npm run lang
+    - npm run test:ci front-end
+  artifacts:
+    reports:
+      junit: front_end/reports/*.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/test-karma/cobertura-coverage.xml
+
+authorization-unit-test:
+  extends: .frontend-node
+  stage: test
+  variables:
+    CHROME_BIN: /usr/bin/google-chrome
+  script:
+    - cd front_end
+    - npm install
+    - npm run lang
+    - npm run test:ci authorization
+  artifacts:
+    reports:
+      junit: front_end/reports/*.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/test-karma/cobertura-coverage.xml
+
+webadmin:
+  extends: .frontend-changes
   stage: build
   image: nx/ci
   tags:
-  - service
+  - ru-moscow
+  secrets:
+    JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
   script:
-  - runJenkinsJob.sh gitlab.vms.review.webadmin.build
+    - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
@@ -28,5 +234,106 @@ build-webadmin:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+
+frontend:
+  extends: .frontend-changes
+  stage: build
+  image: nx/ci
+  tags:
+  - ru-moscow
+  secrets: !reference [.tokens, secrets]
+  script:
+    - !reference [.get_target_branch_script, script]
+    - runJenkinsJob.sh gitlab.cloud.frontend
+      "PUSH_TO_ARTIFACTORY=true"
+      "BRANCH=$TARGET_BRANCH_NAME"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHORT_SHA"
+
+.fail-on:
+  stage: fail-fast
+  variables:
+    CANCEL_ENDPOINT: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/cancel"
+    CANCEL_HEADER: "PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN"
+  allow_failure: true
+  script:
+    - echo "Canceling jobs still running on pipeline"
+    - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
+
+.fail-on-frontend:
+  extends: .fail-on
   rules:
-  - when: manual
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*
+      when: on_failure
+
+.fail-on-frontend-test:
+  extends: .fail-on
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
+      when: on_failure
+
+.fail-on-backend:
+  extends: .fail-on
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/*
+      when: on_failure
+
+on-frontend-lint:
+  extends: .fail-on-frontend
+  needs: ["frontend-lint-check"]
+
+on-test-lint:
+  extends: .fail-on-frontend-test
+  needs: ["fe-lint-tests-check"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
+
+on-language-check:
+  extends: .fail-on-frontend
+  needs: ["language-check"]
+
+on-nx-mentions:
+  extends: .fail-on-frontend
+  needs: ["nx-mentions-check"]
+
+on-frontend-build:
+  extends: .fail-on-frontend
+  needs: ["frontend"]
+
+on-webadmin-build:
+  extends: .fail-on-frontend
+  needs: ["webadmin"]
+
+on-authorization-test:
+  extends: .fail-on-frontend
+  needs: ["authorization-unit-test"]
+
+on-frontend-test:
+  extends: .fail-on-frontend
+  needs: ["frontend-unit-test"]
+
+on-django-checks:
+  extends: .fail-on-backend
+  needs: ["django-checks"]
+
+on-django-tests-slow:
+  extends: .fail-on-backend
+  needs: ["django-unit-test-slow"]
+
+on-django-tests-fast:
+  extends: .fail-on-backend
+  needs: ["django-unit-test-fast"]

@@ -1,5 +1,4 @@
 @use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables" as *;
 
 .initial-state {
     position: relative;
@@ -26,7 +25,7 @@
 }
 
 .header-svg {
-    background: $additional_light1;
+    background: var(--additional_light1);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,8 +34,8 @@
 
 .normal-state {
     padding: 16px;
-    background-color: $additional_light1;
-    border-bottom: 1px dotted $light3;
+    background-color: var(--additional_light1);
+    border-bottom: 1px dotted var(--light3);
 
     h2 {
         @include typography.medium24dark9;
@@ -90,7 +89,7 @@
                     position: relative;
                     display: inline-block;
                     margin: 0 8px 4px 4px;
-                    border-bottom: 1px dotted $light3;
+                    border-bottom: 1px dotted var(--light3);
                     z-index: 1;
                     min-width: 16px;
                     flex-basis: 1;
@@ -108,14 +107,14 @@
     height: 18px;
     padding: -1px inherit; // This is kind of hacky, need to figure out what's going on
     &:hover {
-        color: $dark15;
-        fill: $dark15;
+        color: var(--dark15);
+        fill: var(--dark15);
     }
     @include typography.regular13light;
     background-color: inherit;
     display: flex;
     align-items: center;
-    fill: $light16;
+    fill: var(--light16);
     white-space: nowrap;
     svg-icon {
         svg {

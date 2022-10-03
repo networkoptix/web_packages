@@ -1,35 +1,43 @@
 import {
-    Component, OnInit, Input,
-    forwardRef, ViewEncapsulation,
-    OnDestroy, ViewChild, ElementRef
-}                                   from '@angular/core';
+    Component,
+    OnInit,
+    Input,
+    forwardRef,
+    ViewEncapsulation,
+    OnDestroy,
+    ViewChild,
+    ElementRef
+} from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator, FormControl, NgModel
-}                                   from '@angular/forms';
-import { UntilDestroy }             from '@ngneat/until-destroy';
-import { Subscription }             from 'rxjs';
+    Validator,
+    FormControl,
+    NgModel
+} from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxCloudApiService }        from '@services/nx-cloud-api';
-import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-password-input',
-    templateUrl : 'password.component.html',
-    styleUrls   : ['password.component.scss'],
-    providers   : [
+    selector: 'nx-password-input',
+    templateUrl: 'password.component.html',
+    styleUrls: ['password.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxPasswordComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxPasswordComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxPasswordComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxPasswordComponent),
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -38,9 +46,10 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() form;
     @Input() componentId: string;
     @Input() component: NgModel;
+    @Input() readonly = false;
     @Input() hideErrors = false;
     @Input() hasError = false;
-    @Input() showTag = true;
+    @Input() authorize = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -53,7 +62,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     private passwordSubscription: Subscription;
 
-    @ViewChild('addons') addons : ElementRef;
+    @ViewChild('addons') addons : ElementRef<HTMLDivElement>;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -65,7 +74,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
-        this.tagWidth = this.addons.nativeElement.offsetWidth;
+        this.tagWidth = this.addons?.nativeElement.offsetWidth;
 
         if (!c.value) {
             return {
@@ -122,7 +131,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     private loadCommonPasswords() {
         if (!this.CONFIG.commonPasswordsList) {
             this.passwordSubscription = this.api.getCommonPasswords()
-                .subscribe((data: { [key: string]: number; }) => {
+                .subscribe(data => {
                     this.CONFIG.commonPasswordsList = data;
                 });
         }

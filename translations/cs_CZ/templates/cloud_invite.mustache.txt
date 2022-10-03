@@ -9,4 +9,4 @@ Byli jste pozváni do %CLOUD_NAME%.
 Vytvořte si účet na %CLOUD_NAME%
 pomocí aktuální e-mailové adresy a postupujte podle dalších pokynů.
 
-Registrujte svůj účet pomocí tohoto odkazu: {{ config.portal_url }}/register/{{ message.code }}
+Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}

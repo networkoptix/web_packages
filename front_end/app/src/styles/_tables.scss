@@ -70,7 +70,7 @@
 
             &:hover {
                 color      : $dark9;
-                background : transparentize($brand_core, 0.9);
+                background : var(--brand-core-t90);
             }
 
             &.spacer {

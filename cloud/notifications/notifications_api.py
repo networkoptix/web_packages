@@ -135,13 +135,13 @@ def get_system_with_users(notification_object, request_data):
                 log_push_result(notification_object, 'System credentials do not match target system')
                 return None
         else:
-            system = cloud_api.System.get(
+            system = cloud_api.System.basic_get(
                 request_data['username'], request_data['password'], notification_object.raw_system_id
             )
             system = system['systems'][0]
 
         if system:
-            users = cloud_api.System.users(request_data['username'], request_data['password'], system['id'])
+            users = cloud_api.System.basic_users(request_data['username'], request_data['password'], system['id'])
             system['users'] = {user.get('accountEmail', None) for user in users['sharing']}
     except Exception as exception:
         if isinstance(exception, exceptions.APINotAuthorisedException):

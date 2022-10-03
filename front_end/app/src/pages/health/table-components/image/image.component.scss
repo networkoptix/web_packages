@@ -11,7 +11,7 @@ img {
 }
 
 .hm-camera-preview {
-    color: $light10;
+    color: var(--light10);
     font-size: 16px;
     opacity: 0.6;
     text-align: center;
@@ -20,19 +20,19 @@ img {
 .light-camera-preview {
     @extend .hm-camera-preview;
     font-family: $font-family-regular;
-    color: $light10;
+    color: var(--light10);
     padding: 16px;
 }
 
 .header {
-    color: $dark9;
+    color: var(--dark9);
     font-size: 13px;
     height: 16px;
     margin-bottom: 8px;
 }
 
 .thumbnail-preview {
-    background: $dark1;
+    background: var(--dark1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,10 +52,10 @@ img {
     align-items: center;
     justify-content: center;
     height: 120px !important;
-    background: $light2;
+    background: var(--light2);
     @include media-breakpoint-down(xs) {
         height: 100% !important;
-    }    
+    }
 }
 
 .wide {
@@ -80,7 +80,7 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: black;
+    background: var(--dark1);
     img {
         width: 100%;
         height: auto;
@@ -96,8 +96,8 @@ img {
 }
 
 .image-unavailable-border {
-    border: 1px solid $light4;
-    background: $light2;
+    border: 1px solid var(--light4);
+    background: var(--light2);
     width: 100%;
     height: 100%;
     display: flex;

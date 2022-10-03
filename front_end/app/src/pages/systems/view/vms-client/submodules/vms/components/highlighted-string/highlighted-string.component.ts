@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector    : 'highlighted-string',
-    templateUrl : 'highlighted-string.component.html',
-    styleUrls   : ['highlighted-string.component.scss']
+    selector: 'highlighted-string',
+    templateUrl: 'highlighted-string.component.html',
+    styleUrls: ['highlighted-string.component.scss']
 })
 export class HighlightedStringComponent {
     @Input() string: string;
@@ -40,7 +40,10 @@ export class HighlightedStringComponent {
         if (!this.tokenMatches) {
             return '';
         } else {
-            return this.string.slice(this.matchPosition, this.matchPosition + this.token.length);
+            return this.string.slice(
+                this.matchPosition,
+                this.matchPosition + this.token.length
+            );
         }
     }
 }

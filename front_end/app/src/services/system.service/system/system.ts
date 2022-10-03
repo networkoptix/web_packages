@@ -1,30 +1,44 @@
+import { Router } from '@angular/router';
 import {
-    BehaviorSubject, of, Subscription,
-    Observable, from
-}                                       from 'rxjs';
-import { filter, flatMap, take, tap }   from 'rxjs/operators';
+    BehaviorSubject,
+    Subscription,
+    Observable
+} from 'rxjs';
+import { auditTime, switchMap, tap } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
-import { ServerManager }    from './server-manager/server-manager';
-import { UserManager }      from './user-manager/user-manager';
-import { CameraManager }    from './camera-manager/camera-manager';
-import { StorageManager }   from './storage-manager/storage-manager';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { environment } from '@environments/environment';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
-import { IConfig }                                  from '../../nx-config';
-import { NxCloudApiService }                        from '../../nx-cloud-api';
-import { NxSystemsService, NxSystemWithUserInfo }   from '../../systems.service';
-import { NxSystemAPIService, NxSystemAPI }          from '../../system-api.service';
-import { NxPollService }                            from '../../poll.service';
-import { NxAppStateService }                        from '../../nx-app-state.service';
-import { SystemConfigSettings }                     from '../../system-api.types';
-import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
-import { trimIDs as trimIds }                       from '../../../utils/api_response_cleaners';
-import { NxRibbonService }                          from '@components/ribbon';
-import { NxSystemRestAPI }                          from '@services/system-rest-api.service';
+import { trimIDs as trimIds } from '../../../utils/api_response_cleaners';
+import { NxAppStateService } from '../../nx-app-state.service';
+import { NxCloudApiService } from '../../nx-cloud-api';
+import { IConfig } from '../../nx-config';
+import { NxPollService } from '../../poll.service';
+import { NxSystemAPIService, NxSystemAPI } from '../../system-api.service';
 import {
-    System, IParams, ServerTimeInfo, ICamera,
-    ITask, NxSystemUser, NxSystemRole
-}                                                   from './system-types';
-import { Router }                                   from '@angular/router';
+    EventRule,
+    EventTypes,
+    RawRule,
+    SystemConfigSettings
+} from '../../system-api.types';
+import { NxSystemsService, NxSystemWithUserInfo } from '../../systems.service';
+
+import { CameraManager } from './camera-manager/camera-manager';
+import { ServerManager } from './server-manager/server-manager';
+import { StorageManager } from './storage-manager/storage-manager';
+import {
+    System,
+    IParams,
+    ServerTimeInfo,
+    ICamera,
+    ITask,
+    NxSystemUser,
+    NxSystemRole
+} from './system-types';
+import { UserManager } from './user-manager/user-manager';
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.
@@ -64,6 +78,7 @@ export class NxSystem extends System {
     useRest: boolean;
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
+    updatePromise: Promise<any>;
     usersPromise: Promise<void>;
     systemPoll: Subscription | Observable<string | NxSystem>;
     licensesModifiedSubject = new BehaviorSubject<string>('');
@@ -159,23 +174,22 @@ export class NxSystem extends System {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-
+        /* Unauthorised request handler
+           Some options here:
+            - Access was revoked
+            - System was disconnected from cloud\Password was changed
+            - Nonce expired
+           We try to update nonce and auth on the server again
+           Other cases are not distinguishable
+        */
+        const unauthorizedCallback = this.useRest ? (force) => this.updateToken(force) : (force) => this.updateSystemAuth(force);
         if (!this.mediaserver) {
-            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
-                /* Unauthorised request handler
-                Some options here:
-                - Access was revoked
-                - System was disconnected from cloud\Password was changed
-                - Nonce expired
-                We try to update nonce and auth on the server again
-                Other cases are not distinguishable
-                */
-                return this.updateSystemAuth(true);
-            },
-            this.useRest);
-            // first update auth keys so other requests will not fail
+            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.useRest);
         }
-        this.updateSystemAuth(true);
+        // Handling promise to satisfy the linter.
+        if (!this.useRest || !(<NxSystemRestAPI> this.mediaserver)?.accessToken) {
+            unauthorizedCallback(true).then(() => {});
+        }
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
@@ -196,7 +210,7 @@ export class NxSystem extends System {
     }
 
     updateSystemAuth(force = true) {
-        if (this.CONFIG.isLocal || !force && this.mediaserver?.authGet) { // no need to update
+        if (environment.isLocal || !force && this.mediaserver?.authGet) { // no need to update
             return Promise.resolve(true);
         }
 
@@ -208,18 +222,41 @@ export class NxSystem extends System {
         });
     }
 
+    updateToken(force = true) {
+        const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
+        if (environment.isLocal || !force && accessToken) {
+            return Promise.resolve(true);
+        }
+
+        return this.cloudApi.getSystemToken(this.id).toPromise().then((tokens) => {
+            return (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
+                .toPromise()
+                .then(() => tokens.access_token)
+                .catch(() => tokens.access_token);
+        }).catch(() => {
+            this.lostConnection = true;
+        });
+    }
+
+    /**
+     * @deprecated Should be replaced with direct reference to userManager
+     */
     canViewInfo() {
         // system's capability check was removed as health info page handles it by showing "outdated version" placeholder
-        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return this.userManager.permissions.isAdmin;
     }
 
     canUserViewCloudStorage() {
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal || !this.CONFIG.featureFlags.cloudStorage) {
             return false;
         }
         return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
             (this.isAdmin && this.systemInfo?.cloudStorageSystemEnabled) ||
             (this.systemInfo?.cloudStorageCapable && this.isMine);
+    }
+
+    getInfoFromCloudDb() {
+        return this.cloudApi.systems(this.id);
     }
 
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
@@ -233,12 +270,13 @@ export class NxSystem extends System {
                 ownerAccountEmail,
                 systemName,
                 mergeInfo,
-                capabilities : JSON.parse(<any>specificFeatures),
-                isOnline     : true
+                capabilities: JSON.parse(<any>specificFeatures),
+                isOnline: true
             };
         };
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
+            const systemPromise = Promise.resolve(this as Partial<NxSystemWithUserInfo>);
             return this.mediaserver.getSystemSettings()
                 .then((res: any) => {
                     let parsedSettings: any = {};
@@ -255,7 +293,7 @@ export class NxSystem extends System {
                     } else {
                         this.info = parsedSettings;
                     }
-                    if (this.CONFIG.isLocal && !this.info.name) {
+                    if (environment.isLocal && !this.info.name) {
                         this.info.name = this.CONFIG.system.name;
                     }
                     this.id = parsedSettings?.id || this.CONFIG.localSystemId;
@@ -263,17 +301,21 @@ export class NxSystem extends System {
                     this.isOnline = true;
                     this.cloudStorageCapable = false;
 
-                    this.getUsers(true)
+                    this.getUsers(true, suppressUpdate)
                         .then(() => {
                             this.userManager.ownerEmail = this.info.ownerAccountEmail;
                             this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
-                }, (err) => console.error('getSystemSettings: ', err)) // catch api error
-                .catch(err => console.error('getInfoAndPermissions: ', err)) // catch result processing error
-                .finally(() => {
-                    return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
-                });
+                    return systemPromise;
+                }, (err) => {
+                    console.error('getSystemSettings: ', err);
+                    return systemPromise;
+                }) // catch api error
+                .catch(err => {
+                    console.error('getInfoAndPermissions: ', err);
+                    return systemPromise;
+                }); // catch result processing error
         }
 
         return this.systemsService
@@ -285,7 +327,6 @@ export class NxSystem extends System {
                 }
 
                 if (!response) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ data: { resultCode: 'forbidden' } });
                 }
                 if (this.info) {
@@ -295,8 +336,10 @@ export class NxSystem extends System {
                 }
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
-                this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
-                this.cloudStorageCapable = this.info.capabilities && !!this.info.capabilities.cloudStorage;
+
+                const capabilities = this.info?.capabilities || {};  // Make capabilities defined so that its easier to check feature flags.
+                this.canMerge = this.userManager.isMine && 'cloudMerge' in capabilities;
+                this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {
                     this.cloudStorageSystemEnabled = await this.cloudApi.getCloudStorageUsage(this.info.id).then(() => true, () => false);
                 }
@@ -319,7 +362,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
-            this.infoPromise = this.updateSystemAuth(false).then(() => {
+            this.infoPromise = (!environment.isLocal && this.mediaserver.unauthorizedCallback(false) || Promise.resolve(true)).then(() => {
                 return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
                     return res;
                 });
@@ -330,9 +373,12 @@ export class NxSystem extends System {
 
     startPoll(systemId?: string) {
         if (this.subscriberCount === 0) {
-            if (this.CONFIG.isLocal || this.mediaserver?.authGet) {
+            if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
-                this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => { });
+                this.activeSubscription = this.systemPoll instanceof Observable &&
+                    this.systemPoll.pipe(auditTime(1000)).subscribe(() => {
+                        this.systemInfo = this;
+                    });
             } else {
                 setTimeout(() => this.startPoll(systemId), 1000);
             }
@@ -357,14 +403,11 @@ export class NxSystem extends System {
     }
 
     update = (): Promise<any> => {
-        return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false, true)
-                // eslint-disable-next-line prefer-promise-reject-errors
+        if (!this.updatePromise) {
+            this.updatePromise = this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
-                .then(() => this.cameraManager.getCameras())
-                .then(() => this.getUsers(true))
-                .then(() => this.filterCamerasFromUserPermissions())
+                .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true, true))
                 .catch((error) => {
                     if (error?.offline) {
                         this.isOnline = false;
@@ -375,13 +418,15 @@ export class NxSystem extends System {
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })
                 .finally(() => {
+                    this.updatePromise = undefined;
                     // TODO: re-do ribbonService to handle multiple pages better
                     const { url } = this.router;
                     if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
                         this.ribbonService.hide();
                     }
                 });
-        })).toPromise();
+        }
+        return this.updatePromise;
     };
 
     updateOrGetSystemSettings(updateParams = {}) {
@@ -413,8 +458,12 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    mergeSystems(url: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
-        return this.mediaserver.mergeSystems(url, dryRun, currentPassword, takeRemoteSettings);
+    getRemoteServerInfo(remoteEndpoint: string) {
+        return this.mediaserver.getRemoteServerInfo(remoteEndpoint);
+    }
+
+    mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
+        return this.mediaserver.mergeSystems(url, targetSystemId, dryRun, currentPassword, takeRemoteSettings);
     }
 
     checkMergeStatus(forceReload = true) {
@@ -437,10 +486,16 @@ export class NxSystem extends System {
             .toPromise();
     }
 
+    getLicenseSummaries() {
+        return (<NxSystemRestAPI> this.mediaserver)
+            .getLicenseSummaries()
+            .toPromise();
+    }
+
     authPromise: Promise<any>;
 
     ensureSystemAuth(force?) {
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             return Promise.resolve();
         }
 
@@ -448,37 +503,28 @@ export class NxSystem extends System {
             return this.authPromise;
         }
 
-        if (!force && this.mediaserver?.authGet) {
+        if (!force && (this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken)) {
             return Promise.resolve(true);
         }
 
-        this.authPromise = this.cloudApi.getSystemAuth(this.id).toPromise().then(
-            (authKeys: any) => {
-                if (authKeys.authGet) {
-                    this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+        this.authPromise = this.mediaserver.unauthorizedCallback(true).then(
+            (auth: any) => {
+                if (auth.authGet) {
+                    this.mediaserver.setAuthKeys(auth.authGet, auth.authPost, auth.authPlay);
                     this.authPromise = null;
-                    return Promise.resolve(true);
+                } else if (auth.access_token) {
+                    (this.mediaserver as NxSystemRestAPI)
+                        .setTokens(auth, true)
+                        .subscribe(() => {});
                 } else {
                     this.authPromise = null;
-                    return Promise.reject(authKeys);
+                    return Promise.reject(auth);
                 }
+                return Promise.resolve(true);
             }
         );
 
         return this.authPromise;
-    }
-
-    public getResourceTypes(force: boolean = false) {
-        if (this.resourceTypes && !force) {
-            return Promise.resolve(this.resourceTypes);
-        }
-
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.getResourceTypes().toPromise()
-        ).then(resourceTypes => {
-            this.resourceTypes = resourceTypes;
-            return this.resourceTypes;
-        });
     }
 
     public getMediaServersAndCameras(force: boolean = false): any {
@@ -506,42 +552,28 @@ export class NxSystem extends System {
 
     protected _setMediaServersAndCameras(apiReply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-
-        // sometimes the server sends weird keys (@gbezyuk)
         const mss = apiReply['ec2/getMediaServersEx'] ||
             apiReply['/ec2/getMediaServersEx'];
 
-        let cs = apiReply['ec2/getCamerasEx'];
+        const cs = apiReply['ec2/getCamerasEx'].map(trimIds);
 
-        return this.getResourceTypes().then(resourceTypes => {
-            const desktopCameraType = resourceTypes.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
-
-            cs = cs.filter(
-                c => c.typeId !== desktopCameraType.id &&
-                    !c.addParams.find(p => p.name === 'ioConfigCapability')
-            ).map(trimIds);
-
-            this.mediaservers = mss.map(trimIds).map(ms => ({
-                ...ms,
-                cameras: cs.filter(c => c.parentId === ms.id)
-            }));
-
-            return this.mediaservers;
-        });
+        this.mediaservers = mss.map(trimIds).map(ms => ({
+            ...ms,
+            cameras: cs.filter(c => c.parentId === ms.id)
+        }));
+        return this.mediaservers;
     }
 
-    public checkCameraThumbnail (cameraId) {
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.checkCameraThumbnail(cameraId)
-        );
-    }
-
-    public getCameraThumbnailUrl (cameraId, width = 128, height = 128, t?) {
-        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height, t);
+    public getBookmarks() {
+        return this.mediaserver.getBookmarks?.();
     }
 
     public getPlaybackUrl (cameraId, transport, resolution, position) {
         return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
+    }
+
+    public getCameraHistoryItems() {
+        return this.mediaserver.getCameraHistoryItems();
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
@@ -550,6 +582,10 @@ export class NxSystem extends System {
                 cameraId, startTime, endTime, detail, limit, label, periodsType
             ).toPromise()
         );
+    }
+
+    public getExportUrl (params) {
+        return this.mediaserver.getExportUrl(params);
     }
 
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
@@ -562,11 +598,11 @@ export class NxSystem extends System {
                             const now = Date.now();
                             // @ts-ignore
                             return r.reply.map(i => ({
-                                vmsTime        : parseInt(i.vmsTime),
-                                vmsTimeOffset  : now - parseInt(i.vmsTime),
-                                osTimeOffset   : now - parseInt(i.osTime),
-                                serverId       : i.serverId.slice(1, i.serverId.length - 1),
-                                timeZoneOffset : parseInt(i.timeZoneOffset)
+                                vmsTime: parseInt(i.vmsTime),
+                                vmsTimeOffset: now - parseInt(i.vmsTime),
+                                osTimeOffset: now - parseInt(i.osTime),
+                                serverId: i.serverId.slice(1, i.serverId.length - 1),
+                                timeZoneOffset: parseInt(i.timeZoneOffset)
                             }));
                         }, (err) => {
                             if (err.name === 'TimeoutError' && this.attempts < this.CONFIG.apiRequestAttempts) {
@@ -579,6 +615,174 @@ export class NxSystem extends System {
                         });
             });
     }
+
+    /**
+     * Alexa event rule handlers
+     */
+
+    /**
+     * Handles rules that need to be added/removed when enabling/disabling Alexa
+     */
+    updateAlexaRules(enabled = true) {
+        return this.mediaserver.getEventRules().pipe(
+            switchMap(existingRules => (enabled ? this.#addAlexaRules : this.#removeAlexaRules)(
+                existingRules,
+                this.userManager.currentUser,
+                `"Alexa layout command for ${this.userManager.currentUser.email}"`,
+                `"Alexa command for ${this.userManager.currentUser.email}"`
+            ))
+        );
+    }
+
+    #addAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+        const showAlarmRule = NxSystem.createRule(
+            {
+                eventCondition: NxSystem.getEventCondition(
+                    alarmResourceName
+                )(),
+                actionType: 'showOnAlarmLayoutAction',
+                eventType: EventTypes.USER_DEFINED,
+                actionParams: NxSystem.getActionParams([user.id, user.id], true)
+            },
+            existingRules
+        );
+
+        const doCommandRule = NxSystem.createRule(
+            {
+                eventCondition: NxSystem.getEventCondition(doCommandResourceName)(),
+                actionType: 'showPopupAction',
+                eventType: EventTypes.USER_DEFINED,
+                actionParams: NxSystem.getActionParams([user.id, user.id], true)
+            },
+            existingRules
+        );
+        return Promise.all([
+            showAlarmRule, doCommandRule
+        ].map(rule => this.mediaserver.saveEventRule(rule).toPromise())).catch(errors => {
+            console.error(errors);
+            return false;
+        });
+    }
+
+    #removeAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+        const toRemove = existingRules.filter(({
+            eventCondition
+        }) => [
+            alarmResourceName,
+            doCommandResourceName
+        ].some(resourceName => {
+            const condition = JSON.parse(eventCondition) || {};
+
+            return condition.resourceName === resourceName;
+        }));
+
+        return Promise.all(toRemove.map(({
+            id
+        }) => this.mediaserver.removeEventRule(id).toPromise().catch(errors => errors)));
+    }
+
+    /**
+     * Event Helpers
+     */
+
+    static getActionParams = (
+        [actionResourceId, ...additionalResources]: string[],
+        useSource = false
+    ) => ({
+        allUsers: false,
+        authType: 'authBasicAndDigest',
+        durationMs: 600000,
+        forced: true,
+        fps: 30,
+        needConfirmation: false,
+        playToClient: true,
+        recordAfter: 5,
+        recordBeforeMs: 5000,
+        requestType: '',
+        streamQuality: 'highest',
+        useSource,
+        actionResourceId,
+        additionalResources
+    })
+
+    static getEventCondition = (
+        resourceName: string,
+        noDescription = false
+    ) => (...valuesToParse: string[]) => {
+        const lookupGroupAliases = (groupName: string) => {
+            const aliases = {
+                all: ['everyone'],
+                Administrator: ['admin', 'admins'],
+                'Advanced Viewer': ['advanced'],
+                Viewer: ['viewers'],
+                'Live Viewer': ['live viewers']
+            };
+            return [groupName, ...(aliases[groupName] || [])];
+        };
+        const toCondition = (value: string) => {
+            const cleaned = value.replace('Alexa ', '').toLowerCase();
+            const split = cleaned.split(' ');
+            return split.length === 1 ? cleaned : `"${cleaned}" ${split.join(' ')}`;
+        };
+        const condition = valuesToParse
+            .reduce((values, cur) => [...values, ...lookupGroupAliases(cur)], [])
+            .reduce(
+                (conditions, condition) =>
+                    `${conditions} ${toCondition(condition)}`,
+                ''
+            );
+
+        return {
+            caption: condition,
+            description: noDescription ? '' : condition,
+            eventTimestampUsec: '0',
+            eventType: 'undefinedEvent',
+            metadata: {
+                allUsers: false,
+                level: '0'
+            },
+            omitDbLogging: false,
+            reasonCode: 'none',
+            resourceName
+        };
+    }
+
+    static baseRule = {
+        system: false,
+        schedule: '',
+        eventState: 'Undefined',
+        disabled: false,
+        aggregationPeriod: 0
+    }
+
+    static getRuleId = (
+        caption: string,
+        actionType: string,
+        existingRules: EventRule[]
+    ) => {
+        const existingRulesTuples = existingRules.map(
+            ({ eventCondition, actionType, id }): [string, string, string] => [
+                JSON.parse(eventCondition).caption || '',
+                actionType,
+                id
+            ]
+        );
+        const existingRule = existingRulesTuples.find(
+            ([cap, action]) => cap === caption && action === actionType
+        );
+        return existingRule?.[2] || `{${uuid()}}`;
+    }
+
+    static createRule = (
+        { actionParams, eventCondition, ...rule }: RawRule,
+        existingRules: EventRule[]
+    ): EventRule => ({
+        id: NxSystem.getRuleId(eventCondition.caption, rule.actionType, existingRules),
+        ...NxSystem.baseRule,
+        ...rule,
+        actionParams: JSON.stringify(actionParams),
+        eventCondition: JSON.stringify(eventCondition)
+    })
 
     /**
      * Methods and properties below need to be refactored and moved to respective manager classes.
@@ -609,14 +813,14 @@ export class NxSystem extends System {
      * TODO: This method needs to be refactored and moved into userManager.
      * @deprecated Not really deprecated yet but should be soon.
      */
-    getUsers(reload?): Promise<void> {
+    getUsers(reload?: boolean, suppressUpdate = false): Promise<void> {
         if (!this.usersPromise || reload) {
             let usersPromise: Promise<any>;
             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    if (this.isAdmin) {
+                    if (!environment.isLocal && this.isAdmin) {
                         return this.getUsersCachedInCloud().then((users) => {
                             this.userManager.processUsers(users);
                             return Promise.resolve();
@@ -625,7 +829,7 @@ export class NxSystem extends System {
                         return Promise.resolve();
                     }
                 });
-            } else if (this.isAdmin) { // or we get old cached data from the cloud
+            } else if (!environment.isLocal && this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then((users) => {
                     return this.userManager.processUsers(users);
                 });
@@ -637,7 +841,9 @@ export class NxSystem extends System {
             this.usersPromise = usersPromise.then(() => {
                 this.userManager.checkPermissions();
                 // If system is reported to be online - try to get actual users list
-                this.systemInfo = this;
+                if (!suppressUpdate) {
+                    this.systemInfo = this;
+                }
             }); // Handling promise to satisfy the linter.
         }
         return this.usersPromise;
@@ -706,7 +912,7 @@ export class NxSystem extends System {
             const delPromise = this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        const id = this.CONFIG.isLocal ? this.CONFIG.cloudSystemId : this.id;
+        const id = environment.isLocal ? this.CONFIG.cloudSystemId : this.id;
         return this.cloudApi.unshare(id, email, password);
     }
 
@@ -733,6 +939,7 @@ export class NxSystem extends System {
 
     /**
      * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * Note: userManager.isAdmin() is a function with one required argument, not a getter
      */
     get isAdmin() {
         return this.userManager.permissions.isAdmin;
@@ -740,6 +947,7 @@ export class NxSystem extends System {
 
     /**
      * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * Note: userManager.isOwner() is a function with one required argument, not a getter
      */
     get isOwner() {
         return this.userManager.isOwner(this.userManager.currentUser);
@@ -838,6 +1046,10 @@ export class NxSystem extends System {
         return this.serverManager.getModuleInfo(serverId);
     }
 
+    getModuleInfoUsingUrl(url: string) {
+        return this.serverManager.getModuleInfoUsingUrl(url);
+    }
+
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
@@ -905,11 +1117,11 @@ export class NxSystem extends System {
         return this.serverManager.getLicenses().then(({ licenses, hwids }: any) => {
             const parsedLicenses = licenses.map(this.serverManager.parseLicense);
             const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                EXPIRATION = EXPIRATION.replace(' ', 'T') + 'Z'; // for Safari compatibility
-                const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
+                EXPIRATION = EXPIRATION && (EXPIRATION.replace(' ', 'T') + 'Z'); // for Safari compatibility
+                const activeLicense = hwids.includes(HWID) && (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
-            const used = this.cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled && status !== 'Offline').length;
+            const used = this.cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled).length; // count all cameras - not just ONLINE ones
             const available = total - used;
             return { total, used, available };
         });
@@ -933,9 +1145,9 @@ export class NxSystem extends System {
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    getServerApiDoc(serverId: string) {
+    getServerApiDoc() {
         return this.serverManager
-            .getApiDoc(serverId).toPromise()
+            .getApiDoc()
             .catch(err => Promise.reject(err));
     };
 

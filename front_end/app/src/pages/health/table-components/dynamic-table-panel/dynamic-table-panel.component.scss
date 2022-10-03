@@ -1,88 +1,88 @@
-@use '../../../../../styles/theme_variables' as *;
 @use '../../../../styles/mixins';
+@use "styles/theme_variables" as theme_vars;
 
 .panel {
     padding          : 0;
-    background-color : $light4;
+    background-color : var(--light4);
     border-top       : 1px solid transparent;
-    
+
     h2 {
         font-size : 0.9375rem;
-        color     : $dark9;
+        color     : var(--dark9);
     }
-    
+
     &.view-scroll-fixed-top {
         position: fixed;
         top: 48px + 16px; // header + padding
     }
-    
+
     &.view-scroll-fixed-bottom {
         position: fixed;
         bottom: 16px;
     }
-    
+
     .card {
         margin: 0 !important;
     }
-    
-    
+
+
     .camview-link {
         height : 24px;
         padding-bottom  : 8px;
     }
-    
+
     .info-label {
-        color : $light16;
+        color : var(--light16);
     }
-    
+
     .analytics-label {
         line-height : 20px;
     }
-    
+
     .no-linewrap {
         text-overflow : ellipsis;
         overflow      : hidden;
         white-space   : nowrap;
     }
-    
+
     table th, table td {
         padding : 0;
         height  : 24px;
         width   : 50%;
     }
-    
+
     .active-camera-info {
         & > .row {
             display     : flex;
             align-items : center;
             line-height : 24px;
-            
+
             & > div {
                 line-height : 24px;
             }
         }
     }
-    
+
     .firmware-info {
         & > .row {
             display     : flex;
             align-items : center;
             line-height : 20px;
-            
+
             & > div {
                 line-height : 20px;
             }
         }
     }
-    
+
     header {
         position : relative;
-        
+
         .panel-title {
             @include mixins.ellipsis;
             width : 90%;
         }
-        
+
         .detailsClose {
             position     : absolute;
             top          : 2px;
@@ -91,29 +91,29 @@
             margin-right : 0;
         }
     }
-    
+
     .blue {
-        color : $blue1;
+        color : theme_vars.$blue1;
     }
-    
+
     .firmware-line {
-        stroke       : $brand-primary;
+        stroke       : theme_vars.$brand-primary;
         stroke-width : 2
     }
-    
+
     .icon {
         display     : inline-block;
         height      : 1em; /* default icon height */
         position    : relative;
         user-select : none;
-        
+
         .icon-canvas {
             display    : block;
             height     : 100%;
             width      : 100%;
             visibility : hidden;
         }
-        
+
         .icon-svg {
             height   : 100%;
             left     : 0;

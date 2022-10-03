@@ -1,28 +1,32 @@
-import { Component, Inject, Input }  from '@angular/core';
-import { Router }                    from '@angular/router';
-import { DOCUMENT }                  from '@angular/common';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { timer }                     from 'rxjs';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LocalStorageService } from 'ngx-webstorage';
+import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
-import { LocalStorageService }       from 'ngx-webstorage';
 
-import { NxProcessService, Process } from '@services/process.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxLoginService } from '@services/login.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxSystem }                  from '@services/system.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxToastService }            from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxProcessService, Process } from '@services/process.service';
 import {
-    ModuleInformationReply, NormalResponse
-}                                     from '@services/system-api.types';
-import {NxAppStateService}            from "@services/nx-app-state.service";
-import { environment }                from '@environments/environment';
+    ModuleInformationReply,
+    NormalResponse
+} from '@services/system-api.types';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
-    selector    : 'nx-modal-reset-server-content',
-    templateUrl : 'reset-server.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-reset-server-content',
+    templateUrl: 'reset-server.component.html',
+    styleUrls: []
 })
 export class ResetServerModalContent {
     @Input() system: NxSystem;
@@ -32,6 +36,7 @@ export class ResetServerModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    needsUpdate: boolean;
     resetServer: Process;
     password: string;
     hideErrors = true;
@@ -41,11 +46,14 @@ export class ResetServerModalContent {
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         private appState: NxAppStateService,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
+        private simpleDialogService: NxSimpleDialogsService,
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
         private router: Router,
-        @Inject(DOCUMENT) private document: Document,
+        @Inject(WINDOW) private window: Window,
+        @Inject(DOCUMENT) private document: Document
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -53,9 +61,9 @@ export class ResetServerModalContent {
 
     ngOnInit() {
         const options = {
-            classname : this.CONFIG.toast.warning,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.warning,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         const handleResetFailError = (from: string, error) => {
             console.error(`Error in reset-server dialog from ${from}:`, error);
@@ -67,28 +75,32 @@ export class ResetServerModalContent {
             return false;
         };
         const isResetingCurrentServer = (): boolean => {
-            const currentServer = this.system.serverManager.servers.find(server => server.id === this.serverId);
-            return currentServer.networkAddresses.includes(this.document.location.host)
-                || this.system.info.name === currentServer.name;
-        }
+            const currentServer = this.system.serverManager.servers
+                .find(server => server.id === this.serverId);
+            return currentServer.networkAddresses.includes(this.document.location.host) ||
+                this.system.info.name === currentServer.name;
+        };
         const routeToNextServer = (): void => {
             const { servers } = this.system.serverManager;
             const currentServerIndex = servers.findIndex(server => server.id === this.serverId);
             const nextServerId = NxUtilsService.cleanId(currentServerIndex === servers.length - 1
                 ? servers[0].id : servers[currentServerIndex + 1].id);
             this.router.navigate(['/settings', 'servers', nextServerId]);
-        }
+        };
 
         this.resetServer = this.processService
             .createProcess(() => {
-                return this.system.restoreFactorySettings(this.serverId, this.password).toPromise();
+                return this.system.serverManager.restoreFactorySettings(
+                    this.serverId,
+                    this.password
+                ).toPromise();
             }, {
-                ignoreError        : true,
-                ignoreUnauthorized : true,
-                successMessage     : this.LANG.servers.beginReset?.(),
-                errorCodes         : {
-                    'Wrong password.' : wrongPasswordHandler,
-                    wrongPassword     : wrongPasswordHandler
+                ignoreError: true,
+                ignoreUnauthorized: true,
+                successMessage: this.LANG.servers.beginReset?.(),
+                errorCodes: {
+                    invalidParameter: wrongPasswordHandler,
+                    wrongPassword: wrongPasswordHandler
                 }
             }, async() => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;
@@ -107,20 +119,20 @@ export class ResetServerModalContent {
 
                 let moduleInfo: NormalResponse<ModuleInformationReply>;
                 try {
-                    moduleInfo = await this.system.getModuleInfo(this.serverId).toPromise();
+                    moduleInfo = await this.system.serverManager.getModuleInfo(this.serverId).toPromise();
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);
-                    } else if (this.CONFIG.isLocal) {
+                    } else if (environment.isLocal) {
                         // If we failed to get module info the system probably has only one server.
                         this.activeModal.close();
                         this.appState.systemAvailable$.next(false);
                     }
                 }
                 const { runtimeId: initialRuntimeId } = moduleInfo.reply;
-                return this.system.restartServer(this.serverId)
+                return this.system.serverManager.restartServer(this.serverId)
                     .then(() => {
-                        const serverSubscription = this.system.getModuleInfo(this.serverId)
+                        const serverSubscription = this.system.serverManager.getModuleInfo(this.serverId)
                             .pipe(
                                 map((res: any) => {
                                     if (res.reply.id !== this.serverId) {
@@ -141,7 +153,10 @@ export class ResetServerModalContent {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     this.activeModal.close();
-                                    const successMessage = NxLanguageProviderService.translate(this.LANG.servers.resetSuccessful?.(), { serverName: this.serverName });
+                                    const successMessage = NxLanguageProviderService.translate(
+                                        this.LANG.servers.resetSuccessful?.(),
+                                        { serverName: this.serverName }
+                                    );
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();
@@ -154,6 +169,20 @@ export class ResetServerModalContent {
                             );
                     })
                     .catch(err => handleResetFailError('restartServer', err));
+            }, (err) => {
+                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    this.needsUpdate = true;
+                    this.loginService.currentSystem = this.system;
+                    this.loginService.updateSession('reset')
+                        .then((ready) => {
+                            this.needsUpdate = !ready;
+                            if (ready) {
+                                this.resetServer.run();
+                            }
+                        });
+                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                }
             });
     }
 

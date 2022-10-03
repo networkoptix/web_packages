@@ -5,14 +5,17 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import (
-    api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language,
+    api_success, APINotFoundException, APIForbiddenException)
+from cms.controllers.asset_json import get_review_matching_current_version, process_asset_global_contexts
+from cms.controllers.filldata import global_contexts_to_dict
+from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset,
                         AssetCustomizationReview, DataStructure)
+from cms.serializers import ArticleSerializer
+
 from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
 
-from cms.serializers import ArticleSerializer
+from typing import Union
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the article. Ex: draft, published, or review",
@@ -22,6 +25,7 @@ url__route_param = openapi.Parameter("url_param", openapi.IN_PATH,
                                      description="Route in the url that points to the article.",
                                      type=openapi.TYPE_STRING)
 
+ARTICLE_NOT_FOUND = 'Article not found'
 
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an article based on params",
@@ -36,7 +40,7 @@ def get_article(request, url_param, **kwargs):
     review = state == 'pending'
     article_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
-    article = None
+    article: Union[Asset, None] = None
     version = None
     cached_article = None
 
@@ -55,7 +59,7 @@ def get_article(request, url_param, **kwargs):
             # Check that that the asset's current url still matches
             article = article_review.version.asset
             version = article.version_id(settings.CUSTOMIZATION)
-            ARTICLE_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{url_param}-{state}-{version if not draft else "latest"}'
+            ARTICLE_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state, url_param, version)
             cached_article = ARTICLE_CACHE.get_cached_item()
 
             if not cached_article:
@@ -73,9 +77,7 @@ def get_article(request, url_param, **kwargs):
         # Set version based on draft or pending query params
         version = article.version_id()
         if review:
-            pending_review = AssetCustomizationReview.objects.filter(
-                version__id__gt=version, version__asset=article, customization__name=settings.CUSTOMIZATION,
-                state=AssetCustomizationReview.REVIEW_STATES.pending).last()
+            pending_review = get_review_matching_current_version(article, version)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -108,12 +110,14 @@ def get_article(request, url_param, **kwargs):
             cloud_portal = get_cloud_portal_asset()
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-            process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
-                                    global_contexts, global_contexts_dict, language=language)
+            process_asset_global_contexts(
+                language, cloud_portal, global_contexts, cloud_portal.version_id(),
+                article_dict, global_contexts_dict=global_contexts_dict)
+
             ARTICLE_CACHE.set_cached_item(article_dict)
 
             ser = ArticleSerializer(data=article_dict)
             ser.is_valid()
             return api_success(ser.data)
 
-    raise APINotFoundException(error_data={'url_param': url_param}, error_text='Article not found')
+    raise APINotFoundException(error_data={'url_param': url_param}, error_text=ARTICLE_NOT_FOUND)

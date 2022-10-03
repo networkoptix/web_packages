@@ -1,4 +1,4 @@
-<h1>こんにちは{{message.userFullName}}</h1>
+<h1>{{message.userFullName}} さん、こんにちは。</h1>
 
 {{#message.sharer_name}}
 <p><a href="mailto:{{message.sharer_email}}"> {{message.sharer_name}} </a>がビデオマネージメントシステム "{{message.system_name}}"へのアクセスを共有しました。
@@ -12,5 +12,5 @@
 表示および管理を行うには、このメールアドレスを使用して<a href="{{config.portal_url}}"> %CLOUD_NAME%</a> にアカウントを作成し、続く指示に従ってください。</p>
 {{/message.sharer_name}}
 
-<a class="btn" href="{{config.portal_url}}/register/{{message.code}}">アカウント作成</a>
+<a class="btn" href="{{config.portal_url}}/authorize/register/{{message.code}}">アカウントの作成</a>
 

@@ -1,18 +1,25 @@
+import { Location } from '@angular/common';
 import {
-    Component, Input, ViewEncapsulation
-}                                                from '@angular/core';
-import { Location }                              from '@angular/common';
-import { DomSanitizer }                          from '@angular/platform-browser';
-import { NgForm }                                from '@angular/forms';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }             from '@services/nx-language-provider';
-import { Process }                               from '@services/process.service';
+    Component,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import {
+    NgbActiveModal,
+    NgbModal,
+    NgbModalRef
+} from '@ng-bootstrap/ng-bootstrap';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Process } from '@services/process.service';
 
 @Component({
-    selector    : 'nx-modal-apply-content',
-    templateUrl : 'apply.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-apply-content',
+    templateUrl: 'apply.component.html',
+    styleUrls: []
 })
 export class ApplyModalContent<Apply extends Process, Discard extends Function> {
     @Input() applyFunc: Apply;
@@ -46,10 +53,10 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
 }
 
 @Component({
-    selector      : 'nx-modal-apply',
-    template      : '',
-    encapsulation : ViewEncapsulation.None,
-    styleUrls     : []
+    selector: 'nx-modal-apply',
+    template: '',
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: []
 })
 
 export class NxModalApplyComponent {
@@ -68,8 +75,8 @@ export class NxModalApplyComponent {
     private dialog(applyFunc, discardFunc) {
         this.modalRef = this.modalService.open(ApplyModalContent,
             {
-                windowClass : 'modal-holder',
-                backdrop    : 'static'
+                windowClass: 'modal-holder',
+                backdrop: 'static'
             });
         this.modalRef.componentInstance.applyFunc = applyFunc;
         this.modalRef.componentInstance.discardFunc = discardFunc;

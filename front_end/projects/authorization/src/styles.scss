@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@use "../../../app/styles/_theme_variables" as *;
+@import "~@angular/cdk/overlay-prebuilt.css";
+
+* {
+    .mainContainer {
+        background-color: $additional_light2;
+    }
+
+    .altMainBackground {
+        background-color: $light1 !important;
+    }
+
+    .desktopBackground, .desktopBackground .auth-overlay {
+        background-color: $dark5 !important;
+    }
+
+    .mobileBackground, .mobileBackground .auth-overlay {
+        background-color: $dark4 !important;
+    }
+
+    .placeholder {
+        background-color : transparent;
+
+        &.page {
+            position  : absolute;
+            top       : 50%;
+            left      : 50%;
+            transform : translate(-50%, -50%);
+        }
+    }
+}

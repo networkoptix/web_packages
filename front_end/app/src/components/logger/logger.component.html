@@ -1,0 +1,71 @@
+<ng-template #logger>
+    <div class="mb-3 row">
+        <label class="col-12 col-md-3 col-xl-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center" for="log-levels"
+            translate>Current Logger</label>
+        <div class="col-12 col-md-9 col-xl-10">
+            <nx-select
+                id="log-levels"
+                [(ngModel)]="selectedLogLevel"
+                [items]="logLevels"
+                (onSelected)="getLogs($event)"
+            ></nx-select>
+        </div>
+    </div>
+    <ng-container >
+        <ng-template #autoHeightLogs>
+            <pre
+                class="mb-3 w-100"
+                name="log-frame"
+                [innerText]="logData"
+            ></pre>
+        </ng-template>
+
+        <div *ngIf="!noFrame; else autoHeightLogs">
+            <nx-pre-loader
+                *ngIf="logData === ''"
+            ></nx-pre-loader>
+            <pre
+                *ngIf="logData"
+                [style.height.px]="iframeHeight"
+                class="overflow-auto mb-3"
+                name="log-frame"
+                [innerText]="logData"
+            ></pre>
+        </div>
+    </ng-container>
+    <footer>
+        <div class="d-flex justify-content-between">
+            <button
+                id="refresh-logger"
+                class="btn btn-primary"
+                (click)="getLogs(selectedLogLevel)"
+                translate
+            >Refresh</button>
+            <a
+                *ngIf="logUrl"
+                id="open-logger"
+                class="btn btn-default"
+                target="_blank"
+                [href]="logUrl"
+                translate
+            >Open in a new window</a>
+        </div>
+    </footer>
+</ng-template>
+
+<ng-template #unavailable>
+    <nx-section-placeholder
+            svgFileName="system_settings_placeholder"
+            [wrapperHeight]="250"
+            [translatedMessage]="LANG.monitoring.unavailable()">
+    </nx-section-placeholder>
+</ng-template>
+
+<nx-block *ngIf="!noFrame; else logger" class="d-block">
+    <header>
+        <h4 translate>System Logs</h4>
+    </header>
+    <nx-section *ngIf="selectedServerId else unavailable">
+        <ng-template *ngTemplateOutlet="logger"></ng-template>
+    </nx-section>
+</nx-block>

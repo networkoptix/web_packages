@@ -1,14 +1,20 @@
-import { ms, int } from '../../../utils/type-aliases';
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
+import { PlaybackTransport } from '@view/view.types';
+import { ms, int } from '@vms-client/utils/type-aliases';
+
 import BirdViewTree from './BirdViewTree';
-import { PlaybackTransport } from '@pages/systems/view/view.types';
+import {
+    ICamera,
+    ISimpleTimeRange,
+    CAMERA_STATUS,
+    CameraArchive
+} from './ICamera';
 
 interface NameValue {
     name: string,
     value: string,
 }
 
-type MediaStreamInfo = any // TODO!
+type MediaStreamInfo = any;
 
 export class Camera implements ICamera {
     protected _birdViewTree: BirdViewTree
@@ -24,12 +30,14 @@ export class Camera implements ICamera {
     protected _mediaStreams: Array<MediaStreamInfo> = []
 
     protected _rotation: int = 0
+    protected _streamUrls: string[] = [];
 
     constructor(
         public readonly id: string,
         public readonly parentServerId: string,
         public readonly preferredServerId: string,
         public readonly name: string,
+        public readonly model: string,
         public readonly url: string,
         public readonly status: CAMERA_STATUS,
         public readonly isScheduleEnabled: boolean,
@@ -37,10 +45,22 @@ export class Camera implements ICamera {
         protected _archiveRange: ISimpleTimeRange,
         protected _archive: CameraArchive = [],
         public readonly thumbnailUrl: string | undefined = undefined,
-        public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+        public readonly getVideoUrl: (
+            transport: string,
+            quality: string,
+            t?: ms
+        ) => string,
         public readonly getPosterUrl: (t?: ms) => string
     ) {
         this._initBirdView();
+    }
+
+    public get ip () {
+        try {
+            return this.url.split('/')[2].split(':')[0];
+        } catch {
+            return this.url;
+        }
     }
 
     public parseAdditionalParams (ps: Array<NameValue>) {
@@ -60,11 +80,21 @@ export class Camera implements ICamera {
             // console.log('got camera rotation', this._rotation)
         }
         // console.log('CAMERA ROTATION RECEIVED', rotation, this._rotation)
+
+        const streamUrls = ps.find(p => p.name === 'streamUrls');
+        if (streamUrls) {
+            this._streamUrls = Object.values(JSON.parse(streamUrls.value))
+                .map((stream: string) => stream);
+        }
     }
 
     public get rotation () {
         // console.log('CAMERA ROTATION GET', this._rotation)
         return this._rotation;
+    }
+
+    public get streamUrls() {
+        return this._streamUrls;
     }
 
     public get availableTransportsAndResolutions () {
@@ -95,34 +125,51 @@ export class Camera implements ICamera {
         return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>;
     }
 
+    public get mediaStreams() {
+        return this._mediaStreams;
+    }
+
     protected _getAvailableResolutions (transport) {
         const result: any = {};
         const resolutions = [];
         const isHls = transport === 'hls';
         this._mediaStreams
             .filter(s => s.resolution !== '*')
-            .map(s => s.transports.filter(t => t === transport) && resolutions.push(s.resolution));
+            .map(s =>
+                s.transports.filter(t => t === transport) &&
+                resolutions.push(s.resolution)
+            );
 
         if (resolutions.length === 1) {
             result.high = isHls ? 'hi' : resolutions[0];
         } else {
-            const high = resolutions.filter(r => !this._resolutionIsLow(r)).sort();
+            const high = resolutions.filter(r => {
+                return !this._resolutionIsLow(r);
+            }).sort();
             if (high.length) {
                 result.high = isHls ? 'hi' : high[high.length - 1];
             }
             const low = resolutions.filter(r => this._resolutionIsLow(r)).sort();
-            if (!this.disableDualStreaming && low.length) {
-                result.low = isHls ? 'lo' : low[0];
+            if (!this.disableDualStreaming) {
+                if (isHls) {
+                    result.low = 'lo';
+                } else if (low.length) {
+                    result.low = low[0];
+                } else {
+                    result.low = high[0]; // If there is no low use the lowest high stream.
+                }
             }
         }
 
         if (resolutions.length && transport !== 'hls') {
-            const primaryResolutionHeight = parseInt((result.high || result.low).split('x')[1]);
+            const primaryResolutionHeight = parseInt(
+                (result.high || result.low).split('x')[1]
+            );
             const defaultResolutions = {
-                1080 : '1920x1080',
-                720  : '1280x720',
-                480  : '854x480',
-                360  : '640x360'
+                1080: '1920x1080',
+                720: '1280x720',
+                480: '854x480',
+                360: '640x360'
             };
             [1080, 720, 480, 360].forEach((yResolution) => {
                 if (primaryResolutionHeight >= yResolution) {
@@ -139,11 +186,22 @@ export class Camera implements ICamera {
                 acc = v;
             }
             return acc;
-        }, Infinity) < 1000;
+        }, Infinity) < 720;
+    }
+
+    public get isVirtual () {
+        return !this.model;
     }
 
     public get isLive () {
-        return this.status === 'Online' || this.status === 'Live' || this.status === 'Recording';
+        return (
+            !this.isVirtual &&
+            (
+                this.status === 'Online' ||
+                this.status === 'Live' ||
+                this.status === 'Recording'
+            )
+        );
     }
 
     public get isOnline () {
@@ -155,7 +213,7 @@ export class Camera implements ICamera {
     }
 
     public get isRecording () {
-        return this.status === 'Recording';
+        return !this.isVirtual && this.status === 'Recording';
     }
 
     public get isAuthorized () {
@@ -167,7 +225,10 @@ export class Camera implements ICamera {
     }
 
     public get hasArchive () {
-        return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
+        return !!(
+            this.archiveRange &&
+            this.archiveRange.end > this.archiveRange.start
+        );
     }
 
     public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
@@ -197,6 +258,14 @@ export class Camera implements ICamera {
 
     public getNextRecord (t: ms): ISimpleTimeRange {
         return this._birdViewTree.getNextRecord(t);
+    }
+
+    public get archiveEnd (): ms {
+        if (this.hasArchive) {
+            return this._birdViewTree.archiveEnd;
+        } else {
+            return -Infinity;
+        }
     }
 }
 

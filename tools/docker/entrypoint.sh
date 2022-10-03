@@ -11,6 +11,9 @@ echo "customizedCloudHost=\"default:$CLOUD_HOST\"" >> /root/.config/nx_ini/nx_vm
 # Change cloud host for systems < 4.3. Defaults to cloud-test
 /patch-cloud-host.sh $CLOUD_HOST
 
+# Timout for owner actions. Default value is 10 minutes. Can be changed to shorten testing time.
+echo "maxSessionAgeForPrivilegedApiS=600" >> /root/.config/nx_ini/nx_network_rest.ini
+
 # Changes the port
 PORT=${PORT:-7001}
 # If port is passed as argument

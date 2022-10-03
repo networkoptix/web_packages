@@ -1,20 +1,22 @@
-import { NgModule }                  from '@angular/core';
-import { CommonModule }              from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
+import { NxSwCacheService } from '@services/sw-cache.service';
+
+import { NxAccountService } from './account.service';
+import { NxApplyService } from './apply.service';
+import { NxAppSourceService } from './nx-app-source.service';
+import { NxAppStateService } from './nx-app-state.service';
+import { NxConfigService } from './nx-config';
+import { NxHeaderService } from './nx-header.service';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxConfigService }           from './nx-config';
-import { NxAppStateService }         from './nx-app-state.service';
-import { NxUtilsService }            from './utils.service';
-import { NxPageService }             from './page.service';
-import { NxSystemsService }          from './systems.service';
-import { NxAccountService }          from './account.service';
-import { NxUrlProtocolService }      from './url-protocol.service';
-import { NxApplyService }            from './apply.service';
-import { NxHeaderService }           from './nx-header.service';
-import { NxScrollMechanicsService }  from './scroll-mechanics.service';
-import { NxSearchService }           from './search.service';
-import { NxAppSourceService }        from './nx-app-source.service';
-import { NxSwCacheService }          from '@services/sw-cache.service';
+import { NxPageService } from './page.service';
+import { NxScrollMechanicsService } from './scroll-mechanics.service';
+import { NxSearchService } from './search.service';
+import { NxSwPromptUpdateService } from './sw-prompt-update.service';
+import { NxSystemsService } from './systems.service';
+import { NxUrlProtocolService } from './url-protocol.service';
+import { NxUtilsService } from './utils.service';
 
 @NgModule({
     imports: [
@@ -36,9 +38,14 @@ import { NxSwCacheService }          from '@services/sw-cache.service';
         NxUrlProtocolService,
         NxHeaderService,
         NxScrollMechanicsService,
-        NxSwCacheService
+        NxSwCacheService,
+        NxSwPromptUpdateService
     ],
     exports: []
 })
 export class ServiceModule {
+    constructor(
+        // Do not remove, IDE will show that these services aren't used, but we just need them to be instantiated here.
+        swPromptUpdateService: NxSwPromptUpdateService
+    ) {}
 }

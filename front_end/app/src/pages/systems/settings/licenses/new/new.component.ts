@@ -1,24 +1,27 @@
 import {
     Component,
-    OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewChild
+    OnDestroy,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewChild,
 } from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { SubscriptionLike }          from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { SubscriptionLike } from 'rxjs';
 
-import { IConfig, NxConfigService }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService }          from '@services/process.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSystem }                  from '@services/system.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxProcessService } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-license-new-component',
-    templateUrl : 'new.component.html',
-    styleUrls   : ['new.component.scss']
+    selector: 'nx-license-new-component',
+    templateUrl: 'new.component.html',
+    styleUrls: ['new.component.scss']
 })
 
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
@@ -52,14 +55,13 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     this.licenseForm.controls.licenseKey.setErrors({ offline: true });
                     this.licenseForm.controls.licenseKey.markAsTouched();
 
-                    // eslint-disable-next-line prefer-promise-reject-errors
                     return reject('offline');
                 });
             } else if (this.isActivated(this.license)) {
                 return new Promise((resolve, reject) => {
                     this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
                     this.licenseForm.controls.licenseKey.markAsTouched();
-                    // eslint-disable-next-line prefer-promise-reject-errors
+
                     return reject('alreadyRegistered');
                 });
             } else {
@@ -80,7 +82,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         }
 
                         const error = response.errorString.toLowerCase();
-                        const matchError = errorString => error.indexOf(errorString) !== -1;
+                        const matchError = errorString => error.includes(errorString);
 
                         switch (response.error) {
                             case '1':
@@ -93,8 +95,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             // eslint-disable-next-line no-fallthrough
                             case '3':
-                                // Network error has occurred during license activation. Error code: -1
-                                if (matchError('http error has occurred during license activation')) {
+                                // Network/Http error has occurred during license activation. Error code: -1
+                                if (matchError('error has occurred during license activation')) {
                                     this.dialogsService
                                         .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
                                     break;
@@ -150,8 +152,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             }
         }, {
             errorCodes: {
-                offline           : () => {},
-                alreadyRegistered : () => {}
+                offline: () => {},
+                alreadyRegistered: () => {}
             }
         });
     }
@@ -177,9 +179,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 changes.servers.currentValue.forEach((server) => {
                     const option: any = {
-                        name   : NxUtilsService.htmlToEntity(server.name),
-                        value  : server.id,
-                        status : server.status
+                        name: NxUtilsService.htmlToEntity(server.name),
+                        value: server.id,
+                        status: server.status
                     };
 
                     if (server.status !== 'Online') {

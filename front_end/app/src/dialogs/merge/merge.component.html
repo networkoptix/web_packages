@@ -1,11 +1,18 @@
 <div class="modal-header">
-    <h1 class="modal-title" translate>Merge Systems</h1>
+    <h1 class="modal-title" >
+        <span *ngIf="machine.currentState !== 'failedToFindAnySystem'"
+              translate>Merge Systems</span>
+
+        <span *ngIf="machine.currentState === 'failedToFindAnySystem'"
+        >{{LANG.dialogs.merge.failedToFindAnySystemHeader()}}</span>
+    </h1>
     <button type="button" class="close"
             data-dismiss="modal" aria-label="Close"
             (click)="close()" *ngIf="closable">
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
 </div>
+
 <form *ngIf="machine.currentState === 'thisSystemHasOutdatedServerError'">
     <div class="modal-body">
         <p translate>Some of the servers in this system have an outdated software version and can't be merged.</p>
@@ -15,118 +22,146 @@
         <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
     </div>
 </form>
-<form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
+
+<form *ngIf="machine.currentState === 'failedToFindAnySystem'">
     <div class="modal-body">
-        <p>{{machine.state.template.bodyTitle}}</p>
-        <nx-select
-            #checkMergeDropdown
-            *ngIf="machine.state.show.systemDropdown"
-            class="mb-2"
-            id="system"
-            merge="true"
-            [allowHTML]="true"
-            [stillLoading]="!systemsLoaded"
-            [items]="processedSystems"
-            [selected]="targetSystemDropdown"
-            (onSelected)="setTargetSystem($event)"
-            required></nx-select>
-        <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
-        <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
-            [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">
-            <label class="server-url-label" for="serverUrl" translate>Server URL</label>
-            <input
-                class="mb-2 form-control"
-                #serverUrlInput="ngModel"
-                #checkMergeUrlInput
-                name="serverUrl"
-                id="serverUrl"
-                type="url"
-                [readonly]="checking"
-                placeholder="host:port"
-                (ngModelChange)="serverUrlChange(serverUrlInput)"
-                [ngModel]="machine.state.template.serverUrlInputValue"
-                (blur)="serverUrlChange(serverUrlInput)"
-                nxUrlValidator
-                required/>
-            <label
-                *ngIf="machine.state.show.serverUrlInputValidationErrorText"
-                [innerHTML]="machine.state.template.serverUrlInputValidationErrorText"
-                class="error-label"
-                for="serverUrl">
-            </label>
+        <p>{{LANG.dialogs.merge.failedToFindAnySystem()}}</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
+    </div>
+</form>
+
+<form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
+        <div class="modal-body">
+            <p>{{machine.state.template.bodyTitle}}</p>
+            <nx-select
+                #checkMergeDropdown
+                *ngIf="machine.state.show.systemDropdown"
+                class="mb-2"
+                id="system"
+                [merge]="true"
+                [allowHTML]="true"
+                [stillLoading]="!systemsLoaded"
+                [items]="processedSystems"
+                [selected]="targetSystemDropdown"
+                (onSelected)="setTargetSystem($event)"
+                required></nx-select>
+            <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
+            <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
+                [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">
+                <label class="server-url-label" for="serverUrl" translate>Server URL</label>
+                <input
+                    class="mb-2 form-control"
+                    #serverUrlInput="ngModel"
+                    #checkMergeUrlInput
+                    name="serverUrl"
+                    id="serverUrl"
+                    type="url"
+                    [readonly]="checking || !environment.isLocal"
+                    placeholder="host:port"
+                    (ngModelChange)="serverUrlChange(serverUrlInput)"
+                    [ngModel]="machine.state.template.serverUrlInputValue"
+                    (blur)="serverUrlChange(serverUrlInput)"
+                    nxUrlValidator
+                    required/>
+                <label
+                    *ngIf="machine.state.show.serverUrlInputValidationErrorText"
+                    [innerHTML]="machine.state.template.serverUrlInputValidationErrorText"
+                    class="error-label"
+                    for="serverUrl">
+                </label>
+            </div>
+            <p *ngIf="machine.state.show.checkingErrorText"
+                [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
+                [innerHTML]="machine.state.template.checkingErrorText"
+                class="error-label">
+            </p>
         </div>
-        <p *ngIf="machine.state.show.checkingErrorText"
-            [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
-            [innerHTML]="machine.state.template.checkingErrorText"
-            class="error-label">
-        </p>
+        <div class="modal-footer float-right next-button">
+            <nx-process-button
+                [clickFn]="checkMergeabilityFunction"
+                [process]="checkMergeabilityProcess"
+                [form]="checkMergeForm"
+                actionType="primary"
+                [buttonDisabled]="!systemsLoaded"
+                [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
+                buttonText="{{ 'Next' | translate}}"></nx-process-button>
+        </div>
     </div>
-    <div class="modal-footer float-right next-button">
-        <nx-process-button
-            [clickFn]="checkMergeabilityFunction"
-            [process]="checkMergeabilityProcess"
-            [form]="checkMergeForm"
-            actionType="primary"
-            [buttonDisabled]="!systemsLoaded"
-            [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
-            buttonText="{{ 'Next' | translate}}"></nx-process-button>
-    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; checkMergeabilityProcess.run()"
+                                [noConnectionMsg]="'Failed to check if the systems can merge.' | translate"
+                                [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'adminPassword'" #adminPasswordForm="ngForm" name="adminPasswordForm">
-    <div class="modal-body">
-        <p [innerHTML]="'dialogs.merge.adminPasswordTitle'| translate: {
-                secondarySystem: secondaryName
-            }"></p>
-        <div class="form-group">
-            <label class="mt-2" for="adminLogin" translate>Login</label>
-            <input class="form-control" name="adminLogin" disabled value="admin"/>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
+        <div class="modal-body">
+            <p [innerHTML]="'dialogs.merge.adminPasswordTitle'| translate: {
+                    secondarySystem: secondaryName
+                }"></p>
+            <div class="form-group">
+                <label class="mt-2" for="adminLogin" translate>Login</label>
+                <input class="form-control" name="adminLogin" disabled value="admin"/>
+            </div>
+            <div *ngIf="!system.mediaserver.isSessionOauth || !targetSystem.cloudSystemId" class="form-group"
+                [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
+                <label for="adminPassword" translate>Password</label>
+                <input class="form-control"
+                        #adminPassword="ngModel"
+                        #adminPasswordInput
+                        [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
+                        id="adminPassword" autocomplete="new-password"
+                        name="adminPassword" type="password" [required]="!environment.isLocal || !system.mediaserver.isSessionOauth || !targetSystem.cloudSystemId"
+                        (ngModelChange)="passwordChange(adminPassword)"
+                        [ngModel]="machine.state.template.passwordValue"
+                        (blur)="passwordChange(adminPassword)"
+                        nxFocusMe>
+                <label
+                    *ngIf="machine.state.show.passwordError"
+                    [innerHTML]="machine.state.template.passwordErrorText | safe: 'html'"
+                    class="error-label password-label-margin mb-0" for="adminPassword">
+                </label>
+            </div>
         </div>
-        <div class="form-group"
-            [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
-            <label for="adminPassword" translate>Password</label>
-            <input class="form-control"
-                    #adminPassword="ngModel"
-                    #adminPasswordInput
-                    [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
-                    id="adminPassword" autocomplete="new-password"
-                    name="adminPassword" type="password" required
-                    (ngModelChange)="passwordChange(adminPassword)"
-                    [ngModel]="machine.state.template.passwordValue"
-                    (blur)="passwordChange(adminPassword)"
-                    nxFocusMe>
-            <label
-                *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText | safe: 'html'"
-                class="error-label password-label-margin mb-0" for="adminPassword">
-            </label>
+        <div class="modal-footer next-button">
+            <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            </button>
+            <nx-process-button
+                [process]="checkPasswordProcess"
+                [form]="adminPasswordForm"
+                actionType="primary"
+                [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
+                buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
     </div>
-    <div class="modal-footer next-button">
-        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
-        </button>
-        <nx-process-button
-            [process]="checkPasswordProcess"
-            [form]="adminPasswordForm"
-            actionType="primary"
-            [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
-            buttonText="{{ 'Next' | translate}}"></nx-process-button>
-    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+                                [noConnectionMsg]="'Failed to the check current system\'s password.' | translate"
+                                [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
-    <div class="modal-body">
-        <p [innerHTML]="machine.state.template.urlErrorText | safe: 'html'"></p>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
+        <div class="modal-body">
+            <p [innerHTML]="machine.state.template.urlErrorText | safe: 'html'"></p>
+        </div>
+        <div class="modal-footer next-button">
+            <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            </button>
+            <nx-process-button
+                [process]="checkPasswordProcess"
+                [form]="serverUrlErrorsForm"
+                actionType="primary"
+                buttonText="{{ 'Try Again' | translate}}"></nx-process-button>
+        </div>
     </div>
-    <div class="modal-footer next-button">
-        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
-        </button>
-        <nx-process-button
-            [process]="checkPasswordProcess"
-            [form]="serverUrlErrorsForm"
-            actionType="primary"
-            buttonText="{{ 'Try Again' | translate}}"></nx-process-button>
-    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+                                [noConnectionMsg]="'Failed to check the target system\'s password.' | translate"
+                                [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">
     <div class="modal-body">
@@ -158,48 +193,54 @@
     </div>
 </form>
 <form *ngIf="machine.currentState === 'confirmMerge'" #confirmMergeForm="ngForm" name="confirmMergeForm">
-    <div class="modal-body">
-        <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
-                primarySystem: primaryName,
-                secondarySystem: secondaryName
-        }"></p>
-        <div *ngIf="tooManyServers">
-            <p class="error-label" [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
-            <p class="error-label" translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
-            <p class="mb-3">
-                {{LANG.dialogs.merge.recommendSupport.a_recommend()}}&nbsp;
-                <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support()}}</a>&nbsp;
-                {{LANG.dialogs.merge.recommendSupport.c_proceeding()}}
-            </p>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
+        <div class="modal-body">
+            <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
+                    primarySystem: primaryName,
+                    secondarySystem: secondaryName
+            }"></p>
+            <div *ngIf="tooManyServers">
+                <p class="error-label" [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
+                <p class="error-label" translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
+                <p class="mb-3">
+                    {{LANG.dialogs.merge.recommendSupport.a_recommend()}}&nbsp;
+                    <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support()}}</a>&nbsp;
+                    {{LANG.dialogs.merge.recommendSupport.c_proceeding()}}
+                </p>
+            </div>
+            <div *ngIf="!system.mediaserver.isSessionOauth" class="form-group"
+                [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
+                <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
+                <input class="form-control"
+                        #cloudOwnerPassword="ngModel"
+                        #confirmMergeInput
+                        [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
+                        id="cloudOwnerPassword" autocomplete="new-password"
+                        name="cloudOwnerPassword" type="password" [required]="!system.mediaserver.isSessionOauth"
+                        (ngModelChange)="passwordChange(cloudOwnerPassword)"
+                        [ngModel]="machine.state.template.passwordValue"
+                        (blur)="passwordChange(cloudOwnerPassword)"
+                        nxFocusMe>
+                <label
+                    *ngIf="machine.state.show.passwordError"
+                    [innerHTML]="machine.state.template.passwordErrorText"
+                    class="error-label error-text-margin mb-0" for="cloudOwnerPassword">
+                </label>
+            </div>
         </div>
-        <div class="form-group"
-            [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
-            <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
-            <input class="form-control"
-                    #cloudOwnerPassword="ngModel"
-                    #confirmMergeInput
-                    [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
-                    id="cloudOwnerPassword" autocomplete="new-password"
-                    name="cloudOwnerPassword" type="password" required
-                    (ngModelChange)="passwordChange(cloudOwnerPassword)"
-                    [ngModel]="machine.state.template.passwordValue"
-                    (blur)="passwordChange(cloudOwnerPassword)"
-                    nxFocusMe>
-            <label
-                *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText"
-                class="error-label error-text-margin mb-0" for="cloudOwnerPassword">
-            </label>
+        <div class="modal-footer next-button">
+            <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            </button>
+            <nx-process-button
+                [process]="mergingProcess"
+                [form]="confirmMergeForm"
+                actionType="primary"
+                buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
         </div>
     </div>
-    <div class="modal-footer next-button">
-        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
-        </button>
-        <nx-process-button
-            [process]="mergingProcess"
-            [form]="confirmMergeForm"
-            actionType="primary"
-            buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
-    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; mergingProcess.run()"
+                                [noConnectionMsg]="'Failed to merge {primarySystem} and {secondarySystem}.' | translate: { primarySystem: primaryName, secondarySystem: secondaryName }"
+                                [system]="system"></nx-update-webadmin-session>
 </form>

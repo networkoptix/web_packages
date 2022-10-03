@@ -9,4 +9,3 @@ export * from './table-components/image/image.component';
 export * from './table-components/image-section/image-section.component';
 export * from './card/card.component';
 export * from './update-info/update-info.component';
-

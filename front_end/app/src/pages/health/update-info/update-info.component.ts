@@ -1,22 +1,26 @@
 import {
-    Component, EventEmitter,
-    OnDestroy, OnInit, Output
-}                                    from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription, timer }       from 'rxjs';
-import { startWith }                 from 'rxjs/operators';
+    Component,
+    EventEmitter,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription, timer } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxRibbonService }           from '../../../components/ribbon';
-import { NxHealthService }           from '../health.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { NxHealthService } from '../health.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'nx-health-update',
-    templateUrl : './update-info.component.html',
-    styleUrls : ['update-info.component.scss']
+    selector: 'nx-health-update',
+    templateUrl: './update-info.component.html',
+    styleUrls: ['update-info.component.scss']
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter();
@@ -60,17 +64,27 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.lastUpdate = '0 min ago';
 
         const minute = 60 * 1000;
-        const currentHmAge = (Date.now() - this.healthService.lastUpdate) / minute | 0;
-        this.timerSubscription = timer(0, minute).pipe(startWith(currentHmAge)).subscribe((minutes) => {
-            if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
-                this.ribbonService.show(this.LANG.common.viewingOutdatedReport(), [{ type: 'link', text: 'Refresh', value: '' }], 'alert', this.refreshHealth);
-            } else {
-                this.ribbonService.hide();
-            }
-            if (minutes) {
-                const time = this.healthService.secondsToTime(minutes * 60, 'updateTime');
-                this.lastUpdate = `${time.replace(/m/, ' min')} ago`;
-            }
-        });
+        const currentHmAge =
+            (Date.now() - this.healthService.lastUpdate) / minute | 0;
+        this.timerSubscription = timer(0, minute)
+            .pipe(startWith(currentHmAge))
+            .subscribe((minutes) => {
+                if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
+                    this.ribbonService.show(
+                        this.LANG.common.viewingOutdatedReport(),
+                        [{ type: 'link', text: 'Refresh', value: '' }],
+                        'alert',
+                        this.refreshHealth
+                    );
+                } else {
+                    this.ribbonService.hide();
+                }
+                if (minutes) {
+                    const time = this.healthService.secondsToTime(
+                        minutes * 60, 'updateTime'
+                    );
+                    this.lastUpdate = `${time.replace(/m/, ' min')} ago`;
+                }
+            });
     }
 }

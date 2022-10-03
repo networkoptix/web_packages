@@ -1,15 +1,14 @@
 @use '../../../../../styles/typography';
-@use '../../../../../../styles/theme_variables' as *;
 
 label {
     cursor : pointer;
 
     &.control-label {
-        color : $dark9;
+        color : var(--dark9);
         text-align: left;
 
         &:hover {
-            color : $dark1;
+            color : var(--dark1);
         }
     }
 }
@@ -36,6 +35,25 @@ nx-block div.checkbox-block:last-of-type + .helper-block {
 
 .time-unit-select {
     width : 110px;
+}
+
+.session-alert {
+    height: 20px;
+    margin-top: 0.5rem;
+    margin-left: 1.5rem;
+
+    display: flex;
+    align-items: center;
+
+    span {
+        margin-left: 5px;
+        line-height: 20px;
+    }
+
+    &.no-session-alert {
+        height: 2rem;
+        // Match input height so no height shift on toggle
+    }
 }
 
 .session-toggle-disabled {

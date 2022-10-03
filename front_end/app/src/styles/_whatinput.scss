@@ -1,21 +1,11 @@
-@use '../../styles/theme_variables' as *;
+@use "../../styles/theme_variables" as *;
 
-[data-whatintent='mouse'] *:focus {
+[data-whatintent="mouse"] *:focus {
     outline : none !important;
 }
 
-[data-whatintent='keyboard'] button:focus:not([disabled]):not(.disabled),
-[data-whatintent='keyboard'] a:focus:not([disabled]):not(.disabled):not(.alternative) {
-    outline : none !important;
-    @include outline;
-
-    &.inset {
-        @include inset-outline;
-    }
-}
-
-[data-whatinput='keyboard'] input:focus,
-[data-whatinput='keyboard'] input:active {
+[data-whatintent="keyboard"] button:focus:not([disabled]):not(.disabled),
+[data-whatintent="keyboard"] a:focus:not([disabled]):not(.disabled):not(.alternative) {
     outline : none !important;
     @include outline;
 
@@ -24,7 +14,17 @@
     }
 }
 
-[data-whatinput='keyboard'] input[type=checkbox]:focus:not([disabled]):not(.disabled) {
+[data-whatinput="keyboard"] input:focus,
+[data-whatinput="keyboard"] input:active {
+    outline : none !important;
+    @include outline;
+
+    &.inset {
+        @include inset-outline;
+    }
+}
+
+[data-whatinput="keyboard"] input[type=checkbox]:focus:not([disabled]):not(.disabled) {
     & + .checkmark {
         outline : none !important;
         @include outline;
@@ -41,7 +41,7 @@
     }
 }
 
-[data-whatinput='keyboard'] input[type=radio]:focus:not([disabled]):not(.disabled) {
+[data-whatinput="keyboard"] input[type=radio]:focus:not([disabled]):not(.disabled) {
     & + .checkmark {
         outline : none !important;
         @include outline;
@@ -53,6 +53,10 @@
     }
 }
 
-[data-whatintent='keyboard'] .nav-tabs .nav-item a:focus {
+[data-whatintent="keyboard"] .nav-tabs .nav-item a:focus {
+    @include inset-outline;
+}
+
+[data-whatintent="keyboard"] .tab-list .tab-item a:focus {
     @include inset-outline;
 }

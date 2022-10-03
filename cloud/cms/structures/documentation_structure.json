@@ -55,6 +55,15 @@
             }
           },
           {
+            "name": "labels",
+            "label": "Labels",
+            "value": "",
+            "description": "Add labels for document page here.<br>Please separate your list with commas. Ex APIs, Node.js, Docker",
+            "placeholder": "APIs, Node.js, Docker",
+            "type": "array",
+            "optional": true
+          },
+          {
             "name": "body",
             "label": "Body",
             "value": "",

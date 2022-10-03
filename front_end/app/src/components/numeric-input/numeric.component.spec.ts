@@ -1,10 +1,14 @@
-import {
-    ComponentFixture, TestBed, waitForAsync
-}                             from '@angular/core/testing';
-import { FormsModule }        from '@angular/forms';
-import { DebugElement }       from '@angular/core';
-import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { CommonModule } from '@angular/common';
+import {
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+
+import {
+    NxNumericComponent
+} from '@components/numeric-input/numeric.component';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
@@ -24,8 +28,8 @@ describe('NumericComponent', () => {
                 CommonModule,
                 FormsModule
             ],
-            declarations : [NxNumericComponent],
-            providers    : []
+            declarations: [NxNumericComponent],
+            providers: []
         })
             .compileComponents()
             .then(() => {
@@ -69,13 +73,20 @@ describe('NumericComponent', () => {
         expect(component._value).toBe(701);
     });
 
-    it('should check and reject invalid value', () => {
-        // key event from the test doesn't not change the value so here we'll mimic it
-        component._value = 70117;
+    it('should check and correct a value greater than max', () => {
+        component._value = component.max + 1;
         keyEvent(el, '5', 'keyup');
         fixture.detectChanges();
 
-        expect(component._value).toBe(7011);
+        expect(component._value).toBe(component.max);
+    });
+
+    it('should check and correct a value less than min', () => {
+        component._value = component.min - 1;
+        keyEvent(el, '5', 'keyup');
+        fixture.detectChanges();
+
+        expect(component._value).toBe(component.min);
     });
 
     it('should check and reject invalid value onPaste', () => {
@@ -84,9 +95,10 @@ describe('NumericComponent', () => {
         event.clipboardData.setData('text/plain', 'test');
 
         component.onPaste(event);
+        fixture.detectChanges(); // NaN here
         fixture.detectChanges();
 
-        expect(component._value).toBe(7011); // previous value is 7011
+        expect(component._value).toBe(component._previousValue);
     });
 
     it('should check and sanitize invalid value onPaste', () => {
@@ -105,13 +117,13 @@ describe('NumericComponent', () => {
         component.valueChanged(event);
         fixture.detectChanges();
 
-        expect(component._value).toBe(7011); // previous value is 7011
+        expect(component._value).toBe(component._previousValue);
 
         event.target.value = component.max + 1;
         component.valueChanged(event);
         fixture.detectChanges();
 
-        expect(component._value).toBe(7011); // previous value is 7011
+        expect(component._value).toBe(component._previousValue);
     });
 
     it('should check and accept valid value on valueChange', () => {

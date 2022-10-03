@@ -1,22 +1,19 @@
-@import 'styles/_theme_palette';
-$brand_core: #2FA2DB;
-
 :host {
   .search-box {
     height: 44px;
     width: 100%;
-    border-bottom: 1px solid $light6;
+    border-bottom: 1px solid var(--light6);
     position: relative;
-    background-color: $additional_light2;
+    background-color: var(--additional_light2);
 
     // transition: background-color .2s ease-in-out;
 
     &:hover {
-      background-color: $light2;
+      background-color: var(--light2);
     }
 
     &:focus-within {
-      background-color: $light1;
+      background-color: var(--light1);
     }
 
     > .search-reset-icon {
@@ -25,7 +22,7 @@ $brand_core: #2FA2DB;
       position: absolute;
       right: 40px;
       top: 12px;
-      stroke: #0009;
+      stroke: rgba(var(--dark1--rgb), 0.6);
       pointer-events: all;
       cursor: pointer;
     }
@@ -62,7 +59,7 @@ $brand_core: #2FA2DB;
       height: 100%;
       width: 100%;
       border: none;
-      padding: 0 44px;
+      padding: 0 64px 0 44px;
       font-size: 13px;
 
       // see https://networkoptix.atlassian.net/browse/CLOUD-6846
@@ -70,7 +67,7 @@ $brand_core: #2FA2DB;
       box-shadow: none !important;
 
       &::placeholder {
-        color: $light16;
+        color: var(--light16);
       }
     }
 
@@ -84,41 +81,41 @@ $brand_core: #2FA2DB;
       cursor: pointer;
 
       &:hover {
-        background: $additional_light3;
+        background: var(--additional_light3);
       }
       &:active {
-        background: $light5;
+        background: var(--light5);
       }
 
       > svg {
-        > * {
+        // > * {
           // transition: fill .2s ease-in-out;
-        }
+        // }
         > .outer-circle {
-          stroke: $light16;
+          stroke: var(--light16);
           stroke-width: 2;
           fill: transparent;
         }
         > .i-body {
-          stroke: $light16;
+          stroke: var(--light16);
           stroke-width: 2;
         }
         > .point-over-i {
           stroke-width: 0;
-          fill: $light16;
+          fill: var(--light16);
         }
       }
 
       &.active {
         > svg {
           > .outer-circle {
-            stroke: $brand_core;
+            stroke: var(--brand-core);
           }
           > .i-body {
-            stroke: $brand_core;
+            stroke: var(--brand-core);
           }
           > .point-over-i {
-            fill: $brand_core;
+            fill: var(--brand-core);
           }
         }
       }

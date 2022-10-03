@@ -1,40 +1,114 @@
+@use "styles/theme_variables" as theme_vars;
+
 :host {
   display: block;
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 100px;
-  top: 20px;
-  background-color: #0f02;
+  bottom: 15px;
+  height: 25px;
+  z-index: 10;
+  cursor: text;
 
   > .selected-range {
+    display: none;
     position: absolute;
-    top: 0;
     bottom: 0;
-    background-color: #0f0a;
-    width: 100px;
-    left: 200px;
-    opacity: 0;
+    height: 63px;
+    background-color: rgba(var(--brand-core--rgb), 0.3);
     transition: opacity 0.2s ease-in-out;
     min-width: 1px;
+    // border-left: 1px solid rgba(var(--brand-core--rgb), 0.9);
+    // border-right: 1px solid rgba(var(--brand-core--rgb), 0.9);
+    cursor: move;
 
     &.active {
-      opacity: 1;
+      display: block;
     }
 
     > .ear {
-      width: 80px;
+      width: 120px;
       position: absolute;
-      background: #f00a;
+      background-color: rgba(var(--brand-core--rgb), 0.9);
+      padding: 2px 4px;
       top: 0;
-      bottom: 20px;
+      height: 34px;
+      font-size: 12px;
+      line-height: 1.2em;
+
+      color: var(--light1);
+
+      cursor: col-resize;
+
+      > span {
+        display: block;
+
+        &.date {
+        }
+
+        &.time {
+          font-family: theme_vars.$font-family-bold;
+        }
+      }
+
+      &::before {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        bottom: -4px;
+        border-top: 4px solid rgba(var(--brand-core--rgb), 0.9);
+      }
 
       &.left {
-        left: -80px;
+        left: -120px;
+        border-radius: 2px 0 0 2px;
+        text-align: right;
+        padding-right: 8px;
+
+        &::before {
+          right: 0;
+          border-left: 6px solid transparent;
+        }
       }
 
       &.right {
-        right: -80px;
+        right: -120px;
+        border-radius: 0 2px 2px 0;
+        padding-left: 8px;
+
+        &::before {
+          left: 0;
+          border-right: 6px solid transparent;
+        }
+
+        &::after {
+          content: "";
+          left: 0;
+          top: 0;
+          height: 100px;
+          width: 3px;
+          background: red;
+        }
+
+      }
+
+      &.playback {
+        &::after {
+          content: "";
+          position: absolute;
+          width: 3px;
+          background: var(--dark1);
+          top: -1px;
+          height: 40px; // 64px is the full height
+          border-radius: 3px;
+        }
+        &.left::after {
+          right: -1px;
+        }
+        &.right::after {
+          left: -1px;
+        }
       }
     }
   }

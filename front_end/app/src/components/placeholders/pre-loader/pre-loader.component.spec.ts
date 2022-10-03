@@ -1,8 +1,9 @@
-import {
-    async, ComponentFixture,
-    TestBed
-}                       from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import {
+    async,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
 
 import { NxPreLoaderComponent } from './pre-loader.component';
 
@@ -80,7 +81,9 @@ describe('NxPreLoaderComponent', () => {
         });
 
         it('should have placeholder-content and type', () => {
-            const content = el.nativeElement.querySelectorAll('div .has-preloader .placeholder-content');
+            const content = el.nativeElement.querySelectorAll(
+                'div .has-preloader .placeholder-content'
+            );
             expect(content.length).toBe(1);
             expect(content[0].className).toBe('placeholder-content page');
         });

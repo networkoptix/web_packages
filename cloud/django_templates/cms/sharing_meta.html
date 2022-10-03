@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    {% for property, value in meta %}
+        <meta name="{{property}}" content="{{value}}" property="og:{{property}}">
+    {% endfor %}
+</head>
+</html>

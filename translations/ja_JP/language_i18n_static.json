@@ -1,20 +1,49 @@
 {
-    "language": "ja_JP",
+    "language": "en_US",
     "About %CLOUD_NAME%": "%CLOUD_NAME% について",
+    "All Servers": "すべてのサーバー",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
     "For developers": "開発者向け",
-    "Integrations (β)": "統合 (β)",
+    "Integrations (β)": "インテグレーション (β)",
     "Privacy": "プライバシー",
     "Support": "サポート",
     "Terms": "利用規約",
+    "Developers Console": "開発者用コンソール",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "指定されたサーバーがオンラインであることを確認して、再試行してください。"
+    },
+    "alarmTypes": {
+        "Servers": "サーバー",
+        "Cameras": "カメラ",
+        "Storage Locations": "保存先",
+        "Network Interfaces": "ネットワークインターフェース"
+    },
+    "alarmLevels": {
+        "offline": "オフライン",
+        "error": "エラー",
+        "warning": "警告"
+    },
+    "alertFilters": {
+        "all": "すべてのアラート",
+        "warning": "警告のみ",
+        "error": "エラーのみ"
+    },
+    "deviceTypes": {
+        "All Device Types": "すべてのデバイスタイプ",
+        "servers": "サーバー",
+        "cameras": "カメラ",
+        "storages": "ストレージ",
+        "networkInterfaces": "インターフェース"
+    },
     "accessRoles": {
         "Administrator": {
-            "description": "共有する機能を含む無制限のアクセス",
-            "label": "アドミニストレーター"
+            "description": "共有する権利を含む無制限のアクセス",
+            "label": "管理者"
         },
         "Advanced Viewer": {
-            "description": "ライブ表示、アーカイブ表示、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "description": "ライブ映像を閲覧、錄像を閲覧、PTZコントロールなどを行うことができます",
+            "label": "上位ビューアー"
         },
         "Custom": {
             "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
@@ -25,7 +54,7 @@
             "label": "ライブビューアー"
         },
         "Owner": {
-            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "共有する権利とシステムがクラウドから接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "Viewer": {
@@ -34,7 +63,7 @@
         },
         "advancedViewer": {
             "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "cloudAdmin": {
             "description": "システムを構成し共有することができます",
@@ -45,11 +74,11 @@
             "label": "カスタム"
         },
         "customRole": {
-            "description": "システムで指定されたカスタムのユーザーの役割",
-            "label": "カスタムの役割"
+            "description": "システムで指定されたカスタムのユーザーロール",
+            "label": "カスタムロール"
         },
         "disabled": {
-            "description": "ユーザーが無効の為にシステムにログインできません",
+            "description": "ユーザーは無効になっており、システムにログインできません",
             "label": "無効"
         },
         "liveViewer": {
@@ -57,7 +86,7 @@
             "label": "ライブビューアー"
         },
         "owner": {
-            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "共有する権利とシステムがクラウドから接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "viewer": {
@@ -66,20 +95,72 @@
         }
     },
     "account": {
-        "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
+        "account": "アカウント",
+        "key": "キー",
+        "accountSavedSuccess": "アカウントは正常に保存されました",
         "accountSettings": "アカウント設定",
         "activationLinkSent": "アクティベーションリンクが送信されました",
         "agreementAccepted": "契約が承認されました",
         "changePassword": "パスワードを変更",
-        "newPasswordLabel": "新規パスワード",
+        "security": "セキュリティ",
+        "newPasswordLabel": "新しいパスワード",
         "passwordChangedSuccess": "パスワードを更新しました",
         "saveChanges": "保存"
     },
     "activeActions": {
-        "resetPassword": "パスワードを再設定する",
+        "resetPassword": "パスワードの再設定",
         "sendConfirm": "アクティベーションリンクを再送信",
         "setNewPassword": "パスワードを保存",
         "setNewPasswordLabel": "新規パスワード"
+    },
+    "authorize": {
+        "loginCloudHeader": "%CLOUD_NAME% にログイン",
+        "connectHeader": "システムを %CLOUD_NAME% に接続",
+        "expiredHeader": "セッションの期限が切れました",
+        "loginSystemSubheader": "%CLOUD_NAME% アカウントで",
+        "connectSubheader": "どこでもアクセス & 追加機能",
+        "expiredSubheader": "もう一度ログインしてください",
+        "connectAdditional": "このアカウントはオーナー権限を取得します。",
+        "createText": "アカウント作成",
+        "setupText": "非クラウドシステムのセットアップ",
+        "asAccountSubheader": "ユーザー名",
+        "toAccountSubheader": "アカウント",
+        "forAccountSubheader": "{accountEmail} 用",
+        "passwordDisconnect": "%CLOUD_NAME% からシステムを切断するために",
+        "passwordMerge": "システムを統合するために",
+        "passwordBackup": "バックアップを作成するために",
+        "passwordRestore": "バックアップからシステムを復元するために",
+        "passwordReset": "サーバーをリセットするために",
+        "passwordRestart": "サーバーを再起動するために",
+        "passwordDetach": "サーバーを切り離すために",
+        "expiredAccountSubheader": "再度ログインしてください",
+        "createAccountHeader": "%CLOUD_NAME% アカウントを作成",
+        "activateHeader": "%CLOUD_NAME% アカウントを有効化",
+        "createdText": "アカウントが作成されました!",
+        "activatedText": "アカウントが有効になりました！",
+        "createdAdditional": "<p class=\"mb-2\">有効化リンクを含む確認メッセージが {accountEmail} 宛に送信されました。</p><p>アカウントを有効化し、ここに戻って登録プロセスを終了してください。</p>",
+        "activatedAdditional": "<p>%CLOUD_NAME% へのログインを続けることができます。</p>",
+        "passResetHeader": "パスワードの再設定",
+        "newPassHeader": "新しいパスワードを設定",
+        "newPassConfirmText": "パスワードが設定されました。",
+        "newPassInvalidCode": "パスワードを保存できません: 確認コードが既に使用されているか、間違っています",
+        "notSecureText": "続行すると、<br><span class='error-label'>{ redirectUrl }</span><br>があなたの %CLOUD_NAME% アカウントにアクセスすることを許可することになります。",
+        "confirmHeader": "システムは %CLOUD_NAME% に接続されました!",
+        "loginError": "%CLOUD_NAME% に接続できません",
+        "loginErrorAdditional": "再試行するか、ローカルアカウントでシステムに直接ログインしてください。",
+        "connectErrorAdditional": "後でもう一度お試しください。",
+        "setupErrorAdditional": "<p class=\"mb-2\">再試行するか、非クラウドシステムをセットアップしてください。</p><p>後から %CLOUD_NAME% に接続することができます。</p>",
+        "connectedText": "システムは%CLOUD_NAME% に接続されました。",
+        "setupConnectedText": "システムが接続されました",
+        "stayLoggedInHelpText": "ログイン状態を維持するためのチェックボックス",
+        "termsAndConditionsHelpText": "利用規約とプライバシーポリシーに同意するチェックボックス",
+        "copiedToClipboard": "クリップボードにコピーしました",
+        "authCode": {
+            "message": "認証アプリのコードを入力して、本当に {suffix} しようとしていることを確認してください",
+            "newPass": "新しいパスワードを設定",
+            "login": "ログイン"
+        },
+        "emailSent": "メールを送信しました！"
     },
     "cameraFilters": {
         "H265": "H.265カメラ",
@@ -98,7 +179,7 @@
         "account": {
             "created": {
                 "title": "アカウントが作成されました",
-                "message": "有効化リンクを含む確認メッセージが {email} に送信されました"
+                "message": "有効化リンクを含む確認メッセージが {email} 宛に送信されました"
             },
             "activated": {
                 "title": "アカウントが有効になりました"
@@ -116,19 +197,20 @@
         "cameraStates": {
             "error": "エラー",
             "errorLoading": "ビデオの読み込み中にエラーが発生しました",
-            "flashOrWebmRequired": "ビデオを再生することはできません <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "flashOrWebmRequired": "Internet Explorer での映像再生には、 <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> をインストールして下さい。",
             "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> してください。",
             "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
-            "ieNoWebm": "ビデオを再生することはできません <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "ieNoWebm": "Internet Explorer での再生には <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> をインストールして下さい。",
             "ieWin10": "Microsoft EdgeまたはGoogle Chromeブラウザを使用してください。",
             "noArmSupport": "このブラウザまたはデバイスは、ARMベースのサーバーからのビデオ再生をサポートしていません。",
             "noData": "データがありません",
             "noFormat": "このブラウザは、このカメラのビデオ再生をサポートしていません。",
             "offline": "オフライン",
             "ubuntuNX": "このブラウザは、ARMベースのサーバーのビデオをサポートしていません。代わりにChromiumブラウザを使用してください。",
-            "unauthorized": "認証が必要です。"
+            "unauthorized": "要認証"
         },
         "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
+        "copiedToClipboard": "クリップボードにコピーしました",
         "login": "ログイン",
         "recordingSettingsWarning": "不足している録画設定を更新してください。",
         "disableMotionWarning": "録画モードは「常時録画」に変更されます",
@@ -141,11 +223,12 @@
             "various": "– 異なる値 –",
             "auto": "自動",
             "best": "最高",
-            "high": "高い",
-            "medium": "標準",
+            "high": "高",
+            "medium": "中",
             "low": "低"
         },
         "general": "一般",
+        "generalError": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
         "inaccessibleFeatureMessage": "システムがオフラインのため、情報にアクセスできません。",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} その他のインテグレーション...}  one{#{endTag} その他のインテグレーション...} other{#{endTag} その他のインテグレーション...}}",
         "searchCamPlaceholder": "検索",
@@ -185,7 +268,22 @@
         },
         "viewingOutdatedReport": "古いレポートを表示しています。"
     },
+    "dashboard": {
+        "dashboardEditEnabled": "ダッシュボード編集が有効です",
+        "dashboardLocked": "ダッシュボードはロックされています",
+        "unlockToUpload": "jsonの設定ファイルをアップロードするには、ダッシュボードのロックを解除してください",
+        "unlockToMove": "ウィジェットを移動するには、ダッシュボードのロックを解除してください"
+    },
+    "devConsole": {
+        "create": "作成"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Adminから {count, plural, =0{# システム} other{# システム}}にログインできなくなります:",
+            "wizardWarningDescr": "古いバージョンの %VMS_NAME% クライアントおよび Web Adminは、二要素認証をサポートしていません。",
+            "installAuthApp": "認証アプリをまだお持ちでない場合は、モバイル端末に認証アプリをインストールしてください。 %CLOUD_NAME% は <strong>Google Authenticator</strong>、 <strong>Microsoft Authenticator</strong> および <strong>Duo Mobile</strong> に対応しています。",
+            "nowEnabled": "二要素認証が %CLOUD_NAME% アカウントで <strong>有効</strong> になりました！"
+        },
         "addUser": {
             "alreadyExists": "このメールアドレスは %systemName% システムに既に登録されています"
         },
@@ -194,6 +292,8 @@
             "createAccount": "新規アカウントを作成",
             "delete": "削除",
             "deleteAccount": "アカウントを削除",
+            "disable": "無効化",
+            "enable": "有効化",
             "download": "%VMS_NAME% をダウンロード",
             "logoutAuthorised": "ログアウト",
             "ok": "OK",
@@ -252,9 +352,14 @@
         "merge": {
             "adminPasswordTitle": "<strong>{secondarySystem}</strong> にオーナーアカウントのパスワードを入力してください。",
             "adminPasswordWrong": "adminユーザーのパスワードが間違っています",
+            "knownBothSystemsConnectedToCloud": "システム {targetSystem} は %CLOUD_NAME%に接続されています。クラウドシステムは %CLOUD_NAME% ポータルからのみ統合できます。",
+            "unknownBothSystemsConnectedToCloud": "クラウドに接続されている2つのシステムを統合することはできません。これらのシステムを統合するには %CLOUD_NAME% に移動してください。",
             "checking": "チェック中...",
+            "cloud": "クラウド",
             "commonText": "システム <strong>{primarySystem}</strong> および <strong>{secondarySystem}</strong>を統合できませんでした。",
-            "connectToCloud": "統合したいサーバーを <strong>%cloudName%</strong> に接続するか、 <strong>%vmsName%</strong> クライアントを使用してローカルで統合してください。",
+            "connectToCloud": "統合したいサーバーを <strong>%CLOUD_NAME%</strong> に接続するか、 <strong>%VMS_NAME%</strong> クライアントを使用してローカルで統合してください。",
+            "failedToFindAnySystemHeader": "統合するシステムが見つかりませんでした",
+            "failedToFindAnySystem": "統合したいクラウドシステムのオーナー権限を持っていることを確認してください。 もしくは、統合したいシステムがローカルネットワークを介して現在のシステムにアクセスできることを確認してください。",
             "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、オーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "統合先システム内の任意のサーバーのアドレスを入力してください。",
@@ -262,11 +367,11 @@
             "mergeConfirmation": "<p class=\"mb-0\"><strong>{primarySystem}</strong> と <strong>{secondarySystem}</strong> のシステムを統合しようとしています。</p><p>設定と名称は <strong>{primarySystem}</strong> の値を使用します。</p>",
             "mergeFailedTitle": "システム統合が失敗しました",
             "mergeSuccess": "システム {primaryName} と {secondaryName} の統合が完了しました。",
-            "mergeSystemsTitle": "現在のシステムと統合",
+            "mergeSystemsTitle": "次のシステムと統合",
             "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
             "otherSystem": "その他のシステム...",
-            "ownerCanMergeText": "あなたが所有者であるシステムのみを統合できます",
+            "ownerCanMergeText": "あなたがオーナー権限を所有しているシステムのみ統合できます",
             "passwordRequired": "パスワードが必要です",
             "passwordWrong": "間違ったパスワード",
             "primaryCannotMerge": "システム {targetSystem} は、現在のシステムと互換性のない新しいソフトウェアバージョンです。現在のシステムを {downloadHTML} に更新してから {targetSystem} システムと統合してください。",
@@ -277,12 +382,17 @@
                 "b_support": "サポート",
                 "c_proceeding": "続行する前に"
             },
+            "restError": {
+                "duplicateServer": "統合エラー。両方のシステムに同じサーバーが存在します",
+                "useCloudMerge": "クラウド に紐付けされているシステムは統合できません",
+                "differentCloudOwners": "異なるオーナーを持つ2つのクラウドシステムを統合することはできません"
+            },
             "secondaryCannotMerge": "システム {targetSystem} は、現在のシステムと互換性のない古いソフトウェアバージョンです。 {targetSystem} を {downloadHTML} に更新してから統合してください。",
             "secondarySystemUnavailable": "システム {targetSystem} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "serverAtUrl": "{url} のサーバー",
             "serverNotAvailable": "<p class=\"mb-2\">{targetSystem} システムにアクセスできません。</p><p>当該サーバーがオンラインであることを確認し、もう一度やり直してください。</p>",
             "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
-            "serverVersionOld": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。最新ビルドに更新してから統合してください。",
+            "serverVersionOld": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。対象システムを最新のビルドに更新してから、現在のシステムと統合してください。",
             "serverVersionNew": "このサーバーは、現在のシステムよりも新しいソフトウェアバージョンです。\n両システムを同じビルドに更新してから統合してください。",
             "systemOffline": "システム {targetSystem} がオフラインであるため、現在のシステムと統合することはできません。",
             "systemOfflineUrl": "{targetSystem} にアクセスできません",
@@ -290,12 +400,15 @@
             "systemVersionOld": "システム {targetSystem} は、現在のシステムと互換性のない古いソフトウェアバージョンです。 %targetSystem% を {downloadHTML} に更新してから統合してください。",
             "systemVersionNew": "システム {targetSystem} は、現在のシステムと互換性のない新しいソフトウェアバージョンです。現在のシステムを {downloadHTML} に更新してから {targetSystem} システムと統合してください。",
             "systemVersionsNotMatch": "システムのソフトウェアバージョンが一致していません。双方を {downloadHTML} にアップデートしてください。",
+            "targetSystemBoundToCloud": "このシステムはクラウドに接続されていません。クラウドに紐付けされたシステムとは統合できません。",
             "urlEmpty": "サーバーのアドレスを入力してください",
             "urlNotValid": "有効な URL を入力してください",
-            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>問い合わせください。",
+            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> まで問い合わせください。",
             "warning": "統合されたシステムには <strong>{maxServers}</strong> 以上のサーバーが含まれることになります。"
         },
         "message": {
+            "system2faEnabled": "このシステムでは二要素認証が強制されます。",
+            "system2faDisabled": "このシステムでは、二要素認証は必要ありません。",
             "storageSettingsSaved": "ストレージ設定を保存しました。",
             "storageSettingsNotSaved": "ストレージの設定を保存できませんでした。",
             "settingsSaved": "設定が保存されました.",
@@ -318,6 +431,12 @@
                 "integration": "{companyName} に連絡する",
                 "ipvd_feedback_device": "{asset} に関するフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック"
+            },
+            "twoFactor": {
+                "required": "二要素認証が必要です。",
+                "configure": "設定はこちらから: ",
+                "accountLink": "アカウント設定",
+                "codeRequired": "コードが必要です"
             }
         },
         "removeSystem": {
@@ -325,21 +444,34 @@
             "message": "このシステムをアカウントから切断しようとしています。このシステムにアクセスできなくなります。よろしいですか？",
             "title": "システムを切断しますか？"
         },
+        "renewAuth": {
+            "action": "ログイン",
+            "message": "もう一度ログインしてください。",
+            "title": "セッションの期限が切れました"
+        },
         "titles": {
             "error": "エラー",
             "success": "成功",
             "changeAccount": "{email} としてログイン済みです",
+            "changePasswordFor": "{username} のパスワードを変更する",
             "deleteUser": "ユーザーを削除しますか？",
+            "failedLoginTo": "{systemName} へのログインに失敗しました",
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
-            "removeUser": "ユーザーを削除しますか?",
-            "serversDetach": "現在のシステムからサーバー \"{ title }\" を切り離しますか？",
-            "serversReset": "サーバー \"{ title }\" をデフォルトにリセットしますか？",
-            "serversRestart": "サーバー \"{ title }\" を再起動しますか？",
-            "changePasswordFor": "{username} のパスワードを変更する"
+            "removeUser": "ユーザーを削除",
+            "serversDetach": "現在のシステムからサーバー&nbsp;<strong>{ title }</strong>&nbsp;を切断しますか？",
+            "serversReset": "サーバー&nbsp;<strong>{ title }</strong>&nbsp;をデフォルトにリセットしますか？",
+            "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
+            "deleteAccount": "アカウントを削除するには、オーナー権限を持っているシステムをすべて %CLOUD_NAME% ポータルから切断し、二要素認証を無効化してください。"
+        },
+        "twoFactor": {
+            "action": "ログイン",
+            "message": "このアカウントでは二要素認証が有効になっています。ログインしてください。",
+            "title": "二要素が必要です。",
+            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}にログインできなくなります。",
+            "unsupportedSystem": "このシステムにログインするには、 <a href=\"/account/security\">アカウント設定</a>で「%CLOUD_NAME% アカウントでログインするたびに認証コードを要求する」を無効にします。"
         }
     },
     "downloads": {
@@ -422,8 +554,10 @@
         "Connection timed out": "システム <strong>{failedSystem}</strong> はオフラインです。",
         "Bad Gateway": "システム <strong>{failedSystem}</strong> は現在アクセスできません。<br>しばらくしてから再試行するか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> にお問い合わせください。",
         "INCOMPATIBLE": "システムのソフトウェアバージョンが一致していません。双方を {downloadHTML} にアップデートしてください。",
+        "This authorization method is forbidden. Please contact your system administrator.": "この認証方法は禁止されています。システム管理者に問い合わせてください。",
         "This user does not exist.": "該当ユーザが存在しません。",
         "The user is disabled. Please contact your system administrator.": "ユーザーは無効になっています。システム管理者に問い合わせてください。",
+        "This user has been disabled by a system administrator.": "このユーザーはシステム管理者によって無効にされています。",
         "cloud_systems_have_different_owners": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方の下にリストされているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
         "fail": "{failedSystem} にアクセスできません。",
@@ -434,12 +568,13 @@
         "accountNotActivated": "このアカウントはまだ有効化されていません。 <a href=\"/activate\"> 有効化リンクを再送信</a>",
         "accountNotActivatedAlternate": "アカウントが有効化されていません。 <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> にログインし、画面の指示に従ってください。",
         "alreadyExists": "このアカウントは既に存在します",
-        "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
+        "brokenAccount": "このアカウントが予期しない問題が発生しました。 <a href=\"/restore_password\">アカウントを復元</a>",
         "cantActivatePrefix": "アカウントを有効化できません",
         "cantAddYourOwnEmail": "自分のメールアドレスを追加することはできません",
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
         "cantDeleteAccountOwningSystems": "システムを所有しているアカウントは削除できません。",
+        "cantConnectSystemPrefix": "システムに接続できません",
         "cantDisconnectSystemPrefix": "システムを削除できません",
         "cantEditAdmin": "このユーザーは管理者権限を持っています",
         "cantEditYourself": "自分のアクセス権限を変更することはできません",
@@ -453,24 +588,25 @@
         "cantSharePrefix": "システムを共有できません",
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
         "emailNotFound": "アカウントが存在しません",
-        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、システムが %CLOUD_NAME%から切断されている場合、このシステムへのアクセスが取り消されている場合、または誤ったアカウントにログインしている場合に発生する可能性があります。",
+        "failedToAccess2FA": "<p class=\"mb-0\">このシステムにアクセスするには二要素認証が必要です。</p><p> <a href=\"/account/security\">アカウント設定</a>で二要素認証を有効にすることができます。</p>",
+        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、対象のシステムが %CLOUD_NAME% から切断されている場合、対象のシステムへのアクセスが取り消された場合、リンクに記載されたシステムが存在しない場合、または違うアカウントにログインしている場合に発生する可能性があります。",
         "failedToAccessCamera": "このリンクからアクセスできるカメラはありません。",
         "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{systemName} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{failedSystem}</strong> はオフラインです。",
-        "notAuthorized": "パスワードが間違っています",
+        "notAuthorized": "パスワードが違います",
         "badUsername": "アカウントが見つかりません。",
         "notFound": "見つかりません",
         "ok": "ok",
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
-        "passwordMismatch": "パスワードが間違っています",
+        "passwordMismatch": "パスワードが違います",
         "systemUnavailable": "{failedSystem} は現在アクセスできません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
         "thisSystem": "システム",
         "unknownError": "予期しないエラーが発生しました",
         "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "wrongAuthCode": "期限切れまたは不正なコードです",
-        "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
+        "wrongCode": "アカウントがすでに有効化されているか、確認コードが正しくありません",
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
         "licenseFail": "ライセンスの有効化に失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
@@ -478,7 +614,8 @@
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
         "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
         "archiveEncrypted": "アーカイブは\n暗号化されています",
-        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。"
+        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。",
+        "webadmin2faRequired": "このシステムにアクセスするには二段階認証が必要です。 <a href=\"{ cloudHost }/account/security\">アカウント設定</a>で二段階認証を有効にできます。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -506,7 +643,7 @@
         "dvr": "DVR",
         "encoder": "エンコーダー",
         "hardwareType": "タイプ",
-        "isAnalyticsSupported": "解析",
+        "isAnalyticsSupported": "分析",
         "isAptzSupported": "高度なPTZ",
         "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
@@ -530,20 +667,32 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "対応デバイスに関するその他の質問/懸念事項については",
-        "b_Link": "リクエストを送信",
-        "c_Info": "してください。"
+        "request": "対応デバイスに関する追加の質問/懸念事項については、<span id=\"request\">リクエストを送信</span>してください。"
     },
+    "systemsCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}が見つかりました",
+    "alertsCount": "{count, plural, =0{# アラート} one{# アラート} other{# アラート}}",
     "ipvdTopXByVolume": "ボリューム別トップ {value}:",
     "ipvdDisclaimer": "このリストは、ユーザーが {companyName} へのデバイススペックの自動報告を許可した {vmsName} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。",
     "menu": {
         "titles": {
             "cameras": "カメラ",
-            "systemAdministration": "システムアドミニストレーション",
+            "systemAdministration": "システム管理",
             "general": "一般",
             "licenses": "ライセンス",
-            "users": "ユーザー"
+            "users": "ユーザー",
+            "servers": "サーバー",
+            "alerts": "アラート",
+            "systems": "システム",
+            "storages": "保存先",
+            "networkInterfaces": "ネットワークインターフェース",
+            "graphs": "グラフ",
+            "logs": "ログ"
         }
+    },
+    "tableHeaders": {
+        "type": "タイプ",
+        "server": "サーバー",
+        "alert": "アラート"
     },
     "pageTitles": {
         "about": "概要:",
@@ -552,27 +701,32 @@
         "activateCode": "アカウント有効化",
         "activateSuccess": "アカウントが有効化されました",
         "articleTitle": "{VMS_NAME} の {ARTICLE_TITLE}",
+        "auth": "認証",
         "changePassword": "パスワードの変更",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% をダウンロード",
         "downloadPlatform": "%VMS_NAME% をダウンロード ",
+        "failedToAccess2FA": "システム \"{systemName}\" へのアクセスに失敗しました",
         "failedToAccessSystem": "システムにアクセスできませんでした",
         "failedToAccessCamera": "カメラにアクセスできませんでした",
-        "integrations": "%VMS_NAME% 統合",
+        "integrations": "%VMS_NAME% インテグレーション",
         "login": "ログイン",
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
         "registerSuccess": "ようこそ",
-        "restorePassword": "パスワードリセット",
+        "restorePassword": "パスワードの再設定",
         "restorePasswordSuccess": "パスワードを保存",
         "supportedDevices": "対応デバイス",
         "system": "システム",
         "systemShare": "共有システム",
         "systems": "システム",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "カメラを表示",
-        "apiTool": "API テスト ツール"
+        "apiTool": "API テスト ツール",
+        "security": "セキュリティ",
+        "twofaRequired": "二要素認証が必要です"
     },
     "pageDescriptions": {
         "integrations": "インテグレーションマーケットプレイスは、%VMS_NAME% などのVMS製品とシームレスに統合する製品の集中型エコシステムであり、すべて %CLOUD_NAME% で利用できるため、IPビデオシステムを構築およびカスタマイズするためのソリューションを見つけることができます。",
@@ -580,19 +734,19 @@
         "integrationDetails": "{PLUGIN_NAME}： {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
-        "common": "あまりにも一般的",
-        "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
-        "fair": "可",
-        "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-        "good": "良い",
-        "minLength": "短すぎます",
+        "common": "一般的",
+        "commonMessage": "このパスワードは世界で最も一般的なパスワードです",
+        "fair": "普通",
+        "fairMessage": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください",
+        "good": "良好",
+        "minLength": "文字数不足",
         "minLengthMessage": "パスワードは8文字以上必要です",
-        "missingMessage": "パスワードが必要です",
+        "missingMessage": "必須",
         "required": "無効",
-        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けてください",
         "strongMessage": "強力なパスワード!",
-        "weak": "弱",
-        "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る"
+        "weak": "脆弱",
+        "weakMessage": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください"
     },
     "placeholderTexts": {
         "noSettings": {
@@ -610,6 +764,14 @@
         "server": {
             "title": "サーバーにアクセスできません",
             "message": "システムがオフラインのため、サーバーにアクセスできません。"
+        },
+        "noSystemApiTool": {
+            "title": "有効なシステムが見つかりません",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "システムの読み込みに失敗しました",
+            "message": ""
         }
     },
     "pleaseSelect": "選択してください",
@@ -630,8 +792,12 @@
             "accept": "承諾",
             "reject": "拒否",
             "backToEditText": "編集インターフェースに戻る",
-            "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
+            "previewRibbon": "このページは最新の変更のプレビューであり、公開されているバージョンとは一致しません。",
             "publishedRibbon": "公開されているライブバージョンのページです。"
+        },
+        "newVersionAvailable": {
+            "notification": "%CLOUD_NAME% の新しいバージョンが利用可能です",
+            "installButton": "再読み込みして更新"
         },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"
@@ -680,7 +846,9 @@
     "serverTabTitles": {
         "View": "映像",
         "Settings": "設定",
-        "Information": "情報"
+        "Information": "情報",
+        "Bookmarks": "ブックマーク",
+        "Monitoring": "モニタリング"
     },
     "system": {
         "connected": "接続済み",
@@ -694,7 +862,8 @@
             "notAbleToLoadSystem": "システム設定を読み込めません。",
             "sessionLimitDuration": {
                 "hours": "時間",
-                "minutes": "分"
+                "minutes": "分",
+                "days": "日"
             },
             "warningMessages": {
                 "videoEncryption": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。"
@@ -741,7 +910,8 @@
             "network": "ネットワーク (OS 経由で追加)",
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> がこのシステムの所有権をあなたに譲渡しようとしています"
     },
     "systemStatuses": {
         "activated": "有効化済み",
@@ -750,11 +920,14 @@
         "notActivated": "有効化されていません",
         "offline": "オフライン",
         "online": "オンライン",
-        "unavailable": "利用できません"
+        "unavailable": "利用不可"
     },
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "nameFail": "{type} 名の変更に失敗しました。",
+        "noConnection": "%CLOUD_NAME% への接続を復旧した後、再度お試しください。",
+        "noInternet": "%CLOUD_NAME% は現在利用できません。後ほど再度お試しください。",
+        "userChangesFail": "変更の適用に失敗しました",
         "reviewAccepted": "レビューが承認されました。",
         "system": {
             "deleted": {
@@ -774,6 +947,59 @@
             "rename": {
                 "success": "システム名は保存されました"
             }
+        },
+        "webAdminCloudCredentialError": "クラウドユーザーとしてこのシステムにアクセスするには %CLOUD_NAME% でログインしてください",
+        "twoFaRequired": "このアカウントでは二要素認証が有効になっています。ポップアップウィンドウに認証コードを入力してください。",
+        "loggingIn": "ログイン中。お待ちください..."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "情報",
+            "availability": "可用性",
+            "load": "ロード",
+            "activity": "アクティビティ"
+        },
+        "keys": {
+            "name": "名称",
+            "servers": "サーバー",
+            "cameras": "カメラチャンネル",
+            "storages": "保存先",
+            "users": "ユーザー",
+            "version": "システムバージョン",
+            "cloudSystemId": "クラウドシステムID",
+            "status": "ステータス",
+            "offlineEvents": "イベント: サーバーオフライン (24h)",
+            "uptimeS": "稼働時間",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS サーバー) %",
+            "ramUsageB": "RAM使用量",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMSサーバー)",
+            "serverRamUsageP": "RAM (VMSサーバー) %",
+            "threads": "サーバーのスレッド",
+            "decodingThreads": "デコードのスレッド",
+            "decodingSpeed3s": "デコード速度",
+            "encodingThreads": "エンコードのスレッド",
+            "encodingSpeed3s": "エンコード速度",
+            "primaryStreams": "プライマリストリーム配信数",
+            "secondaryStreams": "セカンダリストリーム配信数",
+            "incomingConnections": "受信接続",
+            "outgoingConnections": "送信接続",
+            "logLevel": "ログレベル",
+            "publicIp": "パブリックIP",
+            "os": "OS",
+            "osTime": "OS時刻",
+            "vmsTime": "VMS時刻",
+            "cpu": "CPU",
+            "cpuCores": "コア",
+            "ramB": "RAM",
+            "guidConflict": "サーバーGUIDの重複",
+            "vmsTimeChanged24h": "イベント: 時刻変更(24時間)",
+            "transactionsPerSecond1m": "トランザクション/秒",
+            "actionsTriggered1m": "ルールのアクティブ化/秒",
+            "apiCalls1m": "API呼び出し/秒",
+            "thumbnails1m": "サムネイル/秒",
+            "activePlugins": "アクティブなプラグインリスト"
         }
     },
     "headerLabels": {
@@ -792,16 +1018,17 @@
             "Starter": "スターター",
             "IO Module": "I/Oモジュール",
             "Bridge": "ブリッジ",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "無効"
         },
         "info": {
             "type": "タイプ",
             "channels": "チャンネル",
             "server": "サーバー",
-            "hwid": "ハードウェアID：",
+            "hwid": "ハードウェアID",
             "status": "ステータス",
-            "expires": "期限切れ",
-            "deactivations": "アクティベーションを解除しました。",
+            "expires": "有効期限",
+            "deactivations": "残り解除回数",
             "online": "オンライン",
             "error": "エラー",
             "expired": "期限切れ",
@@ -814,6 +1041,13 @@
             "activated": "ライセンスキーが有効化されました",
             "inuse": "ライセンスキーは既に有効化されており、別のシステムでハードウェアID {hwid} を持つサーバーに登録されています。",
             "trialActivated": "トライアルライセンスが有効になりました。今日から30日間、最大4台のカメラを録画できます。"
+        }
+    },
+    "redirects": {
+        "message": "ルート \"{url}\" は \"{redirectUrl}\" に移動しました。",
+        "defaultMessage": "新しいルートを参照するにはリンクを更新してください。",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -836,14 +1070,14 @@
         "sessionLimitMinutes": "セッション制限(分)",
         "specificFeatures": "特定の機能",
         "systemName": "システム名",
-        "webSocketEnabled": "Webソケット",
+        "webSocketEnabled": "WebSocket",
         "arecontRtspEnabled": "Arecont RTSP有効",
         "auditTrailEnabled": "操作履歴有効",
-        "auditTrailPeriodDays": "操作履歴の期間日数",
+        "auditTrailPeriodDays": "操作履歴保存日数",
         "autoDiscoveryEnabled": "デバイスの自動検出を有効にする",
         "autoUpdateThumbnails": "サムネイルの自動更新",
         "backupNewCamerasByDefault": "デフォルトで新しいカメラをバックアップする",
-        "backupQualities": "バックアップの画質",
+        "backupQualities": "バックアップするストリーム",
         "cameraSettingsOptimization": "デバイス設定の最適化を許可する",
         "clientStatisticsSettingsUrl": "クライアント統計の相対 url",
         "cloudAccountName": "クラウドオーナーアカウント",
@@ -865,8 +1099,8 @@
         "ldapSearchFilter": "LDAP検索フィルター",
         "ldapUri": "LDAP URI",
         "localSystemId": "ローカルシステムID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "同期時間とインターネット時間の最大差（ミリ秒）",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "同期時刻とローカル時刻の最大差（ミリ秒）",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "同期された時刻とインターネット時刻の最大差 (ミリ秒)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "同期された時刻とローカル時刻の最大差 (ミリ秒)",
         "maxP2pQueueSizeBytes": "最大P2Pキューサイズ(バイト)",
         "maxRecordQueueSizeBytes": "レコードキューの最大サイズ（バイト）",
         "maxRecordQueueSizeElements": "レコードキューの最大サイズ（要素）",
@@ -909,10 +1143,19 @@
         "watermarkSettings": "透かし設定",
         "maxHttpTranscodingSessions": "このサーバーに対する、トランスコーディングを使用したHTTP接続の最大数。Chromeは一度に2つの接続を開き、次に最初の接続を閉じます。したがって、このパラメータには2以上の値を設定することをお勧めします。",
         "maxEventLogRecords": "データベースに保存する最大イベントログレコード。削除されていないレコードの実際の量は、指定された値よりも最大20％大きくなる可能性があります。",
-        "forceLiveCacheForPrimaryStream": "プライマリストリーム用にいくつかのフレームをキャッシュするかどうか。値： \"yes\" - 常に有効（多くのRAMを使用する可能性があります）、 \"no\" - 再生で要求される場合を除いて常に無効（HLSなど）、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上すると（たとえば、Analyticsプラグインがカメラで動作しているときに）オンになります。"
+        "forceLiveCacheForPrimaryStream": "プライマリストリーム用にフレームをキャッシュするかどうか。値: \"yes\" - 常に有効 (RAMを多く消費する可能性あり)、 \"no\" - 再生時に要求される場合 (HLS等) を除いて常に無効、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上するとオンになります (分析プラグインがカメラで動作しているとき等)。"
     },
     "result": "{count, plural, =0{# 件の結果} one{# 件の結果} other{# 件の結果}}",
-    "additionalSystems": "{count, plural, =0{+ # システム} one{+ # システム} other{+ # システム}}",
+    "additionalSystems": "{count, plural, =0{+ # システム}  other{+ # システム}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription": "現在、<span id=\"target2FaSystems\">{count, plural, =0{# システム} one{# システム} other{# システム}}</span>が該当します。",
+            "systemsRemainder": "さらに {count} 件...",
+            "v5Warning": "<span id=\"targetV5\">{count, plural, =0{# システム} other{# システム}}</span>のソフトウェアバージョンが5.0未満です。以前のバージョンの%VMS_NAME%クライアントは二要素認証をサポートしていないため、{count, plural, =0{該当システム} other{該当システム}}には<strong>%VMS_NAME%クライアント</strong>でアクセスできなくなります。",
+            "v5WarningExplanation": "{count, plural, =0{これらのシステム} other{これらのシステム}}へのアクセスを可能にするには、{count, plural, =0{システム} other{システム}}をバージョン5.0に更新するか、チェックボックスを外してください。",
+            "disableWarning": "二要素認証を必要とするシステムが {count, plural,other{# 個}} あります。\n{count, plural, other{当該システム}}にログインできなくなります。"
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "メインストレージの再インデックスが完了しました。",
@@ -942,5 +1185,100 @@
         "serverOffline": "外部ストレージの追加に失敗しました - サーバーが応答しません",
         "success": "外部ストレージを追加しました。",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - クラウドポータル",
+            "description": "%CLOUD_NAME% は %VMS_NAME% システムへの接続、管理、拡張を簡単にします。"
+        },
+        "/systems": {
+            "title": "システム - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% インテグレーション - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% ドキュメント - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "対応デバイス - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "設定 - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "映像 - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "情報 - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "サーバー監視 - webadmin - %VMS_NAME%"
+        }
+    },
+    "maintenance": {
+        "description": "私たちは一部機能の改善および最新機能の開発に取り組んでいます。"
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "日",
+                "Mon": "月",
+                "Tue": "火",
+                "Wed": "水",
+                "Thu": "木",
+                "Fri": "金",
+                "Sat": "土",
+                "Sunday": "日曜日",
+                "Monday": "月曜日",
+                "Tuesday": "火曜日",
+                "Wednesday": "水曜日",
+                "Thursday": "木曜日",
+                "Friday": "金曜日",
+                "Saturday": "土曜日"
+            },
+            "monthNames": {
+                "Jan": "1月",
+                "Feb": "2月",
+                "Mar": "3月",
+                "Apr": "4月",
+                "May": "5月",
+                "Jun": "6月",
+                "Jul": "7月",
+                "Aug": "8月",
+                "Sep": "9月",
+                "Oct": "10月",
+                "Nov": "11月",
+                "Dec": "12月",
+                "January": "1月",
+                "February": "2月",
+                "March": "3月",
+                "April": "4月",
+                "June": "6月",
+                "July": "7月",
+                "August": "8月",
+                "September": "9月",
+                "October": "10月",
+                "November": "11月",
+                "December": "12月"
+            },
+            "timeNames": {
+                "a": "午前",
+                "p": "午後",
+                "am": "午前",
+                "pm": "午後",
+                "A": "午前",
+                "P": "午後",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

@@ -4,7 +4,8 @@
     "module": "es2020",
     "lib": [
       "es2018",
-      "dom"
+      "dom",
+      "DOM.Iterable"
     ],
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -21,9 +22,13 @@
       "@directives/*": ["src/directives/*"],
       "@dialogs/*": ["src/dialogs/*"],
       "@environments/*": ["environments/*"],
+      "@interceptors/*": ["src/interceptors/*"],
       "@pages/*": ["src/pages/*"],
+      "@view/*": ["src/pages/systems/view/*"],
+      "@vms-client/*": ["src/pages/systems/view/vms-client/*"],
       "@guards/*": ["src/routeGuards/*"],
       "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
       "@src/*": ["src/*"],
       "@app/*": ["*"]
     },
@@ -36,7 +41,8 @@
     ]
   },
   "angularCompilerOptions": {
-    "enableIvy": true
+    "enableIvy": true,
+    "strictTemplates": true
   },
   "include": [
     "app/main.ts",

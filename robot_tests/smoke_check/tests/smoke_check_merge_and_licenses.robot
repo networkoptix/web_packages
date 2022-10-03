@@ -8,16 +8,16 @@ Force Tags    merge_and_licenses
 Merge Suite Setup
     Open Browser and go to URL    ${ENV}    False    False
     # Register test users
-    ${merge owner}=   Get Random Email    ${email base}
+    ${merge owner}=   Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    MergeOwner    ${merge owner}    ${password}
     Set Suite Variable    ${merge owner}    ${merge owner}
     ${owner auth}=   Create List    ${merge owner}    ${password}
     Set Suite Variable    ${owner auth}    ${owner auth}
-    ${merge 1 admin}=   Get Random Email    ${email base}
+    ${merge 1 admin}=   Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    Admin    ${merge 1 admin}    ${password}
-    ${merge 2 adviewer}=   Get Random Email    ${email base}
+    ${merge 2 adviewer}=   Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    AdViewer    ${merge 2 adviewer}    ${password}
-    ${common user}=      Get Random Email    ${email base}
+    ${common user}=      Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    Common   ${common user}    ${password}
     Set Suite Variable    ${merge 1 admin}    ${merge 1 admin}
     Set Suite Variable    ${merge 2 adviewer}    ${merge 2 adviewer}
@@ -37,11 +37,13 @@ Merge Suite Setup
     Set To Dictionary    ${merge 2}    id=${cloud id}
 
     # Verify systems are connected to cloud
-    ${systems}=   Get Account Systems    ${ENV}    ${merge owner}    ${password}
+    ${systems}=   Get Account Systems    ${merge owner}    ${password}
     ${ids}=   Evaluate    [sys['id'] for sys in $systems]
     ${sys 1 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 1}[id]
     ${sys 2 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 2}[id]
-    Run Keyword Unless    $sys_1_connected and $sys_2_connected    Fatal Error    One or more system is not connected to cloud
+    IF    ${sys_1_connected} == ${False} or ${sys_2_connected} == ${False}
+        Fatal Error    One or more system is not connected to cloud
+    END
     Sleep   90
 
 Merge Suite Teardown
@@ -108,7 +110,7 @@ Add users and licenses to the systems
     Activate License    ${local auth}    https://${merge 2}[ip]:${merge 2}[port]    ${saas client}
 
 Merge systems and check the users and the licenses
-    ${merge data}=   Merge Cloud Systems    ${ENV}    ${merge 1}[id]    ${merge 2}[id]    ${merge owner}    ${password}
+    ${merge data}=   Merge Cloud Systems    ${merge 1}[id]    ${merge 2}[id]    ${merge owner}    ${password}
     Should be equal as strings    ${merge data}[resultCode]    ok
 
     ${lic remained}=    License Is Activated    ${local auth}    https://${merge 1}[ip]:${merge 1}[port]    ${perm client}
@@ -145,8 +147,8 @@ Merge systems and check the users and the licenses
 
 Add and delete users
     # Add new - portal
-    ${new cloud user}=   Get Random Email    ${email base}
-    Share    ${owner auth}    ${merge 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}
+    ${new cloud user}=   Get Random Email Robot    ${email base}
+    Share    ${owner auth}    ${merge 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}    ${permissions}[liveViewer]
 
     # Delete existing
     ${data}=   Create Dictionary    id=${del user id}

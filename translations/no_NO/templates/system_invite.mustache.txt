@@ -9,5 +9,5 @@ Du er invitert til å bli med %CLOUD_NAME%.
 Du har fått tilgang til {{message.system_name}}.
 {{/message.sharer_name}}
 
-Registrer og se systemet: {{config.portal_url}}/ register /{{message.code}}
+Registrer og vis systemet: {{config.portal_url}}/authorize/register/{{message.code}}
 

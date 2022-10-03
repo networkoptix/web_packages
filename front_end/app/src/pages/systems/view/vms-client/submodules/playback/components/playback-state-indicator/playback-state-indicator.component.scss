@@ -1,6 +1,4 @@
-@import 'styles/_theme_palette';
-$green-border: #51D22A;
-$green-fill: #56E829;
+@use "styles/theme_variables" as theme_vars;
 
 :host {
   display: flex;
@@ -8,7 +6,7 @@ $green-fill: #56E829;
   width: 100%;
   justify-content: center;
   align-items: center;
-  background-color : $additional_light2;
+  background-color : var(--additional_light2);
 
   > .is-live {
     opacity: 0.6;
@@ -20,18 +18,18 @@ $green-fill: #56E829;
     align-items: center;
     justify-content: center;
 
-    background-color: $additional_light2;
-    color: $dark9;
-    border-left: 1px solid $light6;
-    border-right: 1px solid $light4;
+    background-color: var(--additional_light2);
+    color: var(--dark9);
+    border-left: 1px solid var(--light6);
+    border-right: 1px solid var(--light4);
 
     > .line {
       display: block;
 
       > .icon {
         display: inline-block;
-        border: 1px solid $light10;
-        background-color: $light7;
+        border: 1px solid var(--light10);
+        background-color: var(--light7);
         transition: all 0.2s ease-in-out;
         width: 8px;
         height: 8px;
@@ -41,7 +39,6 @@ $green-fill: #56E829;
 
       > .text {
         display: inline-block;
-        text-transform: uppercase;
         font-weight: bold;
       }
     }
@@ -49,8 +46,8 @@ $green-fill: #56E829;
     &.playing {
       > .line {
         > .icon {
-          border: 1px solid $green-border;
-          background-color: $green-fill;
+          border: 1px solid theme_vars.$green_l3;
+          background-color: theme_vars.$green_l4;
         }
       }
     }
@@ -58,13 +55,13 @@ $green-fill: #56E829;
     // &.recording {
     //   > .line {
     //     > .icon {
-    //       border-color: $red_main;
+    //       border-color: theme_vars.$red_main;
     //     }
     //   }
     //   &.playing {
     //     > .line {
     //       > .icon {
-    //         background: $red_main;
+    //         background: theme_vars.$red_main;
     //       }
     //     }
     //   }
@@ -73,29 +70,29 @@ $green-fill: #56E829;
     &.active {
       opacity: 1.0;
       cursor: pointer;
-      background-color: $light5;
-      border-left: 1px solid $light8;
-      border-right: 1px solid $light7;
-      box-shadow: -2px 0 0 0 #0003;
+      background-color: var(--light5);
+      border-left: 1px solid var(--light8);
+      border-right: 1px solid var(--light7);
+      box-shadow: -2px 0 0 0 rgba(var(--dark1--rgb), 0.2);
       z-index: 5;
 
       &:hover {
-        background-color: $light4;
-        border-left: 1px solid $light7;
-        border-right: 1px solid $light6;
+        background-color: var(--light4);
+        border-left: 1px solid var(--light7);
+        border-right: 1px solid var(--light6);
       }
     }
 
     &:hover {
-      background-color: $light3;
-      border-left: 1px solid $light6;
-      border-right: 1px solid $light5;
+      background-color: var(--light3);
+      border-left: 1px solid var(--light6);
+      border-right: 1px solid var(--light5);
     }
 
     &:active {
-      background-color: $light5 !important;
-      border-left: 1px solid $light8 !important;
-      border-right: 1px solid $light7 !important;
+      background-color: var(--light5) !important;
+      border-left: 1px solid var(--light8) !important;
+      border-right: 1px solid var(--light7) !important;
     }
   }
 }

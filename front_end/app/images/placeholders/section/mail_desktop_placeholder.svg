@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 240 120" style="enable-background:new 0 0 240 120;" xml:space="preserve">
+<style type="text/css">
+	.mail-desktop-st0{fill:none;stroke:#698796;stroke-width:2;stroke-miterlimit:10;}
+	.mail-desktop-st1{fill:#E1E7EA;}
+	.mail-desktop-st2{fill:#FFFFFF;stroke:#698796;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;}
+</style>
+<path class="mail-desktop-st0" d="M79,18.6c-4.2-5.5-10.9-9-18.5-9c-9.1,0-17,5.2-20.7,12.6c-7.3,1.7-12.7,8-12.7,15.6c0,8.9,5.5,16.1,14.7,16.1
+	h24.7"/>
+<path class="mail-desktop-st1" d="M172,69v1.9v9.1l-40.2-26.3l40.2-28v14.3v1.9c0.9-0.7,1.9-1.3,3-1.8v-0.1V21.5c0-2.3-1.8-4.2-4-4.4
+	c-0.1,0-0.2,0-0.2,0c-0.1,0-0.2,0-0.2,0h-0.2H69.7h-0.2C67,17,65,19,65,21.5v61c0,2.5,2,4.5,4.5,4.5h101c2.5,0,4.5-2,4.5-4.5V70.9
+	V69H172z M69.7,20h100.7c0.5,0,0.9,0.2,1.2,0.6c0.5,0.7,0.3,1.6-0.4,2.1l-50.8,35.4L68.8,22.7c-0.4-0.3-0.6-0.7-0.6-1.2
+	C68.2,20.7,68.8,20,69.7,20z M68,25.8l40.8,28L68,80.1V25.8z M170.5,84h-101c-0.5,0-0.9-0.2-1.1-0.5l43.1-27.8l7.2,4.9l1.7,1.2
+	l1.7-1.2l7.1-4.9l42.5,27.8C171.4,83.8,171,84,170.5,84z"/>
+<line class="mail-desktop-st2" x1="68" y1="90" x2="68" y2="114"/>
+<line class="mail-desktop-st2" x1="101" y1="90" x2="101" y2="98"/>
+<line class="mail-desktop-st2" x1="137" y1="90" x2="137" y2="98"/>
+<line class="mail-desktop-st2" x1="79" y1="90" x2="79" y2="106"/>
+<line class="mail-desktop-st2" x1="172" y1="90" x2="172" y2="109"/>
+<line class="mail-desktop-st2" x1="161" y1="90" x2="161" y2="102"/>
+<path class="mail-desktop-st0" d="M197.5,49.7c-0.2,0-0.4,0-0.6,0.1c-1.8-6.4-7.9-11.1-15.1-11.1c-6.2,0-11.6,3.5-14.1,8.6
+	c-5,1.2-8.7,5.5-8.7,10.7c0,6.1,5.1,11,11.4,11h27.1c5.5,0,10-4.3,10-9.6C207.4,54,203,49.7,197.5,49.7z"/>
+</svg>

@@ -9,7 +9,7 @@ Suite Teardown   Users Suite Teardown
 Users Suite Setup
     Open browser and go to URL    ${ENV}    False    False
 
-    ${email}=   Get Random Email    ${email base}
+    ${email}=   Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    Users    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email users}    ${email}
@@ -43,14 +43,14 @@ Portal - Share to not registered user
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 1: Share to not registered user(admin permissions)
-    ${new portal user}=   Get Random Email    ${email base}
+    ${new portal user}=   Get Random Email Robot    ${email base}
     Set Suite Variable    ${new portal user}    ${new portal user}
     Share To    ${new portal user}    Administrator
     Log Out
 
     Log    Step 2: Check email for the user
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${new portal user}    ${email password}    register
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${new portal user}    system_invite
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${new portal user}    system_invite
 
     Log    Step 3: Open Register Page
     Run Keyword If    'nxvms' in $env    Go To    ${link}
@@ -118,14 +118,14 @@ Portal - Delete user
 Portal - Share to registered user
     [Tags]    C30446    C30648    users
 
-    ${email}=    Get Random Email    ${email base}
+    ${email}=    Get Random Email Robot    ${email base}
     Run Keyword If    'nxvms' not in $env    Run Keywords
         ...    Register And Activate Account    SmokeCheck    ExistingUser1    ${email}    ${password}    AND
         ...    Set Suite Variable    ${email existing user1}    ${email}
 
     Log    Step 1: Share to existing user via API(viewer permissions)
     ${cloud auth}=   Create List    ${email users}    ${password}
-    Share    ${cloud auth}    ${system users}[cloud id]    ${ACCESS ROLES}[viewer]    ${email existing user1}
+    Share    ${cloud auth}    ${system users}[cloud id]    ${ACCESS ROLES}[viewer]    ${email existing user1}    ${permissions}[viewer]
 
     Log    Step 2: Check email for the user
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email existing user1}    ${email password}    systems
@@ -163,7 +163,7 @@ Portal - Share to registered user
 Client - Share to not registered user
     [Tags]    C30447    C30651    users
 
-    ${new cloud user}=    Get Random Email    ${base email}
+    ${new cloud user}=    Get Random Email Robot    ${base email}
     Set Suite Variable    ${new cloud user}
     Log In    ${email users}    ${password}
     Log    Step 1: Share system with not existing user(admin permissions)
@@ -183,7 +183,7 @@ Client - Share to not registered user
 
     Log    Step 2: Check email for the user
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${new cloud user}    ${email password}    register
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${new cloud user}    system_invite
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${new cloud user}    system_invite
 
     Log    Step 3: Open Register Page
     Run Keyword If    'nxvms' in $env    Go To    ${link}
@@ -249,7 +249,7 @@ Client - Delete cloud user
 
 Client - Share to registered user
     [Tags]    C30448    C30651    users
-    ${email}=    Get Random Email    ${email base}
+    ${email}=    Get Random Email Robot    ${email base}
     Run Keyword If    'nxvms' not in $env    Run Keywords
         ...    Register And Activate Account    SmokeCheck    ExistingUser2    ${email}    ${password}    AND
         ...    Set Suite Variable    ${email existing user2}    ${email}
@@ -273,6 +273,6 @@ Client - Share to registered user
     Select user in users list    ${email existing user2}
     Log Out
 
-    ${users systems}=   Get Account Systems    ${ENV}    ${email existing user2}    ${password}
+    ${users systems}=   Get Account Systems    ${email existing user2}    ${password}
     ${ids}=   Evaluate    [sys['id'] for sys in $users_systems]
     Should Contain    ${ids}    ${system users}[cloud id]

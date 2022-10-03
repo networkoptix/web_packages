@@ -27,13 +27,13 @@
     margin-left: 24px;
     padding-bottom: 18px;
     & > h2 {
-        color: $brand_d2 !important;
+        color: var(--brand-d2) !important;
     }
 }
 
 .brand-title-span {
     font-family: $font-family-medium;
-    color: $brand_d2 !important;
+    color: var(--brand-d2) !important;
 }
 
 .error-text {

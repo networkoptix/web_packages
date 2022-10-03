@@ -1,20 +1,9 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/customizations-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Teardown     Restart
-Suite Teardown    Close All Browsers
+Test Teardown     customizations-resource.Restart
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded    Customizations
-
-*** Variables ***
-${email}             ${EMAIL OWNER}
-${password}          ${BASE PASSWORD}
-${url}               ${ENV}
-${503 URL}           ${url}/static/503.html
-
-*** Keywords ***
-Restart
-    Close All Browsers
-    Open Browser and go to URL    ${url}
 
 *** Test Cases ***
 1. Verify List of Available Languages
@@ -29,7 +18,9 @@ Restart
     
 2. Verify Default language for Cloud Portal
     [Tags]    C43009
-    Run Keyword Unless     '${LANGUAGE}' != 'en_US'    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${DEFAULT LANGUAGE}']
+    IF    '${LANGUAGE}' == 'en_US'
+        Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${DEFAULT LANGUAGE}']
+    END
     
 3. Verify About Product Name
     [Tags]    C43010

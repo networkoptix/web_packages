@@ -1,0 +1,26 @@
+<div *ngIf="show" (nxClickElsewhere)="close()">
+    <section *ngIf="filter.sortable" class="shaded">
+        <h4 translate>Sort:</h4>
+        <div class="sort-button-wrapper">
+            <button (click)="updateState({'sort': FILTER_SORT.ASC})"
+                [ngClass]="{'active': currentState?.sort === FILTER_SORT.ASC}"
+                class="btn btn-default" translate>Ascending</button>
+            <button (click)="updateState({'sort': FILTER_SORT.DESC})"
+                [ngClass]="{'active': currentState?.sort === FILTER_SORT.DESC}"
+                class="btn btn-default" translate>Descending</button>
+        </div>
+    </section>
+    <section class="selection-area">
+        <div *ngFor="let selection of currentState.selections" (click)="updateSelection(selection.name, !selection.value, $event)" class="selection-wrapper">
+            <nx-checkbox [ngModel]="selection.value" [componentId]="field + '-filter-' + selection.name"></nx-checkbox>
+            <label [for]="field + '-filter-' + selection.name">{{
+                filter.grouping && filter.grouping !== GROUPING_OPTIONS.TEXT
+                    ? (selection.name | date: dateFormats[filter.grouping || 'default'])
+                    : selection.name
+            }}</label>
+        </div>
+    </section>
+    <section  class="shaded">
+        <button (click)="reset()" class="btn btn-default ml-auto" translate>Reset Filter</button>
+    </section>
+</div>

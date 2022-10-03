@@ -1,19 +1,21 @@
-import { Component, Input, OnInit }     from '@angular/core';
-import PlaybackService                  from '../../services/playback.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+
+import { LoggerDecorator } from '@view/vms-client/utils';
+import SelectionService from '@vms-client/submodules/timeline/services/timeline.selection.service';
+
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
-import SelectionService                 from '../../../timeline/services/timeline.selection.service';
-import { Subscription }                 from 'rxjs';
-import { LoggerDecorator }              from '@pages/systems/view/vms-client/utils';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
+import PlaybackService from '../../services/playback.service';
 
 type BtnClassesEnum = 'play' | 'pause'
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'playback-controls',
-    templateUrl : './playback-controls.component.html',
-    styleUrls   : ['./playback-controls.component.scss']
+    selector: 'playback-controls',
+    templateUrl: './playback-controls.component.html',
+    styleUrls: ['./playback-controls.component.scss']
 })
 @LoggerDecorator('PLAYBACK CONTROLS ::', true)
 export class PlaybackControlsComponent implements OnInit {
@@ -154,7 +156,11 @@ export class PlaybackControlsComponent implements OnInit {
     }
 
     protected togglePause () {
-        const canPauseLive = (this.playback.canStop && !this.playback.canPlayLive && !this.playback.livePaused);
+        const canPauseLive = (
+            this.playback.canStop &&
+            !this.playback.canPlayLive &&
+            !this.playback.livePaused
+        );
         if (this.playback.canPause || canPauseLive) {
             this.playback.livePaused = canPauseLive;
             if (!canPauseLive) {

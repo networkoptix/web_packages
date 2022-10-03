@@ -1,5 +1,5 @@
-import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
-import { ms, int } from '../../../utils/type-aliases';
+import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import { ms, int } from '@vms-client/utils/type-aliases';
 
 export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized'
 
@@ -64,11 +64,14 @@ export interface ICamera {
     id: string,
     name: string,
     url: string,
+    ip: string,
     status: CAMERA_STATUS,
+    isVirtual: boolean,
     isOnline: boolean,
     isRecording: boolean,
     isLive: boolean,
     isAuthorized: boolean,
+    isOffline: boolean,
     isUnauthorized: boolean,
 
     isScheduleEnabled: boolean,
@@ -77,6 +80,7 @@ export interface ICamera {
     hasArchive: boolean,
     archiveRange: ISimpleTimeRange,
     archive: CameraArchive,
+    readonly archiveEnd: ms,
 
     thumbnailUrl: string,
 
@@ -85,7 +89,9 @@ export interface ICamera {
     getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
     setRecords(range: ISimpleTimeRange, records: CameraArchive)
 
+    mediaStreams: Array<any>
     rotation: int
+    streamUrls: string[]
 
     availableTransports: Array<PlaybackTransport>,
     availableTransportsAndResolutions: AvailableTransportsAndResolutions

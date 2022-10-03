@@ -1,14 +1,22 @@
 import {
-    Component, ViewEncapsulation,
-    Input, forwardRef, EventEmitter,
-    Output, SimpleChanges, ViewChild, ElementRef
-}                            from '@angular/core';
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef,
+    EventEmitter,
+    Output,
+    SimpleChanges,
+    ViewChild,
+    ElementRef
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { Watcher }                   from '../../../services/apply.service';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { BaseDropdown } from '../injDropdown';
+
+import { DropdownItem } from './dropdown.component.types';
 
 /* Usage
  <nx-select [id]="select.id"
@@ -23,15 +31,15 @@ import { Watcher }                   from '../../../services/apply.service';
  */
 
 @Component({
-    selector      : 'nx-select',
-    templateUrl   : 'dropdown.component.html',
-    styleUrls     : ['dropdown.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-select',
+    templateUrl: 'dropdown.component.html',
+    styleUrls: ['dropdown.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxGenericDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxGenericDropdown),
+            multi: true
         }
     ]
 })
@@ -47,10 +55,17 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() hrMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
-    @Input() forcePosition: {left?: number, top?: number, width?: number, offsetTop?: number}
+    @Input() hideSelectedItem = false;
+    @Input() forcePosition: {
+        left?: number,
+        top?: number,
+        width?: number,
+        offsetTop?: number
+    }
+    // eslint-disable-next-line lines-between-class-members
     @Input() allowHTML = false;
 
-    @Output() onSelected = new EventEmitter<string>();
+    @Output() onSelected = new EventEmitter<DropdownItem>();
 
     dropdownType: string;
     nativeElementTop = 0
@@ -68,7 +83,7 @@ export class NxGenericDropdown extends BaseDropdown {
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';
 
-        this.items.forEach((item) => {
+        this.items?.forEach((item) => {
             if (item.help && !item.name.includes(item.help)) {
                 item.name += `<span class="additional-help">${item.help}</span>`;
             }
@@ -79,11 +94,13 @@ export class NxGenericDropdown extends BaseDropdown {
 
     ngAfterViewInit() {
         Promise.resolve().then(() => {
-            this.nativeElementTop = this.forcePosition ? this.ref.nativeElement.parentElement.parentElement.offsetTop : this.ref.nativeElement.offsetHeight;
+            this.nativeElementTop = this.forcePosition
+                ? this.ref.nativeElement.parentElement.parentElement.offsetTop
+                : this.ref.nativeElement.offsetHeight;
         });
     }
 
-    change(item) {
+    change(item: DropdownItem) {
         this._selectedItem = item;
         this.onSelected.emit(item);
         this.onChangeCallback(this._selectedItem);
@@ -99,13 +116,15 @@ export class NxGenericDropdown extends BaseDropdown {
         }
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected && changes.selected.currentValue) {
-            if (changes.selected.currentValue.help &&
-                changes.selected.currentValue.name.indexOf('additional-help') === -1) {
-                changes.selected.currentValue.name += `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
+            if (
+                changes.selected.currentValue.help &&
+                !changes.selected.currentValue.name.includes('additional-help')
+            ) {
+                changes.selected.currentValue.name +=
+                    `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
             }
-
             this._selectedItem = changes.selected.currentValue;
-        } else if (!this.selected && !changes.selected.firstChange) {
+        } else if (!this.selected && !changes.selected?.firstChange) {
             this._selectedItem = { name: this.message, value: '0' };
         }
     }
@@ -116,14 +135,4 @@ export class NxGenericDropdown extends BaseDropdown {
             this.change(item);
         }
     }
-}
-
-export class DropdownItem {
-    constructor(
-        public name: string,
-        public help?: string,
-        public value?: string,
-        public state?: string,
-        public disabled?: boolean
-    ) {}
 }

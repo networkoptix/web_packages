@@ -1,5 +1,36 @@
-@use '../../styles/theme_variables' as *;
+@use "../../styles/theme_variables" as *;
 
+.cdk-overlay-container {
+    // At the moment we don't use backdrop and we need header to be over overlay
+    // some modifications will be needed when we replace ngbModal (introducing overlay with backdrop)
+    z-index: 4 !important;
+}
+
+.cdk-overlay-pane {
+    border        : none;
+    border-radius : 2px;
+    box-shadow    : 0 1rem 2rem 0 transparentize($dark15, 0.4);
+    
+    &.system-popover {
+        width   : 250px;
+        z-index : 4;
+        
+        .system-name {
+            font-family   : $font-family-medium;
+            overflow      : hidden;
+            text-overflow : ellipsis;
+            white-space   : nowrap;
+        }
+        
+        .reminder {
+            font-family : $font-family-medium;
+            color       : var(--light16);
+            margin-left : 28px;
+        }
+    }
+}
+
+// TODO: Remove after retiring NgbPopover
 .popover {
     border : none;
     border-radius: 2px !important;
@@ -14,9 +45,22 @@
             transform   : translateX(-50%);
         }
     }
+    
+    &.bs-popover-right {
+        & > .arrow {
+            margin-top : -1rem !important;
+            transform   : translateX(-50%);
+        }
+    }
+    
+    &.systems-popover {
+        width : 250px;
+    }
 }
 
 .tooltip {
+    pointer-events: none !important;
+
     &.bs-tooltip-top {
         & > .arrow {
             left : calc(50% - 1rem); // move it to the center

@@ -1,14 +1,12 @@
 .section-table-wrapper {
-    @media screen and (max-width: 576px) {
-        overflow-x : scroll;
-    }
+    overflow-x : scroll;
 
     table {
-        grid-template-columns : 120px 100px 100px auto;
-        min-width             : 450px !important;
+        grid-template-columns : 120px 100px 100px 100px auto;
+        min-width: 681px;
 
         .table-row-spacer {
-            grid-column-end : span 4;
+            grid-column-end : span 5;
         }
     }
 }

@@ -1,25 +1,30 @@
 import {
     AfterContentInit,
-    AfterViewInit,
-    Component, ElementRef, EventEmitter, Input,
-    Output, ViewChild
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild
 } from '@angular/core';
 
 import {
-    InfoBlockSection, InfoBlockSections, InfoBlockLine
-}                                   from '../../../../components/info-block/info-block.component';
-import { NxHealthService }          from '../../health.service';
-import { NxHealthLayoutService }    from '../../health-layout.service';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+    InfoBlockSection,
+    InfoBlockSections,
+    InfoBlockLine
+} from '@components/info-block/info-block.component';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+
+import { NxHealthLayoutService } from '../../health-layout.service';
+import { NxHealthService } from '../../health.service';
 
 @Component({
-    selector    : 'nx-dynamic-table-panel-component',
-    templateUrl : './dynamic-table-panel.component.html',
-    styleUrls   : ['./dynamic-table-panel.component.scss']
+    selector: 'nx-dynamic-table-panel-component',
+    templateUrl: './dynamic-table-panel.component.html',
+    styleUrls: ['./dynamic-table-panel.component.scss']
 })
 export class NxDynamicTablePanelComponent implements AfterContentInit {
-
     @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 
@@ -54,14 +59,36 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
                     .map(({ description, name, id: paramGroupId, values }) => {
                         const lines = values.map(({ id, name }) => new InfoBlockLine(
                             name || id,
-                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
-                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
-                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon,
+                            (
+                                (
+                                    activeEntity[paramGroupId] &&
+                                    activeEntity[paramGroupId][id] &&
+                                    activeEntity[paramGroupId][id].text
+                                ) || '_'
+                            ),
+                            (
+                                activeEntity[paramGroupId] &&
+                                activeEntity[paramGroupId][id] &&
+                                activeEntity[paramGroupId][id].class
+                            ),
+                            (
+                                activeEntity[paramGroupId] &&
+                                activeEntity[paramGroupId][id] &&
+                                activeEntity[paramGroupId][id].icon
+                            ),
                             true,
-                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].tooltip
+                            (
+                                activeEntity[paramGroupId] &&
+                                activeEntity[paramGroupId][id] &&
+                                activeEntity[paramGroupId][id].tooltip
+                            )
                         ));
                         const maxParamWidthPercentage = 58;
-                        return new InfoBlockSection(lines, description || name || paramGroupId, maxParamWidthPercentage);
+                        return new InfoBlockSection(
+                            lines,
+                            description || name || paramGroupId,
+                            maxParamWidthPercentage
+                        );
                     });
             }
         });

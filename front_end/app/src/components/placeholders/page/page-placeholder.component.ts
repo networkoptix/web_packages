@@ -1,11 +1,17 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntilDestroy }                                           from '@ngneat/until-destroy';
-import { SubscriptionLike }                                       from 'rxjs';
+import {
+    Component,
+    Input,
+    OnInit,
+    SimpleChanges,
+    ViewEncapsulation,
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { SubscriptionLike } from 'rxjs';
 
-import { NxLanguageProviderService }                              from '../../../services/nx-language-provider';
-import { IConfig, NxConfigService }                               from '../../../services/nx-config';
-import { NxScrollMechanicsService }                               from '../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes }                                from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 /* Usage
  <nx-page-placeholder
@@ -21,22 +27,23 @@ import { LanguageI18NStaticTypes }                                from '../../..
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-page-placeholder',
-    templateUrl   : 'page-placeholder.component.html',
-    styleUrls     : ['page-placeholder.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-page-placeholder',
+    templateUrl: 'page-placeholder.component.html',
+    styleUrls: ['page-placeholder.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
+export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;
     @Input() iconClass: string;
     @Input() placeholderTitle: string;
     @Input() message: string;
     @Input() preloader: boolean;
     @Input() condition: boolean;
-    @Input() withFooter;
+    @Input() withFooter: boolean | '';
     @Input() constrainWidth: boolean;
-    @Input() data: any;
+    @Input() data: { systemName: string };
     @Input() showMainButton = false;
+    @Input() addPadding = true;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -65,11 +72,18 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {}
+    ngOnInit(): void {
+        this.withFooter = this.withFooter || this.withFooter === '';
+        this.setupPlaceholder();
+    }
 
-    ngOnInit() {
-        this.withFooter = (this.withFooter !== undefined);
+    ngOnChanges(changes: SimpleChanges) {
+        if (!changes.data?.firstChange) {
+            this.setupPlaceholder();
+        }
+    }
 
+    setupPlaceholder(): void {
         if (this.type) {
             if (!this.preloader && !this.condition) {
                 this.preloader = false;
@@ -126,6 +140,11 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = this.LANG.errorCodes.failedToAccessCamera();
                     this.iconName = 'NoAccess';
                     break;
+                case 'FAILED_TO_ACCESS_2FA':
+                    this.placeholderTitle = this.LANG.pageTitles.failedToAccess2FA({ systemName: this.data.systemName });
+                    this.message = this.LANG.errorCodes.failedToAccess2FA();
+                    this.iconName = 'NoAccess';
+                    break;
                 case '404' :
                     this.placeholderTitle = this.LANG.pageTitles.pageNotFound();
                     this.message = '';
@@ -149,6 +168,16 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.placeholderTitle = this.LANG.placeholderTexts.noSettings.title();
                     this.message = this.LANG.placeholderTexts.noSettings.message();
                     this.iconName = 'NoSettings';
+                    break;
+                case 'NO_SYSTEM_FOUND_API_TOOL':
+                    this.iconName = '404';
+                    this.message = '';
+                    this.placeholderTitle = this.LANG.placeholderTexts.noSystemApiTool.title();
+                    break;
+                case 'SYSTEM_FAILED_TO_LOAD_API_TOOL':
+                    this.iconName = '404';
+                    this.message = '';
+                    this.placeholderTitle = this.LANG.placeholderTexts.systemLoadFailureApiTool.title();
                     break;
             }
         }

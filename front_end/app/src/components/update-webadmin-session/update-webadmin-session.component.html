@@ -1,0 +1,51 @@
+<form #loginForm="ngForm" name="loginForm" novalidate
+      [ngClass]="{'hide-errors': flags.hideErrors}"
+      (submit)="flags.hideErrors = false">
+    <div class="modal-body">
+        <ng-container *ngIf="isCloud; else local">
+            <p translate>To continue log in to %CLOUD_NAME% in the tab that popped up.</p>
+        </ng-container>
+        <ng-template #local>
+            <p translate>Enter your account password to continue</p>
+            <div class="form-group">
+                <label for="login_email" translate>Login</label>
+                <input type="email" class="form-control"
+                       id="login_email" name="login_email" #login_email="ngModel"
+                       [ngModel]="auth.login"
+                       (ngModelChange)="setLogin($event); resetForm()"
+                       maxlength="255"
+                       disabled
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="login_password" translate>Password</label>
+                <input type="password" class="form-control"
+                    name="login_password"
+                    id="login_password"
+                    #login_password="ngModel"
+                    [(ngModel)]="auth.password"
+                    (ngModelChange)="resetForm()"
+                    maxlength="255"
+                    required nxFocusMe>
+                <div class="input-error"
+                    *ngIf="login_password?.invalid && (login_password.dirty || login_password.touched) && login_password.errors.required"
+                    translate>Password is required</div>
+                <div class="input-error" *ngIf="flags.wrongCredentials" translate>Wrong login or password</div>
+                <div class="input-error" *ngIf="flags.accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+            </div>
+        </ng-template>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            buttonText="{{ 'Continue' | translate }}"
+            [form]="loginForm"
+            [process]="login"
+            [actionType]="processAction"
+            [buttonDisabledInProgress]="isCloud"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="login"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

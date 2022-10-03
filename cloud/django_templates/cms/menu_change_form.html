@@ -1,18 +1,49 @@
 {% extends "admin/change_form.html" %}
-{% load static %}
+{% load static cms_filters %}
 {% block extrahead %}
+    <style>
+        .duplicate-url:after {
+            content: "Duplicate Url";
+            position: absolute;
+            color: red;
+            right: 6px;
+            top: 0;
+        }
+    </style>
     <link rel="stylesheet" href="{% static "css/nested_stacked_overrides.css" %}">
     {{ block.super }}
+    <style>
+        .sync-blocks {
+            cursor: pointer;
+            text-decoration: none !important;
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 0 2px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            color: #333;
+        }
+    </style>
 {% endblock %}
 
 {% block object-tools-items %}
     {% if user.is_superuser %}
+        {% if zendesk_sync_url%}
+            <li>
+                <a href="{{ zendesk_sync_url }}">Zendesk Menu Sync</a>
+            </li>
+        {% endif %}
         <li>
             <a href="{% url 'admin:menu_porting' %}">Import/Export Menus</a>
         </li>
         <li>
             <a href="{% url 'admin:zendesk_import' %}">Import from Zendesk</a>
         </li>
+        {% if customization and zendesk_mapping_url %}
+            <li>
+                <a href="{{ zendesk_mapping_url }}">Zendesk Mapping</a>
+            </li>
+        {% endif %}
         <li>
             <a href="{{ preview_url_draft }}">Draft</a>
         </li>
@@ -24,12 +55,51 @@
 {% endblock %}
 {% block content %}
     {{block.super}}
+    {% if sync_states %}
+        <div class="form-row field-customization_view" id="sync_states">
+            <div>
+                <label>Sync State:</label>
+                {% for customization in sync_states %}
+                    <a href="{{zendesk_sync_url}}#{{customization.customization_name}}" class="sync-blocks" target="_blank" title="Open sync page for {{customization.customization_name}} customization">
+                        <span>{{customization.customization_name}}</span>
+                        <span class="label label-{{label_lookup|get_item:customization.state}}">{{customization.state}}</span>
+                    </a>
+                {% endfor %}
+                <button data-menu-id="{{menu_id}}" data-customization="{{customization}}" class="btn btn-primary btn-sm sync-button">Force Sync for {% firstof customization "ALL" %}</button>
+                <div class="help">Current sync state for customizations that have Zendesk sync enabled.</div>
+            </div>
+        </div>
+    {% endif %}
     {% if preview_url_draft %}
         <div id="menuPreviewErrors"></div>
         <iframe class="previewFrame" src="{{ preview_url_draft }}" style="width: 100%; height: 80vh"></iframe>
     {% endif %}
     <script type="text/javascript">
         const assetInfo = JSON.parse('{{asset_info|safe}}')
+        const syncMenu = event => {
+            event.stopPropagation()
+            event.preventDefault()
+            const endpoint = "{% url 'menu_force_sync' %}"
+            const menu_id = event.target.dataset.menuId
+            const customization = event.target.dataset.customization
+            const payload = {menu_id}
+            const csrf = document.querySelector('[name="csrfmiddlewaretoken"]').value
+            if (customization) {
+                payload['customizations'] = [customization]
+            }
+            fetch(endpoint, {
+                method: 'post',
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "X-CSRFToken": csrf
+                }
+            }).then(res => res.json()).then(message => {
+                const refreshMessage = "\n\nPlease refresh page to see latest sync states or open the menu sync page"
+                alert(message + refreshMessage)
+            })
+        }
+        document.querySelectorAll(".sync-button").forEach(button => button.addEventListener('click', syncMenu))
     </script>
     <script src="{% static 'js/menuChange.js' %}"></script>
 {% endblock %}

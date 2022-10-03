@@ -1,12 +1,16 @@
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { environment }                                      from '@environments/environment';
-import { NxCloudApiService }                                from '../../../nx-cloud-api';
-import { NxSystemAPIService, NxSystemAPI, ResourceParam }   from '../../../system-api.service';
-import { NxUtilsService }                                   from '../../../utils.service';
-import { NxSystemServer, ModuleInfo, IParams }              from '../system-types';
-import { NxSystemRestAPI }                                  from '@services/system-rest-api.service';
-import { NxSystem }                                         from '../system';
+import { environment } from '@environments/environment';
+import type { APIDocVersion } from '@services/nx-config/base-config';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+
+import { NxCloudApiService } from '../../../nx-cloud-api';
+import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../../system-api.service';
+import { NxUtilsService } from '../../../utils.service';
+import { NxSystem } from '../system';
+import { NxSystemServer, ModuleInfo, IParams } from '../system-types';
+
 export class ServerManager {
     mediaserverConnections: {
         [serverId: string]: NxSystemAPI | NxSystemRestAPI;
@@ -14,6 +18,7 @@ export class ServerManager {
 
     servers: NxSystemServer[] = []
     moduleInfo: ModuleInfo;
+    serverSubscription: Observable<any>;
 
     constructor(
         public mediaserver: NxSystemAPI | NxSystemRestAPI,
@@ -31,12 +36,20 @@ export class ServerManager {
 
         if (this.servers.length) {
             this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
-                const unauthorizedCallback = environment.isLocal
-                    ? () => Promise.resolve()
-                    : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
-                        this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                        return Promise.resolve(true);
-                    });
+                let unauthorizedCallback = () => Promise.resolve(true);
+                if (!environment.isLocal) {
+                    unauthorizedCallback = this.system.useRest
+                        ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then((tokens) => {
+                            (<NxSystemRestAPI> this.mediaserver)
+                                .setTokens(tokens, true)
+                                .subscribe(() => {});
+                            return Promise.resolve(true);
+                        })
+                        : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                            return Promise.resolve(true);
+                        });
+                }
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
@@ -60,23 +73,25 @@ export class ServerManager {
 
     getForceServers(useCache, servers?) {
         if (!servers) {
-            const serverSubscription = this.mediaserver.getMediaServers(useCache);
-            serverSubscription.subscribe((res: any) => {
-                if (!res) {
-                    return Promise.reject(new Error(`Request to server has failed ${res}`));
-                }
+            if (!this.serverSubscription || !useCache) {
+                this.serverSubscription = this.mediaserver.getMediaServers(useCache);
+                this.serverSubscription.subscribe((res: any) => {
+                    if (!res) {
+                        return Promise.reject(new Error(`Request to server has failed ${res}`));
+                    }
 
-                this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
-                return this.servers;
-            });
-            return serverSubscription;
+                    this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+                    return this.servers;
+                });
+            }
+            return this.serverSubscription;
         } else {
             this.servers = servers.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
         }
     }
 
-    getPreviewUrl(cameraId, time, width, height, rotate) {
-        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate);
+    getPreviewUrl(cameraId, time, width, height, rotate, auth?) {
+        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
     }
 
     setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string; }) {
@@ -118,13 +133,17 @@ export class ServerManager {
         }
     }
 
+    getModuleInfoUsingUrl(url: string) {
+        return this.mediaserver.getModuleInfoUsingUrl(url);
+    }
+
     changeServerPort(port: number, serverId: string) {
         return this.mediaserverConnections[serverId].changePort(port)
             .catch(err => Promise.reject(err));
     }
 
     logLevel(serverId: string) {
-        return this.mediaserverConnections[serverId].logLevel().toPromise();
+        return this.mediaserverConnections[serverId].logLevel();
     }
 
     setLogLevels(serverId: string, loggers: IParams) {
@@ -160,12 +179,12 @@ export class ServerManager {
     }
 
     restartServer(serverId: string) {
-        return this.mediaserverConnections[serverId].restartServer()
+        return this.mediaserverConnections[serverId].restartServer(serverId)
             .catch(err => Promise.reject(err));
     }
 
     detachFromSystem(serverId: string, currentPassword: string) {
-        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
+        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword, serverId);
     }
 
     removeMediaserver(anotherServerId: string, serverIdToRemove: string) {
@@ -173,7 +192,7 @@ export class ServerManager {
     }
 
     restoreFactorySettings(serverId: string, currentPassword: string) {
-        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
+        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword, serverId);
     }
 
     /**
@@ -192,8 +211,18 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
-    getApiDoc(serverId: string) {
-        return this.mediaserverConnections[serverId].getApiDoc();
+    getApiDoc(type: APIDocVersion = 'main') {
+        return this.mediaserver.getApiDoc(type);
+    }
+
+    getApiChangelog() {
+        const mediaServer = this.mediaserver as NxSystemRestAPI;
+        return mediaServer.getApiChangelog();
+    }
+
+    getApiPreamble() {
+        const mediaServer = this.mediaserver as NxSystemRestAPI;
+        return mediaServer.getApiPreamble();
     }
 
     getStorages(serverId, useCache = false, customTimeout = 8000) {
@@ -206,6 +235,14 @@ export class ServerManager {
 
     getServerStats(serverId, useCache = false) {
         return this.mediaserverConnections[serverId].getServerStats(useCache);
+    }
+
+    getStatistics(serverId: string) {
+        return this.mediaserverConnections[serverId].getStatistics();
+    }
+
+    getLogs(serverId: string, params) {
+        return this.mediaserverConnections[serverId].logUrl(params);
     }
 
     parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string; }) {

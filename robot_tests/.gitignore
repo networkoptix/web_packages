@@ -1,8 +1,8 @@
+.gitignore
 *.png
 *.xml
 *.html
 *.tar
-*.deb
 *.exe
 *.pabotsuitenames
 outputs
@@ -18,7 +18,8 @@ pabot_results
 /libspecs/
 *.idea
 *check.robot
-chromedriver
 *.csv
-DockerQA/*
 server-connect.robot
+robot.sh
+pabot.sh
+/test_results

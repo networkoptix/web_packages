@@ -1,34 +1,46 @@
-import { Component, TemplateRef }              from '@angular/core';
-import { animate, style, transition, trigger } from '@angular/animations';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+    TemplateRef
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { NxToastService } from '@dialogs/toast.service';
-
+@UntilDestroy()
 @Component({
-    selector    : 'app-toasts',
-    templateUrl : 'toast.component.html',
-    styleUrls   : ['toast.component.scss'],
-    host        : { '[class.nx-toasts]': 'true' },
-    animations  : [
-        trigger('fadeInOut', [
-            transition(':enter', [
-                style({ opacity: 0 }),
-                animate('.2s ease-in', style({ opacity: 1 }))
-            ]),
-            transition(':leave', [
-                animate('.5s ease-out', style({ opacity: 0 }))
-            ])
-        ])
-    ]
+    selector: 'nx-toast',
+    templateUrl: 'toast.component.html',
+    styleUrls: ['toast.component.scss']
 })
-export class ToastsContainer {
-    constructor(public toastService: NxToastService) {
+export class NxToast implements OnChanges {
+    @Input() toast: any;
+    @Output() hide = new EventEmitter<boolean>();
+
+    destroy$ = new Subject();
+    isTemplate: boolean;
+
+    constructor() {
     }
 
-    isTemplate(toast) {
-        return toast.textOrTpl instanceof TemplateRef;
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.toast.currentValue) {
+            this.isTemplate = this.toast.textOrTpl instanceof TemplateRef;
+
+            if (this.toast.autohide) {
+                timer(this.toast.delay).pipe(
+                    takeUntil(this.destroy$)
+                ).subscribe(() => this.remove());
+            }
+        }
     }
 
-    remove(toast) {
-        this.toastService.remove(toast);
+    remove() {
+        this.destroy$.next();
+        this.hide.emit(true);
     }
 }

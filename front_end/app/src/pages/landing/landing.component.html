@@ -6,7 +6,7 @@
 
         <p *ngIf="!userEmail" class="button d-flex justify-content-center auth-hidden">
             <a class="btn btn-primary"
-               routerLink="/register" role="button" translate>Create Account</a>
+                [href]="createUrl | unsafe" role="button" translate>Create Account</a>
         </p>
         <p *ngIf="userEmail" class="button d-flex justify-content-center auth-hidden">
             <a class="btn btn-primary"

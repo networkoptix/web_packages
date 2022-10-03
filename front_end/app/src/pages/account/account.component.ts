@@ -1,105 +1,82 @@
-import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxUriService }              from '../../services/uri.service';
-import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../services/systems.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxMenuService }             from '../../menu';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSessionService } from '@services/session.service';
+import { NxMenuService } from '@src/menu';
+import type { Content } from '@src/menu/menu.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'account',
-    templateUrl : 'account.component.html',
-    styleUrls   : ['account.component.scss']
+    selector: 'account',
+    templateUrl: 'account.component.html',
+    styleUrls: ['account.component.scss']
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    content: any = {};
+    content: Partial<Content> = {};
     menuReady = false;
-
-    account: any = {};
-    pass: any = {};
-
-    save;
-    changePassword;
+    userEmail: string;
+    private loginStateSubscription: Subscription;
     private menuDetailSubscription: Subscription;
-
-    private setupDefaults() {
-        this.pass = {
-            password    : '',
-            newPassword : ''
-        };
-    }
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private route: ActivatedRoute,
-        private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
-        private systemsService: NxSystemsService,
-        private accountService: NxAccountService,
-        private dialogs: NxDialogsService,
-        private uriService: NxUriService,
+        private sessionService: NxSessionService,
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe(translation => {
             this.LANG = translation as LanguageI18NStaticTypes;
-            this.init();
         });
-
-        this.setupDefaults();
     }
 
     ngOnDestroy() {}
 
     ngOnInit(): void {
-        this.accountService.get()
-            .then((account) => {
-                this.account = account;
+        this.loginStateSubscription = this.sessionService.loginStateSubject
+            .subscribe((loginState: string) => {
+                this.userEmail = loginState;
                 this.init();
             });
     }
 
     init(): void {
         const accountMenu = this.CONFIG.menus.account;
-        if (this.account === undefined) {
+        if (!this.userEmail) {
             return;
         }
         this.content = {
-            base            : accountMenu.baseUrl,
-            selectedSection : accountMenu.settings.id,
-            level1          : [
+            base: accountMenu.baseUrl,
+            selectedSection: accountMenu.settings.id,
+            level1: [
                 {
-                    id     : accountMenu.settings.id,
-                    icon   : accountMenu.icon,
-                    label  : this.account.email || this.account.first_name,
-                    path   : accountMenu.settings.path,
-                    level3 : [
+                    id: accountMenu.settings.id,
+                    svg: accountMenu.icon,
+                    label: this.userEmail,
+                    path: accountMenu.settings.path,
+                    level3: [
                         {
-                            id    : accountMenu.settings.id,
-                            label : this.LANG.account.accountSettings(),
-                            path  : accountMenu.settings.path
+                            id: accountMenu.settings.id,
+                            label: this.LANG.account.accountSettings(),
+                            path: accountMenu.settings.path
                         },
                         {
-                            id    : accountMenu.password.id,
-                            label : this.LANG.account.changePassword(),
-                            path  : accountMenu.password.path
+                            id: accountMenu.password.id,
+                            label: this.LANG.account.changePassword(),
+                            path: accountMenu.password.path
+                        },
+                        {
+                            id: accountMenu.security.id,
+                            label: this.LANG.account.security(),
+                            path: accountMenu.security.path
                         }
                     ]
                 }

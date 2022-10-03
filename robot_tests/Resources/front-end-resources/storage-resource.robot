@@ -1,3 +1,27 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          system-camera-resource.robot
+Resource          system-server-resource.robot
+
+*** Variables ***
+#${QA BURBANK IP}     10.1.5.34
+${password}    ${BASE PASSWORD}
+${url}         ${ENV}
+${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
+${storage string 2}    ${EMPTY}
+${camera}      00-09-18-64-EE-7D
+${camera url}    10.1.5.168
+${camera manufacturer}    3100
+${camera user}    admin
+${camera password}    QAbur777$
+${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+${disk location}    /media/nxwitness-storages/disk1
+${backup initialized}    ${FALSE}
+${change focus}    //h4[contains(text(),"Storage")]
+@{disk size}    80000    30000    30000    12000    12000
+${networkdisk}    //${QA BURBANK IP}/networkdisk
+${drives}    5
+
 *** Keywords ***
 Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
@@ -18,11 +42,16 @@ Storage Suite Setup
     @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
     Set Suite Variable    @{disk}    @{disk}
     FOR    ${n}    IN RANGE    5
+        # for this to work your QABurbank has to have a /media/nxwitness-storages/disk1 folder in root
+        # this creates 5 virtual disks and creates 2 command line strings that are added to the docker creation step later
         ${new disk} =     Create Virtual Disk    ${disk location}    disk${n}-${random}    ${disk size[${n}]}    disk${n}
         Set List Value    ${disk}    ${n}    ${new disk}
         Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}
-        Run Keyword If    ${n} < 4     Catenate Storages One    ${disk[${n}]}[string]
-        ...    ELSE     Catenate Storages Two    ${disk[${n}]}[string]
+        IF    ${n} < 4
+            Catenate Storages One    ${disk[${n}]}[string]
+        ELSE
+            Catenate Storages Two    ${disk[${n}]}[string]
+        END
     END
     #${storage string 1} =    Get Substring    ${storage string 1}    1
     ${storage string 2} =    Get Substring    ${storage string 2}    1    
@@ -47,7 +76,7 @@ Storage Suite Setup
     Sleep    5
     Log    trial license activated .....| PASS |    DEBUG      console=${console}
     Add Analytics stub plugin   ${server 1['name']}
-    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${camera manufacturer}
+    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${server 1}[local auth]    ${camera manufacturer}
     Log    ${results}
     Log    camera added ..... | PASS |    DEBUG      console=${console}
     Sleep    15
@@ -81,7 +110,6 @@ Storage Suite Teardown
         Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END
     Remove Directory    networkdisk/*
-    Remove All Files    networkdisk/*
     Close All Browsers
 
 Verify Storages
@@ -96,7 +124,7 @@ Verify Storages
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number}
     Run Keyword If    ${login}    Run Keywords
-    ...    Log Out    AND
+    ...    Log Out    add_delay=1    AND
     ...    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
 
 Turn on Recording
@@ -176,10 +204,10 @@ Check Analytics Data is Present
     # ${year} =    Get Substring    ${date}    0    4
     # ${month} =    Get Substring    ${date}    5    7
     Verify File Exists    ${disk}-${random}    object_detection.sqlite
-    # Run Keyword Unless    '${IMAGE}' == '${IMAGE 4.3}' or ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
-    # Run Keyword Unless    '${IMAGE}' == '${IMAGE 4.3}' or ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
-    Run Keyword Unless    ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
-    Run Keyword Unless    ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
+    IF    ${keep} == ${False}
+        Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
+        Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
+    END
 
     # Open Connection    ${QA BURBANK IP}
     # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
@@ -199,7 +227,9 @@ Wait For Analytics Move Dialog
     [Arguments]    ${disk}
     ${status} =    Run Keyword and Return Status
     ...    Wait Until Element Is Visible    ${CHANGE ANALYTICS MODAL}
-    Run Keyword Unless    ${status}    Retry For Analytics Move Dialog    30    30    ${disk}
+    IF    ${status} == ${False}
+        Retry For Analytics Move Dialog    30    30    ${disk}
+    END
 
 Retry For Analytics Move Dialog
     [Arguments]    ${attempts}    ${interval}    ${disk}
@@ -219,7 +249,9 @@ Wait Until Analytics Data Exists
     [Arguments]    ${attempts}    ${interval}    ${disk}    ${camera}    ${server name}
     FOR    ${attempt}    IN RANGE     ${attempts}
         ${status} =    Run Keyword And Return Status    Check Analytics Data is Present     ${disk}    ${camera}    ${server name}
-        Run Keyword Unless    ${status}    Sleep    ${interval}
+        IF    ${status} == ${False}
+            Sleep    ${interval}
+        END
         Exit For Loop If     ${status}
     END
     Check Analytics Data is Present     ${disk}    ${camera}    ${server name}
@@ -375,14 +407,35 @@ Cleanup External Drive
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot  
     Log To Console   networkdisk deleted ....... | PASS |
     
-Skip If Image Is
-    [Arguments]    @{unsupported images}
-    FOR    ${item}    IN    @{unsupported images}
-        Skip If    '${IMAGE}' == '${item}'    Backup Archive not supported with ${IMAGE}
-    END
-    
 Wait Until Storages Are Outdated and Refresh
-    Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}
+    Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}     timeout=65
     Click Element    ${RELOAD ICON} 
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN} 
-    
+
+Convert Disk String to List
+    [Arguments]   ${string}
+    IF    '${string}' != '${None}'
+        ${length} =     Get Length   ${string}
+    ELSE
+        ${length} =    Set Variable    0
+    END
+    IF   ${length} > 5
+        @{list} =   Split String    ${string}    ${SPACE}
+    ELSE
+        ${list} =   Create List     ${string}
+    END
+    [Return]    ${list}
+
+Restart
+    # ${status} =    Run Keyword And Return Status    Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Set Window Size    1920    1080
+    Common Restart Logout    ${url}
+    Reset to Default Storage Config
+
+Test Setup
+    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
+    ${disabled disks} =    Convert Disk String to List      ${disabled}
+    ${backup disks} =    Convert Disk String to List      ${backups}
+    Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
+    Log in to user and system    ${email}     ${system}
+    Go to Servers

@@ -1,0 +1,59 @@
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<ng-container *ngIf="context && asset?.values; else preloader">
+    <nx-block header-style="slim">
+        <nx-section>
+            <form #editForm="ngForm">
+                <section *ngFor="let structure of context.fields" [ngClass]="'section-' + structure.name">
+                    <label [for]="structure.name" [nxTooltip]="!structure.optional && ('This field is required' | translate)">
+                        {{structure.label}}
+                        <span *ngIf="!structure.optional" class="input-error">*</span>
+                    </label>
+                    <span *ngIf="context.global && structure.label">{{structure.name}}</span>
+                    <ng-container [ngSwitch]="structure.type">
+                        <nx-html *ngSwitchCase="INPUT_TYPE.HTML"
+                            [name]="structure.name"
+                            (ngModelChange)="clearErrors(structure.name)"
+                            [(ngModel)]="asset.values[structure.name]"></nx-html>
+                        <input *ngSwitchDefault
+                            [type]="structure.type"
+                            [name]="structure.name"
+                            [placeholder]="structure.placeholder || ''"
+                            (ngModelChange)="clearErrors(structure.name)"
+                            [(ngModel)]="asset.values[structure.name]"
+                            class="form-control">
+                    </ng-container>
+                    <div *ngIf="structure.description" [innerHTML]="structure.description" class="context-field-description"></div>
+                    <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
+                        <span *ngFor="let error of errors" class="input-error">{{error}}</span>
+                    </div>
+                </section>
+            </form>
+        </nx-section>
+    </nx-block>
+
+    <div class="apply-wrapper">
+        <div *ngIf="hasErrors" class="input-error mb-3" translate>Fill in all required fields</div>
+        <div class="placeholder-text d-flex ">
+            <nx-process-button
+                [process]="saveContext"
+                [actionType]="'primary'"
+                [form]="editForm"
+                [clickFn]="onDownloadClick"
+                [removeMinWidth]="true"
+                buttonText="{{ 'Save & Download' | translate }}"></nx-process-button>
+            <nx-process-button
+                customClass="ml-2"
+                [process]="saveContext"
+                [actionType]="'default'"
+                [form]="editForm"
+                [removeMinWidth]="true"
+                buttonText="{{ 'Save' | translate }}"></nx-process-button>
+            <nx-cancel-button
+                [discardFn]="discard"
+                customClass="ml-2"></nx-cancel-button>
+        </div>
+    </div>
+</ng-container>

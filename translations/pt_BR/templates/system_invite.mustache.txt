@@ -9,5 +9,5 @@ Você está convidado a juntar-se a %CLOUD_NAME%.
 Você recebeu acesso a {{message.system_name}}.
 {{/message.sharer_name}}
 
-Cadastre-se e visualize o sistema: {{config.portal_url}}/ register /{{message.code}}
+Cadastre-se e visualize o sistema: {{config.portal_url}}/ autorizar / registrar /{{message.code}}
 

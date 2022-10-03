@@ -16,6 +16,13 @@
             }
         }
 
+        &-content {
+            h2, h3, h4 {
+                margin-top: $line-height-computed;
+                margin-bottom: $line-height-computed;
+            }
+        }
+
         &-logo {
             float               : left;
             display             : flex;
@@ -75,6 +82,11 @@
         .card--separator {
             border-bottom-color : $light6;
         }
+    }
+
+    .light-gray {
+        background: $additional_light1;
+        border-bottom: 1px solid $light3;
     }
 
     .hint {

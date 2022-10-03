@@ -1,4 +1,14 @@
 *** Variables ***
+${email}                              ${EMAIL OWNER}
+${password}                           ${BASE PASSWORD}
+@{cloud auth}                         ${EMAIL OWNER}    ${BASE PASSWORD}
+${url}                                ${ENV}
+${impossible search}                  velociraptor
+${nothing found}                      Nothing found
+${simple criteria}                    s
+${and criteria}                       s a
+${or criteria}                        s|a
+
 #Systems - left menu
 ${LEFT MENU}                          //nx-menu
 ${LEFT MENU BUTTONS}                  ${LEFT MENU}//div[contains(@class, 'nx-menu-section')]//nx-menu-button

@@ -1,5 +1,4 @@
 <ng-container *ngIf="account?.id || account?.email; else preloader">
-
     <div class="col-12 p-0">
         <nx-block>
             <header>
@@ -7,7 +6,9 @@
             </header>
 
             <nx-section>
-                <form #accountForm="ngForm" name="accountForm" class="form" novalidate [ngClass]="{'hide-errors': hideErrors}">
+                <form #accountForm="ngForm" name="accountForm"
+                      class="form" novalidate
+                      [ngClass]="{'hide-errors': hideErrors}">
                     <div class="inputs d-block d-md-table w-100 mw-100">
                         <div class="form-group d-block d-md-table-row mb-2">
                             <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
@@ -16,9 +17,8 @@
                             <div class="d-block d-md-table-cell">
                                 <div class="row pb-md-2">
                                     <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                        <input type="text" class="form-control"
-                                               [ngModel]="account.first_name"
-                                               (ngModelChange)="changeFirstName($event)"
+                                        <input type="text" class="fs-mask form-control"
+                                               [(ngModel)]="account.first_name"
                                                name="firstName" id="firstName" #firstName="ngModel"
                                                pattern="\S+.*"
                                                maxlength="255"
@@ -39,9 +39,8 @@
                             <div class="d-block d-md-table-cell">
                                 <div class="row pb-md-2">
                                     <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                        <input type="text" class="form-control"
-                                               [ngModel]="account.last_name"
-                                               (ngModelChange)="changeLastName($event)"
+                                        <input type="text" class="fs-mask form-control"
+                                               [(ngModel)]="account.last_name"
                                                name="lastName" id="lastName" #lastName="ngModel"
                                                pattern="\S+.*"
                                                maxlength="255"
@@ -60,10 +59,11 @@
             </nx-section>
             <nx-section>
                 <div class="float-right">
-                    <div class="d-inline-block" [ngbTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount() : ''">
+                    <div class="d-inline-block"
+                         [nxTooltip]="isSystemOwner || account.account2faEnabled ? LANG.dialogs.tooltips.deleteAccount() : ''">
                         <button class="btn btn-default"
                                 id="accountSettingsDeleteButton"
-                                [disabled]="isSystemOwner"
+                                [disabled]="isSystemOwner || account.account2faEnabled"
                                 (click)="deleteUser()">
                             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'delete.svg'"
                                 [svgStyle]="{'width.px': '24', 'height.px': '24'}"
@@ -83,9 +83,14 @@
             </header>
 
             <nx-section>
+                <form #langForm="ngForm" name="langForm"
+                      class="form" novalidate
+                      [ngClass]="{'hide-errors': hideErrors}">
                     <nx-language-select
-                    [ngModel]="langCode"
-                    (ngModelChange)="changeLanguage($event)"></nx-language-select>
+                        name="langSelect"
+                        [ngModel]="langCode"
+                        (ngModelChange)="changeLanguage($event)"></nx-language-select>
+                </form>
             </nx-section>
         </nx-block>
     </div>
@@ -93,4 +98,4 @@
 
 <ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>
 
-<ng-container #applyContainer></ng-container>
+<ng-container #pageApply></ng-container>

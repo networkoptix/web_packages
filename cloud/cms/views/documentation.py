@@ -3,19 +3,25 @@ from rest_framework.decorators import api_view, permission_classes
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
+from math import ceil
+from rest_framework import status
 
 from api.helpers.exceptions import (
-    api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+    APIInternalException, api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+from cms.controllers.integration import make_integrations_json
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.controllers.filldata import global_contexts_to_dict
 from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu, cached_doc_menu_map, \
     AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
-from cms.views.integration import make_integrations_json
-
-from util.helpers import get_language_object_from_request
+from util.base_cache import BaseCache
+from util.helpers import get_language_object_from_request, get_meilisearch_client
 import re
+from meilisearch.errors import MeiliSearchApiError
+
+PAGE_NOT_FOUND = 'Page not found'
+KB_NOT_FOUND = 'Kb not found'
 
 SEARCH_SNIPPET_PADDING = 250
 
@@ -56,7 +62,7 @@ def get_page(request, doc_id):
             ser.is_valid()
             return api_success(ser.data)
 
-    raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+    raise APINotFoundException(error_data={'id': doc_id}, error_text=PAGE_NOT_FOUND)
 
 
 def find_article(nodes, doc_id):
@@ -86,13 +92,13 @@ def kb_for_article(request, doc_id):
         contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
     ).first()
     if not doc:
-        raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+        raise APINotFoundException(error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
     nodes = doc.nodes.all()
     menus = {node.get_parent() for node in nodes}
     for menu in menus:
         if menu.base_url and menu.url and menu.enabled:
             return {'base': menu.base_url, 'kb_name': menu.url}
-    raise APINotFoundException(error_data={'id': doc_id}, error_text='Kb not found')
+    raise APINotFoundException(error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
 
 
 # Simple filter for checking that each space delimited string exists somewhere in the doc
@@ -167,6 +173,120 @@ kb_name__path_param = openapi.Parameter(
 )
 
 
+def sync_search_for_menu(request, name):
+    cache_key = f'!!{settings.CUSTOMIZATION}--kb--{name}'
+    docs = DOC_CACHE[cache_key]
+    language = get_language_object_from_request(request)
+    knowledgebase_menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+    if not knowledgebase_menu:
+        raise APINotFoundException(f'Knowledgebase {name} not found')
+    knowledgebase = knowledgebase_menu['nodes']
+    docs = []
+    populate_docs_from_knowledgebase(knowledgebase, docs)
+    DOC_CACHE[cache_key] = docs
+    return generate_doc_json(docs, language=language, force_update=True)
+
+
+@api_view(("GET", ))
+@permission_classes((CanViewDevelopers, ))
+@handle_exceptions
+def sync_search(request, name = None):
+    """Force sync either instant search for either a single knowledgebase or for all docs.
+
+    This will mostly be available for admins in case something weird happens where the instant search gets in a weird state.
+    """
+    if not name:
+        index = get_meilisearch_client().index('documentation')
+        index.delete_all_documents()
+
+    docs = sync_search_for_menu(
+        request, name) if name else generate_doc_json(
+            Asset.objects.filter(
+                asset_type__type=AssetType.ASSET_TYPES.documentation
+            ).values_list(
+                'pk', flat=True
+            ),
+            language=get_language_object_from_request(request),
+            force_update=True
+        )
+
+    if docs:
+        return api_success(docs)
+    else:
+        raise APINotFoundException(f'Knowledgebase {name} not found')
+
+
+SEARCH_NOT_CONFIGURED = 'Instant search not properly configured for this instance'
+SEARCH_INDEX_NOT_FOUND = 'Instant Search index for "documentation" not found. Needs to be initialized'
+
+
+@api_view(("GET", ))
+@permission_classes((CanViewDevelopers, ))
+@handle_exceptions
+def kb_search(request, name):
+    if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
+        raise APIInternalException(SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
+
+    query = request.query_params.get('query', '')
+    kb_menus_filter = [name] if name else request.query_params.get('kbMenus', '').split(',')
+    labels_filter = request.query_params.get('labels', '').split(',')
+    filter_counts = request.query_params.get('filterCounts', '*').split(',')
+    crop_length = int(request.query_params.get('cropLength', 150))
+    to_highlight = request.query_params.get('highlight', '*').split(',')
+    perPage = int(request.query_params.get('perPage', 10))
+    page = int(request.query_params.get('page', 1))
+
+    index = get_meilisearch_client().index('documentation')
+    try:
+        index_updated = index.fetch_info().updated_at
+    except MeiliSearchApiError as e:
+        if e.error_code == 'index_not_found':
+            index_updated = False
+        else:
+            raise e
+
+    if not index_updated:
+        docs_json = sync_search_for_menu(request, name)
+        if not docs_json:
+            raise APIInternalException(SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
+
+    kb_menus_filter = [f'kbMenus = {kb}' for kb in kb_menus_filter if kb]
+    labels_filter = [f'labels = {label}' for label in labels_filter if label]
+
+    options = {
+        'attributesToHighlight': to_highlight,
+        'cropLength': crop_length,
+        'facetsDistribution': filter_counts,
+        'filter': [*kb_menus_filter, *labels_filter],
+        'limit': perPage,
+        'offset': page * perPage - perPage
+    }
+
+    raw_results = index.search(query, options)
+    doc_keys = ['body', 'title', 'shortDescription', 'labels', 'kbMenus', 'id']
+    unformatted = ['kbMenus']
+    docs = [
+        {
+            key: val.replace('</em> <em>', ' ').replace('</em>', '</strong>').replace('<em>', '<strong class="highlighted">') if isinstance(val, str) and key not in unformatted else val
+            for key, val in hit['_formatted'].items()
+            if key in doc_keys
+        }
+        for hit in raw_results.get('hits', [])
+        if hit['kbMenus']
+    ]
+    num_hits = raw_results.get('nbHits', 0)
+    search_result = {
+        'docs': docs,
+        'page': 1,
+        'pageSize': perPage,
+        'totalPages': int(ceil(num_hits / perPage)),
+        'totalResults': num_hits,
+        **raw_results.get('facetsDistribution', {}).pop('labels', {})
+    }
+    
+    return api_success(search_result)
+
+
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an array of all documentation pages. Can be filtered",
                      manual_parameters=[filter__query_param, page__query_param, page_size__query_param, kb_name__path_param],
@@ -212,7 +332,7 @@ def find_asset_knowledgebase(asset, base_url):
     return ''
 
 
-def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False):
+def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False, user=None):
     for node in parent:
         asset_id = node.get('asset_id', None)
         if asset_id:
@@ -232,7 +352,7 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                         node['asset'] = docs[0]
                         node['assetKB'] = find_asset_knowledgebase(asset, base_url)
                 elif asset_type == AssetType.ASSET_TYPES.integration:
-                    integrations = make_integrations_json([asset], language=language)
+                    integrations = make_integrations_json([asset], language=language, user=user)
                     if integrations:
                         node['asset'] = integrations[0]
         if node.get('nodes', None):
@@ -242,7 +362,8 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                 global_contexts=global_contexts,
                 global_contexts_dict=global_contexts_dict,
                 draft=draft,
-                review=review
+                review=review,
+                user=user
             )
 
 
@@ -281,7 +402,8 @@ def menu_to_endpoint(request, name):
             global_contexts=global_contexts,
             global_contexts_dict=global_contexts_dict,
             draft=draft,
-            review=review
+            review=review,
+            user=request.user
         )
         if not (draft or review):
             DOC_CACHE[cache_id] = menu_dict

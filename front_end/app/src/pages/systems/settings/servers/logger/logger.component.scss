@@ -1,10 +1,10 @@
 @use "../../../../../styles/typography";
-@use '../../../../../../styles/theme_variables' as *;
+@use "styles/theme_variables" as theme_vars;
 
 .server-info {
     font-family : typography.$font-family-regular;
     font-size   : typography.$font-size-base;
-    color       : $dark9;
+    color       : var(--dark9);
 
     .header-top-bar {
         display       : flex;
@@ -32,15 +32,15 @@
             }
 
             .online {
-                background-color : typography.$brand_core;
+                background-color : var(--brand-core);
             }
 
             .offline {
-                background-color : $error;
+                background-color : theme_vars.$error;
             }
 
             .checking {
-                background-color : $light16;
+                background-color : var(--light16);
             }
         }
     }
@@ -60,7 +60,7 @@
 
             .cell-ellipsis {
                 margin-bottom : 2px;
-                border-bottom : 1px dotted $light6;
+                border-bottom : 1px dotted var(--light6);
                 flex-grow     : 1;
             }
         }

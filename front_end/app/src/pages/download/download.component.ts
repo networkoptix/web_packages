@@ -1,29 +1,34 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
-    Component, OnInit, OnDestroy,
-    ViewChild, Inject, Input, PLATFORM_ID
-}                                       from '@angular/core';
+    Component,
+    OnInit,
+    OnDestroy,
+    Inject,
+    Input,
+    PLATFORM_ID
+} from '@angular/core';
 import {
-    ActivatedRoute, ActivationEnd, Router
-}                                       from '@angular/router';
-import { isPlatformBrowser }            from '@angular/common';
-import { DeviceDetectorService }        from 'ngx-device-detector';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { filter }                       from 'rxjs/operators';
-import { Subscription }                 from 'rxjs';
+    ActivatedRoute,
+    ActivationEnd,
+    Router
+} from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }     from '../../services/nx-config';
-import { NxAccountService }             from '../../services/account.service';
-import { NxPageService }                from '../../services/page.service';
-import { NxCloudApiService }            from '../../services/nx-cloud-api';
-import { NxUriService }                 from '../../services/uri.service';
-import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountService, isAccount } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'download-component',
-    templateUrl : 'download.component.html',
-    styleUrls : ['download.component.scss']
+    selector: 'download-component',
+    templateUrl: 'download.component.html',
+    styleUrls: ['download.component.scss']
 })
 
 export class DownloadComponent implements OnInit, OnDestroy {
@@ -46,6 +51,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
     canSeeHistory: boolean;
     tabsVisible: boolean;
     sortedPlatforms;
+    checkedDownloads = false;
+    // Placeholder should not appear while downloads are loading
     otherPackages;
     private routerSubscription: Subscription;
 
@@ -57,12 +64,10 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.downloads = { ...this.CONFIG.downloads };
 
         this.downloadsData = {
-            version    : '',
-            installers : [{ platform: '', appType: '' }],
-            releaseUrl : ''
+            version: '',
+            installers: [{ platform: '', appType: '' }],
+            releaseUrl: ''
         };
-
-        this.sortedPlatforms = [];
     }
 
     constructor(
@@ -74,7 +79,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private pageService: NxPageService,
-        private uriService: NxUriService,
         @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.CONFIG = configService.getConfig();
@@ -94,15 +98,18 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     if (this.paramPlatform) {
                         let title;
                         if (this.paramPlatform) {
-                            title = this.LANG.pageTitles.downloadPlatform() + this.paramPlatform;
+                            title = this.LANG.pageTitles.downloadPlatform() +
+                                this.paramPlatform;
                         } else {
                             title = this.LANG.pageTitles.download();
                         }
                         this.pageService.pageTitle = title;
 
-                        if (this.sortedPlatforms.length) {
+                        if (this.sortedPlatforms?.length) {
                             this.calcDisplayedPackages(this.paramPlatform);
-                            this.activePlatform = this.activePlatform = this.sortedPlatforms.find(platform => platform.name === this.paramPlatform);
+                            this.activePlatform = this.sortedPlatforms.find(
+                                platform => platform.name === this.paramPlatform
+                            );
                         }
                     }
                 });
@@ -110,18 +117,24 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     private calcDisplayedPackages(platformName) {
-        const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
+        const platform = this.sortedPlatforms.find(platform =>
+            platform.name === platformName
+        );
         this.downloadButton = undefined;
         this.otherPackages = [];
-        if (platform !== 'undefined') {
+        if (platform !== undefined) {
             if (platform.name === 'sdk') {
                 this.otherPackages = platform.files;
             } else {
                 // Ensures the first client found is always selected for the download button.
-                const client = platform.files.find(({appType}) => appType === 'client');
+                const client = platform.files.find(({ appType }) =>
+                    appType === 'client'
+                );
                 this.downloadButton = client;
                 // Remove the download button from the other packages.
-                this.otherPackages = platform.files.filter(({fileName}) => fileName !== client.fileName);
+                this.otherPackages = platform.files.filter(({ fileName }) =>
+                    fileName !== client.fileName
+                );
             }
         }
     }
@@ -132,8 +145,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[mobile].os === this.activeOs) {
-                    if (this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link() !== 'disabled') {
-                        document.location.href = this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link();
+                    if (
+                        this.LANG.downloads.mobile[
+                            this.downloads.mobile[mobile].name
+                        ].link() !== 'disabled'
+                    ) {
+                        document.location.href = this.LANG.downloads.mobile[
+                            this.downloads.mobile[mobile].name
+                        ].link();
                         return;
                     }
                     break;
@@ -144,13 +163,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.cloudApi
             .getDownloads()
             .then((response: any) => {
+                // Response is null if no releases
                 this.downloadsData = response;
+                this.sortedPlatforms = [];
                 // Sorts platforms based on order defined in nx-config service
-                Object.keys(this.CONFIG.downloads.groups).forEach((key) => {
-                    const checkPlatform = this.CONFIG.downloads.groups[key];
-                    const platform = this.downloadsData.platforms.find((downloadsPlatform) => {
-                        return downloadsPlatform.name === checkPlatform.name;
-                    });
+                Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform) => {
+                    const platform = this.downloadsData?.platforms.find(
+                        (downloadsPlatform) => downloadsPlatform.name === checkPlatform.name
+                    );
                     if (platform) {
                         platform.files = platform.files.filter((installer) => {
                             return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
@@ -183,38 +203,32 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 }
                 this.calcDisplayedPackages(this.platform);
                 this.activePlatform = this.sortedPlatforms.find(platform => platform.name === this.platform);
+                this.checkedDownloads = true;
 
                 this.sub.unsubscribe();
             });
     }
 
     ngOnInit(): void {
-        this.accountService
-            .get()
-            .then(account => {
-                this.canSeeHistory = (!!this.CONFIG.cloudCapabilities.publicReleases ||
-                        account &&
-                        (account.is_superuser ||
-                        account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1));
-            });
+        const account = this.accountService.accountSubject.getValue();
+        this.canSeeHistory = (
+            !!this.CONFIG.cloudCapabilities.publicReleases ||
+            account && (
+                account.is_superuser ||
+                account.permissions.includes(
+                    this.CONFIG.permissions.canViewRelease
+                )
+            )
+        );
 
         if (!this.CONFIG.cloudCapabilities.publicDownloads) {
             this.accountService
                 .requireLogin()
                 .then(result => {
-                    if (!result) {
-                        this.router
-                            .navigate([this.CONFIG.redirect.unauthorised])
-                            .catch(error => {
-                                console.error(error);
-                            });
-                        return;
-                    } else if (result === 'register') {
-                        return;
+                    if (isAccount(result)) {
+                        this.canViewDownloads = true;
+                        this.getDownloads();
                     }
-
-                    this.canViewDownloads = true;
-                    this.getDownloads();
                 });
         } else {
             this.canViewDownloads = true;

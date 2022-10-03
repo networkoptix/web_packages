@@ -10,27 +10,41 @@
 export interface LanguageI18NStaticTypes {
     language:              any;
     "About %CLOUD_NAME%":  any;
+    "All Servers":         any;
     "Download %VMS_NAME%": any;
     "For developers":      any;
     "Integrations (β)":    any;
     Privacy:               any;
     Support:               any;
     Terms:                 any;
+    "Developers Console":  any;
+    productName:           any;
+    monitoring:            Monitoring;
+    alarmTypes:            AlarmTypes;
+    alarmLevels:           AlarmLevels;
+    alertFilters:          AlertFilters;
+    deviceTypes:           DeviceTypes;
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
+    authorize:             Authorize;
     cameraFilters:         CameraFilters;
     clientProtocol:        any;
     common:                Common;
+    dashboard:             Dashboard;
+    devConsole:            DevConsole;
     dialogs:               Dialogs;
     downloads:             Downloads;
     errorCodes:            { [key: string]: any };
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
+    systemsCount:          any;
+    alertsCount:           any;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
     menu:                  Menu;
+    tableHeaders:          TableHeaders;
     pageTitles:            PageTitles;
     pageDescriptions:      PageDescriptions;
     passwordRequirements:  PasswordRequirements;
@@ -45,12 +59,19 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    healthMonitor:         HealthMonitor;
     headerLabels:          HeaderLabels;
     license:               License;
+    redirects:             Redirects;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
+    security:              Security;
     storage:               Storage;
+    metaDefaults:          MetaDefaults;
+    metaDefaultsWebadmin:  MetaDefaultsWebadmin;
+    maintenance:           Maintenance;
+    view:                  View;
 }
 
 export interface AccessRole {
@@ -59,11 +80,14 @@ export interface AccessRole {
 }
 
 export interface LanguageI18NStaticTypesAccount {
+    account:                any;
+    key:                    any;
     accountSavedSuccess:    any;
     accountSettings:        any;
     activationLinkSent:     any;
     agreementAccepted:      any;
     changePassword:         any;
+    security:               any;
     newPasswordLabel:       any;
     passwordChangedSuccess: any;
     saveChanges:            any;
@@ -74,6 +98,77 @@ export interface ActiveActions {
     sendConfirm:         any;
     setNewPassword:      any;
     setNewPasswordLabel: any;
+}
+
+export interface AlarmLevels {
+    offline: any;
+    error:   any;
+    warning: any;
+}
+
+export interface AlarmTypes {
+    Servers:              any;
+    Cameras:              any;
+    "Storage Locations":  any;
+    "Network Interfaces": any;
+}
+
+export interface AlertFilters {
+    all:     any;
+    warning: any;
+    error:   any;
+}
+
+export interface Authorize {
+    loginCloudHeader:           any;
+    connectHeader:              any;
+    expiredHeader:              any;
+    loginSystemSubheader:       any;
+    connectSubheader:           any;
+    expiredSubheader:           any;
+    connectAdditional:          any;
+    createText:                 any;
+    setupText:                  any;
+    asAccountSubheader:         any;
+    toAccountSubheader:         any;
+    forAccountSubheader:        any;
+    passwordDisconnect:         any;
+    passwordMerge:              any;
+    passwordBackup:             any;
+    passwordRestore:            any;
+    passwordReset:              any;
+    passwordRestart:            any;
+    passwordDetach:             any;
+    expiredAccountSubheader:    any;
+    createAccountHeader:        any;
+    activateHeader:             any;
+    createdText:                any;
+    activatedText:              any;
+    createdAdditional:          any;
+    activatedAdditional:        any;
+    passResetHeader:            any;
+    newPassHeader:              any;
+    newPassConfirmText:         any;
+    newPassInvalidCode:         any;
+    notSecureText:              any;
+    confirmHeader:              any;
+    loginError:                 any;
+    loginErrorAdditional:       any;
+    connectErrorAdditional:     any;
+    setupErrorAdditional:       any;
+    connectedText:              any;
+    setupConnectedText:         any;
+    stayLoggedInHelpText:       any;
+    termsAndConditionsHelpText: any;
+    copiedToClipboard:          any;
+    authCode:                   AuthCode;
+    emailSent:                  any;
+}
+
+export interface AuthCode {
+    message: any;
+    newPass: any;
+    login:   any;
 }
 
 export interface CameraFilters {
@@ -94,12 +189,14 @@ export interface Common {
     cameraLinks:                CameraLinks;
     cameraStates:               CameraStates;
     chromeCastWarning:          any;
+    copiedToClipboard:          any;
     login:                      any;
     recordingSettingsWarning:   any;
     disableMotionWarning:       any;
     recordingModes:             RecordingModes;
     resolution:                 Resolution;
     general:                    any;
+    generalError:               any;
     inaccessibleFeatureMessage: any;
     morePlugins:                any;
     searchCamPlaceholder:       any;
@@ -129,10 +226,10 @@ export interface Common {
 
 export interface CommonAccount {
     created:   NoSettings;
-    activated: Activated;
+    activated: Docs;
 }
 
-export interface Activated {
+export interface Docs {
     title: any;
 }
 
@@ -197,7 +294,27 @@ export interface VoiceCommands {
     view:                   any;
 }
 
+export interface Dashboard {
+    dashboardEditEnabled: any;
+    dashboardLocked:      any;
+    unlockToUpload:       any;
+    unlockToMove:         any;
+}
+
+export interface DevConsole {
+    create: any;
+}
+
+export interface DeviceTypes {
+    "All Device Types": any;
+    servers:            any;
+    cameras:            any;
+    storages:           any;
+    networkInterfaces:  any;
+}
+
 export interface Dialogs {
+    twoFa:         DialogsTwoFa;
     addUser:       AddUser;
     buttons:       Buttons;
     cloudStorage:  CloudStorage;
@@ -205,8 +322,10 @@ export interface Dialogs {
     merge:         DialogsMerge;
     message:       DialogsMessage;
     removeSystem:  RemoveSystem;
+    renewAuth:     RemoveSystem;
     titles:        DialogsTitles;
     tooltips:      Tooltips;
+    twoFactor:     DialogsTwoFactor;
 }
 
 export interface AddUser {
@@ -218,6 +337,8 @@ export interface Buttons {
     createAccount:    any;
     delete:           any;
     deleteAccount:    any;
+    disable:          any;
+    enable:           any;
     download:         any;
     logoutAuthorised: any;
     ok:               any;
@@ -278,46 +399,53 @@ export interface UsageLabels {
 }
 
 export interface DialogsMerge {
-    adminPasswordTitle:         any;
-    adminPasswordWrong:         any;
-    checking:                   any;
-    commonText:                 any;
-    connectToCloud:             any;
-    differentOwners:            any;
-    duplicateServers:           any;
-    enterSystemAddressTitle:    any;
-    latestBuild:                any;
-    mergeConfirmation:          any;
-    mergeFailedTitle:           any;
-    mergeSuccess:               any;
-    mergeSystemsTitle:          any;
-    noServerFound:              any;
-    newSystemDisplayName:       any;
-    otherSystem:                any;
-    ownerCanMergeText:          any;
-    passwordRequired:           any;
-    passwordWrong:              any;
-    primaryCannotMerge:         any;
-    primarySystemOffline:       any;
-    primarySystemUnavailable:   any;
-    recommendSupport:           RecommendSupport;
-    secondaryCannotMerge:       any;
-    secondarySystemUnavailable: any;
-    serverAtUrl:                any;
-    serverNotAvailable:         any;
-    serverNotYours:             any;
-    serverVersionOld:           any;
-    serverVersionNew:           any;
-    systemOffline:              any;
-    systemOfflineUrl:           any;
-    systemsIncompatible:        any;
-    systemVersionOld:           any;
-    systemVersionNew:           any;
-    systemVersionsNotMatch:     any;
-    urlEmpty:                   any;
-    urlNotValid:                any;
-    unknownError:               any;
-    warning:                    any;
+    adminPasswordTitle:                 any;
+    adminPasswordWrong:                 any;
+    knownBothSystemsConnectedToCloud:   any;
+    unknownBothSystemsConnectedToCloud: any;
+    checking:                           any;
+    cloud:                              any;
+    commonText:                         any;
+    connectToCloud:                     any;
+    failedToFindAnySystemHeader:        any;
+    failedToFindAnySystem:              any;
+    differentOwners:                    any;
+    duplicateServers:                   any;
+    enterSystemAddressTitle:            any;
+    latestBuild:                        any;
+    mergeConfirmation:                  any;
+    mergeFailedTitle:                   any;
+    mergeSuccess:                       any;
+    mergeSystemsTitle:                  any;
+    noServerFound:                      any;
+    newSystemDisplayName:               any;
+    otherSystem:                        any;
+    ownerCanMergeText:                  any;
+    passwordRequired:                   any;
+    passwordWrong:                      any;
+    primaryCannotMerge:                 any;
+    primarySystemOffline:               any;
+    primarySystemUnavailable:           any;
+    recommendSupport:                   RecommendSupport;
+    restError:                          RESTError;
+    secondaryCannotMerge:               any;
+    secondarySystemUnavailable:         any;
+    serverAtUrl:                        any;
+    serverNotAvailable:                 any;
+    serverNotYours:                     any;
+    serverVersionOld:                   any;
+    serverVersionNew:                   any;
+    systemOffline:                      any;
+    systemOfflineUrl:                   any;
+    systemsIncompatible:                any;
+    systemVersionOld:                   any;
+    systemVersionNew:                   any;
+    systemVersionsNotMatch:             any;
+    targetSystemBoundToCloud:           any;
+    urlEmpty:                           any;
+    urlNotValid:                        any;
+    unknownError:                       any;
+    warning:                            any;
 }
 
 export interface RecommendSupport {
@@ -326,7 +454,15 @@ export interface RecommendSupport {
     c_proceeding: any;
 }
 
+export interface RESTError {
+    duplicateServer:      any;
+    useCloudMerge:        any;
+    differentCloudOwners: any;
+}
+
 export interface DialogsMessage {
+    system2faEnabled:        any;
+    system2faDisabled:       any;
     storageSettingsSaved:    any;
     storageSettingsNotSaved: any;
     settingsSaved:           any;
@@ -338,6 +474,7 @@ export interface DialogsMessage {
     sent:                    any;
     subject:                 Subject;
     title:                   Title;
+    twoFactor:               MessageTwoFactor;
 }
 
 export interface Placeholders {
@@ -358,6 +495,13 @@ export interface Title {
     ipvd_feedback_page:   any;
 }
 
+export interface MessageTwoFactor {
+    required:     any;
+    configure:    any;
+    accountLink:  any;
+    codeRequired: any;
+}
+
 export interface RemoveSystem {
     action:  any;
     message: any;
@@ -368,23 +512,39 @@ export interface DialogsTitles {
     error:                  any;
     success:                any;
     changeAccount:          any;
+    changePasswordFor:      any;
     deleteUser:             any;
+    failedLoginTo:          any;
     loggedFromOtherAccount: any;
     noClientDetected:       any;
     removeUser:             any;
     serversDetach:          any;
     serversReset:           any;
     serversRestart:         any;
-    changePasswordFor:      any;
 }
 
 export interface Tooltips {
     deleteAccount: any;
 }
 
+export interface DialogsTwoFa {
+    wizardWarning:      any;
+    wizardWarningDescr: any;
+    installAuthApp:     any;
+    nowEnabled:         any;
+}
+
+export interface DialogsTwoFactor {
+    action:            any;
+    message:           any;
+    title:             any;
+    wizardWarning:     any;
+    unsupportedSystem: any;
+}
+
 export interface Downloads {
     appTypes:      AppTypes;
-    groups:        Groups;
+    groups:        DownloadsGroups;
     mobile:        Mobile;
     platforms:     Platforms;
     releasesTypes: ReleasesTypes;
@@ -402,7 +562,7 @@ export interface AppTypes {
     video_source_sdk: any;
 }
 
-export interface Groups {
+export interface DownloadsGroups {
     android: ArmClass;
     arm:     ArmClass;
     ios:     ArmClass;
@@ -457,6 +617,61 @@ export interface HeaderLabels {
     healthReportForSystem: any;
 }
 
+export interface HealthMonitor {
+    groups: HealthMonitorGroups;
+    keys:   Keys;
+}
+
+export interface HealthMonitorGroups {
+    info:         any;
+    availability: any;
+    load:         any;
+    activity:     any;
+}
+
+export interface Keys {
+    name:                    any;
+    servers:                 any;
+    cameras:                 any;
+    storages:                any;
+    users:                   any;
+    version:                 any;
+    cloudSystemId:           any;
+    status:                  any;
+    offlineEvents:           any;
+    uptimeS:                 any;
+    cpuUsageP:               any;
+    serverCpuUsageP:         any;
+    ramUsageB:               any;
+    ramUsageP:               any;
+    serverRamUsageB:         any;
+    serverRamUsageP:         any;
+    threads:                 any;
+    decodingThreads:         any;
+    decodingSpeed3s:         any;
+    encodingThreads:         any;
+    encodingSpeed3s:         any;
+    primaryStreams:          any;
+    secondaryStreams:        any;
+    incomingConnections:     any;
+    outgoingConnections:     any;
+    logLevel:                any;
+    publicIp:                any;
+    os:                      any;
+    osTime:                  any;
+    vmsTime:                 any;
+    cpu:                     any;
+    cpuCores:                any;
+    ramB:                    any;
+    guidConflict:            any;
+    vmsTimeChanged24h:       any;
+    transactionsPerSecond1m: any;
+    actionsTriggered1m:      any;
+    apiCalls1m:              any;
+    thumbnails1m:            any;
+    activePlugins:           any;
+}
+
 export interface LanguageI18NStaticTypesIntegration {
     "Access Control":    any;
     Connector:           any;
@@ -509,9 +724,7 @@ export interface Ipvd {
 }
 
 export interface IpvdFeedback {
-    a_Please: any;
-    b_Link:   any;
-    c_Info:   any;
+    request: any;
 }
 
 export interface License {
@@ -549,6 +762,7 @@ export interface LicenseTypeTitles {
     "IO Module":      any;
     Bridge:           any;
     NVR:              any;
+    Invalid:          any;
 }
 
 export interface Messages {
@@ -556,6 +770,10 @@ export interface Messages {
     activated:      any;
     inuse:          any;
     trialActivated: any;
+}
+
+export interface Maintenance {
+    description: any;
 }
 
 export interface Menu {
@@ -568,6 +786,44 @@ export interface MenuTitles {
     general:              any;
     licenses:             any;
     users:                any;
+    servers:              any;
+    alerts:               any;
+    systems:              any;
+    storages:             any;
+    networkInterfaces:    any;
+    graphs:               any;
+    logs:                 any;
+}
+
+export interface MetaDefaults {
+    default:         MetaDefaultsDefault;
+    "/systems":      Docs;
+    "/integrations": Docs;
+    "/docs":         Docs;
+    "/ipvd":         Docs;
+}
+
+export interface MetaDefaultsDefault {
+    site_name:   any;
+    title:       any;
+    description: any;
+}
+
+export interface MetaDefaultsWebadmin {
+    default:       MetaDefaultsWebadminDefault;
+    "/settings":   Docs;
+    "/view":       Docs;
+    "/health":     Docs;
+    "/monitoring": Docs;
+}
+
+export interface MetaDefaultsWebadminDefault {
+    site_name: any;
+    title:     any;
+}
+
+export interface Monitoring {
+    unavailable: any;
 }
 
 export interface PageDescriptions {
@@ -583,11 +839,13 @@ export interface PageTitles {
     activateCode:           any;
     activateSuccess:        any;
     articleTitle:           any;
+    auth:                   any;
     changePassword:         any;
     debug:                  any;
     default:                any;
     download:               any;
     downloadPlatform:       any;
+    failedToAccess2FA:      any;
     failedToAccessSystem:   any;
     failedToAccessCamera:   any;
     integrations:           any;
@@ -602,8 +860,11 @@ export interface PageTitles {
     systemShare:            any;
     systems:                any;
     template:               any;
+    templateWebadmin:       any;
     view:                   any;
     apiTool:                any;
+    security:               any;
+    twofaRequired:          any;
 }
 
 export interface PasswordRequirements {
@@ -623,9 +884,11 @@ export interface PasswordRequirements {
 }
 
 export interface PlaceholderTexts {
-    noSettings: NoSettings;
-    merge:      PlaceholderTextsMerge;
-    server:     NoSettings;
+    noSettings:               NoSettings;
+    merge:                    PlaceholderTextsMerge;
+    server:                   NoSettings;
+    noSystemApiTool:          NoSettings;
+    systemLoadFailureApiTool: NoSettings;
 }
 
 export interface PlaceholderTextsMerge {
@@ -644,16 +907,27 @@ export interface PrivacyPolicy {
     ipvd:        any;
 }
 
+export interface Redirects {
+    message:        any;
+    defaultMessage: any;
+    cloudLinks:     CloudLinks;
+}
+
+export interface CloudLinks {
+    supportLink: any;
+}
+
 export interface Registration {
     agreement: any;
 }
 
 export interface Ribbon {
-    beingMerged:    BeingMerged;
-    finishingMerge: any;
-    integration:    RibbonIntegration;
-    systemOffline:  any;
-    systemsMerging: any;
+    beingMerged:         BeingMerged;
+    finishingMerge:      any;
+    integration:         RibbonIntegration;
+    newVersionAvailable: NewVersionAvailable;
+    systemOffline:       any;
+    systemsMerging:      any;
 }
 
 export interface BeingMerged {
@@ -667,6 +941,11 @@ export interface RibbonIntegration {
     backToEditText:  any;
     previewRibbon:   any;
     publishedRibbon: any;
+}
+
+export interface NewVersionAvailable {
+    notification:  any;
+    installButton: any;
 }
 
 export interface Search {
@@ -686,10 +965,24 @@ export interface Search {
     vendors:           any;
 }
 
+export interface Security {
+    twoFa: SecurityTwoFa;
+}
+
+export interface SecurityTwoFa {
+    twoFADescription:     any;
+    systemsRemainder:     any;
+    v5Warning:            any;
+    v5WarningExplanation: any;
+    disableWarning:       any;
+}
+
 export interface ServerTabTitles {
     View:        any;
     Settings:    any;
     Information: any;
+    Bookmarks:   any;
+    Monitoring:  any;
 }
 
 export interface Servers {
@@ -756,17 +1049,18 @@ export interface ReindexingDone {
 }
 
 export interface LanguageI18NStaticTypesSystem {
-    connected:        any;
-    not_connected:    any;
-    MERGE_FINISHES:   any;
-    mergeUnknownName: any;
-    mySystemSearch:   any;
-    settings:         Settings;
-    status:           SystemStatus;
-    users:            Users;
-    yourSystem:       any;
-    loggers:          Loggers;
-    storageToolTips:  StorageToolTips;
+    connected:            any;
+    not_connected:        any;
+    MERGE_FINISHES:       any;
+    mergeUnknownName:     any;
+    mySystemSearch:       any;
+    settings:             Settings;
+    status:               SystemStatus;
+    users:                Users;
+    yourSystem:           any;
+    loggers:              Loggers;
+    storageToolTips:      StorageToolTips;
+    transferNotification: any;
 }
 
 export interface Loggers {
@@ -794,6 +1088,7 @@ export interface Settings {
 export interface SessionLimitDuration {
     hours:   any;
     minutes: any;
+    days:    any;
 }
 
 export interface WarningMessages {
@@ -828,11 +1123,23 @@ export interface SystemStatuses {
     unavailable:  any;
 }
 
+export interface TableHeaders {
+    type:   any;
+    server: any;
+    alert:  any;
+}
+
 export interface ToastMessage {
-    cloudUnavailable: any;
-    nameFail:         any;
-    reviewAccepted:   any;
-    system:           ToastMessageSystem;
+    cloudUnavailable:             any;
+    nameFail:                     any;
+    noConnection:                 any;
+    noInternet:                   any;
+    userChangesFail:              any;
+    reviewAccepted:               any;
+    system:                       ToastMessageSystem;
+    webAdminCloudCredentialError: any;
+    twoFaRequired:                any;
+    loggingIn:                    any;
 }
 
 export interface ToastMessageSystem {
@@ -850,6 +1157,70 @@ export interface CloudConnect {
 
 export interface Deleted {
     success: any;
+}
+
+export interface View {
+    timeline: Timeline;
+}
+
+export interface Timeline {
+    dayNames:   DayNames;
+    monthNames: MonthNames;
+    timeNames:  TimeNames;
+}
+
+export interface DayNames {
+    Sun:       any;
+    Mon:       any;
+    Tue:       any;
+    Wed:       any;
+    Thu:       any;
+    Fri:       any;
+    Sat:       any;
+    Sunday:    any;
+    Monday:    any;
+    Tuesday:   any;
+    Wednesday: any;
+    Thursday:  any;
+    Friday:    any;
+    Saturday:  any;
+}
+
+export interface MonthNames {
+    Jan:       any;
+    Feb:       any;
+    Mar:       any;
+    Apr:       any;
+    May:       any;
+    Jun:       any;
+    Jul:       any;
+    Aug:       any;
+    Sep:       any;
+    Oct:       any;
+    Nov:       any;
+    Dec:       any;
+    January:   any;
+    February:  any;
+    March:     any;
+    April:     any;
+    June:      any;
+    July:      any;
+    August:    any;
+    September: any;
+    October:   any;
+    November:  any;
+    December:  any;
+}
+
+export interface TimeNames {
+    a:  any;
+    p:  any;
+    am: any;
+    pm: any;
+    A:  any;
+    P:  any;
+    AM: any;
+    PM: any;
 }
 
 // Converts JSON strings to/from your types
@@ -1000,27 +1371,41 @@ const typeMap: any = {
     "LanguageI18NStaticTypes": o([
         { json: "language", js: "language", typ: "any" },
         { json: "About %CLOUD_NAME%", js: "About %CLOUD_NAME%", typ: "any" },
+        { json: "All Servers", js: "All Servers", typ: "any" },
         { json: "Download %VMS_NAME%", js: "Download %VMS_NAME%", typ: "any" },
         { json: "For developers", js: "For developers", typ: "any" },
         { json: "Integrations (β)", js: "Integrations (β)", typ: "any" },
         { json: "Privacy", js: "Privacy", typ: "any" },
         { json: "Support", js: "Support", typ: "any" },
         { json: "Terms", js: "Terms", typ: "any" },
+        { json: "Developers Console", js: "Developers Console", typ: "any" },
+        { json: "productName", js: "productName", typ: "any" },
+        { json: "monitoring", js: "monitoring", typ: r("Monitoring") },
+        { json: "alarmTypes", js: "alarmTypes", typ: r("AlarmTypes") },
+        { json: "alarmLevels", js: "alarmLevels", typ: r("AlarmLevels") },
+        { json: "alertFilters", js: "alertFilters", typ: r("AlertFilters") },
+        { json: "deviceTypes", js: "deviceTypes", typ: r("DeviceTypes") },
         { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
+        { json: "authorize", js: "authorize", typ: r("Authorize") },
         { json: "cameraFilters", js: "cameraFilters", typ: r("CameraFilters") },
         { json: "clientProtocol", js: "clientProtocol", typ: "any" },
         { json: "common", js: "common", typ: r("Common") },
+        { json: "dashboard", js: "dashboard", typ: r("Dashboard") },
+        { json: "devConsole", js: "devConsole", typ: r("DevConsole") },
         { json: "dialogs", js: "dialogs", typ: r("Dialogs") },
         { json: "downloads", js: "downloads", typ: r("Downloads") },
         { json: "errorCodes", js: "errorCodes", typ: m("") },
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
+        { json: "systemsCount", js: "systemsCount", typ: "any" },
+        { json: "alertsCount", js: "alertsCount", typ: "any" },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
         { json: "menu", js: "menu", typ: r("Menu") },
+        { json: "tableHeaders", js: "tableHeaders", typ: r("TableHeaders") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
         { json: "pageDescriptions", js: "pageDescriptions", typ: r("PageDescriptions") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
@@ -1035,23 +1420,33 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "healthMonitor", js: "healthMonitor", typ: r("HealthMonitor") },
         { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
         { json: "license", js: "license", typ: r("License") },
+        { json: "redirects", js: "redirects", typ: r("Redirects") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
+        { json: "security", js: "security", typ: r("Security") },
         { json: "storage", js: "storage", typ: r("Storage") },
+        { json: "metaDefaults", js: "metaDefaults", typ: r("MetaDefaults") },
+        { json: "metaDefaultsWebadmin", js: "metaDefaultsWebadmin", typ: r("MetaDefaultsWebadmin") },
+        { json: "maintenance", js: "maintenance", typ: r("Maintenance") },
+        { json: "view", js: "view", typ: r("View") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "any" },
         { json: "label", js: "label", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesAccount": o([
+        { json: "account", js: "account", typ: "any" },
+        { json: "key", js: "key", typ: "any" },
         { json: "accountSavedSuccess", js: "accountSavedSuccess", typ: "any" },
         { json: "accountSettings", js: "accountSettings", typ: "any" },
         { json: "activationLinkSent", js: "activationLinkSent", typ: "any" },
         { json: "agreementAccepted", js: "agreementAccepted", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
+        { json: "security", js: "security", typ: "any" },
         { json: "newPasswordLabel", js: "newPasswordLabel", typ: "any" },
         { json: "passwordChangedSuccess", js: "passwordChangedSuccess", typ: "any" },
         { json: "saveChanges", js: "saveChanges", typ: "any" },
@@ -1061,6 +1456,72 @@ const typeMap: any = {
         { json: "sendConfirm", js: "sendConfirm", typ: "any" },
         { json: "setNewPassword", js: "setNewPassword", typ: "any" },
         { json: "setNewPasswordLabel", js: "setNewPasswordLabel", typ: "any" },
+    ], false),
+    "AlarmLevels": o([
+        { json: "offline", js: "offline", typ: "any" },
+        { json: "error", js: "error", typ: "any" },
+        { json: "warning", js: "warning", typ: "any" },
+    ], false),
+    "AlarmTypes": o([
+        { json: "Servers", js: "Servers", typ: "any" },
+        { json: "Cameras", js: "Cameras", typ: "any" },
+        { json: "Storage Locations", js: "Storage Locations", typ: "any" },
+        { json: "Network Interfaces", js: "Network Interfaces", typ: "any" },
+    ], false),
+    "AlertFilters": o([
+        { json: "all", js: "all", typ: "any" },
+        { json: "warning", js: "warning", typ: "any" },
+        { json: "error", js: "error", typ: "any" },
+    ], false),
+    "Authorize": o([
+        { json: "loginCloudHeader", js: "loginCloudHeader", typ: "any" },
+        { json: "connectHeader", js: "connectHeader", typ: "any" },
+        { json: "expiredHeader", js: "expiredHeader", typ: "any" },
+        { json: "loginSystemSubheader", js: "loginSystemSubheader", typ: "any" },
+        { json: "connectSubheader", js: "connectSubheader", typ: "any" },
+        { json: "expiredSubheader", js: "expiredSubheader", typ: "any" },
+        { json: "connectAdditional", js: "connectAdditional", typ: "any" },
+        { json: "createText", js: "createText", typ: "any" },
+        { json: "setupText", js: "setupText", typ: "any" },
+        { json: "asAccountSubheader", js: "asAccountSubheader", typ: "any" },
+        { json: "toAccountSubheader", js: "toAccountSubheader", typ: "any" },
+        { json: "forAccountSubheader", js: "forAccountSubheader", typ: "any" },
+        { json: "passwordDisconnect", js: "passwordDisconnect", typ: "any" },
+        { json: "passwordMerge", js: "passwordMerge", typ: "any" },
+        { json: "passwordBackup", js: "passwordBackup", typ: "any" },
+        { json: "passwordRestore", js: "passwordRestore", typ: "any" },
+        { json: "passwordReset", js: "passwordReset", typ: "any" },
+        { json: "passwordRestart", js: "passwordRestart", typ: "any" },
+        { json: "passwordDetach", js: "passwordDetach", typ: "any" },
+        { json: "expiredAccountSubheader", js: "expiredAccountSubheader", typ: "any" },
+        { json: "createAccountHeader", js: "createAccountHeader", typ: "any" },
+        { json: "activateHeader", js: "activateHeader", typ: "any" },
+        { json: "createdText", js: "createdText", typ: "any" },
+        { json: "activatedText", js: "activatedText", typ: "any" },
+        { json: "createdAdditional", js: "createdAdditional", typ: "any" },
+        { json: "activatedAdditional", js: "activatedAdditional", typ: "any" },
+        { json: "passResetHeader", js: "passResetHeader", typ: "any" },
+        { json: "newPassHeader", js: "newPassHeader", typ: "any" },
+        { json: "newPassConfirmText", js: "newPassConfirmText", typ: "any" },
+        { json: "newPassInvalidCode", js: "newPassInvalidCode", typ: "any" },
+        { json: "notSecureText", js: "notSecureText", typ: "any" },
+        { json: "confirmHeader", js: "confirmHeader", typ: "any" },
+        { json: "loginError", js: "loginError", typ: "any" },
+        { json: "loginErrorAdditional", js: "loginErrorAdditional", typ: "any" },
+        { json: "connectErrorAdditional", js: "connectErrorAdditional", typ: "any" },
+        { json: "setupErrorAdditional", js: "setupErrorAdditional", typ: "any" },
+        { json: "connectedText", js: "connectedText", typ: "any" },
+        { json: "setupConnectedText", js: "setupConnectedText", typ: "any" },
+        { json: "stayLoggedInHelpText", js: "stayLoggedInHelpText", typ: "any" },
+        { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
+        { json: "copiedToClipboard", js: "copiedToClipboard", typ: "any" },
+        { json: "authCode", js: "authCode", typ: r("AuthCode") },
+        { json: "emailSent", js: "emailSent", typ: "any" },
+    ], false),
+    "AuthCode": o([
+        { json: "message", js: "message", typ: "any" },
+        { json: "newPass", js: "newPass", typ: "any" },
+        { json: "login", js: "login", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },
@@ -1079,12 +1540,14 @@ const typeMap: any = {
         { json: "cameraLinks", js: "cameraLinks", typ: r("CameraLinks") },
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "any" },
+        { json: "copiedToClipboard", js: "copiedToClipboard", typ: "any" },
         { json: "login", js: "login", typ: "any" },
         { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "any" },
         { json: "disableMotionWarning", js: "disableMotionWarning", typ: "any" },
         { json: "recordingModes", js: "recordingModes", typ: r("RecordingModes") },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "any" },
+        { json: "generalError", js: "generalError", typ: "any" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "any" },
         { json: "morePlugins", js: "morePlugins", typ: "any" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "any" },
@@ -1113,9 +1576,9 @@ const typeMap: any = {
     ], false),
     "CommonAccount": o([
         { json: "created", js: "created", typ: r("NoSettings") },
-        { json: "activated", js: "activated", typ: r("Activated") },
+        { json: "activated", js: "activated", typ: r("Docs") },
     ], false),
-    "Activated": o([
+    "Docs": o([
         { json: "title", js: "title", typ: "any" },
     ], false),
     "NoSettings": o([
@@ -1173,7 +1636,24 @@ const typeMap: any = {
         { json: "stop listening", js: "stop listening", typ: "any" },
         { json: "view", js: "view", typ: "any" },
     ], false),
+    "Dashboard": o([
+        { json: "dashboardEditEnabled", js: "dashboardEditEnabled", typ: "any" },
+        { json: "dashboardLocked", js: "dashboardLocked", typ: "any" },
+        { json: "unlockToUpload", js: "unlockToUpload", typ: "any" },
+        { json: "unlockToMove", js: "unlockToMove", typ: "any" },
+    ], false),
+    "DevConsole": o([
+        { json: "create", js: "create", typ: "any" },
+    ], false),
+    "DeviceTypes": o([
+        { json: "All Device Types", js: "All Device Types", typ: "any" },
+        { json: "servers", js: "servers", typ: "any" },
+        { json: "cameras", js: "cameras", typ: "any" },
+        { json: "storages", js: "storages", typ: "any" },
+        { json: "networkInterfaces", js: "networkInterfaces", typ: "any" },
+    ], false),
     "Dialogs": o([
+        { json: "twoFa", js: "twoFa", typ: r("DialogsTwoFa") },
         { json: "addUser", js: "addUser", typ: r("AddUser") },
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
@@ -1181,8 +1661,10 @@ const typeMap: any = {
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
         { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
+        { json: "renewAuth", js: "renewAuth", typ: r("RemoveSystem") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
+        { json: "twoFactor", js: "twoFactor", typ: r("DialogsTwoFactor") },
     ], false),
     "AddUser": o([
         { json: "alreadyExists", js: "alreadyExists", typ: "any" },
@@ -1192,6 +1674,8 @@ const typeMap: any = {
         { json: "createAccount", js: "createAccount", typ: "any" },
         { json: "delete", js: "delete", typ: "any" },
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
+        { json: "disable", js: "disable", typ: "any" },
+        { json: "enable", js: "enable", typ: "any" },
         { json: "download", js: "download", typ: "any" },
         { json: "logoutAuthorised", js: "logoutAuthorised", typ: "any" },
         { json: "ok", js: "ok", typ: "any" },
@@ -1246,9 +1730,14 @@ const typeMap: any = {
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "any" },
         { json: "adminPasswordWrong", js: "adminPasswordWrong", typ: "any" },
+        { json: "knownBothSystemsConnectedToCloud", js: "knownBothSystemsConnectedToCloud", typ: "any" },
+        { json: "unknownBothSystemsConnectedToCloud", js: "unknownBothSystemsConnectedToCloud", typ: "any" },
         { json: "checking", js: "checking", typ: "any" },
+        { json: "cloud", js: "cloud", typ: "any" },
         { json: "commonText", js: "commonText", typ: "any" },
         { json: "connectToCloud", js: "connectToCloud", typ: "any" },
+        { json: "failedToFindAnySystemHeader", js: "failedToFindAnySystemHeader", typ: "any" },
+        { json: "failedToFindAnySystem", js: "failedToFindAnySystem", typ: "any" },
         { json: "differentOwners", js: "differentOwners", typ: "any" },
         { json: "duplicateServers", js: "duplicateServers", typ: "any" },
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },
@@ -1267,6 +1756,7 @@ const typeMap: any = {
         { json: "primarySystemOffline", js: "primarySystemOffline", typ: "any" },
         { json: "primarySystemUnavailable", js: "primarySystemUnavailable", typ: "any" },
         { json: "recommendSupport", js: "recommendSupport", typ: r("RecommendSupport") },
+        { json: "restError", js: "restError", typ: r("RESTError") },
         { json: "secondaryCannotMerge", js: "secondaryCannotMerge", typ: "any" },
         { json: "secondarySystemUnavailable", js: "secondarySystemUnavailable", typ: "any" },
         { json: "serverAtUrl", js: "serverAtUrl", typ: "any" },
@@ -1280,6 +1770,7 @@ const typeMap: any = {
         { json: "systemVersionOld", js: "systemVersionOld", typ: "any" },
         { json: "systemVersionNew", js: "systemVersionNew", typ: "any" },
         { json: "systemVersionsNotMatch", js: "systemVersionsNotMatch", typ: "any" },
+        { json: "targetSystemBoundToCloud", js: "targetSystemBoundToCloud", typ: "any" },
         { json: "urlEmpty", js: "urlEmpty", typ: "any" },
         { json: "urlNotValid", js: "urlNotValid", typ: "any" },
         { json: "unknownError", js: "unknownError", typ: "any" },
@@ -1290,7 +1781,14 @@ const typeMap: any = {
         { json: "b_support", js: "b_support", typ: "any" },
         { json: "c_proceeding", js: "c_proceeding", typ: "any" },
     ], false),
+    "RESTError": o([
+        { json: "duplicateServer", js: "duplicateServer", typ: "any" },
+        { json: "useCloudMerge", js: "useCloudMerge", typ: "any" },
+        { json: "differentCloudOwners", js: "differentCloudOwners", typ: "any" },
+    ], false),
     "DialogsMessage": o([
+        { json: "system2faEnabled", js: "system2faEnabled", typ: "any" },
+        { json: "system2faDisabled", js: "system2faDisabled", typ: "any" },
         { json: "storageSettingsSaved", js: "storageSettingsSaved", typ: "any" },
         { json: "storageSettingsNotSaved", js: "storageSettingsNotSaved", typ: "any" },
         { json: "settingsSaved", js: "settingsSaved", typ: "any" },
@@ -1302,6 +1800,7 @@ const typeMap: any = {
         { json: "sent", js: "sent", typ: "any" },
         { json: "subject", js: "subject", typ: r("Subject") },
         { json: "title", js: "title", typ: r("Title") },
+        { json: "twoFactor", js: "twoFactor", typ: r("MessageTwoFactor") },
     ], false),
     "Placeholders": o([
         { json: "feedback", js: "feedback", typ: "any" },
@@ -1318,6 +1817,12 @@ const typeMap: any = {
         { json: "ipvd_feedback_device", js: "ipvd_feedback_device", typ: "any" },
         { json: "ipvd_feedback_page", js: "ipvd_feedback_page", typ: "any" },
     ], false),
+    "MessageTwoFactor": o([
+        { json: "required", js: "required", typ: "any" },
+        { json: "configure", js: "configure", typ: "any" },
+        { json: "accountLink", js: "accountLink", typ: "any" },
+        { json: "codeRequired", js: "codeRequired", typ: "any" },
+    ], false),
     "RemoveSystem": o([
         { json: "action", js: "action", typ: "any" },
         { json: "message", js: "message", typ: "any" },
@@ -1327,21 +1832,35 @@ const typeMap: any = {
         { json: "error", js: "error", typ: "any" },
         { json: "success", js: "success", typ: "any" },
         { json: "changeAccount", js: "changeAccount", typ: "any" },
+        { json: "changePasswordFor", js: "changePasswordFor", typ: "any" },
         { json: "deleteUser", js: "deleteUser", typ: "any" },
+        { json: "failedLoginTo", js: "failedLoginTo", typ: "any" },
         { json: "loggedFromOtherAccount", js: "loggedFromOtherAccount", typ: "any" },
         { json: "noClientDetected", js: "noClientDetected", typ: "any" },
         { json: "removeUser", js: "removeUser", typ: "any" },
         { json: "serversDetach", js: "serversDetach", typ: "any" },
         { json: "serversReset", js: "serversReset", typ: "any" },
         { json: "serversRestart", js: "serversRestart", typ: "any" },
-        { json: "changePasswordFor", js: "changePasswordFor", typ: "any" },
     ], false),
     "Tooltips": o([
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
     ], false),
+    "DialogsTwoFa": o([
+        { json: "wizardWarning", js: "wizardWarning", typ: "any" },
+        { json: "wizardWarningDescr", js: "wizardWarningDescr", typ: "any" },
+        { json: "installAuthApp", js: "installAuthApp", typ: "any" },
+        { json: "nowEnabled", js: "nowEnabled", typ: "any" },
+    ], false),
+    "DialogsTwoFactor": o([
+        { json: "action", js: "action", typ: "any" },
+        { json: "message", js: "message", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
+        { json: "wizardWarning", js: "wizardWarning", typ: "any" },
+        { json: "unsupportedSystem", js: "unsupportedSystem", typ: "any" },
+    ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },
-        { json: "groups", js: "groups", typ: r("Groups") },
+        { json: "groups", js: "groups", typ: r("DownloadsGroups") },
         { json: "mobile", js: "mobile", typ: r("Mobile") },
         { json: "platforms", js: "platforms", typ: r("Platforms") },
         { json: "releasesTypes", js: "releasesTypes", typ: r("ReleasesTypes") },
@@ -1357,7 +1876,7 @@ const typeMap: any = {
         { json: "storage_sdk", js: "storage_sdk", typ: "any" },
         { json: "video_source_sdk", js: "video_source_sdk", typ: "any" },
     ], false),
-    "Groups": o([
+    "DownloadsGroups": o([
         { json: "android", js: "android", typ: r("ArmClass") },
         { json: "arm", js: "arm", typ: r("ArmClass") },
         { json: "ios", js: "ios", typ: r("ArmClass") },
@@ -1403,6 +1922,58 @@ const typeMap: any = {
     ], false),
     "HeaderLabels": o([
         { json: "healthReportForSystem", js: "healthReportForSystem", typ: "any" },
+    ], false),
+    "HealthMonitor": o([
+        { json: "groups", js: "groups", typ: r("HealthMonitorGroups") },
+        { json: "keys", js: "keys", typ: r("Keys") },
+    ], false),
+    "HealthMonitorGroups": o([
+        { json: "info", js: "info", typ: "any" },
+        { json: "availability", js: "availability", typ: "any" },
+        { json: "load", js: "load", typ: "any" },
+        { json: "activity", js: "activity", typ: "any" },
+    ], false),
+    "Keys": o([
+        { json: "name", js: "name", typ: "any" },
+        { json: "servers", js: "servers", typ: "any" },
+        { json: "cameras", js: "cameras", typ: "any" },
+        { json: "storages", js: "storages", typ: "any" },
+        { json: "users", js: "users", typ: "any" },
+        { json: "version", js: "version", typ: "any" },
+        { json: "cloudSystemId", js: "cloudSystemId", typ: "any" },
+        { json: "status", js: "status", typ: "any" },
+        { json: "offlineEvents", js: "offlineEvents", typ: "any" },
+        { json: "uptimeS", js: "uptimeS", typ: "any" },
+        { json: "cpuUsageP", js: "cpuUsageP", typ: "any" },
+        { json: "serverCpuUsageP", js: "serverCpuUsageP", typ: "any" },
+        { json: "ramUsageB", js: "ramUsageB", typ: "any" },
+        { json: "ramUsageP", js: "ramUsageP", typ: "any" },
+        { json: "serverRamUsageB", js: "serverRamUsageB", typ: "any" },
+        { json: "serverRamUsageP", js: "serverRamUsageP", typ: "any" },
+        { json: "threads", js: "threads", typ: "any" },
+        { json: "decodingThreads", js: "decodingThreads", typ: "any" },
+        { json: "decodingSpeed3s", js: "decodingSpeed3s", typ: "any" },
+        { json: "encodingThreads", js: "encodingThreads", typ: "any" },
+        { json: "encodingSpeed3s", js: "encodingSpeed3s", typ: "any" },
+        { json: "primaryStreams", js: "primaryStreams", typ: "any" },
+        { json: "secondaryStreams", js: "secondaryStreams", typ: "any" },
+        { json: "incomingConnections", js: "incomingConnections", typ: "any" },
+        { json: "outgoingConnections", js: "outgoingConnections", typ: "any" },
+        { json: "logLevel", js: "logLevel", typ: "any" },
+        { json: "publicIp", js: "publicIp", typ: "any" },
+        { json: "os", js: "os", typ: "any" },
+        { json: "osTime", js: "osTime", typ: "any" },
+        { json: "vmsTime", js: "vmsTime", typ: "any" },
+        { json: "cpu", js: "cpu", typ: "any" },
+        { json: "cpuCores", js: "cpuCores", typ: "any" },
+        { json: "ramB", js: "ramB", typ: "any" },
+        { json: "guidConflict", js: "guidConflict", typ: "any" },
+        { json: "vmsTimeChanged24h", js: "vmsTimeChanged24h", typ: "any" },
+        { json: "transactionsPerSecond1m", js: "transactionsPerSecond1m", typ: "any" },
+        { json: "actionsTriggered1m", js: "actionsTriggered1m", typ: "any" },
+        { json: "apiCalls1m", js: "apiCalls1m", typ: "any" },
+        { json: "thumbnails1m", js: "thumbnails1m", typ: "any" },
+        { json: "activePlugins", js: "activePlugins", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "any" },
@@ -1454,9 +2025,7 @@ const typeMap: any = {
         { json: "sortKey", js: "sortKey", typ: "any" },
     ], false),
     "IpvdFeedback": o([
-        { json: "a_Please", js: "a_Please", typ: "any" },
-        { json: "b_Link", js: "b_Link", typ: "any" },
-        { json: "c_Info", js: "c_Info", typ: "any" },
+        { json: "request", js: "request", typ: "any" },
     ], false),
     "License": o([
         { json: "licenseTypeTitles", js: "licenseTypeTitles", typ: r("LicenseTypeTitles") },
@@ -1491,12 +2060,16 @@ const typeMap: any = {
         { json: "IO Module", js: "IO Module", typ: "any" },
         { json: "Bridge", js: "Bridge", typ: "any" },
         { json: "NVR", js: "NVR", typ: "any" },
+        { json: "Invalid", js: "Invalid", typ: "any" },
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "any" },
         { json: "activated", js: "activated", typ: "any" },
         { json: "inuse", js: "inuse", typ: "any" },
         { json: "trialActivated", js: "trialActivated", typ: "any" },
+    ], false),
+    "Maintenance": o([
+        { json: "description", js: "description", typ: "any" },
     ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },
@@ -1507,6 +2080,39 @@ const typeMap: any = {
         { json: "general", js: "general", typ: "any" },
         { json: "licenses", js: "licenses", typ: "any" },
         { json: "users", js: "users", typ: "any" },
+        { json: "servers", js: "servers", typ: "any" },
+        { json: "alerts", js: "alerts", typ: "any" },
+        { json: "systems", js: "systems", typ: "any" },
+        { json: "storages", js: "storages", typ: "any" },
+        { json: "networkInterfaces", js: "networkInterfaces", typ: "any" },
+        { json: "graphs", js: "graphs", typ: "any" },
+        { json: "logs", js: "logs", typ: "any" },
+    ], false),
+    "MetaDefaults": o([
+        { json: "default", js: "default", typ: r("MetaDefaultsDefault") },
+        { json: "/systems", js: "/systems", typ: r("Docs") },
+        { json: "/integrations", js: "/integrations", typ: r("Docs") },
+        { json: "/docs", js: "/docs", typ: r("Docs") },
+        { json: "/ipvd", js: "/ipvd", typ: r("Docs") },
+    ], false),
+    "MetaDefaultsDefault": o([
+        { json: "site_name", js: "site_name", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
+        { json: "description", js: "description", typ: "any" },
+    ], false),
+    "MetaDefaultsWebadmin": o([
+        { json: "default", js: "default", typ: r("MetaDefaultsWebadminDefault") },
+        { json: "/settings", js: "/settings", typ: r("Docs") },
+        { json: "/view", js: "/view", typ: r("Docs") },
+        { json: "/health", js: "/health", typ: r("Docs") },
+        { json: "/monitoring", js: "/monitoring", typ: r("Docs") },
+    ], false),
+    "MetaDefaultsWebadminDefault": o([
+        { json: "site_name", js: "site_name", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
+    ], false),
+    "Monitoring": o([
+        { json: "unavailable", js: "unavailable", typ: "any" },
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
@@ -1520,11 +2126,13 @@ const typeMap: any = {
         { json: "activateCode", js: "activateCode", typ: "any" },
         { json: "activateSuccess", js: "activateSuccess", typ: "any" },
         { json: "articleTitle", js: "articleTitle", typ: "any" },
+        { json: "auth", js: "auth", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
         { json: "debug", js: "debug", typ: "any" },
         { json: "default", js: "default", typ: "any" },
         { json: "download", js: "download", typ: "any" },
         { json: "downloadPlatform", js: "downloadPlatform", typ: "any" },
+        { json: "failedToAccess2FA", js: "failedToAccess2FA", typ: "any" },
         { json: "failedToAccessSystem", js: "failedToAccessSystem", typ: "any" },
         { json: "failedToAccessCamera", js: "failedToAccessCamera", typ: "any" },
         { json: "integrations", js: "integrations", typ: "any" },
@@ -1539,8 +2147,11 @@ const typeMap: any = {
         { json: "systemShare", js: "systemShare", typ: "any" },
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },
+        { json: "templateWebadmin", js: "templateWebadmin", typ: "any" },
         { json: "view", js: "view", typ: "any" },
         { json: "apiTool", js: "apiTool", typ: "any" },
+        { json: "security", js: "security", typ: "any" },
+        { json: "twofaRequired", js: "twofaRequired", typ: "any" },
     ], false),
     "PasswordRequirements": o([
         { json: "common", js: "common", typ: "any" },
@@ -1561,6 +2172,8 @@ const typeMap: any = {
         { json: "noSettings", js: "noSettings", typ: r("NoSettings") },
         { json: "merge", js: "merge", typ: r("PlaceholderTextsMerge") },
         { json: "server", js: "server", typ: r("NoSettings") },
+        { json: "noSystemApiTool", js: "noSystemApiTool", typ: r("NoSettings") },
+        { json: "systemLoadFailureApiTool", js: "systemLoadFailureApiTool", typ: r("NoSettings") },
     ], false),
     "PlaceholderTextsMerge": o([
         { json: "title", js: "title", typ: "any" },
@@ -1575,6 +2188,14 @@ const typeMap: any = {
         { json: "integration", js: "integration", typ: "any" },
         { json: "ipvd", js: "ipvd", typ: "any" },
     ], false),
+    "Redirects": o([
+        { json: "message", js: "message", typ: "any" },
+        { json: "defaultMessage", js: "defaultMessage", typ: "any" },
+        { json: "cloudLinks", js: "cloudLinks", typ: r("CloudLinks") },
+    ], false),
+    "CloudLinks": o([
+        { json: "supportLink", js: "supportLink", typ: "any" },
+    ], false),
     "Registration": o([
         { json: "agreement", js: "agreement", typ: "any" },
     ], false),
@@ -1582,6 +2203,7 @@ const typeMap: any = {
         { json: "beingMerged", js: "beingMerged", typ: r("BeingMerged") },
         { json: "finishingMerge", js: "finishingMerge", typ: "any" },
         { json: "integration", js: "integration", typ: r("RibbonIntegration") },
+        { json: "newVersionAvailable", js: "newVersionAvailable", typ: r("NewVersionAvailable") },
         { json: "systemOffline", js: "systemOffline", typ: "any" },
         { json: "systemsMerging", js: "systemsMerging", typ: "any" },
     ], false),
@@ -1595,6 +2217,10 @@ const typeMap: any = {
         { json: "backToEditText", js: "backToEditText", typ: "any" },
         { json: "previewRibbon", js: "previewRibbon", typ: "any" },
         { json: "publishedRibbon", js: "publishedRibbon", typ: "any" },
+    ], false),
+    "NewVersionAvailable": o([
+        { json: "notification", js: "notification", typ: "any" },
+        { json: "installButton", js: "installButton", typ: "any" },
     ], false),
     "Search": o([
         { json: "Any", js: "Any", typ: "any" },
@@ -1612,10 +2238,22 @@ const typeMap: any = {
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "vendors", js: "vendors", typ: "any" },
     ], false),
+    "Security": o([
+        { json: "twoFa", js: "twoFa", typ: r("SecurityTwoFa") },
+    ], false),
+    "SecurityTwoFa": o([
+        { json: "twoFADescription", js: "twoFADescription", typ: "any" },
+        { json: "systemsRemainder", js: "systemsRemainder", typ: "any" },
+        { json: "v5Warning", js: "v5Warning", typ: "any" },
+        { json: "v5WarningExplanation", js: "v5WarningExplanation", typ: "any" },
+        { json: "disableWarning", js: "disableWarning", typ: "any" },
+    ], false),
     "ServerTabTitles": o([
         { json: "View", js: "View", typ: "any" },
         { json: "Settings", js: "Settings", typ: "any" },
         { json: "Information", js: "Information", typ: "any" },
+        { json: "Bookmarks", js: "Bookmarks", typ: "any" },
+        { json: "Monitoring", js: "Monitoring", typ: "any" },
     ], false),
     "Servers": o([
         { json: "analyticsDataPolicyError", js: "analyticsDataPolicyError", typ: "any" },
@@ -1687,6 +2325,7 @@ const typeMap: any = {
         { json: "yourSystem", js: "yourSystem", typ: "any" },
         { json: "loggers", js: "loggers", typ: r("Loggers") },
         { json: "storageToolTips", js: "storageToolTips", typ: r("StorageToolTips") },
+        { json: "transferNotification", js: "transferNotification", typ: "any" },
     ], false),
     "Loggers": o([
         { json: "none", js: "none", typ: r("Debug") },
@@ -1710,6 +2349,7 @@ const typeMap: any = {
     "SessionLimitDuration": o([
         { json: "hours", js: "hours", typ: "any" },
         { json: "minutes", js: "minutes", typ: "any" },
+        { json: "days", js: "days", typ: "any" },
     ], false),
     "WarningMessages": o([
         { json: "videoEncryption", js: "videoEncryption", typ: "any" },
@@ -1738,11 +2378,22 @@ const typeMap: any = {
         { json: "online", js: "online", typ: "any" },
         { json: "unavailable", js: "unavailable", typ: "any" },
     ], false),
+    "TableHeaders": o([
+        { json: "type", js: "type", typ: "any" },
+        { json: "server", js: "server", typ: "any" },
+        { json: "alert", js: "alert", typ: "any" },
+    ], false),
     "ToastMessage": o([
         { json: "cloudUnavailable", js: "cloudUnavailable", typ: "any" },
         { json: "nameFail", js: "nameFail", typ: "any" },
+        { json: "noConnection", js: "noConnection", typ: "any" },
+        { json: "noInternet", js: "noInternet", typ: "any" },
+        { json: "userChangesFail", js: "userChangesFail", typ: "any" },
         { json: "reviewAccepted", js: "reviewAccepted", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
+        { json: "webAdminCloudCredentialError", js: "webAdminCloudCredentialError", typ: "any" },
+        { json: "twoFaRequired", js: "twoFaRequired", typ: "any" },
+        { json: "loggingIn", js: "loggingIn", typ: "any" },
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },
@@ -1757,5 +2408,64 @@ const typeMap: any = {
     ], false),
     "Deleted": o([
         { json: "success", js: "success", typ: "any" },
+    ], false),
+    "View": o([
+        { json: "timeline", js: "timeline", typ: r("Timeline") },
+    ], false),
+    "Timeline": o([
+        { json: "dayNames", js: "dayNames", typ: r("DayNames") },
+        { json: "monthNames", js: "monthNames", typ: r("MonthNames") },
+        { json: "timeNames", js: "timeNames", typ: r("TimeNames") },
+    ], false),
+    "DayNames": o([
+        { json: "Sun", js: "Sun", typ: "any" },
+        { json: "Mon", js: "Mon", typ: "any" },
+        { json: "Tue", js: "Tue", typ: "any" },
+        { json: "Wed", js: "Wed", typ: "any" },
+        { json: "Thu", js: "Thu", typ: "any" },
+        { json: "Fri", js: "Fri", typ: "any" },
+        { json: "Sat", js: "Sat", typ: "any" },
+        { json: "Sunday", js: "Sunday", typ: "any" },
+        { json: "Monday", js: "Monday", typ: "any" },
+        { json: "Tuesday", js: "Tuesday", typ: "any" },
+        { json: "Wednesday", js: "Wednesday", typ: "any" },
+        { json: "Thursday", js: "Thursday", typ: "any" },
+        { json: "Friday", js: "Friday", typ: "any" },
+        { json: "Saturday", js: "Saturday", typ: "any" },
+    ], false),
+    "MonthNames": o([
+        { json: "Jan", js: "Jan", typ: "any" },
+        { json: "Feb", js: "Feb", typ: "any" },
+        { json: "Mar", js: "Mar", typ: "any" },
+        { json: "Apr", js: "Apr", typ: "any" },
+        { json: "May", js: "May", typ: "any" },
+        { json: "Jun", js: "Jun", typ: "any" },
+        { json: "Jul", js: "Jul", typ: "any" },
+        { json: "Aug", js: "Aug", typ: "any" },
+        { json: "Sep", js: "Sep", typ: "any" },
+        { json: "Oct", js: "Oct", typ: "any" },
+        { json: "Nov", js: "Nov", typ: "any" },
+        { json: "Dec", js: "Dec", typ: "any" },
+        { json: "January", js: "January", typ: "any" },
+        { json: "February", js: "February", typ: "any" },
+        { json: "March", js: "March", typ: "any" },
+        { json: "April", js: "April", typ: "any" },
+        { json: "June", js: "June", typ: "any" },
+        { json: "July", js: "July", typ: "any" },
+        { json: "August", js: "August", typ: "any" },
+        { json: "September", js: "September", typ: "any" },
+        { json: "October", js: "October", typ: "any" },
+        { json: "November", js: "November", typ: "any" },
+        { json: "December", js: "December", typ: "any" },
+    ], false),
+    "TimeNames": o([
+        { json: "a", js: "a", typ: "any" },
+        { json: "p", js: "p", typ: "any" },
+        { json: "am", js: "am", typ: "any" },
+        { json: "pm", js: "pm", typ: "any" },
+        { json: "A", js: "A", typ: "any" },
+        { json: "P", js: "P", typ: "any" },
+        { json: "AM", js: "AM", typ: "any" },
+        { json: "PM", js: "PM", typ: "any" },
     ], false),
 };

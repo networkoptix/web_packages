@@ -1,26 +1,31 @@
+import { Location } from '@angular/common';
 import {
-    Component, OnInit, Input,
-    forwardRef, ViewEncapsulation,
-    OnDestroy, EventEmitter, Output
-}                                           from '@angular/core';
+    Component,
+    OnInit,
+    Input,
+    forwardRef,
+    ViewEncapsulation,
+    OnDestroy,
+    EventEmitter,
+    Output
+} from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
-}                                           from '@angular/forms';
-import { ActivatedRoute }                   from '@angular/router';
-import { Location }                         from '@angular/common';
-import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
-import { Subject }                          from 'rxjs';
-import { debounceTime }                     from 'rxjs/operators';
-import { isArray }                          from 'rxjs/internal-compatibility';
+} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { isArray } from 'rxjs/internal-compatibility';
+import { debounceTime } from 'rxjs/operators';
 
-import { NxLanguageProviderService }        from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }         from '../../services/nx-config';
-import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
-import { NxUriService }                     from '../../services/uri.service';
-import { NxUtilsService }                   from '../../services/utils.service';
-import { ButtonArrowType, NxSearchService } from '../../services/search.service';
-import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
 
 /* Usage
  <nx-search
@@ -67,13 +72,13 @@ export interface SearchFilter {
 
 @UntilDestroy()
 @Component({
-    selector      : 'nx-search',
-    templateUrl   : './search.component.html',
-    encapsulation : ViewEncapsulation.None,
-    providers     : [{
-        provide     : NG_VALUE_ACCESSOR,
-        useExisting : forwardRef(() => NxSearchComponent),
-        multi       : true
+    selector: 'nx-search',
+    templateUrl: './search.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NxSearchComponent),
+        multi: true
     }],
     styleUrls: ['./search.component.scss']
 })
@@ -121,13 +126,16 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.buttonArrowTypeUp = ButtonArrowType.up;
         this.buttonArrowTypeDown = ButtonArrowType.down;
 
-        this.location.subscribe((event: PopStateEvent) => {
-            // force search component update
-            setTimeout(() => {
-                this.updateFilter(this.uri.getURI());
-                this.modelChanged(false);
-            });
-        });
+        // TODO: remove if no issues found post 21.1 QA (soon)
+        // Causing issues with routing when manually input params into url
+        // Removing doesn't seem to effect functionality of search component, though
+        // this.location.subscribe((event: (PopStateEvent | any)) => {
+        //     // force search component update
+        //     setTimeout(() => {
+        //         this.updateFilter(this.uri.getParams());
+        //         this.modelChanged(false);
+        //     });
+        // });
 
         this.searchUpdated = new Subject<any>();
         this.modelUpdated = new Subject<any>();
@@ -216,12 +224,17 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             }
         }
 
-        if (this.localFilter.selects && this.localFilter.selects.length) {
+        if (
+            this.localFilter.selects &&
+            this.localFilter.selects.length
+        ) {
             this.localFilter
                 .selects
                 .find((select) => {
                     if (this.params[select.id]) {
-                        select.selected = select.items.find((item) => item.value === this.params[select.id]);
+                        select.selected =
+                            select.items.find((item) =>
+                                item.value === this.params[select.id]);
                     } else {
                         if (!select.selected) {
                             select.selected = { value: '0', name: 'All' };
@@ -230,12 +243,17 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 });
         }
 
-        if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
+        if (
+            this.localFilter.multiselects &&
+            this.localFilter.multiselects.length
+        ) {
             this.localFilter
                 .multiselects
                 .find((select) => {
                     if (this.params[select.id]) {
-                        select.selected = isArray(this.params[select.id]) ? this.params[select.id] : this.params[select.id].split(',');
+                        select.selected = isArray(this.params[select.id])
+                            ? this.params[select.id]
+                            : this.params[select.id].split(',');
                     } else {
                         select.selected = [];
                     }

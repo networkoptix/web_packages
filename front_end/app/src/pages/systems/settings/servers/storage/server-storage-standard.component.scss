@@ -1,5 +1,4 @@
 @use "../../../../../styles/typography";
-@use '../../../../../../styles/theme_variables' as *;
 @use "../../../../../styles/mixins" as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -47,8 +46,8 @@ form.form-horizontal {
     th {
         @include typography.medium13dark9;
         padding          : 5px 0 5px 16px;
-        background-color : $additional_light1;
-        border-bottom    : 1px solid $light3;
+        background-color : var(--additional_light1);
+        border-bottom    : 1px solid var(--light3);
         height: 32px !important;
 
     }
@@ -61,7 +60,7 @@ form.form-horizontal {
         @include typography.regular13dark9;
         max-height: 24px !important;
         padding          : 5px 0 5px 16px;
-        background-color : $light1;
+        background-color : var(--light1);
         display          : flex;
         align-items      : center;
 
@@ -75,14 +74,14 @@ form.form-horizontal {
         }
 
         &.disabled-label, div.disabled-label {
-            color : $light10 !important;
+            color : var(--light10) !important;
 
             svg-icon {
                 svg {
                     height: 20px;
                     width: 20px;
                     path {
-                        fill : $light10 !important;
+                        fill : var(--light10) !important;
                     }
                 }
             }
@@ -95,7 +94,7 @@ form.form-horizontal {
     }
 
     tr:hover td {
-        background : transparentize($brand_core, 0.9);
+        background : var(--brand-core-t90);
     }
 }
 
@@ -140,7 +139,7 @@ form.form-horizontal {
 
         .cell-ellipsis {
             margin-bottom : 2px;
-            border-bottom : 1px dotted $light6;
+            border-bottom : 1px dotted var(--light6);
             flex-grow     : 1;
         }
     }
@@ -152,7 +151,7 @@ form.form-horizontal {
     }
 
     .tooltip-text {
-        color: white !important;
+        color: var(--light1) !important;
     }
 
     .reindex-section {
@@ -172,10 +171,10 @@ form.form-horizontal {
             }
             .reindex-progress-container {
                 height: 4px;
-                background-color: $light3 !important;
+                background-color: var(--light3) !important;
                 border-radius: 2px;
                 .reindex-progress {
-                    background-color: $brand_core !important;
+                    background-color: var(--brand-core) !important;
                 }
             }
         }
@@ -207,7 +206,7 @@ svg-icon:not(.animate-rotation) .st0 {
 }
 
 .header-button-span {
-    color: $light16 !important;
+    color: var(--light16) !important;
 }
 
 button.btn.btn-dropdown-toggle.dropdown-toggle {

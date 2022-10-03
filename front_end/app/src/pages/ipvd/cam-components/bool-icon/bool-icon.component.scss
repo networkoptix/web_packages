@@ -1,9 +1,8 @@
-@use '../../../../../styles/theme_variables' as *;
-
+@use "../../../../../styles/theme_variables" as theme_vars;
 
 .icon-additional {
-    font-family : $font-family-medium;
-    font-size   : rem(10px);
+    font-family : theme_vars.$font-family-medium;
+    font-size   : theme_vars.$font-size-ssm;
     float       : left;
     margin-left : 2px;
 }
@@ -21,7 +20,7 @@
 .icon-negative {
     line-height     : 1rem;
     font-size       : 1.5rem;
-    color           : $light10;
+    color           : var(--light10);
     display         : flex;
     justify-content : center;
     margin-top      : -5px;
@@ -30,8 +29,8 @@
 
 .icon-unknown {
     line-height     : 1rem;
-    font-size       : rem(13px);
-    font-family     : $font-family-medium;
+    font-size       : theme_vars.$font-size-base;
+    font-family     : theme_vars.$font-family-medium;
     display         : flex;
     justify-content : center;
     margin-left     : 1px;

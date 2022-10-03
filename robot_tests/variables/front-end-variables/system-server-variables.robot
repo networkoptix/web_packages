@@ -1,6 +1,10 @@
 *** Variables ***
+${password}                         ${BASE PASSWORD}
+${url}                              ${ENV}
+@{server auth}                      admin    ${password}
+
 ${SERVERS LINK}                     //nx-menu//a[@id="servers"]
-${SERVER NAME}                      //header//h2
+${SERVER NAME}                      //header//nx-text-editable
 ${IP}                               //header//p[contains(text(),"${IP TEXT}")]
 ${OS}                               //header//p[contains(text(),"${OS TEXT}")]
 ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}")]
@@ -14,7 +18,7 @@ ${SERVER 1 LIST MENU NAME}          //nx-level-3-item//a//span[contains(text(),"
 ${SERVER OFFLINE ALERT}             //nx-alert-block//span[contains(text(),'${SERVER OFFLINE TEXT}')]
 ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"${RENAME}")]/..
 ${RESTART SERVER BUTTON}            //nx-section//button/span[contains(text(),"${RESTART}")]/..
-${RESTART SERVER FORM}              //form[@name="restartServerForm"]
+${RESTART SERVER FORM}              //nx-modal-restart-server-content
 ${RESTART DIALOG CLOSE BUTTON}      ${RESTART SERVER FORM}//button[contains(@class,"close")]
 ${RESTART DIALOG CANCEL BUTTON}     ${RESTART SERVER FORM}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${RESTART DIALOG RESTART BUTTON}    ${RESTART SERVER FORM}//button[@type="submit"]
@@ -60,6 +64,7 @@ ${STORAGE SYSTEM TOOLTIP}           //ngb-tooltip-window//div[contains(text(), "
 ${STORAGE NONSYSTEM TOOLTIP}        //ngb-tooltip-window//div[contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE LOCATIONS FIRST ROW}      ${STORAGE LOCATIONS TABLE}//tbody//tr[2]
 ${STORAGE LOCATIONS FIRST SPACE}    ${STORAGE LOCATIONS FIRST ROW}/td[3]/nx-storage-size-component/div[@class="container"]
+${STORAGE POPOVER}                  //nx-popover
 ${STORAGE ITEM}                     //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
 ${STORAGE DISK 0}                   //span[contains(text(), "disk0") and @class="ellipsis"] 
 ${STORAGE DISK 1}                   //span[contains(text(), "disk1") and @class="ellipsis"]
@@ -73,21 +78,21 @@ ${STORAGE DISABLED NOT IN USE}      ${STORAGE DISK 2}/parent::td[@class="disable
 ${STORAGE DISABLED RESERVED}        ${STORAGE DISK 3}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE RESERVED MODE}
 ${STORAGE ENABLED MAIN}             ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
 ${STORAGE ENABLED BACKUP}           ${STORAGE DISK 1}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}
-${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
 ${STORAGE DISABLED RESERVED ADDRESS}   ${STORAGE DISK 3}
 ${STORAGE DISABLED NOT IN USE ADDRESS}   ${STORAGE DISK 2}
 ${STORAGE DISABLED INACCESSIBLE ADDRESS}   ${STORAGE DISK INVALID} 
 ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
-${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/info.svg"]
-${STORAGE RESERVED TOOLTIP}         ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
+${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/info.svg")]
+${STORAGE RESERVED TOOLTIP}         //div[contains(@class, "tooltip-body") and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
-${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
-${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0"]
+${RESERVED SPACE}                   ${STORAGE POPOVER}//td[text()="Reserved"]/following-sibling::td
+${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0-numeric"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
-${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup"]
+${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup-switch-wrapper"]
 ${ARCHIVE BACKUP SWITCH SLIDER}     //span[@class="slider round"]
 ${ARCHIVE BACKUP SWITCH ENABLED}    //input[@id="archive-backup-switch" and @class="selected"]
 ${ARCHIVE BACKUP STREAMS MSG}       //p[contains(text(), "${ARCHIVE BACKUP STREAMS MSG TEXT}")]
@@ -101,13 +106,13 @@ ${RESET BACKUP RESET BUTTON}        ${RESET BACKUP MODAL}//button[@type="submit"
 ${RESET BACKUP CLOSE BUTTON}        ${RESET BACKUP MODAL}//button[@aria-label="Close"]
 ${RESET BACKUP CANCEL BUTTON}       ${RESET BACKUP MODAL}//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
-${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/standard/loading.svg"]
-${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
-${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
-${STORAGE SMB ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_smb.svg"]
-${STORAGE SMB TOOLTIP}              ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${SMB TOOLTIP TEXT}")]
-${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static/images/icons/standard/delete.svg"]   
+${STORAGE LOCAL ICON}               *[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE LOADING ICON}             //*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/loading.svg")]
+${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and contains(@data-src,"/images/icons/error.svg")]
+${STORAGE DELETION ALERT TOOLTIP}   //div[contains(@class, "tooltip-body") and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
+${STORAGE SMB ICON}                 *[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_smb.svg")]
+${STORAGE SMB TOOLTIP}              //div[contains(@class, "tooltip-body") and contains(text(), "${SMB TOOLTIP TEXT}")]
+${STORAGE DELETE ICON}              //*[name()="svg-icon" and contains(@data-src,"/images/icons/standard/delete.svg")]
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
 ${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
 ${INACCESSIBLE STORAGE DELETE BUTTON}    ${STORAGE DISK INVALID}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
@@ -142,7 +147,7 @@ ${AS MODAL PASSWORD REQUIRED}       ${AS MODAL PASSWORD INPUT}/parent::div/follo
 ${AS MODAL PASSWORD INVALID}        ${AS MODAL PASSWORD INPUT}/parent::div/following-sibling::div/span[contains(text(), "${LOGIN OR PASSWORD INCORRECT TEXT}")]
 ${AS MODAL SUBMIT BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-process-button//button
 ${AS MODAL CANCEL BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
-${AS FAILED TO ADD TOAST}           //app-toasts//ngb-toast/div[@class="toast-body"]/span[contains(text(), "${FAILED TO ADD STORAGE TEXT}")]
+${AS FAILED TO ADD TOAST}           //app-toasts//nx-toast/div[contains(@class, "alert")]/span[contains(text(), "${FAILED TO ADD STORAGE TEXT}")]
 ${AS MODAL STORAGE ADDED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//*[contains(text(), "${STORAGE PATH ALREADY ADDED TEXT}")]
 ${AS MODAL STORAGE USED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//*[contains(text(), "${STORAGE PATH ALREADY USED TEXT}")]
 ${AS MODAL NOT RECOMMENEDED}        ${ADD STORAGE MODAL}//*[contains(text(), "${NOT RECOMMENDED DIFFERENT SERVERS TEXT}")]
@@ -154,8 +159,8 @@ ${STORAGE REINDEX ARCHIVE HEADER}   //h4[contains(text(), "${REINDEX ARCHIVE TEX
 ${STORAGE REINDEX ARCHIVE MSG}      //p[contains(text(), "${REINDEX ARCHIVE MSG TEXT}")]
 ${STORAGE REINDEX MAIN BUTTON}      ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX MAIN STORAGE TEXT}")]
 ${STORAGE REINDEX BACKUP BUTTON}    ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX BACKUP STORAGE TEXT}")]
-${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
-${STORAGE REINDEX TOOLTIP SECOND}   ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]//p[contains(text(), "${REINDEX TOOLTIP SECOND}")]
+${STORAGE REINDEX TOOLTIP FIRST}    //div[contains(@class, "tooltip-body")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
+${STORAGE REINDEX TOOLTIP SECOND}   //div[contains(@class, "tooltip-body")]//p[contains(text(), "${REINDEX TOOLTIP SECOND}")]
 ${STORAGE REINDEXING MAIN}          ${STORAGE REINDEXING BLOCK}//section[@id="reindex-main"]//div[contains(text(), "${REINDEXING MAIN}")]
 ${REINDEXING MAIN PERCENT}          ${STORAGE REINDEXING MAIN}/following-sibling::span
 ${REINDEXING MAIN CANCEL BUTTON}    ${STORAGE REINDEXING BLOCK}//section[@id="reindex-main"]/button[contains(text(), "${CANCEL BUTTON TEXT}")]
@@ -169,26 +174,27 @@ ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") an
 ${OFFLINE BANNER}                    //nx-alert-block//span[contains(text(),"${SERVER OFFLINE TEXT}")]
 ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${CHECKING TEXT}")]
 ${OUTDATED BANNER}                   //div[@class="warning-margin"]/span[contains(text(), "${STORAGES OUTDATED WARNING TEXT}")]
-${RELOAD ICON}                       //*[name()="svg-icon" and @data-src="/static/images/icons/reload.svg"]
+${RELOAD ICON}                       //*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/reload.svg")]
 
 # ADVANCED
 # Storage Locations Block
 ${STORAGE LOCATIONS TITLE}          //div[@class="card mt-3"]//h4[text()="${STORAGE LOCATIONS TEXT}"]
-${RESERVED SPACE INPUT}             //input[@id="reservedSpace0"]   
+${RESERVED SPACE INPUT}             //input[@id="reservedSpace0-numeric"]
 ${RESERVED SPACE DROPDOWN}          //select[@id="reservedSpaceUnit0"]
 ${RESERVED DROPDOWN SELECTED}       ${RESERVED SPACE DROPDOWN}//option[@selected]
 ${RESERVED DROPDOWN OPTION GB}      ${RESERVED SPACE DROPDOWN}//option[@value='GB']
 ${RESERVED DROPDOWN OPTION TB}      ${RESERVED SPACE DROPDOWN}//option[@value='TB']
-${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0']
+${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0-switch-wrapper']
 @{STORAGE LOCATIONS BLOCK ITEMS}
 ...    ${STORAGE LOCATIONS TITLE}
 ...    ${RESERVED SPACE INPUT}
 ...    ${RESERVED SPACE DROPDOWN}
 ...    ${STORAGE ENABLE SWITCH}
-${STORAGE ENABLE SWITCH STYLE}     ${STORAGE ENABLE SWITCH}//span[@class='slider round']
-${STORAGE SWITCH ENABLED COLOR}    rgba(58, 145, 30, 1)
-${STORAGE SWITCH DISABLED COLOR}   rgba(185, 199, 206, 1) 
-${STORAGE FREE SPACE VALUE}        //td[@title='/recordings/HD Witness Media']//following-sibling::td[2]
+${STORAGE ENABLE SWITCH STYLE}       ${STORAGE ENABLE SWITCH}//span[@class='slider round']
+${STORAGE SWITCH ENABLED COLOR}      rgba(58, 145, 30, 1)
+${STORAGE SWITCH DISABLED COLOR}     rgba(185, 199, 206, 1)
+${SERVER ADVANCED DISABLED COLOR}    rgba(195, 207, 213, 1)
+${STORAGE FREE SPACE VALUE}          //td[@title='/recordings/HD Witness Media']//following-sibling::td[2]
 
 # Log settings block
 ${LOG SETTINGS TITLE}               //h4[text()="${LOG SETTINGS TEXT}"]

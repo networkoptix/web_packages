@@ -12,10 +12,10 @@
         <div class="popup arrow up" [ngClass]="{'invisible': !dropdownWidth$.value, 'small-override': small}"></div>
         <svg-icon nx-add-svg-src
             [src]="CONFIG.icons.dir + 'user.svg'"
-            [svgStyle]="{'width.px': 24, 'height.px': 24, 'margin.px': small ? 8 : 10}"
+            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': small ? '8' : '10'}"
             [applyClass]="true"
             ></svg-icon>
-        <span *ngIf="!small" class="username" [innerText]="CONFIG.isLocal ? settings.name : settings.email"></span>
+        <span *ngIf="!small" class="fs-mask username" [innerText]="environment.isLocal ? settings.name : settings.email"></span>
     </button>
     <div class="dropdown-menu"
         [ngClass]="{'invisible': !show}"
@@ -26,14 +26,19 @@
         aria-labelledby="accountSettingsSelect">
 
         <ul class="dropdown-menu--list width-override">
-            <li *ngIf="!CONFIG.isLocal" class="dropdown-item-container">
+            <li *ngIf="!environment.isLocal" class="dropdown-item-container">
                 <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/" ><span translate>Account Settings</span>
                 </a>
             </li>
-            <li *ngIf="!CONFIG.isLocal" class="dropdown-item-container">
+            <li *ngIf="!environment.isLocal" class="dropdown-item-container">
                 <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/password/"><span translate>Change Password</span>
+                </a>
+            </li>
+            <li *ngIf="!environment.isLocal" class="dropdown-item-container">
+                <a class="dropdown-item inset" (click)="hide()"
+                   routerLink="/account/security/"><span translate>Security</span>
                 </a>
             </li>
             <li class="dropdown-item-container">

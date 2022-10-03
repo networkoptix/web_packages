@@ -1,6 +1,8 @@
 import {
-    Directive, ElementRef,
-    HostListener, Input
+    Directive,
+    ElementRef,
+    HostListener,
+    Input
 } from '@angular/core';
 
 @Directive({ selector: '[nxArrowNav]' })
@@ -25,12 +27,12 @@ export class NxArrowNavDirective {
     @HostListener('document:keydown', ['$event'])
     onKeydown(e) {
         // filter events
-        if ([38, 40].indexOf(e.keyCode) === -1) {
+        if (![38, 40].includes(e.keyCode)) {
             return;
         }
 
         // proceed only if open
-        if (this._elementRef.nativeElement.parentElement.className.indexOf('show') > -1) {
+        if (this._elementRef.nativeElement.parentElement.className.includes('show')) {
             const elements = this._elementRef.nativeElement.querySelectorAll('.dropdown-item-container');
             let fdElm = this._elementRef.nativeElement.querySelector(':focus');
             let idx;

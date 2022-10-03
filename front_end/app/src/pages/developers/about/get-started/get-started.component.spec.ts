@@ -1,20 +1,22 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxGetStartedComponent } from './get-started.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { WINDOW } from '@services/window-provider';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+
+import { HelperMockProvider } from '../../../../_mocks/helpers.test';
 import {
     routeLandingMock,
     getStartedNode
 } from '../../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider } from '../../../../_mocks/helpers.test';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 
-describe('For Developers Landing - Capabilities Node', () => {
+import { NxGetStartedComponent } from './get-started.component';
+
+describe('NxGetStartedComponent', () => {
     const stepToTest = 1;
     const step = getStartedNode.nodes[stepToTest - 1];
     const [stepIcon, stepAnimatedIcon] = step.icon.split(' ');
@@ -27,24 +29,22 @@ describe('For Developers Landing - Capabilities Node', () => {
 
     const getFirstStepContent = (el) => {
         const detailBlock = el.nativeElement.querySelector('.detail-block');
-        const stepNum = detailBlock.querySelector('.step').innerText;
         const stepText = detailBlock.querySelector('.step-text');
         const title = stepText.querySelector('h3').innerText;
-        const subtitle = stepText.querySelector('span').innerText;
         const imageSrc = '/static' + detailBlock.querySelector('.step-image > img').src.split('static')[1];
 
-        return { stepNum, title, subtitle, imageSrc };
+        return { title, imageSrc };
     };
 
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxGetStartedComponent, RouterLinkDirectiveStub],
-                imports      : [CommonModule],
-                providers    : [
-                    new MockProvider(Router, routeLandingMock),
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(WINDOW, {})
+                declarations: [NxGetStartedComponent, RouterLinkDirectiveStub],
+                imports: [CommonModule],
+                providers: [
+                    new HelperMockProvider(Router, routeLandingMock),
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(WINDOW, {})
                 ]
             });
 
@@ -53,10 +53,10 @@ describe('For Developers Landing - Capabilities Node', () => {
             component.getStartedNode = getStartedNode;
             component.ngOnChanges({
                 getStartedNode: {
-                    currentValue  : getStartedNode,
-                    previousValue : null,
-                    firstChange   : false,
-                    isFirstChange : () => true
+                    currentValue: getStartedNode,
+                    previousValue: null,
+                    firstChange: false,
+                    isFirstChange: () => true
                 }
             });
             el = fixture.debugElement;
@@ -83,16 +83,8 @@ describe('For Developers Landing - Capabilities Node', () => {
         expect(numStepBlocks).toBe(numStepNodes);
     });
 
-    it('should show the correct step number', () => {
-        expect(stepContent.stepNum).toBe(stepToTest.toString());
-    });
-
     it('should show the correct step title', () => {
         expect(stepContent.title).toBe(step.title);
-    });
-
-    it('should show the correct step subtitle', () => {
-        expect(stepContent.subtitle).toBe(step.subtitle);
     });
 
     it('should show the correct step image', () => {

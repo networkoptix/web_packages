@@ -1,0 +1,155 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header #createHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+    <div class="for-small">
+        <button *ngIf="smallView"
+            class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('email')">
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
+                [applyClass]="true"></svg-icon>
+        </button>
+        <h3 class="authorize-header">{{ LANG.authorize.createAccountHeader() }}</h3>
+    </div>
+    <ng-container *ngIf="existingEmail">
+        <div class="authorize-subheader">
+            <span class="sub-header" translate>For</span>
+            <span class="for-account" (click)="setCurrentState.emit('email')">{{existingEmail}}</span>
+        </div>
+    </ng-container>
+</header>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
+    *ngIf="createHeader" [ngStyle]="{ 'height': 'calc(100% - ' + createHeader.offsetHeight + 'px)' }">
+    <form #createAccountForm="ngForm" class="form">
+        <div class="create-row" *ngIf="!existingEmail">
+            <div class="email d-flex flex-column" [ngClass]="{ 'hasError': createAccountEmail.invalid && ((createAccountEmail.dirty && !createAccountEmail.errors?.pattern) || createAccountEmail.touched) }">
+                <label for="createEmail" translate>Email</label>
+                <nx-email-input
+                    name="email"
+                    componentId="email"
+                    class="form-component"
+                    [(ngModel)]="createEmail"
+                    [lockEmail]="fromInvite"
+                    [readonly]="fromInvite || createAccountProcess?.processing"
+                    [form]="createAccountForm"
+                    [authorize]="true"
+                    [setFocus]="true"
+                    #createAccountEmail="ngModel"
+                ></nx-email-input>
+                <ng-container *ngIf="createAccountEmail.invalid && ((createAccountEmail.dirty && !createAccountEmail.errors?.pattern) || createAccountEmail.touched)">
+                    <p *ngIf="createAccountEmail.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
+                    <p *ngIf="createAccountEmail.errors.pattern" class="error-label mt-2 mb-0" translate>Invalid email</p>
+                    <p *ngIf="createAccountEmail.errors.alreadyExists" class="error-label mt-2 mb-0" translate>Account already exists</p>
+                    <p *ngIf="createAccountEmail.errors.portalError" class="error-label mt-2 mb-0">{{LANG.common.generalError}}</p>
+                </ng-container>
+            </div>
+        </div>
+        <div class="create-row">
+            <div class="first-name mr-3" [ngClass]="{ 'hasError': firstName.invalid && (firstName.dirty || firstName.touched) }">
+                <label for="firstName" translate>First Name</label>
+                <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    [disabled]="createAccountProcess?.processing"
+                    [ngClass]="{ 'invalid-state': firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required }"
+                    [(ngModel)]="createFirstName"
+                    #firstName="ngModel"
+                    autocomplete="off"
+                    maxlength="255"
+                    required
+                    nxFocusMe
+                    [setFocus]="!!existingEmail"
+                    (change)="createFirstName=createFirstName.trim()"
+                >
+                <p *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
+            </div>
+            <div class="last-name" [ngClass]="{ 'hasError': lastName.invalid && (lastName.dirty || lastName.touched) }">
+                <label for="lastName" translate>Last Name</label>
+                <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    [disabled]="createAccountProcess?.processing"
+                    [ngClass]="{ 'invalid-state': lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required }"
+                    [(ngModel)]="createLastName"
+                    #lastName="ngModel"
+                    autocomplete="off"
+                    maxlength="255"
+                    required
+                    (change)="createLastName=createLastName.trim()"
+                >
+                <p *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
+            </div>
+        </div>
+        <div class="create-row">
+            <div class="password" [ngClass]="{ 'hasError': weakPassword }">
+                <label for="password" translate>Password</label>
+                <nx-password-input
+                    name="createAccountPassword"
+                    componentId="createAccountPassword"
+                    [hasError]="weakPassword"
+                    class="form-component"
+                    [(ngModel)]="createPassword"
+                    [readonly]="createAccountProcess?.processing"
+                    [form]="createAccountForm"
+                    [component]="createAccountPassword"
+                    [authorize]="true"
+                    #createAccountPassword="ngModel">
+                </nx-password-input>
+                <div class="mt-2">
+                    <nx-password-input-validation
+                        [forElement]="createAccountPassword"
+                        [value]="createPassword"
+                        (updateWeakPassword)="weakPassword = $event">
+                    </nx-password-input-validation>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-start">
+                <nx-checkbox
+                    [color]="['desktop', 'mobile'].includes(viewType) && 'desktop'"
+                    name="termsAndConditions"
+                    [(ngModel)]="termsAndConditions"
+                    #termsConditions="ngModel"
+                    componentId="termsAndConditions"
+                    [disabled]="createAccountProcess?.processing"
+                    required
+                    [description]="LANG.authorize.termsAndConditionsHelpText">
+                </nx-checkbox>
+                <label class="mb-0" for="termsAndConditions">
+                    <span class="mr-1" translate>I agree to the</span>
+                    <a [href]="termsUrl" target="_blank" (click)="externalLinkForDesktop(termsUrl)" translate>Terms and Conditions</a>
+                    <span class="mx-1" translate>and</span>
+                    <a [href]="privacyUrl" target="_blank" (click)="externalLinkForDesktop(privacyUrl)" translate>Privacy policy</a>
+                </label>
+            </div>
+            <p *ngIf="termsConditions.touched && !termsAndConditions" class="error-label mt-2 mb-0" translate>Required</p>
+        </div>
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="left">
+            <button class="btn text-button no-padding" type="button" (click)="setCurrentState.emit('email')">
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'login.svg'"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                <span class="pl-2" translate>Log In</span>
+            </button>
+        </div>
+        <div class="right">
+            <button *ngIf="!smallView" class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                <span class="pl-1" translate>Back</span>
+            </button>
+            <nx-process-button
+                [form]="createAccountForm"
+                [clickFn]="onCreateSubmit"
+                [process]="createAccountProcess"
+                [svg]="{ src: 'plus', height: '20', width: '20', color: 'light1' }"
+                buttonText="{{ 'Create Account' | translate }}">
+            </nx-process-button>
+        </div>
+    </footer>
+</main>

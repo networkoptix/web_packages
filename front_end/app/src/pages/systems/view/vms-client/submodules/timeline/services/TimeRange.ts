@@ -1,7 +1,7 @@
-import { float, ms } from '../../../utils/type-aliases';
+import { float, ms } from '@vms-client/utils/type-aliases';
+
 import IrregularLengthInterval from './canvas-renderer/ruler/intervals/IrregularLengthInterval';
 import alignTimeStamp from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';
-import estimateIrregularLengthIntervalPessimistically from './canvas-renderer/ruler/intervals/utils/estimateIrregularLengthIntervalPessimistically';
 
 export class TimeRange {
     constructor(
@@ -34,6 +34,47 @@ export class TimeRange {
         if (this.end > limitingRange.end) {
             this.end = limitingRange.end;
         }
+    }
+
+    public fitWithin (enclosingRange: TimeRange) {
+        const a = this.fitStart(enclosingRange, true);
+        const b = this.fitEnd(enclosingRange, true);
+        // console.log('fw', a, b)
+        return a || b;
+    }
+
+    public fitStart (enclosingRange: TimeRange, paranoid: boolean = false) {
+        if (this.start < enclosingRange.start) {
+            this.start = enclosingRange.start;
+            // console.log('fss')
+            return true;
+        }
+        if (paranoid && this.start > enclosingRange.end) {
+            this.start = enclosingRange.end;
+            // console.log('fse')
+            return true;
+        }
+        // console.log('fsf')
+        return false;
+    }
+
+    public fitEnd (enclosingRange: TimeRange, paranoid: boolean = false) {
+        if (this.end > enclosingRange.end) {
+            this.end = enclosingRange.end;
+            // console.log('fee')
+            return true;
+        }
+        if (paranoid && this.end < enclosingRange.start) {
+            this.end = enclosingRange.start;
+            // console.log('fes')
+            return true;
+        }
+        // console.log('fef')
+        return false;
+    }
+
+    public contains (t: ms) {
+        return this.start <= t && t <= this.end;
     }
 
     public clone () {

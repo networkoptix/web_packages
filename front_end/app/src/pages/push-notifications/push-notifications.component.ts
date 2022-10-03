@@ -1,21 +1,24 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AngularFireMessaging }         from '@angular/fire/messaging';
-import { HttpClient, HttpHeaders }      from '@angular/common/http';
-import { Router }                       from '@angular/router';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { Subscription, timer }          from 'rxjs';
+import { AngularFireMessaging } from '@angular/fire/messaging';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription, timer } from 'rxjs';
 
-import { NxSystemsService }             from '@services/systems.service';
-import { NxAccountService }             from '@services/account.service';
+import { NxAccountService, isAccount } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxSystemsService } from '@services/systems.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'push-notifications-component',
-    templateUrl : 'push-notifications.component.html',
-    styleUrls : ['push-notifications.component.scss']
+    selector: 'push-notifications-component',
+    templateUrl: 'push-notifications.component.html',
+    styleUrls: ['push-notifications.component.scss']
 })
 
 export class PushComponent implements OnInit, OnDestroy {
+    CONFIG: IConfig;
+
     notification;
     systems;
     devices;
@@ -36,19 +39,19 @@ export class PushComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.notification = {
-            title   : '',
-            body    : '',
-            payload : '',
-            options : ''
+            title: '',
+            body: '',
+            payload: '',
+            options: ''
         };
         this.newDevice = {
-            deviceToken      : '',
-            deviceTokenError : '',
-            name             : '',
-            model            : '',
-            provider         : '',
-            userId           : '',
-            success          : false
+            deviceToken: '',
+            deviceTokenError: '',
+            name: '',
+            model: '',
+            provider: '',
+            userId: '',
+            success: false
         };
         this.registered = undefined;
         this.devices = [];
@@ -57,35 +60,39 @@ export class PushComponent implements OnInit, OnDestroy {
         this.subChanges = false;
     }
 
-    constructor(private accountService: NxAccountService,
-                private systemsService: NxSystemsService,
-                private afMessaging: AngularFireMessaging,
-                private http: HttpClient,
-                private router: Router
+    constructor(
+        configService: NxConfigService,
+        private accountService: NxAccountService,
+        private systemsService: NxSystemsService,
+        private afMessaging: AngularFireMessaging,
+        private http: HttpClient,
+        private router: Router
     ) {
         this.setupDefaults();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnDestroy() {}
 
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {
-            if (!(account && account.email.endsWith('@networkoptix.com'))) {
-                this.router
-                    .navigate(['/'])
-                    .catch(error => {
-                        console.error(error);
-                    });
-            } else {
+            if (
+                isAccount(account) &&
+                account.email.endsWith('@networkoptix.com')
+            ) {
                 this.account = account;
                 this.setSystems();
                 this.setFirebase();
+            } else {
+                this.router.navigate([this.CONFIG.redirect.unauthorised]);
             }
         });
     }
 
     setSystems() {
-        this.timeSubscription = timer(10000, 10000).subscribe(() => this.updateSubStates());
+        this.timeSubscription = timer(10000, 10000).subscribe(() =>
+            this.updateSubStates()
+        );
         this.systemsService.forceUpdateSystemsAsPromise().then(
             () => {
                 this.systems = this.systemsService.systems;
@@ -125,7 +132,8 @@ export class PushComponent implements OnInit, OnDestroy {
         this.deviceSubscriptions[token] = {};
         this.deviceSubscriptions[token].all = device.systems.includes('all');
         this.systems.forEach(system => {
-            this.deviceSubscriptions[token][system.id] = !!device.systems.includes(system.id);
+            this.deviceSubscriptions[token][system.id] =
+                !!device.systems.includes(system.id);
         });
     }
 
@@ -183,25 +191,32 @@ export class PushComponent implements OnInit, OnDestroy {
         let deviceToken = '';
         const systems = [];
         const deviceInfo = {
-            name  : '',
-            model : ''
+            name: '',
+            model: ''
         };
         const isEnabled = true;
         let provider;
         let userId;
         if (form === undefined) {
             deviceToken = this.deviceToken;
-            deviceInfo.name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
+            deviceInfo.name = this.currentDeviceName
+                ? this.currentDeviceName
+                : 'Browser';
             deviceInfo.model = window.navigator.userAgent;
             provider = 'firebase';
         } else {
             deviceToken = this.newDevice.deviceToken;
             deviceInfo.name = this.newDevice.name;
-            deviceInfo.model = this.newDevice.model ? this.newDevice.model : 'custom';
+            deviceInfo.model = this.newDevice.model
+                ? this.newDevice.model
+                : 'custom';
             provider = this.newDevice.provider;
             userId = this.newDevice.userId;
         }
-        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+        const headers = new HttpHeaders().set(
+            'Content-Type',
+            'application/json'
+        );
         this.http.put(`/api/notifications/subscriptions/${deviceToken}`, {
             deviceInfo, isEnabled, systems, provider, userId
         }, { headers }).subscribe(
@@ -260,17 +275,18 @@ export class PushComponent implements OnInit, OnDestroy {
             })
         };
         this.http.post('/api/notifications/push_notification', {
-            systemId     : this.notification.system,
-            targets      : [this.account.email],
-            notification : {
-                title : this.notification.title,
-                body  : this.notification.body,
+            systemId: this.notification.system,
+            targets: [this.account.email],
+            notification: {
+                title: this.notification.title,
+                body: this.notification.body,
                 payload,
                 options
             }
         }, httpOptions).subscribe(
             (response: any) => {
-                this.sendStatus = 'Sent, Notification Id:' + response.notificationId;
+                this.sendStatus =
+                    'Sent, Notification Id:' + response.notificationId;
             },
             (response: any) => {
                 this.sendStatus = 'Error: ' + JSON.stringify(response.error);
@@ -285,11 +301,13 @@ export class PushComponent implements OnInit, OnDestroy {
         if (systemId === 'all' && this.deviceSubscriptions[deviceToken].all) {
             systems.push('all');
         } else {
-            Object.entries(this.deviceSubscriptions[deviceToken]).forEach(([systemId, active]) => {
-                if (active && systemId !== 'all') {
-                    systems.push(systemId);
+            Object.entries(this.deviceSubscriptions[deviceToken]).forEach(
+                ([systemId, active]) => {
+                    if (active && systemId !== 'all') {
+                        systems.push(systemId);
+                    }
                 }
-            });
+            );
         }
         const httpOptions = {
             headers: new HttpHeaders({

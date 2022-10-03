@@ -1,14 +1,21 @@
-import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { describe, expect, jest, beforeEach, it } from '@jest/globals';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AngularSvgIconModule }               from 'angular-svg-icon';
+import { DebugElement } from '@angular/core';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed,
+    tick,
+    fakeAsync
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { describe, expect, jest, beforeEach, it } from '@jest/globals';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxGenericDropdown } from './dropdown.component';
-import { NxArrowNavDirective } from '../../../directives/nx-arrow-nav';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService } from '../../../services/nx-config';
 
 describe('NxGenericDropdown', () => {
     let component: NxGenericDropdown;
@@ -16,39 +23,39 @@ describe('NxGenericDropdown', () => {
     let el: DebugElement;
     const dropdownItems = [
         {
-            name     : 'item1',
-            value    : '1',
-            disabled : false,
-            help     : undefined,
-            state    : undefined
+            name: 'item1',
+            value: '1',
+            disabled: false,
+            help: undefined,
+            state: undefined
         },
         {
-            name     : 'item2',
-            value    : '2',
-            disabled : true,
-            help     : undefined,
-            state    : undefined
+            name: 'item2',
+            value: '2',
+            disabled: true,
+            help: undefined,
+            state: undefined
         },
         {
-            name     : 'horizontal',
-            value    : '3',
-            disabled : false,
-            help     : undefined,
-            state    : undefined
+            name: 'horizontal',
+            value: '3',
+            disabled: false,
+            help: undefined,
+            state: undefined
         },
         {
-            name     : 'item4',
-            value    : '4',
-            disabled : false,
-            help     : 'helpText4',
-            state    : undefined
+            name: 'item4',
+            value: '4',
+            disabled: false,
+            help: 'helpText4',
+            state: undefined
         },
         {
-            name     : 'item5',
-            value    : '5',
-            disabled : false,
-            help     : undefined,
-            state    : 'state5'
+            name: 'item5',
+            value: '5',
+            disabled: false,
+            help: undefined,
+            state: 'state5'
         }
     ];
 
@@ -68,9 +75,9 @@ describe('NxGenericDropdown', () => {
             })
         };
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxGenericDropdown, NxArrowNavDirective],
-            providers    : [
+            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            declarations: [NxGenericDropdown, NxArrowNavDirective],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateSpy },
                 { provide: NxConfigService, useValue: configSpy }
             ]
@@ -205,8 +212,8 @@ describe('NxGenericDropdown', () => {
 });
 
 const ButtonClickEvents = {
-    left  : { button: 0 },
-    right : { button: 2 }
+    left: { button: 0 },
+    right: { button: 2 }
 };
 
 function click(el: DebugElement | HTMLElement, eventObj: any = ButtonClickEvents.left): void {

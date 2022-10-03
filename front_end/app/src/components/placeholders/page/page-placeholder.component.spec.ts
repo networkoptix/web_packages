@@ -1,35 +1,29 @@
 import {
-    ComponentFixture, fakeAsync, inject, TestBed,
+    ComponentFixture,
+    inject,
+    TestBed,
     waitForAsync
-}                                            from '@angular/core/testing';
-import { BehaviorSubject, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
-import { nxConfig }                          from '@services/nx-config/config';
-import { NxConfigService }                   from '@services/nx-config';
-import { NxPagePlaceholderComponent }        from './page-placeholder.component';
-import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService }         from '@services/nx-language-provider';
-import { NxScrollMechanicsService }          from '@services/scroll-mechanics.service';
+} from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+
+import { NxPagePlaceholderComponent } from './page-placeholder.component';
 
 describe('NxPagePlaceholderComponent', () => {
     let component: NxPagePlaceholderComponent;
     let fixture: ComponentFixture<NxPagePlaceholderComponent>;
 
-    const configMock = { getConfig: () => nxConfig };
-
-    const scrollMock = {
-        windowSizeSubject: new BehaviorSubject({ height: 0, width: 0 })
-    };
-    const langMock = getMockTranslations();
-
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxPagePlaceholderComponent],
-                providers    : [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(NxScrollMechanicsService, scrollMock)
+                declarations: [NxPagePlaceholderComponent],
+                providers: [
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService),
+                    MockProvider(NxScrollMechanicsService)
                 ]
             })
             .compileComponents();

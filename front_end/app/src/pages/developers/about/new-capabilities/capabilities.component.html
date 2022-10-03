@@ -4,12 +4,12 @@
 
 <ng-template #multiblocks>
     <div class="card-grid card-grid-multi" nxMatchHeight [classToMatch]="'card'" *ngIf="devCapabilitiesNode">
-        <div class="card-container-multi" *ngFor="let node of devCapabilitiesNode.nodes; let last = last" [ngClass]="devCapabilitiesNode.nodes.length === 2?'card-only-two':'card-type-3'"> 
+        <div class="card-container-multi" *ngFor="let node of devCapabilitiesNode.nodes; let last = last" [ngClass]="devCapabilitiesNode.nodes.length === 2?'card-only-two':'card-type-3'">
             <div class="card dev-capabilities-card">
                 <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirDevCapabilities + node.icon" class="card-icon" [svgStyle]="{ 'height.px': svg.height, 'width.px': svg.width }"></svg-icon>
                 <h3 class="title">{{ node.title}}</h3>
                 <ul class="bullet-points">
-                    <li *ngFor="let block of node.asset.blocks" class="bullet-item" [innerHTML]="block.contentHTML | safe: 'html'"></li>     
+                    <li *ngFor="let block of node.asset.blocks" class="bullet-item" [innerHTML]="block.contentHTML | safe: 'html'"></li>
                 </ul>
             </div>
         </div>
@@ -22,13 +22,13 @@
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirDevCapabilities + devCapabilitiesNode.nodes[0].icon" class="card-icon" [svgStyle]="{ 'height.px': svg.height, 'width.px': svg.width }"></svg-icon>
             <h3 class="title">{{ devCapabilitiesNode.nodes[0].title}}</h3>
             <ul class="bullet-points-single-card">
-                <li 
-                    *ngFor="let block of devCapabilitiesNode.nodes[0].asset?.blocks" 
-                    [ngClass]="devCapabilitiesNode.nodes[0].asset?.blocks?.length === 1?'bullet-item-alone': null" 
-                    class="bullet-item" 
+                <li
+                    *ngFor="let block of devCapabilitiesNode.nodes[0].asset?.blocks"
+                    [ngClass]="devCapabilitiesNode.nodes[0].asset?.blocks?.length === 1?'bullet-item-alone': null"
+                    class="bullet-item"
                     [innerHTML]="block.contentHTML | safe: 'html'"
                 ></li>
-            </ul>    
+            </ul>
         </div>
     </div>
 </ng-template>

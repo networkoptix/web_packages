@@ -1,12 +1,13 @@
-import { Injectable }      from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { RibbonAction }              from './ribbon.component';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxAppStateService }         from '@services/nx-app-state.service';
-import { NxHeaderService }           from '@services/nx-header.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { IConfig, NxConfigService }  from '@services/nx-config';
+
+import { RibbonAction } from './ribbon.component';
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
     text: string | Function;
@@ -15,13 +16,12 @@ export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
 @Injectable({ providedIn: 'root' })
 export class NxRibbonService {
     LANG: LanguageI18NStaticTypes
-    CONFIG: IConfig
     context = {
-        visibility     : false,
-        message        : '',
-        actions        : [],
-        type           : '',
-        updateFunction : ''
+        visibility: false,
+        message: '',
+        actions: [],
+        type: '',
+        updateFunction: ''
     };
 
     contextSubject = new BehaviorSubject(this.context);
@@ -29,30 +29,45 @@ export class NxRibbonService {
     constructor(
         private appStateService: NxAppStateService,
         private headerService: NxHeaderService,
-        languageService: NxLanguageProviderService,
-        configService: NxConfigService
+        languageService: NxLanguageProviderService
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.config;
     }
 
-    show(message, actions: RibbonActionInput[], type?, updateFunction?, systemOnly = false) {
-        if (message === this.LANG.ribbon.systemOffline?.() && this.CONFIG.isLocal) {
+    show(
+        message,
+        actions: RibbonActionInput[],
+        type?,
+        updateFunction?,
+        systemOnly = false
+    ) {
+        if (
+            message === this.LANG.ribbon.systemOffline?.() &&
+            environment.isLocal
+        ) {
             return;
         }
-        if (systemOnly && !(this.headerService.currentLocation.isSystem && this.headerService.currentLocation.path !== '/systems')) {
+        if (
+            systemOnly &&
+            !(
+                this.headerService.currentLocation.isSystem &&
+                this.headerService.currentLocation.path !== '/systems'
+            )
+        ) {
             return;
         }
         actions.forEach(action => {
             if (action.type === 'link') {
-                action.text = (typeof action.text === 'function') ? action.text() : action.text;
+                action.text = (typeof action.text === 'function')
+                    ? action.text()
+                    : action.text;
             }
         });
         const msg = (typeof message === 'function') ? message() : message;
 
         this.context = {
-            visibility : true,
-            message    : msg,
+            visibility: true,
+            message: msg,
             actions,
             type,
             updateFunction
@@ -63,11 +78,11 @@ export class NxRibbonService {
 
     hide() {
         this.context = {
-            visibility     : false,
-            message        : '',
-            actions        : [],
-            type           : '',
-            updateFunction : ''
+            visibility: false,
+            message: '',
+            actions: [],
+            type: '',
+            updateFunction: ''
         };
         this.contextSubject.next(this.context);
         this.appStateService.ribbonVisibility = false;

@@ -10,7 +10,17 @@ export interface ErrorStateStructure {
   [key: string]: boolean | string | number | AssetBlock | ErrorStateStructure
 }
 
-type AboutNodeFields = 'assetId' | 'displayName' | 'icon' | 'newWindow' | 'title' | 'url' | 'shortDescription' | 'blocks' | 'asset' | 'nodes' | 'subtitle'
+type AboutNodeFields = 'assetId'
+    | 'displayName'
+    | 'icon'
+    | 'newWindow'
+    | 'title'
+    | 'url'
+    | 'shortDescription'
+    | 'blocks'
+    | 'asset'
+    | 'nodes'
+    | 'subtitle'
 
 type BaseErrorConfig = {
     [key in AboutNodeFields]: string | ErrorConfig
@@ -87,14 +97,18 @@ export class ErrorStateManager {
         nodesConfig?: ErrorConfig | ErrorConfig[],
         assetConfig?: ErrorConfig
     ): ErrorConfig {
-        const config = requiredFields.reduce((config, cur) => ({ ...config, [cur]: true }), {} as ErrorConfig);
+        const config = requiredFields.reduce((config, cur) => ({
+            ...config,
+            [cur]: true
+        }), {} as ErrorConfig);
 
         if (nodesConfig) {
-            config.nodes = (Array.isArray(nodesConfig)
-                ? nodesConfig
-                : [nodesConfig]).reduce((
-                nodes, node, index
-            ) => ({ ...nodes, [index]: node }), {} as ErrorConfig);
+            config.nodes = (
+                Array.isArray(nodesConfig) ? nodesConfig : [nodesConfig]
+            ).reduce((nodes, node, index) => ({
+                ...nodes,
+                [index]: node
+            }), {} as ErrorConfig);
         }
 
         if (assetConfig) {
@@ -133,7 +147,13 @@ export class ErrorStateManager {
                     const nodeError = this.buildError(nodeStructure, nodeConfig);
 
                     return Object.entries(nodeError).length
-                        ? { ...nodes, [nodesStructure[key].title]: this.buildError(nodeStructure, nodeConfig) }
+                        ? {
+                            ...nodes,
+                            [nodesStructure[key].title]: this.buildError(
+                                nodeStructure,
+                                nodeConfig
+                            )
+                        }
                         : nodes;
                 }, {} as ErrorStateStructure);
 
@@ -147,11 +167,24 @@ export class ErrorStateManager {
         if (assetConfig && !assetStructure) {
             errors.asset = 'Asset are missing but are required for this section';
         }
+        if (assetConfig && assetStructure) {
+            const assetErrors = Object.keys(assetConfig).reduce((
+                errors, key
+            ) => !assetStructure[key]
+                ? {
+                    ...errors,
+                    [key]: `Value for the "${key}" field is missing and is required to for this section.`
+                }
+                : errors,
+                {} as ErrorStateStructure);
+            if (Object.keys(assetErrors).length > 0) {
+                errors.asset = assetErrors;
+            }
+        }
 
         if (Object.entries(errors).length) {
             errors.name = node.title;
         }
-
         return errors;
     }
 }

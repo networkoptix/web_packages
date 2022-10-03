@@ -1,47 +1,34 @@
+import { DebugElement } from '@angular/core';
 import {
-    ComponentFixture, TestBed,
+    ComponentFixture,
+    TestBed,
     waitForAsync
-}                                           from '@angular/core/testing';
+} from '@angular/core/testing';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MockProvider } from 'ng-mocks';
+
+import { NxTagComponent } from '@components/tag/tag.component';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import { NxPasswordTagValidationComponent } from './password-tag-validation.component';
-import { DebugElement }                     from '@angular/core';
-import { nxConfig }                         from '@services/nx-config/config';
-import { NxLanguageProviderService }        from '@services/nx-language-provider';
-import { NxConfigService }                  from '@services/nx-config';
-import { NxTagComponent }                   from '@components/tag/tag.component';
 
 describe('NxPasswordTagValidationComponent', () => {
     let component: NxPasswordTagValidationComponent;
     let fixture: ComponentFixture<NxPasswordTagValidationComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {
-            passwordRequirements: {
-                common           : () => 'too common',
-                commonMessage    : () => 'This password is in top most popular passwords in the world',
-                fair             : () => 'fair',
-                fairMessage      : () => 'Use numbers, upper and lower case letters and special characters to make your password stronger',
-                good             : () => 'good',
-                minLength        : () => 'too short',
-                minLengthMessage : () => 'Password must contain at least 8 characters',
-                missingMessage   : () => 'Password is required',
-                required         : () => 'incorrect',
-                requiredMessage  : () => 'Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces',
-                strongMessage    : () => 'Strong password!',
-                weak             : () => 'weak',
-                weakMessage      : () => 'Use numbers, upper and lower case letters and special characters to make your password stronger'
-            }
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
-
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxPasswordTagValidationComponent, NxTagComponent],
-                providers    : [
-                    { provide: NxLanguageProviderService, useValue: translateMock },
-                    { provide: NxConfigService, useValue: configMock }
+                imports: [NgbModule],
+                declarations: [
+                    NxPasswordTagValidationComponent,
+                    NxTagComponent
+                ],
+                providers: [
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService)
                 ]
             })
             .compileComponents()
@@ -52,17 +39,17 @@ describe('NxPasswordTagValidationComponent', () => {
 
                 // component.value = 'test1234';
                 component.forElement = {
-                    valid   : true,
-                    touched : true,
-                    dirty   : true,
-                    control : {
+                    valid: true,
+                    touched: true,
+                    dirty: true,
+                    control: {
                         fairPassword: false
                     },
                     errors: {
-                        minlength : false,
-                        common    : false,
-                        weak      : false,
-                        pattern   : false
+                        minlength: false,
+                        common: false,
+                        weak: false,
+                        pattern: false
                     }
                 };
 
@@ -78,7 +65,7 @@ describe('NxPasswordTagValidationComponent', () => {
     it('should be "GOOD"', () => {
         const tag = el.nativeElement.querySelectorAll('span#successMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-success-bright');
+        expect(tag[0].className).toContain('badge small badge-success-bright static');
         expect(tag[0].innerText).toBe('GOOD');
     });
 
@@ -88,7 +75,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#successMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-warning-bright');
+        expect(tag[0].className).toContain('badge small badge-warning-bright static');
         expect(tag[0].innerText).toBe('FAIR');
     });
 
@@ -101,7 +88,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('TOO SHORT');
     });
 
@@ -114,7 +101,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('TOO COMMON');
     });
 
@@ -127,7 +114,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('WEAK');
     });
 
@@ -141,7 +128,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('INCORRECT');
     });
 });

@@ -1,14 +1,21 @@
 import {
-    Directive, ElementRef, Input,
-    HostListener, HostBinding, OnInit,
-    EventEmitter, Output, SimpleChanges
+    Directive,
+    ElementRef,
+    Input,
+    HostListener,
+    HostBinding,
+    OnInit,
+    EventEmitter,
+    Output,
+    SimpleChanges
 } from '@angular/core';
 
 @Directive({
     selector: '[NxEditable]'
 })
 export class NxEditableDirective implements OnInit {
-    /*
+    /*  DEPRECATED -> use NxTextEditableComponent
+
         This directive makes any text field editable and binds value. Applies default styling if none specified.
 
         Example usage:

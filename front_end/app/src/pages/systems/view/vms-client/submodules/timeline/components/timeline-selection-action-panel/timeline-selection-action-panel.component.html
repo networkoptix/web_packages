@@ -1,0 +1,13 @@
+<div class="duration-selected"
+  *ngIf="selection.range.duration > 0"
+  (click)="handleDurationClick($event)"
+  (dblclick)="handleDurationDoubleClick($event, true)"
+>
+  <span class="duration">{{ duration$ | async }}</span>
+  <!-- <span class="duration" (click)="handleDurationClick($event)">{{ duration }}</span> -->
+  selected
+</div>
+
+<div class="set-time-button" (click)="initSetTimeDialog()">Set Time</div>
+
+<a class="export-link" [href]="exportUrl" target="_blank" download type="application/octet-stream">Export</a>

@@ -9,4 +9,4 @@ Você foi convidado para %CLOUD_NAME%.
 Por favor, crie uma conta em %CLOUD_NAME%
 usando seu endereço de e-mail atual e siga mais instruções.
 
-Registre sua conta usando este link: {{ config.portal_url }}/ register /{{ message.code }}
+Registre sua conta usando este link: {{ config.portal_url }}/ autorizar / registrar /{{ message.code }}

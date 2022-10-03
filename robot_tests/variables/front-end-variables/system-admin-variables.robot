@@ -5,8 +5,9 @@ ${visible}                 /ancestor::nx-checkbox
 ${ADMIN LINK}              //a[@id="admin"]
 ${GENERAL LINK}            //a[@id="general"]
 ${USERS LINK}              //a[@id="users"]
-${SYSTEM SETTINGS FORM}    //form[@id="systemSettingsForm"]
-${SECURITY FORM}           //form[@id="securitySettingsForm"]
+${SYSTEM SETTINGS FORM}    //form[@name="systemSettingsForm"]
+${SECURITY FORM}           //form[@name="systemAndSecuritySettingsForm"]
+${password}    ${BASE PASSWORD}
 
 ${ENABLE AUTO DISCOVERY CHECKBOX}     //*[@id="autoDiscoveryEnabled"]
 ${SEND ANONYMOUS USAGE CHECKBOX}      //*[@id="statisticsAllowed"]
@@ -28,6 +29,15 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    trafficEncryptionForced=false
 ...    videoTrafficEncryptionForced=false
 ...    sessionLimitMinutes=0
+
+&{default settings5}
+...    autoDiscoveryEnabled=${true}
+...    statisticsAllowed=${true}
+...    cameraSettingsOptimization=${true}
+...    auditTrailEnabled=${true}
+...    trafficEncryptionForced=${false}
+...    videoTrafficEncryptionForced=${false}
+...    sessionLimitMinutes=${0}
 
 &{default advanced settings}
 ...    autoDiscoveryEnabled=true
@@ -111,7 +121,7 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ${ENABLE AUDIT TRAIL CHECKBOX}        //*[@id='auditTrailEnabled']
 ${ALLOW ONLY SECURE CHECKBOX}         //*[@id='trafficEncryptionForced']
 ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     //*[@id='videoTrafficEncryptionForced']
-${LIMIT SESSION DURATION CHECKBOX}    //*[@id='sessionLimitMinutes']
+${LIMIT SESSION DURATION CHECKBOX}    //*[@id='sessionLimitMinutesToggle']
 ${TIME NUMBER INPUT}                       //*[@type='number']
 ${TIME DURATION INTERVAL BUTTON}           //*[@id="genericSelect"]
 ${TIME DURATION INTERVAL TEXT}            ${TIME DURATION INTERVAL BUTTON}/span
@@ -145,7 +155,7 @@ ${DISCONNECT FORM ALL USERS WILL BE DELETED}    ${DISCONNECT FORM}//p[contains(t
 ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT}")]
 ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}   ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT}")]
 ${DISCONNECT PASSWORD INPUT}             ${DISCONNECT FORM}//input[@id="password"]
-${DISCONNECT FORM DISCONNECT BUTTON}     ${DISCONNECT FORM}//nx-process-button/div[contains(@class, "process-button")]//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
+${DISCONNECT FORM DISCONNECT BUTTON}     ${DISCONNECT FORM}//nx-process-button/div[contains(@class, "process-button")]//button[contains(text(),"${CONTINUE BUTTON TEXT}")]/..
 ${DISCONNECT FORM CANCEL BUTTON}         ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
 ${DISCONNECT FORM WRONG PASSWORD}        ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${WRONG PASSWORD}")]
 ${DISCONNECT FORM PASSWORD IS REQUIRED}  ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${PASSWORD IS REQUIRED TEXT}")]
@@ -154,8 +164,8 @@ ${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 # ADVANCED SETTINGS
 ${ADVANCED SETTINGS}                    ?advanced
 ${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
-${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
-${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
+${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and contains(@data-src, "images/icons/standard/eye_closed.svg")]
+${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and contains(@data-src, "images/icons/error.svg")]
 ${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
 ${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
 @{ADVANCED SETTINGS ALERT BAR}
@@ -165,7 +175,7 @@ ${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNI
 ...    ${ADVANCED SETTINGS ALERT}
 ...    ${ADVANCED SETTINGS WARNING}
 
-${SUCCESS DIALOG}                           //ngb-modal-window[@role="dialog"]//div[@class="modal-content"]
+${SUCCESS DIALOG}                           //nx-modal-generic-content
 ${SUCCESS DIALOG TEXT}                      ${SUCCESS DIALOG}//p[contains(text(), "${SETTINGS SAVED TEXT}")]
 ${SUCCESS DIALOG HEADER}                    ${SUCCESS DIALOG}//h1/span[contains(text(), "${SUCCESS TEXT}")]
 ${SUCCESS DIALOG X BUTTON}                  ${SUCCESS DIALOG}//button[@data-dismiss="modal" and contains(@class, "close")]
@@ -174,7 +184,7 @@ ${SUCCESS DIALOG CLOSE BUTTON}              ${SUCCESS DIALOG}//button[text()="${
 ${ADDITIONAL LOCAL FS TYPES INPUT}          //input[@id='additionalLocalFsTypes']
 ${ADDITIONAL LOCAL FS TYPES LABEL}          //div[text()='${ADDITIONAL LOCAL FS TYPES TEXT}']
 ${AUDIT TRAIL PERIOD DAYS INPUT}            //input[@id='auditTrailPeriodDays']
-${AUDIT TRAIL PERIOD DAYS LABEL}            //div[text()='${AUDIT TRAIL PERIOD DAYS TEXT}']
+${AUDIT TRAIL PERIOD DAYS LABEL}            //div[text()="${AUDIT TRAIL PERIOD DAYS TEXT}"]
 ${BACKUP SETTINGS INPUT}                    //input[@id='backupSettings']
 ${BACKUP QUALITIES LABEL}                   //div[text()='${BACKUP QUALITIES TEXT}']
 ${BACKUP QUALITIES INPUT}                   //input[@id='backupQualities']
@@ -191,7 +201,7 @@ ${AUTO UPDATE THUMBNAILS LABEL}                 //div[text()='${AUTO UPDATE THUM
 ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}       //*[@id='backupNewCamerasByDefault']
 ${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMERAS BY DEFAULT TEXT}']
 
-@{ADVANCED SETTING ELEMENT BLOCK ONE 4.3_test}
+@{ADVANCED SETTING ELEMENT BLOCK ONE 5.0_test}
 ...    ${ADDITIONAL LOCAL FS TYPES INPUT}
 ...    ${ADDITIONAL LOCAL FS TYPES LABEL}
 ...    ${AUDIT TRAIL PERIOD DAYS INPUT}
@@ -206,7 +216,7 @@ ${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMER
 ...    ${AUTO UPDATE THUMBNAILS CHECKBOX}${visible}
 ...    ${AUTO UPDATE THUMBNAILS LABEL}
 
-@{ADVANCED SETTING ELEMENT BLOCK ONE 4.2_test}
+@{ADVANCED SETTING ELEMENT BLOCK ONE}
 ...    ${ADDITIONAL LOCAL FS TYPES INPUT}
 ...    ${ADDITIONAL LOCAL FS TYPES LABEL}
 ...    ${AUDIT TRAIL PERIOD DAYS INPUT}
@@ -224,7 +234,7 @@ ${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMER
 
 
 ${CLOUD CONNECT RELAYING ENABLED CHECKBOX}                //*[@id='cloudConnectRelayingEnabled']
-${CLOUD CONNECT RELAYING ENABLED LABEL}                        //div[text()='${CLOUD CONNECT RELAYING TEXT}']
+${CLOUD CONNECT RELAYING ENABLED LABEL}                        //div[text()="${CLOUD CONNECT RELAYING TEXT}"]
 ${CLOUD CONNECT UDP HOLE PUNCHING ENABLED CHECKBOX}       //*[@id='cloudConnectUdpHolePunchingEnabled']
 ${CLOUD CONNECT UDP HOLE PUNCHING ENABLED LABEL}               //div[text()='${CLOUD CONNECT UDP HOLE PUNCHING TEXT}']
 ${CROSS DOMAIN ENABLED CHECKBOX}                          //*[@id='crossdomainEnabled']
@@ -236,7 +246,7 @@ ${CLOUD SYSTEM ID LABEL}               //div[text()='${CLOUD SYSTEM ID TEXT}']
 ${CLOUD SYSTEM ID}                     ${CLOUD SYSTEM ID LABEL}/parent::div/following-sibling::div/p
 
 ${DEFAULT EXPORT VIDEO CODEC INPUT}    //input[@id='defaultExportVideoCodec']
-${DEFAULT EXPORT VIDEO CODEC LABEL}    //div[text()='${DEFAULT EXPORT VIDEO CODEC TEXT}']
+${DEFAULT EXPORT VIDEO CODEC LABEL}    //div[text()="${DEFAULT EXPORT VIDEO CODEC TEXT}"]
 ${DEFAULT VIDEO CODEC INPUT}           //input[@id='defaultVideoCodec']
 ${DEFAULT VIDEO CODEC LABEL}           //div[text()='${DEFAULT VIDEO CODEC TEXT}']
 ${DISABLED VENDORS INPUT}              //input[@id='disabledVendors']
@@ -272,9 +282,9 @@ ${SYSTEM ALIVE WARNING}                //div[text()='${SYSTEM ALIVE UPDATE WARNI
 
 
 ${CONNECTION KEEP ALIVE TIMEOUT INPUT}        //input[@id='ec2ConnectionKeepAliveTimeoutSec']
-${CONNECTION KEEP ALIVE TIMEOUT LABEL}        //div[text()='${CONNECTION KEEP ALIVE TIMEOUT TEXT}']
+${CONNECTION KEEP ALIVE TIMEOUT LABEL}        //div[text()="${CONNECTION KEEP ALIVE TIMEOUT TEXT}"]
 ${CONNECTION KEEP ALIVE PROBE INPUT}          //input[@id='ec2KeepAliveProbeCount']
-${CONNECTION KEEP ALIVE PROBE LABEL}          //div[text()='${CONNECTION KEEP ALIVE PROBES TEXT}']
+${CONNECTION KEEP ALIVE PROBE LABEL}          //div[text()="${CONNECTION KEEP ALIVE PROBES TEXT}"]
 ${EMAIL FROM INPUT}                           //input[@id='emailFrom']
 ${EMAIL FROM LABLE}                           //div[text()='${EMAIL FROM TEXT}']
 ${EMAIL SIGNATURE INPUT}                      //input[@id='emailSignature']
@@ -294,13 +304,21 @@ ${SUPPORT EMAIL LABEL}                        //div[text()='${SUPPORT EMAIL TEXT
 ...    ${SUPPORT EMAIL INPUT}
 ...    ${SUPPORT EMAIL LABEL}
 
+@{ADVANCED SETTING ELEMENT BLOCK THREE 5.0_test}
+...    ${EMAIL FROM INPUT}
+...    ${EMAIL FROM LABLE}
+...    ${EMAIL SIGNATURE INPUT}
+...    ${EMAIL SIGNATURE LABEL}
+...    ${SUPPORT EMAIL INPUT}
+...    ${SUPPORT EMAIL LABEL}
 
 ${ENABLE EDGE RECORDING CHECKBOX}       //*[@id='enableEdgeRecording']
-${ENABLE EDGE RECORDING LABEL}               //div[text()='${ENABLE EDGE RECORDING TEXT}']
+${ENABLE EDGE RECORDING LABEL}               //div[text()="${ENABLE EDGE RECORDING TEXT}"]
 ${KEEP HANWHA PORT STATE CHECKBOX}      //*[@id='keepHanwhaIoPortStateIntactOnInitialization']
+${KEEP PORT STATE CHECKBOX}      //*[@id='keepIoPortStateIntactOnInitialization']
 
 ${EVENT LOG PERIOD INPUT}                    //input[@id='eventLogPeriodDays']
-${EVENT LOG PERIOD LABEL}                    //div[text()='${EVENT LOG PERIOD TEXT}']
+${EVENT LOG PERIOD LABEL}                    //div[text()="${EVENT LOG PERIOD TEXT}"]
 ${FORCE LIVE CACHE INPUT}                    //input[@id='forceLiveCacheForPrimaryStream']
 ${FORCE LIVE CACHE LABEL}                    //div[text()='${FORCE LIVE CACHE TEXT}']
 ${LAST MERGE MASTERID INPUT}                 //input[@id='lastMergeMasterId']
@@ -321,6 +339,19 @@ ${LAST MERGE SLAVEID LABEL}                  //div[text()='${LAST MERGE SLAVEID 
 ...    ${LAST MERGE SLAVEID INPUT}
 ...    ${LAST MERGE SLAVEID LABEL}
 
+@{ADVANCED SETTING ELEMENT BLOCK FOUR 5.0_test}
+...    ${ENABLE EDGE RECORDING CHECKBOX}${visible}
+...    ${ENABLE EDGE RECORDING LABEL}
+...    ${KEEP PORT STATE CHECKBOX}${visible}
+...    ${EVENT LOG PERIOD INPUT}
+...    ${EVENT LOG PERIOD LABEL}
+...    ${FORCE LIVE CACHE INPUT}
+...    ${FORCE LIVE CACHE LABEL}
+...    ${LAST MERGE MASTERID INPUT}
+...    ${LAST MERGE MASTERID LABEL}
+...    ${LAST MERGE SLAVEID INPUT}
+...    ${LAST MERGE SLAVEID LABEL}
+
 
 ${LDAP ADMIN DN INPUT}                //input[@id='ldapAdminDn']
 ${LDAP ADMIN DN LABEL}                //div[text()='${LDAP ADMIN DN TEXT}']
@@ -329,7 +360,7 @@ ${LDAP SEARCH BASE LABEL}             //div[text()='${LDAP SEARCH BASE TEXT}']
 ${LDAP SEARCH FILTER INPUT}           //input[@id='ldapSearchFilter']
 ${LDAP SEARCH FILTER LABEL}           //div[text()='${LDAP SEARCH FILTER TEXT}']
 ${LDAP SEARCH TIMEOUT INPUT}          //input[@id='ldapSearchTimeoutS']
-${LDAP SEARCH TIMEOUT LABEL}          //div[text()='${LDAP SEARCH TIMEOUT TEXT}']
+${LDAP SEARCH TIMEOUT LABEL}          //div[text()="${LDAP SEARCH TIMEOUT TEXT}"]
 ${LDAP URI INPUT}                     //input[@id='ldapUri']
 ${LDAP URI LABEL}                     //div[text()='${LDAP URI TEXT}']
 ${LICENSE SERVER INPUT}               //input[@id='licenseServer']
@@ -355,13 +386,13 @@ ${LOCAL SYSTEM ID LABEL}              //div[text()='${LOCAL SYSTEM ID TEXT}']
 
 
 ${LOW QUALITY SCREEN VIDEO CODEC INPUT}            //input[@id='lowQualityScreenVideoCodec']
-${LOW QUALITY SCREEN VIDEO CODEC LABEL}            //div[text()='${LOW QUALITY SCREEN VIDEO CODEC TEXT}']
+${LOW QUALITY SCREEN VIDEO CODEC LABEL}            //div[text()="${LOW QUALITY SCREEN VIDEO CODEC TEXT}"]
 ${MAX DIF SYNC AND INTERNET TIME INPUT}            //input[@id='maxDifferenceBetweenSynchronizedAndInternetTime']
-${MAX DIF SYNC AND INTERNET TIME LABEL}            //div[text()='${MAX DIF SYNC AND INTERNET TIME TEXT}']
+${MAX DIF SYNC AND INTERNET TIME LABEL}            //div[text()="${MAX DIF SYNC AND INTERNET TIME TEXT}"]
 ${MAX DIF SYNC AND LOCAL TIME INPUT}               //input[@id='maxDifferenceBetweenSynchronizedAndLocalTimeMs']
-${MAX DIF SYNC AND LOCAL TIME LABEL}               //div[text()='${MAX DIF SYNC AND LOCAL TIME TEXT}']
+${MAX DIF SYNC AND LOCAL TIME LABEL}               //div[text()="${MAX DIF SYNC AND LOCAL TIME TEXT}"]
 ${MAX EVENT LOG RECORDS INPUT}                     //input[@id='maxEventLogRecords']
-${MAX EVENT LOG RECORDS LABEL}                     //div[text()='${MAX EVENT LOG RECORDS TEXT}']
+${MAX EVENT LOG RECORDS LABEL}                     //div[text()="${MAX EVENT LOG RECORDS TEXT}"]
 
 @{ADVANCED SETTING ELEMENT BLOCK SIX}
 ...    ${LOW QUALITY SCREEN VIDEO CODEC INPUT}
@@ -377,13 +408,13 @@ ${MAX EVENT LOG RECORDS LABEL}                     //div[text()='${MAX EVENT LOG
 ${MAX P2P ALL CLIENTS SIZE INPUT}                //input[@id='maxP2pAllClientsSizeBytes']
 ${MAX P2P ALL CLIENTS SIZE LABEL}                //div[text()='${MAX P2P ALL CLIENTS SIZE TEXT}']
 ${MAX P2P QUEUE SIZE INPUT}                      //input[@id='maxP2pQueueSizeBytes']
-${MAX P2P QUEUE SIZE LABEL}                      //div[text()='${MAX P2P QUEUE SIZE TEXT}']
+${MAX P2P QUEUE SIZE LABEL}                      //div[text()="${MAX P2P QUEUE SIZE TEXT}"]
 ${MAX RECORD QUEUE SIZE INPUT}                   //input[@id='maxRecordQueueSizeBytes']
-${MAX RECORD QUEUE SIZE LABEL}                   //div[text()='${MAX RECORD QUEUE SIZE TEXT}']
+${MAX RECORD QUEUE SIZE LABEL}                   //div[text()="${MAX RECORD QUEUE SIZE TEXT}"]
 ${MAX RECORD QUEUE ELEMENTS INPUT}               //input[@id='maxRecordQueueSizeElements']
-${MAX RECORD QUEUE ELEMENTS LABEL}               //div[text()='${MAX RECORD QUEUE ELEMENTS TEXT}']
+${MAX RECORD QUEUE ELEMENTS LABEL}               //div[text()="${MAX RECORD QUEUE ELEMENTS TEXT}"]
 ${MAX REMOTE ARCHIVE SYNC THREADS INPUT}         //input[@id='maxRemoteArchiveSynchronizationThreads']
-${MAX REMOTE ARCHIVE SYNC THREADS LABEL}         //div[text()='${MAX REMOTE ARCHIVE SYNC THREADS TEXT}']
+${MAX REMOTE ARCHIVE SYNC THREADS LABEL}         //div[text()="${MAX REMOTE ARCHIVE SYNC THREADS TEXT}"]
 
 @{ADVANCED SETTING ELEMENT BLOCK SEVEN}
 ...    ${MAX P2P ALL CLIENTS SIZE INPUT}
@@ -411,7 +442,19 @@ ${MAX WEBM TRANSFER}                            //input[@id='maxWebMTranscoders'
 ${MAX WEARABLE ARCHIVE SYNC INPUT}              //input[@id='maxWearableArchiveSynchronizationThreads']
 ${MAX WEARABLE ARCHIVE SYNC LABEL}              //div[text()='maxWearableArchiveSynchronizationThreads']
 
-@{ADVANCED SETTING ELEMENT BLOCK EIGHT 4.3_test}
+@{ADVANCED SETTING ELEMENT BLOCK EIGHT}
+...    ${MAX RTP RETRY COUNT INPUT}
+...    ${MAX RTP RETRY COUNT LABEL}
+...    ${MAX RTSP CONNECT DURATION INPUT}
+...    ${MAX RTSP CONNECT DURATION LABEL}
+...    ${MAX SCENE ITEMS INPUT}
+...    ${MAX SCENE ITEMS LABEL}
+#...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}
+#...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}
+#...    ${MAX HTTP TRANSCODERS INPUT}
+#...    ${MAX HTTP TRANSCODERS LABEL}
+
+@{ADVANCED SETTING ELEMENT BLOCK EIGHT 5.0_test}
 ...    ${MAX RTP RETRY COUNT INPUT}
 ...    ${MAX RTP RETRY COUNT LABEL}
 ...    ${MAX RTSP CONNECT DURATION INPUT}
@@ -424,26 +467,13 @@ ${MAX WEARABLE ARCHIVE SYNC LABEL}              //div[text()='maxWearableArchive
 ...    ${MAX HTTP TRANSCODERS LABEL}
 
 
-@{ADVANCED SETTING ELEMENT BLOCK EIGHT 4.2_test}
-...    ${MAX RTP RETRY COUNT INPUT}
-...    ${MAX RTP RETRY COUNT LABEL}
-...    ${MAX RTSP CONNECT DURATION INPUT}
-...    ${MAX RTSP CONNECT DURATION LABEL}
-...    ${MAX SCENE ITEMS INPUT}
-...    ${MAX SCENE ITEMS LABEL}
-...    ${MAX WEARABLE ARCHIVE SYNC INPUT}
-...    ${MAX WEARABLE ARCHIVE SYNC LABEL}
-...    ${MAX WEARABLE ARCHIVE SYNC INPUT}
-...    ${MAX WEARABLE ARCHIVE SYNC LABEL}
-
-
 ${RTSP BUFFER SIZE INPUT}                       //input[@id='rtspBufferSizeKb']
 ${META DATA STORAGE CHANGE POLICY INPUT}        //input[@id='metadataStorageChangePolicy']
 ${META DATA STORAGE CHANGE POLICY LABEL}        //div[text()='${META DATA STORAGE CHANGE TEXT}']
 ${OS TIME CHANGE CHECK PERIOD INPUT}            //input[@id='osTimeChangeCheckPeriodMs']
-${OS TIME CHANGE CHECK PERIOD LABEL}            //div[text()='${OS TIME CHANGE CHECK PERIOD TEXT}']
+${OS TIME CHANGE CHECK PERIOD LABEL}            //div[text()="${OS TIME CHANGE CHECK PERIOD TEXT}"]
 ${PRIMARY TIME SYNC SERVER}                     ${PRIMARY TIME SYNC SERVER LABEL}/parent::div/following-sibling::div/p
-${PRIMARY TIME SYNC SERVER LABEL}               //div[text()='${PRIMARY TIME SYNC SERVER TEXT}']
+${PRIMARY TIME SYNC SERVER LABEL}               //div[text()="${PRIMARY TIME SYNC SERVER TEXT}"]
 ${PROXY CONNECTION TIMEOUT INPUT}               //input[@id='proxyConnectTimeoutSec']
 ${PROXY CONNECTION TIMEOUT LABEL}               //div[text()='${PROXY CONNECTION TIMEOUT TEXT}']
 ${PUSH NOTIFICATION LANGUAGE INPUT}             //input[@id='pushNotificationsLanguage']
@@ -480,8 +510,8 @@ ${SERVER DISCOVERY TIMEOUT LABEL}               //div[text()='${SERVER DISCOVERY
 ...    ${RTP TIMEOUT LABEL}
 ...    ${USE SEQUENCIAL FLIR CHECKBOX}${visible}
 ...    ${USE SEQUENCIAL FLIR LABEL}
-...    ${SERVER DISCOVERY TIMEOUT INPUT}
-...    ${SERVER DISCOVERY TIMEOUT LABEL}
+#...    ${SERVER DISCOVERY TIMEOUT INPUT}
+#...    ${SERVER DISCOVERY TIMEOUT LABEL}
 
 
 ${SMTP CONNECTION TYPE INPUT}                   //input[@id='smtpConnectionType']
@@ -546,15 +576,15 @@ ${STATISTICS REPORT UPDATE DELAY LABEL}            //div[text()='${STATISTICS RE
 
 
 ${SYNC TIME EPSILON INPUT}                               //input[@id='syncTimeEpsilon']
-${SYNC TIME EPSILON LABEL}                               //div[text()='${SYNC TIME EPSILON TEXT}']
+${SYNC TIME EPSILON LABEL}                               //div[text()="${SYNC TIME EPSILON TEXT}"]
 ${SYNC TIME INTERVAL NETWORK INPUT}                      //input[@id='syncTimeExchangePeriod']
-${SYNC TIME INTERVAL NETWORK LABEL}                      //div[text()='${SYNC TIME INTERVAL NETWORK TEXT}']
+${SYNC TIME INTERVAL NETWORK LABEL}                      //div[text()="${SYNC TIME INTERVAL NETWORK TEXT}"]
 ${SYSTEM NAME INPUT}                                     //input[@id='systemName']
 ${SYSTEM NAME LABEL}                                     //div[text()='${SYSTEM NAME TEXT}']
 ${TAKE CAMERA OWNERSHIP WITHOUT LOCK CHECKBOX}           //*[@id='takeCameraOwnershipWithoutLock']
 ${TAKE CAMERA OWNERSHIP WITHOUT LOCK LABEL}              //div[text()='${TAKE CAMERA OWNERSHIP WITHOUT LOCK TEXT}']
 ${TIME SYNC ENABLED CHECKBOX}                            //*[@id='timeSynchronizationEnabled']
-${TIME SYNC ENABLED LABEL}                               //div[text()='${TIME SYNC ENABLED TEXT}']
+${TIME SYNC ENABLED LABEL}                               //div[text()="${TIME SYNC ENABLED TEXT}"]
 ${UPDATE NOTIFICATIONS ENABLED CHECKBOX}                 //*[@id='updateNotificationsEnabled']
 ${UPDATE NOTIFICATIONS ENABLED LABEL}                    //div[text()='${UPDATE NOTIFICATIONS ENABLED TEXT}']
 ${UPNP PORT MAPPING ENABLED CHECKBOX}                    //*[@id='upnpPortMappingEnabled']
@@ -562,7 +592,8 @@ ${UPNP PORT MAPPING ENABLED LABEL}                       //div[text()='${UPNP PO
 ${USE TEXT EMAIL FORMAT CHECKBOX}                        //*[@id='useTextEmailFormat']
 ${USE TEXT EMAIL FORMAT LABEL}                           //div[text()='${USE TEXT EMAIL FORMAT TEXT}']
 ${USE WINDOWS EMAIL LINE FEED CHECKBOX}                  //*[@id='useWindowsEmailLineFeed']
-${USE WINDOWS EMAIL LINE FEED LABEL}                     //div[text()='${USE WINDOWS EMAIL LINE FEED}']
+${USE WINDOWS EMAIL LINE FEED LABEL}                     //div[text()="${USE WINDOWS EMAIL LINE FEED}"]
+${USE WINDOWS EMAIL LINE FEED LABEL HEBREW}              //div[text()='${USE WINDOWS EMAIL LINE FEED}']
 ${WATERMARK SETTINGS}                                    ${WATERMARK SETTINGS LABEL}/parent::div/following-sibling::div/p
 ${WATERMARK SETTINGS LABEL}                              //div[text()='${WATERMARK SETTINGS TEXT}']
 ${WEB SOCKET ENABLED CHECKBOX}                           //*[@id='webSocketEnabled']
@@ -594,6 +625,14 @@ ${WEB SOCKET ENABLED LABEL}                              //div[text()='${WEB SOC
 ...    ${USE WINDOWS EMAIL LINE FEED CHECKBOX}${visible}
 ...    ${USE WINDOWS EMAIL LINE FEED LABEL}
 
+@{ADVANCED SETTING ELEMENT BLOCK SIXTEEN HEBREW}
+...    ${UPNP PORT MAPPING ENABLED CHECKBOX}${visible}
+...    ${UPNP PORT MAPPING ENABLED LABEL}
+...    ${USE TEXT EMAIL FORMAT CHECKBOX}${visible}
+...    ${USE TEXT EMAIL FORMAT LABEL}
+...    ${USE WINDOWS EMAIL LINE FEED CHECKBOX}${visible}
+...    ${USE WINDOWS EMAIL LINE FEED LABEL HEBREW}
+
 @{ADVANCED SETTING ELEMENT BLOCK SEVENTEEN}
 ...    ${WATERMARK SETTINGS}
 ...    ${WATERMARK SETTINGS LABEL}
@@ -608,7 +647,7 @@ ${SEARCH CLOSE BUTTON}     ${SEARCH INPUT}/following-sibling::button[contains(@c
 ${SEARCH NOTHING FOUND}    ${NX SEARCH}/following-sibling::div/div[contains(@class, "nx-menu-placeholder") and contains(text(), "${NOTHING FOUND TEXT}")]
 ${MENU SECTION}            //nx-menu//div[contains(@class, "nx-menu-section")]
 ${SEARCHABLE MENU}         ${NX SEARCH}/following-sibling::div[contains(@class, "searchable")]
-${SEARCH RESULT ARROW}     ${SEARCHABLE MENU}//div[contains(@class, "search-results")]//svg-icon
+${SEARCH RESULT ARROW}     ${SEARCHABLE MENU}//div[contains(@class, "search-results")]
 
 ${VIEW SEARCH BOX}                //div[contains(@class, "search-box")]
 ${VIEW SEARCH INPUT}              ${VIEW SEARCH BOX}//input[@placeholder="Search"]

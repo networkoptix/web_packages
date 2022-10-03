@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
+import * as df from 'dateformat';
 
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { ms, int, px } from '@vms-client/utils/type-aliases';
+
+import cfg from '../../timeline.config';
+import TimelineService from '../../timeline.service';
+import primaryRulerSerifDrawingConfigs from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
+
+import AnimatedFloat from './animationPrimitives/AnimatedFloat';
+import primaryRulerDateFormats from './dateformats/primary_ruler_date_formats';
 import IrregularLengthInterval from './intervals/IrregularLengthInterval';
+import {
+    MAX_WEIGHT,
+    MIN_WEIGHT, MIN_WIDTHS_FOR_INTERVALS
+} from './intervals/cfg/MIN_WIDTH_FOR_INTERVALS';
 import irregularLengthIntervals from './intervals/irregularLengthIntervals';
 import estimateIrregularLengthIntervalPessimistically
     from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
 import isAlignedByIrregularInterval from './intervals/utils/isAlignedByIrregularInterval';
-import { MAX_WEIGHT, MIN_WEIGHT, MIN_WIDTHS_FOR_INTERVALS } from './intervals/cfg/MIN_WIDTH_FOR_INTERVALS';
-
-import * as df from 'dateformat';
-
-import cfg from '../../timeline.config';
-import TimelineService from '../../timeline.service';
-import { ms, int, px } from '../../../../../utils/type-aliases';
-import primaryRulerSerifDrawingConfigs from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
-import primaryRulerDateFormats from './dateformats/primary_ruler_date_formats';
-
-import percentageToHex from './utils/percentageToHex';
-
-import AnimatedFloat from './animationPrimitives/AnimatedFloat';
-
 import getIntervalDiffDict from './utils/getIntervalDiffDict';
-import VideoManagementSystemService from '../../../../vms/services/vms.service';
+import percentageToHex from './utils/percentageToHex';
 
 const dateformat = df.default || df;
 
@@ -35,9 +36,11 @@ export interface RulerSerif {
 })
 export class TimelinePrimaryRulerCanvasRendererService {
     constructor(
+        languageService: NxLanguageProviderService,
         protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService,
+        protected vms: VideoManagementSystemService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
     }
 
     protected _prevIntervals: Array<IrregularLengthInterval> = []
@@ -56,13 +59,18 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return false;
     }
 
-    public render (ctx: CanvasRenderingContext2D, intervalToSkip: IrregularLengthInterval | false = false) {
+    public render (
+        ctx: CanvasRenderingContext2D,
+        intervalToSkip: IrregularLengthInterval | false = false
+    ) {
         this._withContext(ctx, () => {
             const serifs = this._getSerifs().filter(s => s.weight > 0);
             if (intervalToSkip) {
                 serifs.map(s =>
-                    !isAlignedByIrregularInterval(this.vms.tweakT(s.time), intervalToSkip) &&
-                    this._drawSerif(ctx, s)
+                    !isAlignedByIrregularInterval(
+                        this.vms.tweakT(s.time),
+                        intervalToSkip
+                    ) && this._drawSerif(ctx, s)
                 );
             } else {
                 serifs.map(s => this._drawSerif(ctx, s));
@@ -71,15 +79,17 @@ export class TimelinePrimaryRulerCanvasRendererService {
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
-        ctx.save()
+        ctx.save();
         actualDrawing();
-        ctx.restore()
+        ctx.restore();
     }
 
     protected _getIntervals (): Array<IrregularLengthInterval> {
         const result = [];
         for (const interval of irregularLengthIntervals) {
-            const displayWidth = this.timeline.durationToDomWidth(estimateIrregularLengthIntervalPessimistically(interval));
+            const displayWidth = this.timeline.durationToDomWidth(
+                estimateIrregularLengthIntervalPessimistically(interval)
+            );
             const requiredWidth = MIN_WIDTHS_FOR_INTERVALS[interval][result.length];
             if (displayWidth >= requiredWidth) {
                 result.push(interval);
@@ -97,7 +107,10 @@ export class TimelinePrimaryRulerCanvasRendererService {
         const ANIMATION_DURATION = 200;
 
         if (this._haveIntervalsChanged(intervals)) {
-            const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals);
+            const intervalDiffDict = getIntervalDiffDict(
+                this._prevIntervals,
+                intervals
+            );
             Object.keys(intervalDiffDict).map(k => {
                 const v = intervalDiffDict[k];
                 if (v.length) {
@@ -106,7 +119,10 @@ export class TimelinePrimaryRulerCanvasRendererService {
                     if (k in this._intervalWeightAnimations) {
                         this._intervalWeightAnimations[k].set(v[1]);
                     } else {
-                        this._intervalWeightAnimations[k] = new AnimatedFloat(v[0], ANIMATION_DURATION);
+                        this._intervalWeightAnimations[k] = new AnimatedFloat(
+                            v[0],
+                            ANIMATION_DURATION
+                        );
                         this._intervalWeightAnimations[k].set(v[1]);
                     }
                 }
@@ -118,20 +134,28 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
         const smallestInterval = intervals[0];
         const intervalsReversed = [...intervals].reverse();
-        return this.timeline.visibleRange.iterate(smallestInterval, this.vms.timeZoneOffset).map(time => {
-            const weight = this._getIntervalWeight(time, intervalsReversed);
-            const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(this.vms.tweakT(time), i));
-            const result = {
-                time,
-                weight,
-                interval
-            };
-            return result;
-        }).filter(s => s.interval);
+        return this.timeline.visibleRange
+            .iterate(smallestInterval, this.vms.timeZoneOffset)
+            .map(time => {
+                const weight = this._getIntervalWeight(time, intervalsReversed);
+                const interval = intervalsReversed.find(i =>
+                    isAlignedByIrregularInterval(this.vms.tweakT(time), i)
+                );
+                const result = {
+                    time,
+                    weight,
+                    interval
+                };
+                return result;
+            }).filter(s => s.interval);
     }
 
-    protected _getIntervalWeight (time: ms, intervalsReversed: Array<IrregularLengthInterval>): int {
-        const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(this.vms.tweakT(time), i));
+    protected _getIntervalWeight (
+        time: ms, intervalsReversed: Array<IrregularLengthInterval>
+    ): int {
+        const interval = intervalsReversed.find(i =>
+            isAlignedByIrregularInterval(this.vms.tweakT(time), i)
+        );
         const result = this._intervalWeightAnimations[interval]?.get() || 0;
         return result;
     }
@@ -153,9 +177,15 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
         const x: px = this.timeline.timeToCanvasOffsetX(s.time);
 
-        const y0: px = Math.round(cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height);
-        const lowerHeight: px = Math.round(lowerDrawingConfig.heightRelative * this.timeline.canvasGeometry.height);
-        const upperHeight: px = Math.round(upperDrawingConfig.heightRelative * this.timeline.canvasGeometry.height);
+        const y0: px = Math.round(
+            cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height
+        );
+        const lowerHeight: px = Math.round(
+            lowerDrawingConfig.heightRelative * this.timeline.canvasGeometry.height
+        );
+        const upperHeight: px = Math.round(
+            upperDrawingConfig.heightRelative * this.timeline.canvasGeometry.height
+        );
         const height = lowerHeight + (upperHeight - lowerHeight) * (s.weight - lowerWeight);
         const y1 = y0 + height;
 
@@ -176,14 +206,18 @@ export class TimelinePrimaryRulerCanvasRendererService {
         }
         const lowerRelativeFontSize = lowerLabelCfg.fontSize;
         const upperRelativeFontSize = upperLabelCfg.fontSize;
-        const relativeFontSize = lowerRelativeFontSize + (upperRelativeFontSize - lowerRelativeFontSize) * (s.weight - lowerWeight);
-        const fontSize: px = Math.round(relativeFontSize * this.timeline.canvasGeometry.dpr);
+        const relativeFontSize = lowerRelativeFontSize +
+            (upperRelativeFontSize - lowerRelativeFontSize) * (s.weight - lowerWeight);
+        const fontSize: px = Math.round(
+            relativeFontSize * this.timeline.canvasGeometry.dpr
+        );
         const format: string = primaryRulerDateFormats[s.interval];
 
         if (fontSize) {
             const labelLowerOpacity = lowerLabelCfg.opacity || lowerOpacity;
             const labelUpperOpacity = upperLabelCfg.opacity || upperOpacity;
-            const labelOpacity = labelLowerOpacity + (labelUpperOpacity - labelLowerOpacity) * (s.weight - lowerWeight);
+            const labelOpacity = labelLowerOpacity +
+                (labelUpperOpacity - labelLowerOpacity) * (s.weight - lowerWeight);
 
             ctx.fillStyle = `${color}${percentageToHex(labelOpacity)}`;
             ctx.textAlign = 'center';

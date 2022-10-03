@@ -1,0 +1,36 @@
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/buttons' as *;
+
+
+@import '~bootstrap/scss/mixins/breakpoints';
+
+:host {
+    margin-top: 16px;
+    padding-left: 1rem;
+    margin-right: 16px;
+
+    @include media-breakpoint-down(sm) {
+        margin-left: 16px;
+    }
+}
+
+.system-message {
+    border: 1px solid;
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+
+.system-message {
+    &-warning {
+        @extend .system-message;
+        border-color: $warning-message-border;
+        background-color: $warning-message-bg;
+    }
+
+    &-error {
+        @extend .system-message;
+        border-color: #e67979;
+        background-color: transparentize($red_l1, 0.6);
+    }
+}

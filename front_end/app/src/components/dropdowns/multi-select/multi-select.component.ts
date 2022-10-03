@@ -1,12 +1,16 @@
 import {
-    Component, ViewEncapsulation,
-    Input, forwardRef, SimpleChanges
-}                            from '@angular/core';
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef,
+    SimpleChanges
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { BaseDropdown }              from '../injDropdown';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { BaseDropdown } from '../injDropdown';
 
 /* Usage
  <nx-multi-select
@@ -17,20 +21,20 @@ import { NxConfigService }           from '../../../services/nx-config';
      description="Roles"
      [items]="[{label: 'a', id: 1}, {label: 'b', id:3}]"
      [ngModel]="[1, 3]"       <- selected items id's
-     (ngModelChanged)="onChange(result)">
+     (ngModelChange)="onChange(result)">
  </nx-multi-select>
  */
 
 @Component({
-    selector     : 'nx-multi-select',
-    templateUrl  : 'multi-select.component.html',
-    styleUrls    : ['multi-select.component.scss'],
+    selector: 'nx-multi-select',
+    templateUrl: 'multi-select.component.html',
+    styleUrls: ['multi-select.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    providers    : [
+    providers: [
         {
-            provide    : NG_VALUE_ACCESSOR,
+            provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxMultiSelectDropdown),
-            multi      : true
+            multi: true
         }
     ]
 })
@@ -38,7 +42,7 @@ import { NxConfigService }           from '../../../services/nx-config';
 export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     @Input() id: string;
     @Input('items') itemsOrig: Item[];
-    @Input() canSelectAll: boolean;
+    @Input() canSelectAll: any;
     @Input() canSearch: boolean;
 
     public items: Item[] = [];
@@ -52,7 +56,6 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
         configService: NxConfigService
     ) {
         super(languageService, configService);
-
         this.filter = '';
     }
 
@@ -87,7 +90,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
             this.innerValue.push(item.id);
         }
 
-        item.selected = (this.innerValue.indexOf(item.id) > -1);
+        item.selected = this.innerValue.includes(item.id);
         this.updateModel();
 
         // break anchor nav event
@@ -108,7 +111,9 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
 
     updateItems() {
         this.items.forEach((item: any) => {
-            item.selected = (this.innerValue !== undefined) ? (this.innerValue.indexOf(item.id) > -1) : false;
+            item.selected = (this.innerValue !== undefined)
+                ? this.innerValue.includes(item.id)
+                : false;
         });
 
         // ensure 'change' will be triggered
@@ -119,10 +124,11 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
         switch (this.innerValue && this.innerValue.length) {
             case 1: {
                 this.textSelected = this.items.find((item: any) => {
-                    return (item.label.name || item.id) === this.innerValue[0];
+                    return (item.label?.name || item.id) === this.innerValue[0];
                 });
                 // Aggregated MSelect items vs. simple list
-                this.textSelected = this.textSelected.label.name || this.textSelected.label;
+                this.textSelected =
+                    this.textSelected.label.name || this.textSelected.label;
                 break;
             }
             case 0:
@@ -131,7 +137,9 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
                 break;
             }
             default: {
-                this.textSelected = this.LANG.search.selected({ count: this.innerValue.length });
+                this.textSelected = this.LANG.search.selected({
+                    count: this.innerValue.length
+                });
                 break;
             }
         }

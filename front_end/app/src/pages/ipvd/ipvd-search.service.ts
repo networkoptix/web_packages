@@ -41,22 +41,24 @@ export class IpvdSearchService {
             }
 
             let result;
-            if (query.indexOf('-') > -1) {
+            if (query.includes('-')) {
                 // If dash in query -> perform exact match
-                result = (c.vendor.toLowerCase().indexOf(query) > -1 ||
-                    c.model.toLowerCase().indexOf(query) > -1);
+                result = (
+                    c.vendor.toLowerCase().includes(query) ||
+                    c.model.toLowerCase().includes(query)
+                );
             } else {
                 // If no dash in query -> include results with and without dash
                 const queryLowerNoDashes = lowerNoDashes(query);
-                result = (lowerNoDashes(c.vendor).indexOf(queryLowerNoDashes) > -1);
-                result = result || (lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
+                result = lowerNoDashes(c.vendor).includes(queryLowerNoDashes);
+                result = result || lowerNoDashes(c.model).includes(queryLowerNoDashes);
 
                 result = result || c.analyticsEvents.find((event) => {
                     return event.toLowerCase().includes(queryLowerNoDashes);
                 });
             }
 
-            return (query.length === 0 || result || c.maxResolution.indexOf(query) > -1);
+            return (query.length === 0 || result || c.maxResolution.includes(query));
         }
 
         let resolution;
@@ -95,11 +97,19 @@ export class IpvdSearchService {
                 return false;
             }
 
-            if (resolution && resolution.value !== '0' && camera.resolutionArea <= resolution.value * 0.9) {
+            if (
+                resolution &&
+                resolution.value !== '0' &&
+                camera.resolutionArea <= resolution.value * 0.9
+            ) {
                 return false;
             }
 
-            if (vendors && vendors.length > 0 && vendors.indexOf(camera.vendor) === -1) {
+            if (
+                vendors &&
+                vendors.length > 0 &&
+                !vendors.includes(camera.vendor)
+            ) {
                 return false;
             }
 
@@ -112,13 +122,15 @@ export class IpvdSearchService {
             if (events &&
                 events.length > 0 &&
                 !events.some(event => {
-                    return camera.analyticsEvents.indexOf(event.label) >= 0;
+                    return camera.analyticsEvents.includes(event.label);
                 })) {
                 return false;
             }
 
             if (this._showAnalytics && query.length) {
-                const matches = camera.analyticsEvents.filter(analytic => analytic.toLowerCase().includes(query));
+                const matches = camera.analyticsEvents.filter(analytic =>
+                    analytic.toLowerCase().includes(query)
+                );
                 if (matches.length) {
                     return true;
                 }
@@ -129,10 +141,10 @@ export class IpvdSearchService {
                 ? queryTerms.every(term => filterCamera(camera, term))
                 : true;
         }).sort((cameraA: any, cameraB: any) => {
-            if (preferredVendors.indexOf(cameraA.vendor.toLowerCase()) !== -1) {
+            if (preferredVendors.includes(cameraA.vendor.toLowerCase())) {
                 return -1;
             }
-            if (preferredVendors.indexOf(cameraB.vendor.toLowerCase()) !== -1) {
+            if (preferredVendors.includes(cameraB.vendor.toLowerCase())) {
                 return 1;
             }
             return cameraA.sortKey < cameraB.sortKey ? -1 : 1;

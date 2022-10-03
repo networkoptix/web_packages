@@ -1,54 +1,62 @@
-import { Component, OnInit }             from '@angular/core';
-import { forkJoin, SubscriptionLike }    from 'rxjs';
-import { delay, filter, map, retryWhen } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { forkJoin, Subject } from 'rxjs';
+import { delay, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxSettingsService }         from '../settings.service';
-import { NxSystem, NxSystemServer }  from '../../../../services/system.service';
-import { NxMenuService }             from '../../../../menu/menu.service';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxUtilsService }            from '../../../../services/utils.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem, NxSystemServer } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxMenuService } from '@src/menu/menu.service';
 
+import { NxSettingsService } from '../settings.service';
+
+@UntilDestroy()
 @Component({
-    selector    : 'nx-system-licenses',
-    templateUrl : 'licenses.component.html',
-    styleUrls   : ['licenses.component.scss']
+    selector: 'nx-system-licenses',
+    templateUrl: 'licenses.component.html',
+    styleUrls: ['licenses.component.scss']
 })
 export class NxSystemLicensesComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     system: NxSystem;
-    systemSubscription: SubscriptionLike;
-    serverSubscription: SubscriptionLike;
-    licensesSubscription: SubscriptionLike;
+    resetSystemInfo$ = new Subject();
+    resetSystem$ = new Subject();
+    resetLicense$ = new Subject();
 
-    licenses: any;
-    licenseSummaries: { type: string, count: number, countAvail: number, required: number }[];
+    licenses: any = [];
+    licenseSummaries: Array<{
+        type: string,
+        count: number,
+        countAvail: number,
+        inUse: number | string,
+        required: number
+    }>;
 
     // Constructor and class initialization methods
     private setupDefaults() {
-        this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
+        this.settingsService.systemSubject
+            .pipe(
+                untilDestroyed(this),
+                filter(data => data !== undefined && data.id !== this.system?.id))
             .subscribe((system) => {
                 this.system = system;
 
-                this.getLicenses();
-
-                if (this.licensesSubscription) {
-                    this.licensesSubscription.unsubscribe();
-                }
-                this.licensesSubscription = this.system.licensesModifiedSubject
+                this.resetLicense$.next(true);
+                this.system.licensesModifiedSubject
+                    .pipe(takeUntil(this.resetLicense$))
                     .subscribe(() => {
                         this.getLicenses();
                     });
 
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
-                this.serverSubscription = this.system.infoSubject
+                this.resetSystem$.next(true);
+                this.system.infoSubject
                     .pipe(
+                        untilDestroyed(this),
+                        takeUntil(this.resetSystem$),
                         map(system => {
                             if (!system.servers || system.servers.length === 0) {
                                 throw system;
@@ -58,7 +66,11 @@ export class NxSystemLicensesComponent implements OnInit {
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.servers && this.system.servers.length) {
+                            if (
+                                this.system &&
+                                this.system.servers &&
+                                this.system.servers.length
+                            ) {
                                 this.system.serverManager
                                     .initSystemMediaServers()
                                     .catch(error => {
@@ -89,16 +101,16 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private createLicenseInfo(item) {
         item.info = {
-            type          : '',
-            count         : '',
-            inuse         : '',
-            required      : 0,
-            serverName    : '',
-            hwid          : '',
-            expired       : false,
-            status        : '',
-            expiration    : '',
-            deactivations : '-'
+            type: '',
+            count: '',
+            inuse: '',
+            required: 0,
+            serverName: '',
+            hwid: '',
+            expired: false,
+            status: '',
+            expiration: '',
+            deactivations: '-'
         };
 
         const dynamicLicense = getDynamicLicense(this);
@@ -110,9 +122,23 @@ export class NxSystemLicensesComponent implements OnInit {
                 item.info[prop[0].toLowerCase()] = prop[1];
             });
 
-        item.info.status = item.info.expired ? this.LANG.license.info.expired() : this.LANG.license.info.ok();
+        if (!item.info.class || !item.info.brand || !item.info.hwid) {
+            item.info.serial = item.key;
+            item.info.status = this.LANG.license.info.error();
+            item.info.type = this.LANG.license.licenseTypeTitles.Invalid;
+
+            return;
+        }
+
+        item.info.status = item.info.expired
+            ? this.LANG.license.info.expired()
+            : this.LANG.license.info.ok();
         // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
-        if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
+        if (
+            item.info.serial === 'TRIAL' ||
+            item.info.name === 'TRIAL' ||
+            item.key.indexOf('0000-0000-0000') === 0
+        ) {
             item.info.type = dynamicLicense.trial.title;
         } else {
             if (item.info.ordertype && item.info.ordertype === 'saas') {
@@ -139,11 +165,16 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private addLicenseSummary(item) {
         // for license summary block
-        const type = typeof item.info.type === 'function' ? item.info.type() : item.info.type;
+        const type = typeof item.info.type === 'function'
+            ? item.info.type()
+            : item.info.type;
         const license = this.licenseSummaries.find(ls => ls.type === type);
 
         let avail = parseInt(item.info.count) || 0;
-        if (item.info.serverStatus !== this.LANG.license.info.online() || item.info.expired) {
+        if (
+            item.info.serverStatus !== this.LANG.license.info.online() ||
+            item.info.expired
+        ) {
             avail = 0;
         }
 
@@ -154,9 +185,10 @@ export class NxSystemLicensesComponent implements OnInit {
         } else {
             this.licenseSummaries.push({
                 type,
-                count      : parseInt(item.info.count) || 0,
-                countAvail : avail,
-                required   : item.info.required
+                count: parseInt(item.info.count) || 0,
+                countAvail: avail,
+                inUse: 'N/A',
+                required: item.info.required
             });
         }
     }
@@ -165,13 +197,16 @@ export class NxSystemLicensesComponent implements OnInit {
         this.system.getLicenses()
             .then(({ licenses: result }) => {
                 if (result.length) {
-                    if (this.serverSubscription) {
-                        this.serverSubscription.unsubscribe();
-                    }
-                    this.serverSubscription = this.system.infoSubject
+                    this.resetSystemInfo$.next(true);
+                    this.system.infoSubject
                         .pipe(
+                            untilDestroyed(this),
+                            takeUntil(this.resetSystemInfo$),
                             map(system => {
-                                if (!system.servers || system.servers.length === 0) {
+                                if (
+                                    !system.servers ||
+                                    system.servers.length === 0
+                                ) {
                                     throw system;
                                 }
                             }),
@@ -179,50 +214,94 @@ export class NxSystemLicensesComponent implements OnInit {
                         )
                         .subscribe(() => {
                             if (this.system.currentServerNotBusy) {
-                                if (this.system && this.system.servers && this.system.servers.length) {
-                                    forkJoin({ times: this.system.getServerTimes(), hardwareIds: this.system.getHardwareIdsOfServers() })
-                                        .subscribe(data => {
-                                            const serversTime = data.times;
-                                            const hardwareIds = data.hardwareIds.reply;
-                                            this.licenseSummaries = [];
+                                if (
+                                    this.system &&
+                                    this.system.servers &&
+                                    this.system.servers.length
+                                ) {
+                                    forkJoin({
+                                        times: this.system.getServerTimes(),
+                                        hardwareIds: this.system.getHardwareIdsOfServers()
+                                    }).subscribe(data => {
+                                        const serversTime = data.times;
+                                        const hardwareIds = data.hardwareIds.reply;
+                                        this.licenseSummaries = [];
 
-                                            if (hardwareIds.length) {
-                                                result.forEach((item) => {
-                                                    this.createLicenseInfo(item);
+                                        if (hardwareIds.length) {
+                                            let maxNvrChannels = 0;
+                                            let maxStarterChannels = 0;
 
-                                                    const boundServer = hardwareIds.find((server: { hardwareIds: string[], serverId: string }) => {
-                                                        return server.hardwareIds.find((id: string) => id === item.info.hwid);
-                                                    });
+                                            result.forEach((item) => {
+                                                this.createLicenseInfo(item);
 
-                                                    const server: NxSystemServer | any = (boundServer) ? this.system.servers.find((server) => server.id === boundServer.serverId) : {};
+                                                const boundServer = hardwareIds.find((server: { hardwareIds: string[], serverId: string }) => {
+                                                    return server.hardwareIds.find((id: string) => id === item.info.hwid);
+                                                });
 
-                                                    if (Object.keys(server).length) {
-                                                        item.info.serverTime = serversTime.find(time => {
-                                                            return NxUtilsService.cleanId(server.id) === time.serverId;
-                                                        }).vmsTime;
+                                                const server: NxSystemServer | any = (boundServer)
+                                                    ? this.system.servers.find((server) => server.id === boundServer.serverId)
+                                                    : {};
 
-                                                        // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"
-                                                        item.info.expiration = new Date(item.info.expiration.replace(/-/g, '/')).getTime();
+                                                if (Object.keys(server).length) {
+                                                    item.info.serverTime = serversTime.find(time => {
+                                                        return NxUtilsService.cleanId(server.id) === time.serverId;
+                                                    }).vmsTime;
 
-                                                        item.info.expired = item.info.expiration < item.info.serverTime; // serverTime is in milliseconds
-                                                        item.info.serverName = server.name;
-                                                        item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()]();
-                                                        item.info.status = (item.info.expired)
-                                                            ? this.LANG.license.info.expired()
-                                                            : (item.info.serverStatus === this.LANG.license.info.online())
-                                                                ? item.info.status
-                                                                : this.LANG.license.info.error();
-                                                    } else {
-                                                        item.info.serverName = this.LANG.license.info.serverNotFound();
-                                                        item.info.serverStatus = server.status;
+                                                    // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"
+                                                    item.info.expiration = new Date(item.info.expiration.replace(/-/g, '/')).getTime();
+
+                                                    item.info.expired = item.info.expiration < item.info.serverTime; // serverTime is in milliseconds
+                                                    item.info.serverName = server.name;
+                                                    item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()]();
+                                                    item.info.status = (item.info.expired)
+                                                        ? this.LANG.license.info.expired()
+                                                        : (item.info.serverStatus === this.LANG.license.info.online())
+                                                            ? item.info.status
+                                                            : this.LANG.license.info.error();
+
+                                                    // monkey patch -> turn off all NVR licenses and then flip only the one with higher channels
+                                                    if (item.info.type() === this.LANG.license.licenseTypeTitles.NVR()) {
+                                                        if (maxNvrChannels < +item.info.count) {
+                                                            maxNvrChannels = +item.info.count;
+                                                        }
                                                         item.info.status = this.LANG.license.info.error();
                                                     }
+                                                    // monkey patch -> turn off all STARTER licenses and then flip only the one with higher channels
+                                                    if (item.info.type() === this.LANG.license.licenseTypeTitles.Starter()) {
+                                                        if (maxStarterChannels < +item.info.count) {
+                                                            maxStarterChannels = +item.info.count;
+                                                        }
+                                                        item.info.status = this.LANG.license.info.error();
+                                                    }
+                                                } else {
+                                                    item.info.serverName = this.LANG.license.info.serverNotFound();
+                                                    item.info.serverStatus = server.status;
+                                                    item.info.status = this.LANG.license.info.error();
+                                                }
 
-                                                    this.addLicenseSummary(item);
-                                                });
-                                                this.licenses = result;
+                                                this.addLicenseSummary(item);
+                                            });
+
+                                            // only one license per type "NVR" or "STARTER" is allowed per system
+                                            // since it's not possible to register new one with fewer channels
+                                            // it's safe to assume that last one is the active
+                                            const nvrs = result.filter((item) => {
+                                                return item.info.type() === this.LANG.license.licenseTypeTitles.NVR();
+                                            });
+                                            if (nvrs.length) {
+                                                nvrs[nvrs.length - 1].info.status = this.LANG.license.info.ok();
                                             }
-                                        });
+
+                                            const starters = result.filter((item) => {
+                                                return item.info.type() === this.LANG.license.licenseTypeTitles.Starter();
+                                            });
+                                            if (starters.length) {
+                                                starters[starters.length - 1].info.status = this.LANG.license.info.ok();
+                                            }
+
+                                            this.licenses = result;
+                                        }
+                                    });
                                 }
                             }
                         });

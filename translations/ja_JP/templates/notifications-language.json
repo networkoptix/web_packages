@@ -1,9 +1,9 @@
 {
   "activate_account": {
-    "emailSubject": "アカウントを有効にする"
+    "emailSubject": "アカウントの有効化"
   },
   "cloud_invite": {
-    "emailSubject": "%CLOUD_NAME% に登録されました"
+    "emailSubject": "%CLOUD_NAME%に招待されました"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"
@@ -24,10 +24,10 @@
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} に新しいバージョンがあります。"
   },
   "restore_password": {
-    "emailSubject": "パスワードをリセット"
+    "emailSubject": "パスワードを再設定してください"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}}があなたを%CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}に招待しました。ビデオシステム{{{message.system_name}}が{{/message.sharer_name}}と共有されました。"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} があなたを %CLOUD_NAME% に招待しました。{{/message.sharer_name}}{{^message.sharer_name}}ビデオシステム {{{message.system_name}} が共有されました。{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "ビデオシステム{{{message.system_name}}が共有されました。"

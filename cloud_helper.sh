@@ -3,7 +3,6 @@
 DOCKER_COMPOSE='etc/docker-compose.yml'
 SQL='./etc/*.sql'
 
-
 function build_frontend(){
     ./build_scripts/build.sh
 }
@@ -142,7 +141,7 @@ function start_celery() {
 
 function start_docker_containers() {
     if [[ -e ${DOCKER_COMPOSE} ]]; then
-        printf "Starting mysql and redis containers\n\n"
+        printf "Starting mysql, redis, and meilisearch containers\n\n"
         docker-compose -f ${DOCKER_COMPOSE} up -d
         printf "\n\n"
     else
@@ -216,16 +215,16 @@ function build_webadmin_locally() {
     [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
-    cp $REPO/webadmin/customize_hack.sh $BUILD_DIR
+    cp webadmin/apply_customization.py $BUILD_DIR
     pushd $BUILD_DIR
         . "$REPO/webadmin/build.sh"
-        . customize_hack.sh
+        ./apply_customization.py
     popd
 }
 
 function local_build() {
     VERSION=$1
-    PORT=$2
+    PORTS="$2"
     COPY=$3
     CLOUD_HOST=$4
     BUILD_DIR=~/Desktop/build
@@ -240,10 +239,14 @@ function local_build() {
     echo "Build mediaserver"
     build_mediaserver_image $VERSION.deb $VERSION $COPY
     echo "Run mediaserver"
-    echo "Starting mediaserver $PORT"
-    run_mediaserver $VERSION $PORT $CLOUD_HOST
-    sleep 10
-    open https://localhost:$PORT
+
+    for PORT in $PORTS
+    do
+        echo "Starting mediaserver $PORT"
+        run_mediaserver $VERSION $PORT $CLOUD_HOST
+        sleep 10
+        open https://localhost:$PORT
+    done
 }
 
 function start_https_tunnel() {
@@ -351,6 +354,9 @@ do
         stop_docker)
             stop_docker_containers
             ;;
+        build_local_webadmin)
+            build_webadmin_locally
+            ;;
         build_local_vms)
             VERSION=$2
             PORT=$3
@@ -387,14 +393,35 @@ do
             run_mediaserver $VERSION "$PORTS" "$CLOUD_HOST" $EMAIL $PASSWORD
             break
             ;;
-         stop_mediaserver)
+        stop_mediaserver)
             stop_mediaserver
             ;;
-         start_https_tunnel)
+        start_https_tunnel)
             start_https_tunnel
             ;;
-         dump_db)
+        dump_db)
             dump_db
+            ;;
+        run_local_servers)
+            VERSION=$2
+            PORTS="$3"
+            LOCAL=$4
+            SKIP_BUILD=$5
+            CLOUD_HOST="cloud-test.hdw.mx"
+
+            if [ "$LOCAL" == "true" ]; then
+                build_webadmin_locally
+                local_build $VERSION "$PORTS" copy $CLOUD_HOST
+            else
+                stop_mediaserver
+                if [ "$SKIP_BUILD" != "true" ]; then
+                    build_mediaserver_image $VERSION.deb $VERSION
+                fi
+                run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
+            fi
+
+            python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
+            break
             ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
@@ -417,7 +444,9 @@ do
             echo 'list_mediaserver - List docker images build by this script'
             echo 'remove_mediaserver - Removes docker mediaserver images created by this script'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
+            echo 'run_local_servers -Stops all running mediaservers, builds a new docker image, and runs the images. Usage "./cloud_helper.sh {version} {ports}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
+            echo 'build_local_webadmin - Builds webadmin locally to test the build'
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'

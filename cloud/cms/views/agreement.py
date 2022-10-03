@@ -7,12 +7,17 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.controllers.asset_json import get_review_matching_current_version
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
                         DataStructure, ContributorAgreement)
 from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
 
+AGREEMENT_NOT_FOUND = 'Agreement not found'
+PREVIEW_NOT_ALLOWED = 'Not allowed to view this preview'
+AGREEMENT_REVIEW_NOT_FOUND = "Agreement review not found."
+NO_REVIEW_PROVIDED = "No review id provided"
 
 state__query_param = openapi.Parameter(
     "state", openapi.IN_QUERY,
@@ -51,7 +56,7 @@ def get_agreement(request):
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
 
         agreement_id = agreement_review.version.asset.id
-        AGREEMENT_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{agreement_id}-{state}-{agreement_review.version if not draft and agreement_id else "latest"}'
+        AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state, agreement_id, agreement_review.version)
         cached_agreement = AGREEMENT_CACHE.get_cached_item()
 
         if agreement_review and not cached_agreement:
@@ -64,16 +69,14 @@ def get_agreement(request):
             and not request.user.is_superuser
             and agreement.created_by != request.user
         ):
-            raise APIForbiddenException(error_data={'id': agreement_id}, error_text='Not allowed to view this preview')
+            raise APIForbiddenException(error_data={'id': agreement_id}, error_text=PREVIEW_NOT_ALLOWED)
         if cached_agreement:
             return api_success(cached_agreement)
 
         # Set version based on draft or pending query params
         version = agreement.version_id()
         if review:
-            pending_review = AssetCustomizationReview.objects.filter(
-                version__id__gt=version, version__asset=agreement, customization__name=settings.CUSTOMIZATION,
-                state=AssetCustomizationReview.REVIEW_STATES.pending).last()
+            pending_review = get_review_matching_current_version(agreement, version)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -114,15 +117,19 @@ def get_agreement(request):
             cloud_portal = get_cloud_portal_asset()
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-            process_global_contexts(cloud_portal, agreement_dict, agreement.version_id(), False,
-                                    global_contexts, global_contexts_dict, language=language)
+            context_processor = ContextProcessor(
+                asset=cloud_portal, preview=False, version_id=cloud_portal.version_id(), global_contexts=global_contexts,
+                global_contexts_dict=global_contexts_dict
+            )
+            context_processor.process_global_contexts(content=agreement_dict, language=language)
+
             AGREEMENT_CACHE.set_cached_item(agreement_dict)
             if agreement_id:
-                AGREEMENT_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}--{state}-latest'
+                AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state)
                 AGREEMENT_CACHE.set_cached_item(agreement_dict)
             return api_success(agreement_dict)
 
-    raise APINotFoundException(error_text='Agreement not found')
+    raise APINotFoundException(error_text=AGREEMENT_NOT_FOUND)
 
 
 review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
@@ -141,7 +148,7 @@ review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
 def accept_agreement(request):
     review_id = request.data.get('review_id', None)
     if review_id is None:
-        return api_success("No review id provided", status_code=status.HTTP_404_NOT_FOUND)
+        return api_success(NO_REVIEW_PROVIDED, status_code=status.HTTP_404_NOT_FOUND)
 
     agreement_review = AssetCustomizationReview.objects.filter(
         version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
@@ -152,4 +159,4 @@ def accept_agreement(request):
         ContributorAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
         return api_success()
     else:
-        return api_success("Agreement review not found.", status_code=status.HTTP_404_NOT_FOUND)
+        return api_success(AGREEMENT_REVIEW_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)

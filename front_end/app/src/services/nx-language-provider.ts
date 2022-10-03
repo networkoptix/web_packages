@@ -1,16 +1,17 @@
-import { Inject, Injectable }      from '@angular/core';
-import { HttpClient }              from '@angular/common/http';
-import { BehaviorSubject }         from 'rxjs';
-import { TranslateService }        from '@ngx-translate/core';
-import { environment }             from '@environments/environment';
-import { NxCloudApiService }       from './nx-cloud-api';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from 'ngx-webstorage';
+import { BehaviorSubject } from 'rxjs';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxSessionService }        from './session.service';
-import { LocalStorageService }     from 'ngx-webstorage';
-import { WINDOW }                  from './window-provider';
-import { NxUriCacheService }       from '@services/uri-cache.service';
-import { Router }                  from '@angular/router';
-import { NxSwCacheService }        from '@services/sw-cache.service';
+import { environment } from '@environments/environment';
+import { NxSwCacheService } from '@services/sw-cache.service';
+import { NxUriCacheService } from '@services/uri-cache.service';
+
+import { NxSessionService } from './session.service';
+import { WINDOW } from './window-provider';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -26,7 +27,6 @@ export class NxLanguageProviderService {
     constructor(
         private translate: TranslateService,
         private http: HttpClient,
-        private cloudApiService: NxCloudApiService,
         private sessionService: NxSessionService,
         private storageService: LocalStorageService,
         private cacheService: NxUriCacheService,
@@ -35,13 +35,12 @@ export class NxLanguageProviderService {
         @Inject(WINDOW) private window: Window
     ) {
         if (environment.isLocal) {
-            this.currentLang = this.sessionService.language;
+            // Fixes circular dependency with local-system-status-interceptor.
+            setTimeout(() => {
+                this.currentLang = this.sessionService.language;
+            });
         }
-        this.translations = this.translate.translations[this.translate.currentLang];
-        this.translateSubject.next(this.translations);
-        this.translateSubject.subscribe(translations => {
-            this.translations = translations;
-        });
+
         this.storageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
             if (!environment.isLocal) {
@@ -92,18 +91,34 @@ export class NxLanguageProviderService {
 
         return (environment.isLocal
             ? this.http.get(`/static/lang_${lang}/language_compiled.json`)
-            : this.cloudApiService.getLanguage()).toPromise();
+            : this.http.get('/api/utils/language')).toPromise();
+    }
+
+    loadTimelineTranslations() {
+        const reduceTranslations = (names, sortList) => sortList.map((key) => names[key]());
+        const timelineTranslations = this.translations.view.timeline;
+        const times = {
+            dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            timeNames: ['a', 'p', 'am', 'pm', 'A', 'P', 'AM', 'PM']
+        };
+        const translations: any = {
+            dayNames: reduceTranslations(timelineTranslations.dayNames, times.dayNames),
+            monthNames: reduceTranslations(timelineTranslations.monthNames, times.monthNames),
+            timeNames: reduceTranslations(timelineTranslations.timeNames, times.timeNames)
+        };
+        return translations;
     }
 
     setTranslations(lang: string, translation): void {
         this.translate.setTranslation(lang, translation);
         this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
 
-        this.translateSubject.next(this.translate.translations[this.translate.currentLang]);
-    }
-
-    public get currentLanguage(): string {
-        return this.translate.currentLang;
+        this.translations = this.translate.translations[this.translate.currentLang];
+        this.translations.productName = this.translations[
+            environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults'
+        ]?.default?.site_name || '';
+        this.translateSubject.next(this.translations);
     }
 
     public get defaultLanguage() {
@@ -130,7 +145,7 @@ export class NxLanguageProviderService {
             this.sessionService.language = language;
         });
 
-        this.cacheService.cachedData.clear();
+        this.cacheService.clearData();
         this.swCacheService
             .clearAllCache()
             .catch((err) => console.error(err));

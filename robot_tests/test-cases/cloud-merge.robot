@@ -1,9 +1,9 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/cloud-merge-resource.robot
 Suite Setup       Merge Suite Setup
 Test Setup        Merge Test Setup
 Test Teardown     Merge Test Teardown
-Suite Teardown    Merge Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Merge Suite Teardown
 Force Tags        merge
 
 *** Test Cases ***
@@ -38,15 +38,15 @@ Force Tags        merge
     [Tags]    C70979    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 6}=   Create Base System    cloud_merge_${rs}_6    image=${IMAGE 4.1}    add users=False
-#    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    network=host    add users=False
-    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    add users=False
+    
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 6}=   Create Base System    cloud_merge_${rs}_6    image=${IMAGE 4.1}    add users=${False}
+    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    network=host    add users=${False}    customPort=7001
+#    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    add users=${False}
 
     FOR    ${i}    IN RANGE    1    8
         Append To List    ${test systems}    ${system ${i}}
@@ -109,7 +109,9 @@ Force Tags        merge
 
     # One of compatible systems is chosen by default
     ${sys 2 shown}=   Run keyword and return status    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]    timeout=30
-    Run Keyword Unless    ${sys 2 shown}    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 3}[name]")]
+    IF    ${sys 2 shown} == ${False}
+        Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 3}[name]")]
+    END
 
     Click Button    ${MERGE SYSTEM DROPDOWN}
     Validate Check Merge Dialog
@@ -135,8 +137,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -163,12 +165,12 @@ Force Tags        merge
     Log   C76420
     Stop Docker Server    ${system 2}[id]
     Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]
+    #Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]    timeout=180
     Click Button    ${MERGE SYSTEM DROPDOWN}
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]//following-sibling::span[contains(text(), "offline")]
+    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//following-sibling::div//span[contains(text(), "${system 2}[name]")]//following-sibling::span[contains(text(), "offline")]
     Element should not be visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 1}[name]")]
 
 5. Merge Dialog - Dropdown has no valid systems
@@ -176,8 +178,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    network=custom1    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    network=custom1    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -198,9 +200,9 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    4
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -231,8 +233,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -268,32 +270,33 @@ Force Tags        merge
     Log    Step 6
     Click Button    ${MERGE X BUTTON}
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
-
-    Log    Step 7
-    Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog
-    Choose System From Dropdown    ${system 2}[name]
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Admin Password Dialog
-    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
-    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
-
-    Log    Step 8
-    Click Button    ${MERGE X BUTTON}
-    Wait Until Element Is Not Visible    ${MERGE DIALOG}
+    
+    # Removed as there is no confirm dialog anymore
+    #Log    Step 7
+    #Click Button    ${MERGE BUTTON SYSTEM}
+    #Validate Check Merge Dialog
+    #Choose System From Dropdown    ${system 2}[name]
+    #Click Button    ${MERGE NEXT BUTTON}
+    #Validate Admin Password Dialog
+    #Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
+    #Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
+    #Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
+#
+    #Log    Step 8
+    #Click Button    ${MERGE X BUTTON}
+    #Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
 # Positive scenarios
 8. Positive scenario with selected cloud system (selected system is secondary)
-    [Tags]    C70930    pos    must
+    [Tags]    C70930    pos    must    smoke
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    5
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -374,8 +377,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -430,8 +433,8 @@ Force Tags        merge
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog    lonely=True
     Go To    ${ENV}/systems/
-    Wait Until Element Is Visible    //h2[contains(text(), "${system 2}[name]")]
-    Wait Until Element Is Not Visible    //h2[contains(text(), "${system 1}[name]")]
+    Wait Until Element Is Visible    //nx-text-editable[contains(text(), "${system 2}[name]")]
+    Wait Until Element Is Not Visible    //nx-text-editable[contains(text(), "${system 1}[name]")]
 
     Log    Step 7
     Go To    ${ENV}/systems/${system 1}[cloud id]
@@ -443,8 +446,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -495,10 +498,10 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    add users=False
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    add users=${False}
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    5
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -556,8 +559,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    network=custom1    owner=${owner email}     add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom2    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    network=custom1    owner=${owner email}     add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom2    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -619,9 +622,9 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    4
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -682,9 +685,9 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
 
     FOR    ${i}    IN RANGE    1    4
         Append To List    ${test systems}    ${system ${i}}
@@ -697,7 +700,7 @@ Force Tags        merge
     ${sys 3 custom}=   Register and activate account with random email    sys3    custom    ${BASE PASSWORD}
     ${all systems user}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 
-    ${auth}=   Create List    ${owner email}    ${BASE PASSWORD}
+    ${auth}=   Create List    admin    ${BASE PASSWORD}
     Save User     ${auth}    https://${QA BURBANK IP}:${system 1}[port]    sys1_admin    ${permissions}[cloudAdmin]    ${sys 1 admin}    sys1 admin    ${BASE PASSWORD}
     Save User     ${auth}    https://${QA BURBANK IP}:${system 2}[port]    sys2_adv    ${permissions}[advancedViewer]    ${sys 2 adv viewer}    sys2 adv    ${BASE PASSWORD}
     Save User     ${auth}    https://${QA BURBANK IP}:${system 3}[port]    sys3_custom    ${permissions}[custom]    ${sys 3 custom}    sys3 custom    ${BASE PASSWORD}
@@ -780,10 +783,10 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    5
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -820,6 +823,7 @@ Force Tags        merge
         Start Docker Server    ${system ${j}}[id]
         Go To    ${ENV}/systems/${system ${j}}[cloud id]
         Reload Page
+        Sleep    5
         Wait Until Element Is Not Visible    ${SYSTEM OFFLINE}    timeout=90
         Go To    ${ENV}/systems/${system ${i}}[cloud id]
         Wait until element is enabled    ${MERGE BUTTON SYSTEM}
@@ -852,8 +856,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -904,8 +908,13 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=${False}    customPort=7001
+    ${server id}=   Get Server Id     https://${QA BURBANK IP}:7001    ${system 1}[local auth]
+    Change Server Port Via Api    ${system 1}[local auth]    https://${QA BURBANK IP}:7001    ${7002}    ${server id}
+    Set Variable    ${system 1}[port]    7002
+
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=${False}    customPort=7001
+    
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -933,8 +942,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -963,8 +972,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -999,8 +1008,8 @@ Force Tags        merge
 #    Log    Test Setup
 #    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 #    ${rs}=   Generate Random String
-#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner email}    add users=False
-#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    add users=False
+#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner email}    add users=${False}
+#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    add users=${False}
 #    FOR    ${i}    IN RANGE    1    3
 #        Append To List    ${test systems}    ${system ${i}}
 #    END
@@ -1047,8 +1056,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1077,8 +1086,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1110,8 +1119,8 @@ Force Tags        merge
 #    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
 #    ${system 2}=   Setup System    image=${IMAGE 4.1}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1147,8 +1156,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1184,8 +1193,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1215,8 +1224,8 @@ Force Tags        merge
     Log    Test Set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1280,9 +1289,9 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    4
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1316,8 +1325,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1349,9 +1358,9 @@ Force Tags        merge
     ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner 1 email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner 2 email}    add users=False
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner 1 email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner 1 email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner 2 email}    add users=${False}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner 1 email}    add users=${False}
     FOR    ${i}    IN RANGE    1    4
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1401,7 +1410,7 @@ Force Tags        merge
 
     Log    C76464
     Log    Step 2
-    Disconnect    ${ENV}    ${owner 2 email}    ${base password}    ${system 2}[cloud id]
+    Disconnect    ${owner 2 email}    ${base password}    ${system 2}[cloud id]
     Slow    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    timeout=5
     Connect System to Cloud   ${auth}   https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[name]    ${owner 1 email}    ${base password}
     Slow    Click Button    ${MERGE TRY AGAIN BUTTON}    timeout=0.5
@@ -1420,8 +1429,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1446,7 +1455,9 @@ Force Tags        merge
     ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
     ${error p2}=   Replace String    ${FAILED TO MERGE SYSTEM IS OFFLINE TEXT}    %SYSTEM%    ${system 2}[name]
     ${offline status}=   Run Keyword And Return Status    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
-    Run Keyword Unless    $offline_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    IF    ${offline status} == ${False}
+        Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    END
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1457,8 +1468,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1484,7 +1495,9 @@ Force Tags        merge
     ${error unreach}=   Replace String    ${FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT}    %SYSTEM%    ${system 1}[name]
     ${offline status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error offline}
     ${unreach status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error unreach}\n${FAILED TO MERGE TRY AGAIN TEXT}
-    Run Keyword Unless    $offline_status or $unreach_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    IF    ${offline_status} == ${False} and ${unreach_status} == ${False}
+        Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    END
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1495,8 +1508,8 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -1521,7 +1534,9 @@ Force Tags        merge
     ${error unreach}=   Replace String    ${FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT}    %SYSTEM%    ${system 2}[name]
     ${offline status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error offline}
     ${unreach status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error unreach}\n${FAILED TO MERGE TRY AGAIN TEXT}
-    Run Keyword Unless    $offline_status or $unreach_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    IF    ${offline_status} == ${False} and ${unreach_status} == ${False}
+        Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    END
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1533,8 +1548,8 @@ Force Tags        merge
 #    Log    Test Setup
 #    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 #    ${rs}=   Generate Random String
-#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner email}    add users=False
-#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    owner=${owner email}    add users=False
+#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner email}    add users=${False}
+#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    owner=${owner email}    add users=${False}
 #    FOR    ${i}    IN RANGE    1    3
 #        Append To List    ${test systems}    ${system ${i}}
 #    END
@@ -1586,9 +1601,9 @@ Force Tags        merge
 #    ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 #    ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 #    ${rs}=   Generate Random String
-#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner 1 email}    add users=False
-#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    owner=${owner 2 email}    add users=False
-#    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner 3 email}    add users=False
+#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner 1 email}    add users=${False}
+#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    owner=${owner 2 email}    add users=${False}
+#    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner 3 email}    add users=${False}
 #
 #    FOR    ${i}    IN RANGE    1    4
 #        Append To List    ${test systems}    ${system ${i}}

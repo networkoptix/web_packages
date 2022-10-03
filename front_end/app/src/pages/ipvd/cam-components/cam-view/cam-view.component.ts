@@ -1,23 +1,30 @@
 import {
     AfterViewInit,
-    Component, ElementRef, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, ViewChild
-}                                    from '@angular/core';
-import { Subscription }              from 'rxjs';
-import { delay }                     from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxUriService }              from '../../../../services/uri.service';
-import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxUriService } from '@services/uri.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-cam-view',
-    templateUrl : './cam-view.component.html',
-    styleUrls  : ['./cam-view.component.scss']
+    selector: 'nx-cam-view',
+    templateUrl: './cam-view.component.html',
+    styleUrls: ['./cam-view.component.scss']
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() activeCamera;
@@ -49,7 +56,6 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     elementWidth;
     camera: { title: string, param?: string, secondaryParam?: string }[];
 
-    private uriSubscription: Subscription;
     private windowScrollSubscription: Subscription;
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
@@ -86,15 +92,18 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             { title: this.LANG.ipvd.isMultiSensor?.(), param: 'isMultiSensor' },
             { title: this.LANG.ipvd.isAnalyticsSupported?.(), param: 'isAnalyticsSupported' }
         ];
-        this.uriSubscription = this.uri
-            .getURI()
+        this.uri.getParams()
+            .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.params = params;
                 this.debug = (params.debug !== undefined);
                 this.beta = (params.beta !== undefined);
 
-                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-                this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported;
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents ||
+                    this.debug ||
+                    this.beta;
+                this.showCameraAnalytics = this.showAnalytics &&
+                    this.activeCamera.isAnalyticsSupported;
             });
 
         this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
@@ -107,7 +116,9 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
+            this.scrollHeight =
+                this.scrollMechanicsService.searchViewHeightSubject.getValue() +
+                NxScrollMechanicsService.HEADER_OFFSET;
             this.calcElementScrollMechanics();
         });
 
@@ -121,19 +132,24 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             .elementViewWidthSubject
             .subscribe(() => {
                 const width = this.scrollMechanicsService.elementViewWidth;
-                this.elementWidth = (width > 0) ? (width - 8 /* -gutter */) + 'px' : '100%';
+                this.elementWidth = (width > 0)
+                    ? (width - 8 /* -gutter */) + 'px'
+                    : '100%';
             });
 
         this.searchViewHeightSubscription = this.scrollMechanicsService
             .searchViewHeightSubject.pipe(delay(0))
             .subscribe(() => {
-                this.scrollHeight = this.scrollMechanicsService.searchViewHeight + NxScrollMechanicsService.HEADER_OFFSET;
+                this.scrollHeight =
+                    this.scrollMechanicsService.searchViewHeight +
+                    NxScrollMechanicsService.HEADER_OFFSET;
             });
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeCamera.currentValue) {
-            this.showCameraAnalytics = this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
+            this.showCameraAnalytics = this.showAnalytics &&
+                changes.activeCamera.currentValue.isAnalyticsSupported;
             this.firmwares = changes.activeCamera.currentValue.firmwares || [];
             this.showAllFirmware = false;
             this.showAllEvents = false;
@@ -157,13 +173,21 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.clientHeight = this.cameraView.nativeElement.clientHeight;
         this.searchHeight = this.scrollMechanicsService.searchViewHeight;
 
-        if (this.clientHeight < this.windowSize.height - this.searchHeight && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
+        if (
+            this.clientHeight < this.windowSize.height - this.searchHeight &&
+            this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET
+        ) {
             this.viewScrollFixedTop = true;
         } else {
             this.viewScrollFixedTop = false;
         }
 
-        if (this.clientHeight > this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 8 && (this.clientHeight - this.windowSize.height + 18) < (this.windowScroll - this.scrollHeight)) {
+        if (
+            this.clientHeight > this.windowSize.height -
+                NxScrollMechanicsService.SCROLL_OFFSET - 8 &&
+            (this.clientHeight - this.windowSize.height + 18) <
+                (this.windowScroll - this.scrollHeight)
+        ) {
             this.viewScrollFixedBottom = true;
         } else {
             this.viewScrollFixedBottom = false;

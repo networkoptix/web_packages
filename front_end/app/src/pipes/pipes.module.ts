@@ -1,7 +1,9 @@
-import { NgModule }         from '@angular/core';
-import { NxSafePipe }       from './nx-safe';
-import { NxUnsafePipe }     from './nx-unsafe';
+import { NgModule } from '@angular/core';
+
 import { NxHealthDatePipe } from './health-date';
+import { NxSafePipe } from './nx-safe';
+import { TextTransformPipe } from './nx-split-text';
+import { NxUnsafePipe } from './nx-unsafe';
 
 @NgModule({
     imports: [
@@ -9,12 +11,14 @@ import { NxHealthDatePipe } from './health-date';
     declarations: [
         NxHealthDatePipe,
         NxSafePipe,
-        NxUnsafePipe
+        NxUnsafePipe,
+        TextTransformPipe,
     ],
     exports: [
         NxHealthDatePipe,
         NxSafePipe,
-        NxUnsafePipe
+        NxUnsafePipe,
+        TextTransformPipe,
     ],
     providers: [NxHealthDatePipe]
 })

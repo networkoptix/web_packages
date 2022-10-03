@@ -1,9 +1,9 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart
-Suite Teardown    System Admin Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
@@ -34,28 +34,36 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Log in to user and system    ${system}[owner]    ${system}[cloud id]${ADVANCED SETTINGS}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
     Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
-    Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
+    IF    '${IMAGE}'=='5.0_test'
+        Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
+    ELSE
+        Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
+    END
 
     Log    Get System back online and check advanced settings
     Start Docker Server    ${system}[id]
     Sleep    4
     Reload Page
-    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=180
+    Wait Until Advanced Settings Are Visible    ONE    timeout=180
 
 3. Hide Advanced Settings button functionality
     [Tags]    C76635    threaded
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
-    Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
+    IF    '${IMAGE}'=='5.0_test'
+        Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
+    ELSE
+        Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
+    END
     IF    '${mode}' == 'cloud'
         Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}
     ELSE
         ${location}=   Get Location
         Go to    ${location}${ADVANCED SETTINGS}
     END
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
 
 4. Audit trail, backup and statistics section
     [Tags]    C78244
@@ -64,36 +72,36 @@ Force Tags        system    advanced_settings    cloud    webadmin
         ...    additionalLocalFsTypes=${EMPTY}
         ...    arecontRtspEnabled=false
         ...    auditTrailPeriodDays=183
-        ...    autoDiscoveryResponseEnabled=true
-        ...    autoUpdateThumbnails=true
+        ...    autoDiscoveryResponseEnabled=${true}
+        ...    autoUpdateThumbnails=${true}
         ...    backupSettings=${BACKUP SETTINGS DEFAULT TEXT}
         ...    clientStatisticsSettingsUrl=${EMPTY}
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=70
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE    timeout=70
 
     Log    Step 1
     Changing input setting changes it on server    ${ADDITIONAL LOCAL FS TYPES INPUT}    additionalLocalFsTypes    test Settings changed
 
     Log    Step 2
-    Changing setting changes it on server    ${ARECONT RTSP ENABLED CHECKBOX}     arecontRtspEnabled    advanced=True
+    Changing setting changes it on server    ${ARECONT RTSP ENABLED CHECKBOX}     arecontRtspEnabled    advanced=${True}
 
     Log    Step 3
     Changing input setting changes it on server    ${AUDIT TRAIL PERIOD DAYS INPUT}    auditTrailPeriodDays    150
     
     Log    Step 4
-    Changing setting changes it on server    ${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}     autoDiscoveryResponseEnabled    advanced=True
+    Changing setting changes it on server    ${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}     autoDiscoveryResponseEnabled    advanced=${True}
     
     Log    Step 5
-    Changing setting changes it on server    ${AUTO UPDATE THUMBNAILS CHECKBOX}     autoUpdateThumbnails    advanced=True
+    Changing setting changes it on server    ${AUTO UPDATE THUMBNAILS CHECKBOX}     autoUpdateThumbnails    advanced=${True}
     
     Log    Step 6
 
-    IF    '${IMAGE}'=='4.3_test'
+    IF    '${IMAGE}'=='5.0_test'
         Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    {"backupNewCameras":true,"id":"{00000000-2222-0000-0000-000000000000}","quality":"CameraBackupBoth"}
     ELSE
-        Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=True
+        Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=${True}
         Log    Step 7
         Changing input setting changes it on server    ${BACKUP QUALITIES INPUT}    backupQualities    CameraBackupHighQuality
     END
@@ -142,7 +150,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Changing input setting changes it on server    ${DISABLED VENDORS INPUT}    disabledVendors    Axis
     
     Log    Step 7
-    Changing input setting changes it on server    ${DOWNLOADER PEERS INPUT}    downloaderPeers    {"abc": ["07a976b5-e61e-4c75-b785-e120d54a3c01"]}
+    Changing input setting changes it on server    ${DOWNLOADER PEERS INPUT}    downloaderPeers    {"abc":["{07a976b5-e61e-4c75-b785-e120d54a3c01}"]}
     
     Log    Step 8
     Changing input setting changes it on server    ${SYSTEM ALIVE INTERVAL INPUT}    ec2AliveUpdateIntervalSec    75
@@ -164,10 +172,14 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    THREE    timeout=60
 
     Log    Step 1
-    Changing input setting changes it on server    ${CONNECTION KEEP ALIVE TIMEOUT INPUT}     ec2ConnectionKeepAliveTimeoutSec    7
+    IF    '${IMAGE}' != '5.0_test'
+        Changing input setting changes it on server    ${CONNECTION KEEP ALIVE TIMEOUT INPUT}     ec2ConnectionKeepAliveTimeoutSec    7
+    END
 
     Log    Step 2
-    Changing input setting changes it on server    ${CONNECTION KEEP ALIVE PROBE INPUT}    ec2KeepAliveProbeCount    0
+    IF    '${IMAGE}' != '5.0_test'
+        Changing input setting changes it on server    ${CONNECTION KEEP ALIVE PROBE INPUT}    ec2KeepAliveProbeCount    0
+    END
     
     Log    Step 3
     Changing input setting changes it on server    ${EMAIL FROM INPUT}     emailFrom    networkoptixtesting123@gmail.com
@@ -203,7 +215,11 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Changing input setting changes it on server    ${FORCE LIVE CACHE INPUT}    forceLiveCacheForPrimaryStream    Yes
 
     Log    Step 4
-    Changing setting changes it on server    ${KEEP HANWHA PORT STATE CHECKBOX}    keepHanwhaIoPortStateIntactOnInitialization    advanced=True
+    IF    '${IMAGE}' == '5.0_test'
+        Changing setting changes it on server    ${KEEP PORT STATE CHECKBOX}    keepIoPortStateIntactOnInitialization    advanced=True
+    ELSE
+        Changing setting changes it on server    ${KEEP HANWHA PORT STATE CHECKBOX}    keepHanwhaIoPortStateIntactOnInitialization    advanced=True
+    END
 
     Log    Step 5
     Changing input setting changes it on server    ${LAST MERGE MASTERID INPUT}    lastMergeMasterId    masterId
@@ -311,7 +327,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT ${IMAGE}    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT    timeout=60
 
     Log    Step 1
     Changing input setting changes it on server    ${MAX RTP RETRY COUNT INPUT}    maxRtpRetryCount    5
@@ -323,7 +339,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Changing input setting changes it on server    ${MAX SCENE ITEMS INPUT}    maxSceneItems    1
 
     Log    Step 4
-    IF    '${IMAGE}'=='4.3_test'
+    IF    '${IMAGE}'=='5.0_test'
         Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
         Log    Step 5
         Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
@@ -388,6 +404,8 @@ Force Tags        system    advanced_settings    cloud    webadmin
 
 14. Server discovery timeout
     [Tags]    C78386
+    # Skipped in 5.0 as it's not an option
+    Skip If    '${IMAGE}'=='5.0_test'
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    serverDiscoveryPingTimeoutSec=60
@@ -416,7 +434,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ELEVEN    timeout=70
 
     Log    Step 1
-    Changing input setting changes it on server    ${SMTP CONNECTION TYPE INPUT}    smtpConnectionType    ssl
+    Changing input setting changes it on server    ${SMTP CONNECTION TYPE INPUT}    smtpConnectionType    Ssl
 
     Log    Step 2
     Changing input setting changes it on server    ${SMTP HOST INPUT}    smtpHost    smtp.gmail.com
@@ -536,7 +554,11 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN    timeout=60
+    IF    "${LANGUAGE}"=="he_IL"
+        Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN HEBREW    timeout=60
+    ELSE
+        Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN    timeout=60
+    END
 
     Log    Step 1
     Changing setting changes it on server    ${UPNP PORT MAPPING ENABLED CHECKBOX}      upnpPortMappingEnabled    advanced=True

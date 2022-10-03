@@ -1,12 +1,20 @@
-import { ms, int } from '../../../utils/type-aliases';
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive, SimpleTimeRange } from './ICamera';
+import { ms, int } from '@vms-client/utils/type-aliases';
+
 import BirdViewTree from './BirdViewTree';
+import {
+    ICamera,
+    ISimpleTimeRange,
+    CAMERA_STATUS,
+    CameraArchive
+} from './ICamera';
 import { _getNextRecord, _isThereRecord } from './utils';
 
 export class TestCamera implements ICamera {
     protected _birdViewTree: BirdViewTree
 
     public readonly rotation: int = 0
+
+    public readonly isVirtual: boolean = false
 
     public get archiveRange () {
         return this._archiveRange;
@@ -28,6 +36,10 @@ export class TestCamera implements ICamera {
         public readonly getPosterUrl: (t?: ms) => string = undefined
     ) {
         this._initBirdView();
+    }
+
+    public get ip () {
+        return this.url;
     }
 
     public get isScheduleEnabled () {
@@ -91,8 +103,8 @@ export class TestCamera implements ICamera {
 
     public get availableTransportsAndResolutions () {
         return {
-            hls  : ['lo', 'hi', ''],
-            webm : ['AxB']
+            hls: ['lo', 'hi', ''],
+            webm: ['AxB']
         };
     }
 
@@ -105,13 +117,12 @@ export class TestCamera implements ICamera {
     }
 
     public isThereRecord (t: ms) {
-        return _isThereRecord(this.archive, t)
+        return _isThereRecord(this.archive, t);
     }
 
     public getNextRecord (t: ms): ISimpleTimeRange {
-        return _getNextRecord(this.archive, t)
+        return _getNextRecord(this.archive, t);
     }
-
 }
 
 export default TestCamera;

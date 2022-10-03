@@ -3,12 +3,17 @@ import json
 import codecs
 import base64
 import binascii
+from dataclasses import dataclass
 import zipfile
 import distutils.dir_util
 import errno
+from typing import Dict, Callable
 import traceback
+from typing import Union, Tuple, Dict, List
 from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
+
+from django.db.models import QuerySet
 
 from cms.models import *
 from cms.controllers.special_structures import SpecialStructures
@@ -66,21 +71,24 @@ def global_contexts_to_dict(contexts, asset):
                     data_structures[lang.code] = context.datastructure_set.all()
                 else:
                     data_structures[lang.code] |= context.datastructure_set.all()
-
-    universal_vals = DataStructure.find_actual_values(
-        data_structures['universal'], asset, version_id=version_id, customization_name=customization_name
-    )
-    del data_structures['universal']
-    data_structure_dict = {ds.name: value for ds, value in universal_vals.items()}
+    if 'universal' in data_structures:
+        universal_vals = DataStructure.find_actual_values(
+            data_structures['universal'], asset, version_id=version_id, customization_name=customization_name
+        )
+        del data_structures['universal']
+        data_structure_dict = {ds.name: value for ds, value in universal_vals.items()}
+    else:
+        data_structure_dict = {}
 
     for language in languages:
-        vals = DataStructure.find_actual_values(
-            data_structures[language.code], asset, version_id=version_id, language=language,
-            customization_name=customization_name
-        )
-        # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
-        for ds, value in vals.items():
-            data_structure_dict[f'{ds.name}__{language.code}'] = value
+        if language.code in data_structures:
+            vals = DataStructure.find_actual_values(
+                data_structures[language.code], asset, version_id=version_id, language=language,
+                customization_name=customization_name
+            )
+            # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
+            for ds, value in vals.items():
+                data_structure_dict[f'{ds.name}__{language.code}'] = value
 
     for tag in SPECIAL_STRUCTURES.function_dict:
         data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, asset)
@@ -88,109 +96,30 @@ def global_contexts_to_dict(contexts, asset):
     return data_structure_dict
 
 
-def process_global_contexts(asset, content, version_id, preview, global_contexts, global_contexts_dict, language=None):
-    for global_context in global_contexts.all():
-        content = process_context_structure(asset, global_context, content, language,
-                                            version_id, preview, False, global_contexts_dict)
-
-    for tag in SPECIAL_STRUCTURES.function_dict:
-        if global_contexts_dict and tag in global_contexts_dict:
-            tag_value = global_contexts_dict[tag]
-        else:
-            tag_value = SPECIAL_STRUCTURES.calc(tag, asset)
-        content = process_data_structure(content, tag, DataStructure.DATA_TYPES.text, tag_value)
-
-    return content
-
-
-def replace_in(collection, key, value):
+def replace_in(collection, key, value='', delete=False):
     # Here we process json files
 
     if type(collection) is dict:
-        elements = collection.items()
+        elements = list(collection.items())
     elif type(collection) is list:
-        elements = enumerate(collection)
+        elements = reversed(list(enumerate(collection)))
     else:
         raise ValueError(f"Cannot iterate through {type(collection)}")
 
     for index, item in elements:
         item_type = type(item)
         if item_type in [dict, list]:
-            replace_in(item, key, value)
+            replace_in(item, key, value, delete=delete)
         elif item_type is str:
             # special case if json value contains only the value - we don't treat it as a string,
             # we replace the whole thing
             if item == key:
-                collection[index] = value
+                if delete:
+                    del collection[index]
+                else:
+                    collection[index] = value
             elif key in item:
                 collection[index] = item.replace(key, str(value))
-
-
-def process_data_structure(content, tag, data_structure_type, content_value):
-    if type(content) in (dict, list):
-        # Process json file
-        replace_in(content, tag, content_value)
-    else:
-        if data_structure_type == DataStructure.DATA_TYPES.check_box:
-            content_value = str(content_value)
-
-        if tag in content:
-            if type(content_value) != str:
-                content_value = str(content_value)
-            content = content.replace(tag, content_value)
-    return content
-
-
-def process_context_structure(asset, context, content, language,
-                              version_id, preview, force_global_files, context_dict=None):
-    values = DataStructure.find_actual_values(
-        context.datastructure_set.all(), asset=asset, language=language, version_id=version_id, draft=preview
-    )
-    values = {ds.id: val for ds, val in values.items()}
-
-    for datastructure in context.datastructure_set.all():
-        # noinspection PyBroadException
-        try:
-            if context_dict and datastructure.name in context_dict:
-                if language:
-                    content_value = context_dict.get(
-                        f'{datastructure.name}__{language.code}', context_dict[datastructure.name]
-                    )
-                else:
-                    content_value = context_dict[datastructure.name]
-            else:
-                content_value = values[datastructure.id]
-            # replace marker with value
-            if not DataStructure.is_file_or_image(datastructure.type):
-                content = process_data_structure(content, datastructure.name, datastructure.type, content_value)
-
-            elif content_value or datastructure.optional:
-                if context.is_global and not force_global_files:
-                    # do not update files from global contexts all the time
-                    continue
-
-                if not datastructure.translatable and language != asset.default_language:
-                    # if file itself is not translatable - update it only for default language
-                    continue
-
-                image_storage = os.path.join('static', asset.asset_root)
-                if preview:
-                    image_storage = os.path.join(image_storage, 'preview')
-
-                file_name = datastructure.name
-                if language:
-                    file_name = file_name.replace("{{language}}", language.code)
-
-                # print "Save file from DB: " + file_name, context, language, context.is_global
-                save_b64_to_file(content_value, file_name, image_storage)
-        except Exception:
-            # if something happens here - instance will not start and it will close to impossible to fix so we ignore
-            # broken records while logging them - it will raise cloud alarm and we will go and fix the problem
-            logger.error(
-                f"ERROR: Cannot process data structure {datastructure.name} for asset {asset.name}")
-            logger.error(traceback.format_exc())
-
-    return content
 
 
 def save_content(filename, content):
@@ -199,31 +128,145 @@ def save_content(filename, content):
         file.write(content)
 
 
-def process_context(asset, context, language, skin,
-                    preview, version_id, global_contexts, global_contexts_dict=None):
-    context_template_text = context.template_for_language(language, asset.default_language, skin)
+@dataclass
+class ContextProcessor:
+    asset: Asset
+    preview: bool
+    version_id: int
+    global_contexts: QuerySet
+    global_contexts_dict: Dict = None
+    skin: str = None
+    custom: bool = False
+    custom_data: Dict = None
 
-    # check if the file is language JSON
-    if context.file_path.endswith(".json") and isinstance(context_template_text, str):
-        try:
-            context_template_text = json.loads(context_template_text)
-        except ValueError:
-            print("Failed to decode file -> " + context.file_path)
+    def process_global_contexts(self, content, language):
+        for global_context in self.global_contexts.all():
+            content = self.process_context_structure(
+                context=global_context, content=content, force_global_files=False, language=language
+            )
 
-    if not context_template_text:
-        context_template_text = ''
-    # if context is global - process it
-    content = process_context_structure(asset, context, context_template_text,
-                                        language, version_id, preview, context.is_global)
-    if not context.is_global:  # if current context is global - do not apply other contexts
-        content = process_global_contexts(asset, content, version_id, preview,
-                                          global_contexts, global_contexts_dict, language=language)
+        for tag in SPECIAL_STRUCTURES.function_dict:
+            if self.global_contexts_dict and tag in self.global_contexts_dict:
+                tag_value = self.global_contexts_dict[tag]
+            else:
+                tag_value = SPECIAL_STRUCTURES.calc(tag, self.asset)
+            content = self.process_data_structure(content, tag, DataStructure.DATA_TYPES.text, tag_value)
 
-    # If json -> dump it to string
-    if type(content) == dict:
-        content = json.dumps(content, indent=4, separators=(',', ': '))
+        return content
 
-    return content
+    @staticmethod
+    def process_data_structure(content, tag, data_structure_type, content_value):
+        if type(content) in (dict, list):
+            # Process json file
+            replace_in(content, tag, content_value)
+        else:
+            if data_structure_type == DataStructure.DATA_TYPES.check_box:
+                content_value = str(content_value)
+
+            if tag in content:
+                if type(content_value) != str:
+                    content_value = str(content_value)
+                content = content.replace(tag, content_value)
+        return content
+
+    def process_context_structure(self, context, content, force_global_files, language=None, context_dict=None):
+        values = DataStructure.find_actual_values(
+            context.datastructure_set.all(), asset=self.asset, language=language, version_id=self.version_id,
+            draft=self.preview
+        )
+        values = {ds.id: val for ds, val in values.items()}
+        field_overrides = context.asset_type.custom_field_overrides
+        exclude = field_overrides.get('exclude', [])
+
+        for datastructure in context.datastructure_set.all():
+            # noinspection PyBroadException
+            try:
+                if self.custom and datastructure.name in exclude:
+                    replace_in(content, datastructure.name, delete=True)
+                    continue
+
+                if self.custom_data and datastructure.name in self.custom_data:
+                    content_value = self.custom_data[datastructure.name]
+                elif context_dict and datastructure.name in context_dict:
+                    if language:
+                        content_value = context_dict.get(
+                            f'{datastructure.name}__{language.code}', context_dict[datastructure.name]
+                        )
+                    else:
+                        content_value = context_dict[datastructure.name]
+                else:
+                    content_value = values[datastructure.id]
+                # replace marker with value
+                if not DataStructure.is_file_or_image(datastructure.type):
+                    content = self.process_data_structure(content, datastructure.name, datastructure.type, content_value)
+
+                elif content_value or datastructure.optional:
+                    if context.is_global and not force_global_files:
+                        # do not update files from global contexts all the time
+                        continue
+
+                    if not datastructure.translatable and language and language != self.asset.default_language:
+                        # if file itself is not translatable - update it only for default language
+                        continue
+
+                    image_storage = os.path.join('static', self.asset.asset_root)
+                    if self.preview:
+                        image_storage = os.path.join(image_storage, 'preview')
+
+                    file_name = datastructure.name
+                    if language:
+                        file_name = file_name.replace("{{language}}", language.code)
+
+                    # print "Save file from DB: " + file_name, context, language, context.is_global
+                    save_b64_to_file(content_value, file_name, image_storage)
+            except Exception:
+                # if something happens here - instance will not start and it will close to impossible to fix so we ignore
+                # broken records while logging them - it will raise cloud alarm and we will go and fix the problem
+                logger.error(
+                    f"ERROR: Cannot process data structure {datastructure.name} for asset {self.asset.name}")
+                logger.error(traceback.format_exc())
+
+        return content
+
+    def process_context(self, context: Context, language):
+        context_template_text = context.template_for_language(language, self.asset.default_language, self.skin)
+
+        # check if the file is language JSON
+        if context.file_path.endswith(".json") and isinstance(context_template_text, str):
+            try:
+                context_template_text = json.loads(context_template_text)
+            except ValueError:
+                print("Failed to decode file -> " + context.file_path)
+
+        if not context_template_text:
+            context_template_text = ''
+        # if context is global - process it
+        content = self.process_context_structure(context=context, content=context_template_text,
+                                                 force_global_files=context.is_global)
+        if not context.is_global:  # if current context is global - do not apply other contexts
+            content = self.process_global_contexts(content, language=language)
+
+        # If json -> dump it to string
+        if type(content) == dict:
+            content = json.dumps(content, indent=4, separators=(',', ': '))
+
+        return content
+
+    def save_context(self, context: Context, language: Language):
+        content = self.process_context(context, language)
+
+        if context.template_for_language(language, self.asset.default_language, self.skin):  # if we have template - save context to file
+            target_file_name = target_file(context.file_path, self.asset.asset_root, language.code, self.preview)
+            # print "save file: " + target_file_name
+            save_content(target_file_name, content)
+
+    def save_contexts(self, context, languages):
+        # update affected languages
+        if context.translatable:
+            for language in languages:
+                self.save_context(context=context, language=language)
+        else:
+            self.save_context(context=context, language=self.asset.default_language)
 
 
 def read_customized_file(filename, asset, language_code=None,
@@ -232,15 +275,18 @@ def read_customized_file(filename, asset, language_code=None,
     skin = asset.read_global_value("%SKIN%")
     language = Language.by_code(language_code, asset.default_language)
     clean_name = filename.replace(language_code, "{{language}}") if language_code else filename
-    context = Context.objects.filter(file_path=clean_name, asset_type=asset.asset_type).first()
+    context: Context = Context.objects.filter(file_path=clean_name, asset_type=asset.asset_type).first()
     if context:
         # success -> return process_context
         global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
-        return process_context(asset, context, language, skin, preview, version_id, global_contexts)
+        context_processor = ContextProcessor(
+            asset=asset, skin=skin, preview=preview, version_id=version_id, global_contexts=global_contexts
+        )
+        return context_processor.process_context(context=context, language=language)
 
     # 2. try to find datastructure for this file
     # TODO: name is not unique
-    data_structure = DataStructure.objects.filter(name=clean_name, context__asset_type=asset.asset_type).first()
+    data_structure: DataStructure = DataStructure.objects.filter(name=clean_name, context__asset_type=asset.asset_type).first()
     if data_structure:
         # success -> return actual value
         value = data_structure.find_actual_value(asset, language, version_id, draft=preview)
@@ -262,17 +308,6 @@ def read_customized_file(filename, asset, language_code=None,
             return file.read()
     except IOError:
         return None  # nothing helps
-
-
-def save_context(asset, context, context_path, language, skin,
-                 preview, version_id, global_contexts, global_contexts_dict):
-    content = process_context(asset, context, language, skin,
-                              preview, version_id, global_contexts, global_contexts_dict)
-
-    if context.template_for_language(language, asset.default_language, skin):  # if we have template - save context to file
-        target_file_name = target_file(context_path, asset.asset_root, language.code, preview)
-        # print "save file: " + target_file_name
-        save_content(target_file_name, content)
 
 
 def generate_languages_json(save_location, language_codes, preview):
@@ -426,6 +461,10 @@ def fill_content(asset,
         global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
         error = False
         skin = asset.read_global_value('%SKIN%')
+        context_processor = ContextProcessor(
+            asset=asset, version_id=version_id, global_contexts=global_contexts,
+            global_contexts_dict=global_contexts_dict, preview=preview, skin=skin
+        )
         with ThreadPoolExecutor(max_workers=workers) as executor:
             # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
             futures = []
@@ -440,8 +479,7 @@ def fill_content(asset,
                         changed_languages = languages_list
                 languages = Language.objects.filter(code__in=changed_languages)
                 # Add the context to the list of tasks for the thread pool.
-                futures.append(executor.submit(thread_context, context, asset, languages, skin,
-                                               preview, version_id, global_contexts, global_contexts_dict))
+                futures.append(executor.submit(context_processor.save_contexts, context, languages))
 
             # Catch any errors raise by thread workers.
             for future in futures:
@@ -477,93 +515,158 @@ def fill_content(asset,
     return not thread_error
 
 
-def thread_context(context, asset, changed_languages, skin, preview, version_id, global_contexts, global_contexts_dict):
-    # update affected languages
-    if context.translatable:
-        for language in changed_languages:
-            save_context(asset, context, context.file_path, language, skin, preview,
-                         version_id, global_contexts, global_contexts_dict)
-    else:
-        save_context(asset, context, context.file_path, asset.default_language, skin, preview,
-                     version_id, global_contexts, global_contexts_dict)
+@dataclass
+class PackageExporter:
+    asset: Asset
+    preview: bool = False
+    version_id: int = None
+    add_root: bool = True
+    update_progress_cb: Callable = None
+    custom: bool = False
+    custom_data: Dict = None
 
+    def __post_init__(self):
+        self.skin = self.asset.read_global_value('%SKIN%')
+        self.global_contexts = Context.objects.filter(is_global=True, asset_type=self.asset.asset_type)
 
-def zip_context(zip_file, asset, context, language_code,
-                preview, version_id, global_contexts, add_root):
-    default_language = asset.default_language
-    language = Language.by_code(language_code, default_language)
-    root_dir = asset.asset_root
-    skin = asset.read_global_value('%SKIN%')
-    if context.template_for_language(language, default_language, skin):  # if we have template - save context to file
-        data = process_context(asset, context, language, skin, preview, version_id, global_contexts)
-        name = context.file_path.replace("{{language}}", language_code) if language_code else context.file_path
-        if add_root:
-            name = os.path.join(root_dir, name)
-        zip_file.writestr(name, data)
-    file_structures = context.datastructure_set.filter(type__in=(DataStructure.DATA_TYPES.image,
-                                                                 DataStructure.DATA_TYPES.file))
-    values = {ds.id: val for ds, val in
-              DataStructure.find_actual_values(file_structures, asset, language, version_id, draft=preview).items()}
-    for file_structure in file_structures:
-        name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
-        if add_root:
-            name = os.path.join(root_dir, name)
+        self.context_processor = ContextProcessor(
+            asset=self.asset, global_contexts=self.global_contexts,
+            preview=self.preview, skin=self.skin, version_id=self.version_id, custom=self.custom,
+            custom_data=self.custom_data
+        )
 
-        # Skip static files that exists in the zip package
-        if name in zip_file.namelist():
-            continue
+    def _zip_context(self, zip_file, context, language):
+        default_language = self.asset.default_language
+        root_dir = self.asset.asset_root
+        if context.template_for_language(language, default_language, self.skin):  # if we have template - save context to file
+            data = self.context_processor.process_context(context, language)
+            name = context.file_path.replace("{{language}}", language.code) if language else context.file_path
+            if self.add_root:
+                name = os.path.join(root_dir, name)
+            zip_file.writestr(name, data)
+        file_structures = context.datastructure_set.filter(type__in=(DataStructure.DATA_TYPES.image,
+                                                                     DataStructure.DATA_TYPES.file))
+        values = {ds.id: val for ds, val in
+                  DataStructure.find_actual_values(file_structures, self.asset, language, self.version_id, draft=self.preview).items()}
+        for file_structure in file_structures:
+            name = file_structure.name.replace("{{language}}", language.code) if language else file_structure.name
+            if self.add_root:
+                name = os.path.join(root_dir, name)
 
-        data = values[file_structure.id]
-        # Check if there is a data_record otherwise its a placeholder value.
-        if data:
-            try:
-                data = base64.b64decode(data)
-                zip_file.writestr(name, data)
-            except binascii.Error as e:
-                logger.error(f'{file_structure.name} had the following Exception {str(e)}')
-                return True
+            # Skip static files that exists in the zip package
+            if name in zip_file.namelist():
+                continue
 
+            data = values[file_structure.id]
+            # Check if there is a data_record otherwise its a placeholder value.
+            if data:
+                try:
+                    data = base64.b64decode(data)
+                    zip_file.writestr(name, data)
+                except binascii.Error as e:
+                    logger.error(f'{file_structure.name} had the following Exception {str(e)}')
+                    return True
 
-def get_zip_package(asset, preview=True, version_id=None, add_root=True, update_progress_cb=None):
-    zip_data = BytesIO()
-    zip_file = zipfile.ZipFile(zip_data, "a", zipfile.ZIP_DEFLATED, False)
+    def get_zip_package(self):
+        zip_data = BytesIO()
+        zip_file = zipfile.ZipFile(zip_data, "a", zipfile.ZIP_DEFLATED, False)
 
-    global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
-    languages = asset.languages_list
-    contexts = list(asset.asset_type.context_set.all())
+        languages = self.asset.languages
+        contexts = list(self.asset.asset_type.context_set.all())
 
-    for index, context in enumerate(contexts):
-        if update_progress_cb:
-            update_progress_cb(index, len(contexts))
-            
-        errors = False
-        if context.translatable:
-            for language_code in languages:
-                errors = zip_context(zip_file, asset, context, language_code,
-                                     preview, version_id, global_contexts, add_root)
-        else:
-            errors = zip_context(zip_file, asset, context, None,
-                                 preview, version_id, global_contexts, add_root)
-        if errors:
-            zip_file.close()
-            raise APIInternalException(f'Error generating package. Some files are missing. Stopped at {context.name}',
-                                       error_code=ErrorCodes.db_error)
+        for index, context in enumerate(contexts):
+            if self.update_progress_cb:
+                self.update_progress_cb(index, len(contexts))
 
-    # Mark the files as having been created on Windows so that
-    # Unix permissions are not inferred as 0000
-    for file in zip_file.filelist:
-        file.create_system = 0
+            errors = False
+            if context.translatable:
+                for language in languages:
+                    errors = self._zip_context(zip_file, context, language)
+            else:
+                errors = self._zip_context(zip_file, context, None)
+            if errors:
+                zip_file.close()
+                raise APIInternalException(
+                    f'Error generating package. Some files are missing. Stopped at {context.name}',
+                    error_code=ErrorCodes.db_error)
 
-    zip_file.close()
-    zip_data.seek(0)
-    return zip_data.read()
+        # Mark the files as having been created on Windows so that
+        # Unix permissions are not inferred as 0000
+        for file in zip_file.filelist:
+            file.create_system = 0
+
+        zip_file.close()
+        zip_data.seek(0)
+        return zip_data.read()
 
 
 def save_b64_to_file(value, filename, storage_location):
     file_name = os.path.join(storage_location, filename)
     make_dir(file_name)
 
-    image_png = base64.b64decode(value) if value else ''
+    image_png = base64.b64decode(value) if value else bytes()
 
     with open(file_name, 'wb') as f:
         f.write(image_png)
+
+
+def host_to_vms_asset(host: str) -> Union[Asset, None]:
+    if host:
+        customization: Customization = Customization.objects.filter(host=host).first()
+        if customization:
+            return get_vms_asset(customization=customization.name)
+
+
+def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, List]:
+    field_overrides = custom_client.base_vms.asset_type.custom_field_overrides
+    fields = field_overrides.get('fields', {})
+    cloud_host_fields = field_overrides.get('cloudHostFields', [])
+    client_values = custom_client.values or {}
+    custom_data = {}
+    errors = []
+
+    for name, field in fields.items():
+        source = field.get('source', '')
+        meta_only = field.get('metaOnly', False)
+        if meta_only and custom_client.created_customization.name != settings.META_CUSTOMIZATION:
+            continue
+
+        if source in ['custom', 'field']:
+            if source == 'field':
+                source_field = field.get('sourceField')
+                if source_field is None:
+                    errors.append({'message': f'Field {name} with source="field" missing key "sourceField"'})
+                    continue
+            else:
+                source_field = name
+
+            value = client_values.get(source_field, None)
+            if value not in [None, '']:
+                custom_data[name] = value
+            elif not field.get('optional', False):
+                errors.append({'message': f'Missing required custom field {source_field}'})
+
+        elif source == 'constant':
+            custom_data[name] = field.get('value')
+
+        elif source == 'auto':
+            custom_data[name] = client_values.get(name, None)
+
+    if custom_client.created_customization.name == settings.META_CUSTOMIZATION:
+        portal_url = client_values.get('portalUrl', '')
+        if portal_url:
+            cloud_host_vms_asset = host_to_vms_asset(portal_url)
+            if not cloud_host_vms_asset:
+                errors.append({'message': f'Invalid portalUrl'})
+            else:
+                for host_field in cloud_host_fields:
+                    if host_field not in custom_data:
+                        ds: Union[DataStructure, None] = DataStructure.objects.filter(
+                            context__asset_type=custom_client.base_vms.asset_type, name=host_field).first()
+                        if ds:
+                            custom_data[host_field] = ds.find_actual_value(
+                                cloud_host_vms_asset)
+
+    return custom_data, errors
+
+

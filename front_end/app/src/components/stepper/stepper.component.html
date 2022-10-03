@@ -1,0 +1,23 @@
+<section class="stepper-wrapper">
+    <header>
+        <ng-container *ngIf="selected.stepLabel" [ngTemplateOutlet]="selected.stepLabel.template"></ng-container>
+    </header>
+
+    <!-- Content from the CdkStep is projected here -->
+    <div [ngTemplateOutlet]="selected.content"></div>
+
+    <footer>
+        <ng-template #spacer><span></span></ng-template>
+        <button *ngIf="selected !== steps.first; else spacer" cdkStepperPrevious class="btn btn-default mr-2">
+            <span class="mr-1">&larr;</span>
+            <span
+                *ngIf="columns > 2 && customButtonLabels && customButtonLabels[selectedIndex - 1] as prevLabel">{{prevLabel}}</span>
+        </button>
+        <button *ngIf="selected !== steps.last; else saveButton" cdkStepperNext class="btn btn-default"
+            [disabled]="controlledSteps && !selected.completed">
+            <span
+                *ngIf="columns > 2 &&customButtonLabels && customButtonLabels[selectedIndex + 1] as nextLabel">{{nextLabel}}</span>
+            <span class="ml-1">&rarr;</span>
+        </button>
+    </footer>
+</section>

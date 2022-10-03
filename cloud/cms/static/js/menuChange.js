@@ -59,6 +59,62 @@ function updateEnabled(id, element, customizations) {
 let all_customizations;
 let customization;
 
+
+const duplicateClass = 'duplicate-url'
+const removeDuplicateClass = (el) => {
+    el.target.parentNode.classList.remove(duplicateClass)
+}
+
+const clearMarked = () => {
+    document.querySelectorAll(`.${duplicateClass}`).forEach(el => el.classList.remove(duplicateClass))
+}
+
+const recursiveExpand = (node) => {
+    if (node === document) return
+    const expanded = 'node-expanded'
+    const item = 'djn-item'
+    if (node.classList.contains(item) && !node.classList.contains(expanded)) {
+        node.classList.add(expanded)
+    }
+    recursiveExpand(node.parentNode)
+}
+
+const markDuplicates = (ids, expandDuplicates) => {
+    ids.forEach(id => {
+        const input = document.querySelector(`#${id}`)
+        const parent = input.parentNode
+        if (!parent.classList.contains(duplicateClass)) {
+            parent.classList.add(duplicateClass)
+            input.addEventListener('change', checkDuplicateUrls)
+        }
+        if (expandDuplicates) {
+            recursiveExpand(parent.parentNode.parentNode.parentNode.parentNode)
+        }
+    })
+}
+
+const checkDuplicateUrls = (e) => {
+    clearMarked()
+    const urlCounts = [...document.querySelectorAll('.field-url.custom-input-wrapper')].reduce((counter, cur) => {
+        const input = cur.querySelector('input.vTextField')
+        if (input.value) {
+            counter[input.value] = [...(counter[input.value] || []), input.id]
+        }
+
+        return counter
+    }, {})
+    const duplicates = Object.entries(urlCounts).reduce((flattened, [_, ids]) => ids.length > 1 ? [...flattened, ...ids] : flattened, [])
+    if (duplicates.length) {
+        const submitted = e instanceof MouseEvent
+        if (submitted) {
+            e.preventDefault();
+            alert('Please fix duplicated node urls before saving')
+        }
+        markDuplicates(duplicates, submitted)
+    }
+}
+
+
 function initNestedScripts() {
     const errorContainer = document.getElementById('menuPreviewErrors');
     const addError = ({ data }) => {
@@ -238,6 +294,7 @@ function initNestedScripts() {
         }
         const topLabel = label.classList.contains('top-label')
         wrapper.classList.add('custom-input-wrapper')
+        wrapper.querySelector('input').addEventListener('change', checkDuplicateUrls)
         label.classList.add('custom-text-label')
         if (node.value || focus) {
             if (!topLabel) {
@@ -285,8 +342,9 @@ function initNestedScripts() {
     }
     widgets.forEach(applyTopLabelStyles)
     selects.forEach(applyTopLabelStyles)
-
 }
+
+document.querySelectorAll('button[type="submit"]').forEach(button => button.addEventListener('click', checkDuplicateUrls))
 
 $(document).ready(function() {
     customization = new URLSearchParams(window.location.search).get('customization');
@@ -299,7 +357,12 @@ $(document).ready(function() {
 
         window.location.href = window.location.pathname + '?' + queryParams.toString();
     });
-
+    const syncStateNode = document.querySelector('#sync_states')
+    if (syncStateNode) {
+        const newParent = document.querySelector('.module.aligned ')
+        const removedSyncStateNode = syncStateNode.parentNode.removeChild(syncStateNode)
+        newParent.appendChild(removedSyncStateNode)
+    }
     const selectElements = $('.field-asset select');
     selectElements.each(function (index) {
         const val = $(this).children("option:selected").val();

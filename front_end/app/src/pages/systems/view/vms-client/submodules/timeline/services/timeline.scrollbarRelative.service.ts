@@ -1,9 +1,10 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import TimelineService from './timeline.service';
-import { float, ms, px, sign } from '../../../utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
+import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
+
+import TimelineService from './timeline.service';
 
 export interface TimelineScrollbarRelativeServiceStatus {
     magnification: float,
@@ -11,6 +12,8 @@ export interface TimelineScrollbarRelativeServiceStatus {
     canScrollLeft: boolean,
     canScrollRight: boolean,
 }
+
+const SCROLL_TRESHOLD_MS = 10;
 
 @Injectable({
     providedIn: 'root'
@@ -21,12 +24,14 @@ export class TimelineScrollbarRelativeService {
 
     protected _log (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
     protected _warn (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
         }
     }
@@ -39,19 +44,19 @@ export class TimelineScrollbarRelativeService {
 
     protected _subject = new BehaviorSubject<TimelineScrollbarRelativeServiceStatus>(
         {
-            magnification  : 1.0,
-            offset         : 0.0,
-            canScrollLeft  : false,
-            canScrollRight : false
+            magnification: 1.0,
+            offset: 0.0,
+            canScrollLeft: false,
+            canScrollRight: false
         }
     )
 
     protected _emit () {
         this._subject.next({
-            magnification  : this.magnification,
-            offset         : this.offset,
-            canScrollLeft  : this.canScrollLeft,
-            canScrollRight : this.canScrollRight
+            magnification: this.magnification,
+            offset: this.offset,
+            canScrollLeft: this.canScrollLeft,
+            canScrollRight: this.canScrollRight
         });
     }
 
@@ -63,9 +68,9 @@ export class TimelineScrollbarRelativeService {
         return Math.max(
             0,
             Math.min(
-                (this.timeline.targetScrollMs - this.timeline.fullRange.start)
-                    / this.timeline.fullRange.duration,
-                1.0 - 1 / this.magnification,
+                (this.timeline.targetScrollMs - this.timeline.fullRange.start) /
+                    this.timeline.fullRange.duration,
+                1.0 - 1 / this.magnification
             )
         );
     }
@@ -76,10 +81,12 @@ export class TimelineScrollbarRelativeService {
 
     public get canScrollLeft (): boolean {
         return this.timeline.visibleRange.start > this.timeline.fullRange.start;
+        // return this.timeline.visibleRange.start - this.timeline.fullRange.start > SCROLL_TRESHOLD_MS;
     }
 
     public get canScrollRight (): boolean {
-        return this.timeline.visibleRange.end < this.timeline.fullRange.end;
+        return this.timeline.fullRange.end > this.timeline.visibleRange.end;
+        // return this.timeline.fullRange.end - this.timeline.visibleRange.end > SCROLL_TRESHOLD_MS;
     }
 
     public handleBarDblClick (e: MouseEvent|TouchEvent) {
@@ -96,7 +103,10 @@ export class TimelineScrollbarRelativeService {
         this.isBackgroundMouseDown = true;
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
-        this._scrollDirection = NxUtilsService.calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) ? -1 : +1;
+        this._scrollDirection =
+            NxUtilsService.calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
+                ? -1
+                : +1;
     }
 
     public handleBackgroundMouseUp (e: MouseEvent|TouchEvent) {
@@ -148,7 +158,10 @@ export class TimelineScrollbarRelativeService {
     }
 
     public handleButtonRightDblClick () {
-        this.timeline.jumpScrollTo(this.timeline.fullRange.end - this.timeline.visibleRange.duration, true);
+        this.timeline.jumpScrollTo(
+            this.timeline.fullRange.end - this.timeline.visibleRange.duration,
+            true
+        );
         this._emit();
     }
 

@@ -1,10 +1,12 @@
 import { Injectable, isDevMode } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { BehaviorSubject } from 'rxjs';
+
+import { ServerTimeInfo } from '@services/system.service';
+import { GUID, ms } from '@vms-client/utils/type-aliases';
+
+import ICamera, { CameraArchive } from '../datatypes/ICamera';
 import IMediaServer from '../datatypes/IMediaServer';
-import Camera from '../datatypes/Camera';
-// import testMediaServers from '../testMediaServers'
-import { GUID, ms } from '../../../utils/type-aliases';
 import {
     VmsState,
     VMS_MODE,
@@ -12,8 +14,7 @@ import {
     createCameraNotSelectedState,
     createCameraSelectedState
 } from '../datatypes/VmsState';
-import ICamera, { CameraArchive } from '../datatypes/ICamera';
-import { ServerTimeInfo } from '@services/system.service';
+// import testMediaServers from '../testMediaServers'
 
 // these two types allow separation of
 // timezone-agnostic and timezone-aware timestamps
@@ -93,7 +94,7 @@ export class VideoManagementSystemService {
     protected _serverTimes: Array<ServerTimeInfo>
 
     public set serverTimes (st: Array<ServerTimeInfo>) {
-        this._log('serverTimes set', st.map(i => i.timeZoneOffset), st)
+        this._log('serverTimes set', st.map(i => i.timeZoneOffset), st);
         this._serverTimes = [...st];
     }
 
@@ -137,34 +138,42 @@ export class VideoManagementSystemService {
     */
 
     public get timeZoneOffset (): ms {
-        let result = 0
+        let result = 0;
         if (!this.serverTimes?.length) {
-            this._warn('TZO no server times data')
+            this._warn('TZO no server times data');
         } else if (this.state.mode !== VMS_MODE.CAMERA_SELECTED) {
-            this._warn('TZO no camera selected')
+            this._warn('TZO no camera selected');
         } else {
             const preferredServerTime =
-                this.serverTimes.find(st => st.serverId === this.selectedCamera.preferredServerId) ||
-                this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
-                this.serverTimes[0];
+                this.serverTimes.find(st =>
+                    st.serverId === this.selectedCamera.preferredServerId
+                ) || this.serverTimes.find(
+                    st => st.serverId === this.selectedCamera.parentServerId
+                ) || this.serverTimes[0];
             const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
-            const serverTZO = preferredServerTime?.timeZoneOffset
+            const serverTZO = preferredServerTime?.timeZoneOffset;
             if (serverTZO === undefined) {
                 return 0;
             }
             // this._log('TZO', preferredServerTime, serverTZO, clientTZO, serverTZO - clientTZO)
             result = serverTZO - clientTZO;
         }
-        return result
-    }
-    public tweakT (t: fairMs): tweakedMs {
-        return t + this.timeZoneOffset
-    }
-    public untweakT (t: tweakedMs): fairMs {
-        return t - this.timeZoneOffset
+        return result;
     }
 
-    public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {
+    public tweakT (t: fairMs): tweakedMs {
+        return t + this.timeZoneOffset;
+    }
+
+    public untweakT (t: tweakedMs): fairMs {
+        return t - this.timeZoneOffset;
+    }
+
+    public setMediaServers (
+        systemId: string,
+        mediaServers: Array<IMediaServer>,
+        updateCamerasOnly = false
+    ) {
         this._log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this._systemId = systemId;
         // @ts-ignore
@@ -186,7 +195,11 @@ export class VideoManagementSystemService {
         if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
             this.selectedCamera.pushRecordedChunks(records);
         } else {
-            this._warn('attempt to set camera newly recorded records while in NOT_INITIALIZED state', cameraId, records);
+            this._warn(
+                'attempt to set camera newly recorded records while in NOT_INITIALIZED state',
+                cameraId,
+                records
+            );
         }
     }
 
@@ -208,7 +221,7 @@ export class VideoManagementSystemService {
         if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
             this.selectedCamera = this._state.selectedCamera;
         }
-        this._log('camera selected', this.selectedCamera)
+        this._log('camera selected', this.selectedCamera);
         const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
         this.cookieService.set(cookieName, cameraId, 365, '/');
         this._emit();
@@ -233,7 +246,8 @@ export class VideoManagementSystemService {
                 const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
                 const cookieCameraId = this.cookieService.get(cookieName);
                 if (cookieCameraId) {
-                    const thisCameraExists = !!this.state.mediaServers.find(ms => ms.cameras.find(c => c.id === cookieCameraId));
+                    const thisCameraExists = !!this.state.mediaServers
+                        .find(ms => ms.cameras.find(c => c.id === cookieCameraId));
                     if (thisCameraExists) {
                         return cookieCameraId;
                     }
@@ -241,14 +255,18 @@ export class VideoManagementSystemService {
 
                 // fallback one: first online camera
                 const cameraChecker = (c: ICamera) => c.isOnline;
-                const firstMediaServerWithAnOnlineCamera = this.state.mediaServers.find(ms => ms.cameras.find(cameraChecker));
+                const firstMediaServerWithAnOnlineCamera =
+                    this.state.mediaServers.find(ms => ms.cameras.find(cameraChecker));
                 if (firstMediaServerWithAnOnlineCamera) {
-                    const firstOnlineCamera = firstMediaServerWithAnOnlineCamera.cameras.find(cameraChecker);
+                    const firstOnlineCamera =
+                        firstMediaServerWithAnOnlineCamera.cameras.find(cameraChecker);
                     return firstOnlineCamera.id;
                 }
 
                 // fallback two: simply use the first camera available
-                const firstMediaServer = this.state.mediaServers.find(ms => ms.cameras?.length);
+                const firstMediaServer = this.state.mediaServers.find(ms =>
+                    ms.cameras?.length
+                );
                 if (firstMediaServer) {
                     return firstMediaServer.cameras[0].id;
                 }

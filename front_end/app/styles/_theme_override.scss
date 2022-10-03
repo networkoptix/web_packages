@@ -163,17 +163,17 @@ hr {
     background-color : theme_variables.$body-bg;
 }
 
-@mixin kill-glyphicon {
-    background-size  : 112px 80px;
-    background-image : url('/static/images/sprite_common.png') !important;
-    &:before {
-        content : none;
-    }
-
-    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/sprite_common@2x.png');
-    }
-}
+//@mixin kill-glyphicon {
+//    background-size  : 112px 80px;
+//    background-image : url('/static/images/sprite_common.png') !important;
+//    &:before {
+//        content : none;
+//    }
+//
+//    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+//        background-image : url('/static/images/sprite_common@2x.png');
+//    }
+//}
 
 select {
     position            : relative;
@@ -194,19 +194,19 @@ select {
 }
 
 .info-icon.active {
-    color : theme_variables.$brand_core !important;
+    color : var(--brand-core, theme_variables.$brand_core) !important;
 }
 
 .video-settings-button:hover,
 .webclient-panel .dropdown-menu > li > a:hover {
-    background-color : theme_variables.$brand_l2 !important;
+    background-color : var( --brand-l2, theme_variables.$brand_l2) !important;
 }
 
 .webclient-panel .dropdown-menu {
     box-shadow : none;
 
     & > li > a.active {
-        background-color : theme_variables.$brand_l1 !important;
+        background-color : var(--brand-l1) !important;
     }
 }
 

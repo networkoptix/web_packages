@@ -1,0 +1,54 @@
+<ng-container *ngIf="url && externalLink">
+    <a [href]="url" target="_blank">
+        <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+    </a>
+</ng-container>
+
+<ng-container *ngIf="url && !externalLink">
+    <a [routerLink]="url">
+        <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+    </a>
+</ng-container>
+
+<ng-container *ngIf="!url">
+    <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+</ng-container>
+
+
+<ng-template #contentBlock >
+<div class="card"  
+    [ngClass]="{
+        'content-block-wide': type==='wide', 
+        'content-block-small': type==='small', 
+        'content-block-adaptive': type==='adaptive' 
+    }">
+    <div class="header">
+        <svg-icon nx-add-svg-src 
+            [ngClass]="{
+                'svg-large': type === 'wide' || 'adaptive',
+                'svg-small': type === 'small'
+            }"
+            [src]="CONFIG.icons.dirLandingIcons + svg + '.svg'"
+            [svgStyle]="{'width.px': svgSizes.mainSvg.width, 'height.px': svgSizes.mainSvg.height}"
+            [applyClass]="true">
+        </svg-icon>
+        <div class="title">
+            <div *ngIf="type === 'small'" class="header-border-small"></div>
+            <span class="title-text">{{ title }}</span>
+            <svg-icon 
+                *ngIf="url"
+                 nx-add-svg-src 
+                 class="arrow-svg"
+                [src]="CONFIG.images.dirLanding + (type === 'small'?'arrow_small.svg':'arrow_large.svg')"
+                [svgStyle]="type === 'small'?{'width.px': svgSizes.arrowSmall.width, 'height.px': svgSizes.arrowSmall.height}:
+                                             {'width.px': svgSizes.arrowLarge.width, 'height.px': svgSizes.arrowLarge.height}"
+                [applyClass]="true">
+            </svg-icon>
+        </div>
+    </div>
+    <div class="body">
+        <div *ngIf="type == 'adaptive'" class="body-border-adaptive"></div>
+        <p>{{ content }}</p>
+    </div>
+</div>
+</ng-template>

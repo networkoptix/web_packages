@@ -1,5 +1,5 @@
 import IAnimated from './IAnimated';
-import { easeInOutSine, EASING } from './easing-functions'
+import { easeInOutSine, EASING } from './easing-functions';
 
 type float = number
 type durationMs = number
@@ -63,7 +63,8 @@ export class AnimatedFloat implements IAnimated<float> {
             if (dt < this._animationDuration) {
                 result = this._getCurrentValue(dt);
             } else {
-                result = this._value = this._target;
+                this._value = this._target;
+                result = this._target;
             }
         }
         return result;
@@ -71,12 +72,14 @@ export class AnimatedFloat implements IAnimated<float> {
 
     public reset (v: float) {
         // if (v > 4 || v < 0) console.log('RESET', v)
-        this._target = this._value = v;
+        this._value = v;
+        this._target = v;
         this._lastChange = Date.now();
     }
 
     public abort () {
-        this._target = this._value = this._getCurrentValue();
+        this._value = this._getCurrentValue();
+        this._target = this._getCurrentValue();
         this._lastChange = Date.now();
     }
 
@@ -95,7 +98,6 @@ export class AnimatedFloat implements IAnimated<float> {
             case 'ease-in-out':
             case 'ease-in-out-sine':
                 return this._value + (this._target - this._value) * easeInOutSine(dt / this._animationDuration);
-                break
             case 'linear':
             default:
                 const result = this._value + (this._target - this._value) * dt / this._animationDuration;

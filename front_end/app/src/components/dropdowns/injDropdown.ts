@@ -1,13 +1,16 @@
 import {
-    Injectable, OnChanges,
-    SimpleChanges, OnDestroy, OnInit
-}                                    from '@angular/core';
-import { ControlValueAccessor }      from '@angular/forms';
+    Injectable,
+    OnChanges,
+    SimpleChanges,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { Watcher }                   from '../../services/apply.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { Watcher } from '@services/apply.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 const noop = () => {};
 
@@ -59,7 +62,11 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
             _value = value.value;
         }
 
-        if (_value !== null && _value !== undefined && !(value instanceof Watcher)) {
+        if (
+            _value !== null &&
+            _value !== undefined &&
+            !(value instanceof Watcher)
+        ) {
             this._selectedItem = _value;
         }
     }

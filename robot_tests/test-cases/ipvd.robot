@@ -1,10 +1,8 @@
 *** Settings ***
-Library           OperatingSystem
-Library           DateTime
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/ipvd-resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
-Test Setup        Restart
-Suite Teardown    Close All Browsers
+Test Setup        ipvd-resource.Restart
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded 
 
 *** Test Cases ***
@@ -23,10 +21,10 @@ Force Tags        Threaded
     ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
     Should Be Equal as Strings    ${search_placeholder}    ${SEARCH PLACEHOLDER TEXT}    ignore_case=true
     Element should contain    ${IPVD ADV SEARCH BUTTON}    ${IPVD ADV SEARCH BUTTON TEXT}    ignore_case=true
-    Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    ${IPVD ADV FILTER MFRS}    ignore_case=true
+    Element should contain    ${IPVD MANUFACTURERS PANE}//header//span    ${IPVD ADV FILTER MFRS}    ignore_case=true
     ${num vendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
     Should Not Be Equal As Numbers  ${num vendors}   0
-    Element should contain      ${IPVD DEVICES PANE}//header/span[2]    ${IPVD DEVICES TEXT}    ignore_case=true
+    Element should contain      ${IPVD DEVICES PANE}//header//span    ${IPVD DEVICES TEXT}    ignore_case=true
     ${num device types}=   Get Element Count    ${IPVD DEVICES PANE}//nx-tag/a
     Should Be Equal As Numbers  ${num device types}   10
     Element should contain    ${IPVD LANDING PAGE TEXT}    ${IPVD SUBMIT A REQUEST TEXT}    ignore_case=true
@@ -60,7 +58,7 @@ Force Tags        Threaded
     Validate on IPVD page
 
     Log    Step 6 - Verify IPVD feedback link opens correct dialog
-    Click Link    ${IPVD SUBMIT A REQUEST LINK}
+    Click Element    ${IPVD SUBMIT A REQUEST LINK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
 
 4. Text search correctly finds Manufacturers
@@ -93,7 +91,7 @@ Force Tags        Threaded
 
     Log    Step 4
     Click Element    ${IPVD SUBMIT A REQUEST}
-    Wait until Element is Visible    ${IPVD FEEDBACK}
+    Wait until Elements Are Visible    ${IPVD FEEDBACK}    ${IPVD FEEDBACK CLOSE BUTTON}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD FEEDBACK}
 

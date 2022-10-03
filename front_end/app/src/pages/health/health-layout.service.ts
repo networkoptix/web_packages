@@ -1,11 +1,12 @@
-import { ElementRef, Injectable }   from '@angular/core';
-import { BehaviorSubject }          from 'rxjs';
-import { debounceTime }             from 'rxjs/operators';
+import { ElementRef, Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
-import { NxHealthService }          from './health.service';
-import { NxRibbonService }          from '../../components/ribbon';
-import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxRibbonService } from '@components/ribbon';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+
+import { NxHealthService } from './health.service';
 
 @Injectable({
     providedIn: 'root'
@@ -152,10 +153,12 @@ export class NxHealthLayoutService {
         this.tilesElementSubject.next(element);
     }
 
-    constructor(configService: NxConfigService,
-                private ribbonService: NxRibbonService,
-                private healthService: NxHealthService,
-                private scrollMechanicsService: NxScrollMechanicsService) {
+    constructor(
+        configService: NxConfigService,
+        private ribbonService: NxRibbonService,
+        private healthService: NxHealthService,
+        private scrollMechanicsService: NxScrollMechanicsService
+    ) {
         this.CONFIG = configService.getConfig();
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
 
@@ -177,10 +180,15 @@ export class NxHealthLayoutService {
     }
 
     setAlertLayout() {
-        const searchElementHeight = this.searchElement ? this.searchElement.nativeElement.offsetHeight : 0;
-        const elementTilesHeight = this.tilesElement ? this.tilesElement.nativeElement.offsetHeight : 0;
+        const searchElementHeight = this.searchElement
+            ? this.searchElement.nativeElement.offsetHeight
+            : 0;
+        const elementTilesHeight = this.tilesElement
+            ? this.tilesElement.nativeElement.offsetHeight
+            : 0;
         if (!this.mobileDetailMode) {
-            this.dimensions = [elementTilesHeight, searchElementHeight, 17/* separator = 1px + padding */];
+            this.dimensions = [elementTilesHeight, searchElementHeight, 17];
+            /* separator = 1px + padding */
         }
         const cannotSetSearch = this.previousActiveEntity === undefined;
         this.setLayout(cannotSetSearch);
@@ -220,8 +228,15 @@ export class NxHealthLayoutService {
         // ... have a feeling that making the table off screen causes table header and table title
         // to report 0 height initially and screw pageSize calc.
         //
-        if (!table || table.offsetLeft === 0 && tableHeader?.innerText.length && !tableHeader.offsetHeight) {
-            if (this.metricsValuesCount > 1) { // short circuit single entity - this was going until metric w/ page is loaded -- TT
+        if (
+            !table || (
+                table.offsetLeft === 0 &&
+                tableHeader?.innerText.length &&
+                !tableHeader.offsetHeight
+            )
+        ) {
+            // short circuit single entity - this was going until metric w/ page is loaded -- TT
+            if (this.metricsValuesCount > 1) {
                 this.healthService.tableReady = false;
                 setTimeout(() => this.setTableDimensions());
             }

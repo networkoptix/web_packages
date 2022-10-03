@@ -1,13 +1,14 @@
-import { NgModule }        from '@angular/core';
-import { CommonModule }    from '@angular/common';
-import { RouterModule }    from '@angular/router';
-import { NgbModule }       from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }            from '../../../components/components.module';
-import { DirectivesModule } from '../../../directives/directives.module';
-import { NxIntegrationsListComponent } from './list.component';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxIntegrationsListComponent } from './list.component';
 
 @NgModule({
     imports: [
@@ -19,11 +20,11 @@ import { PipesModule } from '@src/pipes/pipes.module';
         TranslateModule,
         ComponentsModule
     ],
-    providers : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxIntegrationsListComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         NxIntegrationsListComponent
     ]

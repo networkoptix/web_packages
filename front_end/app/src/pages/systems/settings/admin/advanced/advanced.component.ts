@@ -1,28 +1,29 @@
 import {
     Component,
-    OnDestroy, Input, ViewChild
+    OnDestroy,
+    Input,
+    ViewChild
 } from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import {
-    map, delay, retryWhen, take
-}                                    from 'rxjs/operators';
-import { Subscription }              from 'rxjs';
-import { NgForm }                    from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject, Subscription } from 'rxjs';
+import { map, delay, retryWhen, take, takeUntil } from 'rxjs/operators';
 
-import { NxDialogsService }             from '../../../../../dialogs/dialogs.service';
-import { NxSettingsService }            from '../../settings.service';
-import { NxConfigService, IConfig }     from '../../../../../services/nx-config';
-import { NxLanguageProviderService }    from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process }    from '../../../../../services/process.service';
-import { NxSystem }                     from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
-import { FormWatcher, NxApplyService }  from '../../../../../services/apply.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+
+import { NxSettingsService } from '../../settings.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-system-advanced-admin-component',
-    templateUrl : 'advanced.component.html',
-    styleUrls   : ['advanced.component.scss']
+    selector: 'nx-system-advanced-admin-component',
+    templateUrl: 'advanced.component.html',
+    styleUrls: ['advanced.component.scss']
 })
 
 export class NxSystemAdvancedAdminComponent implements OnDestroy {
@@ -30,17 +31,17 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: NxSystem;
-    @ViewChild('systemSettingsForm', { static: true }) systemSettingsForm: NgForm
+    @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
 
     haveAdvSettings: boolean;
     private serverSubscription: Subscription;
-    private settingsSubscription: Subscription;
 
     systemSettings: any = {};
     changedFields = {};
 
-    formWatcher: FormWatcher;
-    saveSettings: Process;
+    advancedFormWatcher: FormWatcher;
+    saveAdvancedSettings: Process;
+    reset$ = new Subject();
 
     constructor(
         configService: NxConfigService,
@@ -57,7 +58,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnInit() {
-        this.settingsService.footerSubject.next(true);
+        this.settingsService.footer = true;
 
         this.serverSubscription = this.system.infoSubject
             .pipe(
@@ -70,20 +71,27 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             )
             .pipe(take(1))
             .subscribe(() => {
-                this.settingsService.footerSubject.next(true);
+                this.settingsService.footer = true;
                 if (this.system.currentServerNotBusy) {
-                    if (this.system && this.system.servers && this.system.servers.length) {
+                    if (
+                        this.system &&
+                        this.system.servers &&
+                        this.system.servers.length
+                    ) {
                         this.getAdvancedSettings();
                     }
                 }
             });
 
-        this.saveSettings = this.processService.createProcess(() => {
+        this.saveAdvancedSettings = this.processService.createProcess(() => {
             return this.system
                 .updateOrGetSystemSettings(this.changedFields)
                 .toPromise()
                 .then((response: any) => {
-                    if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                    if (
+                        typeof (response.error) !== 'undefined' &&
+                        response.error !== '0'
+                    ) {
                         const errorToShow = response.errorString;
                         this.dialogsService
                             .alert(errorToShow, this.LANG.dialogs.titles.error?.())
@@ -93,61 +101,74 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                     } else {
                         this.settingsToBeDisplayedOrUpdated(this.changedFields);
                         this.dialogsService
-                            .alert(this.LANG.dialogs.message.settingsSaved?.(), this.LANG.dialogs.titles.success?.())
-                            .then(() => {
-                                this.formWatcher.hardReset();
-                            })
-                            .catch(error => {
+                            .alert(
+                                this.LANG.dialogs.message.settingsSaved?.(),
+                                this.LANG.dialogs.titles.success?.()
+                            ).catch(error => {
                                 console.error(error);
                             });
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.settingsNotSaved?.(), this.LANG.dialogs.titles.error?.())
-                        .catch(error => {
+                        .alert(
+                            this.LANG.dialogs.message.settingsNotSaved?.(),
+                            this.LANG.dialogs.titles.error?.()
+                        ).catch(error => {
                             console.error(error);
                         });
                 });
         });
-
-        this.formWatcher = this.applyService.createFormWatcher(
-            'systemSettingsForm',
-            this.systemSettingsForm,
-            this.saveSettings
-        );
-        this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
-        this.applyService.reset();
-
-        this.formWatcher.valueSubject.subscribe((values) => {
-            if (values) {
-                Object.entries(values).forEach(([key, current]) => {
-                    const original = this.systemSettings[key];
-                    const changed = current !== original;
-                    if (changed) {
-                        this.changedFields[key] = current;
-                    } else if (key in this.changedFields) {
-                        delete this.changedFields[key];
-                    }
-                });
-            }
-        });
     }
 
     canSee(key) {
-        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key]?.type);
+        return ['number', 'text', 'password'].includes(
+            this.CONFIG.settingsConfig[key]?.type
+        );
     }
 
     getAdvancedSettings() {
         this.system.updateOrGetSystemSettings()
             .toPromise()
             .then((response: any) => {
+                if (this.advancedFormWatcher) {
+                    this.applyService.removeFormWatcher('advancedSystemSettingsForm');
+                    this.reset$.next(true);
+                }
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
+
+                setTimeout(() => {
+                    this.advancedFormWatcher = this.applyService.createFormWatcher(
+                        'advancedSystemSettingsForm',
+                        this.advancedSystemSettingsForm,
+                        this.saveAdvancedSettings
+                    );
+
+                    this.advancedFormWatcher.valueSubject
+                        .pipe(
+                            takeUntil(this.reset$),
+                            untilDestroyed(this))
+                        .subscribe((values) => {
+                            if (values) {
+                                Object.entries(values).forEach(([key, current]) => {
+                                    const original = this.systemSettings[key];
+                                    const changed = current !== original;
+                                    if (changed) {
+                                        this.changedFields[key] = current;
+                                    } else if (key in this.changedFields) {
+                                        delete this.changedFields[key];
+                                    }
+                                });
+                            }
+                        });
+                });
             });
     }
 
     getDescription(key) {
-        return this.LANG.settingsConfig[key] ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key]) : key;
+        return this.LANG.settingsConfig[key]
+            ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key])
+            : key;
     }
 
     settingsToBeDisplayedOrUpdated = (settings) => {
@@ -168,10 +189,14 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             }
             switch (type) {
                 case 'number':
-                    systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
+                    systemSettings[key] = (value !== '')
+                        ? parseInt(value as string)
+                        : '';
                     break;
                 case 'checkbox':
-                    systemSettings[key] = (typeof value === 'boolean') ? value : (value === 'true');
+                    systemSettings[key] = (typeof value === 'boolean')
+                        ? value
+                        : (value === 'true');
                     break;
                 default:
                     systemSettings[key] = value;

@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
 import {
     HttpHandler,
     HttpInterceptor,
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/do';
-import { Observable, of }         from 'rxjs';
-import { share }      from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { share } from 'rxjs/operators';
 
 import { NxUriCacheService } from '@services/uri-cache.service';
 
@@ -35,10 +35,10 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
 
         // Also leave scope of resetting already cached data for a URI
         if (httpRequest.headers.get('reset-cache')) {
-            this.cacheRegistrationService.cachedData.delete(httpRequest.urlWithParams);
+            this.cacheRegistrationService.deleteData(httpRequest.urlWithParams);
         }
         // Checked if there is cached data for this URI
-        const lastResponse = this.cacheRegistrationService.cachedData.get(httpRequest.urlWithParams);
+        const lastResponse = this.cacheRegistrationService.getData(httpRequest.urlWithParams);
         if (lastResponse) {
             // In case of parallel requests to same URI,
             // return the request already in progress
@@ -55,7 +55,7 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
             .pipe(share())
             .do((stateEvent) => {
                 if (stateEvent instanceof HttpResponse) {
-                    this.cacheRegistrationService.cachedData.set(
+                    this.cacheRegistrationService.setData(
                         httpRequest.urlWithParams,
                         stateEvent.clone()
                     );
@@ -63,7 +63,7 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
             });
 
         // Meanwhile cache the request Observable to handle parallel request
-        this.cacheRegistrationService.cachedData.set(httpRequest.urlWithParams, requestHandle);
+        this.cacheRegistrationService.setData(httpRequest.urlWithParams, requestHandle);
 
         return requestHandle;
     }

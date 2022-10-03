@@ -1,7 +1,7 @@
-import { Inject, Injectable }       from '@angular/core';
-import { BehaviorSubject }          from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
-import { WINDOW }                   from './window-provider';
+import { WINDOW } from './window-provider';
 
 enum GRID_BREAKPOINTS {
     xs = 0,

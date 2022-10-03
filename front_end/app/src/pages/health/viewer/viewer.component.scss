@@ -37,12 +37,12 @@ nx-health-viewer-component {
       }
     }
 
-    .gridContent {
-      //border: 1px solid green;
+    // .gridContent {
+    //   //border: 1px solid green;
 
-      &Component {
-      }
-    }
+    //   &Component {
+    //   }
+    // }
   }
 
   @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
@@ -125,16 +125,16 @@ nx-health-viewer-component {
       }
 
       svg * {
-        fill: $light16;
+        fill: var(--light16);
       }
 
       &:hover svg * {
-        fill: $dark15;
+        fill: var(--dark15);
       }
 
       &:focus, &:active {
         svg * {
-          fill: $light16;
+          fill: var(--light16);
         }
       }
     }
@@ -153,7 +153,7 @@ nx-health-viewer-component {
     }
 
     &.ngx-file-drop__drop-zone--over {
-      background-color : $light16;
+      background-color : var(--light16);
       display         : flex;
       align-items     : center;
       justify-content : center;
@@ -171,10 +171,10 @@ nx-health-viewer-component {
           height : 32px;
 
           svg path{
-            stroke : $light1;
+            stroke : var(--light1);
 
             &.corner {
-              fill : $light1;
+              fill : var(--light1);
             }
           }
         }

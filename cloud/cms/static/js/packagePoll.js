@@ -32,7 +32,7 @@ function cookieInterval() {
     cookieCheckInterval = setInterval(checkCookie, 100);
 }
 
-function togglePending (showPending) {
+function togglePending(showPending) {
     const pending = document.getElementById('pending')
     const done = document.getElementById('done')
     if (showPending) {
@@ -46,15 +46,16 @@ function togglePending (showPending) {
 
 togglePending(true)
 
-function showError(message = 'Some unknown error occurred') {
+function showError(message = 'Some unknown error occurred', title = "Preparing Package") {
     const contextStatus = document.getElementById('context-status')
     const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+    document.getElementById('progress-modal-title').innerText = title
     contextStatus.innerText = message
     progressWrapper.style = "display: none;"
 
 }
 
-function pollPackage (isDraft, taskId = null) {
+function pollPackage(isDraft, taskId = null) {
     const package = packageUrl + (isDraft ? '?draft=True' : '')
     let download = downloadUrl + (isDraft ? '?draft=True' : '')
     const generateStatusUrl = (taskId) => celeryStatusUrl.replace('task_id', taskId)
@@ -64,16 +65,16 @@ function pollPackage (isDraft, taskId = null) {
     progressWrapper.style = "display: block;"
     progressModalTitle.innerText = "Preparing Package"
     contextStatus.innerText = "Processing contexts..."
-    if(taskId) {
+    if (taskId) {
         download = download.replace('task_id', taskId)
         return fetch(generateStatusUrl(taskId)).then(
             res => res.json()
         ).then(status => {
-            if(status.current && status.current < status.total) {
+            if (status.current && status.current < status.total) {
                 contextStatus.innerText = `Processing context ${status.current} out of ${status.total}`
                 progressBar.style = `width: ${Math.round(status.current / status.total * 100)}%;`
                 setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
-            } else if(status === 'SUCCESS'){
+            } else if (status === 'SUCCESS') {
                 togglePending(false)
                 const downloadButton = document.getElementById('download-button')
                 const successMessage = document.getElementById('success-message')
@@ -88,22 +89,31 @@ function pollPackage (isDraft, taskId = null) {
         })
     }
     fetch(package).then(
-        res => res.json()
-    ).then(({is_ready: isReady, task_id: taskId}) => {
-        if (isReady) {
-            window.open(download.replace('task_id', taskId))
-        } else {
-            if(!modal.classList.contains('show')) {
-                modal.classList.add('show')
-                togglePending(true)
+        res => res.text()
+    ).then((response_content) => {
+
+        try {
+            const { is_ready: isReady, task_id: taskId } = JSON.parse(response_content)
+            if (isReady) {
+                window.open(download.replace('task_id', taskId))
+            } else {
+                if (!modal.classList.contains('show')) {
+                    modal.classList.add('show')
+                    togglePending(true)
+                }
+                setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
             }
-            setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
+        } catch (_) {
+            if (!modal.classList.contains('show')) {
+                modal.classList.add('show')
+            }
+            showError(response_content, "Error generating package")
         }
     })
 }
 
 (function checkTaskStatus(taskId) {
-    if(!taskId) return;
+    if (!taskId) return;
     const messageList = document.getElementsByClassName('messagelist')[0]
     const spinner = '<span class="glyphicon glyphicon-repeat status-loader" id="status-glpyh"></span>'
     let asyncStatusInfo = document.getElementById('async-status-info')
@@ -120,15 +130,15 @@ function pollPackage (isDraft, taskId = null) {
         res => res.json()
     ).then(status => {
         let state = 'Processing assets...'
-        if(status.current && status.current < status.total) {
+        if (status.current && status.current < status.total) {
             state = `Processing asset ${status.current} out of ${status.total}`
             setTimeout(() => checkTaskStatus(taskId), pollingInterval * 3)
-        } else if(status === 'SUCCESS'){
+        } else if (status === 'SUCCESS') {
             const glyphSpan = document.getElementById('status-glpyh')
             glyphSpan.classList.remove('glyphicon-repeat', 'status-loader')
             glyphSpan.classList.add('glyphicon-ok-sign')
             state = 'Done processing assets'
-        } else if(status === 'PENDING') {
+        } else if (status === 'PENDING') {
             state = 'Processing assets...'
             setTimeout(() => checkTaskStatus(taskId), pollingInterval * 5)
         } else {

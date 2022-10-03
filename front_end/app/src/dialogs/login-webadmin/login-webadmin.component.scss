@@ -1,19 +1,70 @@
 @use '../../../styles/theme_variables' as *;
 
-.logo-header {
-    background: $additional_light1;
-    height: 160px;
+svg-icon {
+    stroke: #2B383F
+}
+
+// Needs to be outside of the modal to hide the white background
+#preloader-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+// The form needs to be in the DOM for the login process to work properly,
+// so we can't use display: none or *ngIf to hide the modal content
+.loading {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.error-block {
+    min-height: 40px;
+    padding: 10px 16px;
+
+    background-color : rgba($red_l2, .1);
+    border: 1px solid rgba($red_l2, .3);
+    border-radius: 2px;
+
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    border-bottom: 1px solid $light3;
-    img {
-        height: 80px;
+
+    svg-icon {
+        stroke: none;
     }
-    @media screen and (max-height: $collapse-webadmin-window-width), (max-width: $collapse-webadmin-window-width) {
-        height: 80px;
-        img {
-            height: 40px;
-        }
-    }
+}
+
+.oauth-login {
+    margin: 0 !important;
+    width: calc(100vw - 48px) !important;
+    max-width: 100% !important;
+}
+
+.separator {
+    color: $light16;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 16px;
+    margin: 16px 0 !important;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid $additional_light8;
+}
+
+.separator:not(:empty)::before {
+  margin-right: 1em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: 1em;
 }

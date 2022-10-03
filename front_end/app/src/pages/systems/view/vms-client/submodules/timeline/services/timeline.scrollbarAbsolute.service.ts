@@ -1,14 +1,14 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxUtilsService } from '@services/utils.service';
+import { px } from '@vms-client/utils/type-aliases';
+
 import {
     TimelineScrollbarRelativeService,
     TimelineScrollbarRelativeServiceStatus
 } from './timeline.scrollbarRelative.service';
-
-import { px } from '../../../utils/type-aliases';
 import TimelineService from './timeline.service';
-import { NxUtilsService } from '@services/utils.service';
 
 const MIN_BAR_WIDTH_PX = 50;
 
@@ -30,12 +30,14 @@ export class TimelineScrollbarAbsoluteService {
 
     protected _log (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
     protected _warn (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
         }
     }
@@ -48,27 +50,27 @@ export class TimelineScrollbarAbsoluteService {
     }
 
     protected _subject = new BehaviorSubject<TimelineScrollbarAbsoluteServiceStatus>({
-        magnification  : 1.0,
-        offset         : 0.0,
-        isBarGrabbed   : false,
-        canScrollLeft  : false,
-        canScrollRight : false,
-        isIllusionary  : false,
-        left           : 0,
-        honestLeft     : 0,
-        width          : 0,
-        honestWidth    : 0
+        magnification: 1.0,
+        offset: 0.0,
+        isBarGrabbed: false,
+        canScrollLeft: false,
+        canScrollRight: false,
+        isIllusionary: false,
+        left: 0,
+        honestLeft: 0,
+        width: 0,
+        honestWidth: 0
     })
 
     protected _emit () {
         this._subject.next({
             ...this.relative.subject.value,
-            isIllusionary : this.isIllusionary,
-            left          : this.left,
-            honestLeft    : this.honestLeft,
-            width         : this.width,
-            honestWidth   : this.honestWidth,
-            isBarGrabbed  : this._isBarGrabbed
+            isIllusionary: this.isIllusionary,
+            left: this.left,
+            honestLeft: this.honestLeft,
+            width: this.width,
+            honestWidth: this.honestWidth,
+            isBarGrabbed: this._isBarGrabbed
         });
     }
 

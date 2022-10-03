@@ -8,9 +8,9 @@ export interface WebclientUxState {
 }
 
 const webClientUxInitialState = {
-    isFullScreen    : false,
-    isSidebarShown  : true,
-    isTimelineShown : true
+    isFullScreen: false,
+    isSidebarShown: true,
+    isTimelineShown: true
 };
 
 @Injectable({
@@ -19,7 +19,9 @@ const webClientUxInitialState = {
 export class WebClientUxService {
     constructor() {}
 
-    protected _subject = new BehaviorSubject<WebclientUxState>({ ...webClientUxInitialState })
+    protected _subject = new BehaviorSubject<WebclientUxState>({
+        ...webClientUxInitialState
+    })
 
     protected _emit (): void {
         this._subject.next(this.state);

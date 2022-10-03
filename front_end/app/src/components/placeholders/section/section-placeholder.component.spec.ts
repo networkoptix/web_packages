@@ -1,33 +1,32 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
 import {
-    waitForAsync, ComponentFixture,
+    waitForAsync,
+    ComponentFixture,
     TestBed,
     tick,
     fakeAsync
-}                                        from '@angular/core/testing';
-import { HttpClientTestingModule }       from '@angular/common/http/testing';
-import { AngularSvgIconModule }          from 'angular-svg-icon';
+} from '@angular/core/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
+
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import { NxSectionPlaceholderComponent } from './section-placeholder.component';
-import { DebugElement }                  from '@angular/core';
-import { NxLanguageProviderService }     from '@services/nx-language-provider';
-import { NxConfigService }               from '@services/nx-config';
-import { nxConfig }                      from '@services/nx-config/config';
-import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
 
 describe('NxSectionPlaceholderComponent', () => {
     let component: NxSectionPlaceholderComponent;
     let fixture: ComponentFixture<NxSectionPlaceholderComponent>;
     let el: DebugElement;
 
-    const configMock = { getConfig: () => nxConfig };
-    const langMock = getMockTranslations();
-
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxSectionPlaceholderComponent],
-            providers    : [
-                new MockProvider(NxConfigService, configMock),
-                new MockProvider(NxLanguageProviderService, langMock)
+            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            declarations: [NxSectionPlaceholderComponent],
+            providers: [
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService)
             ]
         }).compileComponents();
 

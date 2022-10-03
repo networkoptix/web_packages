@@ -1,4 +1,7 @@
 *** Variables ***
+${url}    ${ENV}
+${password}    ${BASE PASSWORD}
+
 ${HM INFORMATION TAB LINK}               //header/nav//a[text()="${INFORMATION TEXT}"]
 
 ${HM SYSTEM OFFLINE}                     //h2[contains(text(), "${SYSTEM OFFLINE TEXT}")]
@@ -27,7 +30,7 @@ ${HM TABLE}                              //div[@id="nx-table"]
 ${HM SINGLE ENTITY}                      //nx-single-entity
 ${FIRST CARD HEADER}                     ${HM SINGLE ENTITY}//header
 
-${HM DETAILS PANEL}                      //nx-block//nx-section/div[@class="card--body section clearfix"]
+${HM DETAILS PANEL}                      //nx-info-block
 
 ${HM ALERTS TOTAL}                       ${HM TABLE}/div[contains(@class,"table-header")]
 ${HM CAMERA TABLE ERRORS}                ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]

@@ -1,50 +1,36 @@
-<form #disconnectForm="ngForm" name="disconnectForm" novalidate
-      [ngClass]="{'hide-errors': hideErrors}"
-      (submit)="hideErrors = false">
+<form #disconnectForm="ngForm" name="disconnectForm" novalidate>
+      <!-- [ngClass]="{'hide-errors': hideErrors}"
+      (submit)="hideErrors = false"> -->
     <div class="modal-header">
-        <h1 class="modal-title" translate>Disconnect System from %CLOUD_NAME%?</h1>
+        <h1 class="modal-title" translate>Disconnect System from %CLOUD_NAME%</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-
-    <div class="modal-body">
-        <p class="warning-label" translate>All cloud users will be deleted.</p>
-        <p translate>System will be accessible through local network with local administrator account.</p>
-        <p translate class="mb-3">Enter password to continue.</p>
-
-        <div class="form-group" *ngIf="isLocal">
-            <label for="password" translate>Login</label>
-            <input class="form-control"
-                   id="login" autocomplete="new-password"
-                   name="login" disabled value="admin"
-                   [(ngModel)]="auth.username" #login="ngModel">
+    <div [ngStyle]="{ display: needsUpdate ? 'none': 'unset'}">
+        <div class="modal-body">
+            <p
+                *ngIf="system.userManager.currentUser.isCloud && environment.isLocal"
+                translate
+            >You will be logged out</p>
+            <p translate>System will be accessible only via local network.</p>
+            <p class="warning-label" translate>All cloud users will be deleted.</p>
         </div>
-
-        <div class="form-group">
-            <label for="password" translate>Password</label>
-            <input class="form-control"
-                   [(ngModel)]="auth.password" #password="ngModel"
-                   id="password" autocomplete="new-password"
-                   name="password" type="password"
-                   required nxFocusMe>
-            <ng-container *ngIf="password.invalid">
-                <div *ngIf="password.touched && password.dirty && !wrongPassword">
-                    <div class="input-error" translate>Password is required</div>
-                </div>
-                <div *ngIf="wrongPassword">
-                    <div class="input-error" translate>Wrong password</div>
-                </div>
-            </ng-container>
+        <div class="modal-footer">
+            <nx-process-button [process]="disconnect"
+                               [form]="disconnectForm"
+                               [actionType]="'danger'"
+                               [buttonDisabled]="needsUpdate"
+                               buttonText="{{ 'Disconnect' | translate }}"></nx-process-button>
+            <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>
     </div>
-    <div class="modal-footer">
-        <nx-process-button [process]="disconnect"
-                           [form]="disconnectForm"
-                           [actionType]="'danger'"
-                           buttonText="{{ 'Disconnect' | translate }}"></nx-process-button>
-        <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
-    </div>
+    <nx-update-webadmin-session *ngIf="needsUpdate"
+                                [bypassOauth]="true"
+                                (loginSuccess)="needsUpdate = false; disconnect.run()"
+                                [noConnectionMsg]="'Failed to disconnect system from %CLOUD_NAME%.' | translate"
+                                processAction="danger"
+                                [system]="system"></nx-update-webadmin-session>
 </form>

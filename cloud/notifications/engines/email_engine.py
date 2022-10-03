@@ -1,14 +1,12 @@
-from email.mime.image import MIMEImage  # python 3
 import logging
 import json
 import os
 
 import pystache
+from django.conf import settings
 from django.core.cache import cache
-from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.smtp import EmailBackend
 
-from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
 from cms.controllers import filldata
 
 logger = logging.getLogger(__name__)
@@ -21,6 +19,7 @@ def email_cache(customization_name, cache_type, value=None, force=None):
         data = {customization_name: {'version_id': global_id}}
 
     if customization_name in data and 'version_id' in data[customization_name]:
+        from cms.models import check_update_cache
         global_force, global_id = check_update_cache(customization_name, data[customization_name]['version_id'])
         if not force:
             force = global_force
@@ -38,22 +37,30 @@ def email_cache(customization_name, cache_type, value=None, force=None):
     if cache_type not in data[customization_name]:
         data[customization_name][cache_type] = {}
 
-    if value:
-        data[customization_name][cache_type] = value
-        cache.set('email_cache', data)
-    else:
+    if not value:
         return data[customization_name][cache_type]
 
+    data[customization_name][cache_type] = value
+    cache.set('email_cache', data)
 
-def send(email, msg_type, message, language_code, customization_name):
+
+EMAIL_CONFIG = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls", "mail_from_name", "mail_from_email"]
+
+
+def send(email, msg_type, message, language_code, customization_name, subject='', attachments=[]):
+    from email.mime.image import MIMEImage  # python 3
+    from cms.models import cloud_portal_customization_cache
+    from django.core.mail import EmailMultiAlternatives, get_connection
+
     try:
         email = json.loads(email)
     except json.JSONDecodeError:
         email = (email,)
 
     customization_cache = cloud_portal_customization_cache(customization_name, 'email')
-    email_config = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls"]
-    if not all(config_key in customization_cache for config_key in email_config):
+    if any(
+        config_key not in customization_cache for config_key in EMAIL_CONFIG
+    ):
         logger.error(f"Some smtp config settings are missing from {customization_name}. "
                      f"Please notify Release engineers")
         return False
@@ -61,10 +68,10 @@ def send(email, msg_type, message, language_code, customization_name):
     config = {
         'portal_url': customization_cache["portal_url"]
     }
-
-    subject = get_email_title(customization_name, language_code, msg_type)
-    subject = pystache.render(subject, {"message": message, "config": config})
-    subject = subject.replace("\n", "")
+    if not subject:
+        subject = get_email_title(customization_name, language_code, msg_type)
+        subject = pystache.render(subject, {"message": message, "config": config})
+        subject = subject.replace("\n", "")
 
     message_html_template = read_template(customization_name, msg_type, language_code, True)
     message_txt_template = read_template(customization_name, msg_type, language_code, False)
@@ -82,7 +89,7 @@ def send(email, msg_type, message, language_code, customization_name):
         password=str(customization_cache["smtp_password"]),
         username=str(customization_cache["smtp_user"]),
         use_tls=customization_cache["smtp_tls"],
-    )
+    ) if not settings.TESTING else get_connection()
 
     msg = EmailMultiAlternatives(
         subject, email_txt_body, email_from, to=email)
@@ -97,20 +104,24 @@ def send(email, msg_type, message, language_code, customization_name):
     msg_img = MIMEImage(read_file(customization_name, 'templates/email_logo.png'), _subtype="png")
     msg_img.add_header('Content-ID', '<logo>')
     msg.attach(msg_img)
+    for attachment in attachments:
+        msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
 
     mail_obj.send_messages([msg])
     mail_obj.close()
     return True
 
+NOTIFICATION_TEMPLATE_FILENAME = "templates/lang_{{language}}/notifications-language.json"
+EMAIL_TITLES = 'email_titles'
+EMAIL_SUBJECT = "emailSubject"
 
 def get_email_title(customization_name, language_code, event):
-    titles_cache = email_cache(customization_name, 'email_titles')
+    titles_cache = email_cache(customization_name, EMAIL_TITLES)
     if language_code not in titles_cache:
-        filename = "templates/lang_{{language}}/notifications-language.json"
-        data = read_file(customization_name, filename, language_code)
+        data = read_file(customization_name, NOTIFICATION_TEMPLATE_FILENAME, language_code)
         titles_cache[language_code] = json.loads(data)
-        email_cache(customization_name, 'email_titles', titles_cache)
-    return titles_cache[language_code][event]["emailSubject"]
+        email_cache(customization_name, EMAIL_TITLES, titles_cache)
+    return titles_cache[language_code][event][EMAIL_SUBJECT]
 
 
 def read_template(customization_name, name, language_code, html):
@@ -125,6 +136,7 @@ def read_file(customization_name, filename, language_code=""):
     files_cache = email_cache(customization_name, 'files')
     translated_name = filename.replace("{{language}}", language_code)
     if translated_name not in files_cache:
+        from cms.models import get_cloud_portal_asset
         files_cache[translated_name] = filldata.read_customized_file(filename,
                                                                      get_cloud_portal_asset(customization_name),
                                                                      language_code)

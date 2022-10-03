@@ -1,28 +1,40 @@
 import {
-    Component, OnInit, Input,
+    Component,
+    OnInit,
+    Input,
     ViewEncapsulation
-}                                   from '@angular/core';
+} from '@angular/core';
 
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { Process }                  from '../../services/process.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { Process } from '@services/process.service';
+
+interface SvgData {
+    src: string;
+    color?: string;
+    height?: string;
+    width?: string;
+}
 
 @Component({
-    selector     : 'nx-process-button',
-    templateUrl  : 'process-button.component.html',
-    styleUrls    : ['process-button.component.scss'],
+    selector: 'nx-process-button',
+    templateUrl: 'process-button.component.html',
+    styleUrls: ['process-button.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: Process;
-    @Input() clickFn;
+    @Input() clickFn: () => void;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
-    @Input() actionType;
+    @Input() buttonDisabledInProgress: boolean;
+    @Input() actionType: string;
     @Input() form;
-    @Input() customClass: any = '';
-    @Input() customButtonClass: any = '';
-    @Input() svg;
+    @Input() customClass: unknown = '';
+    @Input() customButtonClass = '';
+    @Input() svg: SvgData;
     @Input() textOnly: boolean = false;
+    @Input() reverseButton = false;
+    @Input() removeMinWidth = false;
 
     buttonClass: string;
     CONFIG: IConfig;
@@ -46,6 +58,7 @@ export class NxProcessButtonComponent implements OnInit {
     touchForm() {
         const form = this.form.form || this.form;
         for (const ctrl in form.controls) {
+            // eslint-disable-next-line no-prototype-builtins
             if (form.controls.hasOwnProperty(ctrl)) {
                 form.get(ctrl).markAsTouched();
                 form.get(ctrl).markAsDirty();
@@ -56,9 +69,10 @@ export class NxProcessButtonComponent implements OnInit {
     setFocusToInvalid() {
         const form = this.form.form || this.form;
         for (const ctrl in form.controls) {
+            // eslint-disable-next-line no-prototype-builtins
             if (form.controls.hasOwnProperty(ctrl)) {
                 if (form.get(ctrl).invalid) {
-                    // TODO : find how to set element's focus
+                    // TODO : Use Renderer2 to set focus
                     // control.focused = true;
                     return;
                 }

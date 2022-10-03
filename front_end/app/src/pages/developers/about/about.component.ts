@@ -1,19 +1,18 @@
-/* eslint-disable camelcase */
-import { Component, Input, OnDestroy } from '@angular/core';
-import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
-import { BehaviorSubject, SubscriptionLike } from 'rxjs';
-
-import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
-import { NxHeaderService }      from '../../../services/nx-header.service';
+import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { IConfig, NxConfigService } from '../../../services/nx-config';
-import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxMenusService } from '../../../services/menus.service';
-import { NxPageService } from '../../../services/page.service';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { filter } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 
 export enum AboutTemplates {
     INTRO='intro',
@@ -28,9 +27,9 @@ export enum AboutTemplates {
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
 @Component({
-    selector    : 'nx-about',
-    templateUrl : 'about.component.html',
-    styleUrls   : ['about.component.scss']
+    selector: 'nx-about',
+    templateUrl: 'about.component.html',
+    styleUrls: ['about.component.scss']
 })
 export class NxAboutComponent {
     CONFIG: IConfig;
@@ -55,13 +54,15 @@ export class NxAboutComponent {
         return this.router.url.split('?')[0];
     }
 
-    getInvalidTemplateError({ template, node: { title } }: {template: string, node: AboutNode}) {
+    getInvalidTemplateError({
+        template, node: { title }
+    }: {template: string, node: AboutNode}) {
         const helper = template
             ? `Template name "${template}" is not a valid template`
             : 'Template name is required';
         return {
-            name     : title,
-            [helper] : Object.values(AboutTemplates).reduce((
+            name: title,
+            [helper]: Object.values(AboutTemplates).reduce((
                 rest, cur, ind, arr
             ) => `${rest}"${cur}"${
                 arr.length === 1
@@ -94,7 +95,9 @@ export class NxAboutComponent {
         });
     }
 
-    loadMenu(baseName) {
+    private getMenuNameFromConfig = (
+        baseName
+    ) => {
         this.aboutStructure = null;
         if (!baseName) {
             return;
@@ -105,76 +108,117 @@ export class NxAboutComponent {
             setTimeout(this.pageService.show404);
             return;
         }
-        const { state } = this.route.snapshot.queryParams;
-        this.menusService.getMenu(this.menuName).pipe(
-            untilDestroyed(this)
-        ).subscribe(menu => {
-            this.pageService.pageTitle = menu.title;
-            this.pageService.pageDescription = menu.description;
-        });
-        this.accountService.get().then(account => {
-            this.account = account;
-            this.accountSubscription = this.accountService.accountSubject.pipe(
-                untilDestroyed(this)
-            ).subscribe(account => {
-                if (this.account !== account) {
-                    const url = this.router.url;
-                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
-                        this.router.navigateByUrl(url, { skipLocationChange: true });
-                    });
-                }
-            });
-        }).then(_ => {
-            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).pipe(
-                untilDestroyed(this)
-            ).subscribe(({ nodes: about, id }) => {
-                const mapToAboutNode = ({
-                    name,
-                    subtitle,
-                    display_name: displayName,
-                    asset_id: assetId,
-                    new_window: newWindow,
-                    asset,
-                    assetKB,
-                    url,
-                    icon,
-                    nodes
-                }): AboutNode => {
-                    return ({
-                        title       : displayName || name || asset.title,
-                        subtitle,
-                        displayName : displayName || name,
-                        nodes       : nodes && nodes.map(mapToAboutNode),
-                        url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
-                        assetId,
-                        asset,
-                        icon,
-                        newWindow
-                    });
-                };
-                const mapToAboutStructure = (node): AboutStructureNode => ({
-                    template : node.icon.split(' ')[0],
-                    node     : mapToAboutNode(node)
-                });
+        return true;
+    }
 
-                this.aboutStructure = (about || []).map(mapToAboutStructure);
-                if (state || this.account?.is_superuser) {
-                    this.showRibbon(id, state);
-                }
-            });
+    private updatePageMeta = () => {
+        this.menusService.getMenu(this.menuName).pipe(
+            tap(menu => {
+                this.pageService.pageTitle = menu.title;
+                this.pageService.pageDescription = menu.description;
+            }),
+            untilDestroyed(this)
+        ).toPromise();
+    }
+
+    private mapToAboutNode = ({
+        name,
+        subtitle,
+        display_name: displayName,
+        asset_id: assetId,
+        new_window: newWindow,
+        asset,
+        assetKB,
+        url,
+        icon,
+        nodes
+    }): AboutNode => {
+        return ({
+            title: displayName || name || asset.title,
+            subtitle,
+            displayName: displayName || name,
+            nodes: nodes && nodes.map(this.mapToAboutNode),
+            url: url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
+            assetId,
+            asset,
+            icon,
+            newWindow
         });
+    };
+
+    private mapToAboutStructure = (
+        node
+    ): AboutStructureNode => ({
+        template: node.icon.split(' ')[0],
+        node: this.mapToAboutNode(node)
+    });
+
+    private mapDocToNodes = (
+        state
+    ) => ({
+        nodes: about, id
+    }) => {
+        this.aboutStructure = (about || []).map(this.mapToAboutStructure);
+        if (state || this.account?.is_superuser) {
+            this.showRibbon(id, state);
+        }
+    }
+
+    private fetchUpdatedDocs = () => {
+        const { state } = this.route.snapshot.queryParams;
+
+        this.cloudApi.getDocumentation(
+            this.menuName, DOC_TYPES.struct, '', state
+        ).pipe(
+            untilDestroyed(this),
+            tap(this.mapDocToNodes(state))
+        ).toPromise();
+    }
+    // Not quiet sure what this was originally doing, probably handles if a user was logged out or session gets invalidated
+    // private checkAccount = (
+    //     account
+    // ) => {
+    //     this.account = account;
+    //     this.accountService.accountSubject.pipe(
+    //         untilDestroyed(this),
+    //         map(account => {
+    //             if (this.account !== account) {
+    //                 const url = this.router.url;
+    //                 this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
+    //                     this.router.navigateByUrl(url, { skipLocationChange: true });
+    //                 });
+    //             }
+    //         })
+    //     ).toPromise();
+    // }
+
+    loadMenu(baseName) {
+        if (!this.getMenuNameFromConfig(baseName)) {
+            return;
+        };
+
+        this.updatePageMeta();
+
+        this.accountService.get()
+            .then(account => {
+                this.account = account;
+            })
+            // .then(this.checkAccount)
+            .then(this.fetchUpdatedDocs);
     }
 
     showRibbon(id, state) {
         const ribbonActions: RibbonActionInput[] = [
             {
-                type  : 'link',
-                text  : this.LANG.ribbon.integration.backToEditText,
-                value : this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
+                type: 'link',
+                text: this.LANG.ribbon.integration.backToEditText,
+                value: this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
             }
         ];
         this.ribbonService.show(
-            state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
+            state
+                ? this.LANG.ribbon.integration.previewRibbon()
+                : this.LANG.ribbon.integration.publishedRibbon(),
             ribbonActions
         );
     }

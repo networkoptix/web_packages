@@ -1,10 +1,10 @@
-<div [ngClass]="{'switch-with-label': label}" (click)="changeState()" [id]="componentId">
+<div [ngClass]="{'switch-with-label': label}" (click)="changeState()" [id]="componentId + '-wrapper'">
     <div class="switch position-relative">
         <label class="switch-element">
             <input type="checkbox"
                    [ngClass]="{'selected' : _value}"
-                   [id]="componentId + '-switch'"
-                   [name]="componentId + '-switch'"
+                   [id]="componentId"
+                   [name]="componentId"
                    [attr.checked]="_value ? '': null"
                    (click)="preventBubbling($event)"
                    [attr.disabled]="disabled ? '' : null">

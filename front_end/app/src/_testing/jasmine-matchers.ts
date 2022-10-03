@@ -14,7 +14,7 @@ function toHaveText(): jasmine.CustomMatcher {
     return {
         compare: (actual: any, expectedText: string, expectationFailOutput?: any): jasmine.CustomMatcherResult => {
             const actualText = elementText(actual);
-            const pass = actualText.indexOf(expectedText) > -1;
+            const pass = actualText.includes(expectedText);
             const message = pass ? '' : composeMessage();
             return { pass, message };
 

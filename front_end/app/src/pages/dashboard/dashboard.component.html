@@ -1,0 +1,127 @@
+<div *ngIf="activeAction" cdkDrag class="active-action" [ngClass]="{'d-none': hidePreview}">
+  <header class="action-header" cdkDragHandle>
+    <h5 class="action-header-heading">{{activeAction.label}}</h5>
+    <div class="window-actions">
+      <svg-icon *ngIf="activeAction.url.startsWith('/') && !activeAction.url.startsWith('/admin')" nx-add-svg-src
+        [src]="CONFIG.icons.dirTextButtons + 'copy.svg'" (click)="openPage()"
+        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}" [applyClass]="true"></svg-icon>
+      <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'external.svg'" (click)="openPage(true)"
+        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}" [applyClass]="true"></svg-icon>
+      <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'close.svg'" (click)="openAction()"
+        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}" [applyClass]="true"></svg-icon>
+    </div>
+  </header>
+  <iframe [src]="activeAction.url | safe: 'resourceUrl'" name="asset_explorer_iframe"></iframe>
+</div>
+
+<div *ngIf="menu && activeDashboard && !loading" class="px-3" id="dashboard-heading">
+  <nx-editable-heading name="dashboardName" [nameWatcherValue]="activeDashboard.dashboardName"
+    (nameWatcherValueChange)="activeDashboard.dashboardName = $event; updatePersistedConfig()"
+    [editEnabled]="dragEnabled" [(editMode)]="editingTitle"></nx-editable-heading>
+  <nx-switch *ngIf="!editingTitle" [ngModel]="dragEnabled" (ngModelChange)="toggleDragEnabled($event)"
+    [label]="dragEnabled ? LANG.dashboard.dashboardEditEnabled() : LANG.dashboard.dashboardLocked()">
+  </nx-switch>
+</div>
+
+<ng-template #preloader>
+  <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<div *ngIf="menu.length" id="dashboard-menu">
+  <div *ngIf="dragEnabled && showSettings" class="settings-menu">
+    <div class="settings-wrap">
+      <div class="settings-heading">
+        <h3 translate>Dashboard Settings</h3>
+        <div class="settings-icon">
+          <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'close.svg'" (click)="showSettings = false"
+            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '0'}" [applyClass]="true"></svg-icon>
+        </div>
+      </div>
+      <div class="dashboard-actions">
+        <div class="menu-item" (click)="addWidget()" translate>Add widget</div>
+        <a class="menu-item" (click)="prepareConfigDownload()" [href]="settingsDownloadLink"
+          [download]="downloadFileName" translate>Download dashboard config </a>
+        <label for="settings_upload" class="menu-item" [ngClass]="{disabled:!dragEnabled}"
+          [nxTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''" translate>Apply existing config</label>
+        <input type="file" id="settings_upload" (change)="handleConfigUpload($event)" [disabled]="!dragEnabled">
+      </div>
+    </div>
+  </div>
+  <div class="menu-heading">
+    <nx-editable-heading name="groupName" [nameWatcherValue]="dashboardGroupName"
+      (nameWatcherValueChange)="dashboardGroupName = $event; updatePersistedConfig()" [editEnabled]="dragEnabled">
+    </nx-editable-heading>
+    <div class="settings-icon">
+      <svg-icon *ngIf="dragEnabled" nx-add-svg-src (click)="showSettings = !showSettings"
+        [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
+        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '0'}" [applyClass]="true"></svg-icon>
+    </div>
+  </div>
+  <div cdkDropList (cdkDropListDropped)="moveDashboard($event)" [cdkDropListDisabled]="!dragEnabled"
+    class="dashboard-list">
+    <ng-container *ngFor="let dashboard of menu">
+      <ng-template #dashboardTooltip><span translate>Drag dashboards to update order</span></ng-template>
+      <div *ngIf="dragEnabled || dashboard?.cards?.length" cdkDrag cdkDragLockAxis="y" [routerLink]="[]"
+        (mousedown)="showSettings = false" [nxTooltip]="dragEnabled ? dashboardTooltip : ''"
+        [queryParams]="{'dashboardId': dashboard.id}" routerLinkActive="active" class="menu-item"
+        [ngClass]="{'drag-cursor': dragEnabled}">
+        <span>{{dashboard.dashboardName}}</span>
+        <span *ngIf="!dashboard.cards?.length" class="badge badge-warning ml-2" translate>Empty</span>
+        <button class="remove-button" (click)="removeDashboard(dashboard.id)"
+          [ngClass]="{'visible': dragEnabled && menu?.length > 1}" translate>Remove</button>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="dragEnabled" (click)="addDashboard(); showSettings = false" class="menu-item add-dashboard pointer"
+    translate>Add New Dashboard +</div>
+</div>
+
+<div cdkDropListGroup *ngIf="cards && !loading; else preloader" (resize)="adjustGridHeight($event)"
+  (mousedown)="updateActive(-1); showSettings = false" (nxClickElsewhere)="updateActive(-1)" class="dashboard-parent"
+  [ngClass]="{'drag-background': dragEnabled}" [ngStyle]="{
+      'gap': GRID_GAP + 'px',
+      'padding': gridColumns > 4 ? GRID_GAP + 'px' : 0,
+      'padding-top': 0,
+      'padding-left': GRID_GAP ? 0 : gridColumns + 'px',
+      'padding-right': GRID_GAP ? 0 : gridColumns + 'px',
+      'grid-auto-rows': gridSize + 'px',
+      'grid-template-columns': 'repeat(' + gridColumns + ', [col-start] ' + gridSize + 'px)'
+    }">
+  <ng-container *ngFor="let card of cards; let i = index">
+    <div cdkDropList *ngIf="isFirstPartyWidget(card.identifier)" [cdkDropListDisabled]="!dragEnabled"
+      [cdkDropListData]="i" [cdkDropListSortingDisabled]="true" [ngStyle]="{
+        'grid-column': 'span ' + (card.size.value.cols > gridColumns ? gridColumns : card.size.value.cols),
+        'grid-row': 'span ' + card.size.value.rows
+      }">
+      <div cdkDrag cdkDragBoundary=".dashboard-parent" (cdkDragEntered)="entered($event)" [cdkDragData]="i"
+        (mousedown)="updateActive(i, $event)" class="dashboard-card" (mouseover)="hoverCellIndex = i"
+        (mouseleave)="hoverCellIndex = -1"
+        [ngClass]="{'active-widget': dragEnabled && activeCellIndex === i, 'drag-enabled': dragEnabled}">
+        <div cdkDragHandle>
+          <div class="heading" [nxTooltip]="dragEnabled ? '' : LANG.dashboard.unlockToMove()"
+            [ngClass]="{'drag-heading': dragEnabled && [activeCellIndex, hoverCellIndex].includes(i)}">
+            <ng-template #cardTitle>
+              <h3>{{card.title}}</h3>
+            </ng-template>
+            <ng-container *ngIf="dragEnabled && [activeCellIndex, hoverCellIndex].includes(i); else cardTitle">
+              <nx-select [items]="card.sizes" (onSelected)="updateSelectedSize($event, card)" [selected]="card.size"
+                type="transparent-button">
+              </nx-select>
+              <div class="d-flex window-actions">
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
+                  (click)="toggleEditMode(card)" [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}"
+                  [applyClass]="true"></svg-icon>
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'close.svg'" (click)="removeCard(i)"
+                  [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}" [applyClass]="true"></svg-icon>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="w-100 h-100">
+          <nx-dynamic-widget [card]="card" (syncChanges)="updatePersistedConfig()" (openAction)="openAction($event)">
+          </nx-dynamic-widget>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

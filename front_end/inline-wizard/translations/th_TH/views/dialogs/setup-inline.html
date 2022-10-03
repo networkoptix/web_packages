@@ -1,89 +1,106 @@
 <div class="panel-body text-center" ng-if="stepIs(0)">
     <div class="master-icon"><span class="preloader"></span></div>
     <div class="vertical-center">
-        <h2>กำลังโหลด ...</h2>
+        <h2>Loading ...</h2>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>ไม่สามารถเริ่มต้นระบบได้</h2>
+    <h2>Cannot initialize System</h2>
     <p class="master-description">
-        การเข้าสู่ระบบล้มเหลว
+        Authorization failed.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">ลองใหม่อีกครั้ง</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>ไม่สามารถตั้งค่าระบบได้</h2>
-    <p class="master-description">ไม่สามารถกำหนดค่าระบบได้ <br>
+    <h2>Cannot setup System</h2>
+    <p class="master-description">The System cannot be configured. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">ลองใหม่อีกครั้ง</button>
+        <button class="btn btn-default" ng-if="canRetry()" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
-    <div ng-class="{'vertical-bottom':!settings.liteClient, 'master-description': settings.liteClient}">
-        <h2>เริ่มต้นใช้งาน {{Config.productName}}</h2>
-        <p>Please configure the server first.<br>
+    <div>
+        <h2>Get Started with {{Config.productName}}</h2>
+        <p class="master-description">Please configure the server first.<br>
             Choose an option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
-        <button class="btn btn-primary" autofocus ng-click="next()">ตั้งค่าระบบใหม่</button>
+        <button class="btn btn-primary" autofocus ng-click="next()">Setup New System</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
-            <span class="text"> หรือ </span>
+            <span class="text">or</span>
             <span class="line"></span>
         </div>
-        <button class="btn btn-default" ng-click="skip()"> เพิ่มไปยังระบบที่มีอยู่ </button><br>
-        <small> (หากมีการตั้งค่า {{Config.productName}} ไว้แล้ว) </small><br>
+        <button class="btn btn-default" ng-click="skip()">Add to Existing System</button><br>
+        <small class="text">(if {{Config.productName}} has been already setup)</small><br>
         <small ng-if="!settings.liteClient">&nbsp;</small>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>ป้อนชื่อของระบบ</h2>
+    <h2>Enter System Name</h2>
     <p class="master-description">
-        ช่วยระบุหรือหาระบบ
+        It will help to identify or find System.
     </p>
-    <form class="master-controls" name="forms.systemNameForm" novalidate>
+    <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
-                   placeholder="ชื่อระบบ" required auto-focus>
+                   placeholder="System name" required auto-focus>
         </div>
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
             <div class="help-block">
-                ต้องระบุชื่อ
+                System name is required
             </div>
         </div>
-
+        <input type="submit" hidden>
     </form>
     <p class="vertical-bottom">
-        <a href="" ng-click="next('advanced', true)">การตั้งค่าระบบขั้นสูง</a>
+        <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>การตั้งค่าระบบขั้นสูง</h2>
-    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate>
+    <h2>Advanced System settings</h2>
+    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
-            <div class="checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' " >
-                <label>
-                    <input type="checkbox" id="{{setting}}"
-                           ng-model="systemSettings[setting]"> <span>{{L.settingsConfig[setting]}}</span>
+            <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
+                <label class="nx-checkbox">
+                    <input type="checkbox"
+                           id="{{setting}}"
+                           checked="{{value ? 'checked' : null}}"
+                           aria-describedby="description"
+                           ng-model="systemSettings[setting]">
+
+                    <span class="tick"
+                          ng-class="{'checked' : value}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                            <line class="tristate" x1="5" y1="8" x2="11" y2="8"></line>
+                        </svg>
+                    </span>
+                </label>
+                <label class="control-label mb-0" for="{{setting}}">
+                    <span>{{LANG.settingsConfig[setting]}}</span>
                 </label>
             </div>
 
             <label ng-if="Config.settingsConfig[setting].type != 'checkbox' "
-                   for="{{setting}}" >{{L.settingsConfig[setting]}}</label>
+                   for="{{setting}}" >{{LANG.settingsConfig[setting]}}</label>
             <input ng-if="Config.settingsConfig[setting].type == 'number' " type="number"
                    id="{{setting}}"
                    placeholder="{{}}"
@@ -94,12 +111,13 @@
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
         </div>
+        <input type="submit" hidden>
     </form>
 </div>
 
 
 <div class="panel-body text-center"  ng-if="stepIs('chooseCloudOrLocal')">
-    <h2>เลือกประเภทระบบ</h2>
+    <h2>Choose System type</h2>
     <div class="row radio-panels">
         <div class="col-xs-6 radio-panel ">
             <div class="radio-panel-body"
@@ -107,7 +125,7 @@
                  ng-click="settings.chooseCloudSystem = false">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
-                <h3>ท้องถิ่น</h3>
+                <h3>Local</h3>
                 <p>
                     Works in local networks only<br>
                     Does not require Internet connection
@@ -120,7 +138,7 @@
                  ng-click="settings.chooseCloudSystem = true">
                 <div class="checkbox-icon"></div>
                 <div class="master-icon"><span class="icon-cloud"></span></div>
-                <h3>คลาวด์</h3>
+                <h3>Cloud</h3>
                 <p>
                     Available from everywhere<br>
                     Requires Internet connection
@@ -140,9 +158,9 @@
     <div class="master-icon">
         <span class="icon-account"></span>
     </div>
-    <h2>บัญชี {{Config.cloud.productName}}</h2>
+    <h2>{{Config.cloud.productName}} account</h2>
     <p class="master-description">
-        จำเป็นต้องมีบัญชีเพื่อใช้ระบบคลาวด์ {{Config.cloud.productName}}
+        An account is required to use the cloud System {{Config.cloud.productName}}
     </p>
     <p class="master-controls">
         <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Create a new account</button>&nbsp;&nbsp;
@@ -152,43 +170,58 @@
 
 
 <div class="panel-body text-center" ng-if="stepIs('cloudAuthorizedIntro')">
-    <p>ระบบจะเชื่อมต่ออยู่</p>
+    <p>System will be connected to</p>
 
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
     <h2>{{settings.presetCloudEmail}}</h2>
 
     <p class="vertical-bottom">
-        <a href="" ng-click="next('cloudLogin', true)">เชื่อมต่อกับบัญชีอื่น</a>
+        <a href="" ng-click="next('cloudLogin', true)">Connect to another account</a>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudLogin')">
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
-    <h2>เข้าสู่ระบบ <span class="product-name add-version"> {{Config.cloud.productName}} </span></h2>
+    <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
-    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}">
+    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
-                   type="email" placeholder="อีเมลล์" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
+                   type="email" placeholder="Email" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudPassword" name="cloudPassword" class="form-control"
-                   type="password" autocomplete="new-password" required placeholder="รหัสผ่าน" ng-change="clearCloudError()">
+                   type="password" autocomplete="new-password" required placeholder="Password" ng-change="clearCloudError()">
         </div>
 
-        <div class="checkbox text-left" ng-if="settings.thickClient">
-            <labe>
-                <input ng-model="settings.savePassword" type="checkbox">
-                คงอยู่ในระบบ
-            </labe>
+        <div class="new-style-checkbox" ng-if="settings.thickClient">
+            <label class="nx-checkbox">
+                <input type="checkbox"
+                       id="stayLoggedIn"
+                       ng-model="settings.savePassword">
+
+                <span class="tick"
+                      ng-class="{'checked' : settings.savePassword}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                        </svg>
+                    </span>
+            </label>
+            <label class="control-label mb-0" for="stayLoggedIn">
+                <span>Stay logged in</span>
+            </label>
         </div>
 
         <div class="form-group has-error"
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.email">
             <div class="help-block">
-                โปรดป้อนอีเมลที่ถูกต้อง
+                Please, enter a valid email
             </div>
         </div>
 
@@ -196,7 +229,7 @@
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.required ||
                     forms.cloudForm.cloudPassword.$touched && forms.cloudForm.cloudPassword.$error.required">
             <div class="help-block">
-                ต้องระบุอีเมลและรหัสผ่าน
+                Email and password are required
             </div>
         </div>
 
@@ -208,15 +241,16 @@
 
         <div class="form-group" ng-if="settings.liteClient">
             <p class="help-block">
-                หากต้องการสร้างบัญชีโปรดไปที่ {{portalUrl}}
+                To create an account please visit {{portalUrl}}
             </p>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
-    <h2>ตั้งค่ารหัสผ่านของผู้ดูแลระบบ</h2>
-    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete>
+    <h2>Set up an administrator password</h2>
+    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
             <!-- <input ng-model="settings.localLogin" name="localLogin" class="form-control"
                    type="text" placeholder="Login" required readonly> -->
@@ -228,34 +262,49 @@
                      forms.localForm.localPasswordConfirmation.$touched &&
                      settings.localPasswordConfirmation != settings.localPassword}">
             <input ng-model="settings.localPasswordConfirmation" name="localPasswordConfirmation" class="form-control"
-                   type="password" autocomplete="new-password" placeholder="รีเซ็ตรหัสผ่าน" required>
+                   type="password" autocomplete="new-password" placeholder="Repeat password" required>
         </div>
-        <div class="checkbox text-left" ng-if="settings.thickClient">
-            <labe>
-                <input ng-model="settings.savePassword" type="checkbox">
-                บันทึกรหัสผ่าน
-            </labe>
+
+        <div class="new-style-checkbox" ng-if="settings.thickClient">
+            <label class="nx-checkbox">
+                <input type="checkbox"
+                       id="savePassword"
+                       ng-model="settings.savePassword">
+
+                <span class="tick"
+                      ng-class="{'checked' : settings.savePassword}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                        </svg>
+                    </span>
+            </label>
+            <label class="control-label mb-0" for="savePassword">
+                <span>Save password</span>
+            </label>
         </div>
 
         <div class="form-group"
              ng-if="(!forms.localForm.localLogin.$touched || forms.localForm.localLogin.$valid) &&
-+                    !forms.localForm.passwordInput.$dirty &&
-+                    !forms.localForm.localPasswordConfirmation.$touched">
+                     !forms.localForm.passwordInput.$dirty &&
+                     !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
-                รหัสผ่านต้องมีอักขระประเภทต่างๆและมีสัญลักษณ์อย่างน้อย 8 ตัว
+                Password must contain different types of characters and have at least 8 symbols
             </div>
         </div>
         <div class="form-group has-error" ng-if="!forms.localForm.passwordInput.password.$valid">
             <div class="help-block" ng-if="forms.localForm.passwordInput.password.$error.weak &&
                   !forms.localForm.passwordInput.password.$error.common &&
                   !forms.localForm.passwordInput.password.$error.pattern &&
-                  !forms.localForm.passwordInput.password.$error.minlength">{{L.passwordRequirements.weakMessage}}</div>
+                  !forms.localForm.passwordInput.password.$error.minlength">{{LANG.passwordRequirements.weakMessage}}</div>
             <div class="help-block" ng-if="forms.localForm.passwordInput.password.$error.common &&
                   !forms.localForm.passwordInput.password.$error.pattern &&
-                  !forms.localForm.passwordInput.password.$error.minlength">{{L.passwordRequirements.commonMessage}}</div>
+                  !forms.localForm.passwordInput.password.$error.minlength">{{LANG.passwordRequirements.commonMessage}}</div>
             <div class="help-block" ng-if="forms.localForm.passwordInput.password.$error.minlength &&
-                  !forms.localForm.passwordInput.password.$error.pattern">{{L.passwordRequirements.minLengthMessage}}</div>
-            <div class="help-block" ng-if="forms.localForm.passwordInput.password.$error.pattern">{{L.passwordRequirements.requiredMessage}}</div>
+                  !forms.localForm.passwordInput.password.$error.pattern">{{LANG.passwordRequirements.minLengthMessage}}</div>
+            <div class="help-block" ng-if="forms.localForm.passwordInput.password.$error.pattern">{{LANG.passwordRequirements.requiredMessage}}</div>
         </div>
 
         <div class="form-group has-error"
@@ -265,7 +314,7 @@
                     forms.localForm.localPasswordConfirmation.$touched &&
                     forms.localForm.localPasswordConfirmation.$error.required)">
             <div class="help-block">
-                ต้องกรอกทุกช่อง
+                All fields are required
             </div>
         </div>
 
@@ -273,17 +322,17 @@
              ng-if= "forms.localForm.$valid &&
                      (settings.localPasswordConfirmation != settings.localPassword)">
             <div class="help-block">
-                รหัสผ่านไม่ตรงกัน
+                Passwords do not match
             </div>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
-    <h2>เชื่อมต่อเซิร์ฟเวอร์กับระบบที่มีอยู่</h2>
-    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete>
+    <h2>Connect the server to the existing System</h2>
+    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden>
         <div class="form-group" validate-field>
-
             <input type="text" ng-model="settings.remoteSystem" name="remoteSystemName"
                    uib-typeahead="system as system.visibleName for system in discoveredUrls | filter: {isNew:false, visibleName: $viewValue} | limitTo:8"
                    uib-typeahead-input-formatter="getSystemName($model)"
@@ -292,7 +341,7 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
- placeholder="ระบบ URL ที่มีอยู่ (https://host:port)"
+ placeholder="Existing System URL (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
  class="form-control">
@@ -304,20 +353,20 @@
         <div class="form-group" validate-field>
             <input ng-model="settings.remoteLogin" name="remoteLogin" class="form-control" type="text"
                    ng-change="clearRemoteError(true)"
-                   placeholder="เข้าสู่ระบบ" required>
+                   placeholder="Login" required>
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.remotePassword"
                    name="remotePassword" autocomplete="new-password" class="form-control" type="password"
                    ng-change="clearRemoteError(true)"
-                   placeholder="รหัสผ่าน" required>
+                   placeholder="Password" required>
         </div>
         <div class="form-group has-error"
              ng-if="forms.remoteSystemForm.remoteSystemName.$touched &&  forms.remoteSystemForm.remoteSystemName.$error.required||
                     forms.remoteSystemForm.remoteLogin.$touched && forms.remoteSystemForm.remoteLogin.$error.required ||
                     forms.remoteSystemForm.remotePassword.$touched && forms.remoteSystemForm.remotePassword.$error.required">
             <div class="help-block">
-                ต้องกรอกทุกช่อง
+                All fields are required
             </div>
         </div>
 
@@ -332,20 +381,20 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>กำลังผสานระบบ ...</h2>
-    <p class="master-description">อาจใช้เวลาหลายนาที</p>
+    <h2>Merging Systems ...</h2>
+    <p class="master-description">It may take several minutes</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>กำลังผสานระบบ ...</h2>
-    <p class="master-description">กำลังพยายามเชื่อมต่อกับระบบ</p>
+    <h2>Merging Systems ...</h2>
+    <p class="master-description">Trying to connect to the System</p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('mergeFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>ไม่สามารถผสานระบบ</h2>
+    <h2>Cannot merge Systems</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
@@ -357,79 +406,79 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeTemporaryFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>ระบบถูกผสานสำเร็จ แต่ยังไม่พร้อม</h2>
+    <h2>System was successfully merged, but is not ready yet.</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">ลองใหม่อีกครั้ง</button>
+        <button class="btn btn-default" ng-click="retry()">Try again</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>กำลังเชื่อมต่อกับ {{Config.cloud.productName}} ...</h2>
-    <p class="master-description">อาจใช้เวลาหลายนาที</p>
+    <h2>Connecting to {{Config.cloud.productName}} ...</h2>
+    <p class="master-description">It may take several moments</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>ระบบพร้อมใช้งานแล้ว</h2>
-    <p>เข้าสู่ระบบ</p>
+    <h2>System is ready for use</h2>
+    <p>Login</p>
     <h4>{{settings.cloudEmail}}</h4>
-    <p>การแชร์และการตั้งค่าบัญชี</p>
-    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="เปิด {{Config.cloud.productName}}"
+    <p>Sharing and account settings</p>
+    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="open {{Config.cloud.productName}}"
            ng-click="openLink($event)">{{portalShortLink}}</a></h4>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>ระบบพร้อมใช้งานแล้ว</h2>
-    <p>ที่อยู่เซิร์ฟเวอร์</p>
+    <h2>System is ready for use</h2>
+    <p>Server address</p>
     <h4>{{serverAddress}}</h4>
-    <p>ผู้ดูแลระบบเข้าสู่ระบบ</p>
+    <p>Administrator login</p>
     <h4>{{settings.localLogin}}</h4>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('configureWrongNetwork')">
-    <p><b>โปรดกำหนดการตั้งค่าเครือข่ายก่อน</b></p>
+    <p><b>Please configure network settings first</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">บันทึกการตั้งค่าและรีบูตอุปกรณ์</button>
+        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('configureNetworkForInternet')">
-    <p><b>กำหนดค่าเครือข่ายเพื่อตั้งค่าการเชื่อมต่ออินเทอร์เน็ต</b></p>
+    <p><b>Configure the network to set up Internet connection</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">บันทึกการตั้งค่าและรีบูตอุปกรณ์</button>
+        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnServer')">
-    <h2>เชื่อมต่อเซิร์ฟเวอร์กับอินเทอร์เน็ต</h2>
+    <h2>Connect the server to the Internet</h2>
     <p class="master-description">
-        ตั้งค่าการเชื่อมต่ออินเทอร์เน็ตบนเซิร์ฟเวอร์เพื่อให้สามารถ <br> เชื่อมต่อได้ทุกที่โดยใช้ {{Config.cloud.productName}}
+        Set up Internet connection on the server to be able <br> to connect to it anywhere using {{Config.cloud.productName}}.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
         <button class="btn btn-default" ng-click="skip()">Setup local System</button>
     </p>
     <p ng-if="serverInfo.flags.canSetupNetwork" class="vertical-bottom">
-        <a href="" ng-click="next('configureNetworkForInternet')">กำหนดการตั้งค่าเครือข่าย</a>
+        <a href="" ng-click="next('configureNetworkForInternet')">Configure network settings</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
-    <h2>ไม่สามารถเชื่อมต่อกับ {{Config.cloud.productName}}</h2>
+    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
-        ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
+        Check the Internet connection.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
@@ -439,7 +488,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('cloudFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>ไม่สามารถเชื่อมต่อกับ {{Config.cloud.productName}}</h2>
+    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
         {{cloudError}}
     </p>
@@ -451,12 +500,12 @@
 
 <div class="panel-body text-center" ng-if="stepIs('localFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>ไม่สามารถตั้งค่าระบบได้</h2>
-    <p class="master-description">มีบางอย่างผิดพลาดไปหมด <br>
+    <h2>Cannot setup System</h2>
+    <p class="master-description">Something went totally wrong. <br>
         Error description: {{settings.localError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">ลองใหม่อีกครั้ง</button>
+        <button class="btn btn-default" ng-click="retry()">Try again</button>
     </p>
 </div>
 
@@ -468,28 +517,20 @@
     </p>
     <div class="row">
         <div class="col-xs-6">
-            <div class="text-center"><b>ใช้เว็บเบราเซอร์</b></div>
-            <div class="col-xs-4 text-right">ที่อยู่</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
+            <div class="text-center"><b>Using web browser</b></div>
+            <div class="col-xs-4 text-right">Address</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
-            <div class="text-center"><b>ใช้โปรแกรม {{Config.productName}}</b></div>
-            <div class="col-xs-6 text-right">โฮสต์</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
-            <div class="col-xs-6 text-right">พอร์ต</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
-            <div class="col-xs-6 text-right">เข้าสู่ระบบ</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
-            <div class="col-xs-6 text-right">รหัสผ่าน</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
+            <div class="text-center"><b>Using {{Config.productName}} application</b></div>
+            <div class="col-xs-6 text-right">Host</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
+            <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
+            <div class="col-xs-6 text-right">Login</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
+            <div class="col-xs-6 text-right">Password</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
         </div>
     </div>
 </div>
 
 <div class="panel-footer" ng-hide="activeStep.noFooter">
-    <button class="btn btn-default"
-            ng-if="activeStep.cancel"
-            ng-disabled="lockNextButton"
-            ng-click="cancel()">Cancel</button>
-    <button class="btn btn-default"
-            ng-if="activeStep.back"
-            ng-disabled="lockNextButton"
-            ng-click="back()"><span class="glyphicon glyphicon-arrow-left"></span></button>
     <button class="btn btn-primary pull-right"
             ng-if="activeStep.next"
             ng-disabled="lockNextButton"
@@ -499,5 +540,14 @@
             ng-if="activeStep.finish"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="finish()">Finish</button>
+ ng-click="finish()">Finish
+    </button>
+    <button class="btn btn-default pull-left"
+            ng-if="activeStep.cancel"
+            ng-disabled="lockNextButton"
+            ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default pull-left"
+            ng-if="activeStep.back"
+            ng-disabled="lockNextButton"
+            ng-click="back()"><span class="glyphicon glyphicon-arrow-left"></span></button>
 </div>

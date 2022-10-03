@@ -1,0 +1,83 @@
+@use '../../../../../styles/theme_variables' as *;
+@use '../../../../styles/typography';
+
+:host {
+    grid-area: menu;
+}
+
+a {
+    @include typography.medium15dark9;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+}
+
+ul {
+    @media screen and (min-width: 769px) {
+        position: sticky;
+        top: 16px;   
+    }
+    margin: 16px;
+    flex: 1 0 240px;
+    min-width: 240px;
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+li {
+    border-radius: 2px;
+}
+
+.active-section, a:active {
+    background: $light5;
+}
+
+a:not(.active-section):not(:active):hover {
+    background: $additional_light3;
+}
+
+h3 {
+    @include typography.medium15dark9;
+    margin: 16px 16px 0 16px;
+    background: $light5;
+    padding: 0px;
+}
+
+.edit {
+    background: $light5;
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    
+    a {
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .active-section, a:active {
+        background: $light16;
+        color: $light1 !important;
+    }
+
+    a:not(.active-section):not(:active):hover {
+        background: $light6;
+    }
+}
+
+.additional-link {
+    @include typography.regular14light;
+    cursor: pointer;
+    margin-left: 16px;
+    height: 32px;
+    &:hover {
+        color: $dark15 !important;
+
+        .st0 {
+            fill: $dark15;
+        }
+    }
+
+    .st0 {
+        fill: $light16;
+    }
+}

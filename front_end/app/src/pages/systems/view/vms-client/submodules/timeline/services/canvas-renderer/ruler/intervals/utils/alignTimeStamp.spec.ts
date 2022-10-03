@@ -1,5 +1,6 @@
-import alignTimeStamp from './alignTimeStamp';
 import IrregularLengthInterval from '../IrregularLengthInterval';
+
+import alignTimeStamp from './alignTimeStamp';
 
 xdescribe('alignTimeStamp', () => {
     const t = 1594225376896; // "Wed Jul 08 2020 19:23:03 GMT+0300 (Moscow Standard Time"
@@ -45,21 +46,27 @@ xdescribe('alignTimeStamp', () => {
             switch (i) {
                 case 'millenia': {
                     expect(v.getFullYear() % 1000).toEqual(0);
+                    break;
                 }
                 case 'century': {
                     expect(v.getFullYear() % 100).toEqual(0);
+                    break;
                 }
                 case 'decade': {
                     expect(v.getFullYear() % 10).toEqual(0);
+                    break;
                 }
                 case 'year': {
                     expect(v.getMonth()).toEqual(0);
+                    break;
                 }
                 case 'half-year': {
                     expect(v.getMonth() % 6).toEqual(0);
+                    break;
                 }
                 case 'quarter-year': {
                     expect(v.getMonth() % 3).toEqual(0);
+                    break;
                 }
                 case 'month': {
                     expect(v.getDate()).toEqual(1);

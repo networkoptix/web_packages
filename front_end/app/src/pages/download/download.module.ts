@@ -1,20 +1,22 @@
-import { Injectable, NgModule }  from '@angular/core';
-import { CommonModule }          from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Injectable, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
-    Router, Resolve,
-    RouterModule, Routes
-}                                from '@angular/router';
-import { FormsModule }           from '@angular/forms';
-import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }       from '@ngx-translate/core';
+    Router,
+    Resolve,
+    RouterModule,
+    Routes
+} from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY as empty }        from 'rxjs';
+import { EMPTY as empty } from 'rxjs';
 
-import { ComponentsModule }      from '../../components/components.module';
-import { DirectivesModule }      from '../../directives/directives.module';
-import { DownloadComponent }     from './download.component';
-import { NxConfigService }       from '../../services/nx-config';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { NxConfigService } from '@services/nx-config';
 import { PipesModule } from '@src/pipes/pipes.module';
+
+import { DownloadComponent } from './download.component';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
@@ -23,9 +25,11 @@ export class OsResolver implements Resolve<any> {
     platformMatch: {};
     windows: string;
 
-    constructor(private configService: NxConfigService,
-                private router: Router,
-                private deviceService: DeviceDetectorService) {
+    constructor(
+        private configService: NxConfigService,
+        private router: Router,
+        private deviceService: DeviceDetectorService
+    ) {
         this.deviceInfo = this.deviceService.getDeviceInfo();
         const configDownloads = this.configService.getConfig().downloads;
         this.windows = configDownloads.groups.windows.name;
@@ -53,7 +57,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        NgbModule,
         FormsModule,
         TranslateModule,
         ComponentsModule,
@@ -67,7 +70,7 @@ const appRoutes: Routes = [
     declarations: [
         DownloadComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         DownloadComponent
     ]

@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from django.core.cache import caches
 from django.core.cache.backends.base import InvalidCacheBackendError
 
@@ -16,8 +18,8 @@ class BaseCache(object):
 
     Setting global_clear on init marks that cache to be cleared on clear_global cache.
     """
- 
-    global_clear_cache_keys = {'documentation', 'agreement', 'article', 'integrations', 'menus'}
+
+    global_clear_cache_keys = {'documentation', 'agreement', 'article', 'integrations', 'menus', 'release_notes'}
     cache_key = ''
     lookup_key = ''
 
@@ -25,13 +27,18 @@ class BaseCache(object):
         self.cache_key = cache_key
         self.lookup_key = lookup_key
 
+    @staticmethod
+    def generate_lookup_key(language, state, identifier='', version='latest', customization_name=settings.CUSTOMIZATION):
+        draft = state == "draft"
+        return f'{customization_name}-{language.code}-{identifier}-{state}-{"latest" if draft else version}'
+
     @classmethod
     def clear_global_cache(cls):
         for cache_key in cls.global_clear_cache_keys:
             caches[cache_key].clear()
 
     def get_cached_item(self):
-        """Checks cache for doc using the lookup_key attribute. 
+        """Checks cache for doc using the lookup_key attribute.
 
         Returns:
             doc: returns cached doc or None if not in cache

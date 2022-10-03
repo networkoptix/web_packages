@@ -1,4 +1,4 @@
-import { Injectable }          from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 @Injectable({
@@ -13,12 +13,12 @@ export class NxStorageService {
         this.storage = localStorageService;
     }
 
-    get clear() {
-        return '';
-    }
-
-    set clear(what) {
-        this.storage.clear(what);
+    clear(key?: string) {
+        if (key) {
+            this.storage.clear(key);
+        } else {
+            this.storage.clear();
+        }
     }
 
     get systemId(): string {
@@ -75,5 +75,37 @@ export class NxStorageService {
 
     set restoreProcess(restoreProcess: any) {
         this.storage.store('restoreProcess', restoreProcess);
+    }
+
+    get cloudAccessToken(): string {
+        return this.storage.retrieve('cloudAccessToken') || undefined;
+    }
+
+    set cloudAccessToken(token) {
+        this.storage.store('cloudAccessToken', token);
+    }
+
+    get refreshToken(): string {
+        return this.storage.retrieve('refreshToken') || undefined;
+    }
+
+    set refreshToken(token) {
+        this.storage.store('refreshToken', token);
+    }
+
+    get cloudApiAccessToken(): string {
+        return this.storage.retrieve('cloudApiAccessToken') || undefined;
+    }
+
+    set cloudApiAccessToken(token) {
+        this.storage.store('cloudApiAccessToken', token);
+    }
+
+    get cloudApiRefreshToken(): string {
+        return this.storage.retrieve('cloudApiRefreshToken') || undefined;
+    }
+
+    set cloudApiRefreshToken(token) {
+        this.storage.store('cloudApiRefreshToken', token);
     }
 }

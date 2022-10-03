@@ -1,28 +1,30 @@
 import {
-    Component, Input, OnChanges,
-    SimpleChanges, ViewEncapsulation, ViewChild
-}                                    from '@angular/core';
-import { NgForm }                    from '@angular/forms';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+    Component,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewEncapsulation,
+    ViewChild,
+} from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, SubscriptionLike } from 'rxjs';
-import { debounceTime, takeUntil }   from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import {
-    NxApplyService, FormWatcher, Watcher
-}                                    from '../../../../../services/apply.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxApplyService, FormWatcher, Watcher } from '@services/apply.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-server-logger-component',
-    templateUrl   : 'logger.component.html',
-    styleUrls     : ['logger.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-server-logger-component',
+    templateUrl: 'logger.component.html',
+    styleUrls: ['logger.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NxServerLoggerComponent implements OnChanges {
@@ -53,7 +55,10 @@ export class NxServerLoggerComponent implements OnChanges {
                 .serverManager
                 .setLogLevels(this.serverId, this.loggersToBeSaved())
                 .then((response: any) => {
-                    if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                    if (
+                        typeof (response.error) !== 'undefined' &&
+                        response.error !== '0'
+                    ) {
                         const errorToShow = response.errorString;
                         this.dialogsService
                             .alert(errorToShow, this.LANG.dialogs.titles.error?.())
@@ -62,16 +67,20 @@ export class NxServerLoggerComponent implements OnChanges {
                             });
                     } else {
                         this.dialogsService
-                            .alert(this.LANG.dialogs.message.logLevelsSaved?.(), this.LANG.dialogs.titles.success?.())
-                            .catch(error => {
+                            .alert(
+                                this.LANG.dialogs.message.logLevelsSaved?.(),
+                                this.LANG.dialogs.titles.success?.()
+                            ).catch(error => {
                                 console.error(error);
                             });
                         this.formWatcher.saved();
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.logLevelsNotSaved?.(), this.LANG.dialogs.titles.error?.())
-                        .catch(error => {
+                        .alert(
+                            this.LANG.dialogs.message.logLevelsNotSaved?.(),
+                            this.LANG.dialogs.titles.error?.()
+                        ).catch(error => {
                             console.error(error);
                         });
                 });
@@ -90,34 +99,34 @@ export class NxServerLoggerComponent implements OnChanges {
 
         this.loggerOptions = [
             {
-                value : 'none',
-                name  : this.LANG.system.loggers.none.text(),
-                help  : this.LANG.system.loggers.none.help()
+                value: 'none',
+                name: this.LANG.system.loggers.none.text(),
+                help: this.LANG.system.loggers.none.help()
             },
             {
-                value : 'error',
-                name  : this.LANG.system.loggers.error.text(),
-                help  : this.LANG.system.loggers.error.help()
+                value: 'error',
+                name: this.LANG.system.loggers.error.text(),
+                help: this.LANG.system.loggers.error.help()
             },
             {
-                value : 'warning',
-                name  : this.LANG.system.loggers.warning.text(),
-                help  : this.LANG.system.loggers.warning.help()
+                value: 'warning',
+                name: this.LANG.system.loggers.warning.text(),
+                help: this.LANG.system.loggers.warning.help()
             },
             {
-                value : 'info',
-                name  : this.LANG.system.loggers.info.text(),
-                help  : this.LANG.system.loggers.info.help()
+                value: 'info',
+                name: this.LANG.system.loggers.info.text(),
+                help: this.LANG.system.loggers.info.help()
             },
             {
-                value : 'debug',
-                name  : this.LANG.system.loggers.debug.text(),
-                help  : this.LANG.system.loggers.debug.help()
+                value: 'debug',
+                name: this.LANG.system.loggers.debug.text(),
+                help: this.LANG.system.loggers.debug.help()
             },
             {
-                value : 'verbose',
-                name  : this.LANG.system.loggers.verbose.text(),
-                help  : this.LANG.system.loggers.verbose.help()
+                value: 'verbose',
+                name: this.LANG.system.loggers.verbose.text(),
+                help: this.LANG.system.loggers.verbose.help()
             }
         ];
 
@@ -131,8 +140,8 @@ export class NxServerLoggerComponent implements OnChanges {
     }
 
     init = () => {
-        this.system
-            .logLevel(this.serverId)
+        this.system.serverManager
+            .logLevel(this.serverId).toPromise()
             .then(response => {
                 this.settingsToBeDisplayedOrUpdated(response.reply);
                 this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
@@ -181,14 +190,21 @@ export class NxServerLoggerComponent implements OnChanges {
         ).subscribe(_ => {
             this.loggerWatcher.value = this.formWatcher.changed;
         });
-        this.applyService.addWatchersAndFunctionsFromChild([this.loggerWatcher], this.saveLoggers, reset);
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.loggerWatcher],
+            this.saveLoggers,
+            reset
+        );
     }
 
     loggersToBeSaved() {
         const loggers = [];
 
         Object.keys(this.systemLoggers).forEach((key) => {
-            if (this.systemLoggers[key].value !== this.systemLoggers[key].originalValue) {
+            if (
+                this.systemLoggers[key].value !==
+                this.systemLoggers[key].originalValue
+            ) {
                 loggers.push({ ...this.systemLoggers[key], key });
             }
         });

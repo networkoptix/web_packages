@@ -1,9 +1,12 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Location }                        from '@angular/common';
-import { ActivatedRoute, Router, Params }  from '@angular/router';
-import { BehaviorSubject, Observable }     from 'rxjs';
-import { NxConfigService, IConfig }        from './nx-config';
-import { WINDOW }                          from '@services/window-provider';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { BehaviorSubject, Observable }  from 'rxjs';
+
+import { environment } from '@environments/environment';
+import { WINDOW } from '@services/window-provider';
+
+import { NxConfigService, IConfig } from './nx-config';
+import { NxUtilsService } from './utils.service';
 
 export enum ChildRoutes {
     CAMERAS='cameras',
@@ -42,7 +45,7 @@ export class NxUriService {
     }
 
     set queryParams(params: Params) {
-        if (params !== this.queryParams) {
+        if (!NxUtilsService.isEqual(params, this.queryParams)) {
             this.queryParamsSubject.next(params);
         }
     }
@@ -60,15 +63,17 @@ export class NxUriService {
     }
 
     changePort(newPort): void {
-        this.window.location.replace(`${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`);
+        this.window.location.replace(
+            `${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`
+        );
     }
 
-    getURI(): Observable<Params> {
+    getParams(): Observable<Params> {
         return this.route.queryParams;
     }
 
     navigateSystem(navigateTo, system) {
-        navigateTo = (this.CONFIG.isLocal)
+        navigateTo = (environment.isLocal)
             ? navigateTo.replace('SYSTEM_ID', '')
             : navigateTo.replace('SYSTEM_ID', '/' + system.id);
 
@@ -84,14 +89,22 @@ export class NxUriService {
         });
     }
 
-    updateURI(navigateTo?: string, queryParams: Params = {}, replace?: boolean): Promise<void | boolean> {
+    updateURI(
+        navigateTo?: string,
+        queryParams: Params = {},
+        replace?: boolean
+    ): Promise<void | boolean> {
         if (!navigateTo) {
             navigateTo = this.getURL();
         }
 
         // updating "page" param is called in multiple places for different reasons ...
         // avoid multiple unnecessary URI (and model) updates if we update only "page" and it's same  -- TT
-        if (Object.keys(queryParams).length === 1 && queryParams.page && queryParams.page === this.route.snapshot.queryParams.page) {
+        if (
+            Object.keys(queryParams).length === 1 &&
+            queryParams.page &&
+            queryParams.page === this.route.snapshot.queryParams.page
+        ) {
             return Promise.resolve();
         }
 
@@ -101,9 +114,9 @@ export class NxUriService {
             setTimeout(() => {
                 return this.router.navigate([navigateTo], {
                     queryParams,
-                    relativeTo          : this.route,
-                    replaceUrl          : replace || this.CONFIG.isLocal,
-                    queryParamsHandling : 'merge'
+                    relativeTo: this.route,
+                    replaceUrl: replace || environment.isLocal,
+                    queryParamsHandling: 'merge'
                 }).then(success => {
                     resolve(success);
                 }, error => {
@@ -117,8 +130,8 @@ export class NxUriService {
         this.router
             .navigate([navigateTo], {
                 queryParams,
-                relativeTo : this.route,
-                replaceUrl : false
+                relativeTo: this.route,
+                replaceUrl: false
             })
             .catch(error => { console.error(error); });
     }
@@ -159,8 +172,8 @@ export class NxUriService {
         let base = this.CONFIG.menus.systemSettings.baseUrl;
         let childRoute = '';
 
-        if (!this.CONFIG.isLocal) {
-            base += params.systemId;
+        if (!environment.isLocal) {
+            base += systemId;
         }
 
         if (otherParams.length) {
@@ -169,18 +182,19 @@ export class NxUriService {
             const isChildRoute = param === 'childRoute';
             childRoute = '/' + (isChildRoute ? value : '') + '/';
             if (isChildRoute && value === ChildRoutes.HEALTH || value === ChildRoutes.VIEW) {
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     base = '/';
                     childRoute += '/';
                 }
             } else {
                 // TODO: This probably needs to be refactored, temporary fix for lazy load
+                // TODO: parts of this seem like it had been broken -> should investigate what else needs refactoring here
                 const routeLookup = {
-                    cameraId : 'cameras',
-                    serverId : 'servers',
-                    userId   : 'users'
+                    cameraId: 'cameras',
+                    serverId: 'servers',
+                    userId: 'users'
                 };
-                childRoute += routeLookup[param] + '/' + value;
+                childRoute = childRoute.slice(-1) + routeLookup[param] + '/' + value;
             }
         }
         return base + childRoute;

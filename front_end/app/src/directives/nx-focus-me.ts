@@ -1,6 +1,11 @@
 import {
-    AfterViewInit, Directive,
-    ElementRef, Input, OnChanges, OnInit, SimpleChanges
+    AfterViewInit,
+    Directive,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges
 } from '@angular/core';
 
 @Directive({ selector: '[nxFocusMe]' })
