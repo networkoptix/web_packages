@@ -1996,11 +1996,11 @@
             "You cannot add a parent group to its child.": "You cannot add a parent group to its child."
         },
         "groupAlreadyIn": "Group { srcName } is already in { destName }",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
         "noConnection": "No connection",
         "root": "root",
         "systemAlreadyIn": "System { srcName } is already in { destName }",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}"
     },
     "systemStatuses": {
         "activated": "activated",

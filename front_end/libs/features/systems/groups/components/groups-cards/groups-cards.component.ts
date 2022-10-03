@@ -54,7 +54,7 @@ export class NxGroupsCardsComponent implements OnInit {
     onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
         const dragged = event.item.data;
         const droppedOn = event.container.data;
-        if (!event.isPointerOverContainer) {
+        if (!event.isPointerOverContainer || dragged.id === droppedOn.id) {
             return;
         }
 

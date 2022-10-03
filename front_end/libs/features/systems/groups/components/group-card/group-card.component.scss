@@ -1,5 +1,35 @@
 :host {
-    .system-list-bottom-bar {
-        height: 3.25rem;
+    .card {
+        border-color: var(--group-card-border-color);
+    }
+
+    .system-button {
+        &.card-condensed {
+            .card-body {
+                background: linear-gradient(
+                    180deg,
+                    var(--group-card-bg-grad0) 0%,
+                    var(--group-card-bg-grad100) 100%
+                );
+
+                &:hover {
+                    background: var(--group-card-bg-grad0);
+                }
+            }
+        }
+    }
+    h2 {
+        display: flex !important;
+        align-items: center;
+        line-height: 2rem;
+        height: 2rem;
+        gap: 0.5rem;
+    }
+
+    .group-children {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        // align-items: center;
     }
 }

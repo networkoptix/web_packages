@@ -1,24 +1,53 @@
 @mixin sidebar-level() {
-    h3 {
-        display: inline-block;
-        margin-left: 0.25rem;
-        margin-right: 0.25rem;
-    }
-
     ul {
         list-style-type: none;
         padding-inline-start: 1.5rem;
+
+        li {
+            margin: 0.4rem 0;
+        }
     }
 
-    a {
-        color: var(--body-text-color);
-        text-decoration: none;
+    h3 {
+        // display: inline-block;
+        height: 1.5rem;
+        line-height: 1.5rem;
+        margin-left: 0.25rem;
+        margin-top: 0;
+        margin-bottom: 0;
+
+        a {
+            height: 1.5rem;
+            line-height: 1.5rem;
+            color: var(--body-text-color);
+            text-decoration: none;
+        }
     }
 
+    .group-drop-list {
+        display: flex;
+        align-items: center;
 
-    .group-drop-list.cdk-drop-list-dragging {
-        background-color: rgba(var(--brand-core--rgb), 0.25);
+        &.selected {
+            background-color: var(--groups-sidebar-highlight);
+            h3, a {
+                color: var(--groups-sidebar-highlight-color);
+            }
+
+            .triangle path {
+                fill: var(--groups-sidebar-triangle-icon-highlight-fill);
+            }
+
+            .folder path {
+                fill: var(--groups-sidebar-folder-icon-highlight-fill);
+            }
+        }
+
+        &.cdk-drop-list-dragging {
+            background-color: rgba(var(--groups-sidebar-highlight--rgb), 0.25);
+        }
     }
+
 }
 
 :host {
@@ -36,7 +65,7 @@
 }
 
 .cdk-drag-preview {
-    opacity: 0.35;
+    opacity: 0.5;
     a {
         color: var(--body-text-color);
         text-decoration: none;

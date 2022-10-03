@@ -1,6 +1,7 @@
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -8,6 +9,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
+import { selectCurrentGroupId } from '../../store/groups.selectors';
 
 @UntilDestroy()
 @Component({
@@ -19,12 +21,15 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
     @Input() groups: GroupItem[];
     @Input() systems: SystemItem[];
 
+    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+
     CONFIG: IConfig;
     openState: Record<string, boolean> = {};
 
     constructor(
         configService : NxConfigService,
         private groupsService: NxSystemGroupsService,
+        private store: Store,
     ) {
         this.CONFIG = configService.getConfig();
         groupsService.sidebarOpenSubject

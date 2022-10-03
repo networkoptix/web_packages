@@ -13,6 +13,7 @@ import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {
     selectCrumbs,
+    selectCurrentGroupId,
     selectCurrentGroupItems,
     selectCurrentSystemItems,
     selectLoadingState,
@@ -43,6 +44,7 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     currentSystems$ = this.store.select<SystemItem[] | null>(
         selectCurrentSystemItems
     );
+    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
 

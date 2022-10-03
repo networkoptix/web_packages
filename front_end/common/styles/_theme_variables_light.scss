@@ -511,7 +511,7 @@ html[data-theme="light"] {
     --support-lang-wrapper-bg : #{$light4};
     --support-lang-wrapper-color : #{$light16};
     --support-tech-apple-color : #{$dark1};
-    
+
     --error-label : #{$red-l2};
     --error : #{$red-l2};
 
@@ -569,7 +569,23 @@ html[data-theme="light"] {
     --inactive-license-text: var(--yellow_d2);
 
     // System groups
-    --folder-svg: #{$dark12};
-    --opened-triangle-svg: #{$dark12};
-    --closed-triangle-svg: #{$dark12};
+    --groups-sidebar-bg: #{$light5};
+    @include generateVarAndRgb(--groups-sidebar-highlight, $light16);
+    --groups-sidebar-highlight-color: #{$light1};
+    --groups-sidebar-triangle-icon-fill: #{$dark17};
+    --groups-sidebar-triangle-icon-highlight-fill: #{$light4};
+    --groups-sidebar-folder-icon-fill: #{$dark17};
+    --groups-sidebar-folder-icon-highlight-fill: #{$light1};
+
+    --group-card-folder-icon-body-fill: #{$light10};
+    --group-card-folder-icon-tab-fill: #{$light13};
+    --group-card-bg-grad0: #{$light3};
+    --group-card-bg-grad100: #{$light5};
+    --group-card-border-color: #{$light7};
+    @include generateVarAndRgb(--system-card-bg-grad0, $light1);
+    @include generateVarAndRgb(--system-card-bg-grad100, $light3);
+    --system-card-offline-color: #{$light16};
+    --system-card-border-color: #{$light5};
+    --card-subtext-color: #{$light16};
+    --card-menu-dots-fill: #{$light16};
 }

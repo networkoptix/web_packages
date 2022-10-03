@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-// import { AngularSvgIconModule } from 'angular-svg-icon';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
@@ -8,7 +8,7 @@ import { NxGroupCardComponent } from './group-card.component';
 
 @NgModule({
     imports: [
-        // AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot(),
         ComponentsCoreModule,
         NxSearchHighlightModule,
     ],

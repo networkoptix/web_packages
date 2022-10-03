@@ -1,39 +1,35 @@
-<div class="system-button card card-condensed hoverable">
+<div class="system-button card card-condensed">
     <div
         class="card-body"
+        [ngClass]="{ 'not-online': systemNotOnline }"
         (click)="openSystem()"
     >
-        <h2 class="old-h12 d-block">
+        <h2>
             <nx-search-highlight
                 [text]="system.name"
                 [search]="search"
             ></nx-search-highlight>
         </h2>
-        <span class="system-owner user-name">
+        <!-- <span class="system-owner user-name">
             <nx-search-highlight
                 [text]="getSystemOwnerName"
                 [search]="search"
             ></nx-search-highlight>
-        </span>
+        </span> -->
         <div class="system-list-bottom-bar">
             <div class="system-status">
-                <nx-tag
-                    [clickable]="false"
-                    [type]="tagType"
-                    *ngIf="canShowTag"
-                >
-                    <ng-container>{{ systemState }}</ng-container>
-                </nx-tag>
                 <svg-icon
-                    [ngClass]="{
-                        'margin-system-list-status': canShowTag
-                    }"
                     *ngIf="needToConfigureTwoFactor"
                     nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'lock.svg'"
                     [svgStyle]="{ 'height.px': '20' }"
                     [applyClass]="true"
                 ></svg-icon>
+                <span
+                    *ngIf="systemNotOnline"
+                    class="user-name"
+                    >{{ systemState }}</span
+                >
             </div>
         </div>
     </div>

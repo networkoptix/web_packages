@@ -1,14 +1,17 @@
 :host {
+    overflow-y: auto;
+    padding-right: 1rem;
+
     flex: 1;
 
     .system-card.cdk-drop-list-receiving,
     .system-card.cdk-drop-list-dragging {
-        opacity: 0.75;
+        opacity: 0.25;
     }
 }
 
 .cdk-drag-preview {
-    opacity: 0.35;
+    opacity: 0.5;
 }
 
 .no-systems {

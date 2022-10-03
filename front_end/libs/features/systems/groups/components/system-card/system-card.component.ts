@@ -9,7 +9,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxSystemsService } from '@services/systems.service';
+// import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 
 import type { SystemItem } from '../../groups.types';
@@ -53,7 +53,7 @@ export class NxSystemCardComponent implements OnInit {
         private dialogs: NxDialogsService,
         private processService: NxProcessService,
         private urlProtocol: NxUrlProtocolService,
-        private systemsService: NxSystemsService,
+        // private systemsService: NxSystemsService,
         private router: Router,
     ) {
         this.LANG = language.translations;
@@ -102,16 +102,15 @@ export class NxSystemCardComponent implements OnInit {
             });
     }
 
-    get getSystemOwnerName(): string {
-        return this.systemsService.getSystemOwnerName(
-            this.system,
-            this.account?.email
-        );
-    }
+    // get getSystemOwnerName(): string {
+    //     return this.systemsService.getSystemOwnerName(
+    //         this.system,
+    //         this.account?.email
+    //     );
+    // }
 
-    get canShowTag(): boolean {
-        return this.system.stateOfHealth !== this.CONFIG.system.status.online &&
-            !!this.LANG.systemStatuses;
+    get systemNotOnline(): boolean {
+        return this.system.stateOfHealth !== this.CONFIG.system.status.online;
     }
 
     get canShowButton(): boolean {

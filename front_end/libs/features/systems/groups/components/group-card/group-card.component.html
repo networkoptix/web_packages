@@ -1,21 +1,28 @@
-<div class="system-button card card-condensed hoverable">
+<div class="system-button card card-condensed">
     <div
         class="card-body"
         (click)="openGroup()"
     >
-        <h2 class="old-h12 d-block">
+        <h2>
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'folder2.svg'"
+                [svgStyle]="{ 'width.rem': '1.5', 'height.rem': '2' }"
+            ></svg-icon>
             <nx-search-highlight
                 [text]="group.name"
                 [search]="search"
             ></nx-search-highlight>
         </h2>
         <div class="system-list-bottom-bar">
-            <span class="user-name">{{
-                LANG.systemGroups.groupCount({ count: group.groups.length })
-            }}</span>
-            <span class="user-name">{{
-                LANG.systemGroups.systemCount({ count: group.systemsCount })
-            }}</span>
+            <div class="group-children">
+                <span class="user-name">{{
+                    LANG.systemGroups.groupCount({ count: group.groups.length })
+                }}</span>
+                <span class="user-name">{{
+                    LANG.systemGroups.systemCount({ count: group.systemsCount })
+                }}</span>
+            </div>
         </div>
     </div>
     <div

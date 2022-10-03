@@ -38,13 +38,15 @@
             </div>
             <div
                 class="group-drop-list"
+                [ngClass]="{ selected: (currentGroupId$ | async) === 'root' }"
                 cdkDropList
                 (cdkDropListDropped)="moveToRoot($event)"
             >
                 <svg-icon
                     nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'folder.svg'"
-                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                    svgClass="folder"
                 ></svg-icon>
                 <h3>
                     <a

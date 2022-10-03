@@ -87,7 +87,7 @@ export const selectRootSystemItems = createSelector(
     items => items?.filter(item => item.type === 'system') as SystemItem[]
 );
 
-const selectCurrentGroupId = createSelector(
+export const selectCurrentGroupId = createSelector(
     selectGroupState,
     items => items.currentGroupId
 );

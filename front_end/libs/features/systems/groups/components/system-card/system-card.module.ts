@@ -3,7 +3,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
-import { TagModule } from '@components/tag/tag.module';
 
 import { NxSystemCardComponent } from './system-card.component';
 
@@ -11,7 +10,6 @@ import { NxSystemCardComponent } from './system-card.component';
     imports: [
         AngularSvgIconModule.forRoot(),
         ComponentsCoreModule,
-        TagModule,
         NxSearchHighlightModule,
     ],
     declarations: [
