@@ -344,7 +344,7 @@ Get Random Email Robot
 Get Email Link
     [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=120
     IF    ${via_email}
-        Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+        Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL NO SEND}    is_secure=True
         ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
         IF    "${link type}"=="activate"
             Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
