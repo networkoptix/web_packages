@@ -184,6 +184,9 @@
             "configurations": {
                 "production": {
                     "browserTarget": "webadmin:build:production"
+                },
+                "development": {
+                    "browserTarget": "webadmin:build:development"
                 }
             }
         },
