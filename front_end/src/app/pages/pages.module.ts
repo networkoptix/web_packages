@@ -76,12 +76,10 @@ const lazyRoutes: Routes = [
     {
         path: 'systems/groups',
         loadChildren: () => import('./systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
-        // canActivate: [AuthGuard],
-        // uncomment to enable the feature flag:
-        // canLoad: [FeatureGuard],
-        // data: {
-        //     flags: FeatureFlagStrings.systemGroups
-        // },
+        canLoad: [FeatureGuard],
+        data: {
+            flags: FeatureFlagStrings.systemGroups
+        },
     },
     // {
     //     path: 'systems/groupsbak',
