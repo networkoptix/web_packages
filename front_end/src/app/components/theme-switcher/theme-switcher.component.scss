@@ -1,8 +1,8 @@
 :host {
     .themes {
         .tile {
-            width         : 124px;
-            height        : 100px;
+            width         : 124px !important;
+            height        : 100px !important;
             cursor        : pointer;
             margin-right  : 24px;
             border        : 2px solid transparent;

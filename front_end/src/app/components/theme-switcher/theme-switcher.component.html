@@ -6,7 +6,7 @@
     <nx-section>
         <div class="d-flex flex-row themes">
             <div>
-                <div
+                <button
                     class="tile"
                     (click)="setTheme('dark')"
                     [ngClass]="{ selected: selectedTheme === 'dark' }"
@@ -16,7 +16,7 @@
                         [src]="CONFIG.images.dirTheme + 'dark.svg'"
                         [applyClass]="true"
                     ></svg-icon>
-                </div>
+                </button>
                 <div class="label">
                     <svg-icon
                         *ngIf="selectedTheme === 'dark'"
@@ -29,7 +29,7 @@
             </div>
 
             <div>
-                <div
+                <button
                     class="tile"
                     (click)="setTheme('light')"
                     [ngClass]="{ selected: selectedTheme === 'light' }"
@@ -39,7 +39,7 @@
                         [src]="CONFIG.images.dirTheme + 'light.svg'"
                         [applyClass]="true"
                     ></svg-icon>
-                </div>
+                </button>
                 <div class="label">
                     <svg-icon
                         *ngIf="selectedTheme === 'light'"
@@ -52,7 +52,7 @@
             </div>
 
             <div>
-                <div
+                <button
                     class="tile"
                     (click)="setTheme('auto')"
                     [ngClass]="{ selected: selectedTheme === 'auto' }"
@@ -62,7 +62,7 @@
                         [src]="CONFIG.images.dirTheme + 'auto.svg'"
                         [applyClass]="true"
                     ></svg-icon>
-                </div>
+                </button>
                 <div class="label">
                     <svg-icon
                         *ngIf="selectedTheme === 'auto'"
