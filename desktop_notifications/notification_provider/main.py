@@ -11,6 +11,8 @@ from cloud import CloudAPI
 from protocol import ProviderProtocol
 from subscription import *
 
+MAX_CONNECTIONS = 10000
+
 
 class QuartCustom(Quart):
     shutting_down = False
@@ -23,11 +25,19 @@ redis_client = redis.Redis.from_url(app.config['REDIS_URL'])
 redis_pubsub = redis_client.pubsub()
 
 
+connected = set()
+
+
 def collect_websocket(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
+        global connected
         queue = asyncio.Queue()
-        return await func(queue, *args, **kwargs)
+        connected.add(websocket._get_current_object())
+        try:
+            return await func(queue, *args, **kwargs)
+        finally:
+            connected.remove(websocket._get_current_object())
     return wrapper
 
 
@@ -75,6 +85,16 @@ async def subscribe(socket_queue):
         await stop_lisening(provider_protocol.email, socket_queue)
 
 
+@app.route('/api/v1/health', methods=['GET'])
+def health():
+    num_connected = len(connected)
+    return {
+        'connected': num_connected,
+        'maximum': MAX_CONNECTIONS,
+        'scaleWanted': num_connected > MAX_CONNECTIONS * 0.85
+    }
+
+
 @app.before_serving
 async def startup():
     app.cloud_auth = await CloudAPI.create()
@@ -93,4 +113,4 @@ def ping():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5002)

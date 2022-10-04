@@ -7,7 +7,7 @@ authors = ["Roman Barsegian <rbarsegian@networkoptix.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 quart = "^0.16.3"
-redis = "4.2.0rc3"
+redis = "4.4.0rc1"
 aiohttp = "^3.8.1"
 marshmallow = "^3.15.0"
 hypercorn = "^0.13.2"

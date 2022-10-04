@@ -66,13 +66,16 @@ stages:
   - fi
 
 no-changes:
-  extends: .retries
+#  extends: .retries
+  needs: []
   rules:
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
         changes:
             - cloud/**/*
             - front_end/**/*
         when: never
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        when: always
   stage: check
   script:
     - echo "If this is the only job that runs then no changes were made that requires the pipeline"

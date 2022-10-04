@@ -6,6 +6,7 @@ if TYPE_CHECKING:
 
 import async_timeout
 import asyncio
+import traceback
 
 
 email_queues = dict()
@@ -40,9 +41,14 @@ async def setup_polling():
         try:
             async with async_timeout.timeout(2):
                 await redis_pubsub.get_message(ignore_subscribe_messages=True)
-                await asyncio.sleep(0.01)
+                await asyncio.sleep(0)
         except asyncio.TimeoutError:
             pass
+        except Exception:
+            # Even if there is some unknown exception, we want this task to continue and keep trying
+            # For example, until connectivity is reestablished and redis client handles resubscribing
+            # If exceptions continue for too long, we will see them in logs
+            current_app.logger.error(traceback.format_exc())
 
     await redis_pubsub.unsubscribe()
 
