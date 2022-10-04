@@ -126,42 +126,42 @@
         "asAccountSubheader": "As",
         "toAccountSubheader": "Til",
         "forAccountSubheader": "For {accountEmail}",
-        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
-        "passwordMerge": "to merge systems",
-        "passwordBackup": "to create backup",
-        "passwordRestore": "to restore system from backup",
-        "passwordReset": "to reset server",
-        "passwordRestart": "to restart server",
-        "passwordDetach": "to detach server",
+        "passwordDisconnect": "å koble fra systemet fra %CLOUD_NAME%",
+        "passwordMerge": "å slå sammen systemer",
+        "passwordBackup": "å lage sikkerhetskopi",
+        "passwordRestore": "å gjenopprette systemet fra sikkerhetskopi",
+        "passwordReset": "å tilbakestille serveren",
+        "passwordRestart": "å restarte serveren",
+        "passwordDetach": "å koble fra serveren",
         "passwordTransfer": "å overføre systemet",
-        "expiredAccountSubheader": "Please, log in again as",
+        "expiredAccountSubheader": "Vennligst logg inn igjen 🔐",
         "createAccountHeader": "Opprett %CLOUD_NAME% konto",
-        "activateHeader": "Activate %CLOUD_NAME% Account",
+        "activateHeader": "Aktiver %CLOUD_NAME% -konto",
         "createdText": "Konto opprettet!",
         "activatedText": "Konto aktivert!",
-        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
-        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "createdAdditional": "<p class=\"mb-2\">Bekreftelsesmelding med aktiviseringslenken blir sendt til {accountEmail}.</p><p>Vennligst aktiver kontoen og gå tilbake her for å fullføre prosessen.</p>",
+        "activatedAdditional": "Nå kan du fortsette å logge på %CLOUD_NAME% her eller andre steder",
         "passResetHeader": "Tilbakestille passord",
         "newPassHeader": "Angi et nytt passord",
         "newPassConfirmText": "Passord angitt!",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "newPassInvalidCode": "Kan ikke lagre passord: Bekreftelseskoden er allerede brukt eller feil",
+        "notSecureText": "Hvis du fortsetter vil du gi<br><span class='error-label'>{ redirectUrl }</span><br>tilgang til %CLOUD_NAME% -kontoen din.",
         "confirmHeader": "System koblet til %CLOUD_NAME%!",
         "loginError": "Kan ikke koble til %CLOUD_NAME%",
-        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "loginErrorAdditional": "Vennligst prøv igjen eller logg på systemet direkte med din lokale konto.",
         "connectErrorAdditional": "Vennligst prøv igjen senere.",
-        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "setupErrorAdditional": "<p class=\"mb-2\">Vennligst prøv igjen eller sett opp et ikke-skysystem.</p><p>Du vil kunne koble den til %CLOUD_NAME% når som helst etterpå.</p>",
         "connectedText": "System koblet til %CLOUD_NAME%",
-        "setupConnectedText": "System connected",
-        "stayLoggedInHelpText": "Checkbox for staying logged in",
-        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard",
+        "setupConnectedText": "System koblet til",
+        "stayLoggedInHelpText": "Avmerkingsboks for å forbli pålogget",
+        "termsAndConditionsHelpText": "Avmerkingsboks godtar vilkårene og personvernreglene",
+        "copiedToClipboard": "Kopiert til utklippstavlen",
         "authCode": {
-            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
-            "newPass": "set a new password",
+            "message": "Skriv inn en kode fra autentiseringsappen din for å bekrefte at det virkelig er du som prøver å {suffix}",
+            "newPass": "angi et nytt passord",
             "login": "logg Inn"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "E-post er sendt!"
     },
     "cameraFilters": {
         "H265": "H.265 kameraer",
@@ -212,7 +212,7 @@
         "account": {
             "created": {
                 "title": "Konto opprettet",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "Bekreftelsesmelding med aktiveringslenken er sendt til {email}"
             },
             "activated": {
                 "title": "Kontoen er aktivert"
@@ -243,10 +243,10 @@
             "unauthorized": "Autentisering kreves"
         },
         "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
-        "copiedToClipboard": "Copied to clipboard",
+        "copiedToClipboard": "Kopiert til utklippstavlen",
         "login": "innlogging",
         "recordingSettingsWarning": "Oppdater manglende innspillingsinnstillinger.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Opptaksmodus endres til \"Ta opp alltid\"",
         "recordingModes": {
             "always": "Alltid opptak",
             "motion": "Spill inn bare bevegelse",
@@ -282,10 +282,10 @@
         "systemNoAlertsMessage": "Systemet ditt må ha det bra!",
         "systemOffline": "System frakoblet",
         "systemOfflineMessage": "Dette systemet er offline og kan ikke nås akkurat nå.",
-        "systemServerError": "Internal server error",
+        "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "systemUnresponsive": "Systemet ser ut til å ikke reagere. Last inn siden på nytt.",
         "unknown": "Ukjent",
         "vendor": "Leverandør",
         "model": "Modell",
@@ -317,23 +317,23 @@
     },
     "cookieWarning": "Vi brukte informasjonskapsler for å forbedre opplevelsen din på nettstedet vårt. De hjelper oss også å forstå hvordan nettstedet vårt brukes. Finn ut mer og angi dine cookies-preferanser&nbsp; | her | . Ved å fortsette å bruke nettstedet vårt samtykker du til å bruke informasjonskapslene våre.",
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "Dashboard-redigering er aktivert",
+        "dashboardLocked": "Dashbordet er låst",
+        "unlockToUpload": "Lås opp dashbordet for å laste opp konfigurasjon fra json",
+        "unlockToMove": "Lås opp dashbordet for å flytte widgets"
     },
     "devConsole": {
         "create": "Opprett"
     },
     "dialogs": {
         "twoFa": {
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
+            "wizardWarningDescr": "Tidligere versjoner av %VMS_NAME% klient støtter ikke tofaktorautentisering.",
+            "installAuthApp": "Installer en autentiseringsapp på mobilenheten din hvis du ikke allerede har en. %CLOUD_NAME% støtter <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> eller <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Tofaktorautentisering er nå <strong>aktivert</strong> for %CLOUD_NAME% -kontoen din!"
         },
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Denne e-posten er allerede registrert i %systemName% -systemet"
         },
         "buttons": {
             "cancel": "Avbryt",
@@ -353,8 +353,8 @@
             "title": "Cloud-lagring",
             "enableStorage": "Aktiver skylagring",
             "otherSystem": "Annet system...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "initial": "Vi tilbyr {compCapacity} gratis skylagring per system for å komme i gang.",
+            "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {vmsName} klienten.",
             "camera": "kamera",
             "cameras": "kameraer",
             "actions": {
@@ -415,7 +415,7 @@
             },
             "moveCloudStorage": {
                 "title": "Flytt skylagring",
-                "success": "Storage successfully moved",
+                "success": "Lagringsplass flyttet",
                 "errorPrefix": "Feil ved flytting av skylagring",
                 "notFound": "Lagring ikke funnet. Lagring kan ha blitt flyttet eller slettet av en annen bruker",
                 "status": {
@@ -431,12 +431,12 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Hvis du har tenkt å flytte analysedata til et annet lagringssted, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> før du fortsetter."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "adminPasswordTitle": "Skriv inn passord til eierens konto i <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Passordet for admin-brukeren er feil",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} er koblet til %CLOUD_NAME%. Skysystemer kan bare slås sammen fra %CLOUD_NAME%.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Kontrollerer...",
             "cloud": "Cloud",

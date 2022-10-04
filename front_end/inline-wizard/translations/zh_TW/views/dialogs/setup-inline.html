@@ -31,8 +31,8 @@
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
     <div>
         <h2>Get Started with {{Config.productName}}</h2>
-        <p class="master-description">Please configure the server first.<br>
-            Choose an option.</p>
+        <p class="master-description">請先設定伺服器.<br>
+            選擇一個選項.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
         <button class="btn btn-primary" autofocus ng-click="next()">設定新系統</button>
 
@@ -60,19 +60,19 @@
 
         <div class="form-group has-error" ng-if="forms.systemNameForm.systemName.$touched && forms.systemNameForm.systemName.$error.required">
             <div class="help-block">
-                System name is required
+                系統名稱為必填欄位
             </div>
         </div>
         <input type="submit" hidden>
     </form>
     <p class="vertical-bottom">
-        <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
+        <a href="" ng-click="next('advanced', true)">進階系統設定</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>Advanced System settings</h2>
+    <h2>進階系統設定</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
@@ -170,14 +170,14 @@
 
 
 <div class="panel-body text-center" ng-if="stepIs('cloudAuthorizedIntro')">
-    <p>System will be connected to</p>
+    <p>系統將連接到</p>
 
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
     <h2>{{settings.presetCloudEmail}}</h2>
 
     <p class="vertical-bottom">
-        <a href="" ng-click="next('cloudLogin', true)">Connect to another account</a>
+        <a href="" ng-click="next('cloudLogin', true)">連線到另一個帳戶</a>
     </p>
 </div>
 
@@ -194,7 +194,7 @@
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudPassword" name="cloudPassword" class="form-control"
-                   type="password" autocomplete="new-password" required placeholder="Password" ng-change="clearCloudError()">
+                   type="password" autocomplete="new-password" required placeholder="密碼" ng-change="clearCloudError()">
         </div>
 
         <div class="new-style-checkbox" ng-if="settings.thickClient">
@@ -221,7 +221,7 @@
         <div class="form-group has-error"
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.email">
             <div class="help-block">
-                Please, enter a valid email
+                請輸入一個有效的電子郵件。
             </div>
         </div>
 
@@ -248,7 +248,7 @@
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
-    <h2>Set up an administrator password</h2>
+    <h2>設定管理員密碼</h2>
     <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
         <input type="submit" hidden>
         <div class="form-group" validate-field>
@@ -262,7 +262,7 @@
                      forms.localForm.localPasswordConfirmation.$touched &&
                      settings.localPasswordConfirmation != settings.localPassword}">
             <input ng-model="settings.localPasswordConfirmation" name="localPasswordConfirmation" class="form-control"
-                   type="password" autocomplete="new-password" placeholder="Repeat password" required>
+                   type="password" autocomplete="new-password" placeholder="確認密碼" required>
         </div>
 
         <div class="new-style-checkbox" ng-if="settings.thickClient">
@@ -282,7 +282,7 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="savePassword">
-                <span>Save password</span>
+                <span>保存密碼</span>
             </label>
         </div>
 
@@ -291,7 +291,7 @@
                      !forms.localForm.passwordInput.$dirty &&
                      !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
-                Password must contain different types of characters and have at least 8 symbols
+                密碼必須包含不同類型的字元，且長度至少為8位數。
             </div>
         </div>
         <div class="form-group has-error" ng-if="!forms.localForm.passwordInput.password.$valid">
@@ -314,7 +314,7 @@
                     forms.localForm.localPasswordConfirmation.$touched &&
                     forms.localForm.localPasswordConfirmation.$error.required)">
             <div class="help-block">
-                All fields are required
+                所有欄位皆為必填項目
             </div>
         </div>
 
@@ -322,14 +322,14 @@
              ng-if= "forms.localForm.$valid &&
                      (settings.localPasswordConfirmation != settings.localPassword)">
             <div class="help-block">
-                Passwords do not match
+                兩次密碼輸入不一致
             </div>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
-    <h2>Connect the server to the existing System</h2>
+    <h2>將伺服器加入到現有的系統</h2>
     <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
         <input type="submit" hidden>
         <div class="form-group" validate-field>
@@ -341,7 +341,7 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
- placeholder="Existing System URL (https://host:port)"
+ placeholder="現有系統位址 (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
  class="form-control">
@@ -353,20 +353,20 @@
         <div class="form-group" validate-field>
             <input ng-model="settings.remoteLogin" name="remoteLogin" class="form-control" type="text"
                    ng-change="clearRemoteError(true)"
-                   placeholder="Login" required>
+                   placeholder="登入" required>
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.remotePassword"
                    name="remotePassword" autocomplete="new-password" class="form-control" type="password"
                    ng-change="clearRemoteError(true)"
-                   placeholder="Password" required>
+                   placeholder="密碼" required>
         </div>
         <div class="form-group has-error"
              ng-if="forms.remoteSystemForm.remoteSystemName.$touched &&  forms.remoteSystemForm.remoteSystemName.$error.required||
                     forms.remoteSystemForm.remoteLogin.$touched && forms.remoteSystemForm.remoteLogin.$error.required ||
                     forms.remoteSystemForm.remotePassword.$touched && forms.remoteSystemForm.remotePassword.$error.required">
             <div class="help-block">
-                All fields are required
+                所有欄位皆為必填項目
             </div>
         </div>
 
@@ -381,26 +381,26 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Merging Systems ...</h2>
-    <p class="master-description">It may take several minutes</p>
+    <h2>系統合併中 ...</h2>
+    <p class="master-description">這可能需要幾分鐘的時間</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Merging Systems ...</h2>
-    <p class="master-description">Trying to connect to the System</p>
+    <h2>系統合併中 ...</h2>
+    <p class="master-description">正在嘗試連接到系統</p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('mergeFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot merge Systems</h2>
+    <h2>無法合併系統</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup a separate System</button>
+        <button class="btn btn-default" ng-click="retry()">重試</button>
+        <button class="btn btn-default" ng-click="skip()">設置一個獨立的系統</button>
     </p>
 </div>
 
@@ -411,7 +411,7 @@
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-click="retry()">請再試一次</button>
     </p>
 </div>
 
@@ -434,9 +434,9 @@
 <div class="panel-body text-center" ng-if="stepIs('localSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
     <h2>System is ready for use</h2>
-    <p>Server address</p>
+    <p>伺服器位址</p>
     <h4>{{serverAddress}}</h4>
-    <p>Administrator login</p>
+    <p>管理員登入</p>
     <h4>{{settings.localLogin}}</h4>
 </div>
 
@@ -455,7 +455,7 @@
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
+        <button class="btn btn-primary" ng-click="retry()">保存設定並重啟設備</button>
     </p>
 </div>
 
@@ -478,7 +478,7 @@
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
     <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
-        Check the Internet connection.
+        請檢查網路連線。
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
