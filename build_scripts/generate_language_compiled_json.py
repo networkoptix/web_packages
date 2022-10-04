@@ -106,8 +106,13 @@ def prep_json_for_pluralization(adict):
         if type(adict[key]) is dict:
             prep_json_for_pluralization(adict[key])
         else:
+            is_list = type(adict[key]) is list
+            if is_list:
+                adict[key] = json.dumps(adict[key])
             for match in re.findall(r'{{[#\s\w]+}}', adict[key]):
                 adict[key] = adict[key].replace(match, match[1:-1])
+            if is_list:
+                adict[key] = json.loads(adict[key])
 
 
 def main():
