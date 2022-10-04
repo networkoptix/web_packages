@@ -710,26 +710,26 @@
         "systemList": "System List",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "ようこそ",
                 "nodes": [
                     {
-                        "displayName": "Welcome To %CLOUD_NAME%"
+                        "displayName": "%CLOUD_NAME% へようこそ"
                     }
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "アカウント",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "アカウント設定"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "システム",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "マイシステム"
                     }
                 ]
             }
@@ -1068,8 +1068,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",

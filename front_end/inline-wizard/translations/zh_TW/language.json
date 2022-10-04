@@ -161,19 +161,19 @@
         "incompatibleCloudState": "cloud connected"
     },
     "login": {
-        "incorrectPassword": "Login or password is incorrect",
-        "authLockout": "Too many attempts. Try again in a minute."
+        "incorrectPassword": "帳號或密碼不正確",
+        "authLockout": "嘗試次數過多，請稍後再試。"
     },
     "navigaion": {
-        "cannotGetUser": "Server failure: cannot retrieve current user data"
+        "cannotGetUser": "伺服器錯誤: 無法取得此使用者資料"
     },
     "offlineDialog": {
-        "serverOffline": "server is offline"
+        "serverOffline": "伺服器已離線"
     },
     "restartDialog": {
-        "serverStarting": "server is starting",
-        "serverRestarting": "server is restarting",
-        "serverOffline": "server is offline"
+        "serverStarting": "伺服器正在啟動中",
+        "serverRestarting": "伺服器正在重新啟動",
+        "serverOffline": "伺服器已離線"
     },
     "advanced": {
         "free": "Free",
@@ -182,6 +182,6 @@
         "reserved": "Reserved"
     },
     "pageTitles": {
-        "default": "{{PRODUCT_NAME}} web interface"
+        "default": "{{PRODUCT_NAME}} 網頁管理介面"
     }
 }
