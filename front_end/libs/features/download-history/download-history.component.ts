@@ -90,8 +90,8 @@ export class DownloadHistoryComponent implements OnInit {
 
     // Only for response from NxCloudApiService.getDownloadsHistory(this.build),
     // doesn't acually check object contents
-    private isSingleBuild(_data: BuildHistory | Build): _data is BuildHistory {
-        return !this.build;
+    private isSingleBuild(_data: BuildHistory | Build): _data is Build {
+        return !!this.build;
     }
 
     private getData(): void {
@@ -99,14 +99,14 @@ export class DownloadHistoryComponent implements OnInit {
             .getDownloadsHistory(this.build)
             .then(data => {
                 this.linkbase = data.updatesPrefix;
-                if (this.isSingleBuild(data)) {
+                if (!this.isSingleBuild(data)) {
                     this.downloadsData = data;
                     if (!(this.section in data)) {
                         this.section = this.releases;
                     }
                     this.activeBuilds = data[this.section];
                     this.getAvailableDownloadTypes(data);
-                } else { // only one build
+                } else {
                     this.activeBuilds = [data];
                     this.noteTypes = [data.type];
                     this.downloadsData = {
