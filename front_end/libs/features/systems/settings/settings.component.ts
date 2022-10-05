@@ -175,6 +175,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this.LANG = languageService.translations;
+            });
     }
 
     ngOnInit(): void {

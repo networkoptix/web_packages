@@ -5,6 +5,7 @@ import {
     OnInit
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { Watcher } from '@services/apply.service/watcher';
@@ -15,6 +16,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 const noop = () => { };
 
+@UntilDestroy()
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
     CONFIG: IConfig;
@@ -38,6 +40,14 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
         this.LANG = languageService.translations;
         this.message = this.LANG.pleaseSelect();
         this.show = false;
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                });
+            });
     }
 
     ngOnInit(): void {

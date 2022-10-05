@@ -142,25 +142,21 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                    this.getMenu();
+                });
+            });
+
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         if (this.newHeader) {
             this.lazyLoadNewHeader();
         }
-        this.menusService.getMenu('header', true)
-            .pipe(untilDestroyed(this))
-            .subscribe(header => {
-                const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-                this.headerService.setLocation(this.window.location.pathname);
-                if (this.newHeader && this.loginState) {
-                    const firstNode = this.menusService.makeSystemMenuNode();
-                    const accountNode = this.menusService.makeAccountSettingsNode();
-                    nodes.unshift(firstNode);
-                    nodes.push(accountNode);
-                }
-                this.headerService.nodes = nodes;
-
-                this.headerService.setLocation(this.window.location.pathname);
-            });
+        this.getMenu();
         // Updates windowWidth$ behavior subject on window resize
         fromEvent<Event>(this.window, 'resize')
             .pipe(
@@ -274,6 +270,26 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
         }
         this.headerService.createUrl = `${this.headerService.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
+    }
+
+    private getMenu(): void {
+        this.menusService.getMenu('header', true)
+            .pipe(untilDestroyed(this))
+            .subscribe(header => {
+                const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                this.headerService.setLocation(this.window.location.pathname);
+                if (this.newHeader) {
+                    const firstNode = this.loginState
+                        ? this.menusService.makeSystemMenuNode()
+                        : this.menusService.makeWelcomeNode();
+                    const accountNode = this.menusService.makeAccountSettingsNode();
+                    nodes.unshift(firstNode);
+                    nodes.push(accountNode);
+                }
+                this.headerService.nodes = nodes;
+
+                this.headerService.setLocation(this.window.location.pathname);
+            });
     }
 
     private isActive(val: string) {

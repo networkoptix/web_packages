@@ -4,10 +4,9 @@ import {
     Input,
     forwardRef,
     Directive,
-    Inject
+    Inject, Output, EventEmitter
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { LocalStorageService } from 'ngx-webstorage';
 
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -22,11 +21,10 @@ import { BaseDropdown } from '../injDropdown';
 
 @Directive()
 class BaseLanguageDropdown extends BaseDropdown {
-    @Input() instantReload;
-    @Input() instantApply;
     @Input() dropup;
     @Input() short;
     @Input() altStyle;
+    @Output() langChange = new EventEmitter<string>();
 
     currentLang: string;
     show: boolean;
@@ -45,7 +43,6 @@ class BaseLanguageDropdown extends BaseDropdown {
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
-        private localStorageService: LocalStorageService,
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
     ) {
@@ -77,16 +74,16 @@ class BaseLanguageDropdown extends BaseDropdown {
                 return (lang.language === this.langCode);
             });
 
-            if (this.instantApply && this.instantReload) {
+            if (this.languageService.currentLang !== this.langCode) {
                 if (environment.isLocal) {
                     this.sessionService.language = this.langCode;
                     this.window.location.reload();
                 } else {
                     this.cloudApi
                         .changeLanguage(this.langCode)
-                        .then(_ => {
-                            this.localStorageService.store('language', this.langCode);
+                        .then(() => {
                             this.languageService.currentLang = this.langCode;
+                            this.langChange.emit(this.langCode);
                         });
                 }
             }
@@ -95,8 +92,6 @@ class BaseLanguageDropdown extends BaseDropdown {
 
     ngOnInit(): void {
         this.direction = this.dropup ? 'dropup' : '';
-        this.instantReload = this.instantReload !== undefined;
-        this.instantApply = this.instantApply !== undefined;
 
         this.cloudApi.getLanguages().then(data => {
             this.languages = this.CONFIG?.supportedLanguages?.length === 0

@@ -4,6 +4,7 @@ import {
     OnChanges,
     OnInit,
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
@@ -21,6 +22,7 @@ enum mainButtonState {
     SYSTEMS = 'systems'
 }
 
+@UntilDestroy()
 @Component({
     selector: 'nx-header-main-button',
     templateUrl: 'main-button.component.html',
@@ -46,6 +48,14 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                });
+            });
     }
 
     ngOnInit(): void {

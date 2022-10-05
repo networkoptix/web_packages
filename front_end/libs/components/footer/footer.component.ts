@@ -12,6 +12,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy()
 @Component({
@@ -36,10 +37,20 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         private appState: NxAppStateService,
-        private menusService: NxMenusService
+        private menusService: NxMenusService,
+        languageService: NxLanguageProviderService,
     ) {
         this.CONFIG = configService.getConfig();
         this.visible = !this.CONFIG.featureFlags.newHeader;
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    // this.LANG = translations;
+                    this.getMenu();
+                });
+            });
     }
 
     ngOnDestroy(): void {}
@@ -48,6 +59,20 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
+
+        this.getMenu();
+        this.appState.footerVisibleSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(visible => {
+                this.viewFooter = visible;
+            });
+    }
+
+    trackItem(index, item) {
+        return item ? item.url : undefined;
+    }
+
+    private getMenu(): void {
         this.menusService.getMenu('footer').subscribe(footer => {
             this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
             if (environment.isLocal) {
@@ -60,15 +85,5 @@ export class NxFooterComponent implements OnInit, OnDestroy {
                 });
             }
         });
-
-        this.appState.footerVisibleSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(visible => {
-                this.viewFooter = visible;
-            });
-    }
-
-    trackItem(index, item) {
-        return item ? item.url : undefined;
     }
 }

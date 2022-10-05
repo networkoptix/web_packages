@@ -61,6 +61,14 @@ export class NxStorageService {
         this.storage.store('regActivated', regActivated);
     }
 
+    get language(): string {
+        return this.storage.retrieve('language') || undefined;
+    }
+
+    set language(language: string) {
+        this.storage.store('language', language);
+    }
+
     get langChanged(): boolean {
         return this.storage.retrieve('langChanged') || false;
     }

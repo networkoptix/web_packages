@@ -55,20 +55,22 @@ export class NxMenusService {
                 distinctUntilChanged(),
                 untilDestroyed(this)
             )
-            .subscribe(lang => {
-                this.LANG = languageService.translations;
-                this.updateMenu(lang);
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                    this.updateMenu(translations);
+                });
             });
     }
 
-    updateMenu = (lang): void => {
+    updateMenu = (translations): void => {
         this.languageChanged$.next('changed');
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
             (newMenu, [name, { title, description, nodes }]) => {
                 newMenu[name] = {
                     title,
                     description,
-                    nodes: nodes.map(this.translateNode(lang))
+                    nodes: nodes.map(this.translateNode(translations))
                 };
                 return newMenu;
             }, {});

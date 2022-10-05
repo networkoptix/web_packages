@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -6,6 +7,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -22,6 +24,17 @@ export class NxThemeService {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
+
+        this.localStorageService.observe('theme')
+            .pipe(untilDestroyed(this))
+            .subscribe(theme => {
+                if (!this.window.document.hasFocus()) {
+                    this.window.document.documentElement.setAttribute(
+                        'data-theme',
+                        theme
+                    );
+                }
+            });
     }
 
     async initTheme(): Promise<void> {

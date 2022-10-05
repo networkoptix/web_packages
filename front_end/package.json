@@ -115,7 +115,6 @@
     "@ngrx/store": "13.0.2",
     "@nguniversal/express-engine": "^14.2.0",
     "@ngx-translate/core": "14.0.0",
-    "@ngx-translate/http-loader": "7.0.0",
     "@nrwl/angular": "^14.7.5",
     "@swimlane/ngx-charts": "20.1.0",
     "@tinymce/tinymce-angular": "6.0.1",

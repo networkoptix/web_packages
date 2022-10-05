@@ -28,10 +28,20 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                    this.initMenu();
+                    this.content = { ...this.content }; // trigger onChange
+                });
+            });
     }
 
     ngOnDestroy(): void { }
@@ -52,10 +62,23 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     }
 
     init(): void {
-        const accountMenu = this.CONFIG.menus.account;
         if (!this.userEmail) {
             return;
         }
+
+        this.initMenu();
+
+        this.menuService.selectedDetailsSection
+            .pipe(untilDestroyed(this))
+            .subscribe(selection => {
+                this.content.selectedDetailsSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+                this.menuReady = true;
+            });
+    }
+
+    private initMenu(): void {
+        const accountMenu = this.CONFIG.menus.account;
         this.content.level1 = [{
             id: accountMenu.settings.id,
             svg: accountMenu.icon,
@@ -79,13 +102,5 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                 }
             ]
         }];
-
-        this.menuService.selectedDetailsSection
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-                this.menuReady = true;
-            });
     }
 }

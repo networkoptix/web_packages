@@ -7,6 +7,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
@@ -23,10 +24,10 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxStorageService } from '@services/storage.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 
+@UntilDestroy()
 @Component({
     selector: 'nx-account-settings-component',
     templateUrl: 'settings.component.html',
@@ -50,6 +51,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     langCode: string;
     isSystemOwner = true;
     hideErrors = true;
+    langChanged = false;
 
     private setupDefaults(): void {
         this.menuService.detail = 'settings';
@@ -57,8 +59,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
-        private storageService: NxStorageService,
+        languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,
@@ -71,33 +72,33 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.translations;
-        this.langCode = this.languageService.currentLang;
+        this.LANG = languageService.translations;
+        this.langCode = languageService.currentLang;
         this.setupDefaults();
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                    this.pageService.pageTitle = this.LANG.pageTitles.account();
+                    this.initProcess();
+                    if (this.langChanged) {
+                        this.langChanged = false;
+                        this.toastService.notify(
+                            this.LANG.account.accountSavedSuccess(),
+                            this.CONFIG.toast.success,
+                        );
+                    }
+                });
+            });
     }
 
     ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.account();
         this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.saveAccount = this.processService.createProcess(() => {
-            this.storageService.langChanged = false;
-            return this.cloudApiService.accountPost(this.account);
-        }, {
-            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
-            logoutForbidden: true
-        }).then(() => {
-            this.accountService.accountSubject.next(this.accountService.accountSubject.value);
-            // account info was changed successful (local and on server)
-            // really no need to force update -- TT
-            // this.accountService.get(true);
-            if (!this.storageService.langChanged) {
-                this.toastService.notify(
-                    this.LANG.account.accountSavedSuccess(),
-                    this.CONFIG.toast.success,
-                );
-            }
-        }, () => {});
+        this.initProcess();
 
         this.accountService
             .get(true)
@@ -117,28 +118,39 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                             this.accountForm,
                             this.saveAccount
                         );
-
-                        this.langFormWatcher = this.applyService.createFormWatcher(
-                            'langForm',
-                            this.langForm,
-                            this.saveLang
-                        );
                     });
                 }
             });
-
-        if (this.storageService && this.storageService.langChanged) {
-            this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
-            this.storageService.langChanged = false;
-        }
     }
 
     ngOnDestroy(): void {
         this.applyService.removeWatchers();
     }
 
+    initProcess(): void {
+        this.saveAccount = undefined;
+        this.saveAccount = this.processService.createProcess(() => {
+            return this.cloudApiService.accountPost(this.account);
+        }, {
+            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
+            logoutForbidden: true
+        }).then(() => {
+            this.accountService.accountSubject.next(this.accountService.accountSubject.value);
+            // account info was changed successful (local and on server)
+            // really no need to force update -- TT
+            // this.accountService.get(true);
+            this.toastService.notify(
+                this.LANG.account.accountSavedSuccess(),
+                this.CONFIG.toast.success,
+            );
+        }, () => {
+        });
+    }
+
     changeLanguage(langCode: string): void {
+        this.langChanged = true;
         this.langCode = langCode;
+        this.account.language = langCode;
     }
 
     isUserASystemOwner(): void {

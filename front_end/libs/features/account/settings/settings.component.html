@@ -148,8 +148,8 @@
                 >
                     <nx-language-select
                         name="langSelect"
-                        [ngModel]="langCode"
-                        (ngModelChange)="changeLanguage($event)"
+                        [(ngModel)]="langCode"
+                        (langChange)="changeLanguage($event)"
                     ></nx-language-select>
                 </form>
             </nx-section>

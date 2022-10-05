@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -33,6 +33,7 @@ export class NxDropMenu extends BaseDropdown {
     columns$ = new BehaviorSubject(4);
     systems$ = new BehaviorSubject([]);
     additionalSystems$ = new BehaviorSubject(0);
+    getMenuSubscription: Subscription;
     columnWidth = 236;
 
     systemCounter: number;
@@ -60,17 +61,7 @@ export class NxDropMenu extends BaseDropdown {
                 untilDestroyed(this)
             )
             .subscribe(_ => {
-                this.menusService.getMenu('header', this.systems$.value.length >= 1)
-                    .pipe(
-                        untilDestroyed(this)
-                    )
-                    .subscribe(header => {
-                        const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-                        if (environment.isLocal) {
-                            this.replaceCloudHost(nodes);
-                        }
-                        this.menuNodes$.next(nodes);
-                    });
+                this.getMenu();
             });
 
         this.router
@@ -83,6 +74,35 @@ export class NxDropMenu extends BaseDropdown {
             )
             .subscribe(() => {
                 this.headerService.show$ = false;
+            });
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(translations => {
+                setTimeout(() => {
+                    this.LANG = translations;
+                    this.getMenu();
+
+                    const activeSystem = this.headerService.activeSystem ||
+                        this.headerService.lastActive$.value ||
+                        this.systems[0];
+                    this.menusService.updateActiveSystemMenu(activeSystem);
+                });
+            });
+    }
+
+    private getMenu(): void {
+        this.getMenuSubscription && this.getMenuSubscription.unsubscribe();
+        this.getMenuSubscription = this.menusService.getMenu('header', this.systems$.value.length >= 1)
+            .pipe(
+                untilDestroyed(this)
+            )
+            .subscribe(header => {
+                const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                if (environment.isLocal) {
+                    this.replaceCloudHost(nodes);
+                }
+                this.menuNodes$.next(nodes);
             });
     }
 

@@ -173,10 +173,10 @@
         "serve": {
             "builder": "@angular-devkit/build-angular:dev-server",
             "options": {
-                "publicHost": "localhost:9000",
+                "publicHost": "localhost:9001",
                 "host": "0.0.0.0",
-                "port": 9000,
-                "browserTarget": "webadmin:build:production",
+                "port": 9001,
+                "browserTarget": "webadmin:build:development",
                 "sslKey": "ssl_keys/server.key",
                 "sslCert": "ssl_keys/server.crt",
                 "ssl": true

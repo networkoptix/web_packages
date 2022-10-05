@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 // import { Store } from '@ngrx/store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
@@ -28,6 +29,7 @@ interface MergeInfo {
     secondary: NxSystemInfo;
 }
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -68,6 +70,12 @@ export class NxSystemsService implements OnDestroy {
         } else {
             this.systemsSubject.next([]);
         }
+
+        languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this.LANG = languageService.translations;
+            });
     }
 
     get userDisconnectSystem(): boolean {

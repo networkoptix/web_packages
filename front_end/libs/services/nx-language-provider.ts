@@ -44,7 +44,7 @@ export class NxLanguageProviderService {
 
         this.storageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
-            if (!environment.isLocal) {
+            if (!environment.isLocal && !this.window.document.hasFocus()) {
                 this.window.location.reload();
             }
         });

@@ -14,6 +14,7 @@ export class NxSessionService {
     email$: BehaviorSubject<string>;
     loginStateSubject: BehaviorSubject<string>;
     language$: BehaviorSubject<string>;
+    langChanged$: BehaviorSubject<boolean>;
     private session: LocalStorageService;
 
     constructor(
@@ -26,6 +27,7 @@ export class NxSessionService {
         this.email$ = new BehaviorSubject<string>(this.session.retrieve('email'));
         this.loginStateSubject = new BehaviorSubject<string>(this.loginState || '');
         this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
+        this.langChanged$ = new BehaviorSubject<boolean>(this.session.retrieve('langChanged') || false);
 
         // Listens to changes from other browser tabs.
         this.session.observe('loginState').subscribe(() => {
@@ -63,6 +65,15 @@ export class NxSessionService {
     set language(lang: string) {
         this.session.store('language', lang);
         this.language$.next(lang);
+    }
+
+    get langChanged(): boolean | undefined {
+        return this.langChanged$?.getValue();
+    }
+
+    set langChanged(bool: boolean) {
+        this.session.store('langChanged', bool);
+        this.langChanged$.next(bool);
     }
 
     get loginState(): string {
