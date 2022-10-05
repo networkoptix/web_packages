@@ -104,7 +104,8 @@ export class AppComponent implements AfterViewInit {
     };
 
     lazyLoadComponents = async (): Promise<void> => {
-        const idle = (): Promise<unknown> => new Promise(resolve => requestIdleCallback(resolve));
+        // requestIdleCallback is not supported in Safari so the next best thing is setTimeout.
+        const idle = (): Promise<unknown> => new Promise(resolve => this.window?.requestIdleCallback ? requestIdleCallback(resolve) : setTimeout(resolve));
 
         await idle();
         await import('@components/toast/toast-container.module').then(m => m.ToastContainerModule);

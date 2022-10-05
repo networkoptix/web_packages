@@ -1,7 +1,6 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { isEqual } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
@@ -174,14 +173,11 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     set account(account: Account) {
-        account?.permissions.sort();
-        if (!isEqual(account, this.account)) {
-            this.accountSubject.next(account);
-            const loginState = this.sessionService.loginState;
-            const login = account?.email || account?.name;
-            if (!loginState || loginState !== login) {
-                this.sessionService.loginState = login || null;
-            }
+        this.accountSubject.next(account);
+        const loginState = this.sessionService.loginState;
+        const login = account?.email || account?.name;
+        if (!loginState || loginState !== login) {
+            this.sessionService.loginState = login || null;
             this.bootstrapProviderService.load();
         }
     }

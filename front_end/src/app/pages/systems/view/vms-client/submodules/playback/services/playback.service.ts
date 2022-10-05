@@ -462,7 +462,7 @@ export class PlaybackService {
     }
 
     public changeTransport(st: PlaybackTransport): void {
-        if (this._state.transport === st) {
+        if (this._state.transport === st || !this.vms.selectedCamera.availableTransports.includes(st)) {
             return;
         }
         this._state.transport = st;
