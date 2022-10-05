@@ -62,7 +62,7 @@ def notify_version_ready(asset, version, exclude_user):
         if (reviews_enabled := cloud_capabilities.get('reviews_enabled', False)) and \
                 (not asset.is_integration or cloud_capabilities.get('integration_store_enabled', False)):
             asset_customizations_set.add(customization)
-        
+
         if not reviews_enabled:
             customization_not_enabled.add(customization)
 
@@ -393,6 +393,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     # Only process non-translatable data structures if language is default.
     default_language = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language
     process_nontranslatable = language in (default_language, None)
+    state = RecordSaveState.new()
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = None

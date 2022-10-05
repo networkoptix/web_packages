@@ -126,7 +126,10 @@ def replace_in(collection, key, value='', delete=False):
 def save_content(filename, content):
     make_dir(filename)
     with codecs.open(filename, "w", "utf-8") as file:
-        file.write(content)
+        try:
+            file.write(content)
+        except TypeError:
+            file.write(json.dumps(content, indent=4))
 
 
 @dataclass
