@@ -25,8 +25,8 @@ echo
 mkdir -p $TARGET_DIR/$SKIN/templates/
 cp -rf $dir/templates/* $TARGET_DIR/$SKIN/templates || true
 
-process_lang_1() {
-    lang_dir="$1"
+for lang_dir in ../translations/*/
+do
     lang_dir=${lang_dir%*/}
     LANG=${lang_dir/..\/translations\//}
 
@@ -54,23 +54,15 @@ process_lang_1() {
     echo "Clean sources"
     rm -rf $TARGET_DIR/$SKIN/templates/lang_$LANG/src
     echo
-}
-
-for lang_dir in ../translations/*/
-do
-    process_lang_1 "$lang_dir" $
 done
-
-wait
-
 echo "Templates success"
 
 echo "------------------------------------------------------------"
 echo "Localization - portal"
 echo
 
-process_lang_2() {
-    lang_dir="$1"
+for lang_dir in ../translations/*/
+do
     lang_dir=${lang_dir%*/}
     LANG=${lang_dir/..\/translations\//}
 
@@ -110,14 +102,7 @@ process_lang_2() {
 
     echo
 
-}
-
-for lang_dir in ../translations/*/
-do
-    process_lang_2 "$lang_dir" $
 done
-
-wait
 
 # TODO: scheduled for removing (if no issues) as language.json is not used anymore (except inline-wizard)
 #    pushd $TARGET_DIR/$SKIN
