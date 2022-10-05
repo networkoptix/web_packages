@@ -43,6 +43,7 @@ const PROXY_CONFIG = [
             '/static/css/main.css',
             // static content from cloud
             '/static/images/logo.png',
+            '/static/images/dark_logo.png',
             '/static/images/promo',
             '/static/lang_en_US/views/static/landing.html',
             '/static/503.html',

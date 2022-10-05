@@ -18,6 +18,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
+import { LocalStorageService } from 'ngx-webstorage';
 import {
     BehaviorSubject,
     combineLatest,
@@ -36,7 +37,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
-import { NxStorageService } from '@services/storage.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -131,7 +131,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private systemService: NxSystemService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
-        private storageService: NxStorageService,
+        private storageService: LocalStorageService,
         private router: Router,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
@@ -327,6 +327,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
+        this.storageService.observe('theme')
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                // wait CONFIG to update
+                setTimeout(() => {
+                    this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
+                });
+            });
 
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.inline = params.inline !== 'undefined';
@@ -348,7 +356,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .subscribe((event: RouterEvent) => {
                 if (event instanceof RoutesRecognized) {
                     this.systemId = event.state.root.firstChild.params.systemId || '';
-                    this.storageService.systemId = this.systemId;
+                    this.storageService.store('systemId', this.systemId);
                     this.updateActiveSystem();
                     this.updateActive();
                 }
@@ -433,7 +441,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                         return;
                     }
 
-                    this.systemId = this.storageService.systemId;
+                    this.systemId = this.storageService.retrieve('systemId');
                     if (this.router.url.startsWith('/systems/')) {
                         this.systemId = this.router.url.split('/')[2].split('?')[0];
                     }
