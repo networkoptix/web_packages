@@ -1,6 +1,6 @@
 const legacyTargetConfigs = {
     prod: 'https://nxvms.com',
-    stage: 'https://stage.nxvms.com/'
+    stage: 'https://stage.nxvms.com'
 };
 
 const proxyTargetConfig = {
