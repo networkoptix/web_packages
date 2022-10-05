@@ -12,7 +12,8 @@ nx-block {
 
   .user-name,
   .system-owner {
-    @include typography.regular13dark9;
+    @include typography.regular13nocolor;
+    color: var(--card-header-text);
   }
 
   .name {
