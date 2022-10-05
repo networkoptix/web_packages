@@ -266,7 +266,7 @@ class AssetFilter(SimpleListFilter):
             assets = assets.filter(customizations__name__in=request.user.customizations).distinct()
         # TODO: Get list of available assets for non context managers
         if not UserGroupsToAssetPermissions.\
-                check_customization_permission(request.user, get_customization(customization), 'cms.publish_version'):
+                check_customization_permission(request.user, get_customization(request), 'cms.publish_version'):
             editable_assets = request.user.assets_with_permission('cms.edit_content')
             assets = Asset.objects.filter(Q(id__in=editable_assets))
 
