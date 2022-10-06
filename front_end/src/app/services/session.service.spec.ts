@@ -1,5 +1,6 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { LocalStorageService } from 'ngx-webstorage';
+import { Observable } from 'rxjs';
 
 import { WINDOW } from '@services/window-provider';
 
@@ -15,6 +16,7 @@ describe('Session service', () => {
             localStorageMockStore[key] = value;
         },
         observe: () => ({
+            pipe: () => new Observable<unknown>(),
             subscribe: () => {}
         })
     };
