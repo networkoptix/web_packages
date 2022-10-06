@@ -501,6 +501,30 @@ do
             python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
             break
             ;;
+        download_and_run)
+            VERSION=$2
+            PORTS={$3:"7001"}
+            CLOUD_HOST="stage.nxvms.com"
+            WEBADMIN_HOST="https://localhost"
+            LOCAL_PASSWORD="qweasd1234"
+
+            echo "fetching $VERSION"
+            python tools/scripts/download_deb.py $VERSION
+
+            echo "$VERSION has been saved to tools/$VERSION.deb"
+            stop_mediaserver
+            build_mediaserver_image $VERSION.deb $VERSION
+
+            echo "Running the mediaserver on $WEBADMIN_HOST:$PORTS connected to https://$CLOUD_HOST"
+            run_mediaserver $VERSION "$PORT" $CLOUD_HOST
+            for $PORT in $PORTS; do
+                open $WEBADMIN_HOST:$PORT
+            done
+
+            sleep 30s
+            python tools/scripts/setup_system.py $WEBADMIN_HOST "$PORTS" $LOCAL_PASSWORD
+            break
+            ;;
         update_requirements_licenses)
             update_requirements_licenses
             ;;
