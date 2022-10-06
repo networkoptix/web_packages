@@ -33,10 +33,7 @@ if [ ! "$CLOUD_HOST" ]; then
   exit 1
 fi
 
-PABOT="$VENV_BIN_DIR/pabot"
-ROBOT="$VENV_BIN_DIR/robot"
-"$PABOT" --command "$ROBOT" --end-command \
-  --pabotlib --processes 4 -e integrations -L trace:info \
+PATH="$VENV_BIN_DIR:$PATH" pabot --pabotlib --processes 4 -e integrations -L trace:info \
   -v ENV:"https://$CLOUD_HOST" -i 'smoke' 'test-cases'
 TESTS_RESULT_CODE=$?
 
