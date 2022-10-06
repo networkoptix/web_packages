@@ -7,7 +7,9 @@ FRONTEND_REVISION="${1:?First parameter must be a frontend revision}"
 : "${API_TOKEN:?Provide manually or from Jenkins credentials}"
 
 python3.8 -m venv venv
-PYTHON=venv/bin/python
+VENV_BIN_DIR=venv/bin
+
+PYTHON="$VENV_BIN_DIR/python"
 "$PYTHON" -m pip install -r requirements.txt --no-deps
 
 set +e
@@ -31,7 +33,8 @@ if [ ! "$CLOUD_HOST" ]; then
   exit 1
 fi
 
-pabot --pabotlib --processes 4 -e integrations -L trace:info \
+PABOT="$VENV_BIN_DIR/pabot"
+"$PABOT" --pabotlib --processes 4 -e integrations -L trace:info \
   -v ENV:"https://$CLOUD_HOST" -i 'smoke' 'test-cases'
 TESTS_RESULT_CODE=$?
 
