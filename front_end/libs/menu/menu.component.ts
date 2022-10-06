@@ -307,11 +307,14 @@ export class NxMenuComponent implements OnInit, OnChanges {
                     .parentNode as HTMLDivElement) // .level-1-container
                     .getBoundingClientRect().height
                 : 0;
-
-            this.elmMenuL1 = this.renderer.selectRootElement('.level-1-container:not(.selected)', true);
-            // this.menuService.content.length - 1 -> the number of other level1 nodes
-            this.permHeight = (this.menuService.content.length - 1) * this.elmMenuL1.offsetHeight +
-                (this.containerHeight - this.scrollHeight);
+            try {
+                this.elmMenuL1 = this.renderer.selectRootElement('.level-1-container:not(.selected)', true);
+                // this.menuService.content.length - 1 -> the number of other level1 nodes
+                this.permHeight = (this.menuService.content.length - 1) * this.elmMenuL1.offsetHeight +
+                    (this.containerHeight - this.scrollHeight);
+            } catch (_) {
+                // element does not exist
+            }
         }
     }
 

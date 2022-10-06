@@ -820,6 +820,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost(): void {
+        if (this.systemsService.systems?.length === 1) {
+            return;
+        }
         const sysName = htmlToEntity(
             this.system.info.name || this.LANG.errorCodes.thisSystem()
         );

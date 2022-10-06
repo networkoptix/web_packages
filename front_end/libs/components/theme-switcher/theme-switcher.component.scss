@@ -1,42 +1,42 @@
 :host {
     .themes {
         .tile {
-            width         : 124px;
-            height        : 100px;
+            width         : 124px !important;
+            height        : 100px !important;
             cursor        : pointer;
             margin-right  : 24px;
             border        : 2px solid transparent;
             border-radius : 2px;
-            
+
             &:hover {
                 border-color : var(--image-box-selected-border-color) !important;
             }
-            
+
             &.selected {
                 border-color : var(--image-box-selected-border-color) !important;
             }
-            
+
             svg-icon svg {
                 .dark-brand-color {
                     fill : var(--brand-d4);
                 }
-                
+
                 .bright-brand-color {
                     fill : var(--brand-core);
                 }
             }
         }
-        
+
         .label {
             margin-top : 9px;
             color: var(--label-color);
-            
+
             svg-icon {
                 margin-right: 8px;
-                
+
                 svg {
                     margin-top : -4px;
-    
+
                     path {
                         stroke : var(--label-color);
                     }

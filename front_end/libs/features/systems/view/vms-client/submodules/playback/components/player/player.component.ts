@@ -49,8 +49,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     public rotateDeg: number = 0;
 
-    private transportChangeByError: boolean = false;
-
     public handleClick: (e: MouseEvent) => void;
 
     private serverErrors = {
@@ -128,7 +126,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
             switch (this.playback.state.mode) {
                 case PLAYBACK_MODE.LIVE:
                 case PLAYBACK_MODE.ARCHIVE:
-                    this.transportChangeByError = false;
                     if (
                         !this.playback.state.started &&
                         !(<ArchivePlaybackState> this.playback.state).paused
@@ -146,26 +143,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     public videoErrorEventHandler(event: any): void {
         const { player } = event.target;
-        const toggleTransport = () => {
-            this.transportChangeByError = true;
-            this.playback.changeTransport(
-                this.playback.state.transport !== 'hls' ? 'hls' : 'webm'
-            );
-        };
-        const errorCode = player?.error()?.code;
-        if (
-            [
-                MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
-                MediaError.MEDIA_ERR_DECODE
-            ].includes(errorCode) && // code: 4, 3
-            !this.transportChangeByError
-        ) {
-            toggleTransport();
-        } else if (player && ['abort', 'error'].includes(event.type)) {
-            if (event.type === 'error' && this.transportChangeByError) {
-                this.playback.setError(this.LANG.common.cameraStates.noFormat());
-                return;
-            }
+        if (player && ['abort', 'error'].includes(event.type)) {
             this.http.get(player.src())
                 .pipe(untilDestroyed(this))
                 .subscribe((response: any) => {
@@ -173,11 +151,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                         case '4':
                             if (response.errorString === this.serverErrors.cannotDecrypt) {
                                 this.playback.unplayableArchive();
-                            } else if (
-                                !this.transportChangeByError &&
-                                response.errorString !== this.serverErrors.setupPassword
-                            ) {
-                                toggleTransport();
                             } else {
                                 this.playback.setError(response.errorString);
                             }

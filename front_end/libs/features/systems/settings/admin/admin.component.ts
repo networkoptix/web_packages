@@ -105,7 +105,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     get newOwnerName(): string {
         return this.system.userManager.users
             .find(u => u.email === this.transferInfo.toAccount)
-            ?.fullName;
+            ?.fullName || '';
     }
 
     private setupDefaults(): void {

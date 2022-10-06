@@ -77,11 +77,10 @@ const lazyRoutes: Routes = [
     {
         path: 'systems/groups',
         loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
-        // uncomment to enable the feature flag:
-        // canLoad: [FeatureGuard],
-        // data: {
-        //     flags: FeatureFlagStrings.systemGroups
-        // },
+        canLoad: [FeatureGuard],
+        data: {
+            flags: FeatureFlagStrings.systemGroups
+        },
     },
     {
         path: 'download',

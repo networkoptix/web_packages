@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSwCacheService } from './sw-cache.service';
@@ -27,10 +28,20 @@ export class NxSessionService {
         this.email$ = new BehaviorSubject<string>(this.session.retrieve('email'));
         this.loginStateSubject = new BehaviorSubject<string>(this.loginState || '');
         this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
-        this.langChanged$ = new BehaviorSubject<boolean>(this.session.retrieve('langChanged') || false);
+        this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
 
+        let hasSkippedFirstNull = !!this.session.retrieve('loginState');
         // Listens to changes from other browser tabs.
-        this.session.observe('loginState').subscribe(() => {
+        this.session.observe('loginState').pipe(
+            filter(val => {
+                if (!val && !hasSkippedFirstNull) {
+                    hasSkippedFirstNull = true;
+                    return false;
+                }
+                return true;
+            })
+        ).subscribe(() => {
+            hasSkippedFirstNull = true;
             // Clear config overrides between sessions
             this.session.store(NxConfigService.OVERRIDE_KEY, {});
 
