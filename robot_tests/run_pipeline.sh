@@ -10,7 +10,7 @@ python3.8 -m venv venv
 VENV_BIN_DIR=venv/bin
 
 PYTHON="$VENV_BIN_DIR/python"
-"$PYTHON" -m pip install -r requirements.txt --no-deps
+"$PYTHON" -m pip install -r requirements.txt
 
 GOOGLE_CHROME_DIR="$(./prepare_google_chrome.sh)"
 
