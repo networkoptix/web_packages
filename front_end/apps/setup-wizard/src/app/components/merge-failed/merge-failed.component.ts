@@ -8,7 +8,9 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./merge-failed.component.scss']
 })
 export class MergeFailedComponent implements OnInit {
-    constructor(private wizardService: WizardStateService) { }
+    constructor(
+        public wizardService: WizardStateService
+    ) { }
 
     ngOnInit(): void {
     }

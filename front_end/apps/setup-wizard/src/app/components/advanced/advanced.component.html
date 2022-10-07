@@ -1,16 +1,49 @@
 <div class="state-container">
-    <div class="state-container--title"></div>
+    <div
+        class="state-container--title"
+        style="margin-bottom: 1.5rem"
+    ></div>
     <div class="state-container--body">
         <div class="wrapper">
             <div
-                class="flex-row"
-                *ngFor="let setting of wizardService.systemSettings | as: stringBool | keyvalue"
+                class="d-flex flex-row"
+                *ngFor="
+                    let setting of wizardService.systemAdvancedSettings | as: stringBool | keyvalue
+                "
             >
                 <nx-checkbox
-                    [(ngModel)]="wizardService.systemSettings[setting.key]"
+                    [(ngModel)]="wizardService.systemAdvancedSettings[setting.key]['settingValue']"
                     [componentId]="setting.key"
                 ></nx-checkbox>
-                <label [for]="setting.key">{{ setting.key }}</label>
+                <label [for]="setting.key">{{
+                    wizardService.systemAdvancedSettings[setting.key]['settingLabel']
+                }}</label>
+            </div>
+
+            <div style="margin-left: 26px; margin-top: 8px">
+                <label translate>Security level</label>
+                <nx-select
+                    id="ddSecurity"
+                    name="ddSecurity"
+                    [items]="itemsSecurity"
+                    [(ngModel)]="selectedSecurity"
+                    (ngModelChange)="onSecurityChange($event)"
+                ></nx-select>
+
+                <div class="form-text helper-block">
+                    <ng-container
+                        *ngIf="selectedSecurity.value == 'standard'; else safe"
+                        translate
+                    >
+                        Provides compatability and usability but general system security is lower
+                    </ng-container>
+                    <ng-template
+                        #safe
+                        translate
+                    >
+                        Highest security level but may lead to worse UX and compatability issues
+                    </ng-template>
+                </div>
             </div>
         </div>
     </div>

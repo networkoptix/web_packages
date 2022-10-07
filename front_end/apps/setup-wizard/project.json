@@ -21,7 +21,27 @@
                 "assets": [
                     "apps/setup-wizard/src/favicon.ico",
                     "apps/setup-wizard/src/assets",
-                    "apps/setup-wizard/src/images"
+                    "apps/setup-wizard/src/images",
+                    {
+                        "glob": "**/*",
+                        "input": "common/images",
+                        "output": "images"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/fonts",
+                        "output": "fonts"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/styles",
+                        "output": "styles"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/language",
+                        "output": "."
+                    }
                 ],
                 "styles": [
                     "common/styles/main.scss",

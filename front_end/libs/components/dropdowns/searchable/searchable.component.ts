@@ -6,9 +6,9 @@ import {
     EventEmitter,
     Output,
     ElementRef,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NgForm, NG_VALIDATORS, NG_VALUE_ACCESSOR, UntypedFormControl, Validator } from '@angular/forms';
 import { escapeRegExp } from 'lodash-es';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -22,7 +22,7 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
 
 /* Usage
  <nx-searchable-select
-     [id]="select.id"
+     [componentId]="select.id" <- required for validation within form
      [name]="permissions"
      [items]="accessRoles"
      [(ngModel)]="user.role.name"
@@ -44,17 +44,26 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxSearchableDropdown),
             multi: true
+        },
+        {
+            provide: NG_VALIDATORS,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            useExisting: forwardRef(() => NxSearchableDropdown),
+            multi: true
         }
     ]
 })
-export class NxSearchableDropdown extends BaseDropdown {
-    @Input() id: string = 'searchableSelect';
+
+export class NxSearchableDropdown extends BaseDropdown implements Validator {
+    @Input() form: NgForm;
+    @Input() componentId: string = 'searchableSelect';
     @Input() items: Item[];
     @Input() selected: Item | false;
     @Input() type: string;
     @Input() noMatchMsg: string;
     @Input() placeholder: string;
     @Input() freeText: boolean = false;
+    @Input() validation: string = ''; // Regex pattern
 
     @Output() onSelected = new EventEmitter<Item>();
     @Output() onClickElsewhere = new EventEmitter<string>();
@@ -67,12 +76,30 @@ export class NxSearchableDropdown extends BaseDropdown {
     @ViewChild('searchInput', { static: false })
     searchInput: ElementRef<HTMLSpanElement>;
 
+    // validates the form, returns null when valid else the validation object
+    public validate(c: UntypedFormControl): Record<string, boolean> {
+        if (!c.value?.value) {
+            return {
+                required: true
+            };
+        }
+
+        // check pattern
+        if (this.validation && !new RegExp(this.validation).test(c.value?.value)) {
+            return {
+                pattern: true
+            };
+        }
+
+        return null; // valid
+    }
+
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
     ) {
         super(languageService, configService);
-        this.noMatchMsg ??= this.LANG.search.noMatches();
+        this.noMatchMsg ??= this.LANG.search.noMatches?.() || '';
     }
 
     ngOnInit(): void {
@@ -91,6 +118,8 @@ export class NxSearchableDropdown extends BaseDropdown {
     }
 
     onSearchInput(_event: Event): void {
+        this.form.form.get(this.componentId).markAsUntouched();
+
         let filter = this.searchInput.nativeElement.innerText;
         this.helpText = '';
 
@@ -121,6 +150,11 @@ export class NxSearchableDropdown extends BaseDropdown {
         }
 
         this.show = true;
+    }
+
+    onBlur(): void {
+        this.onSelected.emit(this._selectedItem);
+        this.onChangeCallback(this._selectedItem);
     }
 
     selectItem(item: Item): void {
@@ -185,7 +219,8 @@ export class NxSearchableDropdown extends BaseDropdown {
             this.helpText = this._selectedItem.help;
         }
         this.show = false;
-
+        this.form.form.markAsTouched();
+        this.form.form.get(this.componentId).markAsTouched();
         this.onClickElsewhere.emit(this.searchInput.nativeElement.innerText);
     }
 }

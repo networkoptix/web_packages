@@ -1,7 +1,8 @@
 const defaultCloud = 'https://cloud-test.hdw.mx';
 const proxyTargetConfig = {
     local: {
-        host: 'https://localhost:7001',
+        source: 'https://localhost:9003',
+        host: 'https://localhost:8338',
         cloud: defaultCloud
     }
 };
@@ -22,22 +23,20 @@ const PROXY_CONFIG = [
             '/static/lang_ru_RU',
             '/static/lang_ja_JP',
             '/static/images/logo.png',
-            // '/static/supported_languages.json',
+            '/static/supported_languages.json',
             '/static/languages.json',
             '/swagger-ui',
             '/web',
-            '/static'
         ],
         target: targets.host,
         changeOrigin: true,
         secure: false
     }, {
         context: [
-            '/static/supported_languages.json',
             '/static/lang_en_US',
             '/static'
         ],
-        target: targets.host,
+        target: 'https://localhost:9003',
         changeOrigin: true,
         secure: false,
         bypass: function (req, res, proxyOptions) {

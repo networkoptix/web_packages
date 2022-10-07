@@ -634,11 +634,17 @@ export class SystemConfigSettings {
     statisticReportLastVersion: string;
     systemName: string;
     mergeInfo: any;
+    videoTrafficEncryptionForced?: boolean;
+    exposeDeviceCredentials?: boolean;
+
     constructor(params: Params[]) {
         params.forEach(({ name, value }) => {
             this[name] = value;
         });
     }
+}
+
+export class SystemAdvancedConfigSettings {
 }
 
 enum EventState {

@@ -38,6 +38,7 @@ export interface BaseConfig {
     accountDropdownStaff: AccountDropdown[];
     longAlertTimeout: number;
     maxNumberServerChecked: number;
+    simpleURLRegex: string
     extendedRequestTimeout: number;
     apiRequestAttempts: number;
     animations: Animations;
@@ -499,6 +500,7 @@ export interface Icons {
     dirDevCapabilities: string;
     dirLandingIcons: string;
     dirCloudStorage: string;
+    dirConfirmations: string;
 }
 
 export interface Images {

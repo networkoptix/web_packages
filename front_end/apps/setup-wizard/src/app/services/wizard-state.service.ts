@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
@@ -10,12 +12,12 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemAPIService } from '@services/system-api.service';
-import { ModuleInformationReply, NormalResponse, SystemConfigSettings, UserSession } from '@services/system-api.types';
+import { ModuleInformationReply, NormalResponse, SystemAdvancedConfigSettings, SystemConfigSettings, UserSession } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
 
-import { iState, WIZARD_STATE } from '../types/wizard-state.types';
+import { FORM_STATE, iState, SECURITY_LEVEL, WIZARD_STATE } from '../types/wizard-state.types';
 
 interface BindResponse {
     id: string
@@ -64,7 +66,7 @@ interface ServerFlags {
     hasHDD: string
     newServerFlag: string
     publicIpFlag: string
-    iflistFlag: string
+    ifListFlag: string
     timeCtrlFlag: string
 }
 
@@ -80,12 +82,15 @@ interface SetupConfig {
     localLogin: string,
     localPassword: string,
     localPasswordConfirmation: string,
+    localLoginDataState: string,
 
     remoteSystem: Item,
     remoteLogin: string,
-    remotePassword: string
+    remotePassword: string,
+    mergeDataState: string
 }
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -117,12 +122,11 @@ export class WizardStateService {
         hasHDD: 'SF_Has_HDD',
         newServerFlag: 'SF_NewSystem',
         publicIpFlag: 'SF_HasPublicIP',
-        iflistFlag: 'SF_IfListCtrl',
+        ifListFlag: 'SF_IfListCtrl',
         timeCtrlFlag: 'SF_timeCtrl',
     };
     private readonly serverVersion = 5.1;
 
-    public nextDisabled = false;
     public wizardFSM: { [key: string]: iState };
 
     credentials = {
@@ -152,13 +156,15 @@ export class WizardStateService {
         localLogin: this.defaultUser,
         localPassword: '',
         localPasswordConfirmation: '',
+        localLoginDataState: FORM_STATE.INVALID,
 
         remoteSystem: {
             name: '',
             value: ''
         },
         remoteLogin: '',
-        remotePassword: ''
+        remotePassword: '',
+        mergeDataState: FORM_STATE.INVALID,
     };
 
     systemSettings: SystemConfigSettings = {
@@ -172,8 +178,17 @@ export class WizardStateService {
         statisticReportsLastTime: undefined,
         statisticReportLastVersion: '',
         systemName: '',
-        mergeInfo: {}
+        mergeInfo: {},
+        videoTrafficEncryptionForced: true,
+        exposeDeviceCredentials: false
     };
+
+    systemAdvancedSettings: SystemAdvancedConfigSettings = {
+    };
+
+    securityLevel = 'standard';
+    simpleURLRegex: string;
+    formValidateSubject = new BehaviorSubject<boolean>(false);
 
     constructor(
         config: NxConfigService,
@@ -181,26 +196,31 @@ export class WizardStateService {
         private http: HttpClient,
         private nxSystemAPIService: NxSystemAPIService,
         private router: Router,
+        private translate: TranslateService,
         @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = config.getConfig();
         this.LANG = language.translations;
+        this.simpleURLRegex = this.CONFIG.simpleURLRegex;
+
         const [host, port] = this.window.location.host.split(':');
         this.networkInfo = {
             ip: host,
             port: parseInt(port)
         };
-        this.currentState$.subscribe(state => {
-            console.log(state);
-            this.router.navigate([state || '/'], { skipLocationChange: true })
-                .catch(err => {
-                    console.log('nav failed handle it', err);
-                });
-        });
+        this.currentState$
+            .pipe(untilDestroyed(this))
+            .subscribe(state => {
+                console.log(state);
+                this.router.navigate([state || '/'], { skipLocationChange: true })
+                    .catch(err => {
+                        console.log('nav failed handle it', err);
+                    });
+            });
 
         this.wizardFSM = {
             start: {
-                title: 'Get Started with Nx Witness', // this.LANG.setupWizard.title.start(),
+                title: this.LANG.setupWizard.title.start(),
                 next: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -209,7 +229,7 @@ export class WizardStateService {
                 }
             },
             systemName: {
-                title: 'Enter System Name', // this.LANG.setupWizard.title.systemName(),
+                title: this.LANG.setupWizard.title.systemName(),
                 jump: () => {
                     this.currentState = WIZARD_STATE.Advanced;
                 },
@@ -225,7 +245,7 @@ export class WizardStateService {
                 validate: () => this.setupConfig.systemName.length > 0
             },
             advanced: {
-                title: 'Advanced System settings', // this.LANG.setupWizard.title.advanced(),
+                title: this.LANG.setupWizard.title.advanced(),
                 back: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -331,19 +351,20 @@ export class WizardStateService {
             /**/
 
             merge: {
-                title: 'Connect the server to the existing System', // this.LANG.setupWizard.title.merge(),
+                title: this.LANG.setupWizard.title.merge(),
                 back: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },
                 next: () => {
                     this.currentState = WIZARD_STATE.MergeProcess;
-                }
+                },
+                validate: () => this.setupConfig.mergeDataState === FORM_STATE.VALID
             },
             mergeProcess: {
-                title: 'Progress', // this.LANG.setupWizard.title.mergeProcess()
+                title: this.LANG.setupWizard.title.mergeProcess()
             },
             mergeFailure: {
-                title: 'Merge failed', // this.LANG.setupWizard.title.mergeFailure(),
+                title: this.LANG.setupWizard.title.mergeFailure(),
                 back: () => {
                     this.currentState = WIZARD_STATE.Merge;
                 },
@@ -356,7 +377,7 @@ export class WizardStateService {
             },
 
             localLogin: {
-                title: 'Set up an administrator password', // this.LANG.setupWizard.title.localLogin(),
+                title: this.LANG.setupWizard.title.localLogin(),
                 back: () => {
                     // Reset Credentials
                     this.currentState = WIZARD_STATE.SystemName;
@@ -364,14 +385,14 @@ export class WizardStateService {
                 next: () => {
                     this.initSystem();
                 },
-                validate: () => this.setupConfig.localPassword === this.setupConfig.localPasswordConfirmation
+                validate: () => this.setupConfig.localLoginDataState === FORM_STATE.VALID,
             },
             localSuccess: {
-                title: 'Successful login', // this.LANG.setupWizard.title.localSuccess(),
+                title: this.LANG.setupWizard.title.localSuccess(),
                 finish: true
             },
             localFailure: {
-                title: 'Login failed', // this.LANG.setupWizard.title.localFailure(),
+                title: this.LANG.setupWizard.title.localFailure(),
                 back: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -382,18 +403,22 @@ export class WizardStateService {
             },
 
             initFailure: {
-                title: 'Init failed', // this.LANG.setupWizard.title.initFailure(),
+                title: this.LANG.setupWizard.title.initFailure(),
                 retry: () => {
                     this.initWizard();
                 }
             },
             brokenSystem: {
-                title: 'Broken system', // this.LANG.setupWizard.title.brokenSystem(),
+                title: this.LANG.setupWizard.title.brokenSystem(),
                 retry: () => {
                     this.initWizard();
                 }
             },
         };
+    }
+
+    getURLRegex(): string {
+        return this.simpleURLRegex;
     }
 
     // nativeClient helpers
@@ -453,6 +478,7 @@ export class WizardStateService {
         const state = this.wizardFSM[this.currentState];
         console.log(this.currentState); // Todo: remove
         if (state.validate && !state?.validate()) {
+            this.formValidateSubject.next(true);
             return;
         }
         state?.next();
@@ -492,7 +518,7 @@ export class WizardStateService {
                     wrongNetwork: !ips.some(address => !address.includes('169.254')),
                     hasInternet: data.serverFlags.includes(this.flags.publicIpFlag),
                     cleanSystem: data.serverFlags.includes(this.flags.newServerFlag),
-                    canSetupNetwork: data.serverFlags.includes(this.flags.iflistFlag),
+                    canSetupNetwork: data.serverFlags.includes(this.flags.ifListFlag),
                     canSetupTime: data.serverFlags.includes(this.flags.timeCtrlFlag)
                 };
                 data.flags.brokenSystem = data.flags.noHDD || data.flags.noNetwork || (data.flags.wrongNetwork && !data.flags.canSetupNetwork);
@@ -597,12 +623,14 @@ export class WizardStateService {
             false,
             this.setupConfig.remotePassword,
             true
-        ).subscribe(() => {
-            const { remoteLogin, remotePassword } = this.setupConfig;
-            return this.updateCredentials(remoteLogin, remotePassword, false);
-        }, () => {
-            this.currentState = WIZARD_STATE.MergeFailure;
-        });
+        )
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                const { remoteLogin, remotePassword } = this.setupConfig;
+                return this.updateCredentials(remoteLogin, remotePassword, false);
+            }, () => {
+                this.currentState = WIZARD_STATE.MergeFailure;
+            });
     }
 
     // Connect to cloud
@@ -622,16 +650,18 @@ export class WizardStateService {
         }
 
         const credentials = this.window.nativeClient.getCredentials();
-        this.connect(this.setupConfig.systemName, credentials.email, credentials.accessToken).subscribe(data => {
-            // add link to cloud
-            this.server.setupCloudSystem(
-                this.setupConfig.systemName,
-                data.id,
-                data.authKey,
-                credentials.email,
-                this.systemSettings
-            ).then(() => {});
-        });
+        this.connect(this.setupConfig.systemName, credentials.email, credentials.accessToken)
+            .pipe(untilDestroyed(this))
+            .subscribe(data => {
+                // add link to cloud
+                this.server.setupCloudSystem(
+                    this.setupConfig.systemName,
+                    data.id,
+                    data.authKey,
+                    credentials.email,
+                    this.systemSettings
+                ).then(() => {});
+            });
     }
 
     // Local setup
@@ -642,7 +672,23 @@ export class WizardStateService {
 
     initSystem(): void {
         const { localPassword, systemName } = this.setupConfig;
-        this.server.setupLocalSystem(systemName, localPassword, this.systemSettings)
+
+        const settings = { ...this.systemSettings };
+        // eslint-disable-next-line array-callback-return
+        Object.keys(this.systemAdvancedSettings).map((key: string): void => {
+            if (typeof this.systemAdvancedSettings[key] === 'object') {
+                settings[key] = this.systemAdvancedSettings[key].settingValue;
+            } else {
+                settings[key] = this.systemAdvancedSettings[key];
+            }
+        });
+
+        if (this.securityLevel === SECURITY_LEVEL.SAFE) {
+            settings.videoTrafficEncryptionForced = true;
+            settings.exposeDeviceCredentials = false;
+        }
+
+        this.server.setupLocalSystem(systemName, localPassword, settings)
             .then(_ => {
                 return this.updateCredentials(this.defaultUser, localPassword, false)
                     .catch(this.offlineErrorHandler);
@@ -653,10 +699,12 @@ export class WizardStateService {
     waitForReboot(): void {
         this.currentState = WIZARD_STATE.Start;
         const pingInterval = setInterval(() => {
-            this.server.getServerInfo('this').subscribe(() => {
-                clearInterval(pingInterval);
-                this.window.location.reload();
-            });
+            this.server.getServerInfo('this')
+                .pipe(untilDestroyed(this))
+                .subscribe(() => {
+                    clearInterval(pingInterval);
+                    this.window.location.reload();
+                });
         }, this.CONFIG.alertTimeout);
     }
 
@@ -705,26 +753,36 @@ export class WizardStateService {
     }
 
     getAdvancedSettings(): Promise<void> {
-        return this.server.wizardGetSystemSettings().toPromise().then(systemSettings => {
-            Object.entries(this.CONFIG.settingsConfig).forEach(([settingsName, settingConfig]: [string, Setting]) => {
-                // eslint-disable-next-line no-prototype-builtins
-                if (!systemSettings.hasOwnProperty(settingsName)) {
-                    return;
-                }
-                if (!settingConfig.setupWizard) {
-                    return;
-                }
-                let settingsValue: boolean | number | string = systemSettings[settingsName];
-                if (settingConfig.type === 'checkbox' && settingsValue === undefined) {
-                    settingsValue = true;
-                } else if (settingConfig.type === 'number') {
-                    settingsValue = parseInt(<string>settingsValue);
-                } else if (['true', 'false'].includes(<string>settingsValue)) {
-                    settingsValue = settingsValue === 'true';
-                }
-                this.systemSettings[settingsName] = settingsValue;
+        return this.server.wizardGetSystemSettings().toPromise()
+            .then(systemSettings => {
+                Object.entries(this.CONFIG.settingsConfig).forEach(([settingKey, settingConfig]: [string, Setting]) => {
+                    // eslint-disable-next-line no-prototype-builtins
+                    if (!systemSettings.hasOwnProperty(settingKey)) {
+                        return;
+                    }
+                    if (!settingConfig.setupWizard) {
+                        return;
+                    }
+                    let settingValue: boolean | number | string = systemSettings[settingKey];
+                    if (settingConfig.type === 'checkbox' && settingValue === undefined) {
+                        settingValue = true;
+                    } else if (settingConfig.type === 'number') {
+                        settingValue = parseInt(<string>settingValue);
+                    } else if (['true', 'false'].includes(<string>settingValue)) {
+                        settingValue = settingValue === 'true';
+                    }
+
+                    let settingLabel = this.translate.instant(settingKey);
+                    if (settingLabel === settingKey && settingConfig.label) {
+                        settingLabel = settingConfig.label;
+                    }
+                    this.systemAdvancedSettings[settingKey] = { settingValue, settingLabel };
+                });
             });
-        });
+    }
+
+    setSecurityLevel(level: string): void {
+        this.securityLevel = level;
     }
 
     initWizard = (): void => {

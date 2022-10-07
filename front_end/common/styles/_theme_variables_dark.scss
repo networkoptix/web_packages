@@ -4,6 +4,7 @@
 html[data-theme="dark"] {
     body {
         background-color: #0D0E0F;
+        color : #A5B7C0;
     }
     --body-bg    : #0D0E0F; //$dark3;
     --alt-body-bg : #000000; //$dark1;
@@ -70,6 +71,8 @@ html[data-theme="dark"] {
     --svg-std-icon-fill : #587785; //$dark18;
     --svg-path-light-color : #2B383F; //$dark9;
     --svg-path-dark-color  : #E1E7EA; //$light4;
+    
+    --svg-confirmations-color  : #A5B7C0; //$light10;
 
     --svg-placeholder-elm1-color : #E1E7EA; //$light4;
     --svg-placeholder-elm2-color : #A5B7C0; //$light10;

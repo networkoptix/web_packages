@@ -1,13 +1,21 @@
 <div class="state-container">
     <div
         class="state-container--title"
+        style="margin-bottom: 2rem"
         translate
     >
         Something went wrong.
     </div>
     <div class="state-container--body">
+        <svg-icon
+            nx-add-svg-src
+            [src]="wizardService.CONFIG.icons.dirConfirmations + 'error.svg'"
+            [svgStyle]="{ 'width.px': '280', 'height.px': '120', 'margin-bottom': '2rem' }"
+        >
+        </svg-icon>
+
         <button
-            class="btn-primary"
+            class="btn btn-primary"
             (click)="retry()"
             translate
         >

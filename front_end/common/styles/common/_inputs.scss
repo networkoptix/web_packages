@@ -42,7 +42,7 @@ input.hide-errors {
     padding: $padding-base-vertical $padding-input-horizontal  !important;
     caret-color: var(--input-color) !important;
 
-    @include mixins.placeholder ();
+    @include mixins.placeholder();
 
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
@@ -199,7 +199,7 @@ select.form-control {
     padding: $padding-base-vertical $padding-input-horizontal  !important;
     caret-color: var(--input-color) !important;
 
-    @include mixins.placeholder ();
+    @include mixins.placeholder();
 
     &:-webkit-autofill,
     &:-webkit-autofill:hover,

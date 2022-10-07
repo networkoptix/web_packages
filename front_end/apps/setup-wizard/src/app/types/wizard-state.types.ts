@@ -31,3 +31,13 @@ export interface iState {
     validate?: () => boolean
     finish?: boolean
 }
+
+export const enum FORM_STATE {
+    INVALID = 'INVALID',
+    VALID = 'VALID',
+}
+
+export const enum SECURITY_LEVEL {
+    STANDARD = 'standard',
+    SAFE = 'safe',
+}

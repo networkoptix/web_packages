@@ -8,7 +8,9 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./local-failure.component.scss']
 })
 export class LocalFailureComponent implements OnInit {
-    constructor(private wizardService: WizardStateService) { }
+    constructor(
+        public wizardService: WizardStateService
+    ) { }
 
     ngOnInit(): void {
     }

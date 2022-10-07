@@ -27,6 +27,7 @@ export const nxConfig: IConfig = {
     extendedRequestTimeout: 15 * 1000,
     apiRequestAttempts: 4, // combined with extendedRequestTimeout this mean we'll give up after 1 min
     maxNumberServerChecked: 6, // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
+    simpleURLRegex: '^https:\\/\\/[a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}:[0-9]{2,6}$',
     staticBase,
     accountDropdown: [
         {
@@ -282,6 +283,7 @@ export const nxConfig: IConfig = {
         dirNonStandardView: `/${staticBase}/images/icons/view/`,
         dirPagePlaceholder: `/${staticBase}/images/placeholders/page/`,
         dirSectionPlaceholder: `/${staticBase}/images/placeholders/section/`,
+        dirConfirmations: `/${staticBase}/images/confirmations/`,
         dirDevCapabilities: `/${staticBase}/images/icons/dev_capabilities/`,
         dirCloudStorage: `/${staticBase}/images/icons/cloud_storage/`,
         dirLandingIcons: `/${staticBase}/images/landing/block_icons/`
@@ -808,7 +810,12 @@ export const nxConfig: IConfig = {
     },
     settingsConfig: {
         auditTrailEnabled: { type: 'checkbox', hiddenInAdvanced: true },
-        cameraSettingsOptimization: { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+        cameraSettingsOptimization: {
+            type: 'checkbox',
+            setupWizard: true,
+            hiddenInAdvanced: true,
+            label: 'Allow device setting optimization'
+        },
         cloudConnectUdpHolePunchingEnabled: { type: 'checkbox' },
         defaultMotionMask: '5,0,0,44,32',
         disabledVendors: { type: 'text' },
@@ -826,7 +833,12 @@ export const nxConfig: IConfig = {
         ldapSearchBase: { type: 'text' },
         ldapSearchFilter: { type: 'text' },
         ldapUri: { type: 'text' },
-        autoDiscoveryEnabled: { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+        autoDiscoveryEnabled: {
+            type: 'checkbox',
+            setupWizard: true,
+            hiddenInAdvanced: true,
+            label: 'Enable device auto discovery'
+        },
         smtpConnectionType: { type: 'text' },
         smtpHost: { type: 'text' },
         smtpPort: { type: 'number' },
@@ -837,7 +849,12 @@ export const nxConfig: IConfig = {
         updateNotificationsEnabled: { type: 'checkbox' },
         arecontRtspEnabled: { type: 'checkbox' },
         backupNewCamerasByDefault: { type: 'checkbox' },
-        statisticsAllowed: { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+        statisticsAllowed: {
+            type: 'checkbox',
+            setupWizard: true,
+            hiddenInAdvanced: true,
+            label: 'Send anonymous usage statistics and crash reports'
+        },
         backupQualities: { type: 'text' },
         serverDiscoveryPingTimeoutSec: { type: 'number' },
 

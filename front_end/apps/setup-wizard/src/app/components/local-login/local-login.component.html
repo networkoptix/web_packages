@@ -28,25 +28,48 @@
                 ></nx-password-input>
             </div>
             <div class="form-group">
-                <nx-password-input
-                    name="confirmedPassword"
-                    componentId="confirmedPassword"
-                    class="form-component"
+                <input
+                    name="confirmPassword"
+                    id="confirmedPassword"
+                    class="form-control"
+                    type="password"
                     [(ngModel)]="confirmedPassword"
                     [placeholder]="'Repeat Password' | translate"
-                    [component]="confirmedPasswordModel"
-                    [form]="setAdminPasswordForm"
-                    #confirmedPasswordModel="ngModel"
-                ></nx-password-input>
-                <nx-password-input-validation
-                    [forElement]="createPassword"
-                    [value]="password"
-                >
-                </nx-password-input-validation>
+                    (blur)="checkPasswords()"
+                    #confirmPassword="ngModel"
+                    required
+                />
+
+                <div class="mt-2">
+                    <nx-password-input-validation
+                        [forElement]="createPassword"
+                        [value]="password"
+                    >
+                    </nx-password-input-validation>
+                    <ng-container
+                        *ngIf="
+                            confirmPassword.invalid &&
+                            ((confirmPassword.dirty && !confirmPassword.errors?.pattern) ||
+                                confirmPassword.touched)
+                        "
+                    >
+                        <div
+                            class="input-error"
+                            *ngIf="confirmPassword.errors.required"
+                            translate
+                        >
+                            Password confirmation is required
+                        </div>
+                        <div
+                            class="input-error"
+                            *ngIf="confirmPassword.errors?.dontMatch"
+                            translate
+                        >
+                            Passwords do not match
+                        </div>
+                    </ng-container>
+                </div>
             </div>
         </form>
-        <!--    <div translate>-->
-        <!--        Password must contain different types of characters and have at least 8 symbols-->
-        <!--    </div>-->
     </div>
 </div>

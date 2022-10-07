@@ -84,7 +84,11 @@ export class NxThemeService {
 
     async setTheme(themeSelected: string, username:string): Promise<void> {
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
-        const { themesEnabled } = this.CONFIG.featureFlags;
+        let { themesEnabled } = this.CONFIG.featureFlags;
+        if (username === 'setup') {
+            themesEnabled = true;
+        }
+
         themeSelected = themesEnabled ? themeSelected || 'auto' : 'light';
         if (
             themeSelected === 'auto' ||

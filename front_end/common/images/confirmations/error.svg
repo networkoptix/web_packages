@@ -1,0 +1,12 @@
+<svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style type="text/css">
+        .confirmations {
+            stroke:var(--svg-confirmations-color);
+            fill: none
+        }
+    </style>
+
+    <path class="confirmations" d="M30 58L58 30" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="confirmations" d="M30 30L58 58" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle class="confirmations" cx="44" cy="44" r="42" stroke-width="4"/>
+</svg>

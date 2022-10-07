@@ -22,12 +22,9 @@ a {
     width: 470px;
 
     .header {
-        position: absolute;
-        top: 75px;
-
         h2 {
             @include typography.regular30nocolor;
-            padding: 0 2rem;
+            padding: 0 1rem;
             text-align: center;
         }
     }
@@ -41,7 +38,6 @@ a {
         }
 
         .wrapper {
-            width: 320px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -62,7 +58,7 @@ a {
 
 .state-container {
     height: 100%;
-    width: 250px;
+    width: 280px;
 
     & > div {
         display        : flex;
@@ -74,4 +70,21 @@ a {
     &--title {
         margin-bottom: 4rem;
     }
+}
+
+nx-checkbox {
+    & + label {
+        margin-left : 2px;
+        margin-top  : 4px;
+    }
+}
+
+.helper-block {
+    @include typography.regular12light;
+    margin: 8px 0 8px 1px;
+    line-height: 16px;
+}
+
+.dropdown-item {
+    color : var(--dropdown-item-color) !important;
 }

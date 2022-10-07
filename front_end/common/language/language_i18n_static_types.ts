@@ -1149,7 +1149,16 @@ export interface ServersStatus {
 }
 
 export interface SetupWizard {
-    title: SetupWizardTitle;
+    title:            SetupWizardTitle;
+    advancedSettings: AdvancedSettings;
+}
+
+export interface AdvancedSettings {
+    cameraSettingsOptimization: (params?: Record<string, string | number>) => string;
+    autoDiscoveryEnabled:       (params?: Record<string, string | number>) => string;
+    statisticsAllowed:          (params?: Record<string, string | number>) => string;
+    standard:                   (params?: Record<string, string | number>) => string;
+    safe:                       (params?: Record<string, string | number>) => string;
 }
 
 export interface SetupWizardTitle {

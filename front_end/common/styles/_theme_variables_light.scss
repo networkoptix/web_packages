@@ -6,6 +6,7 @@
 html[data-theme="light"] {
     body {
         background-color: #{$additional_light2};
+        color: #{$dark9};
     }
     --body-bg    : #{$additional_light2};
     --alt-body-bg : #{$light1};
@@ -72,6 +73,8 @@ html[data-theme="light"] {
     --svg-std-icon-fill : #{$light16};
     --svg-path-light-color: #{$light4};
     --svg-path-dark-color: #{$dark9};
+    
+    --svg-confirmations-color: #{$light10};
 
     --svg-placeholder-elm1-color : #2B383F; // $dark9
     --svg-placeholder-elm2-color : #A5B7C0; //$light10;

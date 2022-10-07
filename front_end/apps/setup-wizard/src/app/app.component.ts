@@ -12,7 +12,7 @@ import { WizardStateService } from './services/wizard-state.service';
 export class AppComponent implements OnInit {
     constructor(
       private themeService: NxThemeService,
-      private wizardState: WizardStateService,
+        private wizardState: WizardStateService,
     ) {
     }
     ngOnInit(): void {

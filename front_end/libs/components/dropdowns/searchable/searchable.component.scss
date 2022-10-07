@@ -1,11 +1,17 @@
-@use "typography";
-@use "mixins";
-@use "theme_variables_common" as *;
-
-
 nx-searchable-select {
     width: 100%;
     display: block;
+    
+    &.ng-dirty.ng-invalid:not(.ng-untouched) {
+        .form-control {
+            border-color : var(--input-error-border-color) !important;
+            color        : var(--input-error-color) !important;
+        }
+        
+        .placeholder {
+            color : var(--input-error-color) !important;
+        }
+    }
 
     .input-container {
         display: block;
@@ -14,12 +20,13 @@ nx-searchable-select {
     }
 
     .placeholder {
+        color: var(--input-color-placeholder);
+        font-family: var(--font-family-regular);
         z-index: 0;
         margin: 0;
         position: absolute;
-        top: 2px;
+        top: 3px;
         left: 12px;
-        color: var(--btn-dropdown-toggle-color);
         opacity: 0.7;
         font-size: .75rem;
         line-height: 1.7rem;
@@ -57,11 +64,13 @@ nx-searchable-select {
     }
 
     .additional-help {
-        @include typography.regular13light;
+        font-family: var(--font-family-regular);
+        font-size: 13px;
+        color: var(--light16);
         margin-left: 0.25rem;
     }
 
     .selected .additional-help {
-        color: $light1  !important;
+        color: var(--light1)  !important;
     }
 }

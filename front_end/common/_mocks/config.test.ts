@@ -201,7 +201,8 @@ export function setupConfig(): IConfig {
             dirPagePlaceholder: '/static/images/placeholders/page/',
             dirSectionPlaceholder: '/static/images/placeholders/section/',
             dirDevCapabilities: '/static/images/icons/dev_capabilities/',
-            dirLandingIcons: '/static/images/landing/block_icons/'
+            dirLandingIcons: '/static/images/landing/block_icons/',
+            dirConfirmations: '/static/images/confirmations/'
         },
         images: {
             dir: '/static/images/',

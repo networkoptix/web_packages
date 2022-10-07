@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
+// import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MenuModule } from '@app/menu/menu.module';
@@ -154,7 +154,7 @@ const appRoutes: Routes = [
         AlertBlockModule,
         ContentBlockModule,
         NxAccountSettingsModule,
-        StoreModule.forRoot({}),
+        // StoreModule.forFeature({}),
     ],
     providers: [
     ],

@@ -23,7 +23,7 @@
     margin-left: 1rem;
 
     svg-icon svg .st0 {
-        fill : var(--card-header-text);
+        fill : var(--card-header-text) !important;
         stroke : none;
     }
 }
@@ -31,4 +31,9 @@
 .btn-forward {
     float: right;
     margin-right: 1rem;
+    
+    svg-icon svg .st0 {
+        fill : var(--btn-primary-color) !important;
+        stroke : none;
+    }
 }

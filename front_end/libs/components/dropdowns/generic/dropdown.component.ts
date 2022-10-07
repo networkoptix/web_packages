@@ -84,7 +84,7 @@ export class NxGenericDropdown<
         public ref: ElementRef<HTMLElement>
     ) {
         super(languageService, configService);
-        this.noMatchMsg ??= this.LANG.search.noMatches();
+        this.noMatchMsg ??= this.LANG.search.noMatches?.() || 'No matches';
     }
 
     ngOnInit(): void {

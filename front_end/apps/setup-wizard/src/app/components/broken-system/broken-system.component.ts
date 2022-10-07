@@ -8,7 +8,9 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./broken-system.component.scss']
 })
 export class BrokenSystemComponent implements OnInit {
-    constructor(private wizardService: WizardStateService) { }
+    constructor(
+        public wizardService: WizardStateService
+    ) { }
 
     ngOnInit(): void {
     }
