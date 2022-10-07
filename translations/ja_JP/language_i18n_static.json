@@ -669,7 +669,7 @@
         "cantGetSystemInfoPrefix": "System info is unavailable",
         "cantGetSystemsListPrefix": "System list is unavailable",
         "cantGetUsersListPrefix": "Users list is unavailable",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "%VMS_NAME% アプリケーションが検出されません。",
         "cantRegisterPrefix": "Error occurred",
         "cantSendActivationPrefix": "Cannot send confirmation Email",
         "cantSendConfirmationPrefix": "Cannot send confirmation Email",
@@ -844,7 +844,7 @@
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Failed to access system",
         "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% インテグレーション",
         "login": "Log in",
         "pageNotFound": "Page not found",
         "register": "Create account in",
@@ -1032,27 +1032,27 @@
         "loggers": {
             "none": {
                 "text": "None",
-                "help": "(log disabled)"
+                "help": "(ログ無効)"
             },
             "error": {
                 "text": "Error",
-                "help": "(log errors only)"
+                "help": "(エラーのみログに記録)"
             },
             "warning": {
                 "text": "Warning",
-                "help": "(log warnings and errors)"
+                "help": "(警告とエラーをログに記録)"
             },
             "info": {
                 "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(警告、エラー、およびすべてのメッセージをログに記録)"
             },
             "debug": {
                 "text": "Debug",
-                "help": "(log every System message and debug information)"
+                "help": "(すべてのシステムメッセージとデバッグ情報をログに記録)"
             },
             "verbose": {
                 "text": "Verbose",
-                "help": "(log all information available)"
+                "help": "(利用可能なすべての情報をログに記録)"
             }
         },
         "loggerDropdownLabel": "{ loggerName } log level",
@@ -1101,7 +1101,7 @@
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "noInternet": "%CLOUD_NAME% は現在利用できません。後ほど再度お試しください。",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",
         "system": {
@@ -1366,17 +1366,17 @@
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - クラウドポータル",
+            "description": "%CLOUD_NAME% は %VMS_NAME% システムへの接続、管理、拡張を簡単にします。"
         },
         "/systems": {
             "title": "Systems - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% インテグレーション - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "%VMS_NAME% ドキュメント - %CLOUD_NAME%"
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
