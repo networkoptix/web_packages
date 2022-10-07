@@ -42,6 +42,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 class CombinedWidths {
     constructor(
@@ -60,13 +61,6 @@ enum sizes {
     MD = 48,
     LG = 72,
     XL = 96
-}
-
-enum breakpoints {
-    SM = 576,
-    MD = 768,
-    LG = 992,
-    XL = 1200
 }
 
 @UntilDestroy()
@@ -231,14 +225,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 navWidth = navWidth - tabs;
             }
 
-            if (windowWidth < breakpoints.LG) {
+            if (windowWidth < GridBreakpoints.LG) {
                 showSmallRightNav = true;
                 const collapsedSize: sizes = this.environment.isLocal ? sizes.XL : sizes.MD;
                 const widthDifference = rightNav - this.rightNavWidthCollapsed$.value;
                 navWidth = navWidth - widthDifference + collapsedSize;
             }
 
-            if (windowWidth < breakpoints.MD) {
+            if (windowWidth < GridBreakpoints.MD) {
                 showIcon = false;
                 navWidth = navWidth - icon;
             }

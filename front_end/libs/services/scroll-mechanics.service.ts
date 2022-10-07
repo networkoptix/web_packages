@@ -3,17 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 
 import { WINDOW } from './window-provider';
 
-enum GRID_BREAKPOINTS {
-    xs = 0,
-    sm = 576,
-    md = 768,
-    lg = 992,
-    xl = 1280,
-    xxl = 1440,
-    xxxl = 1600,
-    xxxxl = 1920,
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -30,7 +19,6 @@ export class NxScrollMechanicsService {
 
     public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
-    public static MEDIA = GRID_BREAKPOINTS;
 
     constructor(
         @Inject(WINDOW) private window: Window

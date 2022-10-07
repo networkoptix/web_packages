@@ -17,6 +17,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxAPIToolSystemService } from './services/api-tool-system.service';
 import { NxOpenAPIJSONService } from './services/openapi-json.service';
@@ -52,7 +53,7 @@ export class NxAPIToolComponent {
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this), debounceTime(25)).subscribe(({ width }) => {
-            if (width >= 768) {
+            if (width >= GridBreakpoints.MD) {
                 this.setHeaderHeight();
                 if (this.developersMenuRef?.nativeElement) {
                     this.setMenuOffset();

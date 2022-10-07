@@ -21,6 +21,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
@@ -183,11 +184,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.windowSizeSubscription =
             this.scrollMechanicsService.windowSizeSubject
                 .subscribe(({ width }) => {
-                    if (
-                        this.scrollMechanicsService.mediaQueryMax(
-                            NxScrollMechanicsService.MEDIA.lg
-                        )
-                    ) {
+                    if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                         this.healthLayoutService.mobileDetailMode =
                             this.healthLayoutService.activeEntity !== undefined;
                     } else {
@@ -289,11 +286,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                         console.error(error);
                     });
             }
-            if (
-                this.scrollMechanicsService.mediaQueryMax(
-                    NxScrollMechanicsService.MEDIA.lg
-                )
-            ) {
+            if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                 this.healthLayoutService.mobileDetailMode = true;
             }
         } else {

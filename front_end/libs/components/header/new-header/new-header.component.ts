@@ -11,6 +11,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystem } from '@services/system.service/system';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 @UntilDestroy()
 @Component({
@@ -66,7 +67,7 @@ export class NxNewHeaderComponent {
         });
 
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
-            this.isMobile$.next(width < 576);
+            this.isMobile$.next(width < GridBreakpoints.SM);
         });
     }
 

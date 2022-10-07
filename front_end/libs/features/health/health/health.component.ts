@@ -33,6 +33,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxHealthService } from '../health.service';
 
@@ -201,23 +202,15 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             .pipe(untilDestroyed(this))
             .subscribe(({ width }) => {
                 if (
-                    width >= 768 &&
+                    width >= GridBreakpoints.MD &&
                     this.appStateService.headerVisibleSubject.getValue()
                 ) {
                     this.setHeaderHeight();
                 }
 
-                if (
-                    this.scrollMechanicsService.mediaQueryMax(
-                        NxScrollMechanicsService.MEDIA.lg
-                    )
-                ) {
+                if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                     this.mediaLayoutClass = 'mobileLayout';
-                } else if (
-                    this.scrollMechanicsService.mediaQueryMin(
-                        NxScrollMechanicsService.MEDIA.xl
-                    )
-                ) {
+                } else if (this.scrollMechanicsService.mediaQueryMin(GridBreakpoints.XL)) {
                     this.mediaLayoutClass = 'wideLayout';
                 } else {
                     this.mediaLayoutClass = '';

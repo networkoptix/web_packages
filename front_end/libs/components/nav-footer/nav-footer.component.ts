@@ -10,6 +10,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 @UntilDestroy()
 @Component({
@@ -63,7 +64,6 @@ export class NxNavFooterComponent implements OnInit {
     }
 
     checkVisible(url: string, width = this.scrollMechanicsService.windowSizeSubject.value.width): void {
-        const bootstrapXS = 576;
-        this.visible$.next(width > bootstrapXS && !url.includes('/systems'));
+        this.visible$.next(width > GridBreakpoints.SM && !url.includes('/systems'));
     }
 }

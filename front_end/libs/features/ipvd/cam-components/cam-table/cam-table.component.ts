@@ -28,6 +28,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 import {
     paramSortFunc,
     addPseudoAnchor,
@@ -328,12 +329,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     private setPagerSize(): void {
-        const maxWidthMd = this.scrollMechanicsService.mediaQueryMax(
-            NxScrollMechanicsService.MEDIA.md
-        );
-        const maxWidthXl = this.scrollMechanicsService.mediaQueryMax(
-            NxScrollMechanicsService.MEDIA.xl
-        );
+        const maxWidthMd = this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.MD);
+        const maxWidthXl = this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL);
         if (maxWidthMd || (maxWidthXl && this.selectedCamera)) {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeMedium;
         } else {

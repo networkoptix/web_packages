@@ -13,6 +13,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { COLLAPSE_SECOND_WIDTH } from '@styles/theme-variables-common';
 import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
@@ -69,7 +70,7 @@ export class NxPagePlaceholderComponent implements OnInit {
         this.windowSizeSubscription = this.scrollMechanicsService
             .windowSizeSubject
             .subscribe(({ height, width }) => {
-                this.iconSize = (width <= 768) ? 200 : 400; // $collapse-second-width : 768px;
+                this.iconSize = (width <= COLLAPSE_SECOND_WIDTH) ? 200 : 400;
                 this.iconVisible = (height > 580);
             });
     }

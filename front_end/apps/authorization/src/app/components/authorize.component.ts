@@ -29,6 +29,7 @@ import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
+import { ViewportBreakpoints } from '@styles/theme-variables-common';
 
 import {
     AuthorizeParams,
@@ -38,6 +39,8 @@ import {
 } from './authorize.component.types';
 
 require('what-input');
+
+const AUTH_BREAKPOINT = 355;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -223,16 +226,18 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
             const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
-            this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
-            this.windowSmallEnough = this.window.innerWidth <= 355;
+            this.windowLargeEnough = this.window.innerWidth > ViewportBreakpoints.Tablet.height &&
+                this.window.innerHeight > ViewportBreakpoints.Tablet.width &&
+                this.viewType === 'web';
+            this.windowSmallEnough = this.window.innerWidth <= AUTH_BREAKPOINT;
             fromEvent<Event>(this.window, 'resize')
                 .pipe(debounceTime(100))
                 .subscribe(event => {
                     const { innerHeight, innerWidth } = event.target as Window;
-                    this.windowLargeEnough = innerWidth > 1024 &&
-                        innerHeight > 768 &&
+                    this.windowLargeEnough = innerWidth > ViewportBreakpoints.Tablet.height &&
+                        innerHeight > ViewportBreakpoints.Tablet.width &&
                         this.viewType === 'web';
-                    this.windowSmallEnough = innerWidth <= 355;
+                    this.windowSmallEnough = innerWidth <= AUTH_BREAKPOINT;
                 });
 
             if ([ClientType.loginCloud, ClientType.create].includes(this.clientType)) {

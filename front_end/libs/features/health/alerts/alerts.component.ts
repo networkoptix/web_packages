@@ -23,6 +23,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 import { paramSortFunc } from '@utils/general';
 
 import { NxHealthLayoutService } from '../health-layout.service';
@@ -156,17 +157,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+            if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                 this.healthLayoutService.mobileDetailMode = (this.healthLayoutService.activeEntity !== undefined);
             } else {
                 this.healthLayoutService.mobileDetailMode = false;
             }
 
-            this.smallDesktopMode = this.scrollMechanicsService.mediaQueryMin(
-                NxScrollMechanicsService.MEDIA.lg
-            ) && this.scrollMechanicsService.mediaQueryMax(
-                NxScrollMechanicsService.MEDIA.xl
-            );
+            this.smallDesktopMode =
+                this.scrollMechanicsService.mediaQueryMin(GridBreakpoints.LG) &&
+                this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL);
 
             this.setLayout();
         });
@@ -462,11 +461,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     });
             }
 
-            if (
-                this.scrollMechanicsService.mediaQueryMax(
-                    NxScrollMechanicsService.MEDIA.lg
-                )
-            ) {
+            if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                 this.healthLayoutService.mobileDetailMode = true;
             }
 

@@ -39,6 +39,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, htmlToEntity, paramSortFunc } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 
@@ -331,7 +332,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.scrollMechanicsService.windowSizeSubject
             .pipe(untilDestroyed(this))
             .subscribe(({ width }) => {
-                if (width >= 768) {
+                if (width >= GridBreakpoints.MD) {
                     this.setHeaderHeight();
                 }
             });

@@ -26,6 +26,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -134,9 +135,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
             .subscribe(() => {
                 this.mobileDetailMode = this.healthLayoutService.activeEntity &&
-                this.scrollMechanicsService.mediaQueryMax(
-                    NxScrollMechanicsService.MEDIA.lg
-                );
+                    this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG);
                 if (this.tableElement) {
                     this.healthLayoutService.tableWidth =
                         this.tableElement.nativeElement.offsetWidth;
@@ -234,12 +233,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     private setPagerSize(): void {
         if (
-            this.scrollMechanicsService.mediaQueryMax(
-                NxScrollMechanicsService.MEDIA.md
-            ) || (
-                this.scrollMechanicsService.mediaQueryMax(
-                    NxScrollMechanicsService.MEDIA.xl
-                ) && this.selectedEntity
+            this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.MD) || (
+                this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL) &&
+                    this.selectedEntity
             )
         ) {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeMedium;
@@ -260,11 +256,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedEntity = activeEntity;
         }
 
-        if (
-            this.scrollMechanicsService.mediaQueryMax(
-                NxScrollMechanicsService.MEDIA.lg
-            )
-        ) {
+        if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
             this.mobileDetailMode = !!this.selectedEntity;
         }
 

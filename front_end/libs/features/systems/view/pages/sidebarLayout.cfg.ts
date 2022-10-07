@@ -1,4 +1,6 @@
+import { GridBreakpoints } from '@styles/theme-variables-common';
+
 export const sidebarLayout = {
-    sidebarOverlaysWhenWindowWidthBelowPx: 768,
-    cameraClickHidesSidebarWhenWindowWidthBelowPx: 768
+    sidebarOverlaysWhenWindowWidthBelowPx: GridBreakpoints.MD,
+    cameraClickHidesSidebarWhenWindowWidthBelowPx: GridBreakpoints.MD
 };

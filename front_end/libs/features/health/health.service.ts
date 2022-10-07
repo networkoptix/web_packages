@@ -5,6 +5,7 @@ import type { SearchFilter } from '@components/search/search.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { GridBreakpoints, GRID_PANEL_WIDTH, GRID_SUPER_WIDE_PANEL_WIDTH } from '@styles/theme-variables-common';
 
 @Injectable({
     providedIn: 'root'
@@ -88,16 +89,11 @@ export class NxHealthService {
     }
 
     getPanelWidth() {
-        // values are set from CSS values in $grid-panel-width and $grid-super-wide-panel-width
-        if (
-            this.scrollMechanicsService.mediaQueryMin(
-                NxScrollMechanicsService.MEDIA.xxxxl
-            )
-        ) {
-            return 450;
+        if (this.scrollMechanicsService.mediaQueryMin(GridBreakpoints.XXXXL)) {
+            return GRID_SUPER_WIDE_PANEL_WIDTH;
         }
 
-        return 350;
+        return GRID_PANEL_WIDTH;
     }
 
     pad(n) {

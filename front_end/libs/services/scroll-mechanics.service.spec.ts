@@ -2,6 +2,7 @@ import { waitForAsync, TestBed } from '@angular/core/testing';
 
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 describe('Scroll mechanics service', () => {
     let scroll: NxScrollMechanicsService;
@@ -19,14 +20,6 @@ describe('Scroll mechanics service', () => {
         expect(scroll).toBeTruthy();
         expect(NxScrollMechanicsService.HEADER_OFFSET).toBe(48);
         expect(NxScrollMechanicsService.SCROLL_OFFSET).toBe(48 + 16); // header + padding
-        expect(NxScrollMechanicsService.MEDIA.xs).toBe(0);
-        expect(NxScrollMechanicsService.MEDIA.sm).toBe(576);
-        expect(NxScrollMechanicsService.MEDIA.md).toBe(768);
-        expect(NxScrollMechanicsService.MEDIA.lg).toBe(992);
-        expect(NxScrollMechanicsService.MEDIA.xl).toBe(1280);
-        expect(NxScrollMechanicsService.MEDIA.xxl).toBe(1440);
-        expect(NxScrollMechanicsService.MEDIA.xxxl).toBe(1600);
-        expect(NxScrollMechanicsService.MEDIA.xxxxl).toBe(1920);
     });
 
     it('should have setter and getter (elementTableWidth)', () => {
@@ -81,10 +74,10 @@ describe('Scroll mechanics service', () => {
         // @ts-expect-error Need to update global for test
         viewport.set('screen');
 
-        result = scroll.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
+        result = scroll.mediaQueryMax(GridBreakpoints.XL);
         expect(result).toBeFalse();
 
-        result = scroll.mediaQueryMax(NxScrollMechanicsService.MEDIA.xxl);
+        result = scroll.mediaQueryMax(GridBreakpoints.XXL);
         expect(result).toBeTrue();
     });
 
@@ -93,10 +86,10 @@ describe('Scroll mechanics service', () => {
         // @ts-expect-error Need to update global for test
         viewport.set('screen');
 
-        result = scroll.mediaQueryMin(NxScrollMechanicsService.MEDIA.sm);
+        result = scroll.mediaQueryMin(GridBreakpoints.SM);
         expect(result).toBeTrue();
 
-        result = scroll.mediaQueryMin(NxScrollMechanicsService.MEDIA.xxxxl);
+        result = scroll.mediaQueryMin(GridBreakpoints.XXXXL);
         expect(result).toBeFalse();
     });
 });

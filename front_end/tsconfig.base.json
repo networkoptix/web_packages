@@ -26,14 +26,15 @@
             "@guards/*": ["libs/routeGuards/*"],
             "@services/*": ["libs/services/*"],
             "@utils/*": ["libs/utils/*"],
+            "@authorization/*": ["apps/authorization/*"],
+            "@pipes/*": ["libs/pipes/*"],
+            "@mocks/*": ["common/_mocks/*"],
+            "@styles/*": ["common/styles/*"],
+            "@common/*": ["common/*"],
             "@src/app/*": ["common/*", "libs/*"],
             "@app/*": ["common/*", "libs/*"],
             "@lib/*": ["common/*", "libs/*", "packages/*"],
-            "@src/*": ["common/*", "libs/*"],
-            "@authorization/*": ["apps/authorization/*"],
-            "@pipes/*": ["libs/pipes/*"],
-            "@common/*": ["common/*"],
-            "@mocks/*": ["common/_mocks/*"]
+            "@src/*": ["common/*", "libs/*"]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]
