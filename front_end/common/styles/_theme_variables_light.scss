@@ -8,6 +8,8 @@ html[data-theme="light"] {
         background-color: #{$additional_light2};
         color: #{$dark9};
     }
+    
+    --test-bg : #{$additional_light2};
     --body-bg    : #{$additional_light2};
     --alt-body-bg : #{$light1};
     --body-text-color : #{$dark9};
