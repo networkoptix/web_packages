@@ -996,9 +996,16 @@
             "localSuccess": "System is ready for use",
             "merge": "Connect the server to the existing System",
             "mergeFailure": "Cannot merge Systems",
-            "mergeProcess": "Merging Systems...",
+            "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
             "systemName": "Enter System Name"
+        },
+        "advancedSettings": {
+            "cameraSettingsOptimization": "Allow device setting optimization",
+            "autoDiscoveryEnabled": "Enable device auto discovery",
+            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "standard": "Standard",
+            "safe": "Safe"
         }
     },
     "system": {
