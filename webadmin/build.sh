@@ -54,8 +54,8 @@ npm run build-webadmin
 mv dist static
 cp -R static/scripts/. static/
 
-# Build skins
-npm run buildSkins
+# Build skins - Specific the build dir. After the project changed it needs to be specified
+npm run buildSkins ./static/styles
 
 # Build the inline wizard for each skin
 pushd inline-wizard
