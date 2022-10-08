@@ -107,7 +107,7 @@ export class ChangePasswordModalContent {
             });
     }
 
-    close = (msg: string | boolean = false): void => {
+    close = (msg: boolean = false): void => {
         this.dialogRef.close(msg);
     };
 }

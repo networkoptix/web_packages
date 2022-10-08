@@ -379,7 +379,7 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async changePassword(system: NxSystem, user: NxSystemUser) {
+    public async changePassword(system: NxSystem, user: NxSystemUser): Promise<boolean> {
         const config: Partial<DialogConfig> = {
             data: {
                 system,

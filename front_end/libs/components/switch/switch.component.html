@@ -7,12 +7,12 @@
         <label class="switch-element">
             <input
                 type="checkbox"
-                [ngClass]="{ selected: _value }"
+                [ngClass]="{ selected: value }"
                 [id]="componentId"
                 [name]="componentId"
-                [attr.checked]="_value ? '' : null"
-                (click)="preventBubbling($event)"
-                [attr.disabled]="disabled ? '' : null"
+                [checked]="value"
+                (click)="$event.stopPropagation()"
+                [disabled]="disabled"
             />
             <span
                 class="slider round"

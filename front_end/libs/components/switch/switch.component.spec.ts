@@ -57,10 +57,10 @@ describe('NxSwitchComponent', () => {
 
     it('should change value and emit event', () => {
         spyOn(component.onSwitch, 'emit');
-        expect(component._value).toBeFalse();
+        expect(component['value']).toBeFalse();
 
         body.click();
-        expect(component._value).toBeTrue();
+        expect(component['value']).toBeTrue();
         expect(component.onSwitch.emit).toHaveBeenCalledWith(true);
     });
 
@@ -69,18 +69,18 @@ describe('NxSwitchComponent', () => {
         component.disabled = true;
 
         body.click();
-        expect(component._value).toBeFalse();
+        expect(component['value']).toBeFalse();
         expect(component.onSwitch.emit).toHaveBeenCalledWith(undefined);
     });
 
     it('should change state (NgModel)', () => {
         component.writeValue(true);
-        expect(component._value).toBeTrue();
+        expect(component['value']).toBeTrue();
     });
 
     it('should not change value if disabled (NgModel)', () => {
         component.disabled = true;
         component.writeValue(true);
-        expect(component._value).toBeFalse();
+        expect(component['value']).toBeFalse();
     });
 });

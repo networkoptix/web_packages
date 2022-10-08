@@ -1,28 +1,24 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { ComponentsCoreModule } from '@components/components-core.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { DirectivesModule } from '@directives/directives.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { PermissionsModule } from '@components/dropdowns/permissions/permissions.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SwtichModule } from '@components/switch/switch.module';
 
 import { NxSystemUsersComponent } from './users.component';
 
 @NgModule({
     imports: [
-        CommonModule,
-        RouterModule,
-        FormsModule,
-        TranslateModule,
-        ComponentsModule,
-        PipesModule,
-        DirectivesModule,
+        ComponentsCoreModule,
         AngularSvgIconModule.forRoot(),
-        ContentBlockModule
+        ContentBlockModule,
+        PreLoaderModule,
+        SwtichModule,
+        ContentBlockSectionModule,
+        PermissionsModule,
     ],
     providers: [
     ],

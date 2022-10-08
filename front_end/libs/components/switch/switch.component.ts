@@ -8,11 +8,13 @@ import {
 } from '@angular/core';
 import {
     ControlValueAccessor,
-    UntypedFormControl,
     NG_VALUE_ACCESSOR,
-    Validator
+    Validator,
+    ValidationErrors,
+    FormControl
 } from '@angular/forms';
 
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
@@ -31,29 +33,26 @@ import { NgChanges } from '@utils/ng-changes';
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() id: string;
     @Input() name: string;
-    @Input() required: boolean;
+    @IBool() @Input() required: CoercedBoolInput;
     @Input() checked: boolean;
-    @Input() disabled: any;
+    @IBool() @Input() disabled: CoercedBoolInput;
     @Input() label: string;
-    @Input() showWarning: boolean;
+    @IBool() @Input() showWarning: CoercedBoolInput;
     @Output() onClick = new EventEmitter<boolean>();
 
     @Output() onSwitch = new EventEmitter<boolean>();
 
     componentId: string;
 
-    _value: boolean = false;
+    protected value: boolean = false;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => {
-    };
-
-    private onChangeCallback = (_: any): void => {
-    };
+    private onTouchedCallback = (): void => {};
+    private onChangeCallback = (_: boolean): void => {};
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: UntypedFormControl) {
+    public validate(c: FormControl<boolean>): ValidationErrors | null {
         const err = {
             requiredError: {
                 required: true
@@ -69,13 +68,11 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
 
     ngOnInit(): void {
         this.componentId = (this.id || this.name) + '-switch';
-        this.disabled = (this.disabled !== undefined) ? this.disabled : false; // optional param
-        this.required = (this.required !== undefined); // optional param
 
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {
-                this._value = this.checked;
+                this.value = this.checked;
             }
             // this.setState();
         });
@@ -84,9 +81,9 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any): void {
+    writeValue(value: boolean | null): void {
         if (value !== null && !this.disabled) {
-            this._value = value;
+            this.value = value;
         }
     }
 
@@ -94,7 +91,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn): void {
+    registerOnChange(fn: (_: boolean) => void): void {
         this.onChangeCallback = fn;
     }
 
@@ -102,24 +99,20 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: any): void {
+    registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
     ngOnChanges(changes: NgChanges<NxSwitchComponent>): void {
         if (changes.checked) {
-            this._value = changes.checked.currentValue;
+            this.value = changes.checked.currentValue;
         }
     }
 
     private setState(): void {
         // update the form
-        this.onChangeCallback(this._value);
-        this.onSwitch.emit(this._value);
-    }
-
-    preventBubbling(event: Event): void {
-        event.stopPropagation();
+        this.onChangeCallback(this.value);
+        this.onSwitch.emit(this.value);
     }
 
     changeState(): void {
@@ -130,7 +123,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
         }
 
         this.onTouchedCallback();
-        this._value = !this._value;
+        this.value = !this.value;
         this.setState();
     }
 
