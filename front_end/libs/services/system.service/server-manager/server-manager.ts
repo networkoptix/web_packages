@@ -11,7 +11,7 @@ import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.type
 import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { paramSortFunc } from '@utils/general';
+import { alphabeticalSort } from '@utils/general';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
@@ -35,7 +35,8 @@ export class ServerManager {
         private currentUserEmail: string,
         private systemId: string,
         private cloudApi: NxCloudApiService,
-        private system: NxSystem
+        private system: NxSystem,
+        private locale: string,
     ) {}
 
     initSystemMediaServers(): Promise<Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2>> {
@@ -91,13 +92,13 @@ export class ServerManager {
                         return Promise.reject(new Error(`Request to server has failed ${res}`));
                     }
 
-                    this.servers = res.sort(paramSortFunc(server => server.name));
+                    this.servers = res.sort(alphabeticalSort(this.locale, server => server.name));
                     return this.servers;
                 });
             }
             return this.serverSubscription;
         } else {
-            this.servers = servers.sort(paramSortFunc(server => server.name));
+            this.servers = servers.sort(alphabeticalSort(this.locale, server => server.name));
         }
     }
 

@@ -12,7 +12,8 @@ import {
     ElementRef,
     ViewChild,
     HostListener,
-    Renderer2
+    Renderer2,
+    LOCALE_ID
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -145,6 +146,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         private scrollMechanicsService: NxScrollMechanicsService,
         private renderer: Renderer2,
         @Inject(WINDOW) private window: Window,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -369,22 +371,46 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         let byParam: (a: Cameras, b: Cameras) => number;
 
         switch (param) {
+            case 'vendor':
+            case 'model':
+            case 'hardwareType':
+            case 'primaryCodec':
+                // string
+                const collator = new Intl.Collator(this.locale);
+                // Using collator object here for speed
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare#performance
+                byParam = (a, b) => {
+                    const result = collator.compare(a[param], b[param]);
+                    return this.sortOrderASC ? result : -result;
+                };
+                break;
             case 'maxResolution':
+                // Display resolution string, but use area number for sorting
+                byParam = paramSortFunc(elm => elm.resolutionArea, !this.sortOrderASC);
+                break;
             case 'maxFps':
-            case 'isAnalyticsSupported':
             case 'count':
-                byParam = paramSortFunc(elm =>
-                    param === 'maxResolution' ? elm.resolutionArea : elm[param]
-                , !this.sortOrderASC);
+            case 'resolutionArea':
+                // number
+                byParam = paramSortFunc(elm => elm[param], !this.sortOrderASC);
                 break;
             case 'isFisheye':
             case 'isMdSupported':
             case 'isIoSupported':
-                byParam = paramSortFunc(elm =>
-                    elm[param] ? 0 : 2
-                , this.sortOrderASC);
+            case 'isAnalyticsSupported':
+                // boolean + null (no info)
+                byParam = paramSortFunc(elm => {
+                    if (elm[param] === null) {
+                        return 0;
+                    } else if (!elm[param]) {
+                        return 1;
+                    } else {
+                        return 2;
+                    }
+                }, !this.sortOrderASC);
                 break;
             case 'isPtzSupported':
+                // tri-state + null
                 byParam = paramSortFunc(elm => {
                     if (elm.isAptzSupported) {
                         return 0;
@@ -398,6 +424,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }, this.sortOrderASC);
                 break;
             case 'isAudioSupported':
+                // tri-state + null
                 byParam = paramSortFunc(elm => {
                     if (elm.isAudioSupported === null) {
                         return 3;
@@ -411,11 +438,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }, this.sortOrderASC);
                 break;
             default:
-                byParam = paramSortFunc(elm =>
-                    typeof elm[param] === 'string'
-                        ? elm[param].toLowerCase()
-                        : elm[param]
-                , this.sortOrderASC);
+                byParam = paramSortFunc(elm => elm[param], this.sortOrderASC);
         }
 
         this._elements.sort(byParam);

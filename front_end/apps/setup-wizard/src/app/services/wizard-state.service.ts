@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,6 +16,7 @@ import { ModuleInformationReply, NormalResponse, SystemAdvancedConfigSettings, S
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
+import { alphabeticalSort } from '@utils/general';
 
 import { FORM_STATE, iState, SECURITY_LEVEL, WIZARD_STATE } from '../types/wizard-state.types';
 
@@ -197,7 +198,8 @@ export class WizardStateService {
         private nxSystemAPIService: NxSystemAPIService,
         private router: Router,
         private translate: TranslateService,
-        @Inject(WINDOW) public window: Window
+        @Inject(WINDOW) public window: Window,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = config.getConfig();
         this.LANG = language.translations;
@@ -748,7 +750,7 @@ export class WizardStateService {
                     system.hint = `${system.url} (${system.name})`;
                     return system;
                 })
-                .sort((a, b) => a.visibleName > b.visibleName ? 1 : -1);
+                .sort(alphabeticalSort(this.locale, sys => sys.visibleName));
         });
     }
 

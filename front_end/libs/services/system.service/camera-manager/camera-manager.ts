@@ -1,5 +1,5 @@
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { paramSortFunc } from '@utils/general';
+import { alphabeticalSort } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
 import { NxSystem } from '../system';
@@ -21,7 +21,8 @@ export class CameraManager {
     moduleInfo: ModuleInfo;
 
     constructor(
-        private system: NxSystem
+        private system: NxSystem,
+        private locale: string,
     ) {
         this.serverManager = this.system.serverManager;
     }
@@ -32,7 +33,7 @@ export class CameraManager {
             const [moduleInfo, servers, serverTimes, cameras] = response;
             this.moduleInfo = moduleInfo;
             this.servers = servers.sort(
-                paramSortFunc((server: any) => server.name)
+                alphabeticalSort(this.locale, (server: any) => server.name)
             );
             this.getCameras(serverTimes, cameras);
             return Promise.resolve();

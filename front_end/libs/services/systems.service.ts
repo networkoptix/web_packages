@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID, OnDestroy } from '@angular/core';
 // import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
@@ -10,6 +10,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { alphabeticalSort, paramSortFunc } from '@utils/general';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
@@ -61,6 +62,7 @@ export class NxSystemsService implements OnDestroy {
         private toastService: NxToastService,
         private uriService: NxUriService,
         // private store: Store,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -179,9 +181,7 @@ export class NxSystemsService implements OnDestroy {
         return this.systems.filter(system =>
             system.ownerAccountEmail === currentUserEmail &&
             system.id !== currentSystemId
-        ).sort((a, b) => {
-            return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
-        });
+        ).sort(alphabeticalSort(this.locale, sys => sys.name));
     }
 
     getSystem(
@@ -283,14 +283,10 @@ export class NxSystemsService implements OnDestroy {
 
     private sortSystems(systems: System[], currentUserEmail: string): System[] {
         // Alphabet sorting
-        const preSort = systems.sort((systemA, systemB) => {
-            const systemAName = this.getSystemOwnerName(systemA, currentUserEmail, true);
-            const systemBName = this.getSystemOwnerName(systemB, currentUserEmail, true);
-            return systemAName < systemBName ? -1 : 1;
-        });
+        const preSort = systems.sort(
+            alphabeticalSort(this.locale, sys => this.getSystemOwnerName(sys, currentUserEmail, true))
+        );
         // Sort by usage frequency is more important than Alphabet
-        return preSort.sort((systemA, systemB) => {
-            return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
-        });
+        return preSort.sort(paramSortFunc(sys => sys.usageFrequency, false));
     }
 }

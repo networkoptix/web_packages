@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     Inject,
+    LOCALE_ID,
     OnInit,
     PLATFORM_ID,
     ViewChild,
@@ -37,10 +38,10 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import {
-    paramSortFunc,
     addPseudoAnchor,
     clearPseudoAnchors,
-    PseudoAnchorTarget
+    PseudoAnchorTarget,
+    alphabeticalSort,
 } from '@utils/general';
 
 import { IpvdSearchService } from './ipvd-search.service';
@@ -151,6 +152,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(PLATFORM_ID) private platformId: object,
         @Inject(WINDOW) private window: Window,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -443,9 +445,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.addFilterTags();
 
                 this.vendors = data.vendors;
-                this.vendors.sort(
-                    paramSortFunc(elm => elm.name.toLowerCase())
-                );
+                this.vendors.sort(alphabeticalSort(this.locale, elm => elm.name));
 
                 // reformat vendors to fit the multiselect component
                 this.filterModel.multiselects.unshift({

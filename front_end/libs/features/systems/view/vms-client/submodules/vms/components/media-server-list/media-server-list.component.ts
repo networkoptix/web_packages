@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { htmlToEntity } from '@utils/general';
+import { alphabeticalSort, htmlToEntity } from '@utils/general';
 
-import { ICamera } from '../../datatypes/ICamera';
 import { MediaServer } from '../../datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '../../datatypes/VmsState';
 import { VideoManagementSystemService } from '../../services/vms.service';
@@ -46,7 +45,8 @@ export class MediaServerListComponent implements OnInit {
     constructor(
         private localStorage: LocalStorageService,
         private vms: VideoManagementSystemService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
     }
@@ -78,19 +78,9 @@ export class MediaServerListComponent implements OnInit {
                         ? this.vms.selectedCamera?.id
                         : undefined;
                 }, 0);
-                const cameraComparator = (c1: ICamera, c2: ICamera) => {
-                    const n1 = c1.name.toLocaleLowerCase();
-                    const n2 = c2.name.toLocaleLowerCase();
-                    return n1 > n2 ? +1 : n1 < n2 ? -1 : 0;
-                };
-                this._mediaservers.sort((ms1, ms2) => {
-                    const n1 = ms1.name.toLocaleLowerCase();
-                    const n2 = ms2.name.toLocaleLowerCase();
-                    return n1 > n2 ? +1 : n1 < n2 ? -1 : 0;
-                });
+                this._mediaservers.sort(alphabeticalSort(this.locale, ms => ms.name));
                 this._mediaservers.forEach(ms => {
-                    ms.cameras.sort(cameraComparator);
-                    ms.cameras.sort(cameraComparator);
+                    ms.cameras.sort(alphabeticalSort(this.locale, cam => cam.name));
                 });
         }
         this._resetServersVisibility();

@@ -1,6 +1,8 @@
 import {
     Component,
+    Inject,
     Input,
+    LOCALE_ID,
     OnDestroy,
     OnInit,
 } from '@angular/core';
@@ -40,7 +42,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
-import { cleanId, htmlToEntity, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, cleanId, htmlToEntity } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from './settings.service';
@@ -171,6 +173,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -594,7 +597,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
             if (this.system.cameraManager.cameras) {
                 this.system.cameraManager.cameras.sort(
-                    paramSortFunc(camera => camera.name)
+                    alphabeticalSort(this.locale, camera => camera.name)
                 );
                 const getCameraIP = cameraUrl => cameraUrl.match(
                     /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
@@ -610,10 +613,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                         additionalLabel: getCameraIP(camera.url)
                     }));
-
-                camerasNode.level3 = camerasNode.level3.sort((a, b) => {
-                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                });
             } else {
                 camerasNode.level3 = [];
             }
@@ -723,7 +722,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
             if (this.system.serverManager.servers) {
                 this.system.serverManager.servers.sort(
-                    paramSortFunc(server => server.name.toLowerCase())
+                    alphabeticalSort(this.locale, server => server.name)
                 );
 
                 serversNode.level3 = [];

@@ -1,6 +1,11 @@
 import {
-    Component, Input, ViewChild,
-    ChangeDetectorRef, ElementRef, Inject
+    Component,
+    Input,
+    ViewChild,
+    ChangeDetectorRef,
+    ElementRef,
+    Inject,
+    LOCALE_ID,
 } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 
@@ -21,11 +26,12 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 // import type { NxSystem } from '@services/system.service/system';
+import { DiscoveredPeers } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
-import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
+import { cleanIp, htmlToEntity, strSplice, pickFrom, alphabeticalSort } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';
@@ -129,6 +135,7 @@ export class MergeModalContent {
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -344,7 +351,7 @@ export class MergeModalContent {
 
     getPeerSystems() {
         return this.system.getPeerSystems().toPromise()
-            .then((res: any) => {
+            .then((res: DiscoveredPeers) => {
                 this.peerSystems = res.reply
                     .filter(peer => this.environment.isLocal ? this.system.id !== peer.localSystemId : !peer.cloudSystemId)
                     .map(peer => {
@@ -371,11 +378,7 @@ export class MergeModalContent {
                         }
                         return system;
                     })
-                    .sort((sysA, sysB) => {
-                        const a = `${sysA.systemName?.toLowerCase?.()}${sysA.name.toLowerCase()}`;
-                        const b = `${sysB.systemName?.toLowerCase?.()}${sysB.name.toLowerCase()}`;
-                        return a < b ? -1 : 1;
-                    });
+                    .sort(alphabeticalSort(this.locale, sys => `${sys.systemName ?? ''}${sys.name}`));
             });
     }
 

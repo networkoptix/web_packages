@@ -4,7 +4,10 @@ import {
     Input,
     forwardRef,
     Directive,
-    Inject, Output, EventEmitter
+    Inject,
+    Output,
+    EventEmitter,
+    LOCALE_ID,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -15,7 +18,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
-import { paramSortFunc } from '@utils/general';
+import { alphabeticalSort } from '@utils/general';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -45,6 +48,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         super(languageService, configService);
 
@@ -98,7 +102,7 @@ class BaseLanguageDropdown extends BaseDropdown {
                 ? data
                 : data.filter(language =>
                     this.CONFIG.supportedLanguages?.includes(language.language));
-            this.languages.sort(paramSortFunc(lang => lang.language));
+            this.languages.sort(alphabeticalSort(this.locale, lang => lang.language));
 
             this.splitLanguages();
 

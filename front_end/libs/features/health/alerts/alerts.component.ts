@@ -3,6 +3,8 @@ import {
     AfterViewInit,
     Component,
     ElementRef,
+    Inject,
+    LOCALE_ID,
     OnDestroy,
     OnInit,
     ViewChild,
@@ -24,7 +26,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
-import { paramSortFunc } from '@utils/general';
+import { alphabeticalSort, paramSortFunc } from '@utils/general';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
@@ -91,7 +93,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private location: Location,
         private menuService: NxMenuService,
         private uriService: NxUriService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -397,7 +400,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                         : this.LANG.alarmLevels[level]?.() || `${level}s`;
 
                     return { count, level, name };
-                }).sort((a: any, b: any) => a.level < b.level ? -1 : 1),
+                }).sort(alphabeticalSort(this.locale, a => a.level)),
                 name: this.LANG.alarmTypes[alarmType.name]?.() || alarmType.name
             };
         });

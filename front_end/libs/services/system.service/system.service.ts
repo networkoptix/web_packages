@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -37,6 +37,7 @@ export class NxSystemService {
         private router: Router,
         private ribbonService: NxRibbonService,
         private translateService: TranslateService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -71,6 +72,7 @@ export class NxSystemService {
                 this.ribbonService,
                 this.router,
                 this.translateService,
+                this.locale,
                 currentUserEmail,
                 systemId,
                 serverId,
@@ -116,6 +118,7 @@ export class NxSystemService {
                 this.ribbonService,
                 this.router,
                 this.translateService,
+                this.locale,
                 userEmail,
                 '',
                 '',

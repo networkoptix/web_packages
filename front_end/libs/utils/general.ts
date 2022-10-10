@@ -93,9 +93,9 @@ export function moveArrayElem<T>(
 /** Generates a sorting function for use with `Array.sort()`.
  * @param fn - A function which will be passed the array items being compared
  * @param ascendingOrder - Sort by ascending order (default)
-*/
+ */
 export function paramSortFunc<Param>(
-    fn: (param: Param) => unknown,
+    fn: (param: Param) => number,
     ascendingOrder: boolean = true
 ): (a: Param, b: Param) => number {
     return (a, b) => {
@@ -106,6 +106,22 @@ export function paramSortFunc<Param>(
             return (ascendingOrder) ? 1 : -1;
         }
         return 0;
+    };
+}
+
+/** Generates a function for alphabetic sorting (case insensitive).
+ * @param locale - Locale to use for comparison
+ * @param fn - A function which returns a string from item being sorted
+ * @param ascendingOrder - Sort by ascending order (default)
+ */
+export function alphabeticalSort<P>(
+    locale: string,
+    fn: (param: P) => string,
+    ascendingOrder: boolean = true,
+): (a: P, b: P) => number {
+    return (a, b) => {
+        const result = fn(a).localeCompare(fn(b), locale);
+        return ascendingOrder ? result : -result;
     };
 }
 

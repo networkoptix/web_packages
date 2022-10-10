@@ -1,7 +1,9 @@
 import {
     Component,
     forwardRef,
+    Inject,
     Input,
+    LOCALE_ID,
     OnChanges,
     OnDestroy,
     OnInit,
@@ -20,7 +22,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
-import { paramSortFunc } from '@utils/general';
+import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { IpvdParams } from '../../ipvd.types';
@@ -73,7 +75,8 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         language: NxLanguageProviderService,
         private uri: NxUriService,
         private router: Router,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -176,13 +179,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     setVendorsShown(vendors: Vendors[]): void {
-        const byCountDESC = paramSortFunc<Vendors>(elm => elm.count, false);
-
-        const byNameASC = paramSortFunc<Vendors>(elm => elm.name.toLowerCase());
-
-        this.vendors = vendors.sort(byCountDESC)
+        this.vendors = vendors.sort(paramSortFunc(elm => elm.count, false)) // Desc count
             .slice(0, this.CONFIG.ipvd.vendorsShown)
-            .sort(byNameASC);
+            .sort(alphabeticalSort(this.locale, elm => elm.name)); // Asc name
     }
 
     toggleVendorsShown(element: HTMLButtonElement): void {

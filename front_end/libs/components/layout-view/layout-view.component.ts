@@ -1,6 +1,8 @@
 // import { Location } from '@angular/common';
 import {
-    Component
+    Component,
+    Inject,
+    LOCALE_ID,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
@@ -17,7 +19,7 @@ import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { cleanId, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, cleanId } from '@utils/general';
 
 interface Resource {
     name: string;
@@ -91,7 +93,7 @@ export class NxLayoutViewComponent {
                     aspectRatio
                 }
             }), {} as ResourceLookup<typeof webPages[0]>);
-            const byName = paramSortFunc<Pick<Resource, 'name'>>(r => r.name);
+            const byName = alphabeticalSort<Pick<Resource, 'name'>>(this.locale, r => r.name);
             const parsedResources = { ...parsedServers, ...parsedCameras, ...parsedWebPages };
             const serversForTree = Object.values(parsedServers).sort(byName);
             const camerasForTree = Object.values(parsedCameras).sort(byName);
@@ -206,7 +208,8 @@ export class NxLayoutViewComponent {
         private systemService: NxSystemService,
         private activatedRoute: ActivatedRoute,
         private accountService: NxAccountService,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
 
     }

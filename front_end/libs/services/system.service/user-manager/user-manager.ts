@@ -4,6 +4,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { alphabeticalSort } from '@utils/general';
 
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystemRestAPI } from '../../system-rest-api.service';
@@ -34,7 +35,8 @@ export class UserManager {
         lang: LanguageI18NStaticTypes,
         mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
         currentUserEmail: string,
-        userId: string
+        userId: string,
+        private locale: string,
     ) {
         this.CONFIG = config;
         this.LANG = lang;
@@ -248,9 +250,9 @@ export class UserManager {
             // sorts local before cloud users --> then by email for cloud & name for local
             if (userA.isCloud === userB.isCloud) {
                 if (userA.isCloud) {
-                    return userA.email < userB.email ? -1 : 1;
+                    return userA.email.localeCompare(userB.email);
                 } else {
-                    return userA.name < userB.name ? -1 : 1;
+                    return userA.name.localeCompare(userB.name);
                 }
             }
             return userA.isCloud ? 1 : -1;
@@ -311,9 +313,7 @@ export class UserManager {
             userRole.isAdmin = this.isAdmin(userRole);
             userRole.permissions = this.normalizePermissionString(userRole.permissions);
             return userRole;
-        }).sort((userRoleA, userRoleB) => {
-            return userRoleA.name < userRoleB.name ? -1 : 1;
-        });
+        }).sort(alphabeticalSort(this.locale, role => role.name));
 
         const newRoles = Array.from(new Set([
             ...predefinedRoles,

@@ -188,6 +188,7 @@ export class NxSystem {
         private ribbonService: NxRibbonService,
         private router: Router,
         private translateService: TranslateService,
+        private locale: string,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
@@ -238,7 +239,7 @@ export class NxSystem {
             unauthorizedCallback(true).then(() => { });
         }
 
-        this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
+        this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId, this.locale);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
@@ -246,11 +247,13 @@ export class NxSystem {
             this.currentUserEmail,
             this.id,
             this.cloudApi,
-            this
+            this,
+            this.locale,
         );
 
         this.cameraManager = new CameraManager(
-            this
+            this,
+            this.locale,
         );
 
         this.storageManager = new StorageManager(this);

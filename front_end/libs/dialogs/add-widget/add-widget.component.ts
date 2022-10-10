@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, LOCALE_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
@@ -17,7 +17,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { pickFrom, delayInitial } from '@utils/general';
+import { pickFrom, delayInitial, alphabeticalSort } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;
 type DashboardDropdownItem = DropdownItem<string>;
@@ -79,7 +79,8 @@ export class AddWidgetModalContent {
         private http: HttpClient,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
         this.LANG = language.translations;
@@ -117,7 +118,9 @@ export class AddWidgetModalContent {
         const { dashboardName: name, id: value } = this.activeDashboard || {};
         this.selectedDashboard = { name, value };
         const { widgetUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
-        this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
+        this.widgetDropdownOptions = this.widgets
+            .sort(alphabeticalSort(this.locale, w => w.title))
+            .map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
             this.selectedWidget = cloneDeep(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
             this.downloadWidget(devServer || widgetUrl, !!devServer);
