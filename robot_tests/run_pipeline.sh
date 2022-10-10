@@ -12,6 +12,8 @@ VENV_BIN_DIR=venv/bin
 PYTHON="$VENV_BIN_DIR/python"
 "$PYTHON" -m pip install -r requirements.txt --no-deps
 
+GOOGLE_CHROME_DIR="$(./prepare_google_chrome.sh)"
+
 set +e
 
 BACKEND_REVISION='master'
@@ -33,7 +35,7 @@ if [ ! "$CLOUD_HOST" ]; then
   exit 1
 fi
 
-pabot --pabotlib --processes 4 -e integrations -L trace:info \
+PATH="$GOOGLE_CHROME_DIR:$VENV_BIN_DIR:$PATH" pabot --pabotlib --processes 4 -e integrations -L trace:info \
   -v ENV:"https://$CLOUD_HOST" \
   -v "FROM EMAIL DEFAULT":True \
   -i 'smoke' 'test-cases'
