@@ -5,6 +5,7 @@ import { AdvancedFilterModule } from '@components/advanced-filter/advanced-filte
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { SearchModule } from '@components/search/search.module';
 
 import { ContentBlockModule } from '../content-block/content-block.module';
@@ -21,7 +22,8 @@ import { NxConsoleTableComponent } from './console-table.component';
         ComponentsCoreModule,
         PaginatorModule,
         PreLoaderModule,
-        SearchModule
+        SearchModule,
+        NxSearchHighlightModule,
     ],
     declarations: [
         NxConsoleTableComponent

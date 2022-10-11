@@ -7,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { components } from './components';
@@ -27,7 +28,8 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
         FormsModule,
         DirectivesModule,
         AngularSvgIconModule.forRoot(),
-        PipesModule
+        PipesModule,
+        NxSearchHighlightModule,
     ],
     exports: [
         MediaServerListComponent

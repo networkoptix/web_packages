@@ -33,12 +33,20 @@
                 <span
                     class="name"
                     [ngClass]="server.status"
-                    [innerHTML]="server.name | unsafe | highlight: token"
-                ></span>
+                >
+                    <nx-search-highlight
+                        [text]="server.name"
+                        [search]="token"
+                    ></nx-search-highlight>
+                </span>
                 <span
                     *ngIf="showIP"
                     class="ip-info"
-                    [innerHTML]="server.ip | unsafe | highlight: token"
+                >
+                    <nx-search-highlight
+                        [text]="server.ip"
+                        [search]="token"
+                    ></nx-search-highlight
                 ></span>
                 <svg-icon
                     nx-add-svg-src
@@ -114,11 +122,17 @@
                     <span
                         class="name"
                         [ngClass]="camera.status"
-                        [innerHTML]="camera.name | unsafe | highlight: token"
+                    >
+                        <nx-search-highlight
+                            [text]="camera.name"
+                            [search]="token"
+                        ></nx-search-highlight
                     ></span>
-                    <span
-                        class="ip-info"
-                        [innerHTML]="camera.url | unsafe | highlight: token"
+                    <span class="ip-info">
+                        <nx-search-highlight
+                            [text]="camera.url"
+                            [search]="token"
+                        ></nx-search-highlight
                     ></span>
                 </a>
             </div>

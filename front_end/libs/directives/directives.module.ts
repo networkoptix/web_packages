@@ -8,7 +8,6 @@ import { NxArrowNavDirective } from './nx-arrow-nav';
 import { NxClickElsewhereDirective } from './nx-click-elsewhere';
 import { NxEditableDirective } from './nx-editable.directive';
 import { NxFocusMeDirective } from './nx-focus-me';
-import { HighlightPipe } from './nx-highlight-text';
 import { NxIntersectionObserver } from './nx-intersection.directive';
 import { NxMatchHeightDirective } from './nx-match-height.directive';
 import { NxProjectedCodeBlock } from './nx-projected-code-block.directive';
@@ -29,7 +28,6 @@ import { ResizeModule } from './resize/resize.module';
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
-        HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
@@ -46,7 +44,6 @@ import { ResizeModule } from './resize/resize.module';
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
-        HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,

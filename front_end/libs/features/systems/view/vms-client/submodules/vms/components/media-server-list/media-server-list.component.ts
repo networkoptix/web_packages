@@ -4,7 +4,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { alphabeticalSort, htmlToEntity } from '@utils/general';
+import { alphabeticalSort } from '@utils/general';
 
 import { MediaServer } from '../../datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '../../datatypes/VmsState';
@@ -67,12 +67,6 @@ export class MediaServerListComponent implements OnInit {
             case VMS_MODE.CAMERA_NOT_SELECTED:
             case VMS_MODE.CAMERA_SELECTED:
                 this._mediaservers = s.mediaServers;
-                this._mediaservers.forEach(server => {
-                    server.name = htmlToEntity(server.name);
-                    server.cameras.forEach(camera => {
-                        camera.name = htmlToEntity(camera.name);
-                    });
-                });
                 setTimeout(() => {
                     this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED
                         ? this.vms.selectedCamera?.id

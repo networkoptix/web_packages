@@ -328,12 +328,14 @@
                             *cdkCellDef="let element"
                             (click)="updateEditValues(element)"
                             [class]="'type-default ' + (field.meta?.styles || '')"
-                            [innerHTML]="
-                                element[field.name] | highlight: (selectedData.search$ | async)
-                            "
                             queryParamsHandling="merge"
                             [routerLink]="[CONSOLE_MODE.EDIT, element.id]"
-                        ></td>
+                        >
+                            <nx-search-highlight
+                                [text]="element[field.name]"
+                                [search]="selectedData.search$ | async"
+                            ></nx-search-highlight>
+                        </td>
                     </ng-container>
                 </ng-container>
             </ng-container>
