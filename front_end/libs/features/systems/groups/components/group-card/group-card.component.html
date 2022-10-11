@@ -27,25 +27,32 @@
     </div>
     <div
         class="three-dots"
-        (click)="menuOpen = !menuOpen"
-        (nxClickElsewhere)="menuOpen = false"
+        [cdkMenuTriggerFor]="menu"
     >
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
+    </div>
+    <ng-template #menu>
         <div
-            *ngIf="menuOpen"
             class="card-menu"
+            cdkMenu
         >
             <div
                 class="card-menu-option"
-                (click)="deleteGroup()"
+                cdkMenuItem
+                (cdkMenuItemTriggered)="deleteGroup()"
                 translate
             >
                 Delete group
             </div>
             <!-- eslint-disable-next-line nx/template/no-untranslated -->
-            <div class="card-menu-option">Another group menu option</div>
+            <div
+                class="card-menu-option"
+                cdkMenuItem
+            >
+                Another group menu option
+            </div>
         </div>
-    </div>
+    </ng-template>
 </div>

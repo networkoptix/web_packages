@@ -1,3 +1,4 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -11,6 +12,7 @@ import { NxGroupCardComponent } from './group-card.component';
         AngularSvgIconModule.forRoot(),
         ComponentsCoreModule,
         NxSearchHighlightModule,
+        CdkMenuModule,
     ],
     declarations: [
         NxGroupCardComponent,

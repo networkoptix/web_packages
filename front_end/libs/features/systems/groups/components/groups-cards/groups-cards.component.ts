@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
@@ -14,7 +14,9 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
 @Component({
     selector: 'nx-groups-cards',
     templateUrl: 'groups-cards.component.html',
-    styleUrls: ['groups-cards.component.scss']
+    styleUrls: ['groups-cards.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    // Need to escape encapsulation to style cdk elements
 })
 export class NxGroupsCardsComponent implements OnInit {
     @Input() groups: GroupItem[];

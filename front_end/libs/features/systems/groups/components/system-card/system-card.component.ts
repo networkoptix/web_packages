@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
-import { Process } from '@services/process.service/process';
-// import { NxSystemsService } from '@services/systems.service';
+import type { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 
 import type { SystemItem } from '../../groups.types';
@@ -17,17 +17,19 @@ import type { SystemItem } from '../../groups.types';
 @Component({
     selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',
-    styleUrls: ['system-card.component.scss']
+    styleUrls: ['system-card.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    // Need to escape encapsulation to style menu
 })
 export class NxSystemCardComponent implements OnInit {
     @Input() system: SystemItem;
     @Input() search: string;
     @Input() account: Account;
+    @IBool() @Input() showOwner: CoercedBoolInput = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    menuOpen: boolean = false;
     openClient: Process;
     modalActive: boolean;
 
@@ -53,7 +55,6 @@ export class NxSystemCardComponent implements OnInit {
         private dialogs: NxDialogsService,
         private processService: NxProcessService,
         private urlProtocol: NxUrlProtocolService,
-        // private systemsService: NxSystemsService,
         private router: Router,
     ) {
         this.LANG = language.translations;
@@ -102,12 +103,11 @@ export class NxSystemCardComponent implements OnInit {
             });
     }
 
-    // get getSystemOwnerName(): string {
-    //     return this.systemsService.getSystemOwnerName(
-    //         this.system,
-    //         this.account?.email
-    //     );
-    // }
+    get getSystemOwnerName(): string {
+        return this.system.ownerAccountEmail === this.account?.email
+            ? ''
+            : (this.system.ownerFullName || this.system.ownerAccountEmail);
+    }
 
     get systemNotOnline(): boolean {
         return this.system.stateOfHealth !== this.CONFIG.system.status.online;

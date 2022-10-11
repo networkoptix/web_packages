@@ -10,14 +10,22 @@
                 [search]="search"
             ></nx-search-highlight>
         </h2>
-        <!-- <span class="system-owner user-name">
-            <nx-search-highlight
-                [text]="getSystemOwnerName"
-                [search]="search"
-            ></nx-search-highlight>
-        </span> -->
         <div class="system-list-bottom-bar">
+            <span
+                *ngIf="showOwner && getSystemOwnerName"
+                class="system-owner user-name"
+            >
+                <nx-search-highlight
+                    [text]="getSystemOwnerName"
+                    [search]="search"
+                ></nx-search-highlight>
+            </span>
             <div class="system-status">
+                <span
+                    *ngIf="systemNotOnline"
+                    class="user-name"
+                    >{{ systemState }}</span
+                >
                 <svg-icon
                     *ngIf="needToConfigureTwoFactor"
                     nx-add-svg-src
@@ -25,30 +33,27 @@
                     [svgStyle]="{ 'height.px': '20' }"
                     [applyClass]="true"
                 ></svg-icon>
-                <span
-                    *ngIf="systemNotOnline"
-                    class="user-name"
-                    >{{ systemState }}</span
-                >
             </div>
         </div>
     </div>
     <div
         class="three-dots"
-        (click)="menuOpen = !menuOpen"
-        (nxClickElsewhere)="menuOpen = false"
+        [cdkMenuTriggerFor]="menu"
     >
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
+    </div>
+    <ng-template #menu>
         <div
-            *ngIf="menuOpen"
             class="card-menu"
+            cdkMenu
         >
             <div
                 *ngIf="!openClient.processing"
-                (click)="openClient.run()"
+                (cdkMenuItemTriggered)="openClient.run()"
                 class="card-menu-option"
+                cdkMenuItem
                 translate
             >
                 Open in %VMS_NAME%
@@ -60,8 +65,14 @@
             >
                 Opening %VMS_NAME%...
             </div>
+            <hr />
             <!-- eslint-disable-next-line nx/template/no-untranslated -->
-            <div class="card-menu-option">Another system menu option</div>
+            <div
+                class="card-menu-option"
+                cdkMenuItem
+            >
+                Another system menu option
+            </div>
         </div>
-    </div>
+    </ng-template>
 </div>

@@ -38,5 +38,12 @@
                 text-decoration: none;
             }
         }
+
+        nx-groups-cards {
+            overflow-y: auto;
+            padding-right: 1rem;
+
+            flex: 1;
+        }
     }
 }

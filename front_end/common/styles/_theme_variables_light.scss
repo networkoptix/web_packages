@@ -587,10 +587,17 @@ html[data-theme="light"] {
     --group-card-bg-grad0: #{$light3};
     --group-card-bg-grad100: #{$light5};
     --group-card-border-color: #{$light7};
+
     @include generateVarAndRgb(--system-card-bg-grad0, $light1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light3);
     --system-card-offline-color: #{$light16};
     --system-card-border-color: #{$light5};
+
     --card-subtext-color: #{$light16};
     --card-menu-dots-fill: #{$light16};
+    --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark15--rgb), 0.2);
+    --card-drag-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.2);
+
+    --card-context-bg: #{$light4};
+    --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
 }

@@ -1,17 +1,54 @@
-:host {
-    overflow-y: auto;
-    padding-right: 1rem;
+@use '../system-card/system-card.component' as system-card;
 
-    flex: 1;
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-    .system-card.cdk-drop-list-receiving,
-    .system-card.cdk-drop-list-dragging {
-        opacity: 0.25;
+    .cdk-drop-list {
+        width: system-card.$card-width;
+        height: system-card.$card-height;
+        // Match card size and prevent cards from shifting to fill the gap
+        // when a card is being dragged away
     }
+
+    .group-card,
+    .system-card {
+        position: relative;
+    }
+
+    .placeholder-shadow {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        border-radius: system-card.$card-border-radius;
+    }
+    .cdk-drag-placeholder + .placeholder-shadow,
+    .placeholder-shadow:first-child {
+        box-shadow: var(--card-placeholder-shadow);
+    }
+    /* We have no way to determine with classes whether cdk drop list
+    content is being dragged away, so we instead check if the content is
+    no longer within the drop list.
+
+    .cdk-drag-placeholder is present when mouse is over empty spot,
+    can be first or second child */
+
 }
+
+.system-card.cdk-drop-list-receiving .card,
+.system-card.cdk-drop-list-dragging .card {
+    opacity: 0.25;
+}
+
 
 .cdk-drag-preview {
     opacity: 0.5;
+    box-shadow: var(--card-drag-shadow);
 }
 
 .no-systems {

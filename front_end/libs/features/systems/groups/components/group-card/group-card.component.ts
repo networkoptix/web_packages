@@ -24,8 +24,6 @@ export class NxGroupCardComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    menuOpen: boolean = false;
-
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
