@@ -272,12 +272,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 this.headerService.setLocation(this.window.location.pathname);
-                if (this.newHeader) {
-                    const firstNode = this.loginState
-                        ? this.menusService.makeSystemMenuNode()
-                        : this.menusService.makeWelcomeNode();
+                if (this.newHeader && this.loginState) {
+                    const systemNode = this.menusService.makeSystemMenuNode();
                     const accountNode = this.menusService.makeAccountSettingsNode();
-                    nodes.unshift(firstNode);
+                    nodes.unshift(systemNode);
                     nodes.push(accountNode);
                 }
                 this.headerService.nodes = nodes;

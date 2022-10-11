@@ -90,7 +90,7 @@ export class NxMenusService {
             }
         }
 
-        if (withCurrentSystem && this.currentSystemNode$.value) {
+        if (withCurrentSystem && this.currentSystemNode$.value && !this.CONFIG.featureFlags.newHeader) {
             menu.nodes = menu?.nodes?.length
                 ? [this.currentSystemNode$.value, ...menu.nodes]
                 : [this.currentSystemNode$.value];
