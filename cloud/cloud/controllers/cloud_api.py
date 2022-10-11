@@ -441,10 +441,10 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def bind(request, name, headers=None):
+    def bind(request, name, headers=None, *, customization=settings.CUSTOMIZATION):
         params = {
             'name': name,
-            'customization': get_customization(request)
+            'customization': customization
         }
         return post_wrapper(System.get_request_url('bind'), json=params, headers=headers)
 

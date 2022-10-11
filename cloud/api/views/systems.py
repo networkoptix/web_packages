@@ -348,12 +348,12 @@ def disconnect(request):
 def connect(request):
     require_params(request, ('name',))
     if request.user.is_authenticated:
-        data = cloud_api.System.bind(request, request.data['name'])
+        data = cloud_api.System.bind(request, request.data['name'], customization=get_customization(request))
         return api_success(data)
 
     require_params(request, ('email', 'password'))
     with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
-        data = cloud_api.System.bind(credentials.tokens, request.data['name'])
+        data = cloud_api.System.bind(credentials.tokens, request.data['name'], customization=get_customization(request))
     return api_success(data)
 
 

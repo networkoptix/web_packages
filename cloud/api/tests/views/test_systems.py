@@ -273,7 +273,7 @@ class TestSystemViews:
         request.session = {}
         response = connect(request)
         temp_login_mock.assert_called_with(self.user.email, self.password)
-        bind_mock.assert_called_with(self.tokens, connect_data['name'])
+        bind_mock.assert_called_with(self.tokens, connect_data['name'], customization=settings.CUSTOMIZATION)
         assert response.data == self.sample_data
 
     def test_proxy(self, arf, mocker):
