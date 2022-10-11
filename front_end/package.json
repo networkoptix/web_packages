@@ -52,7 +52,7 @@
     "build": "npm run cleardist && npm run lang && nx run-many --target=build --projects=front-end,authorization --configuration=production",
     "build:ci": "npx nx run-many --target=build --all --parallel=$(getconf _NPROCESSORS_ONLN) --exclude=unconverted",
     "build:auth": "npm run cleardist && nx run authorization:build:production  --skip-nx-cache",
-    "build:cloud": "npm run cleardist && npm run lang && nnx run front-end:build:production  --skip-nx-cache",
+    "build:cloud": "npm run cleardist && npm run lang && nx run front-end:build:production  --skip-nx-cache",
     "build-webadmin": "npm run cleardist && npm run lang && nx run webadmin:build:production  --skip-nx-cache",
     "build:webadmin": "npm run cleardist && npm run lang && npx nx --skip-nx-cache=true run-many --target=build --projects=webadmin,setup-wizard --configuration=production",
     "bundle-report": "npm run lang && nx run front-end:build:production  --skip-nx-cache --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
