@@ -256,7 +256,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                     err.message === 'Instant search feature not enabled'
                         ? err
                         : new Error(
-                            'Error using instance search fallback to legacy search'
+                            `Error using instance search fallback to legacy search: ${err.message}`
                         )
                 );
                 return this.cloudApi.getDocumentation(

@@ -1,14 +1,18 @@
+import contextlib
 from collections import defaultdict
 from functools import wraps
+from signal import signal
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 import time
 from django.conf import settings
+from django.core.cache import cache
 from inlinestyler.utils import inline_css
 import re
 import sass
 import logging
 from bs4 import BeautifulSoup
+from redis.exceptions import ConnectionError
 from mistletoe import markdown
 from html2text import HTML2Text
 from waffle import switch_is_active
@@ -22,6 +26,8 @@ from util.helpers import get_meilisearch_client
 
 logger = logging.getLogger(__name__)
 
+INITIALIZATION_TASK_TIMEOUT = 60 * 60
+INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-docs'
 
 def html2md(html):
     parser = HTML2Text()
@@ -45,7 +51,7 @@ def fixup_markdown_formatting(text):
 def html2plain(html):
     md = html2md(html)
     html_simple = markdown(md)
-    text = BeautifulSoup(html_simple).getText()
+    text = BeautifulSoup(html_simple, features="html.parser").getText()
     return fixup_markdown_formatting(text)
 
 
@@ -63,16 +69,17 @@ def html2plain(html):
 #     return _ignore_index_not_found
 
 class SearchableCache(BaseCache):
-    check_interval = 60 * 5 # 5 Minutes
+    check_interval = 60 * 5  # 5 Minutes
+    update_interval = 30
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, reinitialize=None, **kwargs):
         self.custom_settings = kwargs.pop('search_settings', {})
+        super().__init__()
         self.current_settings = None
         self._search_index = None
-        self.last_checked = time.time() - SearchableCache.check_interval
-        super().__init__(*args, **kwargs)
+        self.last_checked = 0
+        self._reinitialize = reinitialize
         self.get_search_index()
-
         self.fields_from_doc = [
             *self.custom_settings.pop('displayedAttributes'), 'blocks']
 
@@ -82,9 +89,16 @@ class SearchableCache(BaseCache):
 
     @property
     def recently_checked(self):
-        return (self.last_checked + self.check_interval) > time.time()
+        last_checked = self.last_checked or 0
+        return (last_checked + self.check_interval) > time.time()
+
+    @property
+    def being_initialized(self):
+        return bool(cache.get(INITIALIZATION_TASK_KEY))
 
     def get_search_index(self):
+        if settings.TESTING:
+            return None
         if self._search_index or self.recently_checked:
             return self._search_index
 
@@ -128,17 +142,31 @@ class SearchableCache(BaseCache):
                 # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
                 logger.info(e)
 
+    def mark_updated(self, completed=False):
+        if completed:
+            retries = 10
+            time.sleep(10)
+            while self.search_index.get_stats().get('isIndexing', True) and retries:
+                retries -= 1
+                time.sleep(0.5)
+            self['last_updated'] = 0
+        else:
+            self['last_updated'] = time.time()
+
     # @ignore_index_not_found
     def clear_cache(self):
         super().clear_cache()
+        if not settings.TESTING:
+            try:
+                if self.search_index:
+                    self.search_index.delete_all_documents()
+                    if self._reinitialize:
+                        self._reinitialize()
 
-        try:
-            if self.search_index:
-                self.search_index.delete_all_documents()
-        except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError, AttributeError) as e:
-            # MeiliSearchApiError is only raised when running with an empty db
-            # raised when meilisearch service is unavailable
-            logger.warning(e)
+            except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError, AttributeError) as e:
+                # MeiliSearchApiError is only raised when running with an empty db
+                # raised when meilisearch service is unavailable
+                logger.warning(e)
 
     def __setitem__(self, lookup_key, doc):
         """Sets doc to cache using the lookup_key attribute.
@@ -148,7 +176,7 @@ class SearchableCache(BaseCache):
         """
         super().__setitem__(lookup_key, doc)
 
-        if isinstance(doc, list):
+        if isinstance(doc, (list, float, int)):
             return
 
         from_doc = {
@@ -167,6 +195,7 @@ class SearchableCache(BaseCache):
                         }],
                         primary_key='cacheKey'
                     )
+                    self.mark_updated()
             except (MeiliSearchCommunicationError, TypeError) as e:
                 # MeiliSearchCommunicationError is raised when meilisearch service is unavailable
                 # TypeError is raised when switch is enabled but no master key provided
@@ -182,8 +211,20 @@ SEARCH_SETTINGS = {
     'sortableAttributes': ATTRIBUTES,
     'filterableAttributes': ['labels', 'kbMenus'],
 }
+
+def start_reinitialization():
+    from cms.tasks import async_initialize_doc_cache
+    from notifications.celery import app
+    running_task = cache.get(INITIALIZATION_TASK_KEY)
+    if running_task:
+        app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
+    task = async_initialize_doc_cache.apply_async(
+        args=[settings.CUSTOMIZATION, INITIALIZATION_TASK_KEY])
+    cache.set(INITIALIZATION_TASK_KEY, str(task), INITIALIZATION_TASK_TIMEOUT)
+
+
 DOC_CACHE = SearchableCache(
-    cache_key='documentation', search_settings=SEARCH_SETTINGS)
+    cache_key='documentation', search_settings=SEARCH_SETTINGS, reinitialize=start_reinitialization)
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
@@ -296,7 +337,8 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
         pending_review = None
         if review:
-            pending_review = get_review_matching_current_version(doc, version, customization_name)
+            pending_review = get_review_matching_current_version(
+                doc, version, customization_name)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
