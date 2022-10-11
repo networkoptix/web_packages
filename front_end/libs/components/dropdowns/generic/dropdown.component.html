@@ -36,12 +36,14 @@
                 ellipsis: !merge
             }"
         >
-            {{ _selectedItem.name }}
-            <span
-                *ngIf="_selectedItem.help && !_selectedItem.name.includes(_selectedItem.help)"
-                class="additional-help"
-                >{{ _selectedItem.help }}</span
-            >
+            <ng-container *ngIf="_selectedItem">
+                {{ _selectedItem.name }}
+                <span
+                    *ngIf="_selectedItem.help && !_selectedItem.name.includes(_selectedItem.help)"
+                    class="additional-help"
+                    >{{ _selectedItem.help }}</span
+                >
+            </ng-container>
         </span>
         <div class="arrow-flip">
             <svg-icon
