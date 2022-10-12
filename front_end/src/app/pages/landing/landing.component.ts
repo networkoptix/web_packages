@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '@environments/environment';
@@ -8,9 +9,11 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
+import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
+@UntilDestroy()
 @Component({
     selector: 'landing-component',
     templateUrl: 'landing.component.html',
@@ -40,6 +43,7 @@ export class NxLandingComponent implements OnInit {
         private accountService: NxAccountService,
         private pageService: NxPageService,
         private language: NxLanguageProviderService,
+        private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
         private router: Router,
         private cookieService: CookieService
@@ -68,9 +72,9 @@ export class NxLandingComponent implements OnInit {
             this.loaded = true;
             this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
         } else {
-            this.accountService
-                .get(/* forceUpdate */true)
-                .then(account => {
+            this.sessionService.loginStateSubject
+                .pipe(untilDestroyed(this))
+                .subscribe(account => {
                     if (account && !this.startParams.next) {
                         this.accountService.redirectAuthorised();
                         this.userEmail = this.accountService.email;
@@ -83,10 +87,6 @@ export class NxLandingComponent implements OnInit {
                             this.loaded = true;
                         }
                     }
-                }).catch(() => {
-                    this.pageService.pageTitle = this.LANG.productName();
-                    this.pageService.pageDescription = this.CONFIG.landing.description;
-                    this.loaded = true;
                 });
         }
     }

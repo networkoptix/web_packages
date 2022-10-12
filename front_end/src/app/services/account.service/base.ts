@@ -54,6 +54,7 @@ export abstract class BaseAccount implements OnDestroy {
     // Declare services that cause circular dependencies here instead of injecting in constructor
     dialogs: NxSimpleDialogsService;
     protected applyService: NxApplyService;
+    private suppressUpdate: boolean = false;
 
     // Only in LocalAccount but added here for TS convenience
     mediaServerApi: NxSystemRestAPI;
@@ -101,18 +102,14 @@ export abstract class BaseAccount implements OnDestroy {
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
-            .pipe(debounceTime(500), distinctUntilChanged())
+            .pipe(debounceTime(1000), distinctUntilChanged())
             .subscribe(loginState => {
-                if (loginState !== '' && !environment.isLocal) {
-                    this.get(true)
-                        .then(account => {
-                            // prevent stale loginState
-                            if (account) {
-                                this.startAccountPoll();
-                            } else {
-                                this.clearLoginState();
-                            }
-                        });
+                if (!this.suppressUpdate && loginState !== '' && !environment.isLocal) {
+                    if (loginState) {
+                        this.startAccountPoll();
+                    } else {
+                        this.clearLoginState();
+                    }
                 }
             });
 
@@ -424,6 +421,7 @@ export abstract class BaseAccount implements OnDestroy {
         if (!account || !account.is_authenticated) {
             return this.cloudApi.loginCode(code)
                 .then(res => {
+                    this.suppressUpdate = true;
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
                     this.window.location.reload();

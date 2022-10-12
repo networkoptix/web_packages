@@ -63,6 +63,7 @@ class CdbAccountMixin(serializers.Serializer):
         if request.user.is_authenticated:
             cdb_account = Cdb_Account.get(request)
             cdb_account_security = Cdb_Account.get_2fa_settings(request)
+            request.session["has2fa"] = cdb_account.get("account2faEnabled", False)
         self.instance.account2faEnabled = cdb_account.get("account2faEnabled", False)
         self.instance.totpExistsForAccount = cdb_account_security.get("totpExistsForAccount", False)
 
