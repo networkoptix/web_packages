@@ -226,7 +226,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     configureServer(configureParams: t.ConfigureParams): Promise<any> {
-        return this.patch('/rest/v2/servers/*/info', configureParams).toPromise();
+        return this.patch('/rest/v2/servers/this/runtimeInfo', configureParams).toPromise();
     }
 
     // Licenses

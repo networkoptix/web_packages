@@ -420,6 +420,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         return this.dialogs
             .restartServer(this.system, id, htmlToEntity(name))
             .then((res: string) => {
+                if (!res) {
+                    return;
+                }
                 this.system.isAvailable = false;
                 this.system.storageManager.update();
                 this.setStatus(res);

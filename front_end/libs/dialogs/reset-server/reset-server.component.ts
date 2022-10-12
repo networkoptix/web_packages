@@ -28,7 +28,7 @@ import { cleanId, pickFrom } from '@utils/general';
     styleUrls: []
 })
 export class ResetServerModalContent {
-    @Input() closable: boolean;
+    @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
