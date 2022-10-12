@@ -74,7 +74,7 @@ export class NxBootstrapProvider {
         return this.isNewSystem;
     }
 
-    private checkLocalIfNew(reload = true) {
+    private getModuleInfo(reload = true) {
         return this.environment.isLocal
             ? this.http.get('/api/moduleInformation', {}).toPromise()
             : Promise.resolve({});
@@ -91,18 +91,22 @@ export class NxBootstrapProvider {
 
                 return Promise.all([
                     this.languageService.loadLanguage(),
-                    this.checkLocalIfNew()
+                    this.getModuleInfo()
                 ]);
             }).then(([language, moduleInfo]: any) => {
                 this.setLanguage(language);
 
                 if (moduleInfo.reply) {
-                    this.setLocalInfo(moduleInfo.reply);
                     this.isNewSystem = moduleInfo.reply.serverFlags.includes('SF_NewSystem');
+                    this.setLocalInfo(moduleInfo.reply).then(() => {
+                        this.configService.updateConfigUsingOverrides();
+                        this.isLoaded = true;
+                        resolve(true);
+                    });
+                } else {
+                    this.isLoaded = true;
+                    resolve(true);
                 }
-
-                this.isLoaded = true;
-                resolve(true);
             }).catch(err => {
                 console.error(err);
                 // handle fail in app component
@@ -112,16 +116,17 @@ export class NxBootstrapProvider {
         });
     }
 
-    setLocalInfo(data): void {
+    setLocalInfo = async (data): Promise<void> => {
         const hostProtocol = data.cloudHost.split('://')[0];
         this.CONFIG.cloudHost = (hostProtocol === data.cloudHost)
             ? `https://${data.cloudHost}`
             : data.cloudHost;
+        this.CONFIG.featureFlags = await this.http.get<Record<string, unknown>>(`${this.CONFIG.cloudHost}/api/utils/webadmin_feature_flags/`, {}).toPromise().catch(() => ({}));
         this.CONFIG.cloudSystemId = data.cloudSystemId;
         this.CONFIG.localSystemId = data.localSystemId;
         this.CONFIG.localServerId = data.id;
         this.CONFIG.system.name = data.systemName || data.name;
-    }
+    };
 
     setLanguage(data) {
         // this.languageService.newTranslation = { language: data.ajs.language, json: data.i18n };

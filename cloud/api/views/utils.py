@@ -20,7 +20,7 @@ from drf_yasg.utils import swagger_auto_schema
 from util.helpers import get_customization
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
-from cloud.helpers.exceptions import handle_exceptions, require_params,\
+from cloud.helpers.exceptions import api_success, handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
@@ -182,6 +182,7 @@ def language(request):
 def languages(request):
     return redirect(f'/static/languages.json?version={settings.VERSION}')
 
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns a list of builds and patch notes for the current cloud portal.")
 @api_view(['GET'])
@@ -192,7 +193,8 @@ def downloads_history(request):
     can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(
             request.user, customization, 'api.can_view_release')
-    public_release_history = get_settings_from_cache(customization=customization)['publicReleases']
+    public_release_history = get_settings_from_cache(
+        customization=customization)['publicReleases']
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
 
@@ -227,7 +229,8 @@ def downloads_history(request):
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = get_customization(request)
-    public_release_history = get_settings_from_cache(customization=customization)['publicReleases']
+    public_release_history = get_settings_from_cache(
+        customization=customization)['publicReleases']
     can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(
             request.user, customization, 'api.can_view_release')
@@ -378,6 +381,16 @@ def get_feature_flags(request):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Get feature flags for webadmin",
+                     responses={200: openapi.Schema(type=openapi.TYPE_OBJECT, additional_properties=openapi.Schema(type=openapi.TYPE_BOOLEAN))})
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def webadmin_feature_flags(request):
+    request.META['webadmin'] = True
+    return api_success(get_feature_flags(request), additional_headers={'access-control-allow-origin': request.META.get('HTTP_ORIGIN', request.META.get('HTTP_HOST', ''))})
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns cloud config information to the web client.",
                      responses={200: SettingsSerializer()})
 @api_view(['GET'])
@@ -388,6 +401,7 @@ def get_settings(request):
         data=data, request=request)
     serializer.is_valid()
     return Response(serializer.data)
+
 
 IPVD_CACHE_CLEARED = 'IPVD cache cleared'
 IPVD_CACHE_NOT_CLEARED = 'No cached IPVD to clear'
@@ -478,7 +492,7 @@ CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the
                              'resultCode': openapi.Schema(type=openapi.TYPE_STRING, default='notAuthorized'),
                              'errorText': openapi.Schema(type=openapi.TYPE_STRING, default=CUSTOMIZATIONS_STAFF_ONLY),
                              'errorData': openapi.Schema(type=openapi.TYPE_STRING)})
-                    })
+                     })
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 @handle_exceptions

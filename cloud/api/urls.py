@@ -18,6 +18,7 @@ urlpatterns = [
     re_path(r'^utils/downloads/(?P<build>.*)$',     utils.download_build),
     re_path(r'^utils/downloads/?$',                 utils.downloads),
     re_path(r'^utils/settings/?$',                  utils.get_settings),
+    re_path(r'^utils/webadmin_feature_flags/?$',    utils.webadmin_feature_flags),
     re_path(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),
     re_path(r'^ipvd$',                              utils.get_ipvd, name='get-ipvd'),
     re_path(r'^utils/customizations/?$',            utils.get_customizations),
