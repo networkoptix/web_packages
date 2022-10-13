@@ -1,5 +1,6 @@
 *** Settings ***
-Variables    getvars.py
+Variables    getCust.py
+Variables    getLang.py
 Resource     variables/front-end-variables.robot
 Resource     variables/cms-variables.robot
 #Resource     variables/cloud-merge-variables.robot
