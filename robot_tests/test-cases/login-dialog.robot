@@ -96,6 +96,7 @@ Force Tags        Threaded
     Click Element    ${RESEND ACTIVATION LINK BUTTON}
     Activate    ${random email}
     Click Element    ${LOG IN BUTTON}
+    Wait Until Element Is Visible     ${PASSWORD INPUT}
     Input Text    ${PASSWORD INPUT}    ${password}
     Click Element    ${LOG IN BUTTON}
     Validate Log In    ${random email}
