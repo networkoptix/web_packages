@@ -91,6 +91,8 @@ export class ConnectCloudModalContent implements OnInit {
             .then(res => {
                 this.codeExists = !!code;
                 this.cloudTokens = res;
+                this.codeSubscription && this.codeSubscription.unsubscribe();
+                this.storage.clear(this.CONFIG.oauthStore.code);
             });
     }
 

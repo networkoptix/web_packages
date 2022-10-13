@@ -85,7 +85,7 @@ export class NxDropMenu extends BaseDropdown {
 
                     const activeSystem = this.headerService.activeSystem ||
                         this.headerService.lastActive$.value ||
-                        this.systems[0];
+                        this.systems?.[0];
                     this.menusService.updateActiveSystemMenu(activeSystem);
                 });
             });

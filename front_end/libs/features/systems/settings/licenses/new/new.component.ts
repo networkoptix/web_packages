@@ -88,66 +88,12 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             return;
                         }
 
-                        const error = response.errorString.toLowerCase();
-                        const matchError = errorString => error.includes(errorString);
-
-                        switch (response.error) {
-                            case '1':
-                                this.dialogsService
-                                    .notify(response.errorString, 'danger'); // missing param?
-                                break;
-
-                            case '2':
-                            // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
-
-                            // eslint-disable-next-line no-fallthrough
-                            case '3':
-                                // Network/Http error has occurred during license activation. Error code: -1
-                                if (matchError('error has occurred during license activation')) {
-                                    this.dialogsService
-                                        .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
-                                    break;
-                                }
-                                if (matchError('license is expired')) {
-                                    // Can't activate license: License is expired.
-                                    this.licenseForm.controls.licenseKey.setErrors({ expired: true });
-                                } else if (matchError('only one nvr license')) {
-                                    // Only one NVR license is allowed per System.↵You already have one active NVR license.
-                                    this.licenseForm.controls.licenseKey.setErrors({ nvrError: true });
-                                } else if (matchError('only one starter license is allowed')) {
-                                    // Can't activate license: Only one Starter license is allowed per System.↵You already have one active Starter license.
-                                    // Can't activate license: Only one starter license is allowed per System.
-                                    this.licenseForm.controls.licenseKey.setErrors({ starter: true });
-                                } else if (matchError('license key you have entered is invalid')) {
-                                    // Can't activate license:  license key you have entered is invalid.
-                                    this.licenseForm.controls.licenseKey.setErrors({ mask: true });
-                                } else if ([
-                                    'requires higher software version', 'you are trying to activate a license incompatible with your software.'
-                                ].some(matchError)
-                                ) {
-                                    // Can't activate license: This license type requires higher software version
-                                    // Can't activate license: You are trying to activate a license incompatible with your software.
-                                    this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
-                                } else {
-                                    // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
-                                    let matchStart = response.errorString.indexOf('activated to Hardware Id');
-                                    if (matchStart !== -1) {
-                                        // get HWID
-                                        matchStart += 'activated to Hardware Id '.length;
-                                        const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
-                                        this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
-                                        this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
-                                    }
-                                }
-                                this.licenseForm.controls.licenseKey.markAsTouched();
-                                break;
-
-                            default:
-                        }
+                        // legacy license api returns 200
+                        this.processErrors(response);
                     }, fail => {
                         if (fail.name === 'HttpErrorResponse' || fail.error && fail.error.type === 'error') {
-                            this.dialogsService
-                                .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
+                            // license api v2 returns 422
+                            this.processErrors(fail.error);
                         } else {
                             if (fail.name === 'TimeoutError') {
                                 this.dialogsService
@@ -209,6 +155,67 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     ) ?? this.serverOptions[0];
                 }
             }
+        }
+    }
+
+    processErrors(response): void {
+        const error = response.errorString.toLowerCase();
+        const matchError = errorString => error.includes(errorString);
+
+        switch (response.error) {
+            case '1':
+                this.dialogsService
+                    .notify(response.errorString, 'danger'); // missing param?
+                break;
+
+            case '2':
+                // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
+
+                // eslint-disable-next-line no-fallthrough
+            case '3':
+            // Network/Http error has occurred during license activation. Error code: -1
+                if (matchError('error has occurred during license activation')) {
+                    this.dialogsService
+                        .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
+                    break;
+                }
+                if (matchError('license is expired')) {
+                // Can't activate license: License is expired.
+                    this.licenseForm.controls.licenseKey.setErrors({ expired: true });
+                } else if (matchError('only one nvr license')) {
+                // Only one NVR license is allowed per System.↵You already have one active NVR license.
+                    this.licenseForm.controls.licenseKey.setErrors({ nvrError: true });
+                } else if (matchError('only one starter license is allowed')) {
+                // Can't activate license: Only one Starter license is allowed per System.↵You already have one active Starter license.
+                // Can't activate license: Only one starter license is allowed per System.
+                    this.licenseForm.controls.licenseKey.setErrors({ starter: true });
+                } else if (matchError('license key you have entered is invalid')) {
+                // Can't activate license:  license key you have entered is invalid.
+                    this.licenseForm.controls.licenseKey.setErrors({ mask: true });
+                } else if ([
+                    'requires higher software version', 'you are trying to activate a license incompatible with your software.'
+                ].some(matchError)
+                ) {
+                // Can't activate license: This license type requires higher software version
+                // Can't activate license: You are trying to activate a license incompatible with your software.
+                    this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
+                } else {
+                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
+                    let matchStart = response.errorString.indexOf('activated to Hardware Id');
+                    if (matchStart !== -1) {
+                    // get HWID
+                        matchStart += 'activated to Hardware Id '.length;
+                        const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
+                        this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
+                        this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
+                    }
+                }
+                this.licenseForm.controls.licenseKey.markAsTouched();
+                break;
+
+            default:
+                this.dialogsService
+                    .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
         }
     }
 
