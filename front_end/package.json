@@ -86,7 +86,7 @@
     "setSkin": "node setSkin.mjs --skin",
     "setVarSkin": "node buildSkins.mjs ./common/styles",
     "update-lang-files": "node checkIfLangNeedsUpdate.mjs && npm run handle:lang || echo 'Lang already up to date'",
-    "lang-ci-check": "cp ./common/language/language_i18n.json ./src/i18n_copy.json; cp ./common/language/language_i18n_static_types.ts ./src/types_copy.ts; npm run update-lang-files; cmp_i18n=$(cmp ./common/language/language_i18n.json ./src/i18n_copy.json); cmp_types=$(cmp ./common/language/language_i18n_static_types.ts ./src/types_copy.ts); if [ ! -z \"$cmp_i18n\" ] || [ ! -z \"$cmp_types\" ]; then exit 1; fi",
+    "lang-ci-check": "cp ./common/language/language_i18n.json ./common/language/i18n_copy.json; cp ./common/language/language_i18n_static_types.ts ./common/language/static_types_copy.ts; cp ./common/language/language_compiled.json ./common/language/compiled_copy.json; npm run update-lang-files; cmp_i18n=$(cmp ./common/language/language_i18n.json ./common/language/i18n_copy.json); cmp_static_types=$(cmp ./common/language/language_i18n_static_types.ts ./common/language/static_types_copy.ts); cmp_compiled=$(cmp ./common/language/language_compiled.json ./common/language/compiled_copy.json); if [ ! -z \"$cmp_i18n\" ] || [ ! -z \"$cmp_static_types\" ] || [ ! -z \"$cmp_compiled\" ]; then exit 1; fi",
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",
     "test-lang": "node --experimental-specifier-resolution=node testCompiledLang.mjs",
