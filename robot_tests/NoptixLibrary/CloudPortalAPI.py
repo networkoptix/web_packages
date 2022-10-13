@@ -427,6 +427,7 @@ class CloudPortalAPI(object):
         }
         r = requests.post(f"{serverUrl}/api/saveCloudSystemCredentials", auth=HTTPBasicAuth(auth[0], auth[1]),
                           json=body, verify=False)
+        logger.trace(f'status:{r.status_code}')
         assert r.status_code==200
         return r.json()
 
