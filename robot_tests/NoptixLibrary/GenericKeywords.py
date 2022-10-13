@@ -424,7 +424,7 @@ class GenericKeywords(object):
                 return
             elif re.search(url, found):
                 return
-        raise Exception(found + " was not in the email.")
+        raise Exception(found + " was not in the expected list.")
 
     @keyword
     def get_os(self):

@@ -100,7 +100,7 @@ Login with one time backup code
 Attempt login with used backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
     Log In    ${email}    ${password}    validate=${False}    2fa=${True}    2fa backup code=${random one time backup code}
-    Element Should Contain    ${2FA BACKUP CODE ERROR}    Wrong Backup Code
+    Wait Until Element Contains    ${2FA BACKUP CODE ERROR}    Wrong Backup Code
 
 
 Scan QR and decode to key
