@@ -13,7 +13,7 @@
         <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>
         <a
             *ngIf="!loggedIn"
-            [href]="headerService.createUrl | unsafe"
+            [href]="headerService.createUrl"
             class="create-account"
             translate
         >

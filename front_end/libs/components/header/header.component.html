@@ -60,7 +60,7 @@
             <span>
                 <a
                     class="btn"
-                    [href]="headerService.createUrl | unsafe"
+                    [href]="headerService.createUrl"
                     [ngClass]="[
                         showSmall ? 'small-button' : '',
                         true ? 'btn-' + (headerService.createAccountButtonType$ | async) : ''
@@ -81,7 +81,7 @@
             <span>
                 <a
                     class="btn btn-default"
-                    [href]="headerService.authorizeUrl | unsafe"
+                    [href]="headerService.authorizeUrl"
                     [ngClass]="showSmall ? 'small-button' : 'login-button'"
                 >
                     <span
