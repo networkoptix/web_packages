@@ -240,6 +240,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     private setUser(): void {
         if (this.system?.userManager?.users?.length) {
+            this.locked.clear();
+
             let user: NxSystemUser;
             if (this.paramUser) {
                 user = this.findUser();
