@@ -284,15 +284,8 @@ def kb_search(request, name):
     num_hits = raw_results.get('nbHits', 0)
 
     if not num_hits and not index.get_stats().get('numberOfDocuments', 0) and not index.search('', {'filter': kb_menus_filter}).get('nbHits', 0):
-        # Update docs if kb hasn't been added to meilisearch. This would only really happen on first deploy of the meilisearch service
-        docs_json = sync_search_for_menu(request, name)
-
-        if not docs_json:
-            raise APIInternalException(
-                SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
-
-        raw_results = index.search(
-            query, {key: val for key, val in options.items() if val})
+        raise APIInternalException(
+            SEARCH_INDEX_UPDATING, status.HTTP_501_NOT_IMPLEMENTED)
 
     doc_keys = ['body', 'title', 'shortDescription', 'labels', 'kbMenus', 'id']
     unformatted = ['kbMenus']
