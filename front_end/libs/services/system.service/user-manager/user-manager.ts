@@ -245,9 +245,9 @@ export class UserManager {
             // sorts local before cloud users --> then by email for cloud & name for local
             if (userA.isCloud === userB.isCloud) {
                 if (userA.isCloud) {
-                    return userA.email.localeCompare(userB.email);
+                    return userA.email.localeCompare(userB.email, this.locale);
                 } else {
-                    return userA.name.localeCompare(userB.name);
+                    return userA.name.localeCompare(userB.name, this.locale);
                 }
             }
             return userA.isCloud ? 1 : -1;
