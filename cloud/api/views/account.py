@@ -96,10 +96,6 @@ def login_helper(request, token, user):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-
-    request.session["has2fa"] = Account.get(
-        request).get("account2faEnabled", False)
-
     serializer = AccountSerializer(request, many=False)
     return api_success(serializer.data)
 

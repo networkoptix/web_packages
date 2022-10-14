@@ -92,7 +92,7 @@ Force Tags        system    threaded
     Should be equal as strings    ${cloud id}    Cannot find cloudSystemID key
 
 6. Local owner can connect system to cloud
-    [Tags]    webadmin    smoke
+    [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
     Click Button    ${CONNECT TO CLOUD BUTTON}

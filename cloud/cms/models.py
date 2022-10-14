@@ -45,6 +45,8 @@ from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
+INITIALIZATION_TASK_TIMEOUT = 60 * 5
+INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-menus'
 
 class MenuCache(BaseCache):
     def __init__(self):
@@ -60,8 +62,17 @@ class MenuCache(BaseCache):
 
     def clear_cache(self):
         from cms.controllers.documentation import DOC_CACHE
+        from cms.tasks import async_generate_menus
+        from notifications.celery import app
         super().clear_cache()
-        DOC_CACHE.clear_cache()
+        if not settings.TESTING:
+            running_task = cache.get(INITIALIZATION_TASK_KEY)
+            if running_task:
+                app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
+            task = async_generate_menus.apply_async(args=[settings.CUSTOMIZATION])
+            cache.set(INITIALIZATION_TASK_KEY, str(task), INITIALIZATION_TASK_TIMEOUT)
+            DOC_CACHE.clear_cache()
+
 
 READONLY_API_CACHE = BaseCache(cache_key='readonly_apis')
 MENU_CACHE = MenuCache()

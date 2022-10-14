@@ -88,7 +88,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     get showPlaceholder(): boolean {
         return this.systemNoAccess ||
             this.show2faRequired ||
-            this.system && (this.secondaryMerge || this.system.show404);
+                        this.secondaryMerge ||
+            this.system && this.system.show404;
     }
 
     private cancelPrevious$ = new Subject();
@@ -500,65 +501,84 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.checkMergeSubscription.unsubscribe();
         }
         this.checkMergeSubscription = this.system.checkMergeStatus(true)
-            .subscribe(res => {
-                const mergeInProgress = res?.reply?.mergeInProgress;
-                if (environment.isLocal) {
-                    if (
-                        !mergeInProgress &&
-                        this.system.isOnline &&
-                        !this.systemsService.checkMerge(this.system)
-                    ) {
-                        this.ribbonService.hide();
-                    }
-                } else {
-                    this.secondaryMerge = false;
-                    this.ribbonService.hide();
-                    let ribbonText: string;
-                    let systemOnly = false;
-                    const { primary, secondary } =
-                        this.systemsService.systemsMerging || {};
-
-                    if (!this.system.isOnline) {
-                        ribbonText = this.LANG.ribbon.systemOffline?.();
-                        systemOnly = true;
-                    } else if (primary?.id === this.system.id) {
-                        const secondarySystem = this.systemsService.systems
-                            .find(system => secondary.id === system.id);
-                        let secondaryName = secondarySystem?.name ||
-                            secondary?.name ||
-                            this.LANG.system.mergeUnknownName?.();
-                        if (secondaryName.startsWith('server at ')) {
-                            secondaryName = secondaryName[0].toUpperCase() +
-                                secondaryName.slice(1);
+            .subscribe({
+                next: res => {
+                    const mergeInProgress = res?.reply?.mergeInProgress;
+                    if (environment.isLocal) {
+                        if (
+                            !mergeInProgress &&
+                            this.system.isOnline &&
+                            !this.systemsService.checkMerge(this.system)
+                        ) {
+                            this.ribbonService.hide();
                         }
-                        ribbonText = `<div class="my-1">
-                                            <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
-                                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake?.()}</div>
-                                        </div>`;
-                    } else if (secondary?.id === this.system.id) {
-                        this.mergeTargetSystem = this.systemsService.systems
-                            .find(system => primary.id === system.id) ||
-                            { name: this.LANG.system.mergeUnknownName?.() };
-                        this.secondaryMerge = true;
-                    } else if (mergeInProgress) {
-                        ribbonText = this.LANG.ribbon.systemsMerging();
-                    }
+                    } else {
+                        this.secondaryMerge = false;
+                        this.ribbonService.hide();
+                        let ribbonText: string;
+                        let systemOnly = false;
+                        const { primary, secondary } =
+                            this.systemsService.systemsMerging || {};
 
-                    if (ribbonText) {
-                        this.ribbonService.show(
-                            ribbonText,
-                            [],
-                            'alert',
-                            undefined,
-                            systemOnly
-                        );
-                    }
+                        if (!this.system.isOnline) {
+                            ribbonText = this.LANG.ribbon.systemOffline?.();
+                            systemOnly = true;
+                        } else if (primary?.id === this.system.id) {
+                            const secondarySystem = this.systemsService.systems
+                                .find(system => secondary.id === system.id);
+                            let secondaryName = secondarySystem?.name ||
+                                secondary?.name ||
+                                this.LANG.system.mergeUnknownName?.();
+                            if (secondaryName.startsWith('server at ')) {
+                                secondaryName = secondaryName[0].toUpperCase() +
+                                    secondaryName.slice(1);
+                            }
+                            ribbonText = `<div class="my-1">
+                                                <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
+                                                <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake?.()}</div>
+                                            </div>`;
+                        } else if (secondary?.id === this.system.id) {
+                            this.mergeTargetSystem = this.systemsService.systems
+                                .find(system => primary.id === system.id) ||
+                                { name: this.LANG.system.mergeUnknownName?.() };
+                            this.secondaryMerge = true;
+                        } else if (mergeInProgress) {
+                            ribbonText = this.LANG.ribbon.systemsMerging();
+                        }
 
-                    setTimeout(() => {
-                        this.setHeaderHeight();
-                    });
+                        if (ribbonText) {
+                            this.ribbonService.show(
+                                ribbonText,
+                                [],
+                                'alert',
+                                undefined,
+                                systemOnly
+                            );
+                        }
+
+                        setTimeout(() => {
+                            this.setHeaderHeight();
+                        });
+                    }
+                },
+                error: err => {
+                    console.error('err from checkMerge', err);
+                    if (
+                        err.status === 502 &&
+                        this.system?.mergeInfo?.role === 'slave'
+                    ) {
+                        this.currentSystemBeingMergedIntoAnotherSystem();
+                    }
                 }
             });
+    }
+
+    currentSystemBeingMergedIntoAnotherSystem() {
+        const { primary } = this.systemsService.systemsMerging || {};
+        this.mergeTargetSystem = this.systemsService.systems
+            .find(system => primary.id === system.id) ||
+                { name: this.LANG.system.mergeUnknownName?.() };
+        this.secondaryMerge = true;
     }
 
     contentToggle(event: ContentToggle): void {

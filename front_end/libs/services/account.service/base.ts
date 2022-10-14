@@ -99,18 +99,14 @@ export abstract class BaseAccount implements OnDestroy {
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
-            .pipe(debounceTime(500), distinctUntilChanged())
+            .pipe(debounceTime(1000), distinctUntilChanged())
             .subscribe(loginState => {
                 if (loginState !== '' && !environment.isLocal) {
-                    this.get(true)
-                        .then(account => {
-                            // prevent stale loginState
-                            if (account) {
-                                this.startAccountPoll();
-                            } else {
-                                this.clearLoginState();
-                            }
-                        });
+                    if (loginState) {
+                        this.startAccountPoll();
+                    } else {
+                        this.clearLoginState();
+                    }
                 }
             });
 
@@ -152,7 +148,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.loginSubscription.unsubscribe();
+        this.loginSubscription && this.loginSubscription.unsubscribe();
         this.queryParamSubscription.unsubscribe();
     }
 
@@ -414,6 +410,7 @@ export abstract class BaseAccount implements OnDestroy {
         if (!account || !account.is_authenticated) {
             return this.cloudApi.loginCode(code)
                 .then(res => {
+                    this.loginSubscription && this.loginSubscription.unsubscribe();
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
                     this.window.location.reload();

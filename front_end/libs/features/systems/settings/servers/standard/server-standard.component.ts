@@ -72,6 +72,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     checkingForDataAnalytics = false;
     storagesLoading = true;
     showAnalytics = false;
+    analyticsDbChanged = false;
 
     betaMode: boolean;
     enableEdit: boolean;
@@ -285,15 +286,18 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             break;
                     }
                 }
+
                 if (this.saveStorageWatcher.value) {
-                    const params = {
-                        metadataStorageId: this.selectedStorage.id
-                    };
                     try {
-                        await this.system.serverManager.updateResource(
-                            this.selectedServer.id,
-                            params
-                        );
+                        if (this.analyticsDbChanged) {
+                            const params = {
+                                metadataStorageId: this.selectedStorage.id
+                            };
+                            await this.system.serverManager.updateResource(
+                                this.selectedServer.id,
+                                params
+                            );
+                        }
                         await this.system.update();
 
                         this.system.storageManager.update();
@@ -529,6 +533,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.saveStorageWatcher.value = false;
             return;
         }
+
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
         const analyticsData = await this.system
@@ -552,6 +557,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         );
                         await this.system.update();
                         this.system.storageManager.update();
+                        this.analyticsDbChanged = true;
                     } else if (closeRes === 'error') {
                         this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.notify(
@@ -569,6 +575,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.selectedStorage = newStorage;
             this.saveStorageWatcher.value =
                 this.selectedStorage.id !== this.currentAnalyticsDbId;
+            this.analyticsDbChanged = true;
         }
         this.checkingForDataAnalytics = false;
     }
