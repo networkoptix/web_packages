@@ -28,7 +28,6 @@ import { debounceTime, filter, take } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { SystemGuard } from '@guards/systemGuard';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -129,7 +128,6 @@ export class AppComponent implements OnInit {
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
         public appStateService: NxAppStateService,
-        public systemGuard: SystemGuard,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
         private applyService: NxApplyService,

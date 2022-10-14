@@ -71,7 +71,7 @@ html[data-theme="dark"] {
     --svg-std-icon-fill : #587785; //$dark18;
     --svg-path-light-color : #2B383F; //$dark9;
     --svg-path-dark-color  : #E1E7EA; //$light4;
-    
+
     --svg-confirmations-color  : #A5B7C0; //$light10;
 
     --svg-placeholder-elm1-color : #E1E7EA; //$light4;
@@ -520,7 +520,8 @@ html[data-theme="dark"] {
     --error-label : #C22626; //$red_main;
     --error : #C22626; //$red_main;
 
-    --input-bg                 : #{$dark8}; //$dark8;
+    --input-bg                 : #{$dark4};
+    --input-hover-bg           : #{$dark8};
     --input-color              : #A5B7C0; //$light10;
     --input-border-color       : #35464F; //$dark11;
     --input-error-color        : #C22626; //$red_main;

@@ -12,7 +12,7 @@
         border: 1px solid transparent; // avoid text jump
 
         &:hover {
-            background: var(--input-bg);
+            background: var(--input-hover-bg);
             border-radius: 2px;
             padding-left: 4px;
             margin-left: -4px;

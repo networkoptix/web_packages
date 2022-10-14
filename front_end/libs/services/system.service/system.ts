@@ -178,6 +178,11 @@ export class NxSystem {
         this.infoSubject.next(system);
     }
 
+    private getSystemCapabilities() {
+        return this.mediaserver.getSystemSettings()
+            .then(({ specificFeatures }) => specificFeatures);
+    }
+
     constructor(
         CONFIG: IConfig,
         LANG: LanguageI18NStaticTypes,
@@ -375,6 +380,13 @@ export class NxSystem {
                 if (!response) {
                     return Promise.reject({ data: { resultCode: 'forbidden' } });
                 }
+                let directCapabilities = {};
+                try {
+                    directCapabilities = (await this.getSystemCapabilities()) || {};
+                    response.capabilities = { ...response.capabilities, ...directCapabilities };
+                } catch (e) {
+                }
+
                 if (this.info) {
                     Object.assign(this.info, response); // Update
                 } else {

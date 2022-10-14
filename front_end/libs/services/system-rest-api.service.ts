@@ -614,6 +614,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }).toPromise();
     }
 
+    getSystemSettings(): Promise<any> {
+        return this.get('/rest/v1/system/settings').toPromise();
+    }
+
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {
