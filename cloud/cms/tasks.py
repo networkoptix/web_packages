@@ -3,6 +3,7 @@ import json
 from celery import shared_task, current_task
 from celery.exceptions import Ignore
 from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 
 from cms.controllers import filldata, generate_structure, structure, structure_to_html
 from api.models import Account
@@ -60,14 +61,17 @@ def make_package(asset_id, preview, version_id):
 def get_custom_client_package_key(custom_pk, download_id):
     return f'custom-client-{custom_pk}-{download_id}'
 
+
 def get_task_id(current_task):
     return str(current_task.request.id)
+
 
 def raise_errors(current_task, errors):
     current_task.update_state(
         state='ERROR', meta={'errors': errors}
     )
     raise TaskErrors(errors)
+
 
 @shared_task
 def make_custom_client(custom_client_id, download_id):
@@ -115,7 +119,9 @@ def make_structure(user_id, output_format='json', use_actual_values=True, asset_
 
     content = structure_to_html.process_structure_json(data[0]) if single_html_asset else json.dumps(
         data, ensure_ascii=False, indent=4, separators=(',', ': '))
-    get_complete_updater(make_structure.request.id)(file_name.replace(" ", "_"), content)
+    get_complete_updater(make_structure.request.id)(
+        file_name.replace(" ", "_"), content)
+
 
 def make_asset_dict(asset, use_actual_values):
     from cms.views.asset import prepare_asset_exports
@@ -134,7 +140,8 @@ def make_asset_dict(asset, use_actual_values):
 def async_import_assets_from_json(json_cache_id, user_id, publish=False):
     assets_list = PACKAGE_CACHE.get(json_cache_id)
     user = Account.objects.get(pk=user_id)
-    task = async_import_assets_from_json.AsyncResult(async_import_assets_from_json.request.id)
+    task = async_import_assets_from_json.AsyncResult(
+        async_import_assets_from_json.request.id)
 
     structure.import_assets_from_json(
         assets_list, user, publish=publish, increment_progress=get_progress_updater(current_task, len(assets_list), task=task))
@@ -179,3 +186,29 @@ def async_zendesk_push_article(asset_id, *, customization=None, request=None):
     asset = Asset.objects.filter(id=asset_id).first()
     if asset:
         push_accepted_article_to_zendesk(asset, customization=customization, request=request)
+
+
+@shared_task
+def async_initialize_doc_cache(customization, cache_key=None):
+    from cms.models import Customization, AssetType
+    from cms.controllers.documentation import generate_doc_json, DOC_CACHE
+    customization = Customization.objects.filter(name=customization).first()
+    if customization:
+        generate_doc_json(
+            Asset.objects.filter(
+                asset_type__type=AssetType.ASSET_TYPES.documentation
+            ).values_list(
+                'pk', flat=True
+            ),
+            language=customization.default_language,
+            force_update=True
+        )
+    if cache_key:
+        cache.delete(cache_key)
+
+@shared_task
+def async_generate_menus(customization, cache_key):
+    from cms.models import Menu
+    Menu.generate_menus(customization)
+    if cache_key:
+        cache.delete(cache_key)

@@ -33,8 +33,10 @@ if [ ! "$CLOUD_HOST" ]; then
   exit 1
 fi
 
-PATH="$VENV_BIN_DIR:$PATH" pabot --pabotlib --processes 4 -e integrations -L trace:info \
-  -v ENV:"https://$CLOUD_HOST" -i 'smoke' 'test-cases'
+pabot --pabotlib --processes 4 -e integrations -L trace:info \
+  -v ENV:"https://$CLOUD_HOST" \
+  -v "FROM EMAIL DEFAULT":True \
+  -i 'smoke' 'test-cases'
 TESTS_RESULT_CODE=$?
 
 # BUILD_URL is an environment variable provided by Jenkins.

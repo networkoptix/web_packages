@@ -25,7 +25,7 @@ PAGE_NOT_FOUND = 'Page not found'
 KB_NOT_FOUND = 'Kb not found'
 
 SEARCH_SNIPPET_PADDING = 250
-CACHE_HEADER = {'Cache-Control': f'max-age={60*10}'}
+CACHE_HEADER = {'Cache-Control': f'max-age={60}'}
 LONG_CACHE_HEADER = {'Cache-Control': f'max-age={60*60*24*30}'}
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
@@ -59,7 +59,8 @@ def get_page(request, doc_id):
 
     # If doc is not found, then return a 404
     if doc:
-        headers = LONG_CACHE_HEADER if version and version == str(doc.version_id()) else None
+        headers = LONG_CACHE_HEADER if version and version == str(
+            doc.version_id()) else None
         if (draft or review) and not (request.user.is_superuser or doc.created_by == request.user):
             raise APIForbiddenException(error_data={'id': doc_id},
                                         error_text='Not allowed to view this preview')
@@ -235,6 +236,7 @@ def sync_search(request, name=None):
 
 SEARCH_NOT_CONFIGURED = 'Instant search not properly configured for this instance'
 SEARCH_INDEX_NOT_FOUND = 'Instant Search index for "documentation" not found. Needs to be initialized'
+SEARCH_INDEX_UPDATING = 'Instant search index is being updated. Using legacy search.'
 
 
 @api_view(("GET", ))
@@ -244,6 +246,10 @@ def kb_search(request, name):
     if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
         raise APIInternalException(
             SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
+
+    if DOC_CACHE.being_initialized:
+        raise APIInternalException(
+            SEARCH_INDEX_UPDATING, status.HTTP_501_NOT_IMPLEMENTED)
 
     def get_param(param, default=None):
         default = default or []
@@ -259,8 +265,7 @@ def kb_search(request, name):
     perPage = int(request.query_params.get('perPage', 10))
     page = int(request.query_params.get('page', 1))
 
-    client = get_meilisearch_client()
-    index = client.index('documentation')
+    index = get_meilisearch_client().index('documentation')
 
     kb_menus_filter = [f"kbMenus = '{kb}'" for kb in kb_menus_filter if kb]
     labels_filter = [f"labels = '{label}'" for label in labels_filter if label]
@@ -286,12 +291,6 @@ def kb_search(request, name):
         if not docs_json:
             raise APIInternalException(
                 SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
-
-        retries = 10
-
-        while index.get_stats().get('isIndexing', True) and retries:
-            retries -= 1
-            sleep(0.5)
 
         raw_results = index.search(
             query, {key: val for key, val in options.items() if val})

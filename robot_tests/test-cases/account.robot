@@ -243,7 +243,7 @@ Force Tags        account
             Wait Until Element is Visible    ${ACCOUNT SAVE}
             Click Button    ${ACCOUNT SAVE}
             Sleep    2    #to allow the system to change languages
-            Wait Until Element is Visible    //header/h4[text()='${info text}']
+            Wait Until Element is Visible    //header//h4[contains(text(),'${info text}')]
         END
     END
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}
