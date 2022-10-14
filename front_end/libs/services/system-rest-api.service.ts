@@ -123,9 +123,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         throwError(new Error('Invalid http method type was passed.'));
     }
 
-    private setupSystem(
+    setupSystem(
         systemName: string,
-        systemSettings: t.SystemConfigSettings,
+        systemSettings: Record<string, unknown>,
         cloudSystemID = '',
         cloudAuthKey = '',
         owner = '',
@@ -144,7 +144,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }
         };
         !cloudSystemID ? delete config.cloud : delete config.local;
-        return this.post('/rest/v1/system/setup', config).toPromise();
+        return this.post('/rest/v1/system/setup', config);
     }
 
     private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
@@ -750,7 +750,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string,
-        systemSettings: t.SystemConfigSettings
+        systemSettings: Partial<t.SystemConfigSettings>
     ) {
         return this.setupSystem(
             systemName,
@@ -764,7 +764,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     setupLocalSystem(
         systemName: string,
         password: string,
-        systemSettings: t.SystemConfigSettings
+        systemSettings: Partial<t.SystemConfigSettings>
     ) {
         return this.setupSystem(
             systemName,

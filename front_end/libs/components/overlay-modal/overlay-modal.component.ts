@@ -68,7 +68,10 @@ export class NxOverlayModalComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.localStorage.retrieve('resetServer') === true) {
-            setTimeout(() => this.window.location.reload(), 2000);
+            setTimeout(() => {
+                this.localStorage.store('resetServer', false);
+                this.window.location.reload();
+            }, 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
             if (!state || this.system?.serverManager.servers.length > 1) {
@@ -87,6 +90,9 @@ export class NxOverlayModalComponent implements OnInit {
             this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
         });
 
+        if (this.CONFIG.newSystem) {
+            return;
+        }
         this.accountService.get().then(account => {
             if (!account) {
                 return;

@@ -24,6 +24,7 @@ export class AdvancedComponent {
         ];
 
         this.selectedSecurity = this.itemsSecurity[0];
+        this.wizardService.setSecurityLevel(this.selectedSecurity.value);
     }
 
     onSecurityChange(result: DropdownItem<string>): void {

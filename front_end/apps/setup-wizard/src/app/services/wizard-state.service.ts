@@ -155,7 +155,7 @@ export class WizardStateService {
         cloudSystemID: '',
 
         localLogin: this.defaultUser,
-        localPassword: '',
+        localPassword: this.defaultUser,
         localPasswordConfirmation: '',
         localLoginDataState: FORM_STATE.INVALID,
 
@@ -180,12 +180,9 @@ export class WizardStateService {
         statisticReportLastVersion: '',
         systemName: '',
         mergeInfo: {},
-        videoTrafficEncryptionForced: true,
-        exposeDeviceCredentials: false
     };
 
-    systemAdvancedSettings: SystemAdvancedConfigSettings = {
-    };
+    systemAdvancedSettings: Partial<SystemAdvancedConfigSettings> = {};
 
     securityLevel = 'standard';
     simpleURLRegex: string;
@@ -662,7 +659,9 @@ export class WizardStateService {
                     data.authKey,
                     credentials.email,
                     this.systemSettings
-                ).then(() => {});
+                )
+                    .toPromise()
+                    .then(() => {});
             });
     }
 
@@ -674,10 +673,9 @@ export class WizardStateService {
 
     initSystem(): void {
         const { localPassword, systemName } = this.setupConfig;
+        const settings: Partial<SystemConfigSettings> = {};
 
-        const settings = { ...this.systemSettings };
-        // eslint-disable-next-line array-callback-return
-        Object.keys(this.systemAdvancedSettings).map((key: string): void => {
+        Object.keys(this.systemAdvancedSettings).forEach((key: string): void => {
             if (typeof this.systemAdvancedSettings[key] === 'object') {
                 settings[key] = this.systemAdvancedSettings[key].settingValue;
             } else {
@@ -691,8 +689,9 @@ export class WizardStateService {
         }
 
         this.server.setupLocalSystem(systemName, localPassword, settings)
+            .toPromise()
             .then(_ => {
-                return this.updateCredentials(this.defaultUser, localPassword, false)
+                return this.updateCredentials(this.setupConfig.localLogin, localPassword, false)
                     .catch(this.offlineErrorHandler);
             });
     }
@@ -724,6 +723,7 @@ export class WizardStateService {
                         this.currentState = WIZARD_STATE.LocalSuccess;
                     }
                 }
+                this.setupConfig.localPassword = '';
                 clearInterval(systemReadyInterval);
             });
         }, this.CONFIG.alertTimeout);
@@ -765,7 +765,8 @@ export class WizardStateService {
                     if (!settingConfig.setupWizard) {
                         return;
                     }
-                    let settingValue: boolean | number | string = systemSettings[settingKey];
+
+                    let settingValue: boolean | number | string = systemSettings[settingKey] || false;
                     if (settingConfig.type === 'checkbox' && settingValue === undefined) {
                         settingValue = true;
                     } else if (settingConfig.type === 'number') {
@@ -789,22 +790,27 @@ export class WizardStateService {
 
     initWizard = (): void => {
         this.currentState = undefined;
-        this.updateCredentials(this.defaultUser, this.defaultUser, false).then(() => {
-            Promise.all([
-                this.getAdvancedSettings(),
-                this.discoverSystems()
-            ]).catch(() => {});
-            this.checkIfSystemIsReady();
-        }).catch(_ => {
-            const params = new URLSearchParams(this.window.location.search);
-            if (params.get('retry')) {
-                this.currentState = WIZARD_STATE.InitFailure;
-            } else {
-                params.set('retry', 'true');
-                this.window.location.search = params.toString();
-                setTimeout(() => this.window.location.reload(), 1000);
-            }
-        });
+        this.updateCredentials(
+            this.setupConfig.localLogin,
+            this.setupConfig.localPassword,
+            false,
+        )
+            .then(() => {
+                Promise.all([
+                    this.getAdvancedSettings(),
+                    this.discoverSystems()
+                ]).catch(() => {});
+                this.checkIfSystemIsReady();
+            }).catch(_ => {
+                const params = new URLSearchParams(this.window.location.search);
+                if (params.get('retry')) {
+                    this.currentState = WIZARD_STATE.InitFailure;
+                } else {
+                    params.set('retry', 'true');
+                    this.window.location.search = params.toString();
+                    setTimeout(() => this.window.location.reload(), 1000);
+                }
+            });
     };
 
     init(): void {

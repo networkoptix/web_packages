@@ -165,7 +165,62 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
     // Setup wizard calls
     wizardGetSystemSettings(): Observable<SettingsConfig> {
-        return this.get('/rest/v1/system/settings');
+        return this.get('/rest/v2/system/settings');
+    }
+
+    setupCloudSystem(
+        systemName: string,
+        cloudSystemID: string,
+        cloudAuthKey: string,
+        cloudAccountName: string,
+        systemSettings: Partial<t.SystemConfigSettings>
+    ): Observable<any> {
+        return this.setupSystem(
+            systemName,
+            systemSettings,
+            cloudSystemID,
+            cloudAuthKey,
+            cloudAccountName
+        );
+    }
+
+    setupLocalSystem(
+        systemName: string,
+        password: string,
+        systemSettings: Partial<t.SystemConfigSettings>
+    ): Observable<any> {
+        return this.setupSystem(
+            systemName,
+            systemSettings,
+            undefined,
+            undefined,
+            undefined,
+            password
+        );
+    }
+
+    setupSystem(
+        systemName: string,
+        systemSettings: Record<string, unknown>,
+        cloudSystemID = '',
+        cloudAuthKey = '',
+        owner = '',
+        password = ''
+    ): Observable<any> {
+        const config = {
+            name: systemName,
+            settings: systemSettings,
+            local: {
+                password
+            },
+            cloud: {
+                systemId: cloudSystemID,
+                authKey: cloudAuthKey,
+                owner
+            }
+        };
+        !cloudSystemID ? delete config.cloud : delete config.local;
+        return this.post('/rest/v2/system/setup', config);
     }
 
     // Servers

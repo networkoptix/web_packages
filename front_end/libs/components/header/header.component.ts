@@ -402,9 +402,12 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         if (this.environment.isLocal) {
             this.hideWebAdmin = true;
+            if (this.bootstrapProvider.newSystem) {
+                return;
+            }
             this.accountService.get().then(account => {
-                this.hideWebAdmin = !account || this.bootstrapProvider.newSystem;
-                if (!account || this.bootstrapProvider.newSystem) {
+                this.hideWebAdmin = !account;
+                if (!account) {
                     return;
                 }
                 this.system = this.systemService.createLocalSystem(

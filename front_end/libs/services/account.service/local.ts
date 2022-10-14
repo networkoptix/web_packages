@@ -131,8 +131,9 @@ export class LocalAccount extends BaseAccount {
                     return this.router.navigate(['/authorize/register']).then(() => result);
                 }
                 return this.get();
+            }, (): any => {
+                this.router.navigate([this.CONFIG.redirect.unauthorised]);
             })
-            .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
             .finally(() => {
                 this.loginDialogActive = false;
             });

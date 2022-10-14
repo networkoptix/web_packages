@@ -5,6 +5,13 @@
 @use "css-variables/theme_palette" as *;
 @use "css-variables/theme_variables" as *;
 
+nx-pre-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .container {
     display: flex;
     flex: 1;

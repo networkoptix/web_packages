@@ -1,6 +1,13 @@
+<nx-pre-loader
+    type="page"
+    *ngIf="!fsm"
+>
+</nx-pre-loader>
+
 <div
-    class="container"
+    class=""
     [style.height.vh]="100"
+    [style.width.vw]="100"
     *ngIf="fsm"
 >
     <div class="card p-3 card-wizard">

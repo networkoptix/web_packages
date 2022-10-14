@@ -400,7 +400,8 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        await this.preloadDialogsModule();
+        // No need to preload all dialogs in wizard mode
+        // await this.preloadDialogsModule();
         const component = await import('./wizard/wizard.component').then(m => m.WizardModalContent);
 
         return this.open(component, dialogConfig)
