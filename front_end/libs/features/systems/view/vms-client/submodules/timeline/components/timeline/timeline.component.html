@@ -20,7 +20,9 @@
     <nx-timeline-scrollbar></nx-timeline-scrollbar>
     <nx-timeline-playback-indicator
         *ngIf="ux.state.isTimelineShown"
-        [ngStyle]="{ visibility: ux.state.isTimelineShown ? 'visible' : 'hidden' }"
+        [ngStyle]="{
+            visibility: ux.state.isTimelineShown && !selection.isActive ? 'visible' : 'hidden'
+        }"
     ></nx-timeline-playback-indicator>
     <nx-timeline-selection
         *ngIf="archiveSelectionEnabled"

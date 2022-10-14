@@ -69,7 +69,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         protected canvasRenderer: TimelineCanvasRendererService,
         protected wheelHandler: TimelineWheelHandlerService,
         public timeUnderMouse: TimelineTimeUnderMouseService,
-        protected selection: TimelineSelectionService,
+        public selection: TimelineSelectionService,
         public ux: WebClientUxService,
         @Inject(WINDOW) private window: Window,
     ) {

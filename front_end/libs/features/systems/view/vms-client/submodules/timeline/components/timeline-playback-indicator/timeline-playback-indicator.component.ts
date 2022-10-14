@@ -76,7 +76,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit {
     }
 
     public get edgeCaseClasses(): Record<string, boolean> {
-        this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible');
+        this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible-opacity');
         return {
             'left-most': this.honestOffset <= 0,
             leftish: this.honestOffset > 0 &&
