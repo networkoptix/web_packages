@@ -32,6 +32,7 @@ export class NxVideoPlayerComponent {
     offset = 0;
     poster$ = WebRTCStreamManager.sync$.pipe(untilDestroyed(this), filter((val) => val % NxVideoPlayerComponent.POSTER_INTERVAL && this.webRtcPlayerRef?.nativeElement.paused && this.posterFailures < NxVideoPlayerComponent.POSTER_RETRIES), map(() => `${this.camera.previewUrl}&hash=${uuid()}`))
     posterFailures = 0
+    error = '';
 
     enterFullscreen(): void {
         this.webRtcPlayerRef.nativeElement.requestFullscreen({ navigationUI: 'hide' })
@@ -53,10 +54,22 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement).pipe(untilDestroyed(this)).subscribe(stream => {
-            this.webRtcPlayerRef.nativeElement.srcObject = stream;
-            this.webRtcPlayerRef.nativeElement.muted = true;
-            this.webRtcPlayerRef.nativeElement.autoplay = true;
-        });
+        if (['Online', 'Recording'].includes(this.camera.status)) {
+            WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement).pipe(
+                untilDestroyed(this)
+            ).subscribe(([stream, error]) => {
+                if (stream) {
+                    this.webRtcPlayerRef.nativeElement.srcObject = stream;
+                    this.webRtcPlayerRef.nativeElement.muted = true;
+                    this.webRtcPlayerRef.nativeElement.autoplay = true;
+                }
+
+                if (error) {
+                    this.error = error;
+                }
+            });
+        } else {
+            this.error = this.camera.status
+        }
     }
 }

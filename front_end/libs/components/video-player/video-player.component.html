@@ -4,7 +4,7 @@
     muted
 ></video>
 
-<ng-container *ngIf="webRtcPlayer.paused">
+<ng-template #poster>
     <img
         [src]="poster$ | async"
         class="fs-exclude poster"
@@ -13,6 +13,15 @@
         (error)="handleLoad()"
     />
     <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<ng-container *ngIf="webRtcPlayer.paused">
+    <div
+        *ngIf="error; else poster"
+        class="connection-error"
+    >
+        {{ error }}
+    </div>
 </ng-container>
 
 <div

@@ -50,6 +50,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
     },
     {
+        path: 'layouts',
+        loadChildren: () => import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule)
+    },
+    {
         path: 'cloud-authorize',
         loadChildren: () => import('@pages/cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
     },

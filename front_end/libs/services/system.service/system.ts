@@ -94,6 +94,7 @@ function trimIds(o) {
  * If there are only a few references left to that method, then remove those references and delete the deprecated method.
  */
 export class NxSystem {
+    LATEST = 5.1;
     id: string = '';
     canMerge: boolean = false;
 
@@ -201,8 +202,9 @@ export class NxSystem {
     ) {
         this.CONFIG = CONFIG;
         this.LANG = LANG;
-        this.useRest = Math.floor(version) > 4;
-        this.version = version;
+        // Sometimes newly connected systems don't report version correctly
+        this.version = version || this.LATEST;
+        this.useRest = Math.floor(this.version) > 4;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
