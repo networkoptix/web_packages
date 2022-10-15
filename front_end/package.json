@@ -49,7 +49,7 @@
     "serve:auth": "npm run setVarSkin && npm run update-lang-files && nx run authorization:serve:development --proxy-config proxy.conf.auth.js",
     "serve:cloud": "npm run setVarSkin && npm run update-lang-files && nx run front-end:serve:$CLOUD_TARGET --proxy-config proxy.conf.front_end.js",
     "serve:webadmin": "npm run update-lang-files && nx run webadmin:serve:development --proxy-config proxy.conf.webadmin.js",
-    "build": "npm run cleardist && npm run lang && nx run-many --target=build --projects=front-end,authorization --configuration=production",
+    "build": "npm run cleardist && npm run lang && nx run-many --target=build --projects=front-end,authorization --configuration=production --skip-nx-cache=true",
     "build:ci": "npx nx run-many --target=build --all --parallel=$(getconf _NPROCESSORS_ONLN) --exclude=unconverted",
     "build:auth": "npm run cleardist && nx run authorization:build:production  --skip-nx-cache=true",
     "build:cloud": "npm run cleardist && npm run lang && nx run front-end:build:production  --skip-nx-cache=true",
