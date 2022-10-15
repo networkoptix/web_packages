@@ -320,11 +320,18 @@ export class NxSystem {
             specificFeatures,
             mergeInfo
         }: SystemConfigSettings) => {
+            let capabilities = {};
+            try {
+                capabilities = JSON.parse(<any>specificFeatures);
+            } catch {
+                capabilities = specificFeatures;
+            }
+
             return {
                 ownerAccountEmail,
                 systemName,
                 mergeInfo,
-                capabilities: JSON.parse(<any>specificFeatures),
+                capabilities,
                 isOnline: true
             };
         };
