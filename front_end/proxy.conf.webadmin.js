@@ -53,11 +53,13 @@ const PROXY_CONFIG = [
             '/static/supported_languages.json', // Comment out to use your own supported_languages.json.
             '/static/languages.json',
             '/swagger-ui',
-            '/web'
+            '/web',
+            '/webrtc-tracker'
         ],
         target: targets.host,
         changeOrigin: true,
-        secure: false
+        secure: false,
+        ws: true
     }, {
         context: [
             // '/static/supported_languages.json', // Uncomment for using your own local supported_languages.json. It goes in front_end/app/supported_languages.

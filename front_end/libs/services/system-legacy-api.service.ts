@@ -166,7 +166,7 @@ export class NxSystemAPI {
     }
 
     protected getUrlBase(protocol = this.window.location.protocol) {
-        let urlBase = '';
+        let urlBase = protocol !== this.window.location.protocol ? `${protocol}//${this.window.location.host}` : '';
         if (this.systemId) {
             urlBase =
                 protocol +

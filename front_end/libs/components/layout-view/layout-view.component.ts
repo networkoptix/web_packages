@@ -11,12 +11,14 @@ import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode } from '@components/layout-grid/layout-grid.types';
+import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { alphabeticalSort, cleanId } from '@utils/general';
@@ -44,8 +46,18 @@ export class NxLayoutViewComponent {
 
     selectedSystem$ = this.activatedRoute.params.pipe(
         switchMap(async ({ systemId }) => {
-            await this.systemsService.getSystemAsPromise(systemId);
-            const system = this.systemService.createSystem(this.accountService.account.email, systemId);
+            let system: NxSystem;
+            if (environment.isLocal) {
+                const account = await this.accountService.get();
+                system = this.systemService.createLocalSystem(
+                    this.accountService.mediaServerApi,
+                    account.id,
+                    account.email
+                );
+            } else {
+                await this.systemsService.getSystemAsPromise(systemId);
+                system = this.systemService.createSystem(this.accountService.account.email, systemId);
+            }
             await system.update();
             return system;
         }),
@@ -98,7 +110,7 @@ export class NxLayoutViewComponent {
             const serversForTree = Object.values(parsedServers).sort(byName);
             const camerasForTree = Object.values(parsedCameras).sort(byName);
             const webPagesForTree = Object.values(parsedWebPages).sort(byName);
-            const layoutsForTree = layouts.filter(({ id }) => !!id).map(({ name, id, items }) => ({
+            const layoutsForTree = layouts.filter(({ id }) => !!id).map(({ name, id, items = [] }) => ({
                 name,
                 id,
                 children: items.map(({ resourceId }) => ({

@@ -76,6 +76,8 @@ export class NxLayoutGridComponent {
 
     @Output() layoutChanged = new EventEmitter<string>();
 
+    SAVE_DELAY = 0;
+
     treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
     dataSource: ArrayDataSource<BaseResourceNode>;
 
@@ -103,7 +105,7 @@ export class NxLayoutGridComponent {
 
     layout$ = this.#initialLayout$.pipe(
         filter(layout => !!layout),
-        map(initial => this.parseLayout(initial)),
+        map(initial => this.parseLayout({ items: [], ...initial })),
         tap(layout => {
             console.log(layout);
         }),
@@ -454,7 +456,7 @@ export class NxLayoutGridComponent {
         }
         this.updateLayout();
         this.unsaved = cloneDeep(this.layout);
-        this.#countdownTimer$.next(10);
+        this.#countdownTimer$.next(this.SAVE_DELAY);
     }
 
     saveLayout = async (): Promise<void> => {

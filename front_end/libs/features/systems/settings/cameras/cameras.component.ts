@@ -898,7 +898,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         ) {
             this.showOffline = false;
             this.showUnauthorized = false;
-            this.credentialsUpdateInProgress = false;
             this.alerts = [];
         }
 
@@ -989,6 +988,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.availableLicenses = 0;
             });
             this.showPreloader = false;
+        } else if (this.cameraIdFromParams) {
+            this.noCameras = false;
         } else {
             this.noCameras = true;
         }

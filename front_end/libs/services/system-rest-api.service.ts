@@ -285,7 +285,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     // Checks if the url does not have swagger-ui in it.
     private requiresWeb(url) {
-        return !url.includes('swagger-ui');
+        // Leaving this method incase we remember what it was used for.
+        return false;
     }
 
     // Legacy api requires runtime in the header of the request.
@@ -301,7 +302,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
 
         // Not used for the time being.
-        // headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        headers = headers.set('Authorization', `Bearer ${accessToken}`);
 
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
@@ -802,7 +803,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/webPages', params);
     }
 
-    getLayouts(params = { _keepDefault: true }): Observable<t.Layouts> {
+    getLayouts(params = {}): Observable<t.Layouts> {
         return this.get('/rest/v1/layouts', params);
     }
 

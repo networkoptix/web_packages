@@ -64,6 +64,10 @@ type PlaybackDetails = Record<string, { fps: number, players: number }>;
 
 type StreamHandler = (stream: MediaStream) => unknown;
 
+export enum ConnectionError {
+    websocket = 'websocket'
+}
+
 class MediaServerPeerConnection extends RTCPeerConnection {
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (event.candidate) {
@@ -151,13 +155,13 @@ export class WebRTCStreamManager {
      * @param videoElement HTMLVideoElement
      * @returns Observable<MediaStream>
      */
-    static connect(webRtcUrlFactory: () => string, videoElement?: HTMLVideoElement): Observable<MediaStream> {
+    static connect(webRtcUrlFactory: () => string, videoElement?: HTMLVideoElement): Observable<[MediaStream, ConnectionError]> {
         const webRtcUrl = removeAuth(webRtcUrlFactory());
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(webRtcUrlFactory);
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].registerElement(videoElement);
 
-        return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$;
+        return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$.pipe(filter(res => !!res));
     }
 
     /** Internal */
@@ -170,7 +174,7 @@ export class WebRTCStreamManager {
     /** Public methods and properties */
 
     /** Updates whenever the mediasserver sends a new stream */
-    mediaStream$ = new BehaviorSubject<MediaStream>(null);
+    mediaStream$ = new BehaviorSubject<[MediaStream, ConnectionError]>(null);
 
     /**
      * Get current for stream.
@@ -304,6 +308,10 @@ export class WebRTCStreamManager {
      */
     #initWebSocket = (): void => {
         this.#wsConnection = new WebSocket(this.webRtcUrlFactory());
+        this.#wsConnection.onerror = () => {
+            this.mediaStream$.next([null, ConnectionError.websocket]);
+            this.#close();
+        };
         this.#wsConnection.onmessage = this.#gotMessageFromServer;
     };
 
@@ -322,7 +330,7 @@ export class WebRTCStreamManager {
      * Ensures that peer connection to mediaserver has been initialized.
      */
     #initPeerConnection = (): void => {
-        this.#peerConnection ||= new MediaServerPeerConnection(() => this.#getOpenWebSocketConnection(), stream => this.mediaStream$.next(stream));
+        this.#peerConnection ||= new MediaServerPeerConnection(() => this.#getOpenWebSocketConnection(), stream => this.mediaStream$.next([stream, null]));
     };
 
     /**

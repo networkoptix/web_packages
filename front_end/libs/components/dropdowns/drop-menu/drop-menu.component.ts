@@ -82,6 +82,9 @@ export class NxDropMenu extends BaseDropdown {
                 setTimeout(() => {
                     this.LANG = translations;
                     this.getMenu();
+                    if (environment.isLocal) {
+                        return;
+                    }
 
                     const activeSystem = this.headerService.activeSystem ||
                         this.headerService.lastActive$.value ||
@@ -174,6 +177,7 @@ export class NxDropMenu extends BaseDropdown {
             const activeSystem = this.headerService.activeSystem ||
                 this.headerService.lastActive$.value ||
                 this.systems[0];
+            activeSystem.version ||= 5.1;
             this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);
         }
         this.systemCounter = this.systems && this.systems.length;

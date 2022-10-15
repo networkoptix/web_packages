@@ -79,7 +79,9 @@ export class NxSystemService {
                 undefined,
                 cloudSystemInfo?.version
             );
-            this.systemsCache[id] = system;
+            if (cloudSystemInfo?.version) {
+                this.systemsCache[id] = system;
+            }
         }
 
         // This is done to set the auth keys for video. Local doesn't need auth keys
