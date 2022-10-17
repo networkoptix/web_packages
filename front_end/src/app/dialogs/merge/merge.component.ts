@@ -400,6 +400,9 @@ export class MergeModalContent {
         this.loginService.updateSession('merge')
             .then(ready => {
                 this.updateSession = !ready;
+                if (ready) {
+                    process.run();
+                }
             });
     }
 
