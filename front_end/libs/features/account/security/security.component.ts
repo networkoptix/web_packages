@@ -47,17 +47,12 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     twoFaSystems: NxSystemInfo[] = [];
     subV5Systems: NxSystemInfo[] = [];
 
-    targets: PseudoAnchorTarget[] = [];
+    private targets: PseudoAnchorTarget[] = [];
 
-    @ViewChild('twoFaSystemsSpan') twoFaSystemsSpan: ElementRef;
-    @ViewChild('v5WarningSpan') v5WarningSpan: ElementRef;
-    @ViewChild('popLegend2faTemplate') popLegend2faTemplate: TemplateRef<any>;
-    @ViewChild('popLegendSubV5Template') popLegendSubV5Template: TemplateRef<any>;
-    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
-
-    private setupDefaults(): void {
-        this.menuService.detail = 'security';
-    }
+    @ViewChild('twoFaSystemsSpan') private twoFaSystemsSpan: ElementRef<HTMLSpanElement>;
+    @ViewChild('v5WarningSpan') private v5WarningSpan: ElementRef<HTMLSpanElement>;
+    @ViewChild('popLegend2faTemplate') private popLegend2faTemplate: TemplateRef<unknown>;
+    @ViewChild('popLegendSubV5Template') private popLegendSubV5Template: TemplateRef<unknown>;
 
     constructor(
         configService: NxConfigService,
@@ -73,11 +68,11 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
-        this.setupDefaults();
+        this.menuService.detail = 'security';
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.security;
+        this.pageService.pageTitle = this.LANG.pageTitles.security();
         this.account = this.accountService.account;
 
         this.account2faEnabled = this.account.account2faEnabled;
@@ -95,7 +90,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             });
     }
 
-    toggleVerification(value) {
+    toggleVerification(value: boolean): void {
         if (value === undefined || value === this.account2faEnabled) {
             // checkbox not initialized
             // or click happened during initialization
@@ -119,23 +114,27 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     private setPopoverTargets(): void {
         if (this.subV5Systems.length && this.v5WarningSpan) {
-            const targetV5 = this.v5WarningSpan.nativeElement.querySelector('span#targetV5');
+            const targetV5 = this.v5WarningSpan.nativeElement
+                .querySelector<HTMLSpanElement>('span#targetV5');
             addPseudoAnchor(
                 this.targets,
                 targetV5,
                 this.popLegendSubV5Template,
                 'click',
-                this.showPopoverWithTemplate.bind(this));
+                this.showPopoverWithTemplate.bind(this)
+            );
         }
 
         if (this.twoFaSystems.length && this.twoFaSystemsSpan) {
-            const target2FaSystems = this.twoFaSystemsSpan.nativeElement.querySelector('span#target2FaSystems');
+            const target2FaSystems = this.twoFaSystemsSpan.nativeElement
+                .querySelector<HTMLSpanElement>('span#target2FaSystems');
             addPseudoAnchor(
                 this.targets,
                 target2FaSystems,
                 this.popLegend2faTemplate,
                 'click',
-                this.showPopoverWithTemplate.bind(this));
+                this.showPopoverWithTemplate.bind(this)
+            );
         }
     }
 
@@ -145,7 +144,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         setTimeout(() => { this.setPopoverTargets(); });
     }
 
-    showPopoverWithTemplate(template: TemplateRef<any>, target: any): void {
+    private showPopoverWithTemplate(template: TemplateRef<unknown>, target: HTMLElement): void {
         if (this.popoverService.close() === target.id) {
             return;
         }
@@ -159,7 +158,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     @HostListener('document:click', ['$event.target'])
-    onMouseClick(targetElement): void {
+    onMouseClick(targetElement: HTMLElement): void {
         if (targetElement.className !== 'pseudo-anchor') {
             this.popoverService.close();
         }
@@ -203,7 +202,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     genNewCode(): void {
-        this.dialogs
-            .newCode2FA();
+        this.dialogs.newCode2FA();
     }
 }

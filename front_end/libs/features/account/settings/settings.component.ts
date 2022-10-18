@@ -35,27 +35,19 @@ import { WINDOW } from '@services/window-provider';
 })
 
 export class NxAccountSettingsComponent implements OnInit, OnDestroy {
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
-    @ViewChild('accountForm', { read: NgForm }) accountForm;
-    @ViewChild('langForm', { read: NgForm }) langForm;
-
-    accountFormWatcher: any;
-    langFormWatcher: any;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
+    @ViewChild('accountForm', { read: NgForm }) private accountForm: NgForm;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     account: Account;
-    saveLang: Process;
-    saveAccount: Process;
     langCode: string;
     isSystemOwner = true;
     hideErrors = true;
-    langChanged = false;
 
-    private setupDefaults(): void {
-        this.menuService.detail = 'settings';
-    }
+    private saveAccount: Process;
+    private langChanged = false;
 
     constructor(
         configService: NxConfigService,
@@ -74,7 +66,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.langCode = languageService.currentLang;
-        this.setupDefaults();
+        this.menuService.detail = 'settings';
 
         languageService.translateSubject
             .pipe(untilDestroyed(this))
@@ -113,7 +105,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                     setTimeout(() => {
                         // both form are inside *ngIf="account"
                         // otherwise they should be in ngAfterViewInit
-                        this.accountFormWatcher = this.applyService.createFormWatcher(
+                        this.applyService.createFormWatcher(
                             'accountForm',
                             this.accountForm,
                             this.saveAccount
@@ -127,14 +119,14 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.applyService.removeWatchers();
     }
 
-    initProcess(): void {
+    private initProcess(): void {
         this.saveAccount = undefined;
         this.saveAccount = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account);
         }, {
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden: true
-        }).then(() => {
+        }, () => {
             this.accountService.accountSubject.next(this.accountService.accountSubject.value);
             // account info was changed successful (local and on server)
             // really no need to force update -- TT
@@ -153,7 +145,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.account.language = langCode;
     }
 
-    isUserASystemOwner(): void {
+    private isUserASystemOwner(): void {
         this.systemsService.systemsSubject.subscribe(systems => {
             this.isSystemOwner = systems.some(system => {
                 return system.accessRole === 'owner';
@@ -161,13 +153,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    displayErrors = (): void => {
-        this.hideErrors = false;
-    };
-
     deleteUser(): void {
         this.dialogs.deleteCloudUser(this.cloudApiService)
-            .then((res: any) => {
+            .then(res => {
                 if (res && res.resultCode === 'ok') {
                     this.accountService.logout();
                 }

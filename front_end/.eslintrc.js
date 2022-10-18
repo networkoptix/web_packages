@@ -91,9 +91,6 @@ const typeLintBlacklist = [
     '**/nx-intersection.directive.ts',
     '**/nx-projected-link-handler.directive.ts',
     /* Features */
-    '**/password/password.component.ts',
-    '**/security/security.component.ts',
-    '**/settings/settings.component.ts',
     '**/api-tool/api-file-utils.ts',
     '**/api-tool/api-tool-types.ts',
     '**/api-tool/dropdowns/api-tool-dropdown-utils.ts',
@@ -162,7 +159,7 @@ const typeLintBlacklist = [
     '**/new/new.component.spec.ts',
     '**/new/new.component.ts',
     '**/trial/trial.component.ts',
-    '**/settings/settings.component.ts',
+    '**/systems/settings/settings.component.ts',
     '**/system-view-camera/fullscreen.ts',
     '**/system-view-camera/system-view-camera.page.component.ts',
     '**/system-view-index/system-view-index.page.component.ts',

@@ -28,28 +28,18 @@ import { Process } from '@services/process.service/process';
 })
 
 export class NxAccountPasswordComponent implements OnInit, OnDestroy {
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
-    @ViewChild('passwordForm', { read: NgForm }) passwordForm;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
+    @ViewChild('passwordForm', { read: NgForm }) private passwordForm: NgForm;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     account: Account;
-    pass: any = {};
-    hideErrors = true;
+    pass = { password: '', newPassword: '' };
+    hideErrors = false;
     weakPassword = false;
 
-    changePassword: Process;
-    passwordFormWatcher: any;
-
-    private setupDefaults(): void {
-        this.hideErrors = false;
-        this.pass = {
-            password: '',
-            newPassword: ''
-        };
-        this.menuService.detail = 'password';
-    }
+    private changePassword: Process;
 
     constructor(
         configService: NxConfigService,
@@ -65,17 +55,20 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
-        this.setupDefaults();
+        this.menuService.detail = 'password';
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.changePassword;
+        this.pageService.pageTitle = this.LANG.pageTitles.changePassword();
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.changePassword = this.processService.createProcess(() => {
-            const verifySession = () => this.dialogs.passwordVerificationCode(
-                this.pass.newPassword, this.pass.password
-            );
+            const verifySession = (): Promise<unknown> => {
+                return this.dialogs.passwordVerificationCode(
+                    this.pass.newPassword,
+                    this.pass.password
+                );
+            };
             return this.account.account2faEnabled
                 ? this.cloudApiService.verify(this.pass.password)
                     .then(
@@ -85,17 +78,18 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
                             : Promise.reject(error)
                     )
                 : this.cloudApiService.changePassword(
-                    this.pass.newPassword, this.pass.password
+                    this.pass.newPassword,
+                    this.pass.password
                 );
         }, {
             errorCodes: {
-                notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch(),
+                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch(),
                 badRequest: this.LANG.errorCodes.oldPasswordMistmatch(),
             },
-            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
+            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix(),
             ignoreUnauthorized: true
-        }).then(() => {
+        }, () => {
             this.hideErrors = true;
             this.passwordForm.reset();
         });
@@ -107,7 +101,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
                     this.account = account;
 
                     setTimeout(() => {
-                        this.passwordFormWatcher = this.applyService.createFormWatcher(
+                        this.applyService.createFormWatcher(
                             'passwordForm',
                             this.passwordForm,
                             this.changePassword
