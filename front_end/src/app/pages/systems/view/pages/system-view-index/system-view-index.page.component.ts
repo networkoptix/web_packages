@@ -15,6 +15,7 @@ import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service/system';
+import { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { cleanId } from '@utils/general';
@@ -52,7 +53,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     public systemId: string;
     public system: NxSystem;
-    public systems: NxSystem[];
+    public systems: NxSystemWithUserInfo[];
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -314,10 +315,15 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 }
 
                 // _initSystem is called on systems subscription
-                if (this.systems.filter(s => s.id === this.systemId).length) {
+                const systemInfoFromCDB: NxSystemWithUserInfo = this.systems.find(s => s.id === this.systemId);
+                if (systemInfoFromCDB) {
                     this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
                     this.settingsService.system = this.system;
-                    this.ribbonService.hide();
+                    if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
+                        this._setInitializationState(true, true);
+                    } else {
+                        this.ribbonService.hide();
+                    }
                     return Promise.resolve(); // this.system.update();
                 }
 
