@@ -35,7 +35,7 @@ import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
-import { htmlToEntity, pickFrom } from '@utils/general';
+import { pickFrom } from '@utils/general';
 
 import { T_FA_STEPS } from './two-fa.component.types';
 
@@ -149,14 +149,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
             .subscribe(systems => {
-                systems.forEach(system => {
-                    if (!system.useRest) {
-                        this.incompatibleSystems.push({
-                            ...system,
-                            name: htmlToEntity(system.name),
-                        });
-                    }
-                });
+                this.incompatibleSystems = systems.filter(sys => !sys.useRest);
             });
     }
 

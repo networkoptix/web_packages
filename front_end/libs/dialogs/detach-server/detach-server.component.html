@@ -7,7 +7,9 @@
         <h1
             class="modal-title"
             [innerHTML]="
-                'dialogs.titles.serversDetach' | translate: { title: serverName } | safe: 'html'
+                'dialogs.titles.serversDetach'
+                    | translate: { title: serverName | escapeHTML }
+                    | safe: 'html'
             "
         ></h1>
         <button

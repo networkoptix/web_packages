@@ -39,7 +39,11 @@
     <form class="text-center form">
         <p translate>We could not verify the redirect URL.</p>
         <br />
-        <p [innerHTML]="'authorize.notSecureText' | translate: { redirectUrl: redirectUrl }"></p>
+        <p
+            [innerHTML]="
+                'authorize.notSecureText' | translate: { redirectUrl: redirectUrl | escapeHTML }
+            "
+        ></p>
         <br />
         <p translate>Make sure your trust this URL.</p>
     </form>

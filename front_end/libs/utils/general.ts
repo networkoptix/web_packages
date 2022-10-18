@@ -26,11 +26,6 @@ export function cleanSmbUrl(url: string): string {
     return last(url.split('@')).replace('smb:/', '');
 }
 
-export function htmlToEntity(target: string[] | string): string {
-    return (Array.isArray(target) ? target[0] : target)
-        ?.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 export function highlight(text: string, start?: number, end?: number): string {
     start = start ?? 0;
     end = end ?? text.length;

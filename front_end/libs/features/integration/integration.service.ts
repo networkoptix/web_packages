@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { escape } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
@@ -7,7 +8,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { htmlToEntity, paramSortFunc } from '@utils/general';
+import { paramSortFunc } from '@utils/general';
 
 interface Platform {
     file: string;
@@ -246,7 +247,7 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = htmlToEntity(
+            plugin.versionDetails.version = escape(
                 this.formatVersion(plugin.versionDetails.version)
             );
         } else {

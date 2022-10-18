@@ -24,7 +24,6 @@ import { NxPageService } from '@services/page.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import {
-    htmlToEntity,
     addPseudoAnchor,
     clearPseudoAnchors,
     PseudoAnchorTarget
@@ -88,24 +87,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
             .subscribe(systems => {
-                const twoFaSystems: NxSystemInfo[] = [];
-                const subV5Systems: NxSystemInfo[] = [];
-                systems.forEach(system => {
-                    system = {
-                        ...system,
-                        name: htmlToEntity(system.name),
-                    };
-
-                    if (system.system2faEnabled) {
-                        twoFaSystems.push(system);
-                    }
-
-                    if (!system.useRest) {
-                        subV5Systems.push(system);
-                    }
-                });
-                this.twoFaSystems = twoFaSystems;
-                this.subV5Systems = subV5Systems;
+                this.twoFaSystems = systems.filter(sys => sys.system2faEnabled);
+                this.subV5Systems = systems.filter(sys => !sys.useRest);
 
                 this.clearPopoverTargets();
                 this.setPopoverTargets();

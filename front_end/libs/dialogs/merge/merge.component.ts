@@ -7,7 +7,7 @@ import {
     Inject,
     LOCALE_ID,
 } from '@angular/core';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, escape } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
@@ -31,7 +31,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
-import { cleanIp, htmlToEntity, strSplice, pickFrom, alphabeticalSort } from '@utils/general';
+import { cleanIp, strSplice, pickFrom, alphabeticalSort } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';
@@ -1069,7 +1069,7 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = htmlToEntity(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
+        this.primaryName = escape(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
     }
 
     getSecondaryName(): void {
@@ -1078,6 +1078,6 @@ export class MergeModalContent {
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {
             name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
         }
-        this.secondaryName = htmlToEntity(name);
+        this.secondaryName = escape(name);
     }
 }

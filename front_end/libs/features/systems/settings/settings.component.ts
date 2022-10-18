@@ -13,6 +13,7 @@ import {
     NavigationStart
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { escape } from 'lodash-es';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
@@ -42,7 +43,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
-import { alphabeticalSort, cleanId, htmlToEntity } from '@utils/general';
+import { alphabeticalSort, cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from './settings.service';
@@ -843,11 +844,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.systemsService.systems?.length === 1) {
             return;
         }
-        const sysName = htmlToEntity(
-            this.system.info.name || this.LANG.errorCodes.thisSystem()
-        );
+
+        const systemName = this.system.info.name
+            ? escape(this.system.info.name)
+            : this.LANG.errorCodes.thisSystem();
         this.dialogs.notify(
-            this.LANG.errorCodes.lostConnection({ systemName: sysName }),
+            this.LANG.errorCodes.lostConnection({ systemName }),
             'warning'
         );
 

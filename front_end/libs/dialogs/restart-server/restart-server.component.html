@@ -3,7 +3,9 @@
         <h1
             class="modal-title"
             [innerHTML]="
-                'dialogs.titles.serversRestart' | translate: { title: serverName } | safe: 'html'
+                'dialogs.titles.serversRestart'
+                    | translate: { title: serverName | escapeHTML }
+                    | safe: 'html'
             "
         ></h1>
         <button

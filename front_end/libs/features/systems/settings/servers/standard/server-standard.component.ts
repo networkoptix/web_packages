@@ -34,7 +34,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
-import { cleanId, htmlToEntity } from '@utils/general';
+import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { DropdownStorage } from './server-standard.component.types';
@@ -422,7 +422,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     restartServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         return this.dialogs
-            .restartServer(this.system, id, htmlToEntity(name))
+            .restartServer(this.system, id, name)
             .then((res: string) => {
                 if (!res) {
                     return;
@@ -472,7 +472,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             : currentServerIndex - 1;
         const nextServerId = this.system.serverManager.servers[nextServerIndex].id;
         return this.dialogs
-            .detachServer(this.system, id, htmlToEntity(name))
+            .detachServer(this.system, id, name)
             .then(detach => {
                 if (detach === 'success') {
                     this.uriService
@@ -491,7 +491,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     resetServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         return this.dialogs
-            .resetServer(this.system, id, htmlToEntity(name))
+            .resetServer(this.system, id, name)
             // will take some time to reset and then restart the server
             .then(() => this.setStatus('resetting'))
             .catch(() => {

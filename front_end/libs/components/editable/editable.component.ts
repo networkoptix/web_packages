@@ -13,8 +13,7 @@ import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
-
-import { htmlToEntity } from '@utils/general';
+import { escape } from 'lodash-es';
 
 @Component({
     selector: 'nx-text-editable',
@@ -64,9 +63,10 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
             this.el.nativeElement.classList.remove(this.errorClass);
             this.onChangeCallback(this.el.nativeElement.textContent);
         }
-        this.el.nativeElement.innerHTML = htmlToEntity(
-            this.el.nativeElement.textContent
-        );
+
+        // Hide red spellcheck lines
+        this.el.nativeElement.innerHTML = escape(this.el.nativeElement.textContent);
+
         this.el.nativeElement.classList.remove(this.editClass);
         this.el.nativeElement.classList.add(this.initialClass);
         this.onEditModeChanged.emit(false);
