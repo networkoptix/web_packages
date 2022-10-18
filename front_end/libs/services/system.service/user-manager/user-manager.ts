@@ -70,6 +70,10 @@ export class UserManager {
         return this.users.find(user => user.isCloudOwner);
     }
 
+    canViewInfo() {
+        return this.permissions.isAdmin;
+    }
+
     nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
         return this.users.filter(user => {
             if (user.isCloud && cloud) {

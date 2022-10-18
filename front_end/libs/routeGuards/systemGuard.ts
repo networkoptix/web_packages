@@ -61,7 +61,7 @@ export class SystemGuard implements CanActivate {
             const canViewChecks = {
                 users: permissions.editUsers,
                 'cloud-storage': system.canUserViewCloudStorage(),
-                health: system.canViewInfo(),
+                health: system.userManager.canViewInfo(),
                 licenses: permissions.isAdmin || isOwner,
                 advanced: permissions.isAdmin || isOwner,
                 servers: permissions.isAdmin || isOwner,
@@ -77,11 +77,15 @@ export class SystemGuard implements CanActivate {
         if (!(systemId && currentRoute)) {
             return;
         }
-        return this.accountService.get().then(account => {
+        return this.accountService.get().then(async account => {
             if (!account) {
                 return;
             }
             let currSystem = this.systemService.getCurrentSystem();
+            if (currSystem.userManager.users === undefined) {
+                await currSystem.userManager.getUsersDataFromTheSystem();
+            }
+
             if (!this.settingsService.system) {
                 this.settingsService.system = currSystem;
             }
