@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
@@ -94,6 +94,7 @@ export class NxLayoutGridComponent {
     #countdownTimer$ = new Subject<number>();
 
     autoSaveHandler$ = this.#countdownTimer$.pipe(
+        debounceTime(2500),
         skip(1),
         switchMap(time => interval(1000).pipe(map(cur => time - cur))),
         tap(time => !time && this.saveLayout()),

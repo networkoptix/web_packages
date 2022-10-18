@@ -301,7 +301,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
             headers = headers.set(this.token, accessToken || this.#vmsToken || '');
         }
 
-        // Not used for the time being.
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
 
         if (this.serverId) {
@@ -803,7 +802,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/webPages', params);
     }
 
-    getLayouts(params = {}): Observable<t.Layouts> {
+    getLayouts(params = { _keepDefault: true }): Observable<t.Layouts> {
         return this.get('/rest/v1/layouts', params);
     }
 
