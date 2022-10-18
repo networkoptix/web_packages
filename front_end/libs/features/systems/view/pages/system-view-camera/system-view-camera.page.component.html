@@ -232,7 +232,7 @@
                 <ng-template #noArchiveYet>
                     <nx-pre-loader
                         class="loading-archive-indicator"
-                        *ngIf="getRecordsInProgress; else noArchive"
+                        *ngIf="getRecordsInProgress && canViewArchives; else noArchive"
                     ></nx-pre-loader>
                     <ng-template #noArchive>
                         <div class="no-archive-message">
