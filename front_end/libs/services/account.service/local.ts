@@ -103,14 +103,24 @@ export class LocalAccount extends BaseAccount {
     }
 
     logoutHelper(doNotRedirect = false, skipReload = false): void {
-        this.mediaServerApi
-            .logout()
-            .finally(() => {
-                this.cookieService.deleteAll();
-                this.sessionService.invalidateSession(); // Clear session
-
-                this.redirectAfterLogout(doNotRedirect, skipReload);
+        if (!doNotRedirect) {
+            this.router
+                .navigate([this.CONFIG.redirect.unauthorised])
+                .finally(() => {
+                    this.mediaServerApi
+                        .logout()
+                        .finally(() => {
+                            this.cookieService.deleteAll();
+                            this.sessionService.invalidateSession(); // Clear session
+                            this.account = undefined;
+                            !skipReload && this.window.location.reload();
+                        });
+                });
+        } else if (!skipReload) {
+            setTimeout(() => {
+                this.window.location.reload();
             });
+        }
     }
 
     showLogin(
