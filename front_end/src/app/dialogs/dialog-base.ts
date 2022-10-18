@@ -1,6 +1,7 @@
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Injector } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 
 import { DialogConfig } from './dialog-config';
 import { defaultConfig, DIALOG_DATA, DialogRef } from './dialog-ref';
@@ -11,6 +12,7 @@ export class DialogBase {
     private injector: Injector;
     private dialog: DialogRef;
     private dialogsModule: DialogsModule;
+    private unsub$ = new Subject<boolean>();
 
     constructor(
         overlay: Overlay,
@@ -41,8 +43,18 @@ export class DialogBase {
             maxWidth: config.width,
         });
 
+        overlayRef.keydownEvents()
+            .pipe(takeUntil(this.unsub$))
+            .subscribe((key: KeyboardEvent) => {
+                if (key.code === 'Escape') {
+                    this.dialog.close();
+                    this.unsub$.next(true);
+                }
+            });
+
         // Create dialogRef to return
         const dialogRef = new DialogRef(overlayRef);
+
         const injector = Injector.create({
             parent: this.injector,
             providers: [
