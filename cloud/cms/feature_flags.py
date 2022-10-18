@@ -64,6 +64,7 @@ class FLAGS(metaclass=_FlagType):
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
     layouts = ('Layouts', 'layouts', '%Layouts_ENABLED%')
+    system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
@@ -77,7 +78,6 @@ class SWITCHES(metaclass=_FlagType):
     landing_page = ('Landing Page', 'landingPage')
     kb_instant_search = ('KnowledgeBase Instant Search', 'kbInstantSearch')
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
-    system_groups = ('System Groups', 'systemGroups')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
 
 
