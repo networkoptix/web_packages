@@ -84,7 +84,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private processService: NxProcessService,
         private uriService: NxUriService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -265,6 +265,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.passwordChanged = false;
 
             this.selectedUser = { ...user };
+
             delete this.selectedUser.role?.optionLabel; // clean any leftovers
             this.localUserName = this.selectedUser.name;
 

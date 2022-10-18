@@ -64,6 +64,7 @@ export class UserManager {
         this.isMine =
             (email && this.currentUserEmail === email) ||
             this.currentUser?.isLocalOwner;
+        this.processUsers(this.users);
     }
 
     get currentOwner(): NxSystemUser {
@@ -230,17 +231,7 @@ export class UserManager {
             user.isAdmin = this.isAdmin(user);
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
 
-            /**
-             * User can not be edited if:
-             * - this user is the current user
-             * - this user is the local owner (local 'admin')
-             * - this user is the cloud owner
-             *
-             * Furthermore, if the system is not mine and the user is an admin,
-             *   they also can not be edited
-             */
-            const isNotMeOrOwner = !(user.isMe || user.isLocalOwner || user.isCloudOwner);
-            user.canBeEdited = isNotMeOrOwner && (this.isMine || !user.isAdmin);
+            user.canBeEdited = this.canBeEdited(user);
 
             if (user.isMe) {
                 this.currentUser = user;
@@ -261,6 +252,24 @@ export class UserManager {
         });
 
         return this.users;
+    }
+
+    canBeEdited(user: NxSystemUser): boolean {
+        /**
+         * User can not be edited if:
+         * - this user is the current user
+         * - this user is the local owner (local 'admin')
+         * - this user is the cloud owner
+         *
+         * Furthermore, if the system is not mine and the user is an admin,
+         *   they also can not be edited
+         */
+        // const amIAdmin = this.system.userManager.currentUser.isAdmin;
+        // const isNotMeOrOwner = !(user.isMe || user.isLocalOwner || user.isCloudOwner);
+        // this.selectedUser.canBeEdited = isNotMeOrOwner && amIAdmin;
+
+        const isNotMeOrOwner = !(user.isMe || user.isLocalOwner || user.isCloudOwner);
+        return isNotMeOrOwner && (this.isMine || !user.isAdmin);
     }
 
     saveUser(user: NxSystemUser, role: NxSystemRole) {
