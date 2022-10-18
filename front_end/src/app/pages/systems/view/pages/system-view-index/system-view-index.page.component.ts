@@ -276,6 +276,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.$self.classList[
             initializedWithError ? 'add' : 'remove'
         ]('initialization-error');
+        if (!initializedWithError) {
+            this.ribbonService.hide();
+        }
     }
 
     private _onRouteChange(params): void {
@@ -314,7 +317,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 if (this.systems.filter(s => s.id === this.systemId).length) {
                     this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
                     this.settingsService.system = this.system;
-                    this._setInitializationState(!this.system.isOnline, !this.system.isOnline);
                     this.ribbonService.hide();
                     return Promise.resolve(); // this.system.update();
                 }
@@ -376,7 +378,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             timer(0, VideoManagementSystemService.statusRefreshInterval)
                 .pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
-                    if (!this.system || processingMediaServers) {
+                    if (!this.system || !this.system.isOnline || processingMediaServers) {
                         return;
                     }
 
@@ -404,10 +406,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         }
                     });
 
-                    if (!this.system.isOnline) {
-                        this._setInitializationState(true, true);
-                        return;
-                    } else if (this.initializedWithError) {
+                    if (this.initializedWithError) {
                         this._setInitializationState(true, false);
                     }
 
