@@ -9,6 +9,7 @@
         <a
             class="inset navbar-brand asset-name add-version ml-sm-0 d-block"
             [routerLink]="mainUrl"
+            id="NxLogo"
         >
             <img
                 [alt]="environment.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'"
@@ -48,6 +49,7 @@
     <nx-header-tabs
         *ngFor="let node of headerService.currentLocation.parentNode?.nodes"
         [node]="node"
+        id="headerTabs"
     ></nx-header-tabs>
 </ng-template>
 
@@ -60,6 +62,7 @@
             <span>
                 <a
                     class="btn"
+                    id="createAccountBtn"
                     [href]="headerService.createUrl"
                     [ngClass]="[
                         showSmall ? 'small-button' : '',
@@ -81,6 +84,7 @@
             <span>
                 <a
                     class="btn btn-default"
+                    id="loginBtn"
                     [href]="headerService.authorizeUrl"
                     [ngClass]="showSmall ? 'small-button' : 'login-button'"
                 >
@@ -92,6 +96,7 @@
                         *ngIf="!showSmall"
                         class="btn-caption"
                         translate
+                        id="loginBtnText"
                         >Log In</span
                     >
                 </a>
@@ -101,6 +106,7 @@
                     class="auto"
                     short="true"
                     altStyle="true"
+                    id="languageSelect1"
                 ></nx-header-language-select>
             </span>
         </li>
@@ -133,6 +139,7 @@
                 </div>
                 <div
                     class="tab-wrapper"
+                    id="tabWrapper1"
                     (resize)="tabsWidth$.next($event.width)"
                 >
                     <ng-container *ngTemplateOutlet="menuTabs"></ng-container>
@@ -140,7 +147,10 @@
             </ul>
         </div>
         <div (resize)="menuTabsCollapsed$.next($event.width)">
-            <nx-nav-dropdown [nodeLocation]="headerService.currentLocation"></nx-nav-dropdown>
+            <nx-nav-dropdown
+                [nodeLocation]="headerService.currentLocation"
+                id="navDropdownHeader1"
+            ></nx-nav-dropdown>
         </div>
         <div
             class="app-header-right"
@@ -157,6 +167,7 @@
                         class="auto"
                         short="true"
                         altStyle="true"
+                        id="languageSelect2"
                     ></nx-header-language-select>
                 </li>
             </ul>
@@ -245,9 +256,11 @@
                         <div
                             *ngIf="!(showTabs$ | async); else menuTabs"
                             class="tab-wrapper"
+                            id="tabWrapper2"
                         >
                             <nx-nav-dropdown
                                 [nodeLocation]="headerService.currentLocation"
+                                id="navDropdownHeader2"
                             ></nx-nav-dropdown>
                         </div>
                     </ng-container>
@@ -275,6 +288,7 @@
                             class="auto"
                             short="true"
                             altStyle="true"
+                            id="languageSelect3"
                         ></nx-header-language-select>
                     </li>
                 </ul>

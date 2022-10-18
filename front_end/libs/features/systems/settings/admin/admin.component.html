@@ -168,6 +168,7 @@
                             >
                                 <span
                                     class="ellipsis"
+                                    id="disconnectFromCloud"
                                     translate
                                     >Disconnect from %CLOUD_NAME%</span
                                 >
@@ -178,7 +179,11 @@
             </nx-section>
             <nx-section *ngIf="!system.isMine">
                 <span class="system-owner"
-                    ><span translate>Your access level</span><span>&nbsp;– </span>
+                    ><span
+                        translate
+                        id="accessLevelText"
+                        >Your access level</span
+                    ><span>&nbsp;– </span>
                     <span
                         class="name"
                         [innerText]="updateUserRole()"
@@ -191,6 +196,7 @@
                     <button
                         [disabled]="settings.disconnectDisabled"
                         class="btn btn-default"
+                        id="disconnectAccountBtn"
                         (click)="delete()"
                         translate
                     >

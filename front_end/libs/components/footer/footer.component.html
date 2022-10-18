@@ -18,6 +18,7 @@
                             *ngIf="item.new_window || oauth; else internalLink"
                             [href]="item.url | safe: 'url'"
                             [target]="item.new_window ? '_blank' : '_self'"
+                            [attr.id]="item.url === '/download' ? 'downloadLink' : null"
                             >{{ item.display_name | translate }}</a
                         >
                         <ng-template #internalLink>

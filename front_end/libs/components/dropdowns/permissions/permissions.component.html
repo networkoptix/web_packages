@@ -28,7 +28,10 @@
         [style.display]="show ? 'inline-block' : 'none'"
         aria-labelledby="componentId"
     >
-        <ul class="dropdown-menu--list">
+        <ul
+            class="dropdown-menu--list"
+            id="dropdownAccessRoles"
+        >
             <li
                 class="dropdown-item-container"
                 *ngFor="let role of accessRoles"

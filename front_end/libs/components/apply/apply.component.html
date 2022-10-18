@@ -29,12 +29,14 @@
                 [form]="form"
                 [clickFn]="submitFn"
                 buttonText="{{ 'Save' | translate }}"
+                id="saveSettingsBtn"
             ></nx-process-button>
             <nx-cancel-button
                 [process]="save"
                 [discardFn]="discard"
                 [showDiscard]="showDiscard"
                 customClass="ml-2"
+                id="cancelSettingsBtn"
             ></nx-cancel-button>
         </ng-template>
     </div>

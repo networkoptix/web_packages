@@ -24,6 +24,7 @@
                             <span
                                 *ngIf="!selectedUser.isEnabled"
                                 class="text-danger"
+                                id="disabledUserText"
                                 [ngClass]="{ 'pr-2': selectedUser.canBeEdited }"
                                 translate
                                 >User disabled</span
@@ -208,6 +209,7 @@
                 >
                     <button
                         class="btn btn-default has-icon"
+                        id="removeUserBtn"
                         [disabled]="!systemAvailable"
                         (click)="removeUser()"
                     >

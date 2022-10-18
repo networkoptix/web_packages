@@ -57,6 +57,7 @@ require('what-input');
         >
             <div
                 class="mainContainer"
+                id="mainContainer"
                 [ngClass]="{ altMainBackground: appStateService.altBackground }"
                 nxScrollHelper
                 cdkScrollable

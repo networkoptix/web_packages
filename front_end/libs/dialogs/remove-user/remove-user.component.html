@@ -1,28 +1,32 @@
-<div class="modal-header">
-    <h1 class="modal-title">{{ dialogTitle }}</h1>
-    <button
-        type="button"
-        class="close"
-        data-dismiss="modal"
-        aria-label="Close"
-        (click)="close()"
-        *ngIf="closable"
-    >
-        <div class="close-content"></div>
-    </button>
-</div>
+<div id="removeUserModal">
+    <div class="modal-header">
+        <h1 class="modal-title">{{ dialogTitle }}</h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
 
-<div class="modal-footer">
-    <nx-process-button
-        [process]="removeUserProcess"
-        [actionType]="'danger'"
-        [buttonText]="dialogButtonText"
-    ></nx-process-button>
-    <button
-        type="button"
-        class="btn btn-default"
-        (click)="close()"
-    >
-        {{ LANG.dialogs.buttons.cancel() }}
-    </button>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="removeUserProcess"
+            [actionType]="'danger'"
+            [buttonText]="dialogButtonText"
+            [id]="'removeUserBtn'"
+        ></nx-process-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            id="closeRemoveUserModalBtn"
+            (click)="close()"
+        >
+            {{ LANG.dialogs.buttons.cancel() }}
+        </button>
+    </div>
 </div>

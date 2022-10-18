@@ -8,6 +8,7 @@
         <li
             *ngIf="(systems$ | async).length > 1"
             class="systems-grid"
+            id="systemsGrid"
             (resize)="handleResize($event)"
         >
             <nx-system-tile
@@ -20,6 +21,7 @@
                 "
                 [width]="columnWidth"
                 (click)="updateURI(system.id, undefined)"
+                id="systemTile"
             ></nx-system-tile>
             <nx-additional-systems-tile
                 [additionalSystems$]="additionalSystems$"

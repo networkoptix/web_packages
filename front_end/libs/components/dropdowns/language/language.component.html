@@ -12,6 +12,7 @@
     >
         <span
             class="lang-sm"
+            id="activeLang"
             lang="{{ activeLanguage?.language }}"
         ></span>
         <span *ngIf="!short">{{ activeLanguage?.name }}</span>
@@ -42,6 +43,7 @@
                 <span>
                     <span
                         class="lang-sm"
+                        id="{{ lang.name }}"
                         lang="{{ lang.language }}"
                     ></span>
                     <span>{{ lang.name }}</span>
@@ -73,6 +75,7 @@
                             <span>
                                 <span
                                     class="lang-sm"
+                                    id="{{ lang.language }}"
                                     lang="{{ lang.language }}"
                                 ></span>
                                 <span>{{ lang.name }}</span>
@@ -96,6 +99,7 @@
                             <span>
                                 <span
                                     class="lang-sm"
+                                    id="{{ lang.language }}"
                                     lang="{{ lang.language }}"
                                 ></span>
                                 <span>{{ lang.name }}</span>

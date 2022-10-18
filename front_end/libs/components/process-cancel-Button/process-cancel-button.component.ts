@@ -14,6 +14,7 @@ export class NxProcessCancelButtonComponent {
     @Input() buttonText: string;
     @Input() customClass: string = '';
     @Input() showDiscard: boolean = false;
+    @Input() id: string;
 
     handleClick(): void {
         if (this.process?.processing) {

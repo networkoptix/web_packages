@@ -2,6 +2,7 @@
     <button
         type="button"
         class="close"
+        id="closeApply"
         data-dismiss="modal"
         aria-label="Close"
         (click)="close()"
@@ -21,11 +22,13 @@
         [buttonText]="'Apply' | translate"
         [clickFn]="apply"
         [process]="applyFunc"
+        [id]="'applyChanges'"
     ></nx-process-button>
     <nx-cancel-button
         [process]="applyFunc"
         [discardFn]="discard"
         [showDiscard]="true"
+        [id]="'discardChanges'"
     ></nx-cancel-button>
     <button
         *ngIf="!applyFunc?.processing"
@@ -33,6 +36,7 @@
         class="btn btn-default"
         (click)="close()"
         translate
+        [id]="'cancelChanges'"
     >
         Cancel
     </button>

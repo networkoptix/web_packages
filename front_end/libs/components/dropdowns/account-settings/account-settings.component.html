@@ -38,24 +38,27 @@
         [style.display]="'inline-block'"
         [style.right.px]="rightOffset$.value"
         aria-labelledby="accountSettingsSelect"
+        id="accountSettingsDropdown"
     >
         <ul class="dropdown-menu--list width-override">
             <ng-container *ngIf="!environment.isLocal">
                 <li
                     class="dropdown-item-container"
-                    *ngFor="let dropdownItem of CONFIG.accountDropdown"
+                    *ngFor="let dropdownItem of CONFIG.accountDropdown; let i = index"
                 >
-                    <ng-container
-                        *ngTemplateOutlet="
-                            dropdownItem.newWindow ? externalLink : routerLink;
-                            context: { dropdownItem: dropdownItem }
-                        "
-                    ></ng-container>
+                    <a
+                        class="dropdown-item inset"
+                        id="dropdownItem{{ i }}"
+                        [href]="dropdownItem.route"
+                    >
+                        <span>{{ dropdownItem.name }}</span>
+                    </a>
                 </li>
             </ng-container>
             <li class="dropdown-item-container">
                 <a
                     class="dropdown-item inset"
+                    id="logoutHeader"
                     (click)="show = false; logout()"
                 >
                     <span translate>Log Out</span>

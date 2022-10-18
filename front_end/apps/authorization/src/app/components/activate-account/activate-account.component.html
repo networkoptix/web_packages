@@ -30,8 +30,14 @@
             "
             [svgStyle]="{ 'width.px': '280', 'height.px': '120' }"
             [applyClass]="true"
+            id="accountActivatedIcon"
         ></svg-icon>
-        <h3 class="authorize-header mt-3 mb-2">{{ contentHeader$ | async }}</h3>
+        <h3
+            class="authorize-header mt-3 mb-2"
+            id="activationHeader"
+        >
+            {{ contentHeader$ | async }}
+        </h3>
         <div
             class="content-message"
             [ngClass]="{ 'fs-mask': !!loginEmail }"
@@ -50,6 +56,7 @@
                 class="btn text-button"
                 type="button"
                 (click)="setCurrentState.emit('email')"
+                id="btnActivateLogIn"
             >
                 <span translate>Log In</span>
             </button>
@@ -61,6 +68,7 @@
             <nx-process-button
                 [form]="activateAccountForm"
                 [process]="loginProcess"
+                [id]="'accountActivatedLogin'"
                 buttonText="{{ 'Log In' | translate }}"
             >
             </nx-process-button>

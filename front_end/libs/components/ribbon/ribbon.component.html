@@ -3,7 +3,12 @@
         class="clearfix ribbon"
         *ngIf="!type"
     >
-        <div class="message">{{ message }}</div>
+        <div
+            class="message"
+            id="ribbonMessage"
+        >
+            {{ message }}
+        </div>
         <div class="action">
             <ng-container *ngFor="let action of actions">
                 <ng-container *ngIf="action.type === 'link'">
@@ -38,7 +43,10 @@
         <div class="message">
             <div class="message-content">
                 <div class="message-content-wrapper">
-                    <div [innerHTML]="message"></div>
+                    <div
+                        [innerHTML]="message"
+                        id="systemMessage"
+                    ></div>
                     <a
                         *ngIf="updateFunction"
                         (click)="updateFunction()"
