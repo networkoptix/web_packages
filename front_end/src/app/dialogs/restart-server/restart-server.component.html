@@ -25,10 +25,7 @@
                 [buttonDisabled]="needsUpdate"
                 buttonText="{{ 'Restart' | translate }}"
             ></nx-process-button>
-            <nx-cancel-button
-                [process]="restartServer"
-                [discardFn]="close"
-            ></nx-cancel-button>
+            <nx-cancel-button [discardFn]="close"></nx-cancel-button>
         </div>
     </div>
     <nx-update-webadmin-session

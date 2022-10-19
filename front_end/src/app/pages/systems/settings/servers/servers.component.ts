@@ -230,6 +230,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     });
             }
 
+            if (this.isServerOffline) {
+                this.storagesOutdated = false;
+                this.storageTimer.unsubscribe();
+                this.storageTimer = undefined;
+            }
+
             this.menuService.detail = this.selectedServer.id;
             if (this.selectedServer.id !== this.serverId$.value) {
                 this.serverId$.next(this.selectedServer.id);

@@ -420,6 +420,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         return this.dialogs
             .restartServer(this.system, id, htmlToEntity(name))
             .then((res: string) => {
+                if (res === undefined) {
+                    return; // Dialog was canceled
+                }
                 this.system.isAvailable = false;
                 this.system.storageManager.update();
                 this.setStatus(res);
@@ -451,8 +454,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             }
                         });
                 }
-            }).catch(() => {
-                // Dialog was canceled
+            }, (err: never) => {
+                console.error('Failed to restart server: ', err);
             });
     }
 
