@@ -85,15 +85,6 @@
     border-collapse: separate;
     border-spacing: 0 0.5rem;
     padding: 6px 0 6px 8px;
-
-    .user-form-labels {
-        color: var(--dark9);
-    }
-
-    input:disabled {
-        background-color: var(--light2);
-        border: 1px solid var(--light6);
-    }
 }
 
 .edit-padding {

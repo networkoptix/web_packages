@@ -52,11 +52,15 @@ input.hide-errors {
         -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
     }
 
+    &:disabled,
     &[disabled],
     &[readonly],
     fieldset[disabled] & {
         opacity: .4;
-
+        color: var(--input-disabled-color) !important;
+        border-color: var(--input-disabled-border-color) !important;
+        pointer-events: none;
+        
         &:hover,
         &:focus {
             border-color: var(--input-border-color) !important;

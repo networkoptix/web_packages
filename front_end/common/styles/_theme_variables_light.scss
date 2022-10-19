@@ -120,7 +120,9 @@ html[data-theme="light"] {
     --border-hover-color   : #{$light8};
     --border-active-color  : #{$light10};
     --horizontal-sep-color : #{$light6};
+    
     --label-color          : #{$dark9};
+    --label-disabled-color : #{$dark10};
 
     --placehoder-cloud-color   : var(--brand-core);
     --placehoder-cloud-opacity : .1;
@@ -533,6 +535,9 @@ html[data-theme="light"] {
     --input-active-color        : #{$dark9};
     --input-active-border-color : #{$light6};
     --input-color-placeholder   : #{$light16};
+    
+    --input-disabled-color : #{$light16};
+    --input-disabled-border-color : #{$light6};
 
     --input-numeric-arrow-bg : #{$light1};
     --input-numeric-arrow-color : #{$dark9};
