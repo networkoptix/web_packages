@@ -580,6 +580,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.saveSettings,
             () => {
                 this.toggleMotionGrid();
+                this.motionMaskWatcher.reset = function () {
+                    // Force change detection
+                    setTimeout(() => {
+                        this.value = this.originalValue;
+                    });
+                };
                 this.applyService.reset();
             },
             [
