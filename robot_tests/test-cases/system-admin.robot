@@ -4,135 +4,12 @@ Suite Setup       System Admin Suite Setup
 Test Setup        Run Keywords    QA Video Recording Start     System Admin Test Setup
 Test Teardown     Run Keywords    QA Video Recording Stop      System Admin Test Restart
 Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
-Force Tags        system    threaded
+Force Tags        system    cloud
 
 
 *** Test Cases ***
-# WEBADMIN
-1. Cloud block is visible for owner
-    [Tags]    webadmin
-    Log in to system    ${local system}    admin
-    Validate Cloud Block    False
-
-2. Cloud block is not visible for not owner
-    [Tags]    webadmin
-    Log in to system    ${local system}    ${local system}[local users][viewer]
-    Wait until element is not visible    ${CLOUD BLOCK}
-
-3. Connect To Cloud Form - email validation
-    [Tags]    webadmin
-    ${broken emails}=   Create List    qa    qa@    qa@test    qa@test.    qa@test.com@
-    Log in to system    ${local system}    admin
-    Validate Cloud Block    False
-
-    FOR    ${email}    IN    @{broken emails}
-        Click Button    ${CONNECT TO CLOUD BUTTON}
-        Validate Connect To Cloud Form
-        Fill in login and password    ${email}    ${password}
-        Click Button    ${CONNECT TO CLOUD OK BUTTON}
-        Validate Email Input Error    Please enter a valid Email
-        Close Connect to Cloud modal
-    END
-
-4. Connect To Cloud Form - negative scenarios
-    [Tags]    webadmin
-    Log in to system    ${local system}    admin
-    Validate Cloud Block    False
-    Click Button    ${CONNECT TO CLOUD BUTTON}
-    Validate Connect To Cloud Form
-
-    Log    Step 1 - empty login and password
-    Click Button    ${CONNECT TO CLOUD OK BUTTON}
-    Validate Email Input Error    Please enter a valid Email
-    Validate Password Input Error    Password is required
-
-    Connect To Cloud    ${EMPTY}    ${EMPTY}    success=False
-    Validate Email Input Error    Please enter a valid Email
-    Validate Password Input Error    Password is required
-
-    Log    Step 2 - empty password
-    Connect To Cloud    ${BASE EMAIL}    ${EMPTY}    success=False
-    Validate Password Input Error    Password is required
-
-    Log    Step 3 - empty login
-    Connect To Cloud    ${SPACE}    system-admin-variables.${password}    success=False
-    Validate Email Input Error    Email is required
-
-    Log    Step 4 - wrong password
-    Connect To Cloud    ${BASE EMAIL}    dsv34    success=False
-    Validate Password Input Error    Wrong password
-
-    Log    Step 5 - not existing account
-    ${email}=   Get Random Email Robot    ${BASE EMAIL}
-    Connect To Cloud    ${email}    system-admin-variables.${password}    success=False
-    Validate Email Input Error    Account not found
-
-    Log    Step 6 - not activated account
-    ${email}=   Get Random Email Robot    ${BASE EMAIL}
-    Register Account    Not    Activated    ${email}    ${password}
-    Connect To Cloud    ${email}    system-admin-variables.${password}    success=False
-    Wait until element is visible    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
-    ${error text}=   Get Text    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
-    Run Keyword and continue on failure    Should be equal as strings   ${error text}    Account isn't activated. Please log in to Nx Cloud and follow provided instructions.
-
-5. Connect To Cloud Form - cancel buttons works correctly
-    [Tags]    webadmin
-    Log in to system    ${local system}    admin
-    Validate Cloud Block    False
-    Click Button    ${CONNECT TO CLOUD BUTTON}
-    Validate Connect To Cloud Form
-    Fill in login and password    ${system}[owner]    ${password}
-    Wait until elements are not visible    ${CONNECT TO CLOUD EMAIL ERROR}    ${CONNECT TO CLOUD PASSWORD ERROR}
-    Click Button    ${CONNECT TO CLOUD CANCEL BUTTON}
-    Wait until elements are not visible    ${CONNECT TO CLOUD MODAL}    ${DISCONNECT FROM NX}
-    Validate Cloud Block    False
-
-    Log   Check that Cancel button doesn't trigger connection
-    ${cloud id}=   Get Cloud System Id    https://${QABURBANK IP}:${local system}[port]    ${system}[local auth]
-    Should be equal as strings    ${cloud id}    Cannot find cloudSystemID key
-
-6. Local owner can connect system to cloud
-    [Tags]    webadmin
-    Log in to system    ${local system}    admin
-    Validate Cloud Block    False
-    Click Button    ${CONNECT TO CLOUD BUTTON}
-    Connect To Cloud    ${system}[owner]    system-admin-variables.${password}    success=True
-    Validate Cloud Block    True
-
-7. Check UI for local not owner when connected to cloud
-    [Tags]    webadmin
-    Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
-
-    Log in to system    ${local system}    ${local system}[local users][viewer]
-    Wait until elements are visible
-       ...    ${CLOUD NAME}
-       ...    ${CLOUD LINK}
-       ...    ${CONNECTION STATUS}\[contains(text(), "CONNECTED")]
-    Wait until element is not visible    ${DISCONNECT FROM NX}
-
-8. Local owner can disconnect system from cloud
-    [Tags]    webadmin
-    Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
-
-    Log    Step 1
-    Log in to system    ${local system}    admin
-    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
-    Validate Header Button Text    ${local system}[name]    systems=False
-    Click Button    ${DISCONNECT FROM NX}
-    Validate Disconnect Form
-
-    Log    Step 2
-    Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}    timeout=0.1
-    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
-    Validate Cloud Block    connected=False
-
-#    TODO
-#    Check UI for local not owner
-#    Check cloud - system is not there
-
 # CLOUD
 9. Should confirm, if not owner deletes system
-    [Tags]    cloud
     Log in to system    ${system}    ${system}[cloud users][viewer]
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
@@ -152,20 +29,17 @@ Force Tags        system    threaded
 #    Wait Until Element Is Visible    ${JUMBOTRON}
 
 10. Should open System page by link to not authorized user and show it, after owner logs in
-    [Tags]    cloud
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]   ${base password}    button=None
     Verify In System    ${system}[name]
 
 11. Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
-    [Tags]    cloud
     ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Log In    ${email noperm}    ${base password}
     Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 12. Should open System page by link not authorized user, and show alert if logs in and has no permission
-    [Tags]    cloud
     ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${email noperm}    ${base password}    button=None
@@ -173,7 +47,7 @@ Force Tags        system    threaded
 
 # COMMON
 13. User can rename System: change in web -> check server
-    [Tags]    C41880    webadmin    cloud
+    [Tags]    C41880    webadmin
     Log    Step 1
     Log In To System    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
@@ -224,7 +98,7 @@ Force Tags        system    threaded
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 14. User can rename System: change on server side -> check in web
-    [Tags]    C47019    C30678    webadmin    cloud
+    [Tags]    C47019    C30678    webadmin
     Log    Rename System on server side and check it's changed in web
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${new system name}
 
@@ -245,7 +119,7 @@ Force Tags        system    threaded
 
 # System Settings for different users
 15. Correct items are shown for owner
-    [Tags]    C41560    webadmin    cloud    CB-1596
+    [Tags]    C41560    webadmin    CB-1596
     [Documentation]     Currently failing due to work around for CB-1596
     Log in to system    ${system}    ${system}[owner]
     Wait Until Element Is Visible    ${USERS LIST LINK}
@@ -272,7 +146,7 @@ Force Tags        system    threaded
     Wait Until Elements Are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 16. Correct items are shown for admin
-    [Tags]    C41561    webadmin    cloud
+    [Tags]    C41561    webadmin
     Log    currenty failing due to CLOUD-9047
     Log in to system    ${system}    ${system}[cloud users][cloudAdmin]
     Wait Until Element Is Visible    ${USERS LIST LINK}
@@ -296,7 +170,7 @@ Force Tags        system    threaded
     Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 17. Correct items are shown for advanced viewer and below
-    [Tags]    C41562    webadmin    cloud
+    [Tags]    C41562    webadmin
     ${custom role}=    Create And Add Custom Camera User Type and User
     ${viewers}=    Create List
         ...    ${system}[cloud users][advancedViewer]
@@ -333,7 +207,7 @@ Force Tags        system    threaded
 
 # Left search
 18. Left menu search: Position and style
-    [Tags]    C81759    webadmin    cloud    search
+    [Tags]    C81759    webadmin    search
     Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
 
     Log    Step 1
@@ -370,7 +244,7 @@ Force Tags        system    threaded
     Wait Until Element Is Not Visible    ${SEARCH INPUT}
 
 19. Left menu search: Search menu for offline system
-    [Tags]    C81761    cloud    search
+    [Tags]    C81761    search
     Stop Docker Server    ${system}[id]
     Log in to system    ${system}    ${system}[owner]
 
@@ -397,7 +271,7 @@ Force Tags        system    threaded
     Start Docker Server    ${system}[id]
 
 20. Left menu search: Availability for different users
-    [Tags]    C81760    webadmin    cloud    search
+    [Tags]    C81760    webadmin    search
     FOR     ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Validate Search Input
@@ -413,7 +287,7 @@ Force Tags        system    threaded
     END
 
 21. Left menu search: Search mechanics
-    [Tags]    C81762    webadmin    cloud    search 
+    [Tags]    C81762    webadmin    search
     Log in to system    ${system}    ${system}[owner]
 
     Log    Step 1
@@ -451,7 +325,7 @@ Force Tags        system    threaded
     Wait until element is visible    //h2[contains(text(), "${name}")]
 
 22. Left menu search: Collapsable tabs
-    [Tags]    C81771    webadmin    cloud    search
+    [Tags]    C81771    webadmin    search
     Log in to system    ${system}    ${system}[owner]
     Validate Search Input
 
@@ -466,13 +340,13 @@ Force Tags        system    threaded
     Wait Until Element Is Visible    ${USERS EXPAND RESULTS}
 
 23. Left menu search: Placeholder
-    [Tags]    C81772    webadmin    cloud    search
+    [Tags]    C81772    webadmin    search
     Log in to system    ${system}    ${system}[owner]
     Search For    backup
     Wait until element is visible    ${SEARCH NOTHING FOUND}
 
 24. Left menu search: Searchable fields
-    [Tags]    C81796    webadmin    cloud    search
+    [Tags]    C81796    webadmin    search
     Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
     Log in to system    ${system}    ${system}[owner]
     
@@ -510,7 +384,7 @@ Force Tags        system    threaded
 
 # Disconnect System from Cloud
 25. Disconnect dialog interface checks
-    [Tags]    C48834    webadmin    cloud
+    [Tags]    C48834    webadmin
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -551,7 +425,7 @@ Force Tags        system    threaded
     #Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
 26. Cloud Owner can disconnect System from Cloud
-    [Tags]    C41883   C47020    webadmin    cloud    smoke
+    [Tags]    C41883   C47020    webadmin    smoke
     ${local auth}=   Create List    admin    ${base password}
 
     Log    Step 1

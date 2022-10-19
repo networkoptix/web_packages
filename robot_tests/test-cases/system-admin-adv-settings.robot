@@ -47,7 +47,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Wait Until Advanced Settings Are Visible    ONE    timeout=180
 
 3. Hide Advanced Settings button functionality
-    [Tags]    C76635    threaded
+    [Tags]    C76635    
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE

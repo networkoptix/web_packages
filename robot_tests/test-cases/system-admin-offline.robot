@@ -4,17 +4,17 @@ Suite Setup       System Offline Suite Setup
 Test Setup        Run Keywords    QA Video Recording Start     System Offline Restart
 Test Teardown     Run Keywords    QA Video Recording Stop
 Suite Teardown    Run Keyword and Ignore Error    System Offline Suite Teardown
-Force Tags        system
+Force Tags        system    system_offline
 
 
 *** Test Cases ***
 1. The page is opened and shows the user list to owner
-    [Tags]    C41881    Threaded    system_offline
+    [Tags]    C41881        
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
 
 2. Should confirm, if owner deletes system
-    [Tags]    Threaded    system_offline
+    [Tags]        
     Click Button    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
     Click Element    ${DISCONNECT FORM}
@@ -22,7 +22,7 @@ Force Tags        system
     Wait Until Page Does Not Contain Element    ${BACKDROP}
 
 3. Offline system should confirm, if not owner deletes system
-    [Tags]    Threaded    system_offline
+    [Tags]        
     Log Out
     Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM MY ACCOUNT}
@@ -35,13 +35,13 @@ Force Tags        system
     Wait Until Page Does Not Contain Element    ${MODAL DIALOG}
 
 4. Share and Merge buttons should be disabled
-    [Tags]    C41881    Threaded    system_offline
+    [Tags]    C41881        
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}${DISABLED}
     Click Link    ${USERS LIST LINK}
     Wait Until Elements Are Visible    ${ADD USER BUTTON SYSTEMS}${DISABLED}
 
 #Open in nx button should be disabled
-#    [Tags]    C41881    Threaded    system_offline
+#    [Tags]    C41881        
 #    Log in to Autotests 2 System    ${EMAIL OWNER}
 #    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
 #    Click Element    ${SYSTEMS DROPDOWN}
@@ -53,11 +53,11 @@ Force Tags        system
 #    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
 
 5. Should show offline next to system name
-    [Tags]    C41881    Threaded    system_offline
+    [Tags]    C41881        
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
 
 6. Should not be able to delete/edit users
-    [Tags]    Threaded    system_offline    CLOUD-6615
+    [Tags]            CLOUD-6615
     Click Link    ${USERS LIST LINK}
     ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${system}[cloud users][viewer]']
     Wait Until Element Is Visible    ${viewer}
@@ -67,7 +67,7 @@ Force Tags        system
     Element Should Be Disabled    ${REMOVE USER BUTTON}
 
 7. Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
-    [Tags]    Threaded    system_offline
+    [Tags]        
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
     #Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
@@ -77,14 +77,14 @@ Force Tags        system
     Wait Until Location Contains    ${ENV}
 
 8. Offline system should open System page by link to not authorized user and show it, after owner logs in
-    [Tags]    Threaded    system_offline
+    [Tags]        
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]    ${base password}    button=None
     Wait until element is visible    //nx-text-editable[contains(text(), "${system}[name]")]
 
 9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
-    [Tags]    C41572    Threaded    system_offline
+    [Tags]    C41572        
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
     Log In    ${random email}    ${base password}
@@ -94,7 +94,7 @@ Force Tags        system
     Wait Until Location Is    ${ENV}/systems
 
 10. Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
-    [Tags]    Threaded    system_offline
+    [Tags]        
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
@@ -103,7 +103,7 @@ Force Tags        system
 
 #See CLOUD-6592: offline system cannot be renamed
 #Owner is able to rename offline system via Cloud
-#    [Tags]    C41899    system_offline
+#    [Tags]    C41899    
 #    ${new name}=   Get random system name
 #    Change System Name    ${new name}
 #    Log Out
@@ -123,7 +123,7 @@ Force Tags        system
 #    Should be equal as strings    ${system info}[name]     ${system}[name]
 
 11. Does not show Share button to viewer, advanced viewer, live viewer
-    [Tags]    threaded    system_offline
+    [Tags]        
     Log Out
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]
         Log in to user and system    ${user}    ${system}[cloud id]
@@ -133,7 +133,7 @@ Force Tags        system
     END
 
 12. Your permissions is shown for non-owners
-    [Tags]    threaded    C41881    system_offline
+    [Tags]        C41881    
     Log Out
     ${users text}=    Create List    ${ADMIN TEXT}   ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${ADV VIEWER TEXT}    ${CUSTOM TEXT}
     ${users emails}=   Create List    ${system}[cloud users][cloudAdmin]    ${system}[cloud users][viewer]    ${system}[cloud users][liveViewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][custom]
@@ -149,7 +149,7 @@ Force Tags        system
     END
 
 13. Should show (you) for owner and (owner's name & email) for non-owners
-    [Tags]    C41881    threaded    system_offline
+    [Tags]    C41881        
     ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
     Log Out
@@ -159,7 +159,7 @@ Force Tags        system
     Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
 
 14. System changes state to offline if all its Servers goes offline
-    [Tags]    C41894    system_offline
+    [Tags]    C41894    
     Log Out
 
     Log    Step 1
