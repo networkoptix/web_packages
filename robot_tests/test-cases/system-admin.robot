@@ -29,6 +29,7 @@ Force Tags        system    cloud
 #    Wait Until Element Is Visible    ${JUMBOTRON}
 
 10. Should open System page by link to not authorized user and show it, after owner logs in
+    [tags]    smoke
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]   ${base password}    button=None
     Verify In System    ${system}[name]
