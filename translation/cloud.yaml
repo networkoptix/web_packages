@@ -5,13 +5,17 @@ preserve_hierarchy: true
 
 files:
   -
-    source: '/front_end/src/lang*.json'
-    translation: '/translations/%locale_with_underscore%/%original_file_name%'
-    ignore:
-      - '/front_end/src/languages.json'
+    source: '/front_end/src/language_i18n.json'
+    translation: '/translations/%locale_with_underscore%/language_i18n.json'
+    dest: '/language_i18n.json'
+  -
+    source: '/front_end/src/language_i18n_static.json'
+    translation: '/translations/%locale_with_underscore%/language_i18n_static.json'
+    dest: '/language_i18n_static.json'
   -
     source: '/robot_tests/translations/variables_language_en_US.json'
     translation: '/robot_tests/translations/variables_language_%locale_with_underscore%.json'
+    dest: '/robot_tests/variables_language.json'
   -
     source: '/front_end/src/views/**/*.*'
     translation: '/translations/%locale_with_underscore%/views/**/%original_file_name%'
