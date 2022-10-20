@@ -222,10 +222,10 @@ Validate Log In
     END    
 
 Check Log In
-    [Arguments]    ${button}=${LOG IN NAV BAR}
+    [Arguments]    ${user}    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email Robot    ${BASE EMAIL}
     Log In    ${random email}    ${password}      validate=False     button=${button}    exists=${False}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Log In    ${user}    ${password}    button=None
 
 Log Out
     # Add a delay to your call if logging in soon after logging oiut to avoid session race condition
