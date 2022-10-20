@@ -1,4 +1,4 @@
-Hello, {{message.user_full_name}}
+你好，{{message.user_full_name}}
 
 {{message.current_owner_full_name}} ({{message.current_owner_email}}) invites you to become the system owner of {{message.system_name}}.
 

@@ -73,7 +73,7 @@
     "TOO MANY ATTEMPTS TEXT": "For mange forsøg. Prøv igen senere.",
     "WRONG PASSWORD": "Forkert adgangskode",
     "ACCOUNT NOT FOUND TEXT": "Konto ikke fundet",
-    "ACCOUNT DOES NOT EXIST TEXT": "Kontoen eksisterer ikke.",
+    "ACCOUNT DOES NOT EXIST TEXT": "Denne konto findes ikke.",
     "YOU CAN CREATE ACCOUNT TEXT": "Du kan oprette en konto med denne e-mailadresse eller forsøge at indtaste en anden.",
     "CANNOT SEND CONFIRMATION EMAIL": "Kan ikke sende bekræftelsesmail:",
     "ACCOUNT ALREADY EXISTS": "Konto eksisterer allerede",
