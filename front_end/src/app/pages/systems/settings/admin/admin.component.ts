@@ -289,16 +289,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     console.error(err);
                                 });
                         }
+                        // TODO: In develop add a store for transfers.
+                        if (this.ownershipTransferEnabled && !environment.isLocal) {
+                            this.cloudApiService.getTransfers()
+                                .subscribe((res: SystemTransferInfo[]) => {
+                                    this.transferInfo = res.find(transfer =>
+                                        transfer.systemId === this.system.id
+                                    );
+                                });
+                        }
                     });
-
-                if (this.ownershipTransferEnabled && !environment.isLocal) {
-                    this.cloudApiService.getTransfers()
-                        .subscribe((res: SystemTransferInfo[]) => {
-                            this.transferInfo = res.find(transfer =>
-                                transfer.systemId === this.system.id
-                            );
-                        });
-                }
             });
 
         this.initProcesses();
