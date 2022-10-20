@@ -845,12 +845,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
             auth: auth || this.authGet
         };
         let endpoint = '/web/ec2/cameraThumbnail';
+        data.time = 'LATEST';
 
-        if (time) {
-            data.time = time;
-        } else {
+        if (!time) {
             endpoint += '?ignoreExternalArchive';
-            data.time = 'LATEST';
         }
 
         if (width) {
