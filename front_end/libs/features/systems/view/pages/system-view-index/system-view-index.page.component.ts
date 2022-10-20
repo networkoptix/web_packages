@@ -24,7 +24,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import type { NxSystemInfo } from '@services/systems.service.types';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
@@ -280,6 +280,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.$self.classList[
             initializedWithError ? 'add' : 'remove'
         ]('initialization-error');
+        if (!initializedWithError) {
+            this.ribbonService.hide();
+        }
     }
 
     private _onRouteChange(params): void {
@@ -315,11 +318,15 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 }
 
                 // _initSystem is called on systems subscription
-                if (this.systems.filter(s => s.id === this.systemId).length) {
+                const systemInfoFromCDB: NxSystemInfo = this.systems.find(s => s.id === this.systemId);
+                if (systemInfoFromCDB) {
                     this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
                     this.settingsService.system = this.system;
-                    this._setInitializationState(!this.system.isOnline, !this.system.isOnline);
-                    this.ribbonService.hide();
+                    if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
+                        this._setInitializationState(true, true);
+                    } else {
+                        this.ribbonService.hide();
+                    }
                     return Promise.resolve(); // this.system.update();
                 }
 
@@ -380,7 +387,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             timer(0, VideoManagementSystemService.statusRefreshInterval)
                 .pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
-                    if (!this.system || processingMediaServers) {
+                    if (!this.system || !this.system.isOnline || processingMediaServers) {
                         return;
                     }
 
@@ -408,10 +415,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         }
                     });
 
-                    if (!this.system.isOnline) {
-                        this._setInitializationState(true, true);
-                        return;
-                    } else if (this.initializedWithError) {
+                    if (this.initializedWithError) {
                         this._setInitializationState(true, false);
                     }
 
