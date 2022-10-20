@@ -43,7 +43,7 @@
         },
         "Advanced Viewer": {
             "description": "ライブ表示、アーカイブ表示、PTZコントロール 等ができます",
-            "label": "上位ビューアー"
+            "label": "拡張ビューアー"
         },
         "Custom": {
             "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
@@ -54,11 +54,11 @@
             "label": "ライブビューアー"
         },
         "Owner": {
-            "description": "共有する機能およびシステムとクラウドの接続/切断を含む無制限のアクセス",
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "Viewer": {
-            "description": "ライブおよび録画映像を参照できます",
+            "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
         },
         "advancedViewer": {
@@ -74,11 +74,11 @@
             "label": "カスタム"
         },
         "customRole": {
-            "description": "システムで指定されたカスタムのユーザーロール",
-            "label": "カスタムロール"
+            "description": "システムで指定されたカスタムのユーザーの役割",
+            "label": "カスタムの役割"
         },
         "disabled": {
-            "description": "ユーザーが無効になっているため、システムにログインできません",
+            "description": "ユーザーが無効の為にシステムにログインできません",
             "label": "無効"
         },
         "liveViewer": {
@@ -97,13 +97,13 @@
     "account": {
         "account": "アカウント",
         "key": "キー",
-        "accountSavedSuccess": "アカウントは正常に保存されました",
+        "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
         "accountSettings": "アカウント設定",
         "activationLinkSent": "有効化リンクが送信されました",
         "agreementAccepted": "契約が承認されました",
         "changePassword": "パスワードを変更",
         "security": "セキュリティ",
-        "newPasswordLabel": "新しいパスワード",
+        "newPasswordLabel": "新規パスワード",
         "passwordChangedSuccess": "パスワードを更新しました",
         "saveChanges": "保存"
     },
@@ -483,7 +483,7 @@
             "targetSystemBoundToCloud": "このシステムはクラウドに接続されていません。クラウドに紐付けされたシステムとは統合できません。",
             "urlEmpty": "サーバーのアドレスを入力してください",
             "urlNotValid": "有効な URL を入力してください",
-            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> まで問い合わせください。",
+            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "warning": "統合されたシステムには <strong>{maxServers}</strong> 以上のサーバーが含まれることになります。",
             "update": "| 最新のビルド |&nbsp; に更新してください"
         },
@@ -570,7 +570,7 @@
             "metadata_sdk": "メタデータ SDK",
             "package": "パッケージ",
             "server": "サーバーのみ",
-            "servertool": "設定ツール",
+            "servertool": "構成ツール",
             "storage_sdk": "ストレージ SDK",
             "video_source_sdk": "ビデオソースSDK"
         },
@@ -637,7 +637,7 @@
     "errorCodes": {
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
         "DUPLICATE_MEDIASERVER_FOUND": "選択したものと現在のもの両方のシステムに存在するサーバーリストがあります。<br>各システムからオフラインで互換性のないサーバーを削除してやり直してください。",
-        "EmailAlreadyExists": "このメールアドレスは既に登録されています",
+        "EmailAlreadyExists": "このEmailは既に登録されています",
         "FAIL": "システム <strong>{failedSystem}</strong> はオフラインです。",
         "Connection timed out": "システム <strong>{failedSystem}</strong> はオフラインです。",
         "Bad Gateway": "システム <strong>{failedSystem}</strong> は現在アクセスできません。<br>しばらくしてから再試行するか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> にお問い合わせください。",
@@ -651,13 +651,13 @@
         "fail": "{failedSystem} にアクセスできません。",
         "incompatible": "このサーバーのソフトウェアバージョンは互換性がありません。統合するには両方のシステムを同じビルドに更新してください。",
         "unknown_error": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
-        "accountAlreadyActivated": "このアカウントは既に有効化されています",
+        "accountAlreadyActivated": "このアカウントは既にアクティベートされています",
         "accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
-        "accountNotActivated": "このアカウントはまだ有効化されていません。 <a href=\"/activate\"> 有効化リンクを再送信</a>",
+        "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
         "accountNotActivatedAlternate": "アカウントが有効化されていません。 <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> にログインし、画面の指示に従ってください。",
         "alreadyExists": "このアカウントは既に存在します",
         "brokenAccount": "アカウントに予期しない問題が発生しました。 <a href=\"/restore_password\">アカウントを復元</a>",
-        "cantActivatePrefix": "アカウントを有効化できません",
+        "cantActivatePrefix": "アカウントをアクティベートできません",
         "cantAddYourOwnEmail": "自分のメールアドレスを追加することはできません",
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
@@ -665,10 +665,10 @@
         "cantConnectSystemPrefix": "システムに接続できません",
         "cantDisconnectSystemPrefix": "システムを削除できません",
         "cantEditAdmin": "このユーザーは管理者権限を持っています",
-        "cantEditYourself": "自身の権限を変更することはできません",
-        "cantGetSystemInfoPrefix": "システム情報は利用できません",
-        "cantGetSystemsListPrefix": "システム情報は利用できません",
-        "cantGetUsersListPrefix": "ユーザーリストは利用できません",
+        "cantEditYourself": "自分のアクセス権限を変更することはできません",
+        "cantGetSystemInfoPrefix": "システム情報はありません",
+        "cantGetSystemsListPrefix": "システム リストは使用できません",
+        "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
         "cantOpenClient": "%VMS_NAME% アプリケーションが検出されません。",
         "cantRegisterPrefix": "エラーが発生しました",
         "cantSendActivationPrefix": "確認メールを送信できません",
@@ -679,7 +679,7 @@
         "failedToAccess2FA": "<p class=\"mb-0\">このシステムにアクセスするには二要素認証が必要です。</p><p> <a href=\"/account/security\">アカウント設定</a>で二要素認証を有効にすることができます。</p>",
         "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、対象のシステムが %CLOUD_NAME% から切断されている場合、対象のシステムへのアクセスが取り消された場合、リンクに記載されたシステムが存在しない場合、または違うアカウントにログインしている場合に発生する可能性があります。",
         "failedToAccessCamera": "このリンクからカメラにアクセスすることはできません。",
-        "forbidden": "この操作を実行する権限がありません",
+        "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{systemName} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{failedSystem}</strong> はオフラインです。",
         "notAuthorized": "パスワードが違います",
@@ -688,15 +688,15 @@
         "ok": "OK",
         "oldPasswordMistmatch": "現在のパスワードが違います。",
         "oldSafariNotSupported": "バージョン10未満の Safari はサポートされません",
-        "passwordMismatch": "パスワードが違います",
+        "passwordMismatch": "間違ったパスワード",
         "systemUnavailable": "{failedSystem} は現在アクセスできません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
         "thisSystem": "システム",
         "unknownError": "予期しないエラーが発生しました",
         "unknownMergeError": "不明なエラー。ページを更新して再試行してください。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "wrongAuthCode": "コードの有効期限が切れているか、間違っています",
-        "wrongCode": "アカウントがすでに有効化されているか、確認コードが正しくありません",
-        "wrongCodeRestore": "確認コードは既に使用されているか間違っています",
-        "wrongParameters": "フォームの一部パラメーターが正しくありません",
+        "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
+        "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
+        "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
         "licenseFail": "ライセンスの有効化に失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスの有効化に失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
@@ -711,7 +711,7 @@
     },
     "integration": {
         "Access Control": "アクセスコントロール",
-        "Connector": "コネクター",
+        "Connector": "コネクタ",
         "Data Analytics": "データ分析",
         "Drone": "ドローン",
         "Health Monitor": "ヘルスモニター",
@@ -851,10 +851,10 @@
         "minLengthMessage": "パスワードは8文字以上必要です",
         "missingMessage": "必須",
         "required": "不正",
-        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けてください",
-        "strongMessage": "強力なパスワード!",
+        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+        "strongMessage": "強力なパスワードです",
         "weak": "脆弱",
-        "weakMessage": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください"
+        "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る"
     },
     "placeholderTexts": {
         "noSettings": {
@@ -911,7 +911,7 @@
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"
     },
     "search": {
-        "Any": "全て",
+        "Any": "すべて",
         "Search": "検索",
         "analytics": "分析",
         "analyticsSelected": "分析イベント",
@@ -1011,7 +1011,7 @@
             },
             "verbose": {
                 "text": "詳細",
-                "help": "(利用可能なすべての情報をログに記録)"
+                "help": "(利用可能なすべての情報を記録)"
             }
         },
         "loggerDropdownLabel": "{ loggerName } ログレベル",
@@ -1048,13 +1048,13 @@
         }
     },
     "systemStatuses": {
-        "activated": "有効化済み",
+        "activated": "アクティベート済",
         "incompatible": "互換性なし",
         "merging": "統合中",
-        "notActivated": "有効化されていません",
+        "notActivated": "アクティベートされていません",
         "offline": "オフライン",
         "online": "オンライン",
-        "unavailable": "利用不可"
+        "unavailable": "利用できません"
     },
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
@@ -1408,8 +1408,8 @@
             "timeNames": {
                 "a": "a",
                 "p": "p",
-                "am": "午前",
-                "pm": "午後",
+                "am": "am",
+                "pm": "pm",
                 "A": "A",
                 "P": "P",
                 "AM": "午前",

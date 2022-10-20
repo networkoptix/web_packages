@@ -784,7 +784,7 @@
     },
     "tableHeaders": {
         "type": "Kiểu",
-        "server": "Máy chủ",
+        "server": "máy chủ",
         "alert": "Cảnh báo"
     },
     "appFooter": {

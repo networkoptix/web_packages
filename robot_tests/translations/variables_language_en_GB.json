@@ -141,7 +141,7 @@
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Activate your account",
     "RESET PASSWORD EMAIL SUBJECT": "Reset your password",
     "RESET PASSWORD BUTTON TEXT": "Reset Password",
-    "INVITED TO SYSTEM EMAIL SUBJECT": "{{message.sharer_name}} invites you to {{PRODUCT_NAME}}",
+    "INVITED TO SYSTEM EMAIL SUBJECT": "Video system {{message.system_name}} was shared with you",
     "DISCONNECT FORM HEADER TEXT": "Disconnect System from %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Required",
     "EMAIL ALREADY REGISTERED TEXT": "Account already exists",

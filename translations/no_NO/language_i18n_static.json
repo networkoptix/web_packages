@@ -143,7 +143,7 @@
         "activatedAdditional": "Nå kan du fortsette å logge på %CLOUD_NAME% her eller andre steder",
         "passResetHeader": "Tilbakestille passord",
         "newPassHeader": "Angi et nytt passord",
-        "newPassConfirmText": "Passord angitt!",
+        "newPassConfirmText": "Passord er angitt!",
         "newPassInvalidCode": "Kan ikke lagre passord: Bekreftelseskoden er allerede brukt eller feil",
         "notSecureText": "Hvis du fortsetter vil du gi<br><span class='error-label'>{ redirectUrl }</span><br>tilgang til %CLOUD_NAME% -kontoen din.",
         "confirmHeader": "System koblet til %CLOUD_NAME%!",
@@ -516,8 +516,8 @@
             "twoFactor": {
                 "required": "Tofaktorautentisering er nødvendig.",
                 "configure": "You can configure it in your",
-                "accountLink": "account settings",
-                "codeRequired": "Code is required"
+                "accountLink": "kontoinnstillinger",
+                "codeRequired": "Kode kreves"
             }
         },
         "removeSystem": {
@@ -558,7 +558,7 @@
             "action": "Innlogging",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
@@ -849,7 +849,7 @@
         "good": "sterkt",
         "minLength": "for kort",
         "minLengthMessage": "Passordet må inneholde minst 8 tegn",
-        "missingMessage": "Påkrevet",
+        "missingMessage": "Påkrevd",
         "required": "stemmer ikke",
         "requiredMessage": "Bruk bare latinske bokstaver, tall og tastatur symboler, unngå ledende og etterfølgende mellomrom",
         "strongMessage": "Sterkt passord!",
@@ -898,7 +898,7 @@
         "finishingMerge": "Ferdigstiller systemsammenslåing",
         "integration": {
             "accept": "Godta",
-            "reject": "Reject",
+            "reject": "Avvis",
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
             "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den samsvarer ikke med offentlig tilgjengelig versjon.",
             "publishedRibbon": "This page is the live version that is publicly available."
