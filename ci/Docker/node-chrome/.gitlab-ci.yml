@@ -2,6 +2,7 @@ variables:
   NODE_JS_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_node_js'
   NODE_JS_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_1.2'
 
+
 docker:build-node-chrome:
   extends: .docker.template
   interruptible: true
