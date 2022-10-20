@@ -1,26 +1,26 @@
 {
-    "language": "en_US",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
-    "All Servers": "All Servers",
-    "Download %VMS_NAME%": "Download %VMS_NAME%",
+    "language": "fi_FI",
+    "About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
+    "All Servers": "Kaikki palvelimet",
+    "Download %VMS_NAME%": "Lataa %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
-    "Privacy": "Privacy",
-    "Support": "Support",
-    "Terms": "Terms",
+    "Privacy": "Tietosuoja",
+    "Support": "Tuki",
+    "Terms": "Ehdot",
     "Developers Console": "Developers Console",
     "productName": "",
     "monitoring": {
         "unavailable": "Make sure the specified server is online and try again."
     },
     "alarmTypes": {
-        "Servers": "Servers",
-        "Cameras": "Cameras",
-        "Storage Locations": "Storage Locations",
+        "Servers": "Palvelimet",
+        "Cameras": "Kamerat",
+        "Storage Locations": "Tallennustilan sijainnit",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
-        "offline": "Offline",
+        "offline": "Offline-tilassa",
         "error": "Errors",
         "warning": "Warnings"
     },
@@ -31,100 +31,100 @@
     },
     "deviceTypes": {
         "All Device Types": "All Device Types",
-        "servers": "Server",
-        "cameras": "Cameras",
+        "servers": "Palvelin",
+        "cameras": "Kamerat",
         "storages": "Storages",
         "networkInterfaces": "Interface"
     },
     "accessRoles": {
         "Administrator": {
-            "description": "Unrestricted access including the ability to share",
-            "label": "Administrator"
+            "description": "Rajoittamaton pääsy mukaan lukien kyky jakaa",
+            "label": "Järjestelmänvalvoja"
         },
         "Advanced Viewer": {
-            "description": "Can view live video, browse the archive, control PTZ etc",
-            "label": "Advanced Viewer"
+            "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne",
+            "label": "Edistyneempi katselu"
         },
         "Custom": {
-            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
-            "label": "Custom"
+            "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
+            "label": "Asiakassuhde"
         },
         "Live Viewer": {
-            "description": "Can only view live video",
-            "label": "Live Viewer"
+            "description": "Voit katsella vain reaaliaikaista videota",
+            "label": "Reaaliaikainen katselu"
         },
         "Owner": {
-            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
-            "label": "Owner"
+            "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä",
+            "label": "Omistaja"
         },
         "Viewer": {
-            "description": "Can view live video and browse the archive",
-            "label": "Viewer"
+            "description": "Voi katsella reaaliaikaista videota ja selata arkistoa",
+            "label": "Katsoja"
         },
         "advancedViewer": {
-            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
-            "label": "Advanced Viewer"
+            "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne",
+            "label": "Edistyneempi katselu"
         },
         "cloudAdmin": {
-            "description": "Can configure System and share it",
-            "label": "Administrator"
+            "description": "Voi konfiguroida järjestelmää ja jakaa sen",
+            "label": "Järjestelmänvalvoja"
         },
         "custom": {
-            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
-            "label": "Custom"
+            "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
+            "label": "Muokattu"
         },
         "customRole": {
-            "description": "Custom user role specified in System",
-            "label": "Custom role"
+            "description": "Mukautettu käyttäjärooli Järjestelmässä",
+            "label": "Mukautettu rooli"
         },
         "disabled": {
-            "description": "User is disabled and cannot log in to System",
-            "label": "Disabled"
+            "description": "Käyttäjä on poistettu käytöstä ja ei voi kirjautua järjestelmään",
+            "label": "Poissa käytöstä"
         },
         "liveViewer": {
-            "description": "Can only view live video",
-            "label": "Live Viewer"
+            "description": "Voi katsella vain reaaliaikaista videota",
+            "label": "Reaaliaikainen katselu"
         },
         "owner": {
-            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
-            "label": "Owner"
+            "description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä",
+            "label": "Omistaja"
         },
         "viewer": {
-            "description": "Can view live video and browse the archive",
-            "label": "Viewer"
+            "description": "Voi katsella reaaliaikaista videota ja selata arkistoa",
+            "label": "Katsoja"
         }
     },
     "account": {
-        "account": "Account",
+        "account": "Tili",
         "key": "Key",
-        "accountSavedSuccess": "Your account is successfully saved",
-        "accountSettings": "Account Settings",
-        "activationLinkSent": "Activation Link Sent",
+        "accountSavedSuccess": "Tilisi on onnistuneesti päivitetty",
+        "accountSettings": "Tilin asetukset",
+        "activationLinkSent": "Aktivointilinkki lähetetty",
         "agreementAccepted": "Agreement has been accepted",
-        "changePassword": "Change Password",
-        "security": "Security",
-        "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "Password successfully saved",
-        "saveChanges": "Save"
+        "changePassword": "Vaihda salasana",
+        "security": "Turvallisuus",
+        "newPasswordLabel": "Uusi salasana",
+        "passwordChangedSuccess": "Salasana tallennettu onnistuneesti",
+        "saveChanges": "Tallenna"
     },
     "activeActions": {
-        "resetPassword": "Reset Password",
-        "sendConfirm": "Resend activation link",
-        "setNewPassword": "Save password",
-        "setNewPasswordLabel": "New password"
+        "resetPassword": "Vaihda salasana",
+        "sendConfirm": "Lähetä aktivointilinkki uudelleen",
+        "setNewPassword": "Tallenna salasana",
+        "setNewPasswordLabel": "Uusi salasana"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
+        "loginCloudHeader": "Kirjaudu sisään %CLOUD_NAME%",
+        "connectHeader": "Yhdistä järjestelmä %CLOUD_NAME%",
+        "expiredHeader": "Istuntosi on vanhentunut",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
         "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "createText": "Luo tili",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
+        "toAccountSubheader": "Jotta",
         "forAccountSubheader": "For {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
@@ -135,23 +135,23 @@
         "passwordDetach": "to detach server",
         "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "createAccountHeader": "Luo %CLOUD_NAME% tili",
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Account Created!",
         "activatedText": "Account Activated!",
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
-        "passResetHeader": "Reset Password",
-        "newPassHeader": "Set New Password",
+        "passResetHeader": "Vaihda salasana",
+        "newPassHeader": "Aseta uusi salasana",
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "confirmHeader": "Järjestelmä on kytketty %CLOUD_NAME%!",
+        "loginError": "Ei voi muodostaa yhteyttä %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
         "connectErrorAdditional": "Please try again later.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
+        "connectedText": "Järjestelmä on kytketty %CLOUD_NAME%",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
@@ -159,29 +159,29 @@
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "kirjaudu sisään"
         },
         "emailSent": "Email sent!"
     },
     "cameraFilters": {
-        "H265": "H.265 Cameras",
-        "IO": "I / O modules",
-        "TwWayAudio": "2-way audio devices",
-        "aptz": "Cameras with advanced PTZ",
-        "audio": "Cameras with audio",
-        "encoder": "Encoders",
-        "fisheye": "Fisheye cameras",
-        "highRes": "Extra high resolution cameras",
-        "multiSensor": "Multi-sensor cameras",
-        "ptz": "PTZ cameras"
+        "H265": "H.265 Kamerat",
+        "IO": "I / O-moduulit",
+        "TwWayAudio": "2-suuntaiset äänilaitteet",
+        "aptz": "Kamerat, joissa on edistynyt PTZ",
+        "audio": "Kamerat, joissa on ääni",
+        "encoder": "Enkooderit",
+        "fisheye": "360-kamerat",
+        "highRes": "Erittäin korkearesoluutioiset kamerat",
+        "multiSensor": "Multi-sensor kamerat",
+        "ptz": "PTZ-kamerat"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
+            "size": "Koko",
+            "state": "Tila",
+            "system": "Järjestelmä",
+            "expires": "Päättyy",
             "key": "Key"
         },
         "fromServer": {
@@ -219,32 +219,32 @@
             }
         },
         "cameraLinks": {
-            "copyActiveText": "copied to clipboard",
-            "copyDefaultText": "copy",
-            "copyToClipboard": "copy to clipboard",
-            "highStream": "High stream",
-            "lowStream": "Low stream",
-            "transcoding": "Transcoding",
-            "unknown": "Unknown"
+            "copyActiveText": "kopioitu leikepöydälle",
+            "copyDefaultText": "kopio",
+            "copyToClipboard": "kopioi leikepöydälle",
+            "highStream": "Korkea streami",
+            "lowStream": "Matala streami",
+            "transcoding": "Transkoodaus",
+            "unknown": "Tuntematon"
         },
         "cameraStates": {
-            "error": "Error",
+            "error": "Virhe",
             "errorLoading": "An error occurred while loading this video.",
-            "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
-            "flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
-            "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
-            "ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
-            "ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
-            "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
-            "noData": "No data",
-            "noFormat": "This browser does not support video playback from this camera.",
-            "offline": "Offline",
-            "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
-            "unauthorized": "Authentication required"
+            "flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
+            "flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
+            "iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
+            "ieWin10": "Käytä Microsoft Edgen tai Google Chromen selaimia.",
+            "noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
+            "noData": "Ei dataa",
+            "noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
+            "offline": "Offline-tilassa",
+            "ubuntuNX": "Tämä selain ei tue ARM-pohjaisia palvelimia. Käytä sen sijaan Chromium-selainta.",
+            "unauthorized": "Tunnistus vaaditaan"
         },
-        "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+        "chromeCastWarning": "Chromecast on resursseja kuormittava ja saattaa aiheuttaa ongelmia palvelimellasi.",
         "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "login": "kirjaudu sisään",
         "recordingSettingsWarning": "Please update missing recording settings.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -254,11 +254,11 @@
         },
         "resolution": {
             "various": "– Different Values –",
-            "auto": "Auto",
-            "best": "Best",
-            "high": "High",
-            "medium": "Medium",
-            "low": "Low"
+            "auto": "Automaattinen",
+            "best": "Paras",
+            "high": "Korkea",
+            "medium": "Keskitaso",
+            "low": "Matala"
         },
         "intervals": {
             "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
@@ -268,44 +268,44 @@
             "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
             "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
-        "general": "General",
+        "general": "Yleiset",
         "generalError": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
-        "searchCamPlaceholder": "Search",
-        "system": "system",
+        "searchCamPlaceholder": "Etsi",
+        "system": "järjestelmä",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
         "systemNewVersion": "Update your system",
         "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
         "systemNoAlerts": "No Alerts",
         "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "System Offline",
+        "systemOffline": "Järjestelmä offline-tilassa",
         "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "Internal server error",
+        "systemServerError": "Sisäinen palvelinvirhe",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-        "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
         "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
-        "unknown": "Unknown",
-        "vendor": "Vendor",
-        "model": "Model",
-        "ip": "IP Address",
-        "server": "Server",
+        "unknown": "Tuntematon",
+        "vendor": "Toimittaja",
+        "model": "Malli",
+        "ip": "IP-osoite",
+        "server": "Palvelin",
         "os": "OS",
-        "version": "Version",
+        "version": "Versio",
         "voiceCommands": {
-            "clear search": "clear search",
-            "collapse all servers": "collapse all servers",
-            "collapse server": "collapse server + [server name]",
-            "expand all servers": "expand all servers",
-            "expand server": "expand server + [server name]",
-            "help": "help | show commands",
-            "live": "go to live | show me live",
-            "pause": "pause",
-            "play": "play",
-            "search": "find + [text for searchbar]",
-            "stop listening": "stop listening",
-            "view": "view + [camera name]"
+            "clear search": "tyhjennä haku",
+            "collapse all servers": "kokoa kaikki palvelimet",
+            "collapse server": "pienennä palvelin + [palvelimen nimi]",
+            "expand all servers": "laajenna kaikki palvelimet",
+            "expand server": "laajenna palvelin + [palvelimen nimi]",
+            "help": "apua | näytä komennot",
+            "live": "siirry reaaliaikaiseen | näytä minulle reaaliaikainen kuva",
+            "pause": "tauko",
+            "play": "toista",
+            "search": "etsi + [hakupalkin teksti]",
+            "stop listening": "lopeta kuuntelu",
+            "view": "näkymä + [kameran nimi]"
         },
         "viewingOutdatedReport": "You are viewing an outdated report."
     },
@@ -336,16 +336,16 @@
             "alreadyExists": "This email has already been registered in the %systemName% system"
         },
         "buttons": {
-            "cancel": "Cancel",
+            "cancel": "Peruuta",
             "createAccount": "Create New Account",
-            "delete": "Delete",
+            "delete": "Poista",
             "deleteAccount": "Delete Account",
-            "disable": "Disable",
-            "enable": "Enable",
-            "download": "Download %VMS_NAME%",
-            "logoutAuthorised": "Log Out",
+            "disable": "Poista käytöstä",
+            "enable": "Ota käyttöön",
+            "download": "Lataa %VMS_NAME%",
+            "logoutAuthorised": "Kirjaudu ulos",
             "ok": "OK",
-            "remove": "Remove",
+            "remove": "Poista",
             "stayAs": "Stay logged as {email} ",
             "stayLoggedIn": "Stay Logged In"
         },
@@ -355,8 +355,8 @@
             "otherSystem": "Other System...",
             "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "camera": "kamera",
+            "cameras": "kamerat",
             "actions": {
                 "activate": {
                     "heading": "Activate Cloud Storage",
@@ -370,12 +370,12 @@
                 },
                 "move": {
                     "heading": "Move Cloud Storage",
-                    "action": "Move",
+                    "action": "Siirrä",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
                     "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "action": "Poista",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -393,11 +393,11 @@
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "Siirrä",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "Poista",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -438,7 +438,7 @@
             "adminPasswordWrong": "Password for admin user is wrong",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
-            "checking": "Checking...",
+            "checking": "Tarkistetaan...",
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
@@ -447,17 +447,17 @@
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "latestBuild": "viimeisin julkaisu",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeFailedTitle": "System merge failed",
+            "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
             "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
             "mergeSystemsTitle": "Merge current system with",
             "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
+            "newSystemDisplayName": "Uusi järjestelmä",
             "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
-            "passwordRequired": "Password is required",
-            "passwordWrong": "Wrong password",
+            "ownerCanMergeText": "Voit yhdistää pilvijärjestelmät, joissa olet omistajana",
+            "passwordRequired": "Salasana tarvitaan",
+            "passwordWrong": "Väärä salasana",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -481,7 +481,7 @@
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
-            "urlEmpty": "Enter server address",
+            "urlEmpty": "Anna palvelimen osoite",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
@@ -492,26 +492,26 @@
             "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "Storage settings saved.",
             "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
+            "settingsSaved": "Asetukset tallennettu.",
             "settingsNotSaved": "Couldn't save settings.",
             "logLevelsSaved": "Log level(s) saved.",
             "logLevelsNotSaved": "Couldn't save log level(s).",
-            "failedToSend": "Message has failed to send.",
+            "failedToSend": "Viestin lähetys epäonnistui.",
             "placeholders": {
-                "feedback": "Make sure you include your camera model and manufacturer..."
+                "feedback": "Varmista, että määrität kameramallin ja valmistajan..."
             },
-            "sent": "Message has been sent.",
+            "sent": "Viesti on lähetetty.",
             "subject": {
                 "integration_feedback": "Feedback for integration {asset}",
                 "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Feedback for cameras page",
+                "ipvd_feedback_page": "Palaute kameran sivulle",
                 "sales_inquiry": "Sales inquiry for {asset}",
                 "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
                 "integration": "Get in touch with {companyName}",
                 "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "ipvd_feedback_page": "Palaute kameran sivulle"
             },
             "twoFactor": {
                 "required": "Two-factor authentication is required.",
@@ -521,14 +521,14 @@
             }
         },
         "removeSystem": {
-            "action": "Disconnect",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "action": "Katkaise yhteys",
+            "message": "Olet poistamassa tämän järjestelmän tilistäsi. Et voi enää käyttää tätä järjestelmää. Oletko varma?",
+            "title": "Katkaise yhteys järjestelmään?"
         },
         "renewAuth": {
-            "action": "Login",
+            "action": "Kirjaudu sisään",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "Istuntosi on vanhentunut"
         },
         "systemGroups": {
             "createdInRoot": "New group will be created in root",
@@ -538,14 +538,14 @@
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
-            "error": "Error",
-            "success": "Success",
+            "error": "Virhe",
+            "success": "Onnistunut",
             "changeAccount": "You are already logged in as {email}",
             "changePasswordFor": "Change Password for User \"{username}\"",
-            "deleteUser": "Delete user?",
-            "failedLoginTo": "Failed to login to {systemName}",
+            "deleteUser": "Poista käyttäjä?",
+            "failedLoginTo": "Kirjautuminen epäonnistui {systemName}",
             "loggedFromOtherAccount": "You will be logged in with a different account",
-            "noClientDetected": "Install %VMS_NAME% to view your System",
+            "noClientDetected": "Asenna %VMS_NAME% nähdäksesi järjestelmän",
             "removeUser": "Remove user",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
@@ -555,7 +555,7 @@
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
-            "action": "Login",
+            "action": "Kirjaudu sisään",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
@@ -564,15 +564,15 @@
     },
     "downloads": {
         "appTypes": {
-            "bundle": "Client and Server",
-            "camera_sdk": "Video Source SDK",
-            "client": "Client only",
+            "bundle": "Client ja palvelin",
+            "camera_sdk": "Videolähteen SDK",
+            "client": "Vain Client-sovellus",
             "metadata_sdk": "Metadata SDK",
-            "package": "Package",
-            "server": "Server only",
-            "servertool": "Configuration tool",
+            "package": "Paketti",
+            "server": "Vain palvelin",
+            "servertool": "Konfigurointityökalu",
             "storage_sdk": "Storage SDK",
-            "video_source_sdk": "Video Source SDK"
+            "video_source_sdk": "Videolähteen SDK"
         },
         "groups": {
             "android": {
@@ -626,18 +626,18 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Beta-versioita",
+            "patch": "Korjaus",
+            "patches": "Korjaukset",
+            "rc": "Julkaisuehdokkaat",
+            "release": "Julkaisu",
+            "releases": "Julkaisut"
         }
     },
     "errorCodes": {
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "DUPLICATE_MEDIASERVER_FOUND": "Some server lists as existing in both Systems – in the selected and in the current one.<br>Remove offline and incompatible servers from each System and try again.",
-        "EmailAlreadyExists": "This Email is already registered",
+        "DUPLICATE_MEDIASERVER_FOUND": "Jotkin palvelimet ovat olemassa molemmissa järjestelmissä - valituissa ja nykyisissä järjestelmissä.<br>Poista offline- ja yhteensopimattomat palvelimet jokaisesta järjestelmästä ja yritä uudelleen.",
+        "EmailAlreadyExists": "Tämä sähköpostiosoite on jo rekisteröity",
         "FAIL": "System <strong>{failedSystem}</strong> is offline.",
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -651,52 +651,52 @@
         "fail": "{failedSystem} is inaccessible.",
         "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
         "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "accountAlreadyActivated": "This account is already activated",
-        "accountBlocked": "This account is temporarily blocked. Please try again in a few minutes.",
-        "accountNotActivated": "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>",
+        "accountAlreadyActivated": "Käyttäjätilisi on jo aktivoitu",
+        "accountBlocked": "Tämä tili on estetty tilapäisesti. Yritä uudelleen muutaman minuutin.",
+        "accountNotActivated": "Tätä tiliä ei ole vielä aktivoitu. <a href=\"/activate\">Lähetä aktivointilinkki uudelleen</a>",
         "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
-        "alreadyExists": "This account already exists",
-        "brokenAccount": "Unexpected problem with account. <a href=\"/restore_password\">Restore account</a>",
-        "cantActivatePrefix": "Cannot activate your account",
+        "alreadyExists": "Tili on jo olemassa",
+        "brokenAccount": "Odottamaton ongelma tilillä. <a href=\"/restore_password\">Palauta tili</a>",
+        "cantActivatePrefix": "Tiliäsi ei voida aktivoida",
         "cantAddYourOwnEmail": "Adding your own email is not allowed",
-        "cantChangeAccountPrefix": "Cannot save changes",
-        "cantChangePasswordPrefix": "Cannot save password",
+        "cantChangeAccountPrefix": "Muutoksia ei voida tallentaa",
+        "cantChangePasswordPrefix": "Salasanaa ei voida tallentaa",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantConnectSystemPrefix": "Cannot connect System",
-        "cantDisconnectSystemPrefix": "Cannot delete System",
-        "cantEditAdmin": "This user has administrator permissions",
-        "cantEditYourself": "Changing own permissions is not allowed",
-        "cantGetSystemInfoPrefix": "System info is unavailable",
-        "cantGetSystemsListPrefix": "System list is unavailable",
-        "cantGetUsersListPrefix": "Users list is unavailable",
+        "cantDisconnectSystemPrefix": "Järjestelmää ei voi poistaa",
+        "cantEditAdmin": "Tällä käyttäjällä on järjestelmänvalvojan oikeudet",
+        "cantEditYourself": "Oman käyttöoikeuden muuttaminen ei ole sallittua",
+        "cantGetSystemInfoPrefix": "Järjestelmätiedot eivät ole käytettävissä",
+        "cantGetSystemsListPrefix": "Järjestelmäluettelo ei ole käytettävissä",
+        "cantGetUsersListPrefix": "Käyttäjien luettelo ei ole käytettävissä",
         "cantOpenClient": "%VMS_NAME% application is not detected.",
-        "cantRegisterPrefix": "Error occurred",
-        "cantSendActivationPrefix": "Cannot send confirmation Email",
-        "cantSendConfirmationPrefix": "Cannot send confirmation Email",
-        "cantSharePrefix": "Cannot share System",
-        "cantUnshareWithMeSystemPrefix": "Cannot delete System",
-        "emailNotFound": "Account does not exist.",
+        "cantRegisterPrefix": "Tapahtui virhe",
+        "cantSendActivationPrefix": "Vahvistussähköpostia ei voida lähettää",
+        "cantSendConfirmationPrefix": "Vahvistussähköpostia ei voida lähettää",
+        "cantSharePrefix": "Järjestelmää ei voi jakaa",
+        "cantUnshareWithMeSystemPrefix": "Järjestelmää ei voi poistaa",
+        "emailNotFound": "Tiliä ei ole olemassa.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
         "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
-        "forbidden": "You do not have permissions to perform this action",
+        "forbidden": "Sinulla ei ole oikeuksia tämän toiminnon suorittamiseen",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
-        "notAuthorized": "Wrong password",
-        "badUsername": "Account not found",
-        "notFound": "Not found",
+        "notAuthorized": "Väärä salasana",
+        "badUsername": "Tiliä ei löytynyt",
+        "notFound": "Ei löydy",
         "ok": "ok",
-        "oldPasswordMistmatch": "Current password is incorrect.",
-        "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
-        "passwordMismatch": "Wrong password",
+        "oldPasswordMistmatch": "Salasana on virheellinen.",
+        "oldSafariNotSupported": "Safari-selaimen versio 10 vanhempia ei tueta",
+        "passwordMismatch": "Väärä salasana",
         "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "thisSystem": "the system",
+        "thisSystem": "järjestelmä",
         "unknownError": "Unexpected error occurred",
-        "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "wrongAuthCode": "Code is expired or incorrect",
-        "wrongCode": "Account is already activated or confirmation code is incorrect",
-        "wrongCodeRestore": "Confirmation code is already used or incorrect",
-        "wrongParameters": "Some parameters on the form are incorrect",
+        "unknownMergeError": "Tuntematon virhe. Voit yrittää päivittää sivua ja toistaa yrityksen. Jos ongelma jatkuu - ota yhteyttä <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
+        "wrongAuthCode": "Koodi on vanhentunut tai virheellinen",
+        "wrongCode": "Tili on jo aktivoitu tai vahvistuskoodi on virheellinen",
+        "wrongCodeRestore": "Vahvistuskoodi on jo käytetty tai virheellinen",
+        "wrongParameters": "Jotkin lomakkeen parametrit ovat virheellisiä",
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
@@ -718,15 +718,15 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "tili",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Tilin asetukset"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "järjestelmät",
                 "nodes": [
                     {
                         "displayName": "My Systems"
@@ -736,52 +736,52 @@
         }
     },
     "integration": {
-        "Access Control": "Access Control",
+        "Access Control": "Kulunvalvonta",
         "Connector": "Connector",
-        "Data Analytics": "Data Analytics",
+        "Data Analytics": "Data Analytiikka",
         "Drone": "Drone",
-        "Health Monitor": "Health Monitor",
-        "Storage": "Storage",
+        "Health Monitor": "Laitteiden valvonta",
+        "Storage": "Tallennustila",
         "myIntegrationsLabel": "Mine",
         "requirements": "{name} Requirements",
         "testedVersionLabel": "Tested by the developer with {vmsName} version:",
         "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
-        "Advanced PTZ cameras": "Advanced PTZ cameras",
-        "Cameras supporting H.265": "Cameras supporting H.265",
-        "Cameras with 2-way audio": "Cameras with 2-way audio",
-        "Extra high resolution cameras": "Extra high resolution cameras",
-        "Fisheye Cameras": "Fisheye Cameras",
-        "I / O modules": "I / O modules",
-        "Multisensor Cameras": "Multisensor Cameras",
-        "PTZ cameras": "PTZ cameras",
-        "camera": "Camera",
-        "count": "Count",
+        "Advanced PTZ cameras": "Edistyneemmät PTZ-kamerat",
+        "Cameras supporting H.265": "H.265 tuetut kamerat",
+        "Cameras with 2-way audio": "Kamerat, joissa on kaksisuuntainen ääni",
+        "Extra high resolution cameras": "Erittäin korkearesoluutioiset kamerat",
+        "Fisheye Cameras": "360-kamerat",
+        "I / O modules": "I / O-moduulit",
+        "Multisensor Cameras": "Multisensor kamerat",
+        "PTZ cameras": "PTZ-kamerat",
+        "camera": "Kamera",
+        "count": "Määrä",
         "dvr": "DVR",
-        "encoder": "Encoder",
-        "hardwareType": "Type",
-        "isAnalyticsSupported": "Analytics",
-        "isAptzSupported": "Advanced PTZ",
-        "isAptzSupportedShort": "Adv. PTZ",
-        "isAudioSupported": "Audio",
+        "encoder": "Enkooderi",
+        "hardwareType": "Tyyppi",
+        "isAnalyticsSupported": "Analytiikka",
+        "isAptzSupported": "Kehittynyt PTZ",
+        "isAptzSupportedShort": "Kehittyneempi PTZ",
+        "isAudioSupported": "Ääni",
         "isDualStreamingSupported": "Dual Streaming",
-        "isFisheye": "Fisheye",
+        "isFisheye": "360-kamera",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Motion Detection",
+        "isMdSupported": "Liikkeentunnistus",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
-        "model": "Model",
-        "multiSensorCamera": "Multi-Sensor Camera",
-        "other": "Other",
-        "primaryCodec": "Codec",
-        "resolutionArea": "Area",
-        "sndResolution": "Secondary Stream",
-        "vendor": "Manufacturer",
+        "isTwAudioSupported": "2-suuntainen audio",
+        "maxFps": "FPS (max)",
+        "maxResolution": "Resoluutio (max)",
+        "model": "Malli",
+        "multiSensorCamera": "Multi-Sensor-kamera",
+        "other": "Muu",
+        "primaryCodec": "Koodekki",
+        "resolutionArea": "Alue",
+        "sndResolution": "Toissijainen streami",
+        "vendor": "Valmistaja",
         "sortKey": ""
     },
     "ipvdFeedback": {
@@ -794,23 +794,23 @@
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
-            "cameras": "Cameras",
-            "systemAdministration": "System Administration",
-            "general": "General",
-            "licenses": "Licenses",
-            "users": "Users",
-            "servers": "Servers",
+            "cameras": "Kamerat",
+            "systemAdministration": "Järjestelmän hallinta",
+            "general": "Yleiset",
+            "licenses": "Lisenssit",
+            "users": "Käyttäjät",
+            "servers": "Palvelimet",
             "alerts": "Alerts",
-            "systems": "System",
-            "storages": "Storage Locations",
+            "systems": "Järjestelmä",
+            "storages": "Tallennustilan sijainnit",
             "networkInterfaces": "Network Interfaces",
             "graphs": "Graphs",
             "logs": "Logs"
         }
     },
     "tableHeaders": {
-        "type": "Type",
-        "server": "Server",
+        "type": "Tyyppi",
+        "server": "Palvelin",
         "alert": "Alert"
     },
     "appFooter": {
@@ -829,37 +829,37 @@
         }
     },
     "pageTitles": {
-        "about": "About",
+        "about": "Tietoja",
         "account": "Account settings",
         "activate": "Activate account",
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Authorization",
-        "changePassword": "Change password",
-        "debug": "Debug",
+        "changePassword": "Vaihda salasana",
+        "debug": "Vianetsintä",
         "default": "%CLOUD_NAME%",
-        "download": "Download %VMS_NAME%",
-        "downloadPlatform": "Download %VMS_NAME% for ",
+        "download": "Lataa %VMS_NAME%",
+        "downloadPlatform": "Lataa %VMS_NAME% ",
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Failed to access system",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
-        "login": "Log in",
-        "pageNotFound": "Page not found",
-        "register": "Create account in",
-        "registerSuccess": "Welcome to",
+        "login": "Kirjaudu sisään",
+        "pageNotFound": "Sivua ei löydy",
+        "register": "Luo tili",
+        "registerSuccess": "Tervetuloa",
         "restorePassword": "Reset password",
         "restorePasswordSuccess": "Password saved",
-        "supportedDevices": "Supported Devices",
-        "system": "System",
+        "supportedDevices": "Tuetut laitteet",
+        "system": "Järjestelmä",
         "systemShare": "Share System",
-        "systems": "Systems",
+        "systems": "Järjestelmät",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "View cameras",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "Turvallisuus",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -868,19 +868,19 @@
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
-        "common": "too common",
-        "commonMessage": "This password is in top most popular passwords in the world",
-        "fair": "fair",
-        "fairMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger",
-        "good": "good",
-        "minLength": "too short",
-        "minLengthMessage": "Password must contain at least 8 characters",
+        "common": "liian yleinen",
+        "commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
+        "fair": "kohtalainen",
+        "fairMessage": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi",
+        "good": "hyvä",
+        "minLength": "liian lyhyt",
+        "minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
         "missingMessage": "Required",
-        "required": "incorrect",
-        "requiredMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
-        "strongMessage": "Strong password!",
-        "weak": "weak",
-        "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
+        "required": "virheellinen",
+        "requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
+        "strongMessage": "Vahva salasana!",
+        "weak": "heikko",
+        "weakMessage": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi"
     },
     "placeholderTexts": {
         "noSettings": {
@@ -921,12 +921,12 @@
             "to": "is being merged to this system",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "Viimeistellään järjestelmien yhdistämistä",
         "integration": {
-            "accept": "Accept",
+            "accept": "Hyväksy",
             "reject": "Reject",
-            "backToEditText": "Back to the editing interfaces",
-            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
+            "backToEditText": "Takaisin muokkausliittymiin",
+            "previewRibbon": "Tällä sivulla on esikatselu viimeisimmistä muutoksista, ja se ei kata yleisesti saatavilla olevia versioita.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
@@ -937,18 +937,18 @@
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
-        "Any": "Any",
-        "Search": "Search",
-        "analytics": "Analytics",
-        "analyticsSelected": "analytics events",
+        "Any": "Mikä tahansa",
+        "Search": "Etsi",
+        "analytics": "Analytiikka",
+        "analyticsSelected": "analytiikka-tapahtumat",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
-        "hardwareType": "Type",
-        "hardwareTypes": "Types",
-        "minResolution": "Minimum Resolution",
-        "search_ipvd": "Search by model or manufacturer",
+        "hardwareType": "Tyyppi",
+        "hardwareTypes": "Tyypit",
+        "minResolution": "Pienin resoluutio",
+        "search_ipvd": "Hae mallin tai valmistajan mukaan",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
-        "vendor": "Manufacturer",
-        "vendors": "Manufacturers",
+        "vendor": "Valmistaja",
+        "vendors": "Valmistajat",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
         "userNotFound": "<span class=\"error\">User not found</span>"
@@ -961,49 +961,49 @@
         "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
         "detachSystemSuccess": "Server was successfully detached from the system.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
+        "refresh": "Päivitä",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Failed to remove the server from system.",
         "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
         "restartFailed": "There was a problem restarting the server.",
         "restartSuccessful": "Server has successfully restarted.",
-        "serverOffline": "Server is offline.",
-        "servers": "Servers",
+        "serverOffline": "Palvelin offline-tilassa.",
+        "servers": "Palvelimet",
         "status": {
-            "checking": "checking...",
-            "offline": "offline",
+            "checking": "tarkistetaan...",
+            "offline": "ei yhteyttä",
             "resetting": "resetting...",
             "restarting": "restarting..."
         },
         "successRename": "Server name saved."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
-        "Layouts": "Layouts",
+        "View": "Näytä",
+        "Settings": "Asetukset",
+        "Information": "Tiedot",
+        "Bookmarks": "Kirjanmerkit",
+        "Layouts": "Asettelut",
         "Monitoring": "Monitoring"
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Järjestelmän lisäasetukset",
+            "brokenSystem": "Järjestelmää ei voi määrittää",
+            "initFailure": "Järjestelmää ei voi alustaa",
+            "localFailure": "Järjestelmää ei voi määrittää",
+            "localLogin": "Määritä järjestelmänvalvojan salasana",
+            "localSuccess": "Järjestelmä on käyttövalmis",
+            "merge": "Liitä palvelin nykyiseen järjestelmään",
+            "mergeFailure": "Järjestelmiä ei voi yhdistää",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Anna järjestelmän nimi"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Salli laitteen asetusten optimointi",
+            "autoDiscoveryEnabled": "Ota laitteen automaattinen etsintä käyttöön",
+            "statisticsAllowed": "Lähetä anonyymit käyttötilastot ja kaatumisraportit",
             "standard": "Standard",
             "safe": "Safe"
         }
@@ -1012,49 +1012,49 @@
         "connected": "Connected",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
-        "mergeUnknownName": "Unknown Name for System (Caused by cloud merge)",
+        "mergeUnknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
             "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "notAbleToLoadSecurity": "Not able to load security settings.",
             "notAbleToLoadSystem": "Not able to load system settings.",
             "sessionLimitDuration": {
-                "hours": "hours",
-                "minutes": "minutes",
-                "days": "days"
+                "hours": "tuntia",
+                "minutes": "minuuttia",
+                "days": "päiviä"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
+                "videoEncryption": "Videoliikenteen salaaminen lisää merkittävästi suorittimen käyttöä."
             }
         },
         "status": {
-            "offline": "System is offline",
-            "unavailable": "System is unreachable"
+            "offline": "Järjestelmään ei saada yhteyttä",
+            "unavailable": "Järjestelmä ei ole tavoitettavissa"
         },
         "users": {
             "cloudDelete": "Remove User",
             "localDelete": "Delete User"
         },
-        "yourSystem": "Your System",
+        "yourSystem": "Järjestelmäsi",
         "loggers": {
             "none": {
-                "text": "None",
+                "text": "Ei mitään",
                 "help": "(log disabled)"
             },
             "error": {
-                "text": "Error",
+                "text": "Virhe",
                 "help": "(log errors only)"
             },
             "warning": {
-                "text": "Warning",
+                "text": "Varoitus",
                 "help": "(log warnings and errors)"
             },
             "info": {
-                "text": "Info",
+                "text": "Tiedot",
                 "help": "(log warnings, errors and all messages)"
             },
             "debug": {
-                "text": "Debug",
+                "text": "Vianetsintä",
                 "help": "(log every System message and debug information)"
             },
             "verbose": {
@@ -1064,7 +1064,7 @@
         },
         "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
-            "local": "Local",
+            "local": "Paikallinen",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
@@ -1096,38 +1096,38 @@
         }
     },
     "systemStatuses": {
-        "activated": "activated",
-        "incompatible": "incompatible",
-        "merging": "merging",
-        "notActivated": "not activated",
-        "offline": "offline",
-        "online": "online",
-        "unavailable": "unavailable"
+        "activated": "aktivoitu",
+        "incompatible": "yhteensopimaton",
+        "merging": "liitetään",
+        "notActivated": "ei aktivoitu",
+        "offline": "ei yhteyttä",
+        "online": "yhteys muodostettu",
+        "unavailable": "ei saatavilla"
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "Muutoksien tallentaminen epäonnistui",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
-                "success": "System is successfully disconnected from %CLOUD_NAME%"
+                "success": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "Järjestelmä on kytketty %CLOUD_NAME%",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
-                "failed": "System merge failed",
-                "success": "System merge completed"
+                "failed": "Järjestelmien yhdistäminen epäonnistui",
+                "success": "Järjestelmän yhdistäminen on valmis"
             },
             "rename": {
-                "success": "System name saved"
+                "success": "Järjestelmän nimi on tallennettu"
             }
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
@@ -1138,20 +1138,20 @@
     },
     "healthMonitor": {
         "groups": {
-            "info": "Info",
+            "info": "Tiedot",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "Aktiviteetti"
         },
         "keys": {
-            "name": "Name",
-            "servers": "Servers",
+            "name": "Nimi",
+            "servers": "Palvelimet",
             "cameras": "Camera channels",
             "storages": "Storage locations",
-            "users": "Users",
+            "users": "Käyttäjät",
             "version": "System version",
             "cloudSystemId": "Cloud system ID",
-            "status": "Status",
+            "status": "Tila",
             "offlineEvents": "Events: Server Offline (24h)",
             "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
@@ -1173,7 +1173,7 @@
             "publicIp": "Public IP",
             "os": "OS",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "VMS-aika",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1191,37 +1191,37 @@
     },
     "license": {
         "licenseTypeTitles": {
-            "Time": "Time",
+            "Time": "Aika",
             "Trial": "Trial",
             "Professional": "Professional",
-            "Analog": "Analog",
+            "Analog": "Analoginen",
             "Edge": "Edge",
             "VMAX": "VMAX",
-            "Video Wall": "Video Wall",
-            "Analog Encoder": "Analog Encoder",
+            "Video Wall": "Videoseinä",
+            "Analog Encoder": "Analoginen Enkooderi",
             "Starter": "Starter",
             "IO Module": "IO Module",
-            "Bridge": "Bridge",
+            "Bridge": "Silta",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Virheellinen"
         },
         "info": {
-            "type": "Type",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
+            "type": "Tyyppi",
+            "channels": "Kanavat",
+            "server": "Palvelin",
+            "hwid": "Laitteiston tunnus",
+            "status": "Tila",
+            "expires": "Päättyy",
             "deactivations": "Deactivation left",
             "online": "Online",
-            "error": "Error",
-            "expired": "Expired",
+            "error": "Virhe",
+            "expired": "Vanhentunut",
             "ok": "OK",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Palvelinta ei löydy"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} enemmän tarvitaan",
             "activated": "License key activated",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
@@ -1253,88 +1253,88 @@
         "resourceFileUri": "Resource file URI",
         "sessionLimitMinutes": "Session limit (minutes)",
         "specificFeatures": "Specific features",
-        "systemName": "System name",
+        "systemName": "Järjestelmänimi",
         "webSocketEnabled": "Web sockets",
-        "arecontRtspEnabled": "Arecont RTSP Enabled",
-        "auditTrailEnabled": "Audit trail enabled",
-        "auditTrailPeriodDays": "Audit trail period days",
-        "autoDiscoveryEnabled": "Enable device auto discovery",
-        "autoUpdateThumbnails": "Auto-update thumbnails",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
-        "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
-        "emailSignature": "Email signature",
-        "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Enable edge recording",
-        "eventLogPeriodDays": "Event log period (days)",
-        "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
+        "arecontRtspEnabled": "Arecont RTSP käytössä",
+        "auditTrailEnabled": "Auditointi käytössä",
+        "auditTrailPeriodDays": "Auditoinnin kesto, päiviä",
+        "autoDiscoveryEnabled": "Ota laitteen automaattinen etsintä käyttöön",
+        "autoUpdateThumbnails": "Päivitä pienoiskuvat automaattisesti",
+        "backupNewCamerasByDefault": "Varmuuskopioi uudet kamerat oletusarvoisesti",
+        "backupQualities": "Varmuus kopioinnin ominaisuudet",
+        "cameraSettingsOptimization": "Salli laitteen asetusten optimointi",
+        "clientStatisticsSettingsUrl": "Client-statistiikan Url-osoite",
+        "cloudAccountName": "Pilven omistajan tili",
+        "cloudConnectRelayingEnabled": "Ota pilviyhteyden välitys käyttöön",
+        "cloudConnectUdpHolePunchingEnabled": "Ota UDP-rei'itys käyttöön pilviyhteyttä varten",
+        "cloudHost": "Pilvipalvelin",
+        "cloudSystemID": "Pilvijärjestelmän tunnus",
+        "disabledVendors": "Käytöstä poistetut jakelijat",
+        "ec2AliveUpdateIntervalSec": "Järjestelmän tarkistuksen päivitysväli (sekuntia)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Yhteyden säilyttämisen aikaväli (sekuntia)",
+        "ec2KeepAliveProbeCount": "Yhteyden säilyttämisen aikaväli (sekuntia)",
+        "emailFrom": "Sähköpostin lähettäjä",
+        "emailSignature": "Sähköpostin allekirjoitus",
+        "emailSupportEmail": "Tuki sähköpostilla",
+        "enableEdgeRecording": "Ota Edge-tallennus käyttöön",
+        "eventLogPeriodDays": "Tapahtumalokin jakso (päivät)",
+        "ldapAdminDn": "LDAP-admin DN",
+        "ldapSearchBase": "LDAP-hakupohja",
+        "ldapSearchFilter": "LDAP-hakusuodatin",
         "ldapUri": "LDAP URI",
-        "localSystemId": "Local System ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
+        "localSystemId": "Paikallisen järjestelmän tunnus",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Suurin ero synkronoidun ja Internet-ajan välillä (millisekuntia)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Suurin ero synkronoidun ja Internet-ajan välillä (millisekuntia)",
         "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
-        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
-        "maxRecordQueueSizeElements": "Max record queue size (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
-        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
-        "maxSceneItems": "Max scene items (0 means default)",
-        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
-        "rtpTimeoutMs": "RTP timeout (milliseconds)",
-        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
-        "smtpSimple": "SMTP simple",
-        "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
-        "SystemName": "System name",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
+        "maxRecordQueueSizeBytes": "Tallennuksen jonon enimmäiskoko (tavua)",
+        "maxRecordQueueSizeElements": "Tallennuksen jonon enimmäiskoko (tavua)",
+        "maxRemoteArchiveSynchronizationThreads": "Etäarkistoinnin maksimi synkronoinnin vuoro",
+        "maxRtspConnectDurationSeconds": "Suurin Rtsp-yhteyden kesto sekunneissa",
+        "maxSceneItems": "Max kohteiden määrä (0 tarkoittaa oletus)",
+        "proxyConnectTimeoutSec": "Välityspalvelimen yhteyden aikakatkaisu (sekuntia)",
+        "rtpTimeoutMs": "RTP-aikakatkaisu (millisekuntia)",
+        "sequentialFlirOnvifSearcherEnabled": "Käytä peräkkäistä Flir Onvif -hakua",
+        "serverDiscoveryPingTimeoutSec": "Palvelimen löytäminen aikakatkaisu",
+        "smtpConnectionType": "SMTP-yhteystyyppi",
+        "smtpHost": "SMTP isäntä",
+        "smtpPort": "SMTP-portti",
+        "smtpSimple": "Yksinkertainen SMTP",
+        "smtpTimeout": "SMTP aikakatkaisu",
+        "smtpUser": "SMTP käyttäjä",
+        "statisticsAllowed": "Lähetä anonyymit käyttötilastot ja kaatumisraportit",
+        "statisticsReportLastNumber": "Tilastoraportti - viimeinen numero",
+        "statisticsReportLastTime": "Tilastoraportti - viimeinen kerta",
+        "statisticsReportLastVersion": "Tilastoraportti - viimeinen versio",
+        "statisticsReportServerApi": "Tilastopalvelin api",
+        "statisticsReportTimeCycle": "Tilastoraportin aikaväli",
+        "statisticsReportUpdateDelay": "Raportti - päivityksen viive",
+        "synchronizeTimeWithInternet": "Synkronoi aika Internetin kanssa",
+        "SystemName": "Järjestelmänimi",
+        "takeCameraOwnershipWithoutLock": "Ota kameroiden omistajuus ilman lukkoa",
+        "timeSynchronizationEnabled": "Ajan synkronointi käytössä",
         "primaryTimeServer": "Primary time synchronization server",
         "osTimeChangeCheckPeriodMs": "OS time change check period",
         "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
         "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
-        "updateNotificationsEnabled": "Update notifications enabled",
-        "upnpPortMappingEnabled": "UPNP port mapping enabled",
-        "useTextEmailFormat": "Send plain-text emails",
-        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
+        "updateNotificationsEnabled": "Päivitysten ilmoitukset käytössä",
+        "upnpPortMappingEnabled": "UPNP-porttikartoitus on käytössä",
+        "useTextEmailFormat": "Lähettää tekstimuotoisia sähköposteja",
+        "useWindowsEmailLineFeed": "Käytä Windows-rivinsyöttöä sähköposteihin",
         "trafficEncryptionForced": "Force traffic encryption",
         "videoTrafficEncryptionForced": "Force video traffic encryption",
         "updateStatus": "Update status",
         "watermarkSettings": "Watermark settings",
         "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
-        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "maxEventLogRecords": "Tapahtumalokitietueiden maksimimäärä tietokannassa. Palautettujen tietueiden todellinen määrä voi olla jopa 20% korkeampi kuin määritetty arvo.",
+        "forceLiveCacheForPrimaryStream": "Onko välimuistissa joitakin kuvia ensisijaiselle streamille. Arvot: \"kyllä\" - aina käytössä (voi käyttää paljon RAM-muistia), \"ei\" - aina pois käytöstä, paitsi jos toisto vaatii (esim. HLS), \"auto\" - samanlainen kuin \"ei\", mutta on päällä, kun se parantaa käyttökokemusta (esim. kun jokin Analytics-laajennus toimii kamerassa)."
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
     "security": {
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
+            "systemsRemainder": "ja {count} lisää...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
@@ -1348,18 +1348,18 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
+            "main": "Ensisijainen",
+            "backup": "Varmuuskopio",
             "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
+            "reserved": "Varattu",
+            "inaccessible": "Ei pääsyä",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Poistettu käytöstä"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
+        "invalidPath": "Virheellinen tallennustilan polku.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",
@@ -1456,12 +1456,12 @@
             "timeNames": {
                 "a": "a",
                 "p": "p",
-                "am": "am",
-                "pm": "pm",
+                "am": "ap",
+                "pm": "ip",
                 "A": "A",
                 "P": "P",
                 "AM": "AM",
-                "PM": "PM"
+                "PM": "IP"
             }
         }
     }
