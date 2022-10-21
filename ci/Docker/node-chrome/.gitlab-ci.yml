@@ -15,7 +15,7 @@ docker:build-node-chrome:
       echo "NODE_JS_IMAGE_TAG=${NODE_JS_IMAGE_TAG}" > build.env
     fi
     
-    if [[ "${CI_PIPELINE_SOURCE}" == "push"  && $CI_COMMIT_REF_PROTECTED == "true"]]; then
+    if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true"]]; then
       NODE_JS_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${NODE_JS_IMAGE_VERSION}"
       echo "NODE_JS_IMAGE_TAG=${NODE_JS_IMAGE_TAG}" > build.env
     fi
