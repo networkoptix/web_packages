@@ -77,7 +77,6 @@
     "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Не удается отправить подтверждение по Email:",
     "ACCOUNT ALREADY EXISTS": "Учетная запись уже существует",
-    "ACCOUNT DOES NOT EXIST": "Учетная запись не существует.",
     "CODE USED/INCORRECT": "Код подтверждения уже используется или неверен",
     "CHANGE PASSWORD TITLE TEXT": "Изменить пароль",
     "CHANGE PASSWORD LEFT MENU TEXT": "Изменить пароль",
