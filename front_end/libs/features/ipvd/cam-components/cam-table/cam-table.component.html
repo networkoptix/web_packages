@@ -22,7 +22,7 @@
                             <th
                                 *ngFor="let header of showHeaders"
                                 class="align-bottom"
-                                [title]="getCleanTitle(header)"
+                                [title]="header"
                                 (click)="toggleHeaderSort(header)"
                             >
                                 <div class="caption d-flex">

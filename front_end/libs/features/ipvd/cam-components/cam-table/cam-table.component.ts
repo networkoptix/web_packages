@@ -562,11 +562,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         });
     }
 
-    getCleanTitle(text: string): string {
-        return text.replace(/\<br\>/g, ' ')
-            .replace(/\<\/?span\>/g, '');
-    }
-
     isBoolIcon(value: unknown): boolean {
         return typeof value === 'boolean' || value === 0 || value === '0x0';
     }
