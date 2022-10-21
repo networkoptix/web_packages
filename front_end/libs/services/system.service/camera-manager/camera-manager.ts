@@ -123,6 +123,7 @@ export class CameraManager {
             const motionLowResEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
 
             const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
+            const always = newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS;
             const motionOnly = newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY;
             const motionLowRes = newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW;
 
@@ -132,7 +133,7 @@ export class CameraManager {
                 fps: this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
                 modes: [
-                    { name: 'always', id: RecordingType.ALWAYS, value: this.parseRecordingMode(camera, [RecordingType.ALWAYS]), enabled: true },
+                    { name: 'always', id: always, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.ALWAYS]), enabled: true },
                     { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
                     {
                         name: 'motionLowRes',

@@ -102,11 +102,12 @@ export interface IRecordingModes {
 
 export enum RecordingType {
     ALWAYS = 'RT_Always',
-    META_ONLY = 'RT_MetadataOnly',
     MOTION_ONLY = 'RT_MotionOnly',
     MOTION_LOW = 'RT_MotionAndLowQuality',
-    META_LOW = 'RT_MetadataAndLowQuality',
-    NEVER = 'RT_Never'
+    NEVER = 'RT_Never',
+    META_ALWAYS = 'always',
+    META_ONLY = 'metadataOnly',
+    META_LOW = 'metadataAndLowQuality'
 }
 
 export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various';
