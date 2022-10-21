@@ -4,11 +4,10 @@ Suite Setup       System Admin Suite Setup
 Test Setup        Run Keywords    QA Video Recording Start      System Admin Test Setup
 Test Teardown     Run Keywords    QA Video Recording Stop       System Admin Test Restart
 Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
-Force Tags        system
+Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
 1. Should show system settings and security settings and they should match settings on server
-    [Tags]    system settings    cloud    webadmin    threaded
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -28,7 +27,6 @@ Force Tags        system
     Settings on page should match settings on server
 
 2. Changing the Setting * changes it on the server
-    [Tags]    system settings    cloud    webadmin    threaded
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
 
@@ -37,14 +35,12 @@ Force Tags        system
     END
 
 3. Changing the Setting 'Encrypt video traffic' changes it on the server
-    [Tags]    system settings    cloud    webadmin    threaded
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     ${selected}=   Change Setting Encrypt video traffic
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    ${selected}
 
 4. Changing the Setting 'Limit session duration to' changes it on the server
-    [Tags]    system settings    cloud    webadmin    threaded
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
@@ -56,7 +52,7 @@ Force Tags        system
     END
 
 5. Change Time Interval And Verify on Server
-    [Tags]    system settings    C65722    cloud    webadmin    threaded
+    [Tags]    C65722
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -70,7 +66,6 @@ Force Tags        system
     Evaluate Session Limit
 
 6. Changing Several Random Checkboxes Works
-    [Tags]    system settings    cloud    webadmin    threaded
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -78,7 +73,7 @@ Force Tags        system
     Changing Several Settings at Random    ${CANCEL BUTTON}
     
 7. Systems Settings Block is Available for Administrator or Owner
-    [Tags]    C69736    cloud    webadmin    system settings    threaded
+    [Tags]    C69736
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
@@ -92,7 +87,7 @@ Force Tags        system
     END
 
 8. System and Security Settings block is not available for other users
-    [Tags]    C69737    C65698    cloud    webadmin    system settings     threaded
+    [Tags]    C69737    C65698
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]     ${system}[cloud users][custom]
         Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
@@ -105,7 +100,7 @@ Force Tags        system
     END
     
 9. Cancel changes in System Settings block
-    [Tags]    C69738    cloud    webadmin    system settings    threaded
+    [Tags]    C69738
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
@@ -123,7 +118,7 @@ Force Tags        system
     END
 
 10. Moving to a different page after making changes in System Settings without saving them first
-    [Tags]    C69739    cloud    webadmin    system settings    threaded
+    [Tags]    C69739
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
@@ -203,7 +198,7 @@ Force Tags        system
     END
 
 11. Changing All Checkboxes Works
-    [Tags]    system settings    cloud    webadmin    C65722    threaded
+    [Tags]    C65722
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
@@ -217,7 +212,7 @@ Force Tags        system
     Changing All Settings    ${CANCEL BUTTON}
 
 12. Changes made in the thick client are displayed in System Settings block in Cloud Portal
-    [Tags]    C69741    cloud    webadmin    system settings    threaded
+    [Tags]    C69741
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
     Log    Step 1
@@ -279,7 +274,7 @@ Force Tags        system
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${true}
 
 13. Checking the dependency of system settings checkboxes
-    [Tags]    C69742    cloud    webadmin    system settings    threaded
+    [Tags]    C69742
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
 
@@ -317,7 +312,7 @@ Force Tags        system
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
     
 14. Changes made in the thick client are displayed in the security block in Cloud Portal
-    [Tags]    C65723    cloud    webadmin   system settings    threaded
+    [Tags]    C65723
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
 
@@ -380,7 +375,7 @@ Force Tags        system
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
 
 15. Security block is available for administrator or owner
-    [Tags]    C65697    cloud    webadmin    system settings    threaded
+    [Tags]    C65697
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
 
@@ -398,7 +393,8 @@ Force Tags        system
     END
 
 16. System Settings block is not available when the system is offline
-    [Tags]    C69744    cloud    system settings    threaded
+    [Tags]    C69744
+    Remove Tags     webadmin
     Stop Docker Server    ${system}[id]
     Log in to system    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
@@ -409,7 +405,7 @@ Force Tags        system
     Start Docker Server    ${system}[id]
 
 #System settings block view for different System versions
-#    [Tags]    C69743    C65829    cloud    system settings    threaded
+#    [Tags]    C69743    C65829    cloud    system settings    
 #    ${rand}=   Generate Random String
 #    ${4.0 system}=   Create Base System    system_4.0_${rand}    image=${image 4.0}    owner=${EMAIL OWNER}
 #    Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
@@ -438,7 +434,7 @@ Force Tags        system
 #    Delete Docker Server    ${4.0 system}[id]
 
 17. Cancel changes in Security block
-    [Tags]    C65724    cloud    webadmin    system settings    threaded
+    [Tags]    C65724
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
 
@@ -483,7 +479,7 @@ Force Tags        system
     
 # The testcase below is retired - no dependency of checkboxes is expected
 # Checking the dependency of security settings checkboxes
-    # [Tags]    C65700    cloud    webadmin    system settings    threaded
+    # [Tags]    C65700    cloud    webadmin    system settings    
     # Log    Preconditions
     # Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
     
@@ -520,7 +516,7 @@ Force Tags        system
     # Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
 18. Check Limit session duration
-    [Tags]    C65703    cloud    webadmin    system settings    threaded
+    [Tags]    C65703
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
 
@@ -680,7 +676,7 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    5
 
 19. Check HTTPS traffic encryption
-    [Tags]    C65701    cloud    webadmin    system settings    threaded
+    [Tags]    C65701
     Skip If Image Is    5.0    5.1    5.2    msg=5.0 and above not supported
     Log    Preconditions
     ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
@@ -732,7 +728,7 @@ Force Tags        system
     Go To    ${ENV}
 
 #Security block view for 3 dot 2 System
-#    [Tags]    C65829    cloud    system settings    threaded
+#    [Tags]    C65829    cloud    system settings    
 #    Log    Preconditions
 #    ${settings}=   Create Dictionary    auditTrailEnabled=true
 #    Set System Settings via API    ${system['local auth']}    ${3.2 system url}    ${settings}
@@ -743,7 +739,7 @@ Force Tags        system
 #    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
 20. Changes in System Settings block are displayed in thick client
-    [Tags]    C69740    cloud    webadmin    threaded    system settings
+    [Tags]    C69740
     Log    Preconditions
     Reset Settings To Default    ${system['local auth']}    ${server url}
     Log in to system    ${system}    ${system}[owner]

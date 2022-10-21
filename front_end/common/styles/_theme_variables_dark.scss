@@ -120,8 +120,10 @@ html[data-theme="dark"] {
     --border-hover-color   : #263137; //$dark8;
     --border-active-color  : #1C2327; //$dark6;
     --horizontal-sep-color : #2B383F; //$dark9;
+    
     --label-color          : #E1E7EA; //light4;
-
+    --label-disabled-color : #E1E7EA; //light4;
+    
     --placehoder-cloud-color   : #171C1F; //$dark5
     --placehoder-cloud-opacity : 0;
     --placeholder-light-color : #E1E7EA; //$light4;
@@ -537,6 +539,9 @@ html[data-theme="dark"] {
     --input-active-color        : #E1E7EA; //$light4;
     --input-active-border-color : #5D7E8F; //$dark19;
     --input-color-placeholder   : #A5B7C0; //$light10;
+    
+    --input-disabled-color : #{$light10};
+    --input-disabled-border-color : #35464F; //$dark11;
 
     --input-numeric-arrow-bg    : #121517; //$dark4;
     --input-numeric-arrow-color : #A5B7C0; //$light10;

@@ -460,7 +460,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         this.sensitivity.controls.current.valueChanges.pipe(
             untilDestroyed(this)
-        ).subscribe(this.sensitivityButtons$);
+        ).subscribe(val => {
+            this.sensitivityButtons$.next(val);
+            this.sensitivity.setValue({ current: false });
+        });
 
         this.routeParamsSubscription = this.route
             .params
@@ -577,6 +580,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.saveSettings,
             () => {
                 this.toggleMotionGrid();
+                this.motionMaskWatcher.reset = function () {
+                    // Force change detection
+                    setTimeout(() => {
+                        this.value = this.originalValue;
+                    });
+                };
                 this.applyService.reset();
             },
             [

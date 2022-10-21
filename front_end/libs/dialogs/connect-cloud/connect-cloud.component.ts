@@ -124,7 +124,7 @@ export class ConnectCloudModalContent implements OnInit {
         this.account
             .get()
             .then(account => {
-                this.auth.username = account.first_name || account.email;
+                this.auth.username = account.name || account.email;
             });
     }
 

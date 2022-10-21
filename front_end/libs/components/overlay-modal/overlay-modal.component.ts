@@ -41,7 +41,7 @@ export class NxOverlayModalComponent implements OnInit {
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
     oneCheckAtATime = false;
-    showOverlay = true;
+    showOverlay = false;
     refreshMessage: string;
 
     timeoutUntilRefresh$ = new BehaviorSubject(5);
@@ -74,15 +74,29 @@ export class NxOverlayModalComponent implements OnInit {
             }, 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
-            if (!state || this.system?.serverManager.servers.length > 1) {
+            /* Temporary patch for Firefox-specific behavior where a false state is emitted
+            before a true state after successful login, which results in a overlay flash
+
+            Caused by errors when getting login sessions, which is intercepted by
+            LocalSystemStatusInterceptor on FF right after successful login and sets
+            appState.systemAvailable$ to false
+
+            This should be removed once the underlying issue is fixed
+            https://networkoptix.atlassian.net/browse/CLOUD-9674
+            */
+            if (!state && !this.system) {
+                return;
+            }
+
+            if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available
                 !this.showOverlay && await this.checkIfOnline().catch(
                     () => {
                         this.showOverlay = true;
                     });
-            } else if (this.showOverlay && state) {
-                this.showOverlay = false;
+            } else {
+                this.showOverlay = !state;
             }
         });
 

@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -203,7 +203,8 @@ export class NxLayoutViewComponent {
         this.#selectedLayout$,
         this.#fetchingLayout$
     ).pipe(
-        map(current => current === 'fetching' ? null : current)
+        map(current => current === 'fetching' ? null : current),
+        filter(layout => !!layout)
     );
     selectedLayoutDropdown$ = this.#selectedLayout$.pipe(
         map(this.layoutToDropdown),

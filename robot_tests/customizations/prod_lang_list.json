@@ -1,0 +1,117 @@
+{
+    "en_US":
+        {
+        "ACCOUNT TEXT"	   	    :	"Account",
+        "ACCOUNT INFORMATION"   :	"Account Information",
+        "CREATE ACCOUNT TEXT"   :	"Create Account",
+        "DEFAULT"				:	"YES"
+        },
+    "en_GB":
+        {
+        "ACCOUNT TEXT"	   	    :	"Account",
+        "ACCOUNT INFORMATION"   :	"Account Information",
+        "CREATE ACCOUNT TEXT"   :	"Create Account"
+        },
+    "ru_RU":
+        {
+        "ACCOUNT TEXT"	   	    :	"Учетная запись",
+        "ACCOUNT INFORMATION"   :	"Информация об учетной записи",
+        "CREATE ACCOUNT TEXT"   :	"Зарегистрироваться"
+        }, 
+     "fr_FR":
+        {
+        "ACCOUNT TEXT"	   	    :	"Compte",
+        "ACCOUNT INFORMATION"   :	"Informations sur le compte",
+        "CREATE ACCOUNT TEXT"   :	"Créer compte"
+        },
+      "de_DE":
+        {
+        "ACCOUNT TEXT"	   	    :	"Account",
+        "ACCOUNT INFORMATION"   :	"Kontoinformationen",
+        "CREATE ACCOUNT TEXT"   :	"Account erstellen"
+        },
+      "es_ES":
+        {
+        "ACCOUNT TEXT"	   	    :	"Cuenta",
+        "ACCOUNT INFORMATION"   :	"Información de la Cuenta",
+        "CREATE ACCOUNT TEXT"   :	"Crear Cuenta"
+        },
+      "hu_HU":
+        {
+        "ACCOUNT TEXT"	   	    :	"Fiók",
+        "ACCOUNT INFORMATION"   :	"Felhasználói fiók információ",
+        "CREATE ACCOUNT TEXT"   :	"Fiók létrehozása"
+        },	
+      "zh_CN":
+        {
+        "ACCOUNT TEXT"	   	    :	"帐户",
+        "ACCOUNT INFORMATION"   :	"帐户信息",
+        "CREATE ACCOUNT TEXT"   :	"创建帐户"
+        },
+      "zh_TW":
+        {
+        "ACCOUNT TEXT"	   	    :	"帳號",
+        "ACCOUNT INFORMATION"   :	"帳號資訊",
+        "CREATE ACCOUNT TEXT"   :	"新建帳號"
+        },
+      "ja_JP":
+        {
+        "ACCOUNT TEXT"	   	    :	"アカウント",
+        "ACCOUNT INFORMATION"   :	"アカウント情報",
+        "CREATE ACCOUNT TEXT"   :	"アカウント作成"
+        },    		
+      "ko_KR":
+        {
+        "ACCOUNT TEXT"	   	    :	"계정",
+        "ACCOUNT INFORMATION"   :	"계정 정보",
+        "CREATE ACCOUNT TEXT"   :	"계정 만들기"
+        },
+      "tr_TR":
+        {
+        "ACCOUNT TEXT"	   	    :	"Hesap",
+        "ACCOUNT INFORMATION"   :	"Hesap Bilgileri",
+        "CREATE ACCOUNT TEXT"   :	"Hesap oluştur"
+        },     
+      "th_TH":
+        {
+        "ACCOUNT TEXT"	   	    :	"บัญชีผู้ใช้",
+        "ACCOUNT INFORMATION"   :	"ข้อมูลบัญชีสมาชิก",
+        "CREATE ACCOUNT TEXT"   :	"สร้างบัญชี"
+        },  
+      "he_IL":
+        {
+        "ACCOUNT TEXT"	   	    :	"חשבון",
+        "ACCOUNT INFORMATION"   :	"פרטי חשבון",
+        "CREATE ACCOUNT TEXT"   :	"צור חשבון"
+        },  
+      "pl_PL":
+        {
+        "ACCOUNT TEXT"	   	    :	"Konto",
+        "ACCOUNT INFORMATION"   :	"Informacje o koncie",
+        "CREATE ACCOUNT TEXT"   :	"Utwórz konto"
+        }, 
+      "vi_VN":
+        {
+        "ACCOUNT TEXT"	   	    :	"Tài khoản",
+        "ACCOUNT INFORMATION"   :	"Thông tin tài khoản",
+        "CREATE ACCOUNT TEXT"   :	"Tạo tài khoản"
+        },
+     "ca_ES":
+         {
+         "ACCOUNT TEXT"	   	    :	"Compte",
+        "ACCOUNT INFORMATION"   :	"Informació del compte",
+        "CREATE ACCOUNT TEXT"   :	"Crea un compte"
+         },
+     "uk_UA":
+         {
+         "ACCOUNT TEXT"	   	    :	"Обліковий запис",
+        "ACCOUNT INFORMATION"   :	"Інформація про обліковий запис",
+        "CREATE ACCOUNT TEXT"   :	"Створити обліковий запис"
+         },
+     "it_IT":
+         {
+         "ACCOUNT TEXT"	   	    :	"Account",
+        "ACCOUNT INFORMATION"   :	"Informazioni account",
+        "CREATE ACCOUNT TEXT"   :	"Creare un account"
+         }
+    }
