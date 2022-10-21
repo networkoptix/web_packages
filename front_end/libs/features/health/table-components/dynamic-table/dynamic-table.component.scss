@@ -216,6 +216,10 @@ nx-dynamic-table {
             color: var(--light1) !important;
             background-color: var(--light16);
 
+            &:hover {
+              background-color: var(--dynamic-table-row-hover-bg) !important;
+            }
+
             td {
 
               &,
