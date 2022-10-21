@@ -229,6 +229,22 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         return this.patch('/rest/v2/servers/this/runtimeInfo', configureParams).toPromise();
     }
 
+    rebuildArchive(
+        location: number,
+        action?: string
+    ): Observable<t.RebuildArchiveResponse> {
+        let url = `/rest/v2/servers/this/rebuildArchive/${location ? 'main' : 'backup'}`;
+        switch (action) {
+            case 'start':
+                return this.post(url);
+            case 'update':
+                url += '?_keepDefault=true';
+                return this.get(url);
+            case 'stop':
+                return this.delete(url);
+        }
+    }
+
     // Licenses
     activateLicense(key): Observable<any> {
         return this.put(`/rest/v2/licenses/${key}`)

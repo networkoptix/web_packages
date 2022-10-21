@@ -821,26 +821,34 @@ export class NxSystemStorageComponent implements OnInit {
         if (action) {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
         }
-
         let toastType = this.CONFIG.toast.success;
         let message: string;
+
         defer(() => this.system.storageManager
             .rebuildArchive(this.serverId, type, action)
             .pipe(
                 map((res: RebuildArchiveResponse) => {
-                    if (res.reply && res.reply.state === 'RebuildState_None') {
+                    const reply = res.reply || res.main || res.backup;
+                    if (reply && ['RebuildState_None', 'none'].includes(reply.state)) {
                         type ? this.percentMainDone = 1 : this.percentBackupDone = 1;
                         return res;
                     }
-                    if (res.reply && res.reply.totalProgress === 0) {
-                        action = undefined;
+
+                    // v.2 responses
+                    if (res.main || res.backup) {
+                        action = 'update';
+                    } else {
+                        if (reply && reply.totalProgress === 0) {
+                            action = undefined;
+                        }
                     }
+
                     if (type) {
-                        this.percentMainDone = res.reply.totalProgress;
+                        this.percentMainDone = reply.totalProgress;
                         this.reindexingMain = true;
                         this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
                     } else {
-                        this.percentBackupDone = res.reply.totalProgress;
+                        this.percentBackupDone = reply.totalProgress;
                         this.reindexingBackup = true;
                         this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
                     }
@@ -853,7 +861,8 @@ export class NxSystemStorageComponent implements OnInit {
             takeUntil(this.stopReindex$.pipe(filter(stopping => stopping === type))),
         ).subscribe(
             (res: RebuildArchiveResponse) => {
-                if (res.reply.state === 'RebuildState_None') {
+                const reply = res.reply || res.main || res.backup;
+                if (['RebuildState_None', 'none'].includes(reply.state)) {
                     this[`percent${type ? 'Main' : 'Backup'}Done`] = 0;
                     message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`]();
                 }
