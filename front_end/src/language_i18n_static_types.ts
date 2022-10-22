@@ -1,6 +1,7 @@
 export interface LanguageI18NStaticTypes {
     language:              (params?: Record<string, string | number>) => string;
     "About %CLOUD_NAME%":  (params?: Record<string, string | number>) => string;
+    Administration:        (params?: Record<string, string | number>) => string;
     "All Servers":         (params?: Record<string, string | number>) => string;
     "Download %VMS_NAME%": (params?: Record<string, string | number>) => string;
     "For developers":      (params?: Record<string, string | number>) => string;

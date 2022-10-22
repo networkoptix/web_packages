@@ -94,7 +94,7 @@
         (click)="hide()"
         [routerLink]="dropdownItem.route"
     >
-        <span>{{ dropdownItem.name }}</span>
+        <span>{{ dropdownItem.name | translate }}</span>
     </a>
 </ng-template>
 
@@ -108,7 +108,7 @@
         [attr.href]="dropdownItem.route"
         target="_blank"
     >
-        <span>{{ dropdownItem.name }}</span>
+        <span>{{ dropdownItem.name | translate }}</span>
     </a>
 </ng-template>
 
