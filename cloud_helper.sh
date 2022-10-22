@@ -498,7 +498,7 @@ do
                 run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
             fi
 
-            python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
+#            python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
             break
             ;;
         download_and_run)

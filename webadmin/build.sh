@@ -52,44 +52,13 @@ npm ci
 echo -e "\nBuild webadmin" >&2
 npm run build-webadmin
 mv dist static
-cp -R static/scripts/. static/
 
 # Build skins - Specific the build dir. After the project changed it needs to be specified
 npm run buildSkins ./static/styles
 
-# Build the inline wizard for each skin
-pushd inline-wizard
-    echo -e "\nRevert nodeenv for inline wizard..."
-    [ -e nenv ] && rm -rf nenv
-    nodeenv --node=12.20.1 nenv
-    . ./nenv/bin/activate
-    echo "Active Node.js: " && node -v
-    echo "Active npm: " && npm -v
-    npm install
-popd
-echo -e "\nIterate all skins"
-echo $PWD
-for dir in ../skins/*/
-do
-    dir=${dir%*/}
-    SKIN=${dir/..\/skins\//}
-    npm run setSkin $SKIN
-    pushd inline-wizard
-        npm run build
-        # Removed these files because it overrode webadmins version of them
-        rm -rf dist/{fonts,robots.txt,languages.json}
-        mv dist static
-
-        ./translation/localize.sh
-
-        mkdir -p ../static/setup_$SKIN
-        mv static/* ../static/setup_$SKIN
-        rm -rf static
-    popd
-    if [ -n "$LOCAL_ENV" ]; then
-      break
-    fi
-done
+cp -R static/webadmin/. static/
+cp -R static/setup-wizard/. static/
+rm -rf static/{setup-wizard,webadmin}
 
 # Make translations
 echo -e "\nCreate front end translations **************" >&2

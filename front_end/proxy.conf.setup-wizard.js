@@ -2,7 +2,7 @@ const defaultCloud = 'https://cloud-test.hdw.mx';
 const proxyTargetConfig = {
     local: {
         source: 'https://localhost:9003',
-        host: 'https://localhost:8338',
+        host: 'https://localhost:7001',
         cloud: defaultCloud
     }
 };
