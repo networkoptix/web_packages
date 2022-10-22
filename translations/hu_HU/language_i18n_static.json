@@ -1,6 +1,7 @@
 {
     "language": "hu_HU",
     "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
+    "Administration": "Administration",
     "All Servers": "Minden szerver",
     "Download %VMS_NAME%": "%VMS_NAME% letöltése",
     "For developers": "For developers",

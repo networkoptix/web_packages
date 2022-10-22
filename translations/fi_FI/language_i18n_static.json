@@ -1,6 +1,7 @@
 {
     "language": "fi_FI",
     "About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Kaikki palvelimet",
     "Download %VMS_NAME%": "Lataa %VMS_NAME%",
     "For developers": "For developers",
