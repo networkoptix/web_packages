@@ -65,7 +65,7 @@ const PROXY_CONFIG = [
             '/static/lang_en_US',
             '/static'
         ],
-        target: 'https://localhost:9001',
+        target: 'https://localhost:9000',
         changeOrigin: true,
         secure: false,
         bypass: function (req, res, proxyOptions) {

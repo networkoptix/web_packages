@@ -204,10 +204,7 @@ export class RestartServerModalContent {
                             this.system.currentBusyServerIds.delete(this.serverId);
                         }
                         this.system.systemInfo = this.system;
-                        this.toastService.notify(
-                            this.LANG.servers.restartSuccessful(),
-                            this.CONFIG.toast.success
-                        );
+
                         serverSubscription.unsubscribe();
                     });
             },
