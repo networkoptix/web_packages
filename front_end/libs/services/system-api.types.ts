@@ -11,7 +11,13 @@ interface IParams<Value = any> {
 export interface NormalResponse<Reply = {}> {
     error: string,
     errorString: string,
-    reply: Reply
+    reply: Reply,
+}
+
+export interface RebuildResponse<Reply = {}> {
+    reply?: Reply,
+    main?: Reply,
+    backup?: Reply
 }
 
 interface Permissions {
@@ -763,7 +769,7 @@ export interface ResourceParam {
     resourceId?: string;
 }
 
-export type RebuildArchiveResponse = NormalResponse<{
+export type RebuildArchiveResponse = RebuildResponse<{
     state: string;
     totalProgress: number;
 }>;

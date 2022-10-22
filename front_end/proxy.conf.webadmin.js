@@ -54,7 +54,12 @@ const PROXY_CONFIG = [
             '/static/languages.json',
             '/swagger-ui',
             '/web',
-            '/webrtc-tracker'
+            '/webrtc-tracker',
+            '/static/openapi_v1.json',
+            '/static/openapi_manifest.json',
+            '/static/openapi_legacy.json',
+            '/static/openapi_deprecated.json',
+            '/static/openapi.json'
         ],
         target: targets.host,
         changeOrigin: true,

@@ -25,9 +25,6 @@ rm ./dist/styles/*.scss;
 mv ./dist/*.css ./dist/styles;
 sed -i -e 's/href="static\/styles\./href="static\/styles\/styles\./g' dist/index.html;
 
-mv ./dist/*.js ./dist/scripts;
-sed -i -e 's/src="static\//type="text\/javascript" src="static\/scripts\//g' dist/index.html;
-sed -i -e 's/type="text\/javascript"//g' dist/index.html;  # remove extra type as we need to be "module"
 [ -e dist/index.html-e ] && rm dist/index.html-e;
 
 # Webadmin specific actions

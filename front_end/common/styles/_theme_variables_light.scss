@@ -462,6 +462,8 @@ html[data-theme="light"] {
     --table-alt-row-bg : #{$additional_light1};
     --table-row-hover-bg : rgba(var(--brand_core--rgb), .1);
 
+    --dynamic-table-row-hover-bg : var(--light16) !important;
+
     --promo-tile-bg : #{$light3};
     --promo-tile-h4-color : #{$dark9};
     --promo-tile-img-1-path : url("/static/images/promo/landing_promo_1.svg");

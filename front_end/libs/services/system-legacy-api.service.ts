@@ -1073,11 +1073,13 @@ export class NxSystemAPI {
         };
         let endpoint = '/ec2/cameraThumbnail';
 
-        if (time) {
-            data.time = time;
-        } else {
-            endpoint += '?ignoreExternalArchive';
+        if (data.time === 'now' || time === 'now') {
             data.time = 'LATEST';
+        } else if (!time) {
+            data.time = 'LATEST';
+            endpoint += '?ignoreExternalArchive';
+        } else {
+            data.time = time;
         }
 
         if (width) {

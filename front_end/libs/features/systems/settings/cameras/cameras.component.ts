@@ -47,6 +47,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     ICamera,
     IRecordingModes,
@@ -635,6 +636,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     // Process for apply service
     initUpdateProcess(): void {
         this.saveSettings = this.processService.createProcess(() => {
+            const newApi = this.system.serverManager.mediaserver instanceof NxSystemRestAPI;
             if (!this.safeToUpdateRecordingSettings) {
                 this.applyService.setWarn(this.LANG.common.recordingSettingsWarning());
                 return Promise.reject();
@@ -642,7 +644,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps: !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
-                recordingType: this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || RecordingType.ALWAYS,
+                recordingType: this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id ||
+                    (newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS),
                 streamQuality: this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
 
@@ -786,7 +789,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     preventContext = event => event.preventDefault();
 
     checkModeEnabled(id, enabled = this.motionEnabled) {
-        return id === RecordingType.ALWAYS ||
+        return [RecordingType.META_ALWAYS, RecordingType.ALWAYS].includes(id) ||
             id === RecordingType.NEVER ||
             (id === RecordingType.META_LOW
                 ? this.selectedCamera.motionLowResEnabled
@@ -833,7 +836,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     disableMotion = (): void => {
         this.motionEnabled = false;
         this.recordingModes = this.recordingModes.map(({ name, id }) => {
-            const enabled = id === RecordingType.ALWAYS;
+            const enabled = [RecordingType.META_ALWAYS, RecordingType.ALWAYS].includes(id);
             const value = enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
@@ -858,7 +861,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     updateMotionWarning(): void {
         const [
-            // always,
+            _, // unused placeholder for always
             motion,
             lowMotion
         ] = this.recordingModesWatcher.originalValue;

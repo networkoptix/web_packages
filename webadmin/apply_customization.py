@@ -72,14 +72,6 @@ def process_files(customization_zip, webadmin_zip, temp_dir):
     # Copy setup skin and setup wizard in package.
     shutil.copyfile(f"{static_dir}/styles/{skin}.css",
                     f"{static_dir}/styles/skin.css")
-    copy_tree(f"{static_dir}/setup_{skin}", f"{static_dir}/")
-
-    # Remove files related to other skins.
-    for skin_name in ["blue", "green", "orange"]:
-        setup_path = f"{static_dir}/setup_{skin_name}"
-        if Path(setup_path).exists():
-            shutil.rmtree(setup_path)
-        Path(f"{static_dir}/styles/{skin_name}.css").unlink(missing_ok=True)
 
     for file in ["description.json", "webadmin_config.json", "desktop/webadmin_config.js"]:
         extract_file_to(customization_zip, file, customization_dir)

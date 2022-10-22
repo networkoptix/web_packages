@@ -464,6 +464,8 @@ html[data-theme="dark"] {
     --table-alt-row-bg: #171C1F; //$dark5;
     --table-row-hover-bg : #35464F; //$dark11;
 
+    --dynamic-table-row-hover-bg : var(--light16) !important;
+
     --promo-tile-bg : #{$dark4};
     --promo-tile-h4-color : #{$light10};
     --promo-tile-img-1-path : url("/static/images/promo/landing_promo_dark_1.svg");

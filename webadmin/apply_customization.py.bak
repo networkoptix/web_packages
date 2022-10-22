@@ -72,6 +72,14 @@ def process_files(customization_zip, webadmin_zip, temp_dir):
     # Copy setup skin and setup wizard in package.
     shutil.copyfile(f"{static_dir}/styles/{skin}.css",
                     f"{static_dir}/styles/skin.css")
+    copy_tree(f"{static_dir}/setup_{skin}", f"{static_dir}/")
+
+    # Remove files related to other skins.
+    for skin_name in ["blue", "green", "orange"]:
+        setup_path = f"{static_dir}/setup_{skin_name}"
+        if Path(setup_path).exists():
+            shutil.rmtree(setup_path)
+        Path(f"{static_dir}/styles/{skin_name}.css").unlink(missing_ok=True)
 
     for file in ["description.json", "webadmin_config.json", "desktop/webadmin_config.js"]:
         extract_file_to(customization_zip, file, customization_dir)
@@ -137,12 +145,15 @@ def check_if_update_required(webadmin_package, customization_package, output_pac
             ZipFile(webadmin_package) as webadmin_zip, \
             ZipFile(output_package) as output_zip:
 
-        if customization_zip.read("description.json") \
-                != output_zip.read("static/customization/description.json"):
-            return True
+        try:
+            if customization_zip.read("description.json") \
+                    != output_zip.read("static/customization/description.json"):
+                return True
 
-        if webadmin_zip.read("static/version.txt") \
-                != output_zip.read("static/version.txt"):
+            if webadmin_zip.read("static/version.txt") \
+                    != output_zip.read("static/version.txt"):
+                return True
+        except KeyError:
             return True
 
     return False
