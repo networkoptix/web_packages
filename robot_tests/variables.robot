@@ -37,10 +37,10 @@ ${APPLY CHANGES CANCEL BUTTON}        //ngb-modal-window//
 
 #Log In Elements
 ${LOG IN MODAL}                       //nx-authorize-component/div[@class="authorize-main main-w"]
-${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit"]
+${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@id="btnLogin"]
 ${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
 ${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
-${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
+${LOG IN BUTTON}                      //nx-authorize-component//button[@id="btnLogin"]
 ${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//footer//button[@type="button"]//span[text()="${CREATE ACCOUNT BUTTON TEXT}"]
 ${LOG IN BTN REGISTER ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
 ${LOG IN BTN CREATE ACCOUNT PAGE}     //nx-authorize-create-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
@@ -89,7 +89,7 @@ ${SYSTEMS GRID TILES}                 ${SYSTEMS GRID}//nx-system-tile
 
 
 ${LOG OUT BUTTON}                     //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
-${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
+${WELCOME CAPTION}                    //h1[@id='welcomeCaption']/span
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
 ${SECURITY DROPDOWN}                  //header//li//a[@href = "/account/security"]
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
@@ -134,12 +134,12 @@ ${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[cont
 ${THIS PAGE CANNOT BE LOADED}         //h2[@name="NO_SETTINGS" and contains(text(),"${THIS PAGE CANNOT BE LOADED TEXT}")]
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
-${SYSTEM SAVE}                        //nx-apply//nx-process-button//button
-${SYSTEM CANCEL}                      //nx-cancel-button//button
+${SYSTEM SAVE}                        //button[@id="saveSettingsBtn"]
+${SYSTEM CANCEL}                      //button[@id="cancelSettingsBtn"]
 
 ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner')]/span[contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
-${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
+${DISCONNECT FROM MY ACCOUNT}         //button/span[@id="disconnectFromCloud" and contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='componentId']
 ${ACCESS LEVEL DROPDOWN MENU}         ${SYSTEM USER DETAILS}//nx-section//ul[contains(@class, "dropdown-menu")]
@@ -165,8 +165,8 @@ ${NEW FEATURE CLOSE BUTTON}           ${NEW FEATURE MODAL}//button//span[contain
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
-${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button/span[contains(text(),'${CANCEL BUTTON TEXT}')]/..
-${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${DISCONNECT BUTTON TEXT}')]
+${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button[@id="cancelDisconnectSystemBtn" and contains(text(),'${CANCEL BUTTON TEXT}')]
+${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[@id="disconnectSystemBtn" and contains(text(),'${DISCONNECT BUTTON TEXT}')]
 ${DISCONNECT MODAL BUTTON}               ${MODAL DIALOG}//button/span[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 
 ${JUMBOTRON}                          //div[@class='mainContainer']
@@ -174,14 +174,14 @@ ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and n
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
-${ADD USER BUTTON SYSTEMS}            //nx-system-settings-component//nx-menu//nx-menu-button//button
+${ADD USER BUTTON SYSTEMS}            //nx-menu-button[@id="addUserBtn"]//button
 ${ADD USER MODAL}                     //form[@name='addUserForm']
 ${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
 ${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='componentId']
-${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
-${ADD USER CANCEL}                    ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
-${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@data-dismiss='modal']
-${ADD USER PERMISSIONS HINT}          ${ADD USER MODAL}//span[contains(@class,'help-block')]
+${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[@id="addUserBtn" and text()='${ADD BUTTON TEXT}']
+${ADD USER CANCEL}                    ${ADD USER MODAL}//button[@id="cancelAddUserBtn" and text()='${CANCEL BUTTON TEXT}']
+${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@id="closeAddUser"]
+${ADD USER PERMISSIONS HINT}          ${ADD USER MODAL}//span[@id="addUserHelpBlock"]
 
 ${EDIT PERMISSIONS EMAIL}             //form[@name='shareForm']//input[@ng-model='user.email']
 ${EDIT PERMISSIONS DROPDOWN}          //form[@name='shareForm']//button[@id='permissionsSelect']

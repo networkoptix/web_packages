@@ -12,14 +12,14 @@ ${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//form//input[@id='lastNam
 ${REGISTER EMAIL INPUT}               ${REGISTER FORM}//form//nx-email-input/input[@id='email']
 ${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//form//input[@name='registerEmailLocked']
 ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//form//nx-password-input//input[@id='createAccountPassword']
-${REGISTER LOG IN BUTTON}             ${REGISTER FORM}//button/span[text()="${LOG IN BUTTON TEXT}"]/..
+${REGISTER LOG IN BUTTON}             ${REGISTER FORM}//button[@id="btnActivateLogin"]
 ${REGISTER BACK BUTTON}               ${REGISTER FORM}//button/span[text()="${BACK TEXT}"]/..
 ${REGISTER NOT ACTIVATED}             //nx-authorize-component//form[@name="emailForm"]//p[text()="${ACCOUNT NOT ACTIVATED}"]
 
 ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//nx-checkbox[@name="termsAndConditions"]
 ${TERMS AND CONDITIONS CHECKBOX REAL}       ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//input[@id='termsAndConditions']
 
-${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
+${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[@id="btnCreateAccount" and contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
 ${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//nx-checkbox/../following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
 ${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']

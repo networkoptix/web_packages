@@ -4,7 +4,7 @@ ${url}                                ${ENV}
 ${CZECH ALERT}                        Váš účet byl úspěšně uložen
 
 #account web elements
-${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
+${ACCOUNT DROPDOWN}                   //div[@id="accountSettingsDropdown"]
 ${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
 ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
@@ -12,8 +12,8 @@ ${ACCOUNT EMAIL}                      //account//a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
-${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="reset"]
+${ACCOUNT SAVE}                       //button[@id="saveSettingsBtn"]
+${ACCOUNT CANCEL}                     //button[@id="cancelSettingsBtn"]
 ${TEST FIRST NAME}                    testFirstName
 ${TEST LAST NAME}                     testLastName
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
