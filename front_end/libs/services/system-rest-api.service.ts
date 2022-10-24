@@ -125,7 +125,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private setupSystem(
         systemName: string,
-        systemSettings: t.SystemConfigSettings,
+        systemSettings: t.SystemAdvancedConfigSettings,
         cloudSystemID = '',
         cloudAuthKey = '',
         owner = '',
@@ -768,7 +768,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     setupLocalSystem(
         systemName: string,
         password: string,
-        systemSettings: t.SystemConfigSettings
+        systemSettings: t.SystemAdvancedConfigSettings
     ) {
         return this.setupSystem(
             systemName,
