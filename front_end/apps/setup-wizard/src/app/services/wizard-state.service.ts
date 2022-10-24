@@ -673,13 +673,14 @@ export class WizardStateService {
 
     initSystem(): void {
         const { localPassword, systemName } = this.setupConfig;
-        const settings: Partial<SystemConfigSettings> = {};
 
+        const settings: SystemAdvancedConfigSettings = {};
+        // eslint-disable-next-line array-callback-return
         Object.keys(this.systemAdvancedSettings).forEach((key: string): void => {
             if (typeof this.systemAdvancedSettings[key] === 'object') {
-                settings[key] = this.systemAdvancedSettings[key].settingValue;
+                settings[key] = this.systemAdvancedSettings[key].settingValue ?? false;
             } else {
-                settings[key] = this.systemAdvancedSettings[key];
+                settings[key] = this.systemAdvancedSettings[key] ?? false;
             }
         });
 

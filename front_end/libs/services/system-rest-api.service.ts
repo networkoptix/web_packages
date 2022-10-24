@@ -125,7 +125,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     setupSystem(
         systemName: string,
-        systemSettings: Record<string, unknown>,
+        systemSettings: t.SystemAdvancedConfigSettings,
         cloudSystemID = '',
         cloudAuthKey = '',
         owner = '',
@@ -144,7 +144,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }
         };
         !cloudSystemID ? delete config.cloud : delete config.local;
-        return this.post('/rest/v1/system/setup', config);
+        return this.post('/rest/v1/system/setup', config).toPromise();
     }
 
     private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
@@ -768,7 +768,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     setupLocalSystem(
         systemName: string,
         password: string,
-        systemSettings: Partial<t.SystemConfigSettings>
+        systemSettings: t.SystemAdvancedConfigSettings
     ) {
         return this.setupSystem(
             systemName,

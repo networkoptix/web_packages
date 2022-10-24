@@ -651,6 +651,8 @@ export class SystemConfigSettings {
 }
 
 export class SystemAdvancedConfigSettings {
+    videoTrafficEncryptionForced?: boolean;
+    exposeDeviceCredentials?: boolean;
 }
 
 enum EventState {
