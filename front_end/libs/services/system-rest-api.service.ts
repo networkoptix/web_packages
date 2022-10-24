@@ -144,7 +144,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }
         };
         !cloudSystemID ? delete config.cloud : delete config.local;
-        return this.post('/rest/v1/system/setup', config).toPromise();
+        return this.post('/rest/v1/system/setup', config);
     }
 
     private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
