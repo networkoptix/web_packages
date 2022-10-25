@@ -125,7 +125,7 @@ export class NxDebugComponent {
         ).subscribe((systemId: string) => {
             this.system = this.systems.find(system => system.id === systemId);
             this.cloudApiService.getSystemAuth(systemId)
-                .subscribe((authKeys: any) => {
+                .subscribe(authKeys => {
                     this.debugProxySettings.authGet = authKeys.authGet;
                     this.debugProxySettings.authPost = authKeys.authPost;
                 });

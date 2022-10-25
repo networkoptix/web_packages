@@ -546,7 +546,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     updateValues(forceUpdate = false): void {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
-            flatMap((result: any) => this.setupReport(result))
+            flatMap(result => this.setupReport(result))
         ).subscribe(() => { }, () => {
             if (!this.system.id) {
                 !this.window.parent

@@ -1236,15 +1236,11 @@ export class NxSystemAPI {
         return this.get<t.Alarms>('/ec2/metrics/alarms');
     }
 
-    getAggregateHealthReport(forceUpdate = false) {
-        const endpoint =
-            '/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms';
+    getAggregateHealthReport(forceUpdate = false): Observable<t.AggregatedHealthReport> {
+        const endpoint = '/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms';
         const headers = {};
-        const secondsSinceUpdate =
-            ((Date.now() - this.healthService.lastUpdate) / 1000) | 0;
-        const stale =
-            secondsSinceUpdate >
-            this.CONFIG.cloudCapabilities.healthMonitorCacheTimeout;
+        const secondsSinceUpdate = ((Date.now() - this.healthService.lastUpdate) / 1000) | 0;
+        const stale = secondsSinceUpdate > this.CONFIG.cloudCapabilities.healthMonitorCacheTimeout;
         if (
             forceUpdate ||
             !this.cacheService.addedToCache(`${this.urlBase}${endpoint}`) ||
@@ -1255,7 +1251,7 @@ export class NxSystemAPI {
             headers['reset-cache'] = 'reset';
         }
 
-        return this.get(endpoint, {}, headers);
+        return this.get<t.AggregatedHealthReport>(endpoint, {}, headers);
     }
     // End of Health Monitor
 

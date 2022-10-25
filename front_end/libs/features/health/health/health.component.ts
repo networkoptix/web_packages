@@ -28,6 +28,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystemAPIService } from '@services/system-api.service';
+import type { AggregatedHealthReport } from '@services/system-api.types';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -227,7 +228,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.cleanUp();
     }
 
-    setupReport(_data) {
+    setupReport(_data: AggregatedHealthReport) {
         const data = cloneDeep(_data);
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
@@ -579,7 +580,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     updateValues(forceUpdate = false): void {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
-            flatMap((result: any) => this.setupReport(result))
+            flatMap(result => this.setupReport(result))
         ).subscribe(() => { }, () => {
             if (!this.system.id) {
                 !this.window.parent

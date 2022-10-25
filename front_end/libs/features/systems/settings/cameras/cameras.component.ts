@@ -1042,16 +1042,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 .getAggregateHealthReport()
                 .pipe(untilDestroyed(this))
                 .subscribe(
-                    (result: any) => {
+                    result => {
                         this.applyService.setVisible();
-                        const alerts = result &&
-                            result.reply &&
-                            result.reply['ec2/metrics/alarms'] &&
-                            result.reply['ec2/metrics/alarms'].reply.cameras;
-                        this.alerts = Object.entries(alerts || {}).map(
-                            ([cameraId, alertInfo]) =>
+                        const alerts = result?.reply?.['ec2/metrics/alarms']?.reply?.cameras;
+                        this.alerts = Object.entries(alerts || {})
+                            .map(([cameraId, alertInfo]) =>
                                 new Alert(cameraId, alertInfo, 'Camera')
-                        );
+                            );
                         this.updateAlerts();
                     },
                     () => {
