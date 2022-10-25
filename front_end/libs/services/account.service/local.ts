@@ -1,6 +1,7 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
@@ -19,7 +20,7 @@ import { NxSystemAPIService } from '../system-api.service';
 import { NxUriService } from '../uri.service';
 import { WINDOW } from '../window-provider';
 
-import { Account } from './account';
+import { Account, newLocalAccount } from './account';
 import { BaseAccount } from './base';
 
 @Injectable()
@@ -44,7 +45,8 @@ export class LocalAccount extends BaseAccount {
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
-        protected bootstrapProviderService: NxBootstrapProvider
+        protected bootstrapProviderService: NxBootstrapProvider,
+        protected store: Store,
     ) {
         super(
             configService,
@@ -64,7 +66,8 @@ export class LocalAccount extends BaseAccount {
             loginService,
             oauthService,
             cookieService,
-            bootstrapProviderService
+            bootstrapProviderService,
+            store,
         );
         this.mediaServerApi = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), 5.1);
@@ -73,7 +76,7 @@ export class LocalAccount extends BaseAccount {
     async get(forceUpdate = false): Promise<Account | undefined> {
         try {
             const user: any = await this.mediaServerApi.getCurrentUser(forceUpdate);
-            const account = new Account(user);
+            const account = newLocalAccount(user);
             this.account = account;
             return account;
         } catch (err) {

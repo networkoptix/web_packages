@@ -235,10 +235,12 @@ export interface Platform extends Installer {
     name: string;
 }
 
+// There are other properties, but until they're needed outside
+// the account settings page name properties are all we need
 export interface AccountEdit {
-    'first_name': string,
-    'last_name': string,
-    language: string
+    first_name: string;
+    last_name: string;
+    // language: string;
 }
 
 export interface CloudStorage {

@@ -8,9 +8,11 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { accountActions } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -18,6 +20,7 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { AccountEdit } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -61,7 +64,8 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private pageService: NxPageService,
         private toastService: NxToastService,
-        @Inject(WINDOW) protected window: Window
+        private store: Store,
+        @Inject(WINDOW) protected window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -96,7 +100,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             .get(true)
             .then(account => {
                 if (account?.email) {
-                    this.account = account;
+                    this.account = { ...account };
                     if (!environment.isLocal && !this.systemsService.isPolling) {
                         this.systemsService.getSystems(account.email);
                     }
@@ -126,11 +130,13 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         }, {
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden: true
-        }, () => {
-            this.accountService.accountSubject.next(this.accountService.accountSubject.value);
-            // account info was changed successful (local and on server)
-            // really no need to force update -- TT
-            // this.accountService.get(true);
+        }, (res: AccountEdit) => {
+            const { first_name, last_name } = res;
+            this.store.dispatch(
+                accountActions.updateCurrentUser({
+                    update: { first_name, last_name }
+                })
+            );
             this.toastService.notify(
                 this.LANG.account.accountSavedSuccess(),
                 this.CONFIG.toast.success,
@@ -142,7 +148,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     changeLanguage(langCode: string): void {
         this.langChanged = true;
         this.langCode = langCode;
-        this.account.language = langCode;
+        this.store.dispatch(
+            accountActions.updateCurrentUser({ update: { language: langCode } })
+        );
     }
 
     private isUserASystemOwner(): void {

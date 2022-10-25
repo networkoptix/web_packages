@@ -2,7 +2,7 @@ import { last } from 'lodash-es';
 
 import { User } from '../system-api.types';
 
-export class Account {
+export interface Account {
     email: string;
     first_name: string;
     name: string;
@@ -21,18 +21,29 @@ export class Account {
     totpExistsForAccount: boolean;
     accessToken: string;
     sessionExpires: number;
+}
 
-    constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
-        this.email = email;
-        const [first, ...rest] = (fullName || name || '').split(' ');
-        this.id = id;
-        this.name = name;
-        this.first_name = first;
-        this.last_name = last((rest || ['']));
-        this.permissions = (permissions || '').split('|');
-        this.is_superuser = isAdmin || permissions?.includes('GlobalAdminPermission');
-        this.isCloud = isCloud;
-    }
+export function newLocalAccount({
+    email,
+    fullName,
+    id,
+    permissions,
+    name,
+    isAdmin,
+    isCloud
+}: User): Account {
+    const [first, ...rest] = (fullName || name || '').split(' ');
+    return {
+        email,
+        id,
+        name,
+        first_name: first,
+        last_name: last((rest || [''])),
+        permissions: (permissions || '').split('|'),
+        is_superuser: isAdmin || permissions?.includes('GlobalAdminPermission'),
+        isCloud
+    } as Account;
+    // TODO: This should eventually be its own LocalAccount type
 }
 
 export const DUMMY_ACCOUNT: Account = {

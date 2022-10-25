@@ -1,12 +1,14 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { accountActions, accountSelectors } from '@common/store/account';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
@@ -39,7 +41,6 @@ export abstract class BaseAccount implements OnDestroy {
     protected CONFIG: IConfig;
     protected LANG: LanguageI18NStaticTypes;
     protected location: Location;
-    accountSubject = new BehaviorSubject<Account>(undefined);
     protected requestingLogin: any;
     protected loginDialogActive: boolean;
     protected localStorage: any;
@@ -49,6 +50,8 @@ export abstract class BaseAccount implements OnDestroy {
     protected accountPollSubscription: Subscription;
     protected loginSubscription: Subscription;
     protected queryParamSubscription: Subscription;
+
+    private _account: Account;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
     dialogs: NxSimpleDialogsService;
@@ -87,7 +90,8 @@ export abstract class BaseAccount implements OnDestroy {
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
         protected cookieService: CookieService,
-        protected bootstrapProviderService: NxBootstrapProvider
+        protected bootstrapProviderService: NxBootstrapProvider,
+        protected store: Store,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -96,6 +100,13 @@ export abstract class BaseAccount implements OnDestroy {
         // languageService.translateSubject.subscribe(lang => { this.LANG = lang; });
         this.location = locationService;
         this.loginDialogActive = false;
+
+        // Singleton service will be destroyed with application
+        this.store.select(accountSelectors.selectCurrentUser)
+            // eslint-disable-next-line ngrx/no-store-subscription
+            .subscribe(account => {
+                this._account = account;
+            });
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
@@ -154,12 +165,14 @@ export abstract class BaseAccount implements OnDestroy {
 
     // Methods shared between local and cloud versions of account service.
 
-    get account() {
-        return this.accountSubject.getValue();
+    get account(): Account {
+        return this._account;
     }
 
     set account(account: Account) {
-        this.accountSubject.next(account);
+        this.store.dispatch(
+            accountActions.setCurrentUser({ currentUser: account })
+        );
         const loginState = this.sessionService.loginState;
         const login = account?.email || account?.name;
         if (!loginState || loginState !== login) {

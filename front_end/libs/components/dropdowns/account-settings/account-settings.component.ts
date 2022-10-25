@@ -6,12 +6,14 @@ import {
     ViewChild
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import {
     BehaviorSubject,
     combineLatest,
     SubscriptionLike
 } from 'rxjs';
 
+import { accountSelectors } from '@common/store/account';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -43,7 +45,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     isAccountRoute = false;
     displayedFullName = '';
 
-    accountSubscription: SubscriptionLike;
     widthSubscription: SubscriptionLike;
 
     readonly environment = environment;
@@ -61,7 +62,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
         headerService: NxHeaderService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        private store: Store,
     ) {
         super(languageService, configService);
         this.newHeader = this.CONFIG.featureFlags.newHeader;
@@ -71,7 +73,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     }
 
     ngOnInit(): void {
-        this.accountSubscription = this.accountService.accountSubject
+        this.store.select(accountSelectors.selectCurrentUser)
+            .pipe(untilDestroyed(this))
             .subscribe(account => {
                 if (account) {
                     this.settings = {

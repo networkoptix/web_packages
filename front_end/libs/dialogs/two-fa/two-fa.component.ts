@@ -13,10 +13,12 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { CookieService } from 'ngx-cookie-service';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { accountActions } from '@common/store/account';
 import {
     InfoBlockLine,
     InfoBlockSection,
@@ -63,7 +65,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     num2FaSystems: number;
     infoBlockSizeEnum = InfoBlockSize;
 
-    account: Account;
+    private account: Account;
     currentStep: T_FA_STEPS;
     incompatibleSystems: NxSystemInfo[] = [];
 
@@ -166,6 +168,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private elem: ElementRef<HTMLElement>,
         private cookieService: CookieService,
         private dialogRef: DialogRef,
+        private store: Store,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
@@ -384,8 +387,14 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
 
             if (response.account2faEnabled === false) {
-                this.account.account2faEnabled = false;
-                this.account.totpExistsForAccount = false;
+                this.store.dispatch(
+                    accountActions.updateCurrentUser({
+                        update: {
+                            account2faEnabled: false,
+                            totpExistsForAccount: false,
+                        }
+                    })
+                );
                 this.resetDefaults();
                 this.close('disabled');
             }

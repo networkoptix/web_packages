@@ -1,6 +1,7 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 
 import { NxLoginService } from '@services/login.service';
@@ -41,7 +42,8 @@ export class CloudAccount extends BaseAccount {
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
         protected cookieService: CookieService,
-        protected bootstrapProviderService: NxBootstrapProvider
+        protected bootstrapProviderService: NxBootstrapProvider,
+        protected store: Store,
     ) {
         super(
             configService,
@@ -61,7 +63,8 @@ export class CloudAccount extends BaseAccount {
             loginService,
             oauthService,
             cookieService,
-            bootstrapProviderService
+            bootstrapProviderService,
+            store,
         );
     }
 

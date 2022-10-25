@@ -18,6 +18,7 @@ import {
 } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -26,6 +27,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
 import { debounceTime, filter, take } from 'rxjs/operators';
 
+import { accountActions } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { SystemGuard } from '@guards/systemGuard';
@@ -147,6 +149,7 @@ export class AppComponent implements AfterViewInit {
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
         private themeService: NxThemeService,
+        private store: Store,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -167,9 +170,13 @@ export class AppComponent implements AfterViewInit {
 
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
-
         const code = url.searchParams.get('code');
         const refreshToken = url.searchParams.get('refresh_token');
+
+        this.store.dispatch(
+            accountActions.setParams({ params: { auth, code, refreshToken } })
+        );
+
         if (refreshToken) {
             this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {
                 this.appStateService.ready = true;

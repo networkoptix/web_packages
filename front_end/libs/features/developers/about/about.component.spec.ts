@@ -47,7 +47,8 @@ describe('NxAboutComponent', () => {
     const account = { is_superuser: false };
     const accountMock = {
         get: () => Promise.resolve(account),
-        accountSubject: new BehaviorSubject(account)
+        // currentUser$: of(account)
+        // TODO: Replace with mock store
     };
     const ribbonMock: any = {
         hide() {

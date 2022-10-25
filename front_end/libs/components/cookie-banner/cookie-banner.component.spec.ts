@@ -12,9 +12,7 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockDirective } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
-import { of } from 'rxjs';
 
-import { NxAccountService } from '@services/account.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
@@ -32,9 +30,10 @@ xdescribe('NxCookieBannerComponent', () => {
         retrieve: (key: string) => !!localStorageMockStore[key],
         store: (key: string) => { localStorageMockStore[key] = true; }
     };
-    const accountMock = {
-        accountSubject: of('')
-    };
+    // const accountMock = {
+    //     currentUser$: of('')
+    // };
+    // TODO: Replace with mock store
 
     beforeEach(waitForAsync(() => {
         localStorageMockStore = {};
@@ -50,7 +49,7 @@ xdescribe('NxCookieBannerComponent', () => {
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: LocalStorageService, useValue: localStorageMock },
-                { provide: NxAccountService, useValue: accountMock }
+                // { provide: NxAccountService, useValue: accountMock }
             ]
         }).compileComponents()
             .then(() => {

@@ -195,7 +195,7 @@ export class DownloadComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const account = this.accountService.accountSubject.getValue();
+        const account = this.accountService.account;
         this.canSeeHistory = (
             !!this.CONFIG.cloudCapabilities.publicReleases ||
             account && (

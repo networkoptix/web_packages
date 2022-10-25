@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxAccountService } from '@services/account.service';
+import { selectCurrentUser } from '@common/store/account/account.selectors';
+import type { Account } from '@services/account.service/account';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { ErrorStateStructure } from '../error-state/error-state-manager';
@@ -17,10 +19,12 @@ export class NxErrorStateComponent {
 
     LANG: LanguageI18NStaticTypes;
 
+    currentUser$ = this.store.select<Account>(selectCurrentUser);
+
     constructor(
-        public accountService: NxAccountService,
-        public route: ActivatedRoute,
         languageService: NxLanguageProviderService,
+        private route: ActivatedRoute,
+        private store: Store,
     ) {
         this.LANG = languageService.translations;
     }

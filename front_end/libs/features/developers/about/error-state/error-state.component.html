@@ -24,7 +24,7 @@
 </ng-template>
 
 <div
-    *ngIf="(accountService.accountSubject | async)?.is_superuser || pendingOrReview"
+    *ngIf="(currentUser$ | async)?.is_superuser || pendingOrReview"
     class="error-block-wrapper"
 >
     <div class="error-display-block">

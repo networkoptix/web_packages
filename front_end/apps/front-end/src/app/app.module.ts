@@ -2,7 +2,8 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
     PathLocationStrategy,
-    DatePipe, LocationStrategy
+    DatePipe,
+    LocationStrategy
 } from '@angular/common';
 import {
     HttpClientModule,
@@ -30,6 +31,7 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { accountReducer } from '@common/store/account';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -66,7 +68,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot({}),
+        StoreModule.forRoot({ account: accountReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({

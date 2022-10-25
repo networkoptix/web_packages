@@ -72,7 +72,8 @@ ngMocks.defaultMock(NxCloudApiService, () => ({
 
 ngMocks.defaultMock(NxAccountService, () => ({
     get: () => of<Account>(DUMMY_ACCOUNT).toPromise(),
-    accountSubject: new BehaviorSubject<Account>(DUMMY_ACCOUNT),
+    // currentUser$: of(DUMMY_ACCOUNT),
+    // TODO: Replace with mock store
     account: DUMMY_ACCOUNT,
 }));
 

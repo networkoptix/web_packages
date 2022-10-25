@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { cloneDeep } from 'lodash-es';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { NxAccountService } from '@services/account.service';
+import { accountSelectors } from '@common/store/account';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -29,11 +30,13 @@ export class NxNewHeaderComponent {
     loggedIn: boolean | undefined = undefined;
     isMobile$ = new Subject<boolean>();
 
-    constructor(public headerService: NxHeaderService,
+    constructor(
+        public headerService: NxHeaderService,
         menusService: NxMenusService,
-        accountService: NxAccountService,
         router: Router,
-        private scrollMechanicsService: NxScrollMechanicsService) {
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private store: Store,
+    ) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
             if (event.url === '/') {
                 this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
@@ -52,8 +55,9 @@ export class NxNewHeaderComponent {
             }
         });
 
-        accountService.accountSubject
-            .pipe(untilDestroyed(this)).subscribe(account => {
+        this.store.select(accountSelectors.selectCurrentUser)
+            .pipe(untilDestroyed(this))
+            .subscribe(account => {
                 if (account) {
                     this.loggedIn = true;
                 } else {
