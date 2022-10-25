@@ -530,7 +530,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             filename = `report-${this.reportSnapshot.time}.json`;
         }
 
-        const data = new Blob([this.reportSnapshot], { type: 'text/json' });
+        const data = new Blob([JSON.stringify(this.reportSnapshot, null, 4)], { type: 'text/json' });
         FileSaver.saveAs(data, filename);
     }
 
