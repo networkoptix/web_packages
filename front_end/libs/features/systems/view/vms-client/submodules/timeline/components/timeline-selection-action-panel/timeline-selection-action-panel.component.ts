@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -6,7 +5,7 @@ import {
     AfterViewInit,
     TemplateRef,
     ViewContainerRef,
-    Inject,
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -44,7 +43,10 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
 
-    export: string;
+    exportLink: string;
+    exportName: string;
+
+    @ViewChild('exportBtn', { static: true }) exportBtn: ElementRef<HTMLAnchorElement>;
 
     constructor(
         configService: NxConfigService,
@@ -57,7 +59,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         protected dialogs: NxDialogsService,
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -94,23 +95,21 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         this.selection.$background = this.self.nativeElement;
     }
 
-    public exportUrl(): void {
+    downloadFile(): void {
+        this.exportBtn.nativeElement.href = this.exportLink;
+    }
+
+    private exportUrl(): void {
         let transport = this.selection.transport;
 
         if (!['mp4', 'mkv'].includes(transport)) {
             transport = 'mkv';
         }
-        this.export = this.system
+        this.exportLink = this.system
             ? this.system.getExportUrl(this.selection.exportUrlParams)
             : '';
 
-        const e = this.document.createElement('a');
-        const href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(this.export);
-        e.setAttribute('href', href);
-        e.setAttribute('download', `${this.selection.cameraId}.${transport}`);
-        this.document.body.appendChild(e);
-        e.click();
-        this.document.body.removeChild(e);
+        this.exportName = `${this.selection.cameraId}.${transport}`;
     }
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
@@ -136,6 +135,12 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     public onSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.status = s;
         this.self.nativeElement.classList.toggle('active', s.isActive);
+        if (s.isActive) {
+            this.exportUrl();
+        } else {
+            this.exportLink = '';
+            this.exportBtn.nativeElement.href = '#';
+        }
     }
 
     public initSetTimeDialog(): void {

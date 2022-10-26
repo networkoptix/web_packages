@@ -23,9 +23,12 @@
 <a
     #exportBtn
     class="export-link"
-    (click)="exportUrl()"
+    href="#"
+    (click)="downloadFile()"
     (mouseenter)="showLegend(popLegendExportTemplate, exportBtn)"
     (mouseout)="closeLegend()"
+    (mouseout)="closeLegend()"
+    [download]="exportName"
 >
     <svg-icon
         nx-add-svg-src
