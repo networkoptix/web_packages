@@ -240,8 +240,8 @@ Force Tags        account
             Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
             Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
             Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
-            Wait Until Element is Visible    ${ACCOUNT SAVE}
-            Click Button    ${ACCOUNT SAVE}
+#            Wait Until Element is Visible    ${ACCOUNT SAVE}
+#            Click Button    ${ACCOUNT SAVE}
             Sleep    2    #to allow the system to change languages
             Wait Until Element is Visible    //header//h4[contains(text(),'${info text}')]
         END
@@ -252,7 +252,7 @@ Force Tags        account
     ...    //nx-language-select//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
     Click Element
     ...    //nx-language-select//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
-    Click Button    //nx-apply//nx-process-button//button
+#    Click Button    //nx-apply//nx-process-button//button
     Sleep    1
     Verify in Account Page
     Wait Until Element is Visible    //header/h4[contains(text(),'${ACCOUNT INFORMATION}')]
@@ -324,8 +324,8 @@ Force Tags        account
     ...    "${LANGUAGE}"!="ja_JP"    ja_JP
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']
     Click Element    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']/..
-    Click Button    ${ACCOUNT SAVE}
-    Wait Until Element Is Not Visible    ${ACCOUNT CANCEL}
+#    Click Button    ${ACCOUNT SAVE}
+#    Wait Until Element Is Not Visible    ${ACCOUNT CANCEL}
     sleep    5
     Reload Page
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']

@@ -107,13 +107,14 @@ Check Language Logged In
 
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
-    Sleep     1
-    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
-    Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    //header//nx-header-language-select//span[@lang='${lang}']/..
-    Click Element    //header//nx-header-language-select//span[@lang='${lang}']/..
-    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
-    Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
+    Log     This is temporarily disabled. Uncomment below to reactivate
+#    Sleep     1
+#    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
+#    Click Button    ${LANGUAGE DROPDOWN}
+#    Wait Until Element Is Visible    //header//nx-header-language-select//span[@lang='${lang}']/..
+#    Click Element    //header//nx-header-language-select//span[@lang='${lang}']/..
+#    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
+#    Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
@@ -214,7 +215,7 @@ Log in to system
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
-    Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
+#    Wait Until Element Contains    ${ACCOUNT DROPDOWN}    MARK H.
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
     IF    '${mode}' == 'webadmin'
         Wait Until Element Is Visible    ${CLOUD NAME}

@@ -64,7 +64,7 @@ ${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//f
 ${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
 ${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${RESET SUCCESS MESSAGE TEXT}')]
 
-${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
+${LOG IN NAV BAR}                     //a[contains(@class, "login btn") and contains(text(),'${LOG IN BUTTON TEXT}')]
 
 #Header
 ${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]
@@ -97,7 +97,7 @@ ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//but
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
-${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]//landing-display-component/div
+${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]//h1[@id="welcomeCaption"]
 ${CREATE ACCOUNT HEADER}              //header//a[@href='/authorize?client_type=create']
 ${CREATE ACCOUNT BODY}                //landing-component//a[@href='/authorize?client_type=create']
 
