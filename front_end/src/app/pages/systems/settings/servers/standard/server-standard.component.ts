@@ -424,7 +424,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         return this.dialogs
             .restartServer(this.system, id, htmlToEntity(name))
             .then((res: string) => {
-                if (res === undefined) {
+                if (!res) {
                     this.serverRestarting = false;
                     return; // Dialog was canceled
                 }
