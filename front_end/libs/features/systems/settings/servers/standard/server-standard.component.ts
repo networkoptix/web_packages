@@ -274,16 +274,13 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             port.value,
                             serverId
                         );
-                    switch (portReturn.error) {
-                        case '0':
-                            await this.system.update();
-                            port.originalValue = port.value;
-                            newPort = port.value;
-                            break;
-                        case '3':
-                            this.portBusy = true;
-                            port.value = port.originalValue;
-                            break;
+                    if (portReturn?.error === '3') {
+                        this.portBusy = true;
+                        port.value = port.originalValue;
+                    } else {
+                        await this.system.update();
+                        port.originalValue = port.value;
+                        newPort = port.value;
                     }
                 }
 
