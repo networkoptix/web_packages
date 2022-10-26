@@ -11,10 +11,11 @@ import { WizardStateService } from './services/wizard-state.service';
 })
 export class AppComponent implements OnInit {
     constructor(
-      private themeService: NxThemeService,
+        private themeService: NxThemeService,
         private wizardState: WizardStateService,
     ) {
     }
+
     ngOnInit(): void {
         const theme = this.wizardState.hasNativeClient ? 'dark' : 'light';
         this.themeService.setTheme(theme, 'setup');

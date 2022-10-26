@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 
@@ -27,6 +28,7 @@ export class NxLanguageProviderService {
     translateSubject = new BehaviorSubject<LanguageI18NStaticTypes>(null);
 
     constructor(
+        configService: NxConfigService,
         private translate: TranslateService,
         private http: HttpClient,
         private sessionService: NxSessionService,
@@ -35,7 +37,14 @@ export class NxLanguageProviderService {
         private swCacheService: NxSwCacheService,
         @Inject(WINDOW) private window: Window,
     ) {
-        if (environment.isLocal) {
+        this.defaultLanguage = configService.getConfig().defaultLanguage;
+
+        if (environment.isSetup) {
+            const lang = new URLSearchParams(this.window.location.search).get('lang');
+            this.currentLang = lang ?? this.translate.getDefaultLang();
+        }
+
+        if (environment.isLocal && !environment.isSetup) {
             // Fixes circular dependency with local-system-status-interceptor.
             setTimeout(() => {
                 this.currentLang = this.sessionService.language;
