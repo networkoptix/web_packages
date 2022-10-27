@@ -273,10 +273,8 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     public onSelectionSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.selectionStatus = s;
-        if (this.selectionStatus.dragMode) {
-            this._updateCss();
-            this.dateStrings();
-        }
+        this._updateCss();
+        this.dateStrings();
     }
 
     public onTimelineSubjectChange(s: TimelineServiceStatus): void {
