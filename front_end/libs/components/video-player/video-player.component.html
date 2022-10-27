@@ -4,28 +4,13 @@
     muted
 ></video>
 
-<ng-template #poster>
-    <img
-        [src]="poster$ | async"
-        class="fs-exclude poster"
-        [ngClass]="!posterFailures ? 'visible' : 'invisible'"
-        (load)="handleLoad(true)"
-        (error)="handleLoad()"
-    />
-    <nx-pre-loader></nx-pre-loader>
-</ng-template>
-
-<ng-container *ngIf="webRtcPlayer.paused">
-    <div
-        *ngIf="error; else poster"
-        class="connection-error"
-    >
+<ng-container *ngIf="webRtcPlayer.paused && error">
+    <div class="connection-error">
         {{ error }}
     </div>
 </ng-container>
 
 <div
-    *ngIf="!webRtcPlayer.paused"
     class="full-screen parent-hover"
     (click)="enterFullscreen()"
     translate

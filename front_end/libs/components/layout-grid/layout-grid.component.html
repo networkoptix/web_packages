@@ -1,83 +1,81 @@
 <div
-    *ngIf="layout$ | async as layout"
-    class="grid-wrapper"
-    (resize)="updateWrapperSize($event)"
-    [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
-    [ngClass]="{ 'hide-grid': hideGrid }"
+    class="sidebar-wrapper"
+    [ngClass]="{ 'adding-item': addingItem }"
+    (mouseleave)="closeMenu()"
 >
-    <h2
-        *ngIf="(autoSaveHandler$ | async) > 0"
-        class="auto-save-overlay"
-    >
-        {{ LANG.layoutAutosave({ time: autoSaveHandler$ | async }) }}
-    </h2>
+    <header class="menu-tabs">
+        <h3
+            #settings
+            (click)="toggleMenu(settings, true)"
+            (mouseover)="toggleMenu(settings)"
+            [ngClass]="{ 'active-menu': openMenu === settings }"
+            translate
+        >
+            Settings
+        </h3>
+        <h3
+            #resources
+            (click)="toggleMenu(resources, true)"
+            (mouseover)="toggleMenu(resources)"
+            [ngClass]="{ 'active-menu': openMenu === resources }"
+            translate
+        >
+            Resources
+        </h3>
+    </header>
     <div
         class="resources-sidebar"
-        [ngClass]="{ 'hide-resource-menu': !showResources }"
+        (mouseover)="toggleMenu()"
     >
-        <div
-            class="resource-toggle"
-            (click)="showResources = !showResources"
-        ></div>
-        <header
-            #settings
-            (click)="openMenu = settings"
-        >
-            <h3 translate>Settings</h3>
-        </header>
-        <div
-            class="settings-menu"
-            [ngClass]="{ 'hide-settings': openMenu !== settings }"
-        >
-            <ng-container *ngFor="let setting of layout.settings">
-                <ng-container [ngSwitch]="setting.type">
-                    <div *ngSwitchCase="'number'">
-                        <label>{{ setting.label }}</label>
-                        <nx-numeric
-                            [step]="setting.step"
-                            [min]="setting.min"
-                            [max]="setting.max"
-                            [disabled]="layout.locked"
-                            [ngModel]="layout[setting.name]"
-                            (ngModelChange)="autoSave(setting.name, $event)"
-                        ></nx-numeric>
-                    </div>
-                    <div *ngSwitchCase="'boolean'">
-                        <label [for]="setting.name">{{ setting.label }}</label>
-                        <nx-checkbox
-                            [componentId]="setting.name"
-                            [disabled]="layout.locked && setting.name !== 'locked'"
-                            [ngModel]="layout[setting.name]"
-                            (ngModelChange)="autoSave(setting.name, $event)"
-                        ></nx-checkbox>
-                    </div>
-                    <h4
-                        *ngSwitchCase="'heading'"
-                        class="settings-heading"
-                    >
-                        {{ setting.label }}
-                    </h4>
-                    <div *ngSwitchDefault>
-                        <label>{{ setting.label }}</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            [disabled]="setting.type === 'readonly' || layout.locked"
-                            [ngModel]="layout[setting.name]"
-                            (ngModelChange)="autoSave(setting.name, $event)"
-                        />
-                    </div>
+        <ng-container *ngIf="layout$ | async as layout">
+            <div
+                *ngIf="openMenu === settings"
+                class="settings-menu"
+            >
+                <ng-container *ngFor="let setting of layout.settings">
+                    <ng-container [ngSwitch]="setting.type">
+                        <div *ngSwitchCase="'number'">
+                            <label>{{ setting.label }}</label>
+                            <nx-numeric
+                                [step]="setting.step"
+                                [min]="setting.min"
+                                [max]="setting.max"
+                                [disabled]="layout.locked"
+                                [ngModel]="layout[setting.name]"
+                                (ngModelChange)="autoSave(setting.name, $event)"
+                            ></nx-numeric>
+                        </div>
+                        <div *ngSwitchCase="'boolean'">
+                            <label [for]="setting.name">{{ setting.label }}</label>
+                            <nx-checkbox
+                                [componentId]="setting.name"
+                                [disabled]="layout.locked && setting.name !== 'locked'"
+                                [ngModel]="layout[setting.name]"
+                                (ngModelChange)="autoSave(setting.name, $event)"
+                            ></nx-checkbox>
+                        </div>
+                        <h4
+                            *ngSwitchCase="'heading'"
+                            class="settings-heading"
+                        >
+                            {{ setting.label }}
+                        </h4>
+                        <div *ngSwitchDefault>
+                            <label>{{ setting.label }}</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                [disabled]="setting.type === 'readonly' || layout.locked"
+                                [ngModel]="layout[setting.name]"
+                                (ngModelChange)="autoSave(setting.name, $event)"
+                            />
+                        </div>
+                    </ng-container>
                 </ng-container>
-            </ng-container>
-        </div>
-        <header
-            #resources
-            (click)="openMenu = resources"
-        >
-            <h3 translate>Resources</h3>
-        </header>
+            </div>
+        </ng-container>
         <cdk-tree
-            [ngClass]="{ 'hide-settings': openMenu && openMenu !== resources }"
+            *ngIf="openMenu === resources"
             cdkDropList
             [cdkDropListDisabled]="layout.locked"
             [dataSource]="dataSource"
@@ -115,6 +113,14 @@
             </cdk-nested-tree-node>
         </cdk-tree>
     </div>
+</div>
+
+<div
+    *ngIf="layout$ | async as layout"
+    class="grid-wrapper"
+    (resize)="updateWrapperSize($event)"
+    [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
+>
     <div
         *ngIf="aspectHandler$ | async as aspectStyle"
         class="layout-grid"

@@ -1,5 +1,8 @@
+import { isEqual } from 'lodash-es';
+import { animationFrameScheduler, distinctUntilChanged, interval, map, Observable, scan, switchMap, timer } from 'rxjs';
+
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { alphabeticalSort } from '@utils/general';
+import { alphabeticalSort, paramSortFunc } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
 import { NxSystem } from '../system';
@@ -11,8 +14,14 @@ import {
     IRecordingSettings,
     ITask,
     StreamQuality,
-    RecordingType
+    RecordingType,
+    TimeDetail
 } from './camera-manager-types';
+
+const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>): TimeDetail => {
+    chunk.durationMs = chunk.endTimeMs - chunk.startTimeMs;
+    return chunk as TimeDetail;
+};
 
 export class CameraManager {
     private serverManager: ServerManager;
@@ -108,7 +117,7 @@ export class CameraManager {
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.serverManager.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(id, 'hls');
-            const webRtcUrl = this.system.version >= 5.1 ? (): string => this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc') : null;
+            const webRtcUrl = this.system.version >= 5.1 ? ({ position } = { position: null }): string => this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc', 'low', position) : null;
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
@@ -225,5 +234,61 @@ export class CameraManager {
         } else {
             return 'Scheduled';
         }
+    }
+
+    public getRecordedTimes(cameraId: string[], baseCanvasSize = 36000): Observable<TimeDetail[]> {
+        const tenSecondsInMs = 10 * 1000;
+        let first = Infinity;
+        let resolution = 1;
+        const params = { cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1, startTime: 0, endTime: 0 };
+        return timer(0, tenSecondsInMs).pipe(
+            switchMap(() => {
+                params.startTime = params.endTime;
+                params.endTime = Date.now();
+                return this.serverManager.mediaserver.recordedTimePeriods(params);
+            }),
+            map(times => {
+                times.forEach(({ periods }) => {
+                    first = Math.min(parseInt(periods[0].startTimeMs), first);
+                });
+                resolution = Math.round((Date.now() - first) / baseCanvasSize);
+                return times.reduce((acc, { guid: cameraId, periods }) => {
+                    acc.push(
+                        ...periods.map(({ startTimeMs, durationMs }) => {
+                            startTimeMs = parseInt(startTimeMs);
+                            durationMs = parseInt(durationMs);
+                            const endTimeMs = startTimeMs + durationMs;
+                            const start = Math.round((startTimeMs - first) / resolution);
+                            const end = Math.max(Math.round((endTimeMs - first) / resolution), start + 1);
+                            return { cameraId, startTimeMs, durationMs, endTimeMs, start, end };
+                        })
+                    );
+                    return acc.sort(paramSortFunc<TimeDetail>(period => period.startTimeMs));
+                }, [] as TimeDetail[]);
+            }),
+            scan((acc, curr) => {
+                if (!acc.length) {
+                    return curr;
+                }
+
+                curr = curr.filter(current => !acc.find(existing => isEqual(current, existing)));
+
+                if (curr.length) {
+                    acc.push(...curr);
+                }
+
+                return acc;
+            }, []),
+            distinctUntilChanged(isEqual),
+            switchMap(records => !records.length || records[records.length - 1].durationMs !== -1
+                ? Promise.resolve(records)
+                : interval(0, animationFrameScheduler).pipe(
+                    map(() => {
+                        const last = records[records.length - 1];
+                        last.endTimeMs = Date.now();
+                        updateDuration(last);
+                        return records;
+                    })))
+        );
     }
 }

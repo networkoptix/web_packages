@@ -54,22 +54,18 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        if (['Online', 'Recording'].includes(this.camera.status)) {
-            WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement).pipe(
-                untilDestroyed(this)
-            ).subscribe(([stream, error]) => {
-                if (stream) {
-                    this.webRtcPlayerRef.nativeElement.srcObject = stream;
-                    this.webRtcPlayerRef.nativeElement.muted = true;
-                    this.webRtcPlayerRef.nativeElement.autoplay = true;
-                }
+        WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement).pipe(
+            untilDestroyed(this)
+        ).subscribe(([stream, error]) => {
+            if (stream) {
+                this.webRtcPlayerRef.nativeElement.srcObject = stream;
+                this.webRtcPlayerRef.nativeElement.muted = true;
+                this.webRtcPlayerRef.nativeElement.autoplay = true;
+            }
 
-                if (error) {
-                    this.error = error;
-                }
-            });
-        } else {
-            this.error = this.camera.status
-        }
+            if (error) {
+                this.error = error;
+            }
+        });
     }
 }

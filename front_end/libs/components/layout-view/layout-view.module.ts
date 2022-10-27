@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ComponentsCommonModule } from '@components/components-common.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { LayoutGridModule } from '@components/layout-grid/layout-grid.module';
+import { LayoutTimelineModule } from '@components/layout-timeline/layout-timeline.module';
 
 import { NxLayoutViewComponent } from './layout-view.component';
 
@@ -10,7 +11,8 @@ import { NxLayoutViewComponent } from './layout-view.component';
     imports: [
         ComponentsCoreModule,
         ComponentsCommonModule,
-        LayoutGridModule
+        LayoutGridModule,
+        LayoutTimelineModule
     ],
     declarations: [
         NxLayoutViewComponent

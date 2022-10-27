@@ -802,11 +802,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/webPages', params);
     }
 
-    getLayouts(params = { _keepDefault: true }): Observable<t.Layouts> {
+    getLayouts(params: Record<string, unknown> = { _keepDefault: true }): Observable<t.Layouts> {
         return this.get('/rest/v1/layouts', params);
     }
 
-    getLayout(layoutId: string, params = { _keepDefault: true }): Observable<t.Layout> {
+    getLayout(layoutId: string, params: Record<string, unknown> = { _keepDefault: true }): Observable<t.Layout> {
         return this.get(`/rest/v1/layouts/${layoutId}`, params);
     }
 

@@ -5,9 +5,19 @@
 
 .layout-wrapper {
     height: calc(100% - 32px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "main"
+        "timeline";
+}
+
+nx-layout-timeline {
+    grid-area: timeline;
+}
+
+nx-layout-grid {
+    grid-area: main;
 }
 
 .select-wrapper {

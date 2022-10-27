@@ -5,12 +5,14 @@ import {
     LOCALE_ID,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { uniq } from 'lodash-es';
+import { BehaviorSubject, combineLatest, concat, merge, Observable, Subject } from 'rxjs';
 import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode } from '@components/layout-grid/layout-grid.types';
+import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -105,7 +107,7 @@ export class NxLayoutViewComponent {
                     aspectRatio
                 }
             }), {} as ResourceLookup<typeof webPages[0]>);
-            const byName = alphabeticalSort<Pick<Resource, 'name'>>(this.locale, r => r.name);
+            const byName = alphabeticalSort<Pick<Resource, 'name'>>(this.locale, r => r.name || '');
             const parsedResources = { ...parsedServers, ...parsedCameras, ...parsedWebPages };
             const serversForTree = Object.values(parsedServers).sort(byName);
             const camerasForTree = Object.values(parsedCameras).sort(byName);
@@ -153,12 +155,12 @@ export class NxLayoutViewComponent {
             id: systemId,
             userManager: {
                 currentUser: {
-                    id: userId
+                    id: parentId
                 }
             }
         }) => [
-            ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : []),
-            this.createNewLayout(systemId, userId)
+            ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts({ _keepDefault: true, parentId }).toPromise() : []),
+            this.createNewLayout(systemId, parentId)
         ]),
         shareReplay({
             bufferSize: 1,
@@ -213,6 +215,18 @@ export class NxLayoutViewComponent {
             refCount: true
         })
     );
+    cameras$ = combineLatest([this.selectedLayout$, this.layoutItemLookup$]).pipe(
+        map(([{ items }, lookup]) => uniq(items.filter(({ resourceId }) => lookup[resourceId]?.type === 'camera').map(({ resourceId }) => resourceId).sort()))
+    );
+    recordedTimes$ = this.selectedLayout$.pipe(
+        switchMap(() => concat(
+            Promise.resolve(null),
+            combineLatest([
+                this.cameras$, this.selectedSystem$
+            ]).pipe(
+                switchMap(([cameras, system]) => system.cameraManager.getRecordedTimes(cameras))
+            ))
+        ));
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
@@ -230,6 +244,7 @@ export class NxLayoutViewComponent {
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;
         this.#fetchingLayout$.next('fetching');
+        WebRTCStreamManager.updatePosition();
         this.router.navigateByUrl(`${this.router.url.split('layouts')[0]}layouts/${layoutId}`);
     }
 

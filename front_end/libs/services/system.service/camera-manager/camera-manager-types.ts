@@ -52,7 +52,7 @@ export interface ICamera {
     userDefinedGroupName: string;
     vendor: string;
     previewUrl: string;
-    webRtcUrl: () => string;
+    webRtcUrl: (params?: Record<string, unknown>) => string;
     liveUrl: string;
     recordingSettings: IRecordingSettings;
     isStream: boolean;
@@ -189,4 +189,13 @@ interface _ParsedAddParams {
     streamFpsSharing: string;
     supportedMotion: string;
     defaultPreferredPtzPresetType: string;
+}
+
+export interface TimeDetail {
+    cameraId: string;
+    startTimeMs: number;
+    endTimeMs: number;
+    durationMs: number;
+    start: number;
+    end: number;
 }

@@ -1197,6 +1197,10 @@ export class NxSystemAPI {
             params, {});
     }
 
+    recordedTimePeriods(params: Record<string, unknown>) {
+        return this.get('/ec2/recordedTimePeriods', params).pipe(map(({ reply }) => reply));
+    }
+
     /* End of Working with archive */
 
     setCameraPath(cameraId: string): void {
@@ -1295,7 +1299,7 @@ export class NxSystemAPI {
             url += `auth=${this.authGet}&`;
         }
         if (position) {
-            url += `pos=${position}&`;
+            url += `${transport === 'webRtc' ? 'position' : 'pos'}=${position}&`;
         }
         return url;
     }

@@ -14,4 +14,9 @@
         [layoutItemLookup]="layoutItemLookup$ | async"
         [system]="selectedSystem$ | async"
     ></nx-layout-grid>
+    <nx-layout-timeline
+        [cameras]="cameras$ | async"
+        [layoutItemLookup]="layoutItemLookup$ | async"
+        [records]="recordedTimes$ | async"
+    ></nx-layout-timeline>
 </div>

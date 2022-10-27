@@ -82,9 +82,9 @@ export class NxLayoutGridComponent {
     dataSource: ArrayDataSource<BaseResourceNode>;
 
     openMenu: false | HTMLElement = false;
-    hideGrid = false;
-    showResources = false;
+    previousOpenMenu: HTMLElement = null;
     unsaved: Layout | false = false;
+    addingItem = false;
     readonly EDGE_GAP = 60;
     readonly INITIAL_DRAG_STATE = { move: { x: 0, y: 0 }, resize: { x: 0, y: 0 }, id: '', transformOrigin: 'top left' };
     readonly SETTINGS_CONFIG = SETTINGS_CONFIG;
@@ -275,7 +275,7 @@ export class NxLayoutGridComponent {
 
     async ngOnChanges({ layout, layoutItemLookup }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
-            this.showResources = false;
+            this.openMenu = false;
             this.#initialLayout$.next(layout.currentValue);
             if (this.unsaved) {
                 await this.saveLayout();
@@ -290,6 +290,21 @@ export class NxLayoutGridComponent {
     async ngOnDestroy(): Promise<void> {
         if (this.unsaved) {
             await this.saveLayout();
+        }
+    }
+
+    toggleMenu(target: HTMLElement = this.previousOpenMenu, force = false): void {
+        if (!this.openMenu || force) {
+            if (this.openMenu) {
+                this.previousOpenMenu = this.openMenu;
+            }
+            this.openMenu = target;
+        }
+    }
+
+    closeMenu(): void {
+        if (!this.addingItem) {
+            this.openMenu = false;
         }
     }
 
@@ -409,7 +424,7 @@ export class NxLayoutGridComponent {
     };
 
     moveAddedItem = ({ pointerPosition: move }: { pointerPosition: Point }): void => {
-        this.showResources &&= false;
+        this.addingItem = true;
         this.#draggingPosition$.next({ move, id: 'added' });
     };
 
@@ -528,6 +543,7 @@ export class NxLayoutGridComponent {
         ).subscribe(([{ x, y, resize }, collisions]) => {
             const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
             const notMoved = [x, y, resize.x, resize.y].every(change => !change);
+            this.addingItem = false;
             if (unresolvedCollisions || notMoved) {
                 return this.updateLayout();
             }
