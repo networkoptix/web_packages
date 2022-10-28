@@ -200,7 +200,10 @@
                     class="fs-exclude form-control"
                     #adminPassword="ngModel"
                     #adminPasswordInput
-                    [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
+                    [ngClass]="{
+                        'invalid-state':
+                            (adminPassword.touched && adminPassword.invalid) || wrongPassword
+                    }"
                     id="adminPassword"
                     autocomplete="new-password"
                     name="adminPassword"

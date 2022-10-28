@@ -21,6 +21,12 @@
     .mb-merge {
         margin-bottom: 24px !important;
     }
+
+    label {
+        &.error-label {
+            margin: 0.5rem 0 0 !important;
+        }
+    }
 }
 
 .modal-footer {
@@ -60,5 +66,5 @@
 }
 
 .invalid-state {
-    border-color: var(--error);
+    border-color: var(--error-label) !important;
 }
