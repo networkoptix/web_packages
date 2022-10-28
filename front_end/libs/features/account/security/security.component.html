@@ -2,20 +2,27 @@
     <ng-container *ngIf="account?.id || account?.email; else preloader">
         <nx-block>
             <header>
-                <div class="tfauth-status-switch-wrapper">
-                    <nx-switch
-                        [checked]="totpExistsForAccount"
-                        (onSwitch)="switchToggle($event)"
-                        id="2fa-active-status"
-                        name="2fa-active-status"
-                    >
-                    </nx-switch>
-                    <h4
-                        class="ml-3"
+                <div class="tfauth-status-header-wrapper">
+                    <h4 translate>Two-factor authentication (2FA)</h4>
+
+                    <nx-tag
+                        *ngIf="!(account2faEnabled || totpExistsForAccount)"
+                        type="danger"
+                        size="medium"
+                        name="tag"
+                        [clickable]="false"
                         translate
+                        >DISABLED</nx-tag
                     >
-                        Two-factor authentication
-                    </h4>
+                    <nx-tag
+                        *ngIf="account2faEnabled || totpExistsForAccount"
+                        type="success"
+                        size="medium"
+                        name="tag"
+                        [clickable]="false"
+                        translate
+                        >ENABLED</nx-tag
+                    >
                 </div>
             </header>
 
@@ -30,6 +37,14 @@
                         Authenticator, Microsoft Authenticator or Duo Mobile) in addition to your
                         %CLOUD_NAME% password.</span
                     >
+                    <button
+                        *ngIf="!(account2faEnabled || totpExistsForAccount)"
+                        class="btn btn-primary mt-3"
+                        (click)="switch2FA(true)"
+                        translate
+                    >
+                        Enable 2FA
+                    </button>
                 </div>
 
                 <ng-template #enabledText>
@@ -101,6 +116,7 @@
                         ></nx-checkbox>
 
                         <label
+                            class="mb-0"
                             for="skip-tfauth"
                             translate
                             >Ask for verification code on every login with %CLOUD_NAME%
@@ -136,6 +152,13 @@
                             "
                         ></p>
                     </div>
+                    <button
+                        class="btn btn-default mt-3"
+                        (click)="switch2FA(false)"
+                        translate
+                    >
+                        Disable
+                    </button>
                 </ng-container>
 
                 <ng-template #popLegendSubV5Template>

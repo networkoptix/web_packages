@@ -168,7 +168,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.clearPopoverTargets();
     }
 
-    switchToggle(targetState: boolean): void {
+    switch2FA(targetState: boolean): void {
         this.totpExistsForAccount = targetState;
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {

@@ -2,8 +2,16 @@
 @import "../account.component";
 
 :host {
-    .tfauth-status-switch-wrapper {
+    .tfauth-status-header-wrapper {
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .tfauth-checkbox {
+        display     : flex;
+        align-items : center;
     }
 
     .system-name {
