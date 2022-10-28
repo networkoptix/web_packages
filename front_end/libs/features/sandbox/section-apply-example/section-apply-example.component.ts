@@ -13,21 +13,21 @@ import { Process } from '@services/process.service/process';
 })
 export class SectionApplyExampleComponent {
     // Refs to use for rendering apply component instances
-    @ViewChild('section1apply', { read: ViewContainerRef, static: true }) section1apply;
-    @ViewChild('section2apply', { read: ViewContainerRef, static: true }) section2apply;
-    @ViewChild('section3apply', { read: ViewContainerRef, static: true }) section3apply;
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
+    @ViewChild('section1apply', { read: ViewContainerRef, static: true }) section1apply: ViewContainerRef;
+    @ViewChild('section2apply', { read: ViewContainerRef, static: true }) section2apply: ViewContainerRef;
+    @ViewChild('section3apply', { read: ViewContainerRef, static: true }) section3apply: ViewContainerRef;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply: ViewContainerRef;
 
     // section 1
     section1InputWatcher = new Watcher<string>();
     section1Watcher: SectionWatcher;
     saveSection1: Process;
 
-    get section1Input() {
+    get section1Input(): string {
         return this.section1InputWatcher.value;
     }
 
-    set section1Input(value) {
+    set section1Input(value: string) {
         this.section1InputWatcher.value = value;
     }
 
@@ -40,11 +40,11 @@ export class SectionApplyExampleComponent {
     section2Watcher: SectionWatcher;
     saveSection2: Process;
 
-    get section2Input() {
+    get section2Input(): string {
         return this.section2InputWatcher.value;
     }
 
-    set section2Input(value) {
+    set section2Input(value: string) {
         this.section2InputWatcher.value = value;
     }
 
@@ -53,11 +53,11 @@ export class SectionApplyExampleComponent {
     section3Watcher: SectionWatcher;
     saveSection3: Process;
 
-    get section3Input() {
+    get section3Input(): string {
         return this.section3InputWatcher.value;
     }
 
-    set section3Input(value) {
+    set section3Input(value: string) {
         this.section3InputWatcher.value = value;
     }
 
@@ -99,12 +99,12 @@ export class SectionApplyExampleComponent {
         );
 
         // const availableSectionWatchers = [this.section1Watcher, this.section2Watcher];
-        const availableSectionWatchers = [];
+        const availableSectionWatchers: Watcher<unknown>[] = [];
         this.saveAll = this.processService
             .createProcess(() => Promise.resolve())
             .then(() => {
                 availableSectionWatchers.forEach(
-                    (watcher: Watcher<any> | SectionWatcher) => {
+                    (watcher: Watcher<unknown> | SectionWatcher) => {
                         watcher.reset();
                     }
                 );

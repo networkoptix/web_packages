@@ -12,7 +12,7 @@ import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
     NG_VALIDATORS,
-    UntypedFormControl,
+    FormControl,
     Validator,
     ValidationErrors,
 } from '@angular/forms';
@@ -76,7 +76,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     private onChangeCallback = (_: boolean): void => {};
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: UntypedFormControl): ValidationErrors | null {
+    public validate(c: FormControl<string>): ValidationErrors | null {
         const err = {
             requiredError: {
                 required: true

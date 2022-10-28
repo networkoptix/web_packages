@@ -45,7 +45,6 @@ import { TagsComponent } from './tags/tags.component';
 import { NxThemeColorsComponent } from './theme-colors/colors.component';
 import { ToasterComponent } from './toaster/toaster.component';
 import { ValidationComponent } from './validation/validation.component';
-import { WebsocketComponent } from './websocket/websocket.component';
 
 const appRoutes: Routes = [
     {
@@ -123,10 +122,6 @@ const appRoutes: Routes = [
                 loadChildren: () => import('./ngrx-demo/ngrx-demo.module').then(m => m.NgrxDemoModule)
             },
             {
-                path: 'websocket',
-                component: WebsocketComponent
-            },
-            {
                 path: 'arch',
                 component: NxArchSvgComponent
             }
@@ -168,7 +163,6 @@ const appRoutes: Routes = [
         FormElementsComponent,
         TagsComponent,
         ValidationComponent,
-        WebsocketComponent,
         NxArchSvgComponent,
         NxBasicColorsComponent,
         NxCustomColorsComponent,

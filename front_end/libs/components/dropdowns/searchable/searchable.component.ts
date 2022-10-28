@@ -8,7 +8,7 @@ import {
     ElementRef,
     ViewChild,
 } from '@angular/core';
-import { NgForm, NG_VALIDATORS, NG_VALUE_ACCESSOR, UntypedFormControl, Validator } from '@angular/forms';
+import { NgForm, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormControl, Validator, ValidationErrors } from '@angular/forms';
 import { escapeRegExp } from 'lodash-es';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -77,7 +77,7 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
     searchInput: ElementRef<HTMLSpanElement>;
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: UntypedFormControl): Record<string, boolean> {
+    public validate(c: FormControl<Item>): ValidationErrors | null {
         if (!c.value?.value) {
             return {
                 required: true

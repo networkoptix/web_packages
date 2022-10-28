@@ -96,10 +96,6 @@ export class NxSandboxComponent {
                             label: 'Ribbon,  Banner, Toaster & Buttons',
                             path: '/toaster'
                         }, {
-                            id: 'websocket',
-                            label: 'Websocket',
-                            path: '/websocket'
-                        }, {
                             id: 'archsvg',
                             label: 'Architecture (SVG)',
                             path: '/arch'

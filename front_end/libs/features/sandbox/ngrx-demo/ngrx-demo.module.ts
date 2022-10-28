@@ -8,12 +8,9 @@ import { NgrxDemoBookCollectionComponent } from './components/books/book-collect
 import { NgrxDemoBookListComponent } from './components/books/book-list/book-list.component';
 import { NgrxDemoBooksComponent } from './components/books/books.component';
 import { NgrxDemoCounterComponent } from './components/counter/counter.component';
-import { NgrxDemoGroupListComponent } from './components/groups/group-list/group-list.component';
-import { NgrxDemoGroupsComponent } from './components/groups/groups.component';
 import { booksReducer } from './store/books/books.reducer';
 import { collectionReducer } from './store/books/collection.reducer';
 import { counterReducer } from './store/counter/counter.reducer';
-import { groupsReducer } from './store/groups/groups.reducer';
 
 const appRoutes: Routes = [
     {
@@ -24,10 +21,6 @@ const appRoutes: Routes = [
         path: 'books',
         component: NgrxDemoBooksComponent,
     },
-    {
-        path: 'groups',
-        component: NgrxDemoGroupsComponent,
-    }
 ];
 
 @NgModule({
@@ -40,8 +33,6 @@ const appRoutes: Routes = [
 
         StoreModule.forFeature('books', booksReducer),
         StoreModule.forFeature('collection', collectionReducer),
-
-        StoreModule.forFeature('groups', groupsReducer),
     ],
     providers: [
     ],
@@ -51,9 +42,6 @@ const appRoutes: Routes = [
         NgrxDemoBookListComponent,
         NgrxDemoBookCollectionComponent,
         NgrxDemoBooksComponent,
-
-        NgrxDemoGroupListComponent,
-        NgrxDemoGroupsComponent,
     ],
     bootstrap: [
     ],

@@ -11,8 +11,9 @@ import {
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
-    UntypedFormControl,
-    Validator
+    Validator,
+    ValidationErrors,
+    FormControl
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -65,7 +66,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     };
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: UntypedFormControl) {
+    public validate(c: FormControl<string>): ValidationErrors | null {
         return null; // valid
     }
 

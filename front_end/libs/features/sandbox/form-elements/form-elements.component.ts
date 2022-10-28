@@ -20,12 +20,11 @@ export class FormElementsComponent {
     show: boolean;
     toggleDisabled: boolean;
     show5: boolean;
-    blah;
-    group;
-    agree;
-    edit;
-    wholeText;
-    data;
+    blah: string;
+    group: string;
+    agree: boolean;
+    edit: boolean;
+    wholeText: string;
     selectedAspect: AspectRatioDropdownItem;
     aspectRatios: AspectRatioDropdownItem[];
     selectedRotation: RotationDropdownItem;
@@ -99,7 +98,7 @@ export class FormElementsComponent {
         this.selectedSearchableDDItem = { ...result };
     }
 
-    private touchForm(form): void {
+    private touchForm(form: NgForm): void {
         for (const ctrl in form.form.controls) {
             if (Object.prototype.hasOwnProperty.call(form.form.controls, ctrl)) {
                 form.form.get(ctrl).markAsTouched();
@@ -107,7 +106,7 @@ export class FormElementsComponent {
         }
     }
 
-    onSubmit() {
+    onSubmit(): false | undefined {
         if (this.testForm && !this.testForm.valid) {
             // Set the form touched
             this.touchForm(this.testForm);

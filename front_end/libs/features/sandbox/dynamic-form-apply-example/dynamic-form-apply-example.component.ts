@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
 
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
+import type { FormWatcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -20,15 +21,15 @@ export class DynamicFormApplyExampleComponent {
     // page process
     saveAll: Process;
 
-    form2Group: UntypedFormGroup;
+    form2Group: FormGroup<{ fields: FormArray<FormControl<string>> }>;
 
-    @ViewChild('form3') form3;
-    formWatcher: any;
+    @ViewChild('form3') form3: NgForm;
+    formWatcher: FormWatcher;
     saveForm3: Process;
 
     constructor(
         configService: NxConfigService,
-        private formBuilder: UntypedFormBuilder,
+        private formBuilder: FormBuilder,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private toastService: NxToastService
@@ -38,7 +39,7 @@ export class DynamicFormApplyExampleComponent {
 
     ngOnInit(): void {
         this.form2Group = this.formBuilder.group({
-            fields: this.formBuilder.array([])
+            fields: this.formBuilder.array<string>([])
         });
 
         this.saveForm3 = this.processService.createProcess(() => {
@@ -64,7 +65,7 @@ export class DynamicFormApplyExampleComponent {
         this.fields.removeAt(i);
     }
 
-    get fields() {
-        return this.form2Group.get('fields') as UntypedFormArray;
+    get fields(): FormArray<FormControl<string>> {
+        return this.form2Group.get('fields') as typeof this.fields;
     }
 }

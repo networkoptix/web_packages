@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import type { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type {
@@ -10,6 +10,7 @@ import type {
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
+import type { FormWatcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -23,13 +24,13 @@ import { Process } from '@services/process.service/process';
 export class FormApplyExampleComponent {
     CONFIG: IConfig;
     // Refs to use for rendering apply component instances
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply: ViewContainerRef;
 
     // page process
     saveAll: Process;
 
-    @ViewChild('form1') form1;
-    formWatcher: any;
+    @ViewChild('form1') form1: NgForm;
+    formWatcher: FormWatcher;
     account = {
         form1Field1Input: '',
         form1Field2Input: ''
@@ -37,8 +38,8 @@ export class FormApplyExampleComponent {
 
     saveForm1 : Process;
 
-    @ViewChild('form2') form2;
-    formWatcher2: any;
+    @ViewChild('form2') form2: NgForm;
+    formWatcher2: FormWatcher;
     form2Field1Input: string;
     saveForm2 : Process;
 
@@ -53,8 +54,7 @@ export class FormApplyExampleComponent {
     langCode: string = 'en_US';
     selectedDDItem: DropdownItem<string>;
 
-    tags: any[];
-    form2Group: UntypedFormGroup;
+    tags: { name: string, selected: boolean, type?: string }[];
 
     constructor(
         configService: NxConfigService,
