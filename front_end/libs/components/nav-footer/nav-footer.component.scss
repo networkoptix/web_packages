@@ -1,6 +1,6 @@
 .footer {
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     width: 100%;
     height: 32px;
     background-color: var(--footer-bg);
@@ -11,7 +11,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding: 6px 0px 0px 16px;
+        padding: 6px 0 0 16px;
         .item {
             margin-right: 24px;
             a {
@@ -20,6 +20,7 @@
         }
     }
     .copyright {
+        color: var(--footer-link-color);
         display: flex;
         white-space: nowrap;
         margin-left: auto;
@@ -31,14 +32,14 @@
         padding-left: 20px;
         padding-right: 15px;
         position: sticky;
-        right: 0px;
+        right: 0;
         bottom: 1px;
         transition-property: width, margin-left, padding;
         transition-duration: 500ms, 500ms, 500ms;
         &.invisible {
-            width: 0px;
-            margin-left: 0px;
-            padding: 0px;
+            width: 0;
+            margin-left: 0;
+            padding: 0;
             svg-icon {
                 opacity: 0;
             }
