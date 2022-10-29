@@ -82,6 +82,7 @@ export class MergeModalContent {
     secondaryName: string;
     systemUrls = {};
     updateSession = false;
+    wrongPassword = false;
     private remotePassword: string;
 
     // static variables
@@ -510,7 +511,15 @@ export class MergeModalContent {
                         this.targetSystem.id,
                         true,
                         this.machine.state.template.passwordValue
-                    ).toPromise();
+                    ).toPromise()
+                        .catch(res => {
+                            if (res.error && res.error.errorString.toLowerCase() === 'wrong password.') {
+                                this.updateShow(this.confirmPasswordError, {
+                                    passwordErrorText: this.passwordWrong
+                                });
+                                this.wrongPassword = true;
+                            }
+                        });
                 }
             },
             {

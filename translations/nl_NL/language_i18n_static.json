@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Alle servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Voor ontwikkelaars",
@@ -1075,8 +1076,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
-        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
+        "systemCount": "{count, plural, =0{# systemen} one{# systeem} other{# systemen}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",

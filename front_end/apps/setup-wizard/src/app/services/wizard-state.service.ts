@@ -174,7 +174,7 @@ export class WizardStateService {
         cloudSystemID: '',
         localSystemId: '',
         specificFeatures: undefined,
-        statisticsAllowed: false,
+        statisticsAllowed: true,
         statisticsReportLastNumber: 0,
         statisticReportsLastTime: undefined,
         statisticReportLastVersion: '',
@@ -779,6 +779,12 @@ export class WizardStateService {
                     let settingLabel = this.translate.instant(settingKey);
                     if (settingLabel === settingKey && settingConfig.label) {
                         settingLabel = settingConfig.label;
+                    }
+                    // TODO: REMOVE! ...Temporary fix for https://networkoptix.atlassian.net/browse/CLOUD-9716
+                    // until server API is fixed
+                    // rest/v1/system/settings returns null for “statisticsAllowed“
+                    if (settingKey === 'statisticsAllowed' && settingValue === null) {
+                        settingValue = true;
                     }
                     this.systemAdvancedSettings[settingKey] = { settingValue, settingLabel };
                 });

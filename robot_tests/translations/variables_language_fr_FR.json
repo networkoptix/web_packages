@@ -77,7 +77,6 @@
     "YOU CAN CREATE ACCOUNT TEXT": "Vous pouvez créer un compte avec cette adresse e-mail ou essayer d'en saisir un autre.",
     "CANNOT SEND CONFIRMATION EMAIL": "Impossible d’envoyer courriel de confirmation:",
     "ACCOUNT ALREADY EXISTS": "Le compte existe déjà",
-    "ACCOUNT DOES NOT EXIST": "Compte n’existe pas.",
     "CODE USED/INCORRECT": "Code de confirmation est déjà utilisé ou incorrecte",
     "CHANGE PASSWORD TITLE TEXT": "Changer mot de passe",
     "CHANGE PASSWORD LEFT MENU TEXT": "Changer mot de passe",

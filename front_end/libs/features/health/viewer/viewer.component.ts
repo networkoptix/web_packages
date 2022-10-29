@@ -181,11 +181,15 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                 this.healthService.values[asset] &&
                 Object.keys(this.healthService.values[asset]).length
             ) {
+                const svgName = asset === 'cameras'
+                    ? 'camera'
+                    : asset === 'systems' ? 'system' : asset;
+
                 menu.level1.push({
                     id: asset,
                     label: this.healthService.manifest[asset].name,
                     path: asset,
-                    svg: asset
+                    svg: svgName
                 });
             }
         });

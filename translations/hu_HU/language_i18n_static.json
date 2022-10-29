@@ -1,6 +1,7 @@
 {
     "language": "hu_HU",
     "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
+    "Administration": "Administration",
     "All Servers": "Minden szerver",
     "Download %VMS_NAME%": "%VMS_NAME% letöltése",
     "For developers": "For developers",
@@ -1075,8 +1076,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
-        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",

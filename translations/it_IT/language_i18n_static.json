@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Tutti i server",
     "Download %VMS_NAME%": "Scarica %VMS_NAME%",
     "For developers": "Per gli sviluppatori",
@@ -1006,8 +1007,7 @@
             "statisticsAllowed": "Invia statistiche di utilizzo anonime e rapporti sugli arresti anomali",
             "standard": "Standard",
             "safe": "Safe"
-        }
-    },
+        },
     "system": {
         "connected": "Connesso",
         "not_connected": "Non connesso",
@@ -1075,8 +1075,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
-        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
