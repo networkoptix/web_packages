@@ -21,7 +21,7 @@
     "emailSubject": "Kameraside Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "Ejerskabsoverdragelse for {{message.system_name}}"
   },
   "ownership_transfer_response": {
     "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
