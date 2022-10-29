@@ -10,7 +10,14 @@ Restart
 Account Test Teardown
     Run Keyword If Test Failed    account-resource.Reset DB and Open New Browser On Failure
 
+Account Server Test Teardown
+    Run Keyword If Test Failed    account-resource.Server Reset DB and Open New Browser On Failure
+
+
 Reset DB and Open New Browser On Failure
+    Set Account Name    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+
+Server Reset DB and Open New Browser On Failure
     Set Account Name    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Set Account Name    ${server 1}[cloud users][viewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     ${server auth}=   Create List    admin    ${BASE PASSWORD}
@@ -29,6 +36,13 @@ Verify Delete User Dialog
     ...    ${DELETE ACCOUNT HEADER}
 
 Account Suite Setup
+    Open Browser and go to URL    ${url}
+    ${owner}=   Register and activate account with random email    mark    hamill    ${password}
+    ${no perm}=   Register and activate account with random email    mark    hamill    ${password}
+    Set Suite Variable    ${no perm}    ${no perm}
+    Go to    ${url}
+
+Account Server Suite Setup
     Open Browser and go to URL    ${url}
     ${owner}=   Register and activate account with random email    mark    hamill    ${password}
     ${no perm}=   Register and activate account with random email    mark    hamill    ${password}
@@ -52,10 +66,13 @@ Account Suite Setup
 
     Go to    ${url}
     
-Account Suite Tear Down
+Account Server Suite Tear Down
     FOR    ${i}    IN RANGE    1    4
         Delete Base System    ${server ${i}}
     END
     Execute Command Remotely    docker rm -f ${server 4}[id] ${server 5}[id]
     Delete Account    ${delete}    ${base password}
+    Close All Browsers
+
+Account Suite Tear Down
     Close All Browsers

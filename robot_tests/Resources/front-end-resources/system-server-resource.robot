@@ -138,7 +138,8 @@ Server Settings Suite Setup
     ELSE
         Set Local Variable    ${vms}    new
     END
-    ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} -e VMS=${vms} ${IMAGE}
+    ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
+    ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} -e VMS=${vms} -e CLOUD_HOST=${ENV NO HTTP} ${IMAGE}
     ${cont id 1}=    Evaluate    $id[:12]
     Sleep    5
     Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    servers1-${random}

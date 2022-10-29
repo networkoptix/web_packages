@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "%CLOUD_NAME% について",
+    "Administration": "管理",
     "All Servers": "すべてのサーバー",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
     "For developers": "開発者向け",

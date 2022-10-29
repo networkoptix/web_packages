@@ -77,7 +77,6 @@
     "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "No es pot enviar el correu electrònic de confirmació:",
     "ACCOUNT ALREADY EXISTS": "Account already exists",
-    "ACCOUNT DOES NOT EXIST": "El compte no existeix.",
     "CODE USED/INCORRECT": "El codi de confirmació ja s'ha utilitzat o és incorrecte",
     "CHANGE PASSWORD TITLE TEXT": "Canvia la contrasenya",
     "CHANGE PASSWORD LEFT MENU TEXT": "Canvia la contrasenya",

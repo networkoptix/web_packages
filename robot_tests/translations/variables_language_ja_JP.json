@@ -77,7 +77,6 @@
     "YOU CAN CREATE ACCOUNT TEXT": "このメールアドレスでアカウントを作成するか、別のメールアドレスを入力してください。",
     "CANNOT SEND CONFIRMATION EMAIL": "確認メールを送信できません:",
     "ACCOUNT ALREADY EXISTS": "アカウントは既に存在します",
-    "ACCOUNT DOES NOT EXIST": "アカウントが存在しません.",
     "CODE USED/INCORRECT": "確認コードは既に使用されているか間違っています",
     "CHANGE PASSWORD TITLE TEXT": "パスワードの変更",
     "CHANGE PASSWORD LEFT MENU TEXT": "パスワードを変更",
