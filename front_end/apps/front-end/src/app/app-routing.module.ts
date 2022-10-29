@@ -25,11 +25,13 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'systems/:systemId/advanced',
-        loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule)
+        loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard]
     },
     {
         path: 'systems/:systemId/view',
-        loadChildren: () => import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule)
+        loadChildren: () => import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard]
     },
     {
         path: 'systems/:systemId/layouts',
@@ -50,12 +52,14 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'systems/:systemId/health',
-        loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule)
+        loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule),
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard]
+
     },
     {
         path: 'systems/:systemId/bookmarks',
         loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
-        canActivate: [BookmarksGuard]
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard, BookmarksGuard]
     },
     {
         path: 'systems/:systemId/monitoring',

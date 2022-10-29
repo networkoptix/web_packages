@@ -81,6 +81,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     resetDisabled: boolean;
     portChangeDisabled: boolean;
     serverUnavailable: boolean;
+    serverRestarting: boolean;
     serverOffline: boolean;
     certError: boolean;
     fullInfoPath: string;
@@ -119,6 +120,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.resetDisabled = true;
         this.portChangeDisabled = true;
         this.serverUnavailable = true;
+        this.serverRestarting = false;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.section = 'servers';
         this.fullInfoPath = '';
@@ -418,10 +420,13 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     restartServer(): Promise<void> {
         const { id, name } = this.selectedServer;
+        this.serverRestarting = true;
+
         return this.dialogs
             .restartServer(this.system, id, htmlToEntity(name))
             .then((res: string) => {
-                if (res === undefined) {
+                if (!res) {
+                    this.serverRestarting = false;
                     return; // Dialog was canceled
                 }
                 this.system.isAvailable = false;
@@ -435,6 +440,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         )
                         .subscribe(status => {
                             if (status) {
+                                this.serverRestarting = false;
                                 this.destroyRestartTake$.next(true);
                                 this.accountService.logout(false);
                             }
@@ -450,12 +456,18 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                                 this.system.currentServerNotBusy = true;
                                 this.system.currentBusyServerIds.delete(id);
                                 this.system.isAvailable = true;
+                                this.serverRestarting = false;
                                 this.setStatus('');
                                 this.destroyRestartTake$.next(true);
+                                this.toastService.notify(
+                                    this.LANG.servers.restartSuccessful(),
+                                    this.CONFIG.toast.success
+                                );
                             }
                         });
                 }
             }, (err: never) => {
+                this.serverRestarting = false;
                 console.error('Failed to restart server: ', err);
             });
     }

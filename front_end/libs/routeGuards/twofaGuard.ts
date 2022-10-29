@@ -15,6 +15,7 @@ import { Account } from '@services/account.service/account';
 import { OauthService } from '@services/oauth.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable({
@@ -35,51 +36,50 @@ export class TwofaGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const canActivateSubject = new Subject<boolean>();
-        this.accountService.get(true).then((account: Account) => {
-            this.systemsService.systemsSubject
-                .pipe(take(1))
-                .subscribe(systems => {
-                    const { systemId } = route.params;
-                    const systemInfo = systems.find(system => system.id === systemId);
-                    if (systemInfo?.system2faEnabled && !account.sessionVerified) {
-                        if (!account.totpExistsForAccount) {
-                            const noRedirect = this.window.location.href.endsWith(
-                                `twofa-required?systemName=${systemInfo.name}`
-                            );
-                            if (!noRedirect) {
-                                canActivateSubject.complete();
-                                this.router.navigate(
-                                    ['twofa-required'],
-                                    { queryParams: { systemName: systemInfo.name } }
-                                );
-                            } else {
-                                canActivateSubject.next(false);
-                                canActivateSubject.complete();
-                            }
-                        } else {
-                            const system = this.systemService.createSystem(
-                                account.email,
-                                systemId,
-                                undefined,
-                                true
-                            );
+        this.systemsService.systemsSubject
+            .pipe(take(1))
+            .subscribe(async (systems: NxSystemInfo[]) => {
+                const { systemId } = route.params;
+                const systemInfo = systems.find(system => system.id === systemId);
+                const account: Account = await this.accountService.get(true);
+                if (systemInfo?.system2faEnabled && !account.sessionVerified) {
+                    if (!account.totpExistsForAccount) {
+                        const noRedirect = this.window.location.href.endsWith(
+                            `twofa-required?systemName=${systemInfo.name}`
+                        );
+                        if (!noRedirect) {
                             canActivateSubject.complete();
-                            system.updateToken(true).then(token => {
-                                this.oauthService.redirectOauth(
-                                    'system2faAuth',
-                                    account.email,
-                                    undefined,
-                                    token,
-                                    Location.joinWithSlash(this.window.location.origin, state.url)
-                                );
-                            });
+                            this.router.navigate(
+                                ['twofa-required'],
+                                { queryParams: { systemName: systemInfo.name } }
+                            );
+                        } else {
+                            canActivateSubject.next(false);
+                            canActivateSubject.complete();
                         }
                     } else {
-                        canActivateSubject.next(true);
+                        const system = this.systemService.createSystem(
+                            account.email,
+                            systemId,
+                            undefined,
+                            true
+                        );
                         canActivateSubject.complete();
+                        system.updateToken(true).then(token => {
+                            this.oauthService.redirectOauth(
+                                'system2faAuth',
+                                account.email,
+                                undefined,
+                                token,
+                                Location.joinWithSlash(this.window.location.origin, state.url)
+                            );
+                        });
                     }
-                });
-        });
+                } else {
+                    canActivateSubject.next(true);
+                    canActivateSubject.complete();
+                }
+            });
         return canActivateSubject;
     }
 }
