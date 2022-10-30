@@ -735,8 +735,7 @@
                 ]
             }
         }
-    }
-},
+    },
     "integration": {
         "Access Control": "접근 제어",
         "Connector": "커넥터",
@@ -988,7 +987,7 @@
         "Layouts": "레이아웃",
         "Monitoring": "모니터링"
     },
-        "setupWizard": {
+    "setupWizard": {
         "title": {
             "advanced": "고급 시스템 설정",
             "brokenSystem": "시스템을 설정 할수 없습니다.",
@@ -1077,8 +1076,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
