@@ -423,20 +423,23 @@ export class WizardStateService {
 
     // nativeClient helpers
     public get hasNativeClient(): boolean {
-        return !!this.window?.nativeClient;
+        try {
+            return !!nativeClient;
+        } catch {
+            return false;
+        }
     }
 
     // @ts-expect-error Currently unused
     private cancelNative(): unknown {
         if (this.hasNativeClient) {
-            nativeClient.cancelDialog();
+            nativeClient?.cancel();
         }
         return this.closeNative();
     }
 
     private closeNative(): Promise<void> {
         if (this.hasNativeClient) {
-            nativeClient.closeDialog();
             this.window.close();
             return Promise.resolve();
         }
@@ -583,7 +586,9 @@ export class WizardStateService {
                 return Promise.resolve(true);
             }
 
-            // sendCredentialsToNativeClient
+            if (this.hasNativeClient) {
+                nativeClient.connectUsingLocalAdmin(this.credentials.password, true);
+            }
             this.currentState = WIZARD_STATE.LocalSuccess;
             return Promise.resolve(true);
         });
@@ -648,9 +653,12 @@ export class WizardStateService {
         if (!this.hasNativeClient) {
             return;
         }
-
-        const credentials = this.window.nativeClient.getCredentials();
-        this.connect(this.setupConfig.systemName, credentials.email, credentials.accessToken)
+        const refreshToken = nativeClient.refreshToken();
+        // Use the refresh token to set an access token.
+        const accessToken = refreshToken; // Change later to the actual accessToken
+        // Then use the access token to get the users email.
+        const email = '';
+        this.connect(this.setupConfig.systemName, email, accessToken)
             .pipe(untilDestroyed(this))
             .subscribe(data => {
                 // add link to cloud
@@ -658,7 +666,7 @@ export class WizardStateService {
                     this.setupConfig.systemName,
                     data.id,
                     data.authKey,
-                    credentials.email,
+                    email,
                     this.systemSettings
                 ).then(() => {});
             });
@@ -814,10 +822,6 @@ export class WizardStateService {
     init(): void {
         this.server = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), this.serverVersion);
-        let initPromise = Promise.resolve();
-        if (this.hasNativeClient) {
-            initPromise = nativeClient.init();
-        }
-        initPromise.finally(this.initWizard);
+        this.initWizard();
     }
 }
