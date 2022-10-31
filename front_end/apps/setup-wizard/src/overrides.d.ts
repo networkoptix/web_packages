@@ -1,18 +1,12 @@
-interface credentials {
-    email: string;
-    accessToken: string;
-}
-
 declare global {
     interface Window {
         nativeClient: typeof nativeClient;
     }
 
     class nativeClient {
-        static cancelDialog(): void;
-        static closeDialog(): void;
-        static getCredentials(): credentials;
-        static init(): Promise<void>;
+        static cancel(): void;
+        static connectUsingLocalAdmin(password: string, savePassword: boolean): void;
+        static refreshToken(): string;
         static openUrlInBrowser(url: string): void;
     }
 }
