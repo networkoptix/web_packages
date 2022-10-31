@@ -292,6 +292,7 @@ export class NxSystem {
                 .catch(() => tokens.access_token);
         }).catch(() => {
             this.lostConnection = true;
+            return '';
         });
     }
 

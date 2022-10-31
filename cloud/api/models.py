@@ -1,9 +1,12 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
+from django.dispatch import receiver
+from django.db.models.signals import m2m_changed
 from django.utils import timezone
 from django.utils.html import format_html
 from django.conf import settings
+from django.core.cache import cache
 from django.contrib.contenttypes.models import ContentType
 
 from jsonfield import JSONField
@@ -151,6 +154,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.is_staff |= self.email.endswith(settings.SUPERUSER_DOMAIN)
+        cache.delete(self.email)
         super().save(*args, **kwargs)
         self.add_to_all_releases_group()
 
@@ -317,6 +321,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
     short_first_name.short_description = "first name"
     short_last_name.short_description = "last name"
 
+@receiver(m2m_changed, sender=Account.groups.through)
+def clear_account_cache(sender, instance, action, pk_set, **kwargs):
+    if action in ["post_add", "post_remove"]:
+        for account in Account.objects.filter(pk__in=pk_set):
+            cache.delete(account.email)
 
 class AccountLoginHistory(models.Model):
     action = models.CharField(max_length=64)

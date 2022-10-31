@@ -129,6 +129,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE = (
+    'cloud.middleware.CachedMiddleware',
     'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'oauth2_provider.middleware.OAuth2TokenMiddleware',
@@ -711,6 +712,18 @@ TRAFFIC_RELAY_PROTOCOL = 'https://'
 
 CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
 LICENSE_SERVER = conf.get('licenseServer', 'https://nxlicensed.test.hdw.mx' if LOCAL_ENVIRONMENT else 'https://licensing.vmsproxy.com')
+USE_CORS_BYPASS = LOCAL_ENVIRONMENT and not TESTING and not os.getenv('DISABLE_CORS_BYPASS', '')
+LOCAL_CORS_BYPASS = os.getenv('CORS_BYPASS', 'http://localhost:42069/') if USE_CORS_BYPASS else ''
+
+if LOCAL_CORS_BYPASS:
+    import requests
+    try:
+        # Ensure that local cors bypass server is running.
+        requests.get(LOCAL_CORS_BYPASS)
+    except:
+        raise Exception(f'Please start proxy bypass server on {LOCAL_CORS_BYPASS} or set CORS_BYPASS env variable to a different server or disable by setting DISABLE_CORS_BYPASS env variable')
+
+
 
 SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'

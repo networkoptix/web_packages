@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CookieService } from 'ngx-cookie-service';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -43,6 +44,7 @@ export class NxLoggerComponent implements OnChanges {
     constructor(
         config: NxConfigService,
         languageService: NxLanguageProviderService,
+        private cookieService: CookieService,
         @Inject(WINDOW) private window: Window
     ) {
         this.relayUrl = config.getConfig().trafficRelayHost;
@@ -64,7 +66,8 @@ export class NxLoggerComponent implements OnChanges {
                     params = params.set('auth', authGet);
                 }
                 loggerHost = this.relayUrl.replace('{systemId}', `${cleanId(this.selectedServerId)}.${this.system.id}`);
-                this.logUrl = `${protocol}//${loggerHost}/web/api/showLog?${params.toString()}`;
+                const localProxy = this.cookieService.get('cors_bypass') || '';
+                this.logUrl = `${localProxy}${protocol}//${loggerHost}/web/api/showLog?${params.toString()}`;
             }
         }
 

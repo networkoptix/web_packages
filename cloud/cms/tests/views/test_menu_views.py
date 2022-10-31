@@ -9,15 +9,24 @@ from cms.views.menu import *
 
 @pytest.mark.no_db
 def test_get_menu(mocker, arf, account_factory, db):
-    mock_request = arf.get('')
-    mock_request.session = {}
-    mock_request.user = account_factory(prepare_only=True)
+    account = account_factory(prepare_only=True)
+
+    def request_factory(path = ''):
+        mock_request = arf.get(path)
+        mock_request.session = {}
+        mock_request.user = account
+        return mock_request
+
     menu_name = str(uuid4())
     mock_generate_menu = mocker.patch(
         'cms.models.Menu.generate_menu', return_value=None)
 
-    # Test not found
-    res = get_menu(mock_request, menu_name)
+    # Test redirect
+    res = get_menu(request_factory(), menu_name)
+    assert res.status_code == status.HTTP_302_FOUND
+    redirect_url = res.url
+
+    res = get_menu(request_factory(redirect_url), menu_name)
     assert res.status_code == status.HTTP_404_NOT_FOUND
     assert res.data['errorText'] == f'Menu {menu_name} not found'
     mock_generate_menu.assert_called_once_with(menu_name=menu_name, customization=settings.CUSTOMIZATION)
@@ -28,7 +37,7 @@ def test_get_menu(mocker, arf, account_factory, db):
         'cms.models.Menu.generate_menu', return_value=mock_menu)
     mocker.patch(
         'cms.models.Menu.generate_menus', return_value={})
-    res = get_menu(mock_request, menu_name)
+    res = get_menu(request_factory(redirect_url), menu_name)
     assert res.status_code == status.HTTP_200_OK
     assert res.data == mock_menu
     mock_generate_menu.assert_called_once_with(menu_name=menu_name, customization=settings.CUSTOMIZATION)

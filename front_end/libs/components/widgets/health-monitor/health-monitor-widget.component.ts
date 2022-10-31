@@ -8,12 +8,12 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystemInfo } from '@services/systems.service.types';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -89,7 +89,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
 
     static manifestLookup = {};
 
-    static systems$ = new BehaviorSubject<NxSystemInfo[]>([]);
+    static systems$ = new BehaviorSubject<System[]>([]);
     HealthMonitorResource: HealthMonitorResource;
     system: NxSystem;
     healthMonitorAge = 0;

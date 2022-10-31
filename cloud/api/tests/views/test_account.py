@@ -125,12 +125,22 @@ class TestAccountViews:
         return self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
 
     def test_index_get(self, mock_cdb_account, active_user):
+        def get_request(path):
+            req = self.arf.get(path)
+            req.user = active_user
+            req.session = self.mocker.MagicMock()
+            req.session.get = lambda _, val: val
+            return req
+
         mock_get_2fa_settings = self.mocker.patch.object(
             Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
-        req = self.arf.get('/api/account')
-        req.user = active_user
-        req.session = self.mocker.MagicMock()
-        req.session.get = lambda _, val: val
+
+        req = get_request('/api/account')
+
+        # Test cache redirect
+        resp = index(req)
+        assert resp.status_code == status.HTTP_302_FOUND
+        req = get_request(resp.url)
 
         # Test with totp exists
         resp = index(req)

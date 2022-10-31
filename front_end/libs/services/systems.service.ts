@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, LOCALE_ID, OnDestroy } from '@angular/core';
-// import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
@@ -14,6 +12,7 @@ import { alphabeticalSort, paramSortFunc } from '@utils/general';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
+import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -56,11 +55,12 @@ export class NxSystemsService implements OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         pollService: NxPollService,
-        private http: HttpClient,
+        // private http: HttpClient,
         private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private uriService: NxUriService,
+        private cloudApi: NxCloudApiService,
         // private store: Store,
         @Inject(LOCALE_ID) private locale: string,
     ) {
@@ -127,10 +127,7 @@ export class NxSystemsService implements OnDestroy {
     }
 
     private _getSystems(systemId?: string): Observable<System[]> {
-        if (systemId) {
-            return this.http.get<System[]>(this.CONFIG.apiBase + '/systems/' + systemId);
-        }
-        return this.http.get<System[]>(this.CONFIG.apiBase + '/systems');
+        return this.cloudApi.systems(systemId);
     }
 
     forceUpdateSystems(userEmail?: string): Observable<NxSystemInfo[]> {

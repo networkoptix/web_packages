@@ -1,0 +1,14 @@
+{
+  "name": "cors_bypass",
+  "version": "1.0.0",
+  "description": "Local cors anywhere server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors-anywhere": "^0.4.4"
+  }
+}

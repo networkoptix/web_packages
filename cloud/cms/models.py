@@ -1572,6 +1572,11 @@ class UserGroupsToAssetType(models.Model):
 
         return UserGroupsToAssetPermissions.objects.filter(group__id__in=asset_type_groups).exists()
 
+@receiver(post_save, sender=UserGroupsToAssetPermissions)
+@receiver(post_save, sender=UserGroupsToAssetType)
+def clear_account_cache(sender, instance, created, **kwargs):
+    for account in instance.group.user_set.all():
+        cache.delete(account.email)
 
 # CMS data. Partners can change that
 class ContentVersion(models.Model):

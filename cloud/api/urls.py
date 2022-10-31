@@ -17,7 +17,7 @@ urlpatterns = [
     re_path(r'^utils/downloads/history$',           utils.downloads_history),
     re_path(r'^utils/downloads/(?P<build>.*)$',     utils.download_build),
     re_path(r'^utils/downloads/?$',                 utils.downloads),
-    re_path(r'^utils/settings/?$',                  utils.get_settings),
+    re_path(r'^utils/settings/?$',                  utils.get_settings, name='get_settings'),
     re_path(r'^utils/webadmin_feature_flags/?$',    utils.webadmin_feature_flags),
     re_path(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),
     re_path(r'^ipvd$',                              utils.get_ipvd, name='get-ipvd'),
@@ -41,7 +41,7 @@ urlpatterns = [
     re_path(r'^account/timeSincePassword$',  account.time_since_password),
     re_path(r'^account/reviewCookie$',       account.review_cookie),
     re_path(r'^account/verify$',             account.verify_password),
-    re_path(r'^account/?$',                  account.index),
+    re_path(r'^account/?$',                  account.index, name='account'),
 
     re_path(r'^2fa/verification$', two_fa.TwoFactorVerification.as_view()),
     re_path(r'^2fa/backup$',       two_fa.BackupCode.as_view()),

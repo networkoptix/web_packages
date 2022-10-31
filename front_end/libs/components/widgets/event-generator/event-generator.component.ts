@@ -7,17 +7,16 @@ import { map, tap } from 'rxjs/operators';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystemInfo } from '@services/systems.service.types';
 import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';
-
 interface SystemDropdownItem extends DropdownItem<string> {
     disabled: boolean;
 }
@@ -51,7 +50,7 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
     };
 
     static cloudApi: NxCloudApiService;
-    static systems$ = new BehaviorSubject<NxSystemInfo[]>([]);
+    static systems$ = new BehaviorSubject<System[]>([]);
 
     system: NxSystem;
     selectedSystem: SystemDropdownItem;

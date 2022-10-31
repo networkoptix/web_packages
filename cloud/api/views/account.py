@@ -3,7 +3,11 @@ import enum
 import time
 import logging
 import json
+from django.shortcuts import redirect
+from django.urls import reverse
 import requests
+from uuid import uuid4
+from django.core.cache import cache
 
 import django
 from django.conf import settings
@@ -302,7 +306,16 @@ def index(request):
 
     if request.method == 'GET':
         # get authorized user here
-        return api_success(AccountSerializer(request, many=False).data)
+        # Redirect if no version
+        # Add indefinate cache heading
+        cached = request.query_params.get('cached')
+        current_version = cache.get(request.user.email)
+        if not cached or not current_version or cached != current_version:
+            if not current_version:
+                current_version = str(uuid4())
+                cache.set(request.user.email, current_version)
+            return redirect(f'{reverse("account")}?cached={current_version}')
+        return api_success(AccountSerializer(request, many=False).data, additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
 
     serializer = AccountUpdateSerializer(request, data=request.data)
 
@@ -399,8 +412,15 @@ class SecurityAction(enum.Enum):
         return list(cls.__members__.keys())
 
 
+
 class AccountSecurity(APIView):
     permission_classes = [IsAuthenticated]
+
+    def invalidate_user_cache(self, email):
+        """
+        Clears the cached version for a user to invalidate browser cached version on next request.
+        """
+        cache.delete(email)
 
     @method_decorator(swagger_auto_schema(
         # auto_schema=None,
@@ -411,6 +431,7 @@ class AccountSecurity(APIView):
         account_security_serializer = AccountSecuritySerializer(
             data=request.data)
         account_security_serializer.is_valid(raise_exception=True)
+        self.invalidate_user_cache(request.user.email)
 
         mfa_code = account_security_serializer.validated_data.get("mfaCode")
         action = account_security_serializer.validated_data.get("action")
@@ -443,6 +464,7 @@ class AccountSecurity(APIView):
         if Account.get(request).get("account2faEnabled"):
             raise APIRequestException('Cannot delete totp while 2fa is enabled', ErrorCodes.bad_request)
         request.session["has2fa"] = False
+        cache.delete(request.user.email)
         return api_success(Auth.delete_2fa_key(request))
 
 

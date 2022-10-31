@@ -168,7 +168,12 @@ export class NxSystemAPI {
     protected getUrlBase(protocol = this.window.location.protocol) {
         let urlBase = protocol !== this.window.location.protocol ? `${protocol}//${this.window.location.host}` : '';
         if (this.systemId) {
+            const localProxy = this.cookieService.get('cors_bypass') || '';
+            if (localProxy) {
+                protocol = 'https:';
+            }
             urlBase =
+                localProxy +
                 protocol +
                 '//' +
                 this.CONFIG.trafficRelayHost

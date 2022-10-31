@@ -208,9 +208,7 @@ class SettingsSerializer(CustomizationCacheSerializer):
     developersEnabled = serializers.BooleanField()
     customClientsEnabled = serializers.BooleanField()
     licenseServer = serializers.CharField()
-
-    def get_license_server(self):
-        return settings.LICENSE_SERVER
+    customization = serializers.CharField()
 
     def extend_settings(self, request):
         from api.views.utils import get_feature_flags
@@ -254,6 +252,8 @@ class SettingsSerializer(CustomizationCacheSerializer):
                 kwargs['data']['trafficRelayHost'] = settings.TRAFFIC_RELAY_HOST
             if not kwargs['data'].get('licenseServer', False):
                 kwargs['data']['licenseServer'] = settings.LICENSE_SERVER
+            if not kwargs['data'].get('customization', False):
+                kwargs['data']['customization'] = customization
 
         super().__init__(*args, **kwargs)
 

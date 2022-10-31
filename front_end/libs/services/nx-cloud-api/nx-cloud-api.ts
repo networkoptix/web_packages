@@ -4,9 +4,10 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import LogRocket from 'logrocket';
-import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { EMPTY, of, from, BehaviorSubject, throwError, defer } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map, tap, shareReplay } from 'rxjs/operators';
 
 import type {
     AuthorizeParams,
@@ -26,6 +27,7 @@ import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
 
+import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
 import { CustomClientAPI } from './custom-client-api';
@@ -104,6 +106,7 @@ export class NxCloudApiService {
     public customClient: CustomClientAPI;
     public licenseServerApiFactory: (licenseServer: string, cloudHost: string) => LicenseServerAPI;
     public cloudStorageApi: CloudStorageAPI;
+    public cloudDbApi: CloudDbAPI;
 
     constructor(
         private configService: NxConfigService,
@@ -115,12 +118,16 @@ export class NxCloudApiService {
         private nxSwCacheService: NxSwCacheService,
         private consoleService: NxConsoleService,
         private oauthService: OauthService,
+        private cookieService: CookieService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.customClient = new CustomClientAPI(this.CONFIG, this.http, this.consoleService);
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
-        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)();
+        const targetInstance = this.cookieService.get('cloud_instance') || '';
+        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(targetInstance);
+        const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code), shareReplay({ refCount: true, bufferSize: 1 }));
+        this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(targetInstance, this.CONFIG.customization);
     }
 
     getSubAPI(route: ConsoleSection) {
@@ -146,6 +153,7 @@ export class NxCloudApiService {
 
     @swClear('cloudSystemAPI', '/systems', false)
     disconnect(systemId: string) {
+        // Use cloudDbApi once TempCredentials have been added to cloudDbApi
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
             system_id: systemId
         });
@@ -153,6 +161,7 @@ export class NxCloudApiService {
 
     @swClear('cloudSystemAPI', '/systems', false)
     connect(systemName, email, password) {
+        // Use cloudDbApi once TempCredentials have been added to cloudDbApi
         const accessToken = this.oauthService.cloudApiAccessToken;
         let headers = new HttpHeaders();
         if (accessToken) {
@@ -259,23 +268,21 @@ export class NxCloudApiService {
         return this.http.get<t.IPVDCameras>(this.CONFIG.apiBase + '/ipvd');
     }
 
-    @swClear('cloudSystemAPI', '/systems', false)
     getCode(systemId: string) {
-        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/code`, {});
+        return this.cloudDbApi.getCode(systemId);
     }
 
-    @swClear('cloudSystemAPI', '/systems', false)
     getSystemAuth(systemId: string) {
-        return this.http.get<t.SystemAuth>(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
+        return this.cloudDbApi.getAuth(systemId);
     }
 
-    @swClear('cloudSystemAPI', '/systems', false)
     getSystemToken(systemId: string) {
-        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/token`, {});
+        return this.cloudDbApi.getToken(systemId);
     }
 
     @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
+        // TODO: Move to cloudDbApi once we add oauth handlers to cloudDbApi
         return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
             master_system_id: masterSystemId,
             slave_system_id: slaveSystemId,
@@ -330,14 +337,8 @@ export class NxCloudApiService {
             { user_email: userEmail }).toPromise();
     }
 
-    @swClear('cloudSystemAPI', '/systems', true)
     renameSystem(systemId: string, systemName: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
-            name: systemName
-        }).toPromise().then(result => {
-            // this.systems('clearCache');
-            return result;
-        });
+        return this.cloudDbApi.rename(systemId, systemName).toPromise();
     }
 
     sendMessage(
@@ -353,28 +354,27 @@ export class NxCloudApiService {
     }
 
     systems(systemId?: string) {
-        if (systemId) {
-            return this.http.get<any[]>(this.CONFIG.apiBase + '/systems/' + systemId);
-        }
-        return this.http.get<any[]>(this.CONFIG.apiBase + '/systems');
+        return this.cloudDbApi.systems(systemId);
     }
 
     users(systemId: string) {
-        return this.http.get<t.CloudUsers>(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
+        return this.cloudDbApi.getCloudUsers(systemId);
     }
 
     unshare(systemId: string, userEmail: string, password?: string) {
-        let url = `${this.CONFIG.apiBase}/systems/${systemId}/users`;
-        const data: any = {
-            user_email: userEmail,
-            role: this.CONFIG.accessRoles.unshare
+        const body: any = {
+            accountEmail: userEmail,
+            accessRole: this.CONFIG.accessRoles.unshare,
+            isEnabled: false
         };
         if (environment.isLocal) {
-            url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
-            data.email = userEmail;
-            data.password = password || '';
+            const url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
+            body.email = userEmail;
+            body.password = password || '';
+            return this.http.post(url, body);
         }
-        return this.http.post(url, data);
+
+        return this.cloudDbApi.sharing(systemId, body);
     }
 
     authKey() {

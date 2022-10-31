@@ -1,4 +1,7 @@
+from uuid import uuid4
 from django.http.request import QueryDict
+from django.urls import reverse
+from django.shortcuts import redirect
 from rest_framework.permissions import AllowAny
 from cms.feature_flags import FLAGS, check_feature_flag
 import time
@@ -17,19 +20,25 @@ from util.helpers import get_customization
 @permission_classes((AllowAny,))
 def get_menu(request, name):
     customization = get_customization(request)
+    cached = request.query_params.get('cached')
+    current_version = MENU_CACHE[(f'{customization}_key')]
+
+    if not cached or not current_version or cached != current_version:
+        if not current_version:
+            current_version = str(uuid4())
+            MENU_CACHE[(f'{customization}_key')] = current_version
+        return redirect(f'{reverse("get_menu", kwargs={"name": name})}?cached={current_version}')
+
     name = name.lower()
     cached_menus = MENU_CACHE[customization] or {}
-    menu  = None
-
-    if request.user.is_superuser or not (menu := cached_menus.get(name, None)):
+    menu  = cached_menus.get(name, None)
+    if not menu:
         menu = Menu.generate_menu(menu_name=name, customization=customization)
         if menu:
             cached_menus = cached_menus or Menu.generate_menus(customization=customization)
             MENU_CACHE[customization] = {**cached_menus, name: menu}
-
-
-    if not menu:
-        raise APINotFoundException(f'Menu {name} not found')
+        else:
+            raise APINotFoundException(f'Menu {name} not found')
 
     return api_success(menu)
 

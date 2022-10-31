@@ -396,11 +396,25 @@ def webadmin_feature_flags(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def get_settings(request):
-    data = get_settings_from_cache(request=request)
+    customization = get_customization(request)
+    global_cache = caches['customization']
+    user = request.query_params.get('cached')
+    user_key = getattr(request.user, 'email', 'anonymous_user')
+    current_user = cache.get(user_key)
+    user_changed = not user or not current_user or user != current_user
+    version = request.query_params.get('version')
+    current_version = global_cache.get(f'global_version_{customization}')
+    if user_changed or not version:
+        if not current_user:
+            current_user = str(uuid4())
+            cache.set(user_key, current_user)
+        return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}')
+
+    data = get_settings_from_cache(customization=customization)
     serializer = SettingsSerializer(
         data=data, request=request)
     serializer.is_valid()
-    return Response(serializer.data)
+    return Response(serializer.data, headers={'Cache-Control': f'max-age={60**2 * 24}'})
 
 
 IPVD_CACHE_CLEARED = 'IPVD cache cleared'

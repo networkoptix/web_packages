@@ -13,6 +13,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
+import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
@@ -151,6 +152,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
         private themeService: NxThemeService,
+        private cookieService: CookieService,
         @Inject(WINDOW) public window: Window
     ) {
         this.LANG = languageService.translations;
@@ -160,7 +162,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     private verifyRedirectUrlHelper(systemId: string): Observable<boolean> {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
         const redirectPort = new URL(this.initialData.redirect_uri).port;
-        return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
+        const localProxy = this.cookieService.get('cors_bypass') || '';
+        return this.httpClient.get(`${localProxy}https://${systemUrl}/rest/v1/servers/*/info`)
             .pipe(
                 untilDestroyed(this),
                 map((servers: ModuleInformationReply[]) => {

@@ -6,11 +6,11 @@ import { debounceTime, switchMap, shareReplay, map, tap, startWith } from 'rxjs/
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystemInfo } from '@services/systems.service.types';
 import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';
@@ -63,7 +63,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
 
     CUSTOM_LABELS = ['Select System', 'Select Camera', 'Auto Update'];
 
-    static systems$ = new BehaviorSubject<NxSystemInfo[]>([]);
+    static systems$ = new BehaviorSubject<System[]>([]);
     updater$ = new Subject();
     system: NxSystem;
     selectedSystem: SystemDropdownItem;

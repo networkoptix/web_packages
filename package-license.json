@@ -749,6 +749,51 @@
             "path": "cloud_portal/cloud_helper"
         }
     },
+    "/cors_bypass/": {
+        "cors-anywhere@0.4.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/Rob--W/cors-anywhere",
+            "publisher": "Rob Wu",
+            "email": "rob@robwu.nl",
+            "path": "cloud_portal/cors_bypass/node_modules/cors-anywhere",
+            "licenseFile": "cloud_portal/cors_bypass/node_modules/cors-anywhere/README.md"
+        },
+        "cors_bypass@1.0.0": {
+            "licenses": "ISC",
+            "path": "cloud_portal/cors_bypass"
+        },
+        "eventemitter3@1.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/primus/eventemitter3",
+            "publisher": "Arnout Kazemier",
+            "path": "cloud_portal/cors_bypass/node_modules/eventemitter3",
+            "licenseFile": "cloud_portal/cors_bypass/node_modules/eventemitter3/LICENSE"
+        },
+        "http-proxy@1.11.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nodejitsu/node-http-proxy",
+            "publisher": "Nodejitsu Inc.",
+            "email": "info@nodejitsu.com",
+            "path": "cloud_portal/cors_bypass/node_modules/http-proxy",
+            "licenseFile": "cloud_portal/cors_bypass/node_modules/http-proxy/LICENSE"
+        },
+        "proxy-from-env@0.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/Rob--W/proxy-from-env",
+            "publisher": "Rob Wu",
+            "email": "rob@robwu.nl",
+            "url": "https://robwu.nl/",
+            "path": "cloud_portal/cors_bypass/node_modules/proxy-from-env",
+            "licenseFile": "cloud_portal/cors_bypass/node_modules/proxy-from-env/README.md"
+        },
+        "requires-port@0.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/unshiftio/requires-port",
+            "publisher": "Arnout Kazemier",
+            "path": "cloud_portal/cors_bypass/node_modules/requires-port",
+            "licenseFile": "cloud_portal/cors_bypass/node_modules/requires-port/LICENSE"
+        }
+    },
     "/front_end/eslint-plugin-nx/": {
         "@cspotcode/source-map-support@0.8.1": {
             "licenses": "MIT",

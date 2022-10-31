@@ -24,6 +24,7 @@ export const nxConfig: IConfig = {
     alertTimeout: 3 * 1000, // Alerts are shown for 3 seconds,
     longAlertTimeout: 6 * 1000, // Alerts are shown for 6 seconds,
     pollingTimeout: 30 * 1000,
+    customization: 'default',
     extendedRequestTimeout: 15 * 1000,
     apiRequestAttempts: 4, // combined with extendedRequestTimeout this mean we'll give up after 1 min
     maxNumberServerChecked: 6, // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for

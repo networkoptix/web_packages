@@ -1,4 +1,5 @@
 from uuid import uuid4
+import uuid
 from cloud.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
 from api.views import utils
@@ -341,6 +342,11 @@ class TestGetSettings:
 
     def make_request(self):
         request = self.arf.get('/api/utils/settings')
+        request.user = self.user
+        request.session = {}
+        redirect_res = utils.get_settings(request)
+        assert redirect_res.status_code == status.HTTP_302_FOUND
+        request = self.arf.get(redirect_res.url)
         request.user = self.user
         request.session = {}
         return utils.get_settings(request)

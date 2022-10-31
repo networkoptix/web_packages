@@ -16,11 +16,9 @@ interface BaseRequestOptions {
     body?: unknown;
 }
 
-interface PostRequestOptions extends BaseRequestOptions {
-    body?: unknown;
-}
+interface PostRequestOptions extends BaseRequestOptions { }
 
-export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl?: string, cloudHost?: string) => ApiType;
+export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken?: Observable<string>) => (serverUrl?: string, cloudHost?: string) => ApiType;
 
 /**
  * Static properties methods required for using BaseCloudServiceAPI abstract class.
@@ -55,7 +53,7 @@ export abstract class BaseCloudServiceAPI {
     constructor(
         protected serverUrl: string,
         private apiBase: string,
-        public cloudHost: string,
+        public hostOrCustomization: string,
         protected http: HttpClient,
         private withFreshSession: WithFreshSession
     ) {
@@ -78,7 +76,7 @@ export abstract class BaseCloudServiceAPI {
 
         const additionalHeaders = {
             Authorization: `Bearer ${accessToken}`,
-            'cloud-host': this.cloudHost || environment.cloudHostDev || environment.cloudHost || ''
+            'cloud-host': this.hostOrCustomization || environment.cloudHostDev || environment.cloudHost || ''
         };
 
         const updateHeading = ([key, value]: [string, string]): void => {

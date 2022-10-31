@@ -2,6 +2,7 @@ import json
 import os
 import re
 from itertools import chain
+import urllib
 from django.conf import settings
 from django import shortcuts
 from django.http import HttpResponse
@@ -223,6 +224,7 @@ SHARE_CRAWLER_REGEX = r'^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinteres
 
 
 def app_view(request):
+    response = None
     if redirect_path := check_redirect(request):
         return shortcuts.redirect(redirect_path, permanent=True)
 
@@ -234,11 +236,18 @@ def app_view(request):
         if open_graph_crawler:
             return shortcuts.render(request, "cms/sharing_meta.html", context)
 
-        return TemplateView.as_view(
+        response = TemplateView.as_view(
             template_name="static/index.mustache.html",
             extra_context=context)(request)
 
-    return shortcuts.render(request, "static/index.html")
+    response = response or shortcuts.render(request, "static/index.html")
+
+    if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
+        # Used on the frontend to bypass cors issues due to differences between running locally and behind nginx
+        response.set_cookie('cloud_instance', urllib.parse.quote_plus(f'{settings.LOCAL_CORS_BYPASS}{settings.CLOUD_PORTAL_URL}'))
+        response.set_cookie('cors_bypass', urllib.parse.quote_plus(settings.LOCAL_CORS_BYPASS))
+
+    return response
 
 
 def robots_txt(request):

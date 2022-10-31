@@ -28,6 +28,7 @@ const PROXY_CONFIG = [
             '/api',
             '/oauth',
             '/cs',
+            '/cdb',
             // mediaserver specific apis
             '/ec2',
             '/hls',

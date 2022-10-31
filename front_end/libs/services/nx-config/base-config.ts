@@ -32,6 +32,7 @@ export interface BaseConfig {
     commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;
+    customization: string;
     previewPath?: string;
     alertTimeout: number;
     accountDropdown: AccountDropdown[];
