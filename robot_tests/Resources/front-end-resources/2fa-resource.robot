@@ -37,8 +37,8 @@ Turn on 2fa Functionality
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
     Click Link    ${SECURITY DROPDOWN}
-    Wait Until Element Is Visible    ${2FA SWITCH}
-    Click Element    ${2FA SWITCH}
+    Wait Until Element Is Visible   ${2FA ENABLE BUTTON}
+    Click Element    ${2FA ENABLE BUTTON}
     Wait Until Element Is Visible    ${2FA PASSWORD MODAL FIELD}
     Input Text    ${2FA PASSWORD MODAL FIELD}    ${BASE PASSWORD}
     Wait Until Element Is Visible    ${2FA PASSWORD MODAL NEXT BTN}
@@ -77,25 +77,26 @@ Turn off 2fa Functionality
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
     Click Link    ${SECURITY DROPDOWN}
-    Wait Until Element Is Visible    ${2FA SWITCH}
-    ${available}=    Run Keyword And Return Status    Element Should Be Visible    ${2FA SWITCH ENABLED}
+    Wait Until Element Is Visible    ${2FA DISABLE BUTTON}
+    ${available}=    Run Keyword And Return Status    Element Should Be Visible    ${2FA ENABLED BADGE}
     IF    "${available}" == "True"
-    Click Element    ${2FA SWITCH}
+    Click Element    ${2FA DISABLE BUTTON}
     Wait Until Element Is Visible    ${2FA TOTP FIELD}
     Disable two factor authentication form validations
     ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Input Text    ${2FA TOTP FIELD}    ${totp}
     Click Element    ${2FA DISABLE MODAL BTN}
-    Wait Until Element Is Visible    ${2FA SWITCH DISABLED}
+    Wait Until Element Is Visible    ${2FA DISABLED BADGE}
     END
 
 Login with one time backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
     Log In    ${email}    ${password}    2fa=${True}    2fa backup code=${random one time backup code}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
     Click Link    ${SECURITY DROPDOWN}
-    Wait Until Element Is Visible    ${2FA SWITCH ENABLED}
+    Wait Until Element Is Visible    ${2FA ENABLED BADGE}
 
 Attempt login with used backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}

@@ -8,6 +8,10 @@ ${url}                                      ${ENV}
 ${2FA SWITCH}                               //nx-account-security-component//nx-switch//input[@id="2fa-active-status-switch"]//..
 ${2FA SWITCH ENABLED}                       //nx-account-security-component//input[(@id="2fa-active-status-switch") and (@class="selected")]//..
 ${2FA SWITCH DISABLED}                      //nx-account-security-component//input[(@id="2fa-active-status-switch") and (@class="")]//..
+${2FA ENABLE BUTTON}                        //button[contains(text(), "${ENABLE 2FA TEXT}")]
+${2FA DISABLE BUTTON}                       //button[contains(text(), "${DISABLE 2FA TEXT}")]
+${2FA DISABLED BADGE}                       //a[@id="tag-tag" and contains(text(), "${DISABLED TEXT}")]
+${2FA ENABLED BADGE}                        //a[@id="tag-tag" and contains(text(), "${ENABLED TEXT}")]
 ${2FA PASSWORD MODAL FIELD}                 //nx-two-fa-modal-content//input[@id="login_password"]
 ${2FA PASSWORD MODAL NEXT BTN}              //nx-two-fa-modal-content//svg-icon[contains(@data-src,"/images/icons/standard/arrow_right.svg")]
 ${2FA QA CODE BTN}                          //nx-two-fa-modal-content//button[@id="qrMode"]
