@@ -1,11 +1,20 @@
-@use "../../../../../app/src/styles/typography";
-@use "../../../../../app/src/styles/mixins";
-@use "../../../../../app/styles/theme_variables" as *;
-
+@use "../../../../../src/app/styles/typography";
+@use "../../../../../src/app/styles/mixins";
+@use "../../../../../src/styles/theme_variables_common" as *;
+@use "../../../../../src/styles/css-variables/native-theme/theme_palette" as *;
+@use "../../../../../src/styles/css-variables/theme_palette" as *;
+@use "../../../../../src/styles/css-variables/theme_variables" as *;
 
 @media only screen and (max-width: 355px)  {
     body {
         min-width: 160px !important;
+    }
+
+    .cloud-header-st0 {
+        stroke: var(--svg-path-light-color);
+    }
+    .cloud-header-st1 {
+        stroke : var(--svg-path-dark-color);
     }
 
     .authorize-main {
@@ -13,7 +22,7 @@
             min-width: 160px !important;
             main {
                 header .authorize-header {
-                    margin: 0 16px !important;
+                    margin: 0 8px !important;
                 }
                 form {
                     .create-row {
@@ -52,6 +61,10 @@
             }
         }
     }
+
+    .btn-login {
+        max-width: unset;
+    }
 }
 
 // safari specific
@@ -65,11 +78,11 @@
 
 .authorize-main {
     .main-w .stroke-color-main, .header-w .stroke-color-main {
-        stroke: $dark9;
+        stroke: var(--btn-text-color);
     }
 
     .main-w .fill-color-main, .header-w .fill-color-main {
-        fill: $dark9;
+        fill: var(--btn-text-color);
     }
 
     .main-d .stroke-color-main, .header-d .stroke-color-main {
@@ -81,8 +94,8 @@
     }
 
     .invalid-state {
-        border-color: $error !important;
-        color: $error !important;
+        border-color: var(--error) !important;
+        color: var(--error) !important;
     }
 
     .fake-link {
@@ -117,18 +130,21 @@
         height : 100vh;
 
         &.window-w {
-            border: 1px solid $light4;
+            border: 1px solid var(--border-color);
             border-radius: $border-radius-base;
         }
 
         .authorize-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 100%;
             @include typography.medium22dark9lh24;
-            height: 24px;
+            color: var(--auth-header-color) !important;
+            height: 40px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            text-align: center;
             padding: 0 16px;
         }
 
@@ -142,19 +158,21 @@
             justify-content: center;
             align-items: center;
             padding: 24px 0;
-            background-color: $additional_light1;
-            border-bottom: 1px solid $light3;
+            background-color: var(--auth-header-bg);
+            border-bottom: 1px solid var(--border-color);
             max-width: 480px;
 
             .authorize-subheader {
                 @include typography.regular14dark9lh16;
+                color : var(--auth-subheader-color) !important;
                 margin-top: 20px;
+
                 .for-account {
                     margin-left: 8px;
                     border-radius: 25px;
                     padding: 2px 10px;
-                    background-color: $light3;
-                    border: 1px solid $light6;
+                    background-color: var(--auth-pill-bg);
+                    border: 1px solid var(--border-color);
                     cursor: pointer;
                     &.span-disabled {
                         cursor: text;
@@ -240,14 +258,10 @@
             }
 
             input {
-                height: 40px;
-                font-size: $h6-font-size;
-                padding: 0 8px;
-                border-radius: 1px;
-                border: 1px solid $light6;
-                &:hover {
-                    border-color: $light8;
-                }
+                height: 40px !important;
+                font-size: $h6-font-size !important;
+                padding: 0 8px !important;
+                border-radius: 1px !important;
             }
 
             .create-row input {
@@ -267,17 +281,20 @@
             }
 
             &.main-w {
-                background-color: $light1;
-                color: $dark9;
+                background-color: var(--auth-body-bg);
+                color: var(--body-text-color);
+
                 input {
-                    color: $dark9;
+                    color: var(--input-color);
+                    background-color: var(--input-bg);
+
                     &:focus {
-                        border: 1px solid var(--brand-core);
+                        border: 1px solid var(--brand-core) !important;
                     }
                 }
 
                 .new-backup-code {
-                    color: $dark9;
+                    color: var(--input-color);
                     background-color: $light2;
                     border: 2px solid $light4;
                     &:hover {
@@ -310,8 +327,8 @@
                 }
 
                 input {
-                    color: $light4;
-                    background-color: $dark5;
+                    color: var(--input-color);
+                    background-color: var(--input-bg);
                     &:focus {
                         background-color: $dark4;
                         border: 1px solid $dark2;
@@ -356,8 +373,10 @@
                 }
 
                 input {
-                    color: $light4;
-                    background-color: $dark4;
+                    color: $light4 !important;
+                    background-color: $dark4 !important;
+                    border : 1px solid $dark1 !important;
+
                     &:focus {
                         background-color: $dark3;
                         border: 1px solid $dark1;
@@ -405,25 +424,31 @@
                 }
 
                 &.footer-w {
-                    border-top: 1px solid $light3;
+                    border-top: 1px solid var(--border-color);
                     display: flex;
                     button.btn.text-button {
-                        color: $light16;
-                        svg .st0 {
-                            stroke: $light16;
+                        color: var(--btn-text-color);
+                        svg {
+                            .st0, .stroke-color-main {
+                                stroke : var(--btn-text-color);
+                            }
                         }
 
                         &:hover {
-                            color: $dark15;
-                            svg .st0 {
-                                stroke: $dark15;
+                            color: var(--btn-text-hover-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-hover-color);
+                                }
                             }
                         }
 
                         &:active {
-                            color: $light16;
-                            svg .st0 {
-                                stroke: $light16;
+                            color: var(--btn-text-active-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-active-color);
+                                }
                             }
                         }
                     }
@@ -433,23 +458,28 @@
                     border-top: 1px solid $dark6;
                     display: flex;
                     button.btn.text-button {
-                        color: $light16;
-
-                        svg .st0 {
-                            stroke: $light16;
+                        color: var(--btn-text-color);
+                        svg {
+                            .st0, .stroke-color-main {
+                                stroke : var(--btn-text-color);
+                            }
                         }
 
                         &:hover {
-                            color: $light14;
-                            svg .st0 {
-                                stroke: $light14;
+                            color: var(--btn-text-hover-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-hover-color);
+                                }
                             }
                         }
 
                         &:active {
-                            color: $light16;
-                            svg .st0 {
-                                stroke: $light16;
+                            color: var(--btn-text-active-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-active-color);
+                                }
                             }
                         }
                     }
@@ -458,25 +488,31 @@
                 &.footer-m {
                     border-top: 1px solid $dark4;
                     display: flex;
-                    
+
                     button.btn.text-button {
-                        color: $light16;
+                        color: var(--btn-text-color);
                         height : auto !important;
-                        svg .st0 {
-                            stroke: $light16;
-                        }
-                        
-                        &:hover {
-                            color: $light14;
-                            svg .st0 {
-                                stroke: $light14;
+                        svg {
+                            .st0, .stroke-color-main {
+                                stroke : var(--btn-text-color);
                             }
                         }
-                        
+
+                        &:hover {
+                            color: var(--btn-text-hover-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-hover-color);
+                                }
+                            }
+                        }
+
                         &:active {
-                            color: $light16;
-                            svg .st0 {
-                                stroke: $light16;
+                            color: var(--btn-text-active-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-active-color);
+                                }
                             }
                         }
                     }

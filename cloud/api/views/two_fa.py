@@ -1,13 +1,14 @@
 from django.utils.decorators import method_decorator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import decorators, serializers
+from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
+from rest_framework import decorators
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from urllib.parse import quote
 
-from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
+from cloud.controllers.cloud_api import Auth
+from cloud.helpers.exceptions import api_success, APINotAuthorisedException
+from api.serializers import CreateBackupCodeSerializer, DeleteBackupCodeSerializer, TwoFaSerializer, CloudResponseSerializer, VerificationSerializer
 
 
 class TwoFactorPermissionsMixin:
@@ -25,29 +26,6 @@ class TwoFactorPermissionsMixin:
             return ""
 
 
-class CreateBackupCodeSerializer(serializers.Serializer):
-    count = serializers.IntegerField(required=False, default=8, min_value=1)
-
-
-class DeleteBackupCodeSerializer(serializers.Serializer):
-    backup_codes = serializers.CharField()
-
-    @staticmethod
-    def validate_backup_codes(data):
-        if ' ' in data:
-            raise serializers.ValidationError("Backup Codes should be comma seperated with no spaces")
-        return data
-
-
-class VerificationSerializer(serializers.Serializer):
-    code = serializers.CharField(required=True)
-    verification_code = serializers.CharField(required=True)
-
-    @staticmethod
-    def validate_verification_code(value):
-        return quote(value)
-
-
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = None
@@ -57,7 +35,8 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         """
         Verifies an access code using a 2fa code.
         """
-        verificationSerializer = VerificationSerializer(data=request.query_params)
+        verificationSerializer = VerificationSerializer(
+            data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_2fa_code(data["verification_code"], data["code"])
@@ -89,7 +68,8 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         """
         Verifies an access code using a backup code.
         """
-        verificationSerializer = VerificationSerializer(data=request.query_params)
+        verificationSerializer = VerificationSerializer(
+            data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_backup_code(data["verification_code"], data["code"])
@@ -121,7 +101,8 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         Generates and save a new backup code for the user.
         """
         count = CreateBackupCodeSerializer(request.data).data.get("count")
-        old_codes = ",".join(map(lambda x: x["backup_code"], Auth.get_active_backup_codes(request)))
+        old_codes = ",".join(
+            map(lambda x: x["backup_code"], Auth.get_active_backup_codes(request)))
         Auth.delete_backup_codes(request, codes=old_codes)
 
         return api_success(Auth.generate_backup_code(request, count))
@@ -153,23 +134,20 @@ def get_active_backup_codes(request):
 
 
 @swagger_auto_schema(method="POST",
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
-                             "verification_code": openapi.Schema(description="A 2fa code from your 2fa app.",
-                                                                 type=openapi.TYPE_STRING)
-                         },
-                         required=["verification_code"]
-                     ))
+                     operation_description="Verifies the current user's access_token using a 2fa code.",
+                     request_body=TwoFaSerializer,
+                     responses={'200': openapi.Response('Two Factor Auth', CloudResponseSerializer)})
 @decorators.api_view(["POST"])
 @decorators.permission_classes((IsAuthenticated,))
 def add_2fa_to_session(request):
     """
     Verifies the current user's access_token using a 2fa code.
     """
-    require_params(request, ("verification_code",))
-    verification_code = request.data.get("verification_code")
-    res = Auth.verify_2fa_code(verification_code, request.session.get("access_token"))
+    serializer = TwoFaSerializer(data=request.data)
+    serializer.is_valid()
+    verification_code = serializer.data.get("verification_code")
+    res = Auth.verify_2fa_code(
+        verification_code, request.session.get("access_token"))
 
     if request.user and request.user.is_authenticated:
         request.session["has2fa"] = True

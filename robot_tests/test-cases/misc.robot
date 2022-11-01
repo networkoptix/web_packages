@@ -1,6 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
-Test Teardown     Close Browser
+Test Setup        Run Keywords    QA Video Recording Start
+Test Teardown     Run Keywords    QA Video Recording Stop      Close Browser
 Force Tags        Threaded
 
 
@@ -10,11 +11,12 @@ Force Tags        Threaded
     Open Browser and go to URL    ${url}/wfvyuieyuisgweyugv
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Click Link    ${TAKE ME HOME}
-    Location Should Be    ${url}/
+    Wait Until Location Is    ${url}/
 
 2. Failed to access system page correctly shows when going to a non-existent system
     Open Browser and go to URL    ${url}
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
+    ${user}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
+    Log In    ${user}    ${BASE PASSWORD}
     Go To    ${url}/systems/htgfjtrdtrtyrrtydrydcrtydrtrdrtdrtdrtdrtd
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    <br>    ${EMPTY}
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    \n    ${EMPTY}
@@ -29,13 +31,13 @@ Force Tags        Threaded
 
 3. The logo takes you to the systems page when logged in
     [Tags]    C41540
-    Open Browser and go to URL    ${url}/authorize/register
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=${LOG IN BTN CREATE ACCOUNT PAGE}
-    Go To    ${url}/${NOPTIXAUTOQA SYSTEM ID}
+    Open Browser And Go To URL    ${url}/authorize/register
+    ${user}    Register And Activate Account With Random Email    mark    hamill    ${BASE PASSWORD}
+    Log In    ${user}    ${BASE PASSWORD}
+    Go To    ${ENV}/account
     Wait Until Element Is Visible    ${HEADER ICON LINK}
     Click Link    ${HEADER ICON LINK}
-    Wait Until Element Is Visible    ${NOPTIXAUTOQA SYSTEM NAME}
-    Location Should Be    ${url}/systems
+    Wait Until Location Is    ${url}/systems
 
 4. Language can be changed on landing page
     [Tags]    C41549

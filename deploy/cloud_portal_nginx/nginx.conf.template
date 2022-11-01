@@ -119,7 +119,7 @@ http {
             try_files /static/scripts/ngsw-worker.js =404;
         }
 
-        location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$ {
+        location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$|.*\.otf$|.*\.ttf$|.*\.woff$|.*\.woff2$|.*\.eot$ {
             root /app/app/static;
             add_header Cache-Control 'max-age=31449600'; # one year
             try_files /$CUSTOMIZATION/${DOLLAR}uri /$CUSTOMIZATION/static/${DOLLAR}uri /common/${DOLLAR}uri /$CUSTOMIZATION/static/scripts/vendor/${DOLLAR}uri /$CUSTOMIZATION/static/vendor/${DOLLAR}uri =404;
@@ -136,6 +136,7 @@ http {
             proxy_set_header Host ${DOLLAR}http_host;
             proxy_set_header Authorization  "";
             proxy_redirect off;
+            proxy_pass_request_headers on;
 
             proxy_pass   http://app_server;
         }
@@ -176,9 +177,9 @@ http {
             proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com;
         }
 
-        location /static/$BUILD/ {
+        location ~* ^/static/([\d]+)/(.*)$ {
             root /app/app/static;
-            rewrite ^/static/$BUILD/(.*)$ /static/$1 break;
+            rewrite ^/static/([\d]+)/(.*)$ /static/$2 break;
             try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
             error_page 404 /common/static/index.html;
         }

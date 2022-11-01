@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-settings-menu-resource.robot
 Suite Setup       System Settings Menu Suite Setup
-Test Setup        System Settings Menu Test Setup
-Test Teardown     Run Keyword If Test Failed    System Settings Menu Test Restart
+Test Setup        Run Keywords    QA Video Recording Start      System Settings Menu Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop       Settings Menu Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    System Settings Menu Suite Teardown
 Force Tags        system    left-menu    threaded    webadmin    cloud
 

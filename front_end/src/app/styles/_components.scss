@@ -1,0 +1,238 @@
+@use "../../styles/theme_variables_common" as *;
+@use "../styles/typography";
+@use "../../app/components/content-block/content-block.component";
+@use "bootstrap_utils" as bootstrap;
+
+.section-placeholder {
+    position: relative;
+    display: flex;
+
+    .page-placeholder {
+        .placeholder-content {
+            transform: none !important;
+
+            .placeholder-icon {
+                margin: 80px 0 40px;
+            }
+        }
+    }
+}
+
+.page-placeholder {
+    position : absolute;
+    z-index  : 99;
+    width: 100%;
+    /*If the system is offline this should cover everything.
+                     Must always be the highest z-index*/
+
+    & > .placeholder {
+        opacity : 1;
+    }
+
+    .placeholder > .placeholder-content {
+        top : 40%;
+    }
+
+    &.offline {
+        @media (max-width : 991px) {
+            & > .placeholder {
+                height   : auto !important;
+                position : relative;
+                margin   : 50px 0;
+
+                & > .placeholder-content {
+                    top       : 0;
+                    transform : none;
+                }
+            }
+        }
+    }
+}
+
+.card {
+    &.hoverable {
+        margin-bottom : 10px;
+
+        &:hover {
+            box-shadow : var(--card-shadow);
+        }
+    }
+
+    table {
+        margin : 0;
+    }
+}
+
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card-type-4 {
+    @include bootstrap.media-breakpoint-down(sm){
+        flex: 0 1 45% !important;
+    }
+    flex: 0 1 22%;
+}
+
+.card-type-3 {
+    @include bootstrap.media-breakpoint-up(sm){
+        flex: 0 1 33% !important;
+    }
+    flex: 0 1 100%;
+}
+
+.jumbotron {
+    padding : 80px 0 0 0;
+
+    .welcome-caption {
+        font-size       : 64px !important;
+        font-family     : $font-family-light;
+        justify-content : center;
+        line-height     : 1;
+        padding         : 8px 0;
+        margin-top      : 0;
+        margin-bottom   : 16px;
+    }
+
+    .lead {
+        @include typography.regular18nocolor;
+        color : var(--body-text-color);
+        margin-bottom  : 48px;
+        min-height     : 28px;
+        padding-bottom : 1px;
+    }
+
+    // IE11
+    @media all and (-ms-high-contrast : none), (-ms-high-contrast : active) {
+        .promo-block {
+            @include bootstrap.media-breakpoint-up(sm) {
+                flex : 0 0 31.4% !important;
+            }
+        }
+    }
+
+    .promo-block {
+        @extend .card;
+        border : none;
+        text-align : center;
+        padding    : 0;
+        margin     : 0 8px 16px;
+        background : var(--promo-tile-bg);
+
+        @include bootstrap.media-breakpoint-up(sm) {
+            flex : 0 0 calc(100% / 3 - 16px);
+        }
+
+        h2 {
+            @extend .card--header;
+            @include typography.medium18nocolor;
+            border-bottom   : none;
+            line-height     : unset;
+            padding-top     : 124px;
+            padding-bottom  : 0;
+            background      : no-repeat 50% 20px;
+            background-size : auto 64px;
+        }
+
+        // fancy but not useful ...keeping it for reference
+        //@for $i from 1 through 9 {
+        //    &:nth-of-type(#{$i}) h2 {
+        //        background-image : url("/static/images/promo/landing_promo_#{$i}.svg");
+        //    }
+        //}
+
+        &:nth-of-type(1) h2 {
+            background-image : var(--promo-tile-img-1-path);
+        }
+
+        &:nth-of-type(2) h2 {
+            background-image : var(--promo-tile-img-2-path);
+        }
+
+        &:nth-of-type(3) h2 {
+            background-image : var(--promo-tile-img-3-path);
+        }
+
+        h2, h4 {
+            justify-content : center;
+        }
+
+        h4 {
+            @include typography.regular14nocolor;
+            color : var(--promo-tile-h4-color) !important;
+            margin      : 20px 16px;
+            line-height : 1.4;
+        }
+
+        &[href=""] {
+            pointer-events: none;
+        }
+    }
+}
+
+.header-editable {
+    display         : flex;
+    justify-content : space-between;
+    margin-right    : auto;
+    flex            : 0 1 auto;
+    min-width       : 0;
+    max-width       : 100%;
+}
+
+landing-display-component {
+    .promo-block {
+        position         : relative;
+        display          : flex;
+        flex-direction   : column;
+        min-width        : 0;
+        word-wrap        : break-word;
+        background-color : #fff;
+        background-clip  : border-box;
+        border           : 1px solid rgba(0, 0, 0, 0.125);
+        max-width        : 576px;
+        &:nth-of-type(1), &:nth-of-type(2), &:nth-last-of-type(1), &:nth-last-of-type(2) {
+            flex-grow: 1 !important;
+        }
+        &:nth-of-type(4n) {
+            @include bootstrap.media-breakpoint-up(sm) {
+                max-width: calc((100% / 3 - 16px) * 2) !important;
+            }
+        }
+    }
+
+    .row {
+        justify-content: center;
+    }
+}
+
+.ngx-charts-outer {
+    display : flex;
+
+    .ngx-charts {
+        float  : none !important;
+        height : 500px;
+
+        .tick text {
+            fill : var(--body-text-color) !important;
+        }
+    }
+
+    .chart-legend .legend-labels {
+        background-color : var(--svg-legend-bg);
+        border           : 1px solid var(--svg-legend-border-color);
+
+        .legend-label {
+            color : var(--body-text-color);
+
+            .active .legend-label-text {
+                color : var(--body-text-color);
+            }
+        }
+    }
+}
+
+pre, code {
+    color : var(--body-text-color);
+}

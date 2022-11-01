@@ -1,5 +1,5 @@
 {
-    "cs_CZ"    :    "Czech",
+    "ca_ES"    :    "Catalan",
     "de_DE"    :    "German",
     "en_GB"    :    "EnglishGB",
     "en_US"    :    "EnglishUS",
@@ -12,10 +12,7 @@
     "ko_KR"    :    "Korean",
     "nl_NL"    :    "Dutch",
     "pl_PL"    :    "Polish",
-    "pt_BR"    :    "PortugesBR",
-    "pt_PT"    :    "PortugesPT",
     "ru_RU"    :    "Russian",
-    "sv_SE"    :    "Swedish",
     "th_TH"    :    "Thai",
     "tr_TR"    :    "Turkish",
     "uk_UA"    :    "Ukranian",

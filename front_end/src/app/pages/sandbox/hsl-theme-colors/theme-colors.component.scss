@@ -1,0 +1,105 @@
+@use "../../../../styles/native-theme/theme_palette" as *;
+@use "sass:map";
+
+:host {
+    --color-h:200; /* Hue        */
+    --color-s:60%; /* Saturation */
+    --color-l:50%; /* Lightness  */
+    
+    --new-error-core: hsl(0, var(--color-s), var(--color-l));
+    
+    $brand-colors: (
+        'core': 1,
+        'l4': 1.6,
+        'l3': 1.5,
+        'l2': 1.3,
+        'l1': 1.1,
+        'd1': 0.9,
+        'd2': 0.7,
+        'd3': 0.5,
+        'd4': 0.3,
+        'd5': 0.2,
+    );
+    
+    @each $key, $value in $brand-colors {
+        --new-brand-#{$key}:  hsl(var(--color-h), var(--color-s), calc(var(--color-l) * #{$value}));
+    }
+    
+    @for $i from 1 through 21 {
+        --new-light#{$i}: hsl(var(--color-h), calc(var(--color-s) / 2), calc(#{$i - 1} * 5%));
+    }
+    
+    --new-brand-inverted: hsl(
+        calc(var(--color-h) + 180),
+        var(--color-s),
+        var(--color-l)
+    );
+    --new-brand-dimmed: hsl(
+        var(--color-h),
+        calc(var(--color-s) - var(--color-s) * 0.6),
+        var(--color-l)
+    );
+    
+    div.color {
+        height: 30px;
+        display : flex;
+        align-items: center;
+        
+        &.error {
+            background-color: var(--new-error-core);
+        }
+        
+        @for $i from 1 through 21 {
+            &.light#{$i} {
+                background-color: var(--new-light#{$i});
+            }
+        }
+        
+        @each $key, $value in $brand-colors {
+            &.brand-#{$key} {
+                background-color: var(--new-brand-#{$key});
+            }
+        }
+        
+        &.brand-dimmed {
+            background-color: var(--new-brand-dimmed);
+        }
+        
+        &.brand-inverted {
+            background-color: var(--new-brand-inverted);
+        }
+    }
+    
+    .input-label, .input {
+        display : flex;
+        align-items: center;
+        margin-right: .5rem;
+        height: 30px;
+    }
+    
+    .input-label {
+        color : var(--new-light19);
+    }
+    
+    --brand-core : var(--new-brand-core);
+    --brand-d4: var(--new-brand-d4);
+    --input-color : var(--new-light12);
+    --label-color: var(--new-light19);
+    --card-header-text: var(--new-light20);
+    --card-header-bg: var(--new-light4);
+    --border-color: var(--new-light6);
+    --image-box-selected-border-color: var(--new-brand-dimmed) !important;
+    
+    .input {
+        color : var(--new-light12);
+        border: 1px solid var(--new-light7);
+        border-radius: 2px;
+        background-color: var(--new-light2);
+        
+        &:hover, &:active, &:focus {
+            border-color: var(--new-brand-core) !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    }
+}

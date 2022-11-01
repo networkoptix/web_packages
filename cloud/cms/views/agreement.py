@@ -5,12 +5,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from api.helpers.exceptions import (
+from cloud.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.asset_json import get_review_matching_current_version
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
                         DataStructure, ContributorAgreement)
+from cms.serializers import AgreementSerializer
 from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
 
@@ -23,18 +24,22 @@ state__query_param = openapi.Parameter(
     "state", openapi.IN_QUERY,
     description="State of the agreement. Ex: draft, published, or review",
     type=openapi.TYPE_STRING)
-id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
+id__query_param = openapi.Parameter(
+    "id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,
                      operation_description="Developer Agreement to use the integration store.",
-                     manual_parameters=[state__query_param, id__query_param])
+                     manual_parameters=[state__query_param, id__query_param],
+                     responses={
+                         status.HTTP_200_OK: AgreementSerializer()
+                     })
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_agreement(request):
     AGREEMENT_CACHE = BaseCache(cache_key='agreement')
     state = request.query_params.get('state') or 'accepted'
-    draft =  state == 'draft'
+    draft = state == 'draft'
     review = state == 'pending'
     agreement_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
@@ -56,7 +61,8 @@ def get_agreement(request):
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
 
         agreement_id = agreement_review.version.asset.id
-        AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state, agreement_id, agreement_review.version)
+        AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
+            language, state, agreement_id, agreement_review.version)
         cached_agreement = AGREEMENT_CACHE.get_cached_item()
 
         if agreement_review and not cached_agreement:
@@ -69,14 +75,16 @@ def get_agreement(request):
             and not request.user.is_superuser
             and agreement.created_by != request.user
         ):
-            raise APIForbiddenException(error_data={'id': agreement_id}, error_text=PREVIEW_NOT_ALLOWED)
+            raise APIForbiddenException(
+                error_data={'id': agreement_id}, error_text=PREVIEW_NOT_ALLOWED)
         if cached_agreement:
             return api_success(cached_agreement)
 
         # Set version based on draft or pending query params
         version = agreement.version_id()
         if review:
-            pending_review = get_review_matching_current_version(agreement, version)
+            pending_review = get_review_matching_current_version(
+                agreement, version)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -115,17 +123,25 @@ def get_agreement(request):
 
             # Get global contexts and fill any matching variables in datarecords
             cloud_portal = get_cloud_portal_asset()
-            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
-            global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+            global_contexts = Context.objects.filter(
+                asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
+            global_contexts_dict = global_contexts_to_dict(
+                global_contexts, cloud_portal)
             context_processor = ContextProcessor(
                 asset=cloud_portal, preview=False, version_id=cloud_portal.version_id(), global_contexts=global_contexts,
                 global_contexts_dict=global_contexts_dict
             )
-            context_processor.process_global_contexts(content=agreement_dict, language=language)
+            context_processor.process_global_contexts(
+                content=agreement_dict, language=language)
+
+            serializer = AgreementSerializer(data=agreement_dict)
+            serializer.is_valid()
+            agreement_dict = serializer.data
 
             AGREEMENT_CACHE.set_cached_item(agreement_dict)
             if agreement_id:
-                AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state)
+                AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
+                    language, state)
                 AGREEMENT_CACHE.set_cached_item(agreement_dict)
             return api_success(agreement_dict)
 
@@ -156,7 +172,8 @@ def accept_agreement(request):
     ).last()
 
     if agreement_review:
-        ContributorAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
+        ContributorAgreement.objects.get_or_create(
+            accepted_agreement=agreement_review, user=request.user)
         return api_success()
     else:
         return api_success(AGREEMENT_REVIEW_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)

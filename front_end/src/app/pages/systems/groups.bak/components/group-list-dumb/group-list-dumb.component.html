@@ -1,0 +1,19 @@
+<div class="row">
+    <div
+        *ngFor="let group of groups"
+        class="card card-condensed hoverable"
+        (dragstart)="onDragStart($event, group.id, group.type)"
+        (dragover)="onDragOver($event)"
+        (drop)="onDrop($event, group.id)"
+    >
+        <a
+            [routerLink]="'/systems/groups/' + group.id"
+            class="card-body d-flex flex-column"
+        >
+            <h2
+                class="old-h12 d-block"
+                [innerHTML]="group.name | unsafe | highlight: searchString"
+            ></h2>
+        </a>
+    </div>
+</div>

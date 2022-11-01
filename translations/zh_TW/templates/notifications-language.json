@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "關於{{{message.asset}}{{/message.asset}}攝影機頁面的回饋意見{{#message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "{{message.system_name}} 的系統擁有者將進行轉移"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "{{message.system_name}} 的系統擁有者將進行轉移 - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}{{{message.asset}}有新版本可供檢視"
   },

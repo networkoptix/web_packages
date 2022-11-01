@@ -1,7 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/history-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        history-resource.Restart
+Test Setup        Run Keywords    QA Video Recording Start     history-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop
 #Test Teardown     Run Keyword If Test Failed    history-resource.Reset DB and Open New Browser On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded

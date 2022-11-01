@@ -14,6 +14,7 @@
     <script src="{% static 'split.js/dist/split.min.js' %}"></script>
     <script src="{% static 'csstree-validator/dist/csstree-validator.js' %}"></script>
     <script src="{% static 'uuid/dist/umd/uuidv4.min.js' %}"></script>
+    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
 
 {% endblock %}
 <{% block breadcrumbs %}
@@ -163,14 +164,20 @@
             {% else %}
                 <button class="btn btn-sm btn-info" type="submit" name="SaveDraft">Save Draft</button>
             {% endif %}
-            <button class="btn btn-sm btn-success" type="submit" name="SendReview">Submit & Review</button>
+            <button class="btn btn-sm btn-success" type="submit" name="SendReview"
+            {% if not asset.can_submit_for_review %}disabled title="At least one customization must be enabled to submit for review"{% endif %}>Submit & Review</button>
             <button class="btn btn-sm btn-danger" type="reset" name="Reset">Reset</button>
         </div>
     {% endif %}
 </form>
 <script>
-    const brandingVariables = {{default_branding|safe}}
+    let brandingVariables = {{default_branding|safe}}
     const reviewButton = document.querySelector('button[name="SendReview"]')
+    const textInputs = [
+    ...document.querySelectorAll('input[type="text"]'),
+    ...document.querySelectorAll('textarea')
+    ]
+
 
     const checkInput = (
         inputText,
@@ -212,14 +219,17 @@
         }
     }
 
-    const textInputs = [
-    ...document.querySelectorAll('input[type="text"]'),
-    ...document.querySelectorAll('textarea')
-    ]
+    const updateBranding = elementOrEvent => {
+        const element = (elementOrEvent.target || elementOrEvent)
+        brandingVariables = JSON.parse(element.value)
+        textInputs.forEach(input => input !== element && checkValue(input))
+    }
+
 
     textInputs.forEach(input => {
-        checkValue(input)
-        input.addEventListener('change', checkValue)
+        const callback = input.name === 'Restricted' ? updateBranding : checkValue
+        callback(input)
+        input.addEventListener('change', callback)
     })
 
     const getErrors = () => {

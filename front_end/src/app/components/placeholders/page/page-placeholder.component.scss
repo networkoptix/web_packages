@@ -1,0 +1,202 @@
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+
+$preloader_circle_color          : $light;
+$preloader_circle_size           : 16px;
+$preloader_circle_distance       : 12px;
+
+$preloader_small_circle_size     : 10px;
+$preloader_small_circle_distance : 8px;
+
+@mixin preloader($circle_color, $circle_size, $circle_distance) {
+    & {
+        width : ($preloader_circle_size + $preloader_circle_distance) *3;
+    }
+
+    .circleG {
+        background-color                  : transparentize($circle_color, 1);
+        float                             : left;
+        height                            : $circle_size;
+        width                             : $circle_size;
+        border-radius                     : $circle_size*0.5;
+        margin                            : 0 $circle_distance*0.5;
+        -webkit-transform                 : translate3d(0, 0, 0);
+        -webkit-animation-name            : bounce_circleG;
+        animation-name                    : bounce_circleG;
+        -webkit-animation-duration        : 1.4s;
+        animation-duration                : 1.4s;
+        -webkit-animation-iteration-count : infinite;
+        animation-iteration-count         : infinite;
+        -webkit-animation-direction       : normal;
+        animation-direction               : normal;
+    }
+
+    .circleG_2 {
+        -webkit-animation-delay : 0.15s;
+        animation-delay         : 0.15s;
+    }
+
+    .circleG_3 {
+        -webkit-animation-delay : 0.3s;
+        animation-delay         : 0.3s;
+    }
+
+    @-webkit-keyframes bounce_circleG {
+        0% {
+        }
+        40% {
+            background-color : $circle_color;
+        }
+        80% {
+            background-color : transparentize($circle_color, 1);
+        }
+        100% {
+        }
+    }
+
+    @keyframes bounce_circleG {
+        0% {
+        }
+        40% {
+            background-color : $circle_color;
+        }
+        80% {
+            background-color : transparentize($circle_color, 1);
+        }
+        100% {
+        }
+    }
+}
+
+.show-preloader {
+    height: 284px;
+}
+
+.page-placeholder {
+    margin           : 0 auto;
+    min-height       : 400px;
+    height           : calc(100% - 48px);
+    z-index          : 1;
+    /*This is used for the preloaders.
+     It should always be higher than the video,
+     but not the top bar of the video player*/
+
+    //background-color : $dark9;
+    position         : relative;
+
+    &.has-preloader {
+        background-color : transparent;
+        opacity          : 1;
+    }
+
+    &.with-footer {
+        height     : calc(100% - 100px);
+        min-height : 250px;
+    }
+
+    &.with-padding {
+        padding: 80px 0 !important;
+    }
+}
+
+.placeholder-content {
+    display         : flex;
+    flex-direction  : column;
+    justify-content : space-around;
+    align-items     : center;
+    text-align      : center;
+    position        : relative;
+    margin          : 0 auto;
+    width           : 100%;
+    height          : 100%;
+    font-size       : 130%;
+    font-weight     : 300;
+    line-height     : 30px;
+    color           : $light;
+
+    a {
+        color           : $light12;
+        text-decoration : underline;
+
+        &:hover, &:active {
+            color : $light1;
+        }
+    }
+}
+
+
+.placeholder-icon {
+    margin-bottom : 24px;
+    
+    svg {
+        .brand_element_cloud {
+            fill    : var(--placehoder-cloud-color);
+            opacity : var(--placehoder-cloud-opacity);
+        }
+        
+        .svg_light {
+            fill : var(--placeholder-light-color)
+        }
+        
+        .svg_light2 {
+            fill : var(--placeholder-light2-color)
+        }
+        
+        .svg_light_stroke {
+            stroke : var(--placeholder-light-color)
+        }
+        
+        .svg_accent {
+            fill : var(--placeholder-accent-color)
+        }
+        
+        .svg_accent-stroke {
+            stroke : var(--placeholder-accent-color)
+        }
+        
+        .svg_accent2 {
+            fill : var(--placeholder-accent2-color)
+        }
+        
+        .brand_element {
+            fill : var(--brand-core);
+        }
+    }
+}
+
+.placeholder-title {
+    @include typography.medium24nocolor;
+    color : var(--placehoder-title-color) !important;
+    text-align      : center;
+    margin-bottom   : 1rem;
+    justify-content : center;
+    max-width       : 560px;
+}
+
+.placeholder-message {
+    @include typography.regular15nocolor;
+    color : var(--placehoder-body-color) !important;
+    line-height : 24px;
+    max-width   : 560px;
+
+    a {
+        color : $brand_core;
+
+        &:hover,
+        &:active {
+            color : $brand_l1;
+        }
+    }
+}
+
+.placeholder-preloader {
+    @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
+}
+
+.main-button {
+    margin-top: 40px !important;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+  }

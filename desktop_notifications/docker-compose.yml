@@ -1,0 +1,77 @@
+version: '3.9'
+services:
+    provider:
+        network_mode: bridge
+        build: .
+        image: cloud_notifications_app
+        restart: always
+        ports:
+            - "5001:8000"
+        environment:
+            - DEBUG=true
+            - ENV=development
+            - REDIS_HOST=redis
+            - REDIS_PORT=6380
+        command: provider
+        depends_on:
+            - redis
+        volumes:
+            - ./:/app/app
+            - ./docker/entrypoint.sh:/app/entrypoint.sh
+        links:
+            - redis
+    provider-nginx:
+        network_mode: bridge
+        build: ./nginx
+        image: cloud_notifications_nginx
+        restart: always
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        ports:
+            - "8003:80"
+        depends_on:
+            - provider
+        links:
+            - provider:app
+    receiver:
+        network_mode: bridge
+        image: cloud_notifications_app
+        restart: always
+        ports:
+            - "5000:8000"
+        environment:
+            - DEBUG=true
+            - ENV=development
+            - REDIS_HOST=redis
+            - REDIS_PORT=6380
+        command: receiver
+        depends_on:
+            - redis
+            - provider
+        volumes:
+            - ./:/app/app
+            - ./docker/entrypoint.sh:/app/entrypoint.sh
+        links:
+            - redis
+    receiver-nginx:
+        network_mode: bridge
+        image: cloud_notifications_nginx
+        restart: always
+        ports:
+            - "8004:80"
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - receiver
+            - provider-nginx
+        links:
+            - receiver:app
+    redis:
+        network_mode: bridge
+        image: redis:3.2.8-alpine
+        container_name: cloud_notifications_redis
+        command: --port 6380
+        ports:
+            - "6380:6380"
+        expose:
+            - "6380"

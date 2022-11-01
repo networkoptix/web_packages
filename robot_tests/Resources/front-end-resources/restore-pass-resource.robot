@@ -2,6 +2,9 @@
 Resource          ../../resource.robot
 
 *** Keywords ***
+Restore Pass Test Teardown
+    Run Keyword If Test Failed    restore-pass-resource.Open New Browser On Failure
+
 Register Random User
     ${email}=   Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${email}    ${password}
@@ -34,6 +37,7 @@ Get Restore Code and Open the Link
     [Return]    ${link}
 
 Restore Pass Validation Setup
+    Open Browser and go to URL    ${url}
     ${user}=   Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${user}    ${password}
     Set Suite Variable     ${user}    ${user}
@@ -48,7 +52,7 @@ Restart
     Open Restore Password Dialog
 
 Open Restore Password Dialog
-    Open Browser and go to URL    ${url}/authorize
+    Open Browser and Go to URL    ${url}/authorize
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${user}
@@ -120,7 +124,7 @@ Test Password Invalid
     Check Password Badge    ${new pw}    ${SAVE PASSWORD}
     IF    '''${new pw}''' not in ${good passwords} and '''${new pw}''' not in ${fair passwords}
         Click Button    ${SAVE PASSWORD}
-        Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    resetPassword
+        Check New Password Outline and Error Message    ${new pw}    ${RESET NEXT BUTTON}    ${RESET PASSWORD INPUT}    resetPassword
     END
 
 Restart Restore Pass Form Password

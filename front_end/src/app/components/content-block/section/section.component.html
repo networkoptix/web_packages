@@ -1,0 +1,20 @@
+<div
+    class="card--body section clearfix"
+    [ngClass]="type"
+    [ngStyle]="{ padding: nonPadded ? '0' : '.7rem' }"
+>
+    <div
+        class="card--body-subheader"
+        #subHeaderWrapper
+        [hidden]="!haveSubheader"
+    >
+        <h3>
+            <ng-content select="header"></ng-content>
+        </h3>
+    </div>
+    <div
+        *ngIf="(!nonPadded && haveSubheader) || haveSubheader"
+        class="card--body-spacer"
+    ></div>
+    <div class="card--body-content"><ng-content></ng-content></div>
+</div>

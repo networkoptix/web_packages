@@ -49,12 +49,13 @@ ${HM NETWORK INTERFACE TABLE ERRORS}     ${HM TABLE}//*[name() = 'svg']/*[name()
 ${HM NETWORK INTERFACE TABLE WARNINGS}   ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
 ${HM NETWORK INTERFACE CARD ERRORS}      //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM NETWORK INTERFACE CARD WARNINGS}    //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM NEXT PAGE LINK}                     //ngb-pagination//a[@aria-label="Next"]
-${HM PREVIOUS PAGE LINK}                 //ngb-pagination//a[@aria-label="Previous"]
-${HM PAGE NUMBER LINK}                   //ngb-pagination//a[text()=
-${HM CURRENT PAGE NUMBER LINK}           //ngb-pagination//span[text()="(current)"]/parent::a
-${HM FIRST TABLE PAGE ELEMENT}           //ngb-pagination//a[@aria-label="Previous" and @tabindex="-1"]
-${HM LAST TABLE PAGE ELEMENT}            //ngb-pagination//a[@aria-label="Next" and @tabindex="-1"]
+${HM NEXT PAGE LINK}                     //nx-paginator//a[@id="paginator-next"]
+${HM PREVIOUS PAGE LINK}                 //nx-paginator//a[@id="paginator-prev"]
+#${HM PAGE NUMBER LINK}                   //nx-paginator//a[text()=
+${HM CURRENT PAGE NUMBER LINK}           //nx-paginator//span[text()="(current)"]/parent::a
+${HM FIRST TABLE PAGE ELEMENT}           //nx-paginator//a[@id="paginator-tile-first"]
+${HM LAST TABLE PAGE ELEMENT}            //nx-paginator//a[@id="paginator-tile-last"]
+${HM LAST TABLE PAGE ELEMENT ACTIVE}     //nx-paginator//a[@id="paginator-tile-last" and contains(@class, "active-page")]
 ${HM ALERTS LINK ERRORS}                 ${HM ALERTS PAGE LINK}/div[2]/div[1]/nx-alert-counter/div/span
 ${HM ALERTS LINK WARNINGS}               ${HM ALERTS PAGE LINK}/div[2]/div[2]/nx-alert-counter/div/span
 

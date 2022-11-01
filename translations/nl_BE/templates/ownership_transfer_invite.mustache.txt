@@ -1,0 +1,7 @@
+Hallo, {{message.user_full_name}}
+
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) nodigt u uit om systeemeigenaar te worden van {{message.system_name}}.
+
+Log in en verwerk het verzoek op de pagina Systeeminstellingen
+
+{{config.portal_url}}/systemen/{{message.system_id}}

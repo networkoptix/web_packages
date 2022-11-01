@@ -1,6 +1,7 @@
 {
     "language": "nl_BE",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+    "Administration": "Administratie",
     "All Servers": "Alle servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Voor ontwikkelaars",
@@ -8,7 +9,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
-    "Developers Console": "Developer Tools",
+    "Developers Console": "Ontwikkelaarsconsole",
     "productName": "",
     "monitoring": {
         "unavailable": "Zorg ervoor dat de opgegeven server online is en probeer het opnieuw."
@@ -101,7 +102,7 @@
         "accountSettings": "Accountinstellingen",
         "activationLinkSent": "Activatielink verzonden",
         "agreementAccepted": "De overeenkomst is geaccepteerd",
-        "changePassword": "Wachtwoord wijzigen",
+        "changePassword": "Wijzig wachtwoord",
         "security": "Beveiliging",
         "newPasswordLabel": "Nieuw wachtwoord",
         "passwordChangedSuccess": "Wachtwoord succesvol opgeslagen",
@@ -133,6 +134,7 @@
         "passwordReset": "om server te resetten",
         "passwordRestart": "om de server te herstarten",
         "passwordDetach": "om de server los te koppelen",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Gelieve opnieuw in te loggen als",
         "createAccountHeader": "Maak %CLOUD_NAME% account aan",
         "activateHeader": "Activeer %CLOUD_NAME% account",
@@ -175,6 +177,38 @@
         "ptz": "PTZ camera's"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Grootte",
+            "state": "Status",
+            "system": "Systeem",
+            "expires": "Verloopt",
+            "key": "Sleutel"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Beschikbaar",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "De cloudopslag die niet wordt gebruikt voor opnamen. Ga naar <a href=\"{serverSettings}\">Servers instellingen</a> om deze te configureren."
+    },
     "common": {
         "account": {
             "created": {
@@ -225,7 +259,15 @@
             "best": "Beste",
             "high": "Hoog",
             "medium": "Gemiddeld",
-            "low": "Lage"
+            "low": "Laag"
+        },
+        "intervals": {
+            "yearS": "{count, plural, =0{# jaar} one{# jaar} other{# jaar}}",
+            "monthS": "{count, plural, =0{# maanden} one{# maand} other{# maanden}}",
+            "weekS": "{count, plural, =0{# weken} one{# week} other{# weken}}",
+            "dayS": "{count, plural, =0{# dagen} one{# dag} other{# dagen}}",
+            "hourS": "{count, plural, =0{# uur} one{# uur} other{# uur}}",
+            "minuteS": "{count, plural, =0{# minuten} one{# minuut} other{# minuten}}"
         },
         "general": "Algemeen",
         "generalError": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We hebben cookies gebruikt om uw ervaring op onze site te verbeteren. Ze helpen ons ook te begrijpen hoe onze site wordt gebruikt. Lees meer en stel uw cookievoorkeuren in&nbsp; | hier | . Door onze site te blijven gebruiken, stemt u in met het gebruik van onze cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Bewerken van dashboard is ingeschakeld",
         "dashboardLocked": "Dashboard is vergrendeld",
@@ -309,6 +358,28 @@
             "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
             "camera": "camera",
             "cameras": "camera's",
+            "actions": {
+                "activate": {
+                    "heading": "Cloudopslag activeren",
+                    "action": "Activeer",
+                    "success": "Cloudopslag succesvol geactiveerd!"
+                },
+                "modify": {
+                    "heading": "Cloudopslag wijzigen",
+                    "action": "Aanpassen",
+                    "success": "Cloudopslag succesvol geüpgraded!"
+                },
+                "move": {
+                    "heading": "Cloud-opslag verplaatsen",
+                    "action": "Verplaatsen",
+                    "success": "Cloudopslag succesvol geüpgraded!"
+                },
+                "delete": {
+                    "heading": "Cloudopslag verwijderen?",
+                    "action": "Verwijderen",
+                    "success": "Cloudopslag succesvol verwijderd!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Huidige opnamen",
                 "whenFullyUsed": "Wanneer volledig gebruikt",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Archief van",
                 "recordingBitrate": "Bitrate van de opnames",
                 "delayFromLive": "Vertraging vanaf live"
+            },
+            "information": {
+                "update": {
+                    "title": "Aanpassen",
+                    "body": "U kunt de huidige grootte van de cloudopslag in het systeem wijzigen met de nieuwe sleutel. Alle opgenomen gegevens worden opgeslagen."
+                },
+                "migrate": {
+                    "title": "Verplaatsen",
+                    "body": "Cloud Storage met alle opgenomen gegevens kan eenvoudig worden overgedragen naar uw andere systeem zonder actieve Cloud Storage."
+                },
+                "delete": {
+                    "title": "Verwijderen",
+                    "body": "U kunt Cloud Storage op elk moment van het systeem verwijderen. U kunt deze sleutel later gebruiken om opnieuw te activeren, als u dat wilt."
+                }
             },
             "remove": {
                 "success": "Cloudopslag is succesvol verwijderd uit het systeem",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
             "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
             "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "We raden u aan om te overleggen met",
-                "b_support": "ondersteuning",
-                "c_proceeding": "voordat u verder gaat."
-            },
+            "recommendSupport": "We raden u aan om te overleggen met | ondersteuning | vooraleer verder te gaan.",
             "restError": {
                 "duplicateServer": "Fout bij samenvoegen. Beide systemen hebben dezelfde server",
                 "useCloudMerge": "Kan systemen gekoppeld aan de cloud niet samenvoegen",
@@ -404,7 +485,8 @@
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
+            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn.",
+            "update": "Werk ze bij naar de&nbsp; | laatste build |"
         },
         "message": {
             "system2faEnabled": "Tweestapsverificatie zal nu afgedwongen worden voor dit systeem.",
@@ -448,6 +530,13 @@
             "action": "Login",
             "message": "Log opnieuw in.",
             "title": "Uw sessie is verlopen"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is geen gebruiker in het systeem"
         },
         "titles": {
             "error": "Fout",
@@ -572,7 +661,7 @@
         "cantActivatePrefix": "Kan uw account niet activeren",
         "cantAddYourOwnEmail": "Je eigen e-mailadres toevoegen is niet toegestaan",
         "cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
-        "cantChangePasswordPrefix": "Wachtwoord kan niet worden opgeslagen",
+        "cantChangePasswordPrefix": "Kan wachtwoord niet opslaan",
         "cantDeleteAccountOwningSystems": "Kan het account dat eigen systemen heeft niet verwijderen",
         "cantConnectSystemPrefix": "Kan geen verbinding maken",
         "cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
@@ -616,6 +705,10 @@
         "archiveEncrypted": "ARCHIEF\nVERSLEUTELD",
         "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen.",
         "webadmin2faRequired": "Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem. U kunt tweefactorauthenticatie inschakelen in uw <a href=\"{ cloudHost }/account/security\">accountinstellingen</a>."
+    },
+    "appHeader": {
+        "mySystems": "Mijn Systemen",
+        "systemList": "Systeem Lijst"
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Gelieve <span id=\"request\">een verzoek in te dienen</span> voor aanvullende vragen/opmerkingen met betrekking tot ondersteunde apparaten."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}} gevonden",
     "alertsCount": "{count, plural, =0{# waarschuwingen} one{# waarschuwing} other{# waarschuwingen}}",
     "ipvdTopXByVolume": "Top {value} door volume:",
@@ -693,6 +787,21 @@
         "type": "Type",
         "server": "Server",
         "alert": "Waarschuwing"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Over",
@@ -807,8 +916,6 @@
         "Search": "Zoek",
         "analytics": "Analytics",
         "analyticsSelected": "analytics evenementen",
-        "filter applied": "filter toegepast",
-        "filters applied": "filters toegepast",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} toegepast",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
@@ -816,7 +923,10 @@
         "search_ipvd": "Zoeken op model of fabrikant",
         "selected": "{count, plural, =0{# geselecteerd} one{# geselecteerd} other{# geselecteerd}}",
         "vendor": "Fabrikant",
-        "vendors": "Fabrikanten"
+        "vendors": "Fabrikanten",
+        "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
+        "noMatches": "Geen overeenkomsten",
+        "userNotFound": "<span class=\"error\">Gebruiker niet gevonden</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
@@ -848,6 +958,7 @@
         "Settings": "Instellingen",
         "Information": "Informatie",
         "Bookmarks": "Bladwijzers",
+        "Layouts": "Layouts",
         "Monitoring": "Controle"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(log alle beschikbare informatie)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } logboek niveau",
         "storageToolTips": {
             "local": "Lokaal",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wil het eigendom van dit systeem aan u overdragen"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wil het eigendom van dit systeem aan u overdragen",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
+        "systemCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "geactiveerd",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker",
         "twoFaRequired": "Twee-factor-authenticatie is ingeschakeld voor dit account. Voer uw verificatiecode in het pop-upvenster in.",
-        "loggingIn": "Inloggen. Een ogenblik geduld."
+        "loggingIn": "Inloggen. Een ogenblik geduld.",
+        "sessionRenewed": "Sessie is vernieuwd.",
+        "failedToUpdateSession": "Het bijwerken van de sessie is mislukt."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"
+        "healthReportForSystem": "Gezondheidsrapport voor systeem {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

@@ -1,0 +1,47 @@
+@use "styles/_theme_variables_common" as *;
+
+:host {
+    display : block;
+    
+    
+    .tooltip-body {
+        max-width        : 200px;
+        padding          : 0.25rem 0.5rem;
+        color            : var(--tooltip-color);
+        background-color : var(--tooltip-bg);
+        border-radius    : 0.25rem;
+        position         : relative;
+        text-align       : left;
+    }
+    
+    .tooltip-arrow {
+        position: absolute;
+        
+        &::before,
+        &::after {
+            position     : absolute;
+            display      : block;
+            content      : "";
+            border-color : transparent;
+            border-style : solid;
+        }
+        
+        &::before {
+            left               : 0;
+            border-width       : 4px 4px 4px 0;
+            border-right-color : var(--tooltip-bg);
+        }
+    }
+}
+
+:host-context(.top.center) .tooltip-arrow {
+    bottom    : -4px;
+    left      : 50%;
+    transform : rotate(270deg) translateX(-50%);
+}
+
+:host-context(.bottom.center) .tooltip-arrow {
+    top       : -4px;
+    left      : 50%;
+    transform : rotate(90deg) translateX(-50%);
+}

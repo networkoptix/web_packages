@@ -1,0 +1,57 @@
+<ng-template
+    #card
+    let-block="block"
+    let-type="type"
+>
+    <nx-landing-content-block
+        [type]="determineBlockType(type)"
+        [title]="block.title"
+        [content]="block.content"
+        [svg]="block.svg"
+        [externalLink]="block.externalLink ? true : false"
+        [url]="block.url"
+        class="card-item"
+    >
+    </nx-landing-content-block>
+</ng-template>
+
+<div
+    class="container root-container"
+    #content
+>
+    <div class="inner-container">
+        <ng-container
+            *ngFor="let block of data.firstSectionData"
+            [ngTemplateOutlet]="card"
+            [ngTemplateOutletContext]="{ block: block, type: 'wide' }"
+        >
+        </ng-container>
+        <div class="header">{{ data.header1 }}</div>
+        <ng-container
+            *ngFor="let block of data.secondSectionData"
+            [ngTemplateOutlet]="card"
+            [ngTemplateOutletContext]="{ block: block, type: 'wide' }"
+        >
+        </ng-container>
+        <div class="card-grid-header">{{ data.header2 }}</div>
+        <div
+            nxMatchHeight
+            [classToMatch]="'card-item'"
+            [ngClass]="data.cardData.length !== 2 ? 'card-grid' : 'card-grid-two-cards'"
+        >
+            <ng-container
+                *ngFor="let block of data.cardData"
+                [ngTemplateOutlet]="card"
+                [ngTemplateOutletContext]="{
+                    block: block,
+                    type:
+                        data.cardData.length === 1 ||
+                        (data.cardData.length === 2 && screenWidth < 993)
+                            ? 'wide'
+                            : 'small'
+                }"
+            >
+            </ng-container>
+        </div>
+    </div>
+</div>

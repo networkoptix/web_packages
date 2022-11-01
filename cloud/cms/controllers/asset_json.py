@@ -78,15 +78,24 @@ def generate_asset_dictionary(show_pending, show_drafts, asset, current_version,
     return asset_dict
 
 
-def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, customization_name=settings.CUSTOMIZATION):
-    records = DataStructure.find_actual_values(data_structures, asset=asset, version_id=current_version,
+def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, customization_name=settings.CUSTOMIZATION, name_filter=[]):
+    ds_list = data_structures
+    if name_filter:
+        ds_list = [ds for ds in ds_list if ds.name in name_filter]
+
+    return DataStructure.find_actual_values(ds_list, asset=asset, version_id=current_version,
                                                draft=show_pending or show_drafts, customization_name=customization_name)
-    return {ds.id: actual_value for ds, actual_value in records.items()}
 
 
-def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, asset, current_version, customization_name=settings.CUSTOMIZATION):
-    records = find_actual_values(
-        data_structures, asset, current_version, show_pending, show_drafts, customization_name)
+def map_ds_attribute_to_actual_value(datastructure_values, map_by='id'):
+     return { getattr(ds, map_by): actual_value for ds, actual_value in datastructure_values.items() }
+
+
+def generate_context_dicts_with_actual_values(show_pending, show_drafts, contexts, data_structures, asset, current_version, customization_name=settings.CUSTOMIZATION):
+    actual_values = find_actual_values(
+        data_structures, asset, current_version, show_pending, show_drafts, customization_name=customization_name)
+    actual_values = map_ds_attribute_to_actual_value(actual_values)
+
     for context in contexts:
         context_dict = {}
         for datastructure in context.datastructure_set.all():
@@ -94,14 +103,15 @@ def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, a
             if not datastructure.public:
                 continue
 
-            record_value = records[datastructure.id]
-            if datastructure.type in S3_STRUCTURE_TYPES:
-                record_value = record_value.replace(S3_LINK, REPLACEMENT_LINK)
+            actual_value = actual_values[datastructure.id]
 
-            if not record_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
+            if datastructure.type in S3_STRUCTURE_TYPES:
+                actual_value = actual_value.replace(S3_LINK, REPLACEMENT_LINK)
+
+            if not actual_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
                 continue
 
-            context_dict[ds_name] = record_value
+            context_dict[ds_name] = actual_value
 
         yield context, context_dict
 

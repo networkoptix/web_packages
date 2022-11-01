@@ -1,0 +1,40 @@
+<div class="block-container mt-3 adjusted-height">
+    <div
+        class="row"
+        *ngIf="systemOnline; else offline"
+    >
+        <div class="col-12 col-md-4 col-xl-3">
+            <nx-pre-loader *ngIf="!system; else menu"></nx-pre-loader>
+            <ng-template #menu>
+                <nx-select
+                    [id]="'avail-servers'"
+                    [type]="'api-tool'"
+                    [items]="availServers"
+                    [selected]="selectedServer"
+                    (onSelected)="changeSelectedServer($event)"
+                    class="mb-3"
+                >
+                </nx-select>
+                <nx-menu [content]="content"></nx-menu>
+            </ng-template>
+        </div>
+
+        <div class="col-12 col-md-8 col-xl-9 pt-3 pt-md-0">
+            <nx-alert-block
+                *ngIf="selectedServer?.disabled"
+                type="error"
+                id="server-offline"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [line1]="'Server offline' | translate"
+            ></nx-alert-block>
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+
+    <ng-template #offline>
+        <nx-page-placeholder
+            class="placeholder-section page-placeholder"
+            type="NO_SETTINGS"
+        ></nx-page-placeholder>
+    </ng-template>
+</div>

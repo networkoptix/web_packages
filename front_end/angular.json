@@ -11,8 +11,8 @@
         }
       },
       "root": "",
-      "sourceRoot": "app",
-      "prefix": "src",
+      "sourceRoot": "src",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -24,118 +24,122 @@
               "qrcode",
               "@firebase/util",
               "@firebase/component",
-              "core-js/features/array/is-array",
-              "rxjs/internal/scheduler/animationFrame",
               "dateformat",
               "@videojs/xhr",
               "videojs-vtt.js",
               "global/document",
-              "@babel/runtime/helpers/possibleConstructorReturn",
-              "@babel/runtime/helpers/inheritsLoose",
-              "@babel/runtime/helpers/construct",
-              "@babel/runtime/helpers/inherits",
               "mux.js/lib/mp4/probe",
               "mux.js/lib/tools/ts-inspector.js",
               "swagger-ui"
             ],
             "outputPath": "dist",
-            "index": "app/index.html",
-            "main": "app/main.ts",
-            "polyfills": "app/polyfills.ts",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.json",
-            "aot": true,
-            "buildOptimizer": true,
             "assets": [
               { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" },
-              "app/customization",
-              "app/images",
-              "app/fonts",
-              "app/styles",
-              "app/views",
-              "app/scripts",
-              "app/503.html",
-              "app/downloads.json",
-              "app/apple-app-site-association",
-              "app/language_compiled.json",
-              "app/language_i18n_static.json",
-              "app/language_i18n.json",
-              "app/language.json",
-              "app/languages.json",
-              "app/supported_languages.json",
-              "app/robots.txt"
+              "src/customization",
+              "src/images",
+              "src/fonts",
+              "src/styles",
+              "src/views",
+              "src/scripts",
+              "src/503.html",
+              "src/downloads.json",
+              "src/apple-app-site-association",
+              "src/language_compiled.json",
+              "src/language_i18n_static.json",
+              "src/language_i18n.json",
+              "src/language.json",
+              "src/languages.json",
+              "src/supported_languages.json",
+              "src/robots.txt"
             ],
             "styles": [
-              "app/styles/main.scss"
+              "src/app/dialogs/dialogs.scss",
+              "src/styles/main.scss"
             ],
             "scripts": [
-              "node_modules/marked/lib/marked.js"
+              "node_modules/marked/marked.min.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "app/src/styles",
-                "app/styles"
+                "src/app/styles",
+                "src/styles"
               ]
-            }
+            },
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "sourceMap": {
+              "scripts": true,
+              "styles": false,
+              "vendor": false
+            },
+            "aot":true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "cloud-test": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.cloud-test.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.cloud-test.ts"
                 }
               ]
             },
             "dev2": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.dev2.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev2.ts"
                 }
               ]
             },
             "dev3": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.dev3.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev3.ts"
                 }
               ]
             },
             "local": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.local.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
                 }
               ]
             },
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "8mb",
-                  "maximumError": "10mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "200kb",
                   "maximumError": "280kb"
+                },
+                {
+                  "type": "anyScript",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 }
               ],
               "serviceWorker": true,
@@ -144,77 +148,79 @@
             "stage": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.stage.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stage.ts"
                 }
               ]
             },
             "webadmin": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.webadmin.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.webadmin.ts"
                 },
                 {
-                  "replace": "app/src/services/account.service/index.ts",
-                  "with": "app/src/services/account.service/index.webadmin.ts"
+                  "replace": "src/app/services/account.service/index.ts",
+                  "with": "src/app/services/account.service/index.webadmin.ts"
                 },
                 {
-                  "replace": "app/src/routeGuards/authGuard.ts",
-                  "with": "app/src/routeGuards/authGuard.webadmin.ts"
+                  "replace": "src/app/routeGuards/authGuard.ts",
+                  "with": "src/app/routeGuards/authGuard.webadmin.ts"
                 }
               ],
               "index": {
-                "input": "app/index.tagless.html",
+                "input": "src/index.tagless.html",
                 "output": "index.html"
               }
             },
             "webadmin-prod": {
               "fileReplacements": [
                 {
-                  "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.webadmin-prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.webadmin-prod.ts"
                 },
                 {
-                  "replace": "app/src/services/account.service/index.ts",
-                  "with": "app/src/services/account.service/index.webadmin.ts"
+                  "replace": "src/app/services/account.service/index.ts",
+                  "with": "src/app/services/account.service/index.webadmin.ts"
                 }
               ],
               "index": {
-                "input": "app/index.tagless.html",
+                "input": "src/index.tagless.html",
                 "output": "index.html"
               },
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "7mb"
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "150kb",
-                  "maximumError": "180kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "280kb"
+                },
+                {
+                  "type": "anyScript",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "publicHost": "localhost:9000",
             "host": "0.0.0.0",
             "port": 9000,
             "browserTarget": "front-end:build",
-            "sourceMap": true,
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
@@ -240,6 +246,7 @@
             },
             "webadmin": {
               "port": 9001,
+              "publicHost": "localhost:9001",
               "browserTarget": "front-end:build:webadmin"
             }
           }
@@ -253,39 +260,27 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "app/test.ts",
-            "polyfills": "app/polyfills.ts",
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "app/favicon.ico",
-              "app/assets"
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
-              "app/styles/main.scss"
+              "src/app/dialogs/dialogs.scss",
+              "src/styles/main.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/",
-                "app/src/styles",
-                "app/styles"
+                "src/app/styles",
+                "src/styles"
               ]
             },
             "scripts": [],
             "codeCoverage": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         },
         "e2e": {
@@ -325,16 +320,25 @@
             "main": "projects/authorization/src/main.ts",
             "polyfills": "projects/authorization/src/polyfills.ts",
             "tsConfig": "projects/authorization/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/authorization/src/favicon.ico",
               "projects/authorization/src/assets"
             ],
             "styles": [
-              "app/styles/main.scss",
+              "src/styles/main.scss",
               "projects/authorization/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": {
+              "scripts": true,
+              "styles": true,
+              "vendor": false
+            },
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -348,7 +352,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -357,38 +360,44 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "200kb",
                   "maximumError": "280kb"
+                },
+                {
+                  "type": "anyScript",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 }
               ]
             },
             "development": {
-              "optimization": false,
               "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb",
+                  "maximumWarning": "2mb",
                   "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "20kb",
-                  "maximumError": "28kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "280kb"
+                },
+                {
+                  "type": "anyScript",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -396,7 +405,6 @@
             "browserTarget": "authorization:build:development",
             "host": "0.0.0.0",
             "port": 9002,
-            "sourceMap": true,
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
@@ -430,19 +438,6 @@
             "scripts": []
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/authorization/tsconfig.app.json",
-              "projects/authorization/tsconfig.spec.json",
-              "projects/authorization/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -458,8 +453,12 @@
       }
     }
   },
-  "defaultProject": "front-end",
   "cli": {
-    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea"
+    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea",
+    "cache": {
+      "enabled": true,
+      "path": ".angular/cache",
+      "environment": "all"
+    }
   }
 }

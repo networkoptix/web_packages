@@ -1,9 +1,0 @@
-<div class="fs-exclude player-container" #container
-     [style.transform]="'rotate(' + actualRotation + 'deg)'">
-    <video #video
-        [style.maxWidth.px]="actualRotation % 180 === 90 ? container.parentElement.getBoundingClientRect().height : undefined"
-        id="nx-vjs-player"
-        playsinline
-        preload="auto" muted>
-    </video>
-</div>

@@ -1,0 +1,332 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/mixins";
+
+$logo-height               : 32px;
+$line-height               : 44px;
+$vertical-spacing          : 15px;
+$horizontal-spacing        : 16px;
+$active-border-width       : 3px;
+$max-dropdown-width        : 320px;
+$max-header-item-width     : 212px;
+
+$collapse-first-width      : 920px;
+$collapse-second-width     : 768px;
+
+$collapse-first-width-max  : $collapse-first-width - 1px;
+$collapse-second-width-max : $collapse-second-width - 1px;
+/* here we kill $grid-float-breakpoint-max to */
+$header-collapsing-width-1 : 1px;
+
+.app-header-left {
+    flex-grow: 1;
+    & > ul {
+        flex-wrap: nowrap;
+        flex-shrink: 1;
+    }
+}
+
+.navbar {
+    height        : $navbar-height;
+    border-top    : none;
+    border-left   : none;
+    border-right  : none;
+    border-radius : 0;
+    border-bottom : 1px solid var(--header-border-color);
+    padding-right : 1rem !important;
+    // Position relative and z-index are needed for the landing page, the expanding svgs on the landing page will not respect the stacking context of a position:static element.
+    position: relative;
+    z-index: 5;
+    background-color: var(--header-bg) !important;
+
+    &.navbar-default {
+        background-color : #fff;
+        padding          : 0;
+        z-index          : 100;
+    }
+
+    .dropdown .dropdown-toggle {
+        height : 32px !important;
+        border : none;
+    }
+
+    .app-header-right {
+        margin-top : -1px;
+    }
+
+    .navbar-nav {
+        flex-direction : row;
+        align-items    : center;
+        height         : $navbar-height;
+        line-height    : $line-height;
+    }
+
+    .navbar-brand {
+        font-size : $h3-font-size;
+        margin    : 0 $horizontal-spacing !important;
+        padding   : 0;
+
+        & > img {
+            height  : $logo-height;
+            display : inline-block;
+            margin  : (($navbar-height - $logo-height)*0.5) 0;
+        }
+    }
+
+
+    .margin-right {
+        margin-right : $horizontal-spacing !important;
+    }
+
+    .nav li {
+        margin      : 0;
+        padding     : 0;
+        font-size   : $font-size-lg;
+        display     : flex;
+        align-items : center;
+        height      : 100%;
+
+        &.vertical-bar {
+            border-right : 1px solid $light4;
+            height       : 25px;
+
+        }
+
+        & > span {
+            // display: inline-block;
+            margin-left : .5rem;
+        }
+
+        & > a {
+            @include typography.medium14dark9;
+            margin          : 0;
+            padding         : 0 $horizontal-spacing;
+            line-height     : 46px;
+            display         : flex;
+            flex-direction  : row;
+            align-items     : center;
+            position        : relative;
+            text-decoration : none;
+
+            & > span.ellipsis {
+                @include mixins.ellipsis;
+                white-space    : nowrap;
+                display        : inline-block;
+                vertical-align : bottom;
+                line-height    : $line-height;
+                max-width      : $max-header-item-width;
+            }
+
+            &:hover {
+                background-color : $light2;
+                text-decoration  : none;
+            }
+        }
+
+        &.no-hover > a:hover {
+            cursor           : default;
+            background-color : transparent !important;
+        }
+
+        &.open {
+            border-bottom : 1px solid $navbar-default-bg;
+            margin-bottom : -1px;
+
+            & > a {
+                color         : $navbar-default-link-color !important;
+
+                margin-left   : -1px;
+                border-left   : 1px solid $dropdown-border;
+
+                margin-right  : -1px;
+                border-right  : 1px solid $dropdown-border;
+
+                height        : 58px;
+                margin-bottom : -2px;
+
+                &::before {
+                    content       : "";
+                    position      : absolute;
+                    left          : $horizontal-spacing;
+                    right         : $horizontal-spacing;
+                    bottom        : 1px;
+                    border-bottom : 1px solid $navbar-default-border;
+                }
+            }
+        }
+
+        &.active {
+            background-color : white !important;
+
+            & > a {
+                color : var(--brand-core);
+
+                &:hover {
+                    background-color : transparent !important;
+                }
+
+                &::after {
+                    content          : "";
+                    position         : absolute;
+                    bottom           : 0;
+                    height           : $active-border-width;
+                    background-color : var(--brand-core);
+                    left             : 1rem;
+                    right            : 1rem;
+                }
+            }
+        }
+
+        & > a > span {
+            &.glyphicon {
+                margin-left  : -2px;
+                margin-right : 14px;
+            }
+
+            &.icon-caret {
+                margin-left   : 14px;
+                margin-right  : -2px;
+                margin-bottom : -2px;
+            }
+        }
+    }
+
+    /* This is to prevent top menu from collapsing */
+    & > div > .navbar-nav > li {
+        float : left;
+    }
+
+    .navbar-header {
+        float : left;
+    }
+
+    .navbar-right {
+        float        : right !important;
+        margin-right : 0;
+    }
+
+    @media (max-width : $grid-float-breakpoint-max) {
+        .open {
+            position : static; /* It was relative, but we remove it to allow dropdown to take the whole width of the screen*/
+            .dropdown-menu {
+                position         : absolute;
+                border           : 1px solid $navbar-default-bg;
+                background-color : $navbar-default-bg;
+                margin-top       : 2px;
+            }
+        }
+    }
+
+    .navbar-left {
+        float : left !important;
+    }
+
+    /* / End of This is to prevent top menu from collapsing*/
+
+    @media (max-width : $collapse-first-width-max) {
+        .dropdown-menu-left {
+            right : 0;
+            left  : auto;
+        }
+    }
+
+    @media (max-width : $grid-float-breakpoint-max) {
+        .vertical-bar,
+        .hidden-collapsed,
+        .icon-caret,
+        .ellipsis {
+            display : none !important;
+        }
+    }
+}
+
+.login-button {
+        min-width: 80px;
+}
+
+.nav-icon {
+    display: block;
+    &.collapsed {
+        display: none;
+    }
+}
+
+.hidden-menu {
+    list-style: none;
+    position: fixed;
+    display: flex;
+    top: -10000vh;
+    left: -10000vw;
+}
+
+.tab-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.nav-override {
+    max-width: 100vw !important;
+    padding-right: 0px !important;
+    flex-wrap: nowrap !important;
+    & > div {
+        flex-wrap: nowrap !important;
+    }
+}
+
+.small-button {
+    padding: 0 !important;
+    width: 48px !important;
+}
+
+.breadcrumb-wrapper {
+    margin-right: 20px;
+    margin-top: 0 !important;
+    position: relative;
+    & > svg-icon {
+        position: absolute;
+        right: -18px;
+        width: 20px;
+        top: 3px;
+        bottom: 0;
+        & > svg {
+            vertical-align: top;
+            & > .st0{
+                fill-rule: evenodd;
+                clip-rule: evenodd;
+                fill: $light4;
+            }
+        }
+    }
+}
+
+.breadcrumb-button {
+    cursor: pointer;
+    height: 48px !important;
+    padding: 0 8px;
+    & > a {
+        font-family     : $font-family-medium;
+        color           : $font-color-medium;
+        font-size       : $h6-font-size;
+        text-decoration : none;
+        white-space     : nowrap;
+        line-height     : 48px;
+    }
+    &:hover {
+        background: $light2;
+        border-bottom: 1px solid $light5;
+    }
+    &:active {
+        background: $light3;
+        border-bottom: 1px solid $light6;
+    }
+}
+
+.collapsed-breadcrumb {
+    margin-left: -6px;
+
+    & > a {
+        font-size: 20px;
+        line-height: 42px;
+    }
+}

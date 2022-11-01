@@ -1,0 +1,21 @@
+<nx-block
+    first-element
+    *ngIf="plugin && plugin.instructions"
+    name="howToSetup"
+>
+    <header translate>How to setup?</header>
+
+    <nx-section *ngIf="plugin.instructions.instructionVideo">
+        <nx-external-video [src]="plugin.instructions.instructionVideo"></nx-external-video>
+    </nx-section>
+    <nx-section *ngIf="plugin.instructions.screenshots">
+        <nx-carousel
+            type="Setup"
+            [screenshots]="plugin.instructions.screenshots"
+        ></nx-carousel>
+    </nx-section>
+
+    <nx-section>
+        <div [innerHtml]="plugin.instructions.installationInstructions | safe: 'html'"></div>
+    </nx-section>
+</nx-block>

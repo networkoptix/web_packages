@@ -8,7 +8,7 @@ Resource          storage-resource.robot
 System Admin Suite Setup
     Open browser and go to URL    ${ENV}
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
@@ -68,7 +68,7 @@ Wait until settings are visible
 Wait Until Advanced Settings Are Visible
     [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
     IF    '${block number}'=='ONE' or '${block number}'=='THREE' or '${block number}'=='FOUR'
-        IF    '${IMAGE}'=='5.0_test' 
+        IF    '${IMAGE}'=='5.0'
             ${block number}=   Set Variable    ${block number} ${IMAGE}
         END
     END
@@ -101,7 +101,9 @@ Validate Success Dialog
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
     Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=1
+    Sleep    1
     Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=${new name}
+    Sleep    1
 #    Press Keys    ${SYSTEM NAME}    ${new name}
     #Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
 #    Press Keys    ${SYSTEM NAME}    ENTER
@@ -367,7 +369,7 @@ Connect To Cloud
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    IF    '${IMAGE}' == '5.0_test'
+    IF    '${IMAGE}' == '5.0'
         ${expected value}=   Convert To String    ${expected value}
         ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
         ${expected value}=   Replace String    ${expected value}    true    True
@@ -407,22 +409,23 @@ Show Advanced Settings
 
 Reset Settings To Default
     [Arguments]    ${auth}    ${server url}
-    IF    "${IMAGE}" == "5.0_test"
+    IF    "${IMAGE}" == "5.0" or "${IMAGE}" == "5.1"
         Set System Settings    ${auth}    ${server url}    ${default settings5}
     ELSE
         Set System Settings    ${auth}    ${server url}    ${default settings}
     END
+
 System Offline Suite Setup
+    Open browser and go to URL    ${ENV}
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${system}
     Stop Docker Server    ${system}[id]
-
     ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${extra system}
     Sleep    30
-    Open browser and go to URL    ${ENV}
+    Go to    ${ENV}
 
 System Offline Suite Teardown
     Delete Base System    ${system}

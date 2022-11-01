@@ -3,6 +3,9 @@ import datetime
 import json
 import logging
 import re
+from django.urls import reverse
+from py import process
+from uuid import uuid4
 
 import requests
 from django.core.cache import cache, caches
@@ -11,13 +14,14 @@ from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import serializers
+from rest_framework import serializers, status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
-from api.helpers.exceptions import handle_exceptions, require_params,\
+from cloud.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
+from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType
 from cms.feature_flags import *
@@ -26,8 +30,10 @@ logger = logging.getLogger(__name__)
 
 
 # Swagger params
-build__route_param = openapi.Parameter('key', openapi.IN_PATH, type=openapi.TYPE_STRING)
-visited_key__query_param = openapi.Parameter('key', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+build__route_param = openapi.Parameter(
+    'key', openapi.IN_PATH, type=openapi.TYPE_STRING)
+visited_key__query_param = openapi.Parameter(
+    'key', openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 # Swagger schemas
 language__body = openapi.Schema(type=openapi.TYPE_STRING)
@@ -35,7 +41,8 @@ visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_cloud_capabilities_from_cache():
-    customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'cloud_capabilities')
+    customization_cache = cloud_portal_customization_cache(
+        settings.CUSTOMIZATION, 'cloud_capabilities')
     capabilities = {
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False)
     }
@@ -47,47 +54,11 @@ def get_cloud_capabilities_from_cache():
 
 
 def get_settings_from_cache():
-    customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')
-    return {
-        'appTypesForPlatform': customization_cache.get('app_types_for_platform', {}),
-        'availableDownloadsPlatform': customization_cache.get('available_downloads_platform', []),
-        'cloudName': customization_cache.get('cloud_name', ''),
-        'vmsName': customization_cache.get('vms_name', ''),
-        'alexaIntegrationEnabled': customization_cache.get('alexa_integration_enabled', False),
-        'bookmarksEnabled': customization_cache.get('bookmarks_enabled', False),
-        'cloudStorageEnabled': customization_cache.get('cloud_storage_enabled', False),
-        'cloudStorageSize': customization_cache.get('cloud_storage_size', '53687091200'),
-        'copyrightYear': customization_cache.get('copyright_year', ''),
-        'companyName': customization_cache.get('company_name', ''),
-        'companyLink': customization_cache.get('company_link', ''),
-        'customClientsEnabled': customization_cache.get('public_custom_clients', False),
-        'developersEnabled': customization_cache.get('developers_enabled', False),
-        'feedbackEnabled': customization_cache.get('feedback_enabled', False),
-        'integrationFilterItems': customization_cache.get('integration_filter_items', []),
-        'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
-        'integrationSeoPageDescription': customization_cache.get('integration_seo_page_description', ''),
-        'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
-        'landingDescription': customization_cache.get('landing_description', ''),
-        'healthMonitorCacheTimeout': customization_cache.get('health_monitor_cache_timeout', 60),
-        'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
-        'publicDownloads': customization_cache.get('public_downloads', False),
-        'publicReleases': customization_cache.get('public_releases', False),
-        'showAllBetas': customization_cache.get('show_all_betas', False),
-        'showAnalyticsEvents': customization_cache.get('show_analytics_events', False),
-        'sortSupportedDevicesByPopularity': customization_cache.get('sort_supported_devices_by_popularity', False),
-        'testedOperatingSystems': customization_cache.get('tested_operating_systems', {}),
-        'supportLink': customization_cache.get('support_link', ''),
-        'privacyLink': customization_cache.get('privacy_link', ''),
-        'supportedResolutions': customization_cache.get('supported_resolutions', []),
-        'supportedHardwareTypes': customization_cache.get('supported_hardware_types', []),
-        'searchTags': customization_cache.get('search_tags', []),
-        'vendorsShown': customization_cache.get('vendors_shown', '30'),
-        'pushConfig': customization_cache.get('push_config', {}),
-        'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
-        'logRocket': customization_cache.get('log_rocket', ''),
-        'fullStory': customization_cache.get('full_story', ''),
-        'trialLicenseKey': customization_cache.get('trial_license_key', ''),
-    }
+    customization_cache = cloud_portal_customization_cache(
+        settings.CUSTOMIZATION, 'config')
+    serializer = CustomizationCacheSerializer(data=customization_cache)
+    serializer.is_valid()
+    return serializer.data
 
 
 def filter_releases(releases):
@@ -98,7 +69,8 @@ def filter_releases(releases):
     mobile_types = ["android", "ios"]
 
     for release in releases:
-        is_mobile = any(map(lambda platform: platform.get("name") in mobile_types, release.get("platforms", [])))
+        is_mobile = any(map(lambda platform: platform.get(
+            "name") in mobile_types, release.get("platforms", [])))
         if is_mobile and not has_mobile:
             has_mobile = True
             filtered_releases.append(release)
@@ -175,7 +147,8 @@ def language(request):
         response = redirect(language_file)
 
         request.session['language'] = lang
-        response.set_cookie('language', lang, 60 * 60 * 24 * 7)  # Cookie for one week
+        response.set_cookie('language', lang, 60 * 60 *
+                            24 * 7)  # Cookie for one week
         return response
     elif request.method == 'POST':
         require_params(request, ('language',))
@@ -191,7 +164,8 @@ def language(request):
 
         response = Response({'language': lang})
         # Save cookie
-        response.set_cookie('language', lang, 60 * 60 * 24 * 7)  # Cookie for one week
+        response.set_cookie('language', lang, 60 * 60 *
+                            24 * 7)  # Cookie for one week
         return response
 
 
@@ -212,12 +186,14 @@ def languages(request):
 def downloads_history(request):
     # TODO: later we can check specific permissions
     can_view_releases = UserGroupsToAssetPermissions.\
-        check_customization_permission(request.user, settings.CUSTOMIZATION, 'api.can_view_release')
+        check_customization_permission(
+            request.user, settings.CUSTOMIZATION, 'api.can_view_release')
     public_release_history = get_settings_from_cache()['publicReleases']
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
 
-    downloads_url = settings.DOWNLOADS_JSON.replace('{{customization}}', settings.CUSTOMIZATION)
+    downloads_url = settings.DOWNLOADS_JSON.replace(
+        '{{customization}}', settings.CUSTOMIZATION)
     downloads_json = requests.get(downloads_url)
 
     if downloads_json.status_code == 404:
@@ -232,7 +208,8 @@ def downloads_history(request):
 
     if not get_settings_from_cache()["showAllBetas"]:
         filter_type = "betas"
-        downloads_json[filter_type] = filter_releases(downloads_json.get(filter_type, []))
+        downloads_json[filter_type] = filter_releases(
+            downloads_json.get(filter_type, []))
 
     return Response(downloads_json)
 
@@ -248,7 +225,8 @@ def download_build(request, build):
     customization = settings.CUSTOMIZATION
     public_release_history = get_settings_from_cache()['publicReleases']
     can_view_releases = UserGroupsToAssetPermissions.\
-        check_customization_permission(request.user, customization, 'api.can_view_release')
+        check_customization_permission(
+            request.user, customization, 'api.can_view_release')
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
     """
@@ -263,14 +241,16 @@ def download_build(request, build):
         20.1.1.12345 R10 - Desktop Meta build with release
     """
     if not re.search(r'(?:(?:\d*\.){2,3})?\d+(?: \w\d+)?', build):
-        raise APINotFoundException("Invalid build number", ErrorCodes.bad_request)
+        raise APINotFoundException(
+            "Invalid build number", ErrorCodes.bad_request)
 
     downloads_url = settings.DOWNLOADS_VERSION_JSON.replace('{{customization}}', customization).\
         replace('{{build}}', build)
     downloads_json = requests.get(downloads_url)
 
     if downloads_json.status_code != 200:
-        raise APINotFoundException("Build number does not exist", ErrorCodes.not_found, error_data=request.query_params)
+        raise APINotFoundException(
+            "Build number does not exist", ErrorCodes.not_found, error_data=request.query_params)
 
     downloads_json = downloads_json.json()
 
@@ -285,7 +265,8 @@ def download_build(request, build):
 
     # find settings for customizations
     if customization not in updates_json:
-        logger.warning(f'Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}')
+        logger.warning(
+            f'Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}')
         customization = 'default'
 
     updates_record = updates_json[customization]
@@ -308,7 +289,8 @@ def downloads(request):
 
     public_downloads = settings_cache['publicDownloads']
     if not public_downloads and not request.user.is_authenticated:
-        raise APIForbiddenException("Not authorized", ErrorCodes.not_authorized)
+        raise APIForbiddenException(
+            "Not authorized", ErrorCodes.not_authorized)
     cache_key = f"downloads_{customization}"
     if request.method == 'POST':  # clear cache on POST request - only for this customization
         global_cache.set(cache_key, False)
@@ -321,7 +303,8 @@ def downloads(request):
 
         # find settings for customizations
         if customization not in updates_json:
-            logger.warning(f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
+            logger.warning(
+                f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
         updates_record = updates_json[customization]
         latest_version = updates_record.get('download_version')
@@ -339,12 +322,14 @@ def downloads(request):
                 latest_release = updates_record['current_release']
             if not latest_release:  # Hack for new customizations
                 logger.warning(f'No official release for customization: {customization}. '
-                             f'{settings.CONFIG_ERROR}')
+                               f'{settings.CONFIG_ERROR}')
                 latest_release = '3.0'
-            if latest_release.startswith('2'):  # latest release is 2.* - fallback for 3.0
+            # latest release is 2.* - fallback for 3.0
+            if latest_release.startswith('2'):
                 latest_release = '3.0'
             if latest_release not in updates_record['releases']:
-                logger.warning(f'No 3.0 release for customization: {customization}. {settings.CONFIG_ERROR}')
+                logger.warning(
+                    f'No 3.0 release for customization: {customization}. {settings.CONFIG_ERROR}')
                 return Response(None)
             latest_version = updates_record['releases'][latest_release]
         # End of fallback section for old structure and old versions
@@ -389,165 +374,80 @@ def get_feature_flags(request):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
-                     operation_description="Returns cloud config information to the web client.")
+                     operation_description="Returns cloud config information to the web client.",
+                     responses={200: SettingsSerializer()})
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def get_settings(request):
-    settings_object = get_settings_from_cache()
-    if 'version_id' in settings_object:
-        del settings_object['version_id']
-    settings_object['menus'] = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
-    settings_object['docMenuMap'] = cached_doc_menu_map(customization_name=settings.CUSTOMIZATION)
-    settings_object['licenseTypes'] = LicenseType.get_license_types()
+    data = get_settings_from_cache()
+    serializer = SettingsSerializer(
+        data=data, request=request)
+    serializer.is_valid()
+    return Response(serializer.data)
 
-    # Hide cloud merge setting if its disabled to not reveal this feature to users.
-    if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:
-        del settings_object['cloudMerge']
-
-    if 'showAllBetas' in settings_object:
-        del settings_object['showAllBetas']
-
-    if not settings_object.get('integrationStoreEnabled') and \
-            UserGroupsToAssetPermissions.user_has_beta_access(request.user):
-        settings_object['integrationStoreEnabled'] = True
-    if not settings_object.get('developersEnabled', False) and \
-            UserGroupsToAssetPermissions.check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'cms.access_developers'):
-        settings_object['developersEnabled'] = True
-    if not settings_object.get('customClientsEnabled', False) and \
-            UserGroupsToAssetPermissions.check_customization_permission(
-                request.user, settings.CUSTOMIZATION, 'api.custom_clients'):
-        settings_object['customClientsEnabled'] = True
-
-    settings_object['featureFlags'] = get_feature_flags(request)
-    return Response(settings_object)
+IPVD_CACHE_CLEARED = 'IPVD cache cleared'
+IPVD_CACHE_NOT_CLEARED = 'No cached IPVD to clear'
+IPVD_EXPIRES = 60**2 * 24
+IPVD_CACHE_HEADER = {'Cache-Control': f'max-age={IPVD_EXPIRES}'}
 
 
-@swagger_auto_schema(method="GET",  # auto_schema=None,
-                     operation_description="Returns the list of supported devices.")
-@swagger_auto_schema(method="POST",  # auto_schema=None,
+def check_ipvd_cache_response(version):
+    if all(
+            k in (ipvd := cache.get(version, {}))
+            for k in ("cameras", "vendors", "analytics", "num_cameras")
+    ):
+        return Response({
+            **ipvd,
+            "cached": True
+        }, headers=IPVD_CACHE_HEADER)
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns the list of supported devices.",
+                     responses={200: IpvdSerializer()})
+@swagger_auto_schema(method="POST",
                      operation_description="Clear's the supported devices cache.",
-                     responses={'200': 'IPVD cache cleared'})
+                     responses={
+                         '200': IPVD_CACHE_CLEARED,
+                         '202': IPVD_CACHE_NOT_CLEARED})
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
 def get_ipvd(request):
     url = settings.IPVD_CONNECT
+    current_version = cache.get('ipvd', None)
 
     if request.method == 'GET':
-        # check cache and return cached item if any
-        ipvd = cache.get("ipvd", dict())
+        version = request.GET.get('version')
 
-        if all(k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")):
-            return Response({
-                "cameras": ipvd["cameras"],
-                "vendors": ipvd["vendors"],
-                "analytics": ipvd["analytics"],
-                "num_cameras": ipvd["num_cameras"],
-                "cached": True
-            })
-        # ---------------------
+        if not current_version:
+            # Update current version and redirect to cacheable url
+            current_version = str(uuid4())
+            cache.set('ipvd', current_version)
+            return redirect(f'{reverse("get-ipvd")}?version={current_version}')
 
-        # else request and process
+        elif version != current_version:
+            # Redirect to new version if changed. Only really happens if IPVD cache was cleared
+            return redirect(f'{reverse("get-ipvd")}?version={current_version}')
+
+        if response := check_ipvd_cache_response(version):
+            return response
+
         cameras = requests.get(url, "[]").json()
+        serializer = IpvdSerializer(data=cameras)
+        serializer.is_valid()
+        ipvd = serializer.data
 
-        # build vendor list
-        analytics_events = set()
-        vendors_dict = {}
-        camera_names = []
+        # Save the IPVD data as the current version
+        cache.set(current_version, ipvd, IPVD_EXPIRES)
 
-        for camera in cameras:
-            camera["firmwares"] = json.loads(camera["firmwares"]) if camera["firmwares"] else {}
-
-            firmwares = []
-            max_firmware_count = 0
-            total_camera_count = 0
-
-            for firmware in camera["firmwares"]:
-                if re.match('[<>]+', firmware):
-                    continue
-
-                count = camera["firmwares"][firmware]
-
-                firmwares.append({'count': count, 'name': firmware})
-
-                total_camera_count += count
-                if count > max_firmware_count:
-                    max_firmware_count = count
-
-            for firmware in firmwares:
-                percentage = round((firmware["count"] / total_camera_count) * 100)
-                percentage = str(percentage) + "%" if percentage else "< 1"
-                firmware["percentage"] = percentage
-
-                pow_var = log2(200) / log2(max_firmware_count) if max_firmware_count > 200 else 1
-                length = round(100 * pow(firmware["count"] / max_firmware_count, pow_var))
-                length = length if length >= 2 else 2
-                firmware["barLength"] = length
-
-            firmwares.sort(key=lambda x: x["count"], reverse=True)
-
-            camera["firmwares"] = firmwares
-            camera["maxFirmwareCount"] = max_firmware_count
-            camera["totalCameraCount"] = total_camera_count
-
-            camera["isH265"] = camera["primaryCodec"] == 'H.265'
-
-            if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:
-                camera["hardwareType"] = 'Multi-Sensor Camera'
-                camera["hardwareTypeId"] = 'multiSensorCamera'
-            else:
-                camera["hardwareTypeId"] = camera["hardwareType"].lower()
-
-            res = camera["maxResolution"].split('x')
-            if len(res) == 2:
-                camera["resolutionArea"] = int(res[0]) * int(res[1])
-            else:
-                camera["resolutionArea"] = 0
-
-            vendor = camera["vendor"]
-            if vendor in vendors_dict:
-                vendors_dict[vendor]['count'] += camera["count"]
-            else:
-                vendors_dict[vendor] = {'name': vendor, 'count': camera["count"]}
-
-            vm = camera["vendor"].replace(" ", "") + camera["model"].replace(" ", "")
-            camera["sortKey"] = vm
-            camera_names.append(vm)
-
-            if camera["aliases"]:
-                for alias in camera["aliases"].split(','):
-                    alias = alias.strip()
-                    camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
-
-            for event in camera['analyticsEvents']:
-                analytics_events.add(event)
-
-        num_cameras = len(set(camera_names))
-        # ---------------------
-
-        vendors = list(vendors_dict.values())
-        analytics = list(analytics_events)
-        analytics.sort()
-
-        ipvd = {
-            "cameras": cameras,
-            "vendors": vendors,
-            "analytics": analytics,
-            "num_cameras": num_cameras
-        }
-
-        # cache ipvd
-        cache.set("ipvd", ipvd, 60 * 60 * 24)  # 24 hours
-        # ---------------------
-
-        return Response(ipvd)
+        # The IPVD cache header max-age could outlive the data ttl in the cache but that's ok since we already checked the version
+        return Response(ipvd, headers=IPVD_CACHE_HEADER)
 
     elif request.method == 'POST':
-        # clear cache
-        cache.set("ipvd", dict())
-        # --------------------
+        # Really only care about deleting the ipvd cache so might not even have to check if current_version cache was deleted
+        cleared = cache.delete("ipvd") and cache.delete(current_version)
 
-        return Response({'IPVD cache cleared'})
+        return Response({IPVD_CACHE_CLEARED}) if cleared else Response({IPVD_CACHE_NOT_CLEARED}, status.HTTP_202_ACCEPTED)
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,

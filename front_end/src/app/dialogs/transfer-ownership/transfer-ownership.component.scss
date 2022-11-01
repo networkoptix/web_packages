@@ -1,0 +1,11 @@
+@use '../../styles/typography';
+
+.subtext {
+    @include typography.regular13nocolor;
+    color: var(--light-text-color); // light16
+}
+
+#request-sent {
+    @include typography.medium16nocolor;
+    color: var(--body-text-color); // dark9
+}

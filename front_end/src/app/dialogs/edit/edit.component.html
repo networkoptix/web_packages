@@ -1,0 +1,93 @@
+<form>
+    <div class="modal-header">
+        <h1 class="modal-title">{{ heading }}</h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ng-container *ngFor="let structure of manifest.fields">
+            <section *ngIf="!structure?.hidden">
+                <label>
+                    <span>{{ structure.label }}</span>
+                    <span
+                        *ngIf="structure.meta?.options?.required"
+                        class="pl-1 pr-3 input-error"
+                        [nxTooltip]="'This field is required' | translate"
+                        >*</span
+                    >
+                </label>
+                <ng-container [ngSwitch]="structure.type">
+                    <nx-select
+                        *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
+                        [selected]="dropdownLookup[structure.name]?.selected"
+                        (onSelected)="updateDropdown(structure.name, $event)"
+                        [items]="dropdownLookup[structure.name]?.options"
+                        [stillLoading]="!dropdownLookup[structure.name]?.options"
+                    ></nx-select>
+                    <nx-html
+                        *ngSwitchCase="STRUCTURE_TYPE.HTML"
+                        [name]="structure.name"
+                        [(ngModel)]="values[structure.name]"
+                    ></nx-html>
+                    <input
+                        *ngSwitchDefault
+                        [type]="structure.type"
+                        [name]="structure.name"
+                        (input)="clearError(structure.name)"
+                        [placeholder]="structure?.placeholder || ''"
+                        [(ngModel)]="values[structure.name]"
+                        class="form-control"
+                    />
+                </ng-container>
+                <div
+                    *ngIf="structure.description"
+                    [innerHTML]="structure.description"
+                ></div>
+                <div
+                    *ngIf="errors[structure.name] as errors"
+                    class="d-flex flex-column"
+                >
+                    <span
+                        *ngFor="let error of errors"
+                        class="input-error"
+                        >{{ error }}</span
+                    >
+                </div>
+            </section>
+        </ng-container>
+    </div>
+    <div class="modal-footer border-top-0">
+        <ng-template #createButton>
+            <nx-process-button
+                [process]="createContext"
+                [buttonText]="'Create' | translate"
+                [buttonDisabled]="processDisabled"
+            ></nx-process-button>
+        </ng-template>
+        <nx-process-button
+            *ngIf="values?.id; else createButton"
+            [process]="saveContext"
+            [buttonText]="'Save' | translate"
+            [buttonDisabled]="processDisabled"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="values?.id ? saveContext : createContext"
+            [discardFn]="close"
+        ></nx-cancel-button>
+        <nx-process-button
+            *ngIf="values?.id"
+            [process]="deleteContext"
+            [buttonText]="'Delete' | translate"
+            actionType="default"
+            [reverseButton]="true"
+            [svg]="{ src: 'delete' }"
+        ></nx-process-button>
+    </div>
+</form>

@@ -1,16 +1,25 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    OnChanges,
+    ViewChild,
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
 
-import { AuthorizeStateType } from '../authorize.component';
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -34,8 +43,8 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @Input() errorCode: string;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendPassword: any;
-    @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
+    sendPassword: () => void;
+    @ViewChild('passwordForm', { static: false }) passwordForm: NgForm;
     passwordToggle = true;
     header: string;
     subHeader: string;
@@ -64,7 +73,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizePasswordComponent>): void {
         if (changes.errorCode?.currentValue) {
             this.passwordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
         }
@@ -74,11 +83,11 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         }
     }
 
-    logout() {
+    logout(): void {
         // clear out local storage of email/user information
     }
 
-    setupText() {
+    setupText(): void {
         const auth = this.LANG.authorize;
         const connect = {
             header: auth.connectHeader(),
@@ -131,6 +140,11 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
                 subHeader,
                 subHeaderSuffix: auth.passwordDetach()
             },
+            confirmPasswordTransfer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordTransfer()
+            },
             connectSystemToCloud: connect,
             setupWizard: connect,
             renewSessionDesktop: renew,
@@ -138,7 +152,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         };
     }
 
-    setText() {
+    setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
         if (this.clientType.includes('Password')) {

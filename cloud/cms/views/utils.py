@@ -9,7 +9,7 @@ from html_sanitizer import Sanitizer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 
-from api.helpers.exceptions import api_success
+from cloud.helpers.exceptions import api_success
 from cloud.utils import remove_suffix
 
 from ..forms import QASettingsForm
@@ -25,7 +25,8 @@ def sanitize_html(request):
     sanitizer = Sanitizer()
 
     # Handle sanitizer bug on 3.8 alpine
-    sanitized_html = remove_suffix(sanitizer.sanitize(html), '</div></body></html>\n')
+    sanitized_html = remove_suffix(
+        sanitizer.sanitize(html), '</div></body></html>\n')
     return api_success({'sanitizedHTML': sanitized_html})
 
 

@@ -1,0 +1,80 @@
+<div
+    class="navigation-tile"
+    [style.width.px]="width"
+    [attr.id]="node['htmlID']"
+>
+    <div class="d-flex align-middle mw-100">
+        <svg-icon
+            class="section-title-icon"
+            *ngIf="node.icon"
+            [src]="iconsDir + node.icon"
+            [svgStyle]="{
+                'width.px': '24',
+                'height.px': '24',
+                position: 'absolute',
+                'top.px': '0',
+                'left.px': '10',
+                display: 'inline-block'
+            }"
+        ></svg-icon>
+        <div class="section-title">
+            <h5
+                class="section-title-text"
+                [ngClass]="{ 'no-link': node.url === '' }"
+                [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined"
+            >
+                {{ node.display_name || node.name }}
+            </h5>
+        </div>
+    </div>
+
+    <ul
+        *ngIf="node.nodes && node.nodes.length"
+        class="list-unstyled nav-links-section"
+    >
+        <ng-container *ngFor="let link of node.nodes">
+            <li
+                class="nav-links"
+                [style.padding-right.px]="link.new_window || link.icon ? 0 : 8"
+                [ngClass]="{
+                    selected:
+                        headerService.currentLocation.path === link.url || checkActive(link.url)
+                }"
+            >
+                <ng-template #internalLink>
+                    <a
+                        [routerLink]="link.url"
+                        [ngClass]="{ 'has-icon': link.new_window || link.icon }"
+                        [attr.id]="link['htmlID']"
+                    >
+                        {{ link.display_name || link.name }}
+                    </a>
+                </ng-template>
+                <a
+                    *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink"
+                    [href]="link.url"
+                    [target]="link.new_window ? '_blank' : '_self'"
+                    [ngClass]="{ 'has-icon': link.new_window || link.icon }"
+                    [attr.id]="link['htmlID']"
+                >
+                    {{ link.display_name || link.name }}
+                </a>
+                <svg-icon
+                    style="width: 24px; height: 24px"
+                    *ngIf="link.new_window || link.icon"
+                    [src]="
+                        link.icon
+                            ? iconsDir + link.icon
+                            : CONFIG.icons.dirTextButtons + 'external.svg'
+                    "
+                    [svgStyle]="{
+                        'margin-top.px': '-1',
+                        'width.px': '20',
+                        'height.px': '20',
+                        display: 'inline-block'
+                    }"
+                ></svg-icon>
+            </li>
+        </ng-container>
+    </ul>
+</div>

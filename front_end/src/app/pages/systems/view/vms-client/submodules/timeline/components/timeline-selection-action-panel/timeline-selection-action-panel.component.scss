@@ -1,0 +1,128 @@
+:host {
+    display       : block;
+    width         : 64px;
+    height        : auto;
+    z-index       : 1;
+    
+    position      : absolute;
+    right         : 0;
+    bottom        : 100px;
+    
+    border-radius : 2px;
+    
+    font-size     : 13px;
+    line-height   : 28px;
+    
+    opacity       : 0;
+    transition    : opacity 0.2s ease-in-out;
+    
+    &.active {
+        opacity : 1;
+    }
+    
+    > * {
+        display     : inline-block;
+        padding     : 4px;
+        user-select : none;
+    }
+    
+    > a, .set-time-button {
+        background-color : var(--timeline-selection-panel-bg);
+        color            : var(--timeline-selection-panel-color);
+        
+        &:hover {
+            background-color : var(--timeline-selection-panel-hover-bg);
+        }
+        
+        &:active {
+            background-color : var(--timeline-selection-panel-active-bg);
+        }
+      
+        svg-icon {
+            pointer-events: none;
+            display: contents;
+        }
+    }
+    
+    > .duration-selected {
+        cursor : pointer;
+    }
+    
+    > .export-link {
+        position        : relative;
+        text-decoration : none;
+        display         : flex;
+        padding         : 8px 0;
+        flex-direction  : column;
+        align-items     : center;
+        border-top      : 1px solid var(--timeline-selection-panel-delimiter-color);
+        
+        &::after {
+            left  : auto;
+            right : 0;
+        }
+        
+        svg-icon svg path {
+            fill : var(--timeline-selection-panel-color);
+        }
+    }
+    
+    > .set-time-button {
+        position       : relative;
+        cursor         : pointer;
+        display        : flex;
+        padding         : 8px 0;
+        flex-direction : column;
+        align-items    : center;
+        border-top     : 1px solid var(--timeline-selection-panel-delimiter-color);
+      
+        svg-icon svg path {
+            stroke : var(--timeline-selection-panel-color);
+        }
+    }
+    
+    .close {
+        position         : relative;
+        width            : auto;
+        cursor           : pointer;
+        display          : block;
+        float            : none;
+        border-radius    : 2px 2px 0 0;
+        background-color : var(--timeline-selection-panel-close-bg);
+        
+        &:hover {
+            opacity: 1;
+            background-color: var(--timeline-selection-panel-close-hover-bg);
+        }
+      
+        &:active {
+            background-color: var(--timeline-selection-panel-close-active-bg);
+        }
+    }
+    
+    .close:before, .close:after {
+        position         : absolute;
+        left             : 50%;
+        top              : 4px;
+        content          : " ";
+        height           : 12px;
+        width            : 2px;
+        background-color : var(--timeline-selection-panel-color);
+    }
+    
+    .close:before {
+        transform : rotate(45deg);
+    }
+    
+    .close:after {
+        transform : rotate(-45deg);
+    }
+}
+
+::ng-deep .hint-popover {
+    pointer-events: none;
+  
+    nx-popover {
+      transform: translateY(-8px);
+    }
+}

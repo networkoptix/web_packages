@@ -1,0 +1,50 @@
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables_common" as *;
+
+.menu-level-one {
+    display: flex;
+    background-color: var(--header-level-one-bg);
+    padding-left: 12px;
+    height: 40px;
+    .menu-item {
+        height: 25px !important;
+        white-space: nowrap;
+        @extend .header-button;
+        margin: 8px 0px;
+        border: none !important;
+        border-radius: 4px !important;
+        text-transform: uppercase;
+
+    }
+
+    nx-account-settings-select {
+        display: block;
+        position: absolute;
+        right: 0px;
+    }
+
+    .create-account {
+        white-space: nowrap;
+        @extend .header-button;
+        text-decoration: inherit;
+        color: inherit;
+        min-height: 24px;
+        margin: 13px 16px 10px auto;
+    }
+}
+
+.header-button {
+    @include typography.regular11nocolor;
+    color: var(--header-level-one-color);
+
+    &:hover {
+        color: var(--header-level-one-hover-color);
+    }
+    &.active {
+        color: var(--header-level-one-active-color);
+        background-color: var(--header-level-one-active-bg);
+    }
+    &.disabled {
+        color: var(--header-item-disabled);
+    }
+}

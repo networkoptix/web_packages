@@ -1,0 +1,164 @@
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<ng-template #saveButton>
+    <button
+        class="btn btn-primary"
+        (click)="saveSettings()"
+        translate
+    >
+        Save Settings
+    </button>
+</ng-template>
+
+<div class="explorer-wrapper">
+    <ng-container *ngIf="card && (dataSource$ | async) as dataSource; else preloader">
+        <div
+            [ngClass]="{ 'd-none': !card.editMode }"
+            class="h-100"
+        >
+            <nx-stepper
+                [saveButton]="saveButton"
+                [columns]="card.size.value.cols"
+                [customButtonLabels]="['General', 'Asset Types']"
+            >
+                <cdk-step>
+                    <div class="h-100">
+                        <h4 translate>General Settings</h4>
+                        <div class="mt-2 mb-3">
+                            <label class="my-0">
+                                <span translate>Max Cache Age</span>
+                            </label>
+                            <nx-numeric
+                                [min]="1"
+                                [max]="60"
+                                [(ngModel)]="card.config.maxAge"
+                            ></nx-numeric>
+                        </div>
+                        <div class="d-flex mb-1">
+                            <nx-checkbox
+                                componentId="showAdmin"
+                                [(ngModel)]="card.config.showAdmin"
+                            ></nx-checkbox>
+                            <label
+                                class="mb-0"
+                                for="showAdmin"
+                            >
+                                <span translate>Show Admin Links</span>
+                            </label>
+                        </div>
+                        <div class="d-flex mb-1">
+                            <nx-checkbox
+                                componentId="showPreviews"
+                                [(ngModel)]="card.config.showPreviews"
+                            ></nx-checkbox>
+                            <label
+                                class="mb-0"
+                                for="showPreviews"
+                            >
+                                <span translate>Show Preview Links</span>
+                            </label>
+                        </div>
+                    </div>
+                </cdk-step>
+                <cdk-step>
+                    <div class="h-100">
+                        <h4 translate>Selected Asset Types</h4>
+                        <div
+                            *ngFor="
+                                let assetType of card.config.assetTypes
+                                    | as: { key: AssetTypeInterface }
+                                    | keyvalue
+                            "
+                            class="d-flex mb-1"
+                        >
+                            <nx-checkbox
+                                [componentId]="assetType.key"
+                                [(ngModel)]="assetType.value.value"
+                            ></nx-checkbox>
+                            <label
+                                class="mb-0"
+                                [for]="assetType.key"
+                            >
+                                <span>{{ assetType.value.name }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </cdk-step>
+            </nx-stepper>
+        </div>
+        <div [ngClass]="{ 'd-none': card.editMode }">
+            <h5
+                [ngClass]="{ 'animate-rotation': loading }"
+                (click)="refreshData()"
+            >
+                <span>
+                    {{ LANG.components.widgets.lastUpdated({ date: dataSource.last }) }}
+                </span>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+                    [svgStyle]="{
+                        'width.px': '16',
+                        'height.px': '16',
+                        'margin.px': '0',
+                        'margin-left.px': '6'
+                    }"
+                    [applyClass]="true"
+                ></svg-icon>
+            </h5>
+            <cdk-tree
+                [dataSource]="dataSource.data"
+                [treeControl]="treeControl"
+            >
+                <cdk-nested-tree-node
+                    *cdkTreeNodeDef="let node"
+                    class="explorer-node"
+                    [ngClass]="{ 'asset-link': node.id }"
+                >
+                    <ng-template #nodeName>
+                        <span>{{ node.name }}</span>
+                    </ng-template>
+                    <div *ngIf="node.id; else nodeName">
+                        <a (click)="showAction(node)">
+                            {{ node.name }}
+                        </a>
+                        <a
+                            *ngFor="let action of node?.actions || []"
+                            class="action-link"
+                            (click)="
+                                showAction({
+                                    url: action.url,
+                                    label: node.name + ' - ' + action.name,
+                                    params: action.params || {}
+                                })
+                            "
+                            [nxTooltip]="action.name"
+                            >{{ ACTION_ICONS[action.type] || action.name }}</a
+                        >
+                    </div>
+                </cdk-nested-tree-node>
+                <cdk-nested-tree-node
+                    *cdkTreeNodeDef="let node; when: hasChild"
+                    class="explorer-node"
+                >
+                    <div
+                        cdkTreeNodeToggle
+                        [cdkTreeNodeToggleRecursive]="treeControl.isExpanded(node)"
+                    >
+                        <span>
+                            {{ treeControl.isExpanded(node) ? '📂' : '📁' }}
+                        </span>
+                        <span>
+                            {{ node.name }}
+                        </span>
+                    </div>
+                    <div [ngClass]="{ 'd-none': !treeControl.isExpanded(node) }">
+                        <ng-container cdkTreeNodeOutlet></ng-container>
+                    </div>
+                </cdk-nested-tree-node>
+            </cdk-tree>
+        </div>
+    </ng-container>
+</div>

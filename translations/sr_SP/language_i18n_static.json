@@ -1,6 +1,7 @@
 {
     "language": "sr_SP",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "For developers",
@@ -133,6 +134,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Create %CLOUD_NAME% Account",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -175,6 +177,38 @@
         "ptz": "PTZ cameras"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "Medium",
             "low": "Low"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "General",
         "generalError": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "You are viewing an outdated report."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -309,6 +358,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "camera",
             "cameras": "cameras",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Current recordings",
                 "whenFullyUsed": "When fully used",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Archive from",
                 "recordingBitrate": "Recording Bitrate",
                 "delayFromLive": "Delay from live"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "Cloud storage successfully removed from system",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
-                "b_support": "support",
-                "c_proceeding": "before proceeding."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
@@ -404,7 +485,8 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -448,6 +530,13 @@
             "action": "Login",
             "message": "Please log in again.",
             "title": "Your session has expired"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Error",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Access Control",
         "Connector": "Connector",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -693,6 +787,21 @@
         "type": "Type",
         "server": "Server",
         "alert": "Alert"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "About",
@@ -807,8 +916,6 @@
         "Search": "Search",
         "analytics": "Analytics",
         "analyticsSelected": "analytics events",
-        "filter applied": "filter applied",
-        "filters applied": "filters applied",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
@@ -816,7 +923,10 @@
         "search_ipvd": "Search by model or manufacturer",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Manufacturer",
-        "vendors": "Manufacturers"
+        "vendors": "Manufacturers",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -848,6 +958,7 @@
         "Settings": "Settings",
         "Information": "Information",
         "Bookmarks": "Bookmarks",
+        "Layouts": "Layouts",
         "Monitoring": "Monitoring"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(log all information available)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "activated",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

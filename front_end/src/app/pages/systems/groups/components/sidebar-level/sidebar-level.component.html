@@ -1,0 +1,62 @@
+<ul>
+    <li *ngFor="let group of groups; trackBy: trackItem">
+        <div
+            class="group-drop-list"
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="group"
+            (cdkDropListDropped)="onDrop($event)"
+        >
+            <span
+                class="group-toggle-btn"
+                (click)="openState[group.id] = !openState[group.id]"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="
+                        openState[group.id]
+                            ? CONFIG.icons.dir + 'closed_triangle.svg'
+                            : CONFIG.icons.dir + 'opened_triangle.svg'
+                    "
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                ></svg-icon>
+            </span>
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'folder.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            ></svg-icon>
+            <h3
+                cdkDrag
+                [cdkDragData]="group"
+                cdkDragBoundary=".sidebar"
+            >
+                <span *cdkDragPlaceholder></span>
+                <a [routerLink]="'/systems/groups/' + group.id">{{ group.name }}</a>
+            </h3>
+        </div>
+        <nx-sidebar-level
+            *ngIf="group.groups.length || group.systems.length"
+            [ngClass]="{ 'closed-level': !openState[group.id] }"
+            [groups]="group.groups"
+            [systems]="group.systems"
+        ></nx-sidebar-level>
+    </li>
+
+    <li *ngFor="let system of systems; trackBy: trackItem">
+        <div
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="system"
+        >
+            <h3
+                cdkDrag
+                [cdkDragData]="system"
+                cdkDragBoundary=".sidebar"
+            >
+                <span *cdkDragPlaceholder></span>
+                <a [routerLink]="'/systems/' + system.id">{{ system.name }}</a>
+            </h3>
+        </div>
+    </li>
+</ul>

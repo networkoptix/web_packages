@@ -1,0 +1,92 @@
+@use "../../../../../styles/theme_variables_common" as *;
+@use "../../../../styles/typography";
+
+:host {
+    grid-area : menu;
+    
+    h3 {
+        @include typography.medium15nocolor;
+        color: var(--left-menu-l1-color) !important;
+        margin     : 16px 16px 0 16px;
+        background : var(--left-menu-l1-selected-bg);
+        padding    : 0;
+    
+        svg-icon svg .st0 {
+            fill   : var(--left-menu-l1-color);
+            stroke : none;
+        }
+    }
+    
+    ul {
+        @media screen and (min-width : 769px) {
+            position : sticky;
+            top      : 16px;
+        }
+        margin               : 0 16px 16px;
+        flex                 : 1 0 240px;
+        min-width            : 240px;
+        list-style           : none;
+        padding-inline-start : 0;
+    
+        li {
+            border-radius : 2px;
+    
+            a {
+                @include typography.medium13nocolor;
+                color: var(--left-menu-l3-color);
+                display         : flex;
+                text-decoration : none;
+                align-items     : center;
+                line-height     : 26px;
+                padding         : 0 .75rem;
+    
+                svg-icon svg .st0 {
+                    fill   : var(--left-menu-l3-color);
+                    stroke : none;
+                }
+    
+                &:hover {
+                    background : var(--left-menu-l3-hover-bg);
+                    color      : var(--left-menu-l3-hover-color);
+        
+                    svg-icon svg .st0 {
+                        fill : var(--left-menu-l3-hover-color);
+                    }
+                }
+                
+                &:active, &.active-section {
+                    background : var(--left-menu-l3-selected-bg);
+                    color : var(--left-menu-l3-selected-color);
+    
+                    svg-icon svg .st0 {
+                        fill   : var(--left-menu-l3-selected-color);
+                    }
+                }
+    
+                svg-icon svg .st0 {
+                    fill : var(--left-menu-l3-color);
+                }
+            }
+        }
+    }
+    
+    .additional-link {
+        @include typography.regular14nocolor;
+        color: var(--text-placeholder-color);
+        cursor      : pointer;
+        margin-left : 16px;
+        height      : 32px;
+        
+        &:hover {
+            color : $dark15 !important;
+            
+            .st0 {
+                fill : $dark15;
+            }
+        }
+        
+        .st0 {
+            fill : $light16;
+        }
+    }
+}

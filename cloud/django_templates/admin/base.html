@@ -1,5 +1,5 @@
 {% extends 'admin/base.html' %}
-{% load i18n admin_urls admin_static %}
+{% load i18n admin_urls static %}
 {% load static %}
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
-    <script>window.$ = django.jQuery; window.jQuery = django.jQuery;</script>
+    <script>window.$ = django.jQuery;
+    window.jQuery = django.jQuery;</script>
     <script type="text/javascript" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
     {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/darkFix.css' %}">
 {% endblock %}

@@ -1,0 +1,12 @@
+.section-table-wrapper {
+    overflow-x : auto;
+
+    table {
+        grid-template-columns : 120px 100px 100px 100px auto;
+        min-width: 681px;
+
+        .table-row-spacer {
+            grid-column-end : span 5;
+        }
+    }
+}

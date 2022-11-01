@@ -1,0 +1,42 @@
+@use "sass:color" as *;
+
+@function _hex2Rgb($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
+@mixin generateVarAndRgb($name, $hex) {
+  #{$name}: $hex;
+  #{$name}--rgb: _hex2Rgb($hex);
+}
+
+$opacity-to-hex : (
+        0: "00",
+        0.05: "0C",
+        0.1: "19",
+        0.15: "26",
+        0.2: "33",
+        0.25: "3F",
+        0.3: "4C",
+        0.35: "59",
+        0.4: "66",
+        0.45: "72",
+        0.5: "7F",
+        0.55: "8C",
+        0.6: "99",
+        0.65: "A5",
+        0.7: "B2",
+        0.75: "BF",
+        0.8: "CC",
+        0.85: "D8",
+        0.9: "E5",
+        0.95: "F2",
+        1: "FF"
+);
+
+@function color-opacity($color, $opacity) {
+  @return unquote($color + map-get($opacity-to-hex, $opacity));
+}
+
+@mixin color-opacity($property, $color, $opacity) {
+  #{$property}: unquote($color + map-get($opacity-to-hex, $opacity));
+}

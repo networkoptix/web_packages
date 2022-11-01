@@ -23,8 +23,6 @@ class TestAddCloudAdmin:
             'LOCAL_ENV': False
         }
         mocker.patch.object(os, 'environ', environ)
-        mock_sleep = mocker.patch.object(
-            time, 'sleep')
         mock_register = mocker.patch.object(
             cloud_api.Account, 'register')
         mock_activate = mocker.patch.object(
@@ -36,7 +34,7 @@ class TestAddCloudAdmin:
         instance = Command()
         mock_write_stdout = mocker.patch.object(
             instance.stdout, 'write')
-    
+
         # Test missing email
         pytest.raises(
             ValueError,
@@ -61,7 +59,6 @@ class TestAddCloudAdmin:
         mock_activate.assert_called_once_with(code)
         expected_calls = (
             ('SUCCESS', f'Successfully added user with {email} for email.'),
-            ('NOTICE', f'Waiting for {SLEEP_TIMER}s to activate the account.'),
             ('SUCCESS', f'Successfully activated {email}.')
         )
         stdout_calls = [getattr(instance.style, style)(msg)
@@ -73,6 +70,5 @@ class TestAddCloudAdmin:
         Account.objects.filter(email=email).delete()
         message.delete()
         mocker.patch.object(cloud_api.Account, 'activate', side_effect=Exception('some failure'))
-        instance.handle(
-            email=email, password=password)
+        instance.handle(email=email, password=password)
         assert Account.objects.filter(email=email).first()

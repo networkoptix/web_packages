@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <style type="text/css">
+        .st0 {
+            stroke : #698796;
+        }
+    </style>
+    <title>arrow_expand</title>
+    <g id="arrow_expand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <polyline id="Path-2-Copy" class="st0" transform="translate(9.997792, 10.000000) scale(1, -1) translate(-9.997792, -10.000000) " points="4 13 10 7 15.995584 13"></polyline>
+    </g>
+</svg>

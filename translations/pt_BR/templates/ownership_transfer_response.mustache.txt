@@ -1,0 +1,1 @@
+{{ message.user_full_name }} ({{ message.user_email }}) tem {{ message.status }} seu pedido para transferir a propriedade de {{ message.system_name }}

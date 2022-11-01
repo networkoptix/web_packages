@@ -4,7 +4,7 @@
     "single_customization": false,
     "contexts": [
         {
-            "name": "Release Notes",
+            "name": "releaseNotes",
             "label": "Release Notes",
             "description": "Release notes for version",
             "values": [

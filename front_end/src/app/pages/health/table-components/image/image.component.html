@@ -1,0 +1,91 @@
+<div
+    *ngIf="!show"
+    class="d-flex h-100 w-100 align-items-center justify-content-center image-unavailable-border"
+    [ngClass]="{
+        wide: aspect === '16:9' || aspect === 'Auto',
+        normal: aspect === '4:3',
+        square: aspect === '1:1'
+    }"
+    id="preloader-wrapper"
+>
+    <nx-pre-loader [type]="'generic-camera-preview'"></nx-pre-loader>
+</div>
+<div
+    *ngIf="time && !show"
+    class="header"
+>
+    {{ time }}
+</div>
+<div
+    [ngClass]="
+        motionPreview
+            ? {
+                  'motion-preview': true,
+                  'd-none': !show
+              }
+            : {
+                  mini: !isPrimary,
+                  'd-none': !show,
+                  'light-thumbnail-preview': lightBackground,
+                  'thumbnail-preview': !lightBackground,
+                  wide: aspect === '16:9' || aspect === 'Auto',
+                  normal: aspect === '4:3',
+                  square: aspect === '1:1',
+                  fill: aspect === 'override'
+              }
+    "
+>
+    <img
+        class="fs-exclude"
+        alt="{{ state }}"
+        *ngIf="
+            (state === 'Online' || state === 'Recording' || state === 'Scheduled') && url;
+            else noLivePreview
+        "
+        [src]="url"
+        [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
+        [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
+        [attr.object-fit]="'cover'"
+        (load)="loaded.emit(true)"
+        (error)="url = ''; loaded.emit(true)"
+    />
+    <ng-template #noLivePreview>
+        <div
+            *ngIf="isPrimary; else noMiniPreview"
+            [ngSwitch]="lightBackground || motionPreview ? 'No Image' : state"
+            [ngClass]="
+                lightBackground || motionPreview
+                    ? 'light-camera-preview image-unavailable-border'
+                    : 'hm-camera-preview'
+            "
+        >
+            <div
+                *ngSwitchCase="'No Image'"
+                translate
+            >
+                NO IMAGE
+            </div>
+            <div
+                *ngSwitchCase="'Offline'"
+                translate
+            >
+                OFFLINE
+            </div>
+            <div
+                *ngSwitchCase="'Unauthorized'"
+                translate
+            >
+                AUTHENTICATION REQUIRED
+            </div>
+            <div
+                *ngSwitchDefault
+                translate
+            >
+                UNAVAILABLE
+            </div>
+        </div>
+        <ng-template #noMiniPreview>
+            <div class="camera-preview-offline"></div>
+        </ng-template>
+    </ng-template>
+</div>

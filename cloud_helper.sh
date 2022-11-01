@@ -30,7 +30,8 @@ function init_backend(){
 
 function init_frontend(){
     pushd front_end
-    npm install
+    echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
+    npm ci
     npm run setSkin blue
     popd
 }
@@ -100,7 +101,7 @@ function setup_env() {
     export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
-    npm install --prefix cloud
+    npm run node-modules --prefix cloud
 }
 
 function setup_robot_env() {
@@ -128,6 +129,9 @@ function setup_robot_env() {
 
 function setup_or_activate_virtualenv() {
     [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.8
+
+    # Copy necessary config for virutalenv
+    cp etc/virtual_env_template/* env
 
     printf "Activating python3.8 env\n\n"
     . ./env/bin/activate
@@ -257,6 +261,61 @@ function start_https_tunnel() {
 
     echo 'Starting tunnel'
     stunnel 'etc/stunnel_dev.conf'
+}
+
+function install_cli() {
+    export CLOUD_PORTAL_DIR=$(pwd)
+    pushd cloud_helper
+    npm run node-modules
+    npm run build
+    npm link
+    echo 'cloud-helper CLI installed'
+    cloud-helper
+    popd
+}
+
+function check_licenses() {
+    # pip-licenses --format=json --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);"
+    pip-licenses --format=json --with-urls --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);Mozilla Public License 2.0 (MPL 2.0);LGPLv3+"
+}
+
+function update_requirements_licenses() {
+    CI_OUTPUT=cloud/ci-license.json
+    UPDATE_OUTPUT=cloud/requirements-license.json
+
+    if [[ $CI_PIPELINE_SOURCE = *[!\ ]* ]]
+    then
+        LICENSE_OUTPUT_FILE=$CI_OUTPUT
+    else
+        LICENSE_OUTPUT_FILE=$UPDATE_OUTPUT
+    fi
+
+    echo "results will be output to $LICENSE_OUTPUT_FILE"
+
+    check_licenses > "$LICENSE_OUTPUT_FILE"
+
+    if [ -s $LICENSE_OUTPUT_FILE ]
+    then
+        if [[ $CI_PIPELINE_SOURCE = *[!\ ]* ]]
+        then
+            echo "checking $UPDATE_OUTPUT against $CI_OUTPUT"
+
+            DIFF=$(diff $UPDATE_OUTPUT $CI_OUTPUT)
+
+            if [ "$DIFF" != "" ]
+            then
+                echo "Please update $UPDATE_OUTPUT before trying to merge"
+                exit 1
+            else
+                echo "python licenses up to date"
+            fi
+        else
+            echo "updated $UPDATE_OUTPUT"
+        fi
+    else
+        exit 1
+    fi
+
 }
 
 for command in $@
@@ -423,6 +482,39 @@ do
             python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
             break
             ;;
+        download_and_run)
+            VERSION=$2
+            PORTS={$3:"7001"}
+            CLOUD_HOST="stage.nxvms.com"
+            WEBADMIN_HOST="https://localhost"
+            LOCAL_PASSWORD="qweasd1234"
+
+            echo "fetching $VERSION"
+            python tools/scripts/download_deb.py $VERSION
+
+            echo "$VERSION has been saved to tools/$VERSION.deb"
+            stop_mediaserver
+            build_mediaserver_image $VERSION.deb $VERSION
+
+            echo "Running the mediaserver on $WEBADMIN_HOST:$PORTS connected to https://$CLOUD_HOST"
+            run_mediaserver $VERSION "$PORT" $CLOUD_HOST
+            for $PORT in $PORTS; do
+                open $WEBADMIN_HOST:$PORT
+            done
+
+            sleep 30s
+            python tools/scripts/setup_system.py $WEBADMIN_HOST "$PORTS" $LOCAL_PASSWORD
+            break
+            ;;
+        update_requirements_licenses)
+            update_requirements_licenses
+            ;;
+        update_package_licenses)
+            npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
+            ;;
+        install_cli)
+            install_cli
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -450,7 +542,18 @@ do
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
+            echo 'update_requirements_licenses - Updates requirements-license.json when run locally else checks if updated when CI'
+            echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'
+            echo 'install_cli - Installs cloud-helper CLI command globally'
             echo ''
+            if ! command -v cloud-helper &> /dev/null
+            then
+                echo "cloud-helper CLI not installed. Installing now."
+                install_cli
+            else
+                cloud-helper
+            fi
+
             ;;
     esac
 done

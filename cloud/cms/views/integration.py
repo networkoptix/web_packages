@@ -1,4 +1,4 @@
-from util.base_cache import BaseCache
+from cms.serializers import IntegrationSerializer, IntegrationsListSerializer
 from cms.controllers.integration import check_integration_store_enabled, make_integrations_json
 from django.conf import settings
 from django.db.models import Q
@@ -11,7 +11,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from util.helpers import get_language_object_from_request
-from api.helpers.exceptions import api_success
+from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
 
@@ -33,50 +33,63 @@ pending__query_param = openapi.Parameter("pending", openapi.IN_QUERY,
 INTEGRATION_NOT_FOUND = "Integration not found."
 INTEGRATION_FORBIDDEN = "You do not have permission to view this integration"
 
+
 @swagger_auto_schema(method='GET',
                      operation_description="Returns an integration by id.",
-                     manual_parameters=[asset_id__route_param, draft__query_param, pending__query_param])
+                     manual_parameters=[asset_id__route_param,
+                                        draft__query_param, pending__query_param],
+                     responses={
+                         status.HTTP_200_OK: IntegrationSerializer(many=True),
+                         status.HTTP_403_FORBIDDEN: INTEGRATION_FORBIDDEN,
+                         status.HTTP_404_NOT_FOUND: INTEGRATION_NOT_FOUND
+                     })
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
     is_enabled = check_integration_store_enabled()
-    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
+    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
+        request.user)
+    has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'cms.view_integration_drafts')
 
-    if not asset_id:
-        return api_success(INTEGRATION_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
-
-    asset_id = int(asset_id)
-    integration = Asset.objects.filter(asset_type__type=INTEGRATION,
-                                       customizations__name__in=[settings.CUSTOMIZATION],
-                                       id=asset_id).last()
-
-    if not integration:
+    if not (asset_id := int(asset_id)) or not (integration := Asset.objects.filter(asset_type__type=INTEGRATION, customizations__name__in=[settings.CUSTOMIZATION], id=asset_id).last()):
         return api_success(INTEGRATION_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
     if draft or review:
         if not request.user.is_authenticated:
             return api_success(INTEGRATION_FORBIDDEN,
                                status_code=status.HTTP_403_FORBIDDEN)
+
         if integration.id not in request.user.assets and not request.user.is_superuser:
-            if draft:
-                return api_success(f"You do not have permission to view this draft.",
-                                   status_code=status.HTTP_403_FORBIDDEN)
-            if not UserGroupsToAssetPermissions.\
+            if draft and not has_draft_permission:
+                return api_success(
+                    'You do not have permission to view this draft.',
+                    status_code=status.HTTP_403_FORBIDDEN,
+                )
+
+            if review and not UserGroupsToAssetPermissions.\
                     check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
-                return api_success(f"You do not have permission to view this review.",
-                                   status_code=status.HTTP_403_FORBIDDEN)
+                return api_success(
+                    'You do not have permission to view this review.',
+                    status_code=status.HTTP_403_FORBIDDEN,
+                )
+
     elif not (is_enabled or has_beta_access):
         return api_success(INTEGRATION_FORBIDDEN,
                            status_code=status.HTTP_403_FORBIDDEN)
 
-    return api_success(make_integrations_json(
-        [integration], language=get_language_object_from_request(request), show_pending=review, show_drafts=draft,
-        user=request.user
-    ))
+    serializer = IntegrationSerializer.generate([integration], request)
+    serializer.is_valid()
 
+    return api_success(serializer.data)
 
+@swagger_auto_schema(method='GET',
+                     operation_description="Returns a list of integrations",
+                     responses={
+                         status.HTTP_200_OK: IntegrationsListSerializer()
+                     })
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_integrations(request):
@@ -92,43 +105,21 @@ def get_integrations(request):
         return api_success([])
     integration_list = []
 
-    # Leaving here temporarily for reference
-    # # Only known users can see Drafts and reviews
-    # if not request.user.is_anonymous:
-    #     drafts = Asset.objects. \
-    #         filter(asset_type__type=INTEGRATION,
-    #                contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION).distinct()
-    #
-    #     # Users without manager permissions will see only their integration (accepted, reviews, drafts).
-    #     if not UserGroupsToAssetPermissions.\
-    #             check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
-    #         drafts = drafts.filter(id__in=request.user.assets).distinct()
-    #         integration_list = make_integrations_json(drafts.filter(preview_status=Asset.PREVIEW_STATUS.draft),
-    #                                                   show_drafts=True, user=request.user)
-    #         # If the integration store is disabled show developers their approved integrations
-    #         if not is_enabled:
-    #             integration_list.extend(make_integrations_json(drafts, user=request.user))
-    #
-    #     # If the integration store is disabled Manager level users will see all accepted and pending integrations
-    #     elif not is_enabled:
-    #         integration_list.extend(make_integrations_json(integrations, user=request.user))
-    #
-    #     # Shows pending reviews. If the users is not a manager they will only see their pending reviews
-    #     # Otherwise they will see all of the pending reviews
-    #     drafts = drafts.filter(contentversion__assetcustomizationreview__state=PENDING)
-    #     integration_list.extend(make_integrations_json(drafts, show_pending=True, user=request.user))
-    #
-    # if is_enabled:
-    #     integration_list.extend(make_integrations_json(integrations, user=request.user))
-
     is_portal_manager = UserGroupsToAssetPermissions.\
-        check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+        check_customization_permission(
+            request.user, settings.CUSTOMIZATION, 'cms.publish_version')
 
-    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
+    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
+        request.user)
+    has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'cms.view_integration_drafts')
     draft_integrations = []
 
     if not request.user.is_anonymous:
-        draft_integrations = integrations.filter(Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
+        draft_integrations = integrations.filter(
+            Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
+        if has_draft_permission:
+            draft_integrations = integrations
         if request.user.is_superuser:
             draft_integrations = integrations
             review_integrations = integrations
@@ -157,9 +148,13 @@ def get_integrations(request):
     # Sort integrations by name. Ignore case.
     # Name might not exist if integration was just created.
     # This breaks the integration store for the owner of the nameless integration.
-    integration_list.sort(key=lambda x: x["information"].get("name", "~~~~").lower())
+    integration_list.sort(
+        key=lambda x: x["information"].get("name", "~~~~").lower())
 
-    return api_success({'data': integration_list})
+    serializer = IntegrationSerializer(data=integration_list, many=True)
+    serializer.is_valid()
+
+    return api_success({'data': serializer.data})
 
 
 @swagger_auto_schema(method='GET',
@@ -170,9 +165,11 @@ def get_integrations(request):
 def get_integrations_count(request):
     is_enabled = check_integration_store_enabled()
     is_portal_manager = UserGroupsToAssetPermissions. \
-        check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+        check_customization_permission(
+            request.user, settings.CUSTOMIZATION, 'cms.publish_version')
 
-    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
+    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
+        request.user)
     response = {}
     if is_enabled or is_portal_manager or has_beta_access:
         integration_count = Asset.objects.filter(

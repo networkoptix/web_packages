@@ -3,7 +3,7 @@
 # Steps to set up build environment on ubuntu 14.04
 sudo apt-get install -y nodejs-legacy npm
 pushd front_end
-npm install
+npm run node-modules
 popd
 
 virtualenv env

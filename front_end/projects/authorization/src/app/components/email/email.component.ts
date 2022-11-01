@@ -1,17 +1,26 @@
 import {
-    Component, EventEmitter, Input, OnChanges, OnDestroy,
-    OnInit, Output, SimpleChanges, ViewChild
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild,
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
 
-import { AuthorizeStateType } from '../authorize.component';
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,12 +39,12 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Output() loginEmailChange = new EventEmitter<string>();
     @Input() emailProcess: Process;
     @Input() errorCode: string;
-    @Input() reactivate: () => Promise<any>;
+    @Input() reactivate: () => Promise<void>;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendEmail: any;
+    sendEmail: () => void;
     isMobile = true;
-    @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
+    @ViewChild('emailForm', { static: false }) emailForm: NgForm;
     header: string;
     subHeader: string;
     templateText: {
@@ -44,6 +53,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             subHeader?: string
         }
     };
+    emailAutoFilled = false;
 
     constructor(
         language: NxLanguageProviderService,
@@ -54,7 +64,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.CONFIG = configService.getConfig();
     }
 
-    private handleErrors (changes) {
+    private handleErrors(changes: NgChanges<NxAuthorizeEmailComponent>): void {
         const { email } = this.emailForm?.controls;
         if (!email) {
             return;
@@ -68,12 +78,15 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.setupText();
         this.setText();
         this.sendEmail = () => {
+            if (this.emailAutoFilled && this.errorCode) {
+                this.emailForm?.controls?.email.setErrors(null);
+            }
             this.loginEmailChange.emit(this.loginEmail);
         };
         this.isMobile = this.deviceService.isMobile();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeEmailComponent>): void {
         if (changes.errorCode?.currentValue) {
             // Handles when form isn't ready yet.
             if (!this.emailForm?.controls?.email) {
@@ -88,15 +101,20 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         if (!changes.clientType?.firstChange) {
             this.setText();
         }
+
+        const email = changes?.loginEmail;
+        if (email?.firstChange && !email.previousValue && email.currentValue) {
+            this.emailAutoFilled = true;
+        }
     }
 
     ngOnDestroy(): void {}
 
-    setupNonCloudSystem() {
+    setupNonCloudSystem(): void {
         // TODO: waiting for new setup wizard
     }
 
-    setupText() {
+    setupText(): void {
         const auth = this.LANG.authorize;
         const connect = {
             header: auth.connectHeader(),
@@ -119,7 +137,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         };
     }
 
-    setText() {
+    setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
     }

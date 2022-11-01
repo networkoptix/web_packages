@@ -1,0 +1,83 @@
+@use "../../../../styles/typography";
+@use "../../../../styles/mixins" as *;
+
+:host {
+    .system-tile {
+        display             : flex;
+        flex-direction      : row;
+        align-items         : center;
+        height              : 52px;
+        padding             : 6px;
+        border-radius       : 4px;
+        cursor              : pointer;
+        border              : 1px solid transparent;
+        -webkit-user-select : none;
+        -moz-user-select    : none;
+        -ms-user-select     : none;
+        user-select         : none;
+        
+        &:hover {
+            background-color : var(--system-tile-hover-bg);
+        }
+        
+        &:active {
+            background-color : var(--system-tile-active-bg);
+        }
+        
+        &.selected {
+            background : var(--system-tile-selected-bg) !important;
+            border     : 1px solid var(--system-tile-selected-bg) !important;
+        }
+        
+        .system-status {
+            width       : 36px;
+            height      : 100%;
+            flex-shrink : 0;
+            position    : relative;
+            
+            svg {
+                position : absolute;
+                top      : -3px;
+                left     : 0;
+                height   : 24px;
+                width    : 24px;
+                
+                .st0, .system-offline-st0 {
+                    fill : var(--system-tile-name-color);
+                }
+    
+                .system-offline-st1 {
+                    fill : var(--system-tile-icon-offline-color);
+                }
+            }
+        }
+        
+        .system-info {
+            display         : flex;
+            width           : calc(100% - 40px);
+            flex-shrink     : 1;
+            flex-grow       : 1;
+            flex-direction  : column;
+            justify-content : center;
+            
+            .system-name {
+                @include ellipsis;
+                @include typography.medium14nocolor;
+                color : var(--system-tile-name-color);
+                max-width   : 100%;
+                line-height : 24px;
+            }
+            
+            .owner {
+                @include ellipsis;
+                @include typography.regular11nocolor;
+                color : var(--system-tile-owner-color);
+                line-height : 16px;
+            }
+            
+        }
+    }
+}
+
+
+

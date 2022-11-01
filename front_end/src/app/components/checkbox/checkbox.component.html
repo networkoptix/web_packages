@@ -1,0 +1,84 @@
+<label
+    class="nx-checkbox"
+    [attr.disabled]="disabled ? '' : null"
+    [ngClass]="color"
+>
+    <input
+        type="checkbox"
+        [id]="componentId"
+        [attr.checked]="value ? '' : null"
+        aria-describedby="description"
+        (click)="changeState($event)"
+    />
+
+    <span
+        class="tick"
+        [ngClass]="state"
+    >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <polygon
+                class="box"
+                points="6.523 6.42 6.523 17.42 17.523 17.52 17.523 6.42"
+                fill="none"
+                stroke="#698796"
+            />
+            <polyline
+                class="box"
+                points="16.523 6.42 6.523 6.42 6.523 17.42 17.523 17.52 17.523 12.42"
+                fill="none"
+                stroke="#698796"
+            />
+            <polyline
+                class="tick"
+                points="9.026 11.343 12.026 14.343 19.526 6.843"
+                fill="none"
+                stroke="#2592C3"
+            />
+            <line
+                class="tristate"
+                x1="9.026"
+                y1="11.87"
+                x2="15.026"
+                y2="11.87"
+                fill="none"
+                stroke="#698796"
+            />
+            <rect
+                class="focus"
+                x="2"
+                y="2"
+                width="20"
+                height="20"
+                rx="3"
+                stroke="#2592C3"
+                stroke-width="2"
+                fill="none"
+            />
+            <rect
+                class="focus outer"
+                x="1"
+                y="1"
+                width="22"
+                height="22"
+                rx="4"
+                stroke="#2592C3"
+                stroke-width="2"
+                fill="none"
+            />
+        </svg>
+    </span>
+    <span
+        *ngIf="labelText"
+        class="labelText"
+        >{{ labelText }}</span
+    >
+    <span
+        hidden
+        id="description"
+        >{{ ariaText }}</span
+    >
+</label>

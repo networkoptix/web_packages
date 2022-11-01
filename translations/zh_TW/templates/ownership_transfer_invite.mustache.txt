@@ -1,0 +1,7 @@
+您好, {{message.user_full_name}}
+
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) 邀請您成為 {{message.system_name}}的系統所有者。
+
+Log in and process the request on the System Settings page
+
+{{config.portal_url}}/systems/{{message.system_id}}

@@ -1,0 +1,156 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/_mixins";
+@use "../../styles/bootstrap_utils" as bootstrap;
+
+.nx-search {
+    .btn-arrow {
+        .arrow-flip svg-icon {
+            bottom: 11px;
+            left: 12px;
+            width: 20px;
+        }
+        &.selected .arrow-flip svg-icon {
+            bottom : 9px;
+        }
+    }
+
+    .search-group {
+        flex-shrink : 20;
+        position    : relative;
+        width       : 100%;
+
+        .icon-search {
+            position : absolute;
+            top  : 10px;
+            left : 16px;
+        }
+
+        .search-input {
+            @include typography.regular15nocolor;
+            height        : 40px !important;
+            padding-left  : 48px !important;
+            padding-right : 40px;
+            border-radius : 2px;
+            //border        : 1px solid $light6;
+            background    : transparent !important;
+            outline       : none;
+            box-shadow    : none;
+            caret-color   : var(--input-color) !important;
+
+            &:focus::placeholder {
+                color: transparent !important;
+            }
+
+            &:placeholder-shown {
+                @include mixins.placeholder();
+            }
+
+            // defined in inputs
+            //&:active, &:focus, &.non-empty {
+            //    border : 1px solid var(--brand-core) !important;
+            //}
+
+            &:hover:not(:active):not(:focus) {
+                border : 1px solid $light8;
+            }
+    
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active {
+                -webkit-text-fill-color : var(--input-color);
+                -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+            }
+        }
+
+        // overwrite input style by layout
+        &.search {
+            .icon-search {
+                top  : 6px;
+                left : 12px;
+            }
+
+            .search-input {
+                @include typography.regular14nocolor;
+                height : 32px !important;
+                padding-left: 40px !important;
+                padding-right: 40px !important;
+            }
+
+            .search-clear {
+                width       : 36px !important;
+                height      : 32px !important;
+                line-height : 32px !important;
+            }
+        }
+
+        .search-clear {
+            position    : absolute;
+            right       : 0;
+            top         : 0;
+            bottom      : 0;
+            line-height : 40px;
+            margin      : auto;
+            cursor      : pointer;
+            width       : 40px;
+            height      : 40px !important;
+            padding     : 0 !important;
+        }
+    }
+
+    .filter-label {
+        margin-right: 2px; // prevent flex overlap with next button's border
+        white-space: nowrap;
+
+        &:hover {
+            //color: $light1;
+        }
+    }
+
+    .drop-container {
+        max-width: 992px;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            flex-direction : column !important;
+        }
+
+        .drop {
+            padding: 0 1rem 0 0;
+            min-width: 200px;
+            max-width: 300px;
+
+            @include bootstrap.media-breakpoint-down(sm) {
+                padding-right: 0;
+                max-width: 100%;
+            }
+
+            &:last-of-type {
+                padding-right: 0;
+            }
+
+            &.large {
+                min-width: 300px;
+            }
+
+            .dropdown .dropdown-toggle span {
+                @include mixins.ellipsis;
+            }
+        }
+    }
+
+    .search-tags {
+        margin-bottom: 4px !important;
+    }
+
+    .pagination {
+        flex-wrap : wrap;
+
+        li {
+            margin     : 0 4px 4px 0;
+            cursor     : pointer;
+            text-align : center;
+            width      : auto;
+        }
+    }
+}

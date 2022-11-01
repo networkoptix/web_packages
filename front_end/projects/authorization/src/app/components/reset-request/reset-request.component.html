@@ -1,24 +1,48 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header #resetRequestHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+<header
+    #resetRequestHeader
+    [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }"
+>
     <div class="for-small">
-        <button *ngIf="smallView" class="btn mobile-back-button" type="button" (click)="goBack()">
-            <svg-icon nx-add-svg-src
+        <button
+            *ngIf="smallView"
+            class="btn mobile-back-button"
+            type="button"
+            (click)="goBack()"
+        >
+            <svg-icon
+                nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
-                [applyClass]="true"></svg-icon>
+                [svgStyle]="{ 'width.px': '36', 'height.px': '36' }"
+                [applyClass]="true"
+            ></svg-icon>
         </button>
         <h3 class="authorize-header">{{ LANG.authorize.passResetHeader() }}</h3>
     </div>
 </header>
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
-    [ngStyle]="{ 'height': 'calc(100% - ' + resetRequestHeader.offsetHeight + 'px)' }">
-    <form #resetPasswordForm="ngForm" name="resetPasswordForm">
+<main
+    [ngClass]="{
+        'main-w': viewType === 'web',
+        'main-d': viewType === 'desktop',
+        'main-m': viewType === 'mobile'
+    }"
+    [ngStyle]="{ height: 'calc(100% - ' + resetRequestHeader.offsetHeight + 'px)' }"
+>
+    <form
+        #resetPasswordForm="ngForm"
+        name="resetPasswordForm"
+    >
         <ng-container *ngIf="!confirm; else resetConfirm">
-            <label for="authorizeEmail" translate>Email</label>
+            <label
+                for="authorizeEmail"
+                translate
+                >Email</label
+            >
             <input
                 type="email"
                 id="resetPasswordEmail"
                 name="resetPasswordEmail"
+                class="fs-mask form-control"
                 [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) }"
                 [(ngModel)]="resetEmail"
                 [disabled]="resetRequestProcess.processing"
@@ -26,31 +50,78 @@
                 [pattern]="CONFIG.credentialsValidation.emailRegex"
                 required
                 email
-                nxFocusMe>
+                nxFocusMe
+            />
             <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
-                <p *ngIf="email.errors.required" class="error-label mt-2 mb-0" translate>Enter email</p>
-                <p *ngIf="email.errors.email || email.errors.pattern" class="error-label mt-2 mb-0" translate>Invalid email</p>
-                <p *ngIf="email.errors.accountDoesNotExist" class="error-label mt-2 mb-0" translate>Account does not exist.</p>
+                <p
+                    *ngIf="email.errors.required"
+                    class="error-label mt-2 mb-0"
+                    translate
+                >
+                    Enter email
+                </p>
+                <p
+                    *ngIf="email.errors.email || email.errors.pattern"
+                    class="error-label mt-2 mb-0"
+                    translate
+                >
+                    Invalid email
+                </p>
+                <p
+                    *ngIf="email.errors.accountDoesNotExist"
+                    class="error-label mt-2 mb-0"
+                    translate
+                >
+                    Account does not exist.
+                </p>
             </ng-container>
         </ng-container>
         <ng-template #resetConfirm>
             <div class="email-sent">
-                <svg-icon nx-add-svg-src
-                    [src]="CONFIG.icons.dirSectionPlaceholder + 'mail' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
-                    [svgStyle]="{'width.px': '280', 'height.px': '120'}"
-                    [applyClass]="true"></svg-icon>
-                <h3 class="authorize-header" translate>We've sent you an email</h3>
-                <p translate>Please follow instructions there to reset your password and return here to log in again.</p>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="
+                        CONFIG.icons.dirSectionPlaceholder +
+                        'mail' +
+                        (viewType === 'web' ? '' : '_desktop') +
+                        '_placeholder.svg'
+                    "
+                    [svgStyle]="{ 'width.px': '280', 'height.px': '120' }"
+                    [applyClass]="true"
+                ></svg-icon>
+                <h3
+                    class="authorize-header"
+                    translate
+                >
+                    We've sent you an email
+                </h3>
+                <p translate>
+                    Please follow instructions there to reset your password and return here to log
+                    in again.
+                </p>
             </div>
         </ng-template>
     </form>
-    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+    <footer
+        [ngClass]="{
+            'footer-w': viewType === 'web',
+            'footer-d': viewType === 'desktop',
+            'footer-m': viewType === 'mobile'
+        }"
+    >
         <div class="right w-100">
-            <button class="btn text-button" type="button" (click)="goBack()" *ngIf="!smallView">
-                <svg-icon nx-add-svg-src
+            <button
+                class="btn text-button"
+                type="button"
+                (click)="goBack()"
+                *ngIf="!smallView"
+            >
+                <svg-icon
+                    nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                    [svgStyle]="{'width.px': '24', 'height.px': '20'}"
-                    [applyClass]="true"></svg-icon>
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '20' }"
+                    [applyClass]="true"
+                ></svg-icon>
                 <span translate>Back</span>
             </button>
             <nx-process-button
@@ -59,7 +130,8 @@
                 [form]="resetPasswordForm"
                 buttonText="{{ 'Reset Password' | translate }}"
                 [buttonDisabled]="!!resetPasswordEmail?.errors"
-                [process]="resetRequestProcess">
+                [process]="resetRequestProcess"
+            >
             </nx-process-button>
             <ng-template #loginButton>
                 <button
@@ -67,7 +139,9 @@
                     type="submit"
                     (click)="setCurrentState.emit('password')"
                     translate
-                >Log In</button>
+                >
+                    Log In
+                </button>
             </ng-template>
         </div>
     </footer>

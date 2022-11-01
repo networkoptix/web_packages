@@ -1,0 +1,51 @@
+<style>
+    .color-def {
+        font-size: 1rem;
+    }
+    .color-def div {
+        height: 16px;
+        width: 16px;
+        border: 1px solid gray;
+        float: left;
+        margin-right: 8px;
+        margin-top: 4px;
+    }
+
+    .colorsHeader {
+        font-size: 1rem;
+        border-bottom: 1px solid gray;
+    }
+</style>
+
+<div
+    class="content-block"
+    style="padding: 2rem"
+>
+    <div class="row colorsHeader">
+        <div class="col-4">Variable</div>
+        <div class="col-3">Light</div>
+        <div class="col-3">Dark</div>
+    </div>
+    <div
+        class="row"
+        *ngFor="let color of theme"
+    >
+        <div class="col-4">
+            <div class="color-def">
+                {{ color.name }}
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="color-def">
+                <div [style]="{ 'background-color': color.light }"></div>
+                {{ color.light }}
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="color-def">
+                <div [style]="{ 'background-color': color.dark }"></div>
+                {{ color.dark }}
+            </div>
+        </div>
+    </div>
+</div>

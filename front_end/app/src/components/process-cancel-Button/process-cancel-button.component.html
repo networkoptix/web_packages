@@ -1,6 +1,0 @@
-<button type="reset"
-        class="min-w-80 btn btn-default {{customClass}}"
-        (mousedown)="handleClick()">
-    <ng-container *ngIf="!process?.processing && showDiscard; else cancel">{{'Discard' | translate }}</ng-container>
-    <ng-template #cancel>{{'Cancel' | translate}}</ng-template>
-</button>

@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "关于{{{message.asset}}{{/message.asset}} 摄像机页面反馈{{#message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "Ownership transfer for {{message.system_name}}"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}:{{{message.asset}}有新版本可供检视"
   },

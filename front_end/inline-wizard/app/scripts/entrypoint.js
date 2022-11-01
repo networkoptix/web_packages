@@ -5,7 +5,6 @@ import 'angular-resource';
 import 'angular-sanitize';
 import 'angular-ui-bootstrap';
 
-import 'hint.css/hint.min.css';
 import '../styles/nativeclient.scss';
 import '../styles/webadminclient.scss';
 

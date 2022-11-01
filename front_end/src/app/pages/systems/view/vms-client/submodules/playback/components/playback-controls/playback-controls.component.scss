@@ -1,0 +1,49 @@
+:host {
+    display  : inline-block;
+    width    : 63px;
+    overflow : hidden;
+    position : relative;
+    z-index  : 2;
+    
+    > .playback-control-button {
+        text-align       : center;
+        border-left      : 1px solid var(--border-color);
+        position         : absolute;
+        left             : 0;
+        top              : 0;
+        bottom           : 0;
+        right            : 0;
+        
+        display          : flex;
+        flex-direction   : column;
+        justify-content  : center;
+        align-items      : center;
+        
+        color            : var(--control-color);
+        background-color : var(--view-bg);
+        transition       : all .2s ease-in-out;
+        
+        svg-icon svg path {
+            fill    : var(--timeline-control-color);
+            opacity : 0.5;
+        }
+        
+        &.enabled {
+            cursor  : pointer;
+            color   : var(--control-enabled-color);
+            z-index : 1;
+            
+            svg-icon svg path {
+                opacity : 1;
+            }
+            
+            &:hover {
+                background-color : var(--control-hoved-bg);
+            }
+            
+            &:active {
+                background-color : var(--control-active-bg) !important;
+            }
+        }
+    }
+}

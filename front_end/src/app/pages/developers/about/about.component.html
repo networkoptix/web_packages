@@ -1,0 +1,74 @@
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+<ng-template
+    #intro
+    let-intro="intro"
+>
+    <div class="about-heading">
+        <h1
+            *ngIf="intro.url; else noLinkHeader"
+            [routerLink]="intro.url"
+            class="heading-link"
+        >
+            {{ intro.title }}
+        </h1>
+        <ng-template #noLinkHeader>
+            <h1>{{ intro.title }}</h1>
+        </ng-template>
+        <ng-container *ngIf="intro.asset?.shortDescription">
+            <p [innerHTML]="intro.asset.shortDescription || '' | safe: 'html'"></p>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-container *ngIf="path === '/docs/' + baseName">
+    <ng-container *ngIf="aboutStructure; else preloader">
+        <ng-container
+            *ngFor="let section of aboutStructure"
+            [ngSwitch]="section.template"
+        >
+            <ng-container *ngSwitchCase="aboutCases.INTRO">
+                <ng-container
+                    *ngTemplateOutlet="intro; context: { intro: section.node }"
+                ></ng-container>
+            </ng-container>
+            <nx-capabilities
+                *ngSwitchCase="aboutCases.CAPABILITIES"
+                [capabilitiesNode]="section.node"
+            ></nx-capabilities>
+            <nx-new-capabilities
+                *ngSwitchCase="aboutCases.DEV_CAPABILITIES"
+                [devCapabilitiesNode]="section.node"
+            ></nx-new-capabilities>
+            <nx-get-started
+                *ngSwitchCase="aboutCases.GET_STARTED"
+                [getStartedNode]="section.node"
+            ></nx-get-started>
+            <nx-dev-tools
+                *ngSwitchCase="aboutCases.DEV_TOOLS"
+                [devToolsNode]="section.node"
+                [title]="section.node.displayName || section.node.title || section.node.asset.title"
+            ></nx-dev-tools>
+            <nx-integrations
+                *ngSwitchCase="aboutCases.INTEGRATIONS"
+                [integrationsNode]="section.node"
+            ></nx-integrations>
+            <nx-support
+                *ngSwitchCase="aboutCases.SUPPORT"
+                [supportNode]="section.node"
+            ></nx-support>
+            <nx-supported-tech
+                *ngSwitchCase="aboutCases.SUPPORTED_TECH"
+                [supportedTechNode]="section.node"
+            ></nx-supported-tech>
+            <nx-error-state
+                *ngSwitchDefault
+                [errors]="getInvalidTemplateError(section)"
+            ></nx-error-state>
+        </ng-container>
+        <div class="mx-3">
+            <nx-footer [center]="true"></nx-footer>
+        </div>
+    </ng-container>
+</ng-container>
+<router-outlet></router-outlet>

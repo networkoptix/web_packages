@@ -1,0 +1,14 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/bootstrap_utils" as bootstrap;
+
+.layout-wrapper {
+    height: calc(100% - 32px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.select-wrapper {
+    color: var(--brand-core);
+}

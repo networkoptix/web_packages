@@ -1,0 +1,494 @@
+@use "../styles/typography";
+@use "../../styles/theme_variables_common" as *;
+@use "../styles/mixins";
+@use "bootstrap_utils" as bootstrap;
+@forward "../../styles/theme_variables_common";
+
+@mixin button {
+    font-family     : $font-family-medium;
+    //color           : $font-color-medium;
+    font-size       : $h6-font-size !important;
+    height          : 2rem !important;
+    border-radius   : $border-radius-base !important;
+    font-weight     : inherit !important;
+    padding         : 0 1rem !important;
+    border          : none;
+    display         : flex !important;
+    align-items     : center !important;
+    transition      : none !important;
+    max-width       : 278px;
+    text-overflow   : ellipsis;
+    overflow        : hidden;
+    line-height     : 1rem !important;
+    justify-content : center;
+    text-decoration : none;
+    box-shadow      : none;
+
+    &:hover,
+    &:active,
+    &.active,
+    &:focus,
+    &.focus {
+        box-shadow : none;
+    }
+
+    &:disabled {
+        opacity : 0.3;
+
+        & * {
+            pointer-events : none;
+        }
+    }
+}
+
+// Overwrite Boostrap section ************
+button, .btn {
+    @include button;
+}
+
+.btn.btn-big {
+    height : 40px !important;
+}
+
+.btn.btn-default {
+    color            : var(--btn-default-color) !important;
+    background-color : var(--btn-default-bg) !important;
+    box-shadow       : var(--btn-default-shadow);
+    font-family      : $font-family-medium;
+    
+    &.svg-icon svg-icon svg .st0 {
+        fill   : var(--btn-default-color);
+        stroke : none;
+    }
+    
+    &.has-icon {
+        position     : relative;
+        padding-left : 36px !important;
+    
+        svg-icon {
+            position : absolute;
+            left     : 6px;
+            
+            svg .st0 {
+                fill : var(--btn-default-color) !important;
+            }
+        }
+    }
+    
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : var(--btn-default-hover-bg) !important;
+        box-shadow       : var(--btn-default-hover-shadow);
+    }
+
+    &:active,
+    &.active {
+        color : var(--btn-default-active-color) !important;
+        background-color : var(--btn-default-active-bg) !important;
+        box-shadow       : var(--btn-default-active-shadow) !important;
+    
+        &.has-icon svg-icon svg .st0 {
+            fill : var(--btn-default-active-color) !important;
+        }
+    }
+}
+
+.btn.btn-dropdown-toggle {
+    color            : var(--btn-dropdown-toggle-color) !important;
+    background-color : var(--btn-dropdown-toggle-bg);
+    box-shadow       : var(--btn-dropdown-toggle-shadow-color);
+    font-family      : $font-family-medium;
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : var(--btn-dropdown-toggle-hover-bg);
+        box-shadow       : var(--btn-dropdown-toggle-hover-shadow);
+    }
+
+    &:active,
+    &.active {
+        background-color : var(--btn-dropdown-toggle-active-bg);
+        box-shadow       : var(--btn-dropdown-toggle-active-shadow) !important;
+    }
+    
+    svg-icon svg g polyline.st0 {
+        stroke : var(--btn-dropdown-toggle-color);
+        fill : none;
+    }
+}
+
+.btn.btn-primary {
+    color            : var(--btn-primary-color) !important;
+    background-color : var(--btn-primary-bg) !important;
+    box-shadow       : var(--btn-primary-shadow);
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : var(--btn-primary-hover-bg) !important;
+        box-shadow       : var(--btn-primary-hover-shadow);
+    }
+
+    &:focus,
+    &.focus {
+
+    }
+
+    &:active,
+    &.active {
+        color            : var(--btn-primary-active-color) !important;
+        background-color : var(--btn-primary-active-bg) !important;
+        box-shadow       : var(--btn-primary-active-shadow) !important;
+    }
+    
+    &.disabledInProgress {
+        opacity: 1;
+    }
+    
+    &.svg-icon svg-icon svg .st0 {
+        fill   : var(--btn-primary-color);
+        stroke : var(--btn-primary-color);
+    }
+}
+
+.btn.btn-danger {
+    color            : var(--btn-danger-color) !important;
+    background-color : var(--btn-danger-bg) !important;
+    border-color     : transparent !important;
+    box-shadow       : inset 0 -1px 0 0 var(--btn-danger-shadow) !important;
+    
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : var(--btn-danger-hover-bg) !important;
+        box-shadow       : inset 0 -1px 0 0 var(--btn-danger-hover-shadow);
+    }
+    
+    &:focus,
+    &.focus {
+    
+    }
+    
+    &:active,
+    &.active {
+        background-color : var(--btn-danger-active-bg) !important;
+        box-shadow       : inset 0 1px 0 0 var(--btn-danger-active-shadow) !important;
+    }
+}
+
+.btn.btn-lg {
+    padding       : 10px 16px;
+    font-size     : 15px;
+    line-height   : 1.3333333;
+    border-radius : 4px;
+}
+
+.btn.btn-toggle {
+    color            : $dark9;
+    background-color : $light4;
+    max-width        : 180px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+
+    input {
+        position : absolute;
+        opacity  : 0;
+    }
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : $light5;
+    }
+
+    &:active,
+    &.active {
+        background-color : $light6 !important;
+    }
+
+    &.selected {
+        color            : $light1;
+        background-color : $light16 !important;
+    }
+}
+
+.btn.btn-menu {
+    height           : 28px;
+    color            : var(--btn-clear-color);
+    border           : 1px solid $light10 !important;
+    background-color : var(--btn-clear-bg);
+    max-width        : 180px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+    border-radius    : $border-radius-base !important;
+}
+
+.btn.btn-clear {
+    color            : var(--btn-clear-color);
+    background-color : var(--btn-clear-bg);
+    max-width        : 215px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+    border-radius    : $border-radius-base !important;
+    
+    svg-icon svg .st0 {
+        stroke : var(--btn-clear-color);
+    }
+    
+    input {
+        position : absolute;
+        opacity  : 0;
+    }
+
+    .glyphicon-close {
+        opacity : 1 !important;
+    }
+
+    &:hover:not([disabled]):not(.disabled) {
+        color : var(--btn-clear-hover-color);
+        background-color : var(--btn-clear-hover-bg);
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-clear-hover-color);
+        }
+    }
+
+    &:active,
+    &.active {
+        color : var(--btn-clear-active-color);
+        background-color : var(--btn-clear-active-bg) !important;
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-clear-active-color);
+        }
+    }
+}
+
+// (END) Overwrite Boostrap section ******
+
+.btn-back {
+    padding-left : 0 !important;
+
+    svg-icon {
+        margin : 0 8px;
+    
+        svg .st0 {
+            stroke : var(--btn-default-color) !important;
+        }
+    }
+    
+    &:hover {
+        svg-icon svg .st0 {
+            stroke : var(--btn-default-hover-color) !important;
+        }
+    }
+    
+    &:active {
+        svg-icon svg .st0 {
+            fill : var(--btn-default-active-color) !important;
+        }
+    }
+}
+
+.btn-next {
+    svg-icon {
+        width       : 24px;
+        margin-left : 8px;
+        
+        svg .st0 {
+            stroke : $light1;
+            fill   : $light1;
+        }
+    }
+}
+
+.btn-dropdown-toggle {
+    background-color : transparent;
+}
+
+.btn-tag {
+    @include typography.regular13nocolor;
+    color : var(--btn-tag-color);
+    font-weight      : 400;
+    white-space      : nowrap;
+    background-color : var(--btn-tag-bg);
+    max-width        : none;
+
+    &:hover {
+        //color            : $light16;
+        //background-color : $light5;
+    }
+
+    &:active {
+        //color            : $light16;
+        //background-color : $light6;
+    }
+    
+    &-selected {
+        @include typography.regular13nocolor;
+        @include mixins.badge-selected(
+            var(--btn-tag-selected-bg) !important,
+            var(--btn-tag-selected-hover-bg) !important,
+            var(--btn-tag-selected-active-bg) !important
+        );
+        color : var(--btn-tag-selected-color) !important;;
+        padding   : 0 40px 0 12px !important;
+        position  : relative;
+        max-width : none;
+        cursor    : default !important;
+    
+        & > span {
+            margin  : 0;
+            padding : 0;
+        }
+    
+        &:hover {
+            //color : $light1;
+        }
+    
+        .close-button {
+            position        : absolute;
+            right           : 0;
+            bottom          : 0;
+            border-radius   : 2px;
+            display         : flex;
+            justify-content : center;
+            align-items     : center;
+            height          : 40px;
+            width           : 40px;
+            cursor          : pointer;
+        
+            .tag-close-icon {
+                margin : 0 !important;
+            }
+        }
+        
+        svg-icon svg g polyline.st0 {
+            stroke: var(--btn-tag-selected-color) !important;
+            fill: none;
+        }
+    }
+}
+
+.btn.btn-arrow {
+    color : var(--btn-arrow-color);
+    background-color : var(--btn-arrow-bg);
+    position      : relative;
+    padding-left  : 40px !important;
+    padding-right : 12px !important;
+    max-width     : none;
+    
+    &:hover {
+        color            : var(--btn-arrow-hover-color);
+        background-color : var(--btn-arrow-hover-bg);
+    }
+    
+    &.has-icon {
+        padding-left : 20px;
+    }
+
+    & > span {
+        margin  : 0;
+        padding : 0 1px; // flex messes up caption width
+    }
+
+    &.selected {
+        color            : var(--btn-arrow-selected-color);
+        background-color : var(--btn-arrow-selected-bg);
+    }
+    
+    .arrow-flip svg-icon svg g polyline.st0 {
+        stroke: var(--btn-arrow-selected-color);
+        fill : none;
+    }
+}
+
+.btn-text {
+    text-decoration : none;
+
+    svg-icon svg {
+        width  : 20px;
+        height : 20px;
+        
+        .st0 {
+            stroke : var(--btn-text-color);
+        }
+    }
+
+    &.has-icon {
+        padding-left : 25px !important;
+        position     : relative;
+
+        svg {
+            path {
+                fill : var(--btn-text-color);
+            }
+        }
+    }
+
+    span {
+        @include typography.regular13nocolor;
+        color : var(--btn-text-color);
+        &.close {
+            left   : 4px;
+            width  : 16px;
+            height : 16px;
+
+            &:before, &:after {
+                background-color : var(--btn-text-color);
+            }
+        }
+    }
+
+    &:hover {
+        text-decoration : none;
+
+        span {
+            color           : var(--btn-text-hover-color) !important;
+            text-decoration : none;
+
+            &.close {
+                &:before, &:after {
+                    background-color : var(--btn-text-hover-color);
+                }
+            }
+        }
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-text-hover-color);
+        }
+    }
+
+    &:active {
+        span {
+            color : var(--btn-text-active-color) !important;
+
+            &.close {
+                &:before, &:after {
+                    color : var(--btn-text-active-color) !important;
+                }
+            }
+        }
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-text-active-color);
+        }
+    }
+}
+
+.btn-collapse {
+    @include bootstrap.media-breakpoint-down(md) {
+        padding : 0 .75rem;
+    }
+
+    .glyphicon {
+        display : block;
+        margin  : 0;
+        @include bootstrap.media-breakpoint-up(md) {
+            display : none;
+        }
+    }
+
+    .btn-caption {
+        display : none;
+        @include bootstrap.media-breakpoint-up(md) {
+            display : block;
+        }
+    }
+}
+

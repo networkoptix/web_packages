@@ -1,0 +1,65 @@
+<nx-pre-loader
+    type="page"
+    *ngIf="!systems"
+></nx-pre-loader>
+
+<div
+    *ngIf="systems && !hasOneSystem"
+    class="auth-visible"
+    [ngClass]="{ 'm-2': showCompact, container: !showCompact }"
+>
+    <nx-no-systems *ngIf="!systems.length"></nx-no-systems>
+    <ng-container *ngIf="systems.length">
+        <div
+            class="search-block row border-bottom"
+            *ngIf="!disableSearch && showSearch"
+        >
+            <nx-search
+                class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+                [ngModel]="search"
+                (ngModelChange)="setSearch($event)"
+                layout="compact"
+                placeholder="Search systems"
+                instant
+            ></nx-search>
+        </div>
+        <div *ngIf="systems.length">
+            <div
+                *ngIf="!showCompact"
+                class="p-0 mb-3 mt-3"
+            >
+                <h1 class="old-h12">
+                    <span *ngIf="search.value">{{
+                        LANG.systemsCount({ count: filteredSystems.length })
+                    }}</span>
+                    <span
+                        *ngIf="!search.value"
+                        translate
+                        >Systems</span
+                    >
+                </h1>
+            </div>
+            <div class="row">
+                <ng-container *ngFor="let system of filteredSystems; trackBy: trackItem">
+                    <div
+                        *ngIf="!systemsToShow || systemsToShow.includes(system.id)"
+                        class="col-sm-12 mb-3 mb-lg-0"
+                        [ngClass]="{
+                            'col-lg-4 col-xl-3': size === 'full',
+                            'col-md-6': size !== 'compact',
+                            'col-12': size === 'compact'
+                        }"
+                    >
+                        <system-card
+                            [system]="system"
+                            [search]="search.value"
+                            [account]="account"
+                            [openSystem]="openSystem"
+                        ></system-card>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+    <nx-footer *ngIf="!showCompact && !show2faRequired"></nx-footer>
+</div>

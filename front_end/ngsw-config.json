@@ -4,8 +4,8 @@
   "assetGroups": [
     {
       "name": "app",
-      "installMode": "prefetch",
-      "updateMode": "prefetch",
+      "installMode": "lazy",
+      "updateMode": "lazy",
       "resources": {
         "files": [
           "/index.html",
@@ -24,7 +24,7 @@
       "resources": {
         "files": [
           "/assets/**",
-          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+          "/*.(svg|cur|jpg|png|webp|gif|ani)"
         ]
       }
     }
@@ -38,18 +38,6 @@
         "/api/integrations",
         "/api/integration/**",
         "/api/documentation/**"
-      ],
-      "cacheConfig": {
-        "maxAge": "2h",
-        "maxSize": 100,
-        "timeout": "0u",
-        "strategy": "freshness"
-      }
-    },
-    {
-      "name": "apiFresh",
-      "urls": [
-        "/api/utils/language"
       ],
       "cacheConfig": {
         "maxAge": "2h",
@@ -80,6 +68,7 @@
     "!/admin/**",
     "!/cdb/**",
     "!/authorize",
-    "!/authorize/**"
+    "!/authorize/**",
+    "!/api/utils/language"
   ]
 }

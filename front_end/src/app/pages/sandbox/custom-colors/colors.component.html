@@ -1,0 +1,39 @@
+<style>
+    .color-def {
+        font-size: 1rem;
+    }
+    .color-def div {
+        height: 16px;
+        width: 16px;
+        border: 1px solid gray;
+        float: left;
+        margin-right: 8px;
+        margin-top: 4px;
+    }
+</style>
+
+<div
+    class="content-block"
+    style="padding: 2rem"
+>
+    <div class="row">
+        <div class="col-3">
+            <div
+                class="color-def"
+                *ngFor="let color of blue"
+            >
+                {{ color.name }} : {{ color.hex }}
+                <div [style]="{ 'background-color': color.hex }"></div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div
+                class="color-def"
+                *ngFor="let color of orange"
+            >
+                {{ color.name }} : {{ color.hex }}
+                <div [style]="{ 'background-color': color.hex }"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+@use "../styles/typography" as *;
+// @import '../../../app/styles/native-theme/theme_palette';
+// @import '../../../app/styles/custom/custom_palette';
+// @import '../../styles/theme_palette';
+// @use '../../styles/theme_variables_common' as variables;
+
+.nx-table {
+    table-layout  : auto;
+    white-space   : nowrap;
+    margin-bottom : 0;
+
+    thead {
+        background-color : var(--card-header-bg);
+        border-bottom    : 1px solid var(--border-color);
+
+        th {
+            @include medium13nocolor;
+            color : var(--card-header-text) !important;
+            //display        : inline-block;
+            white-space    : normal;
+            padding        : .5rem 0;
+            font-weight    : 500 !important;
+            text-transform : none;
+            overflow-wrap  : break-word;
+            cursor         : pointer;
+            border         : none;
+
+            &:first-of-type {
+                padding-left : .5rem;
+            }
+
+            &.table-title {
+                @include regular24dark9;
+
+                .text-placeholder {
+                    color : var(--text-placeholder-color);
+                    font-size : 1.25rem;
+                }
+            }
+
+            .caption {
+                position : relative;
+                height   : 2rem;
+
+                .sort-dir {
+                    top: 0;
+                    right    : auto;
+                    position : relative;
+                    bottom   : 0;
+
+                    &:after {
+                        content : " ";
+                    }
+
+                    &.asc {
+                        &:after {
+                            content : "+";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    tbody {
+        background-color: var(--card-body-bg);
+
+        tr {
+            //display: block;
+            height : rem(24px);
+
+            &:hover {
+                background-color: unset !important;
+                td {
+                    color      : var(--card-header-text) !important;;
+                    background : var(--table-row-hover-bg);
+                }
+            }
+
+            &.spacer {
+                height           : .5rem;
+                background-color : var(--card-body-bg);
+            }
+
+            td {
+                @include regular13nocolor;
+                color : var(--label-color) !important;
+                display        : table-cell;
+                vertical-align : middle;
+                padding        : rem(4px) 1rem rem(4px) 0;
+                line-height    : 1rem;
+                border         : none;
+
+                &:first-of-type {
+                    padding-left : .5rem;
+                }
+            }
+        }
+    }
+
+    &-header {
+        @include regular13dark9;
+        color : var(--card-header-text) !important;
+        padding          : 0.5rem 1rem;
+        background-color : var(--card-header-bg);
+        border           : 1px solid var(--border-color);
+        border-bottom    : none;
+        line-height      : 16px;
+        text-transform   : none;
+        overflow-wrap    : break-word;
+
+        .results {
+            @include medium13dark9;
+            font-weight : 500 !important;
+            line-height : 16px;
+        }
+    }
+}
+
+.table-wrapper {
+      overflow-x       : scroll;
+      box-shadow       : none;
+      border           : 1px solid var(--border-color);
+      background-color : var(--body-bg);
+
+    &::-webkit-scrollbar-track {
+        background-color : var(--scrollbar-thumb-border-color);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb-bg);;
+        border : 2px solid var(--scrollbar-thumb-border-color) !important;
+    }
+}

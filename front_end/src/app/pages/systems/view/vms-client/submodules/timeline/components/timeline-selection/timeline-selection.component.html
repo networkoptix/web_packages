@@ -1,0 +1,35 @@
+<div
+    #selectedRange
+    class="selected-range"
+    (mousedown)="selectedRangeMouseDownHandler($event)"
+    (dblclick)="selectedRangeDoubleClickHandler($event)"
+>
+    <div
+        class="left-draggable"
+        (mouseover)="leftEarMouseInOutHandler(true)"
+        (mouseout)="leftEarMouseInOutHandler(false)"
+        (mousedown)="leftEarMouseDownHandler($event)"
+    ></div>
+    <div
+        #leftEar
+        *ngIf="!hideLeftEar"
+        class="ear left"
+    >
+        <span class="date">{{ leftDate }}</span>
+        <span class="time">{{ leftTime }}</span>
+    </div>
+    <div
+        #rightEar
+        *ngIf="!hideRightEar"
+        class="ear right"
+    >
+        <span class="date">{{ rightDate }}</span>
+        <span class="time">{{ rightTime }}</span>
+    </div>
+    <div
+        class="right-draggable"
+        (mouseover)="rightEarMouseInOutHandler(true)"
+        (mouseout)="rightEarMouseInOutHandler(false)"
+        (mousedown)="rightEarMouseDownHandler($event)"
+    ></div>
+</div>

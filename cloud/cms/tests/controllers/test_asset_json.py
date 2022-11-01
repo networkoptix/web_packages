@@ -6,7 +6,7 @@ from cms.controllers.integration import make_integrations_json
 from cms.controllers.release_notes import RELEASE_NOTES, make_release_notes_json
 
 from cms.models import AssetCustomizationReview, AssetType, Context, DataStructure
-from cms.controllers.asset_json import REPLACEMENT_LINK, S3_LINK, generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, get_current_version, get_latest_ds_values
+from cms.controllers.asset_json import REPLACEMENT_LINK, S3_LINK, generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, get_current_version, generate_context_dicts_with_actual_values
 from conftest import generate_uuids
 from util.base_cache import BaseCache
 
@@ -143,7 +143,7 @@ class TestGenerateAssetStateDictionary:
         assert asset_dict['draft'] == True
 
 
-class TestGetLatestDsValues:
+class TestGenerateContextDictsWithActualValues:
     @pytest.fixture(autouse=True)
     def setup(self, db, mocker):
         self.datastructure_count = randint(3,10)
@@ -158,10 +158,10 @@ class TestGetLatestDsValues:
 
         self.datastructures = datastructures
         mocker.patch(
-            'cms.controllers.asset_json.find_actual_values',  return_value=self.mock_records)
+            'cms.controllers.asset_json.map_ds_attribute_to_actual_value',  return_value=self.mock_records)
 
     def test_success(self):
-        for context, context_dict in get_latest_ds_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
             assert context == self.context
             for key in context_dict:
                 id = int(key[:4])
@@ -177,7 +177,7 @@ class TestGetLatestDsValues:
         external_file.save()
         self.mock_records[external_file.id] = f"Test {S3_LINK} Test"
 
-        for context, context_dict in get_latest_ds_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
             for key in context_dict:
                 assert S3_LINK not in context_dict[key]
                 if key in [external_image.name, external_file.name]:
@@ -188,7 +188,7 @@ class TestGetLatestDsValues:
         private_ds.public = False
         private_ds.save()
 
-        for context, context_dict in get_latest_ds_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
             for key in context_dict:
                 assert key != private_ds.name
 
@@ -196,10 +196,11 @@ class TestGetLatestDsValues:
         blank_ds, multiselect_ds = self.datastructures[0:2]
         blank_id, multiselect_id = blank_ds.id, multiselect_ds.id
         multiselect_ds.type = DataStructure.DATA_TYPES.multiselect
+        multiselect_ds.meta_settings['options'] = {}
         multiselect_ds.save()
         self.mock_records[blank_id], self.mock_records[multiselect_id] = '', ''
 
-        for context, context_dict in get_latest_ds_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
             multiselect_ds_found = False
             for key in context_dict:
                 assert key != blank_ds.name

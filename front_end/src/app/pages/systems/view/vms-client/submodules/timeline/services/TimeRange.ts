@@ -1,0 +1,93 @@
+import { float, ms } from '@vms-client/utils/type-aliases';
+
+import { IrregularLengthInterval } from './canvas-renderer/ruler/intervals/IrregularLengthInterval';
+import { alignTimeStamp } from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';
+
+export class TimeRange {
+    constructor(
+        public start: ms,
+        public end: ms
+    ) {
+    }
+
+    public get duration(): ms {
+        return this.end - this.start;
+    }
+
+    public shift(offset: ms): void {
+        this.start += offset;
+        this.end += offset;
+    }
+
+    public moveStartTo(s: ms): void {
+        const duration = this.duration;
+        this.start = s;
+        this.end = s + duration;
+    }
+
+    public zoom(durationDelta: ms, offset: float = 0.5, limitingRange: TimeRange): void {
+        this.start += Math.round(durationDelta * offset);
+        this.end -= Math.round(durationDelta * (1.0 - offset));
+        if (this.start < limitingRange.start) {
+            this.start = limitingRange.start;
+        }
+        if (this.end > limitingRange.end) {
+            this.end = limitingRange.end;
+        }
+    }
+
+    public fitWithin(enclosingRange: TimeRange) {
+        const a = this.fitStart(enclosingRange, true);
+        const b = this.fitEnd(enclosingRange, true);
+        // console.log('fw', a, b)
+        return a || b;
+    }
+
+    public fitStart(enclosingRange: TimeRange, paranoid: boolean = false) {
+        if (this.start < enclosingRange.start) {
+            this.start = enclosingRange.start;
+            // console.log('fss')
+            return true;
+        }
+        if (paranoid && this.start > enclosingRange.end) {
+            this.start = enclosingRange.end;
+            // console.log('fse')
+            return true;
+        }
+        // console.log('fsf')
+        return false;
+    }
+
+    public fitEnd(enclosingRange: TimeRange, paranoid: boolean = false) {
+        if (this.end > enclosingRange.end) {
+            this.end = enclosingRange.end;
+            // console.log('fee')
+            return true;
+        }
+        if (paranoid && this.end < enclosingRange.start) {
+            this.end = enclosingRange.start;
+            // console.log('fes')
+            return true;
+        }
+        // console.log('fef')
+        return false;
+    }
+
+    public contains(t: ms) {
+        return this.start <= t && t <= this.end;
+    }
+
+    public clone() {
+        return new TimeRange(this.start, this.end);
+    }
+
+    public iterate(interval: IrregularLengthInterval, tzOffset: ms = 0): Array<ms> {
+        const start = alignTimeStamp(this.start + tzOffset, interval, 'left');
+        const end = alignTimeStamp(this.end + tzOffset, interval, 'right');
+        const result = [];
+        for (let i = start; i <= end; i = alignTimeStamp(i, interval, 'right')) {
+            result.push(i - tzOffset);
+        }
+        return result;
+    }
+}

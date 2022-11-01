@@ -7,20 +7,21 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     ViewChild,
     Inject,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
 
-import { AuthorizeStateType } from '../authorize.component';
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -42,7 +43,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         password: string;
         firstName: string;
         lastName: string;
-    }
+    };
 
     @Output() accountInfoChange = new EventEmitter<{
         email: string;
@@ -63,11 +64,11 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
-    weakPassword = null;
+    weakPassword: boolean = null;
     termsAndConditions = false;
 
     @Input() createAccountProcess: Process;
-    onCreateSubmit: any;
+    onCreateSubmit: () => void;
 
     @ViewChild('createAccountForm', { static: false }) createForm: NgForm;
 
@@ -99,13 +100,13 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeCreateAccountComponent>): void {
         if (changes.errorCode) {
             const eC = changes.errorCode.currentValue;
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });
         }
         if (changes.footerItems) {
-            changes.footerItems.currentValue.forEach((item: { name_raw: string, url: string }) => {
+            changes.footerItems.currentValue.forEach((item: { name: string, name_raw: string, url: string }) => {
                 if (item.name_raw === 'Terms') {
                     this.termsUrl = item.url;
                 }
@@ -118,10 +119,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     ngOnDestroy(): void {}
 
-    externalLinkForDesktop(relativePath: string) {
-        // @ts-ignore
+    externalLinkForDesktop(relativePath: string): false | undefined {
         if (this.window.nativeClient) {
-            // @ts-ignore
             nativeClient.openUrlInBrowser(relativePath);
             return false;
         }

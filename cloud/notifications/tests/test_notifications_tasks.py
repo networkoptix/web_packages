@@ -70,7 +70,7 @@ def test_send_email(mocker, db):
     message_html, message_text, subject, system_id, domain, *emails = [
         str(uuid4()) for _ in range(randint(10, 20))]
     expected_emails = [f'{email}@{domain}.com' for email in emails]
-    mocker.patch.object(System, 'users', return_value={'sharing': [{'accountEmail': target} for target in expected_emails]})
+    mocker.patch.object(cloud_api.System, 'users', return_value={'sharing': [{'accountEmail': target} for target in expected_emails]})
     attachments = emails
     expected_attachments = [
         {'filename': f'{attachment}.txt',

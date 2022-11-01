@@ -3,7 +3,8 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Systems Page Suite Setup
-    ${rand str}=   Generate Random String
+    Open browser and go to URL    ${ENV}
+    ${rand str}=   Generate Random String      length=5
     ${owner}=   Register and activate account with random email    Main    Owner    ${base password}
     ${system}=   Create Base System    systems_page_main_${rand str}   add users=True    owner=${owner}
     Set Suite Variable    ${system}
@@ -29,7 +30,11 @@ Systems Page Suite Setup
     Set Suite Variable    ${no sys user}
     Sleep    30
 
-    Open browser and go to URL    ${ENV}
+    Go to    ${ENV}
+
+Systems Page Test Setup
+    QA Video Recording Start
+    Common Restart Logout    ${ENV}
 
 Systems Page Suite Teardown
     FOR    ${sys}    IN    @{offline systems}    ${system}    ${extra system}

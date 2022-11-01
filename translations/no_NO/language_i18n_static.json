@@ -1,17 +1,18 @@
 {
-    "language": "no_NO",
+    "language": "en_US",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
+    "Administration": "Administrasjon",
     "All Servers": "Alle servere",
     "Download %VMS_NAME%": "Last ned %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "For utviklere",
+    "Integrations (β)": "Integrasjoner (β)",
     "Privacy": "Personvern",
     "Support": "Brukerstøtte",
     "Terms": "Vilkår",
     "Developers Console": "Utviklerkonsoll",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Kontroller at den angitte serveren er online, og prøv igjen."
     },
     "alarmTypes": {
         "Servers": "Servere",
@@ -20,7 +21,7 @@
         "Network Interfaces": "Nettverksgrensesnitt"
     },
     "alarmLevels": {
-        "offline": "Frakoblet",
+        "offline": "Offline",
         "error": "Feil",
         "warning": "Advarsler"
     },
@@ -47,7 +48,7 @@
         },
         "Custom": {
             "description": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser",
-            "label": "Tilpasset"
+            "label": "Egendefinert"
         },
         "Live Viewer": {
             "description": "Kan bare vise live video",
@@ -71,7 +72,7 @@
         },
         "custom": {
             "description": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser",
-            "label": "Tilpasset"
+            "label": "Egendefinert"
         },
         "customRole": {
             "description": "Tilpasset brukerrolle spesifisert i System",
@@ -117,50 +118,51 @@
         "loginCloudHeader": "Logg inn på %CLOUD_NAME%",
         "connectHeader": "Koble systemet til %CLOUD_NAME%",
         "expiredHeader": "Økten din har utløpt",
-        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
-        "connectSubheader": "To access it from anywhere and enable additional features",
-        "expiredSubheader": "Please, log in again",
-        "connectAdditional": "This account will get owner access level",
+        "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
+        "connectSubheader": "For å få tilgang til den fra hvor som helst og aktivere tilleggsfunksjoner",
+        "expiredSubheader": "Vennligst logg inn igjen 🔐",
+        "connectAdditional": "Denne kontoen får eiertilgangsnivå",
         "createText": "Opprett konto",
-        "setupText": "Setup Non-cloud System",
-        "asAccountSubheader": "As",
+        "setupText": "Sett opp Ikke-cloud system",
+        "asAccountSubheader": "Som",
         "toAccountSubheader": "Til",
         "forAccountSubheader": "For {accountEmail}",
-        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
-        "passwordMerge": "to merge systems",
-        "passwordBackup": "to create backup",
-        "passwordRestore": "to restore system from backup",
-        "passwordReset": "to reset server",
-        "passwordRestart": "to restart server",
-        "passwordDetach": "to detach server",
-        "expiredAccountSubheader": "Please, log in again as",
+        "passwordDisconnect": "å koble fra systemet fra %CLOUD_NAME%",
+        "passwordMerge": "å slå sammen systemer",
+        "passwordBackup": "å lage sikkerhetskopi",
+        "passwordRestore": "å gjenopprette systemet fra sikkerhetskopi",
+        "passwordReset": "å tilbakestille serveren",
+        "passwordRestart": "å restarte serveren",
+        "passwordDetach": "å koble fra serveren",
+        "passwordTransfer": "å overføre systemet",
+        "expiredAccountSubheader": "Vennligst logg inn igjen 🔐",
         "createAccountHeader": "Opprett %CLOUD_NAME% konto",
-        "activateHeader": "Activate %CLOUD_NAME% Account",
+        "activateHeader": "Aktiver %CLOUD_NAME% -konto",
         "createdText": "Konto opprettet!",
-        "activatedText": "Account Activated!",
-        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
-        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "activatedText": "Konto aktivert!",
+        "createdAdditional": "<p class=\"mb-2\">Bekreftelsesmelding med aktiviseringslenken blir sendt til {accountEmail}.</p><p>Vennligst aktiver kontoen og gå tilbake her for å fullføre prosessen.</p>",
+        "activatedAdditional": "Nå kan du fortsette å logge på %CLOUD_NAME% her eller andre steder",
         "passResetHeader": "Tilbakestille passord",
         "newPassHeader": "Angi et nytt passord",
-        "newPassConfirmText": "Password is set!",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "newPassConfirmText": "Passord er angitt!",
+        "newPassInvalidCode": "Kan ikke lagre passord: Bekreftelseskoden er allerede brukt eller feil",
+        "notSecureText": "Hvis du fortsetter vil du gi<br><span class='error-label'>{ redirectUrl }</span><br>tilgang til %CLOUD_NAME% -kontoen din.",
         "confirmHeader": "System koblet til %CLOUD_NAME%!",
         "loginError": "Kan ikke koble til %CLOUD_NAME%",
-        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "loginErrorAdditional": "Vennligst prøv igjen eller logg på systemet direkte med din lokale konto.",
         "connectErrorAdditional": "Vennligst prøv igjen senere.",
-        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "setupErrorAdditional": "<p class=\"mb-2\">Vennligst prøv igjen eller sett opp et ikke-skysystem.</p><p>Du vil kunne koble den til %CLOUD_NAME% når som helst etterpå.</p>",
         "connectedText": "System koblet til %CLOUD_NAME%",
-        "setupConnectedText": "System connected",
-        "stayLoggedInHelpText": "Checkbox for staying logged in",
-        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard",
+        "setupConnectedText": "System koblet til",
+        "stayLoggedInHelpText": "Avmerkingsboks for å forbli pålogget",
+        "termsAndConditionsHelpText": "Avmerkingsboks godtar vilkårene og personvernreglene",
+        "copiedToClipboard": "Kopiert til utklippstavlen",
         "authCode": {
-            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
-            "newPass": "set a new password",
+            "message": "Skriv inn en kode fra autentiseringsappen din for å bekrefte at det virkelig er du som prøver å {suffix}",
+            "newPass": "angi et nytt passord",
             "login": "logg Inn"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "E-post er sendt!"
     },
     "cameraFilters": {
         "H265": "H.265 kameraer",
@@ -175,11 +177,43 @@
         "ptz": "PTZ kameraer"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Størrelse",
+            "state": "Tilstand",
+            "system": "System",
+            "expires": "Utløper",
+            "key": "Nøkkel"
+        },
+        "fromServer": {
+            "ACTIVE": "Aktiv",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Ikke tilordnet",
+            "until": "{size} til {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Denne lisensen ble deaktivert mer enn én gang OG ble reaktivert for mindre enn 24 timer siden",
+            "License key is already activated": "Lisensnøkkel er allerede aktivert",
+            "Maximum number of items is 10000": "Maksimalt antall produkter er 10000",
+            "This Cloud license does not exist": "Denne Cloud lisensen finnes ikke",
+            "This license is already activated": "Denne lisensen er allerede aktivert",
+            "This license is not activated": "Denne lisensen er ikke aktivert",
+            "This license has already expired": "Denne lisensen har allerede utløpt",
+            "Already has a cloud storage license active": "Har allerede en aktiv skylagringslisens",
+            "Cloud System ID does not match credentials used": "Cloud system ID samsvarer ikke med legitimasjonen som er brukt",
+            "Not Authorized for cloud system": "Ikke autorisert for skysystem",
+            "This license is not currently activated": "Denne lisensen er ikke aktivert for øyeblikket",
+            "This license has no deactivations remaining": "Denne lisensen har ingen deaktiveringer igjen",
+            "Cloud system Id does not match license activation": "Skysystem-ID samsvarer ikke med lisensaktivering",
+            "used": "{used} av {total} ({percent}%) er brukt",
+            "available": "Tilgjengelig",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "Skylagringen brukes ikke til opptak. Gå til <a href=\"{serverSettings}\">Serverinnstillinger</a> for å konfigurere den."
+    },
     "common": {
         "account": {
             "created": {
                 "title": "Konto opprettet",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "Bekreftelsesmelding med aktiveringslenken er sendt til {email}"
             },
             "activated": {
                 "title": "Kontoen er aktivert"
@@ -187,7 +221,7 @@
         },
         "cameraLinks": {
             "copyActiveText": "kopiert til utklippstavlen",
-            "copyDefaultText": "kopiere",
+            "copyDefaultText": "kopier",
             "copyToClipboard": "kopier til utklippstavle",
             "highStream": "Høy kvalitet",
             "lowStream": "Lav kvalitet",
@@ -210,10 +244,10 @@
             "unauthorized": "Autentisering kreves"
         },
         "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
-        "copiedToClipboard": "Copied to clipboard",
-        "login": "logg Inn",
+        "copiedToClipboard": "Kopiert til utklippstavlen",
+        "login": "innlogging",
         "recordingSettingsWarning": "Oppdater manglende innspillingsinnstillinger.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Opptaksmodus endres til \"Ta opp alltid\"",
         "recordingModes": {
             "always": "Alltid opptak",
             "motion": "Spill inn bare bevegelse",
@@ -226,6 +260,14 @@
             "high": "Høy",
             "medium": "Medium",
             "low": "Lav"
+        },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
         "general": "Generell",
         "generalError": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
@@ -244,7 +286,7 @@
         "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "systemUnresponsive": "Systemet ser ut til å ikke reagere. Last inn siden på nytt.",
         "unknown": "Ukjent",
         "vendor": "Leverandør",
         "model": "Modell",
@@ -268,24 +310,31 @@
         },
         "viewingOutdatedReport": "Du ser på en utdatert rapport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Sist oppdatert { date }",
+            "updatingIn": "Oppdaterer om { time } sekunder"
+        }
+    },
+    "cookieWarning": "Vi brukte informasjonskapsler for å forbedre opplevelsen din på nettstedet vårt. De hjelper oss også å forstå hvordan nettstedet vårt brukes. Finn ut mer og angi dine cookies-preferanser&nbsp; | her | . Ved å fortsette å bruke nettstedet vårt samtykker du til å bruke informasjonskapslene våre.",
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "Dashboard-redigering er aktivert",
+        "dashboardLocked": "Dashbordet er låst",
+        "unlockToUpload": "Lås opp dashbordet for å laste opp konfigurasjon fra json",
+        "unlockToMove": "Lås opp dashbordet for å flytte widgets"
     },
     "devConsole": {
         "create": "Opprett"
     },
     "dialogs": {
         "twoFa": {
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
+            "wizardWarningDescr": "Tidligere versjoner av %VMS_NAME% klient støtter ikke tofaktorautentisering.",
+            "installAuthApp": "Installer en autentiseringsapp på mobilenheten din hvis du ikke allerede har en. %CLOUD_NAME% støtter <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> eller <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Tofaktorautentisering er nå <strong>aktivert</strong> for %CLOUD_NAME% -kontoen din!"
         },
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Denne e-posten er allerede registrert i %systemName% -systemet"
         },
         "buttons": {
             "cancel": "Avbryt",
@@ -305,10 +354,32 @@
             "title": "Cloud-lagring",
             "enableStorage": "Aktiver skylagring",
             "otherSystem": "Annet system...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "initial": "Vi tilbyr {compCapacity} gratis skylagring per system for å komme i gang.",
+            "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {vmsName} klienten.",
             "camera": "kamera",
             "cameras": "kameraer",
+            "actions": {
+                "activate": {
+                    "heading": "Aktiver Sky-lagring",
+                    "action": "Aktiver",
+                    "success": "Sky-lagring er aktivert!"
+                },
+                "modify": {
+                    "heading": "Endre Sky-lagring",
+                    "action": "Endre",
+                    "success": "Sky-lagring ble oppgradert!"
+                },
+                "move": {
+                    "heading": "Flytt skylagring",
+                    "action": "Flytt",
+                    "success": "Sky-lagring ble oppgradert!"
+                },
+                "delete": {
+                    "heading": "Slett Sky-lagring?",
+                    "action": "Slett",
+                    "success": "Sky-lagring ble slettet!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Aktuelle opptak",
                 "whenFullyUsed": "Ved full bruk",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Arkiv fra",
                 "recordingBitrate": "Opptak Bitrate",
                 "delayFromLive": "Forsinkelse fra live"
+            },
+            "information": {
+                "update": {
+                    "title": "Endre",
+                    "body": "Du kan endre gjeldende Cloud Storage-størrelse i systemet ved å bruke den nye nøkkelen. Alle registrerte data vil bli lagret."
+                },
+                "migrate": {
+                    "title": "Flytt",
+                    "body": "Cloud Storage med alle registrerte data kan enkelt overføres til ditt andre system uten aktiv Cloud Storage."
+                },
+                "delete": {
+                    "title": "Slett",
+                    "body": "Du kan fjerne Cloud Storage fra systemet når som helst. Du kan bruke denne nøkkelen senere for reaktivering, hvis du vil."
+                }
             },
             "remove": {
                 "success": "Skylagring ble fjernet fra systemet",
@@ -331,7 +416,7 @@
             },
             "moveCloudStorage": {
                 "title": "Flytt skylagring",
-                "success": "Storage successfully moved",
+                "success": "Lagringsplass flyttet",
                 "errorPrefix": "Feil ved flytting av skylagring",
                 "notFound": "Lagring ikke funnet. Lagring kan ha blitt flyttet eller slettet av en annen bruker",
                 "status": {
@@ -347,12 +432,12 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Hvis du har tenkt å flytte analysedata til et annet lagringssted, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> før du fortsetter."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "adminPasswordTitle": "Skriv inn passord til eierens konto i <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Passordet for admin-brukeren er feil",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} er koblet til %CLOUD_NAME%. Skysystemer kan bare slås sammen fra %CLOUD_NAME%.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Kontrollerer...",
             "cloud": "Cloud",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Vi anbefaler at du rådfører deg med",
-                "b_support": "brukerstøtte",
-                "c_proceeding": "før du fortsetter."
-            },
+            "recommendSupport": "Vi anbefaler deg å rådføre deg med teknisk support, før du fortsetter.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Kan ikke slå sammen systemer som er bundet til skyen",
@@ -404,7 +485,8 @@
             "urlEmpty": "Skriv inn serveradressen",
             "urlNotValid": "Angi gyldig URL",
             "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Oppdater dem til&nbsp; den nyeste versjonen °"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -435,8 +517,8 @@
             "twoFactor": {
                 "required": "Tofaktorautentisering er nødvendig.",
                 "configure": "You can configure it in your",
-                "accountLink": "account settings",
-                "codeRequired": "Code is required"
+                "accountLink": "kontoinnstillinger",
+                "codeRequired": "Kode kreves"
             }
         },
         "removeSystem": {
@@ -445,9 +527,16 @@
             "title": "Koble fra systemet?"
         },
         "renewAuth": {
-            "action": "Logg Inn",
+            "action": "Innlogging",
             "message": "Please log in again.",
             "title": "Økten din har utløpt"
+        },
+        "systemGroups": {
+            "createdInRoot": "Ny gruppe vil bli opprettet i toppnivå",
+            "createdInCurrentGroup": "Ny gruppe vil bli opprettet i gjeldende gruppe"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Feil",
@@ -458,7 +547,7 @@
             "failedLoginTo": "Kunne ikke logge inn på {systemName}",
             "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
-            "removeUser": "Vil du fjerne bruker",
+            "removeUser": "Vil du fjerne brukeren",
             "serversDetach": "Koble server&nbsp;<strong>{ title }</strong>&nbsp;fra gjeldende system?",
             "serversReset": "Tilbakestille server&nbsp;<strong>{ title }</strong>&nbsp;til standardinnstillingene?",
             "serversRestart": "Start server på nytt&nbsp;<strong>{ title }</strong>?"
@@ -467,10 +556,10 @@
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% -portalen og deaktiver tofaktorautentisering for å slette kontoen din."
         },
         "twoFactor": {
-            "action": "Logg Inn",
+            "action": "Innlogging",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "Mine systemer",
+        "systemList": "Systemliste"
+    },
     "integration": {
         "Access Control": "Adgangskontroll",
         "Connector": "Tilkobler",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Lagrer automatisk om { time } sekunder...",
     "systemsCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}} funnet",
     "alertsCount": "{count, plural, =0{# varsler} one{# varsling} other{# varsler}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -694,12 +788,27 @@
         "server": "Server",
         "alert": "Alarm"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. Alle rettigheter reservert"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menynode <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> inneholder feil"
+        },
+        "downloadHistory": {
+            "published": "PUBLISERT { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generert: { time }"
+        }
+    },
     "pageTitles": {
-        "about": "Om",
-        "account": "Kontoinnstillinger",
-        "activate": "Aktiver konto",
-        "activateCode": "Aktiver konto",
-        "activateSuccess": "Konto aktivert",
+        "about": "About",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Autorisasjon",
         "changePassword": "Bytt passord",
@@ -715,15 +824,15 @@
         "pageNotFound": "Siden ble ikke funnet",
         "register": "Opprett konto i",
         "registerSuccess": "Velkommen til",
-        "restorePassword": "Tilbakestille passord",
-        "restorePasswordSuccess": "Passord lagret",
+        "restorePassword": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Støttede enheter",
         "system": "System",
-        "systemShare": "Del system",
+        "systemShare": "Share System",
         "systems": "Systemer",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "Se kameraer",
+        "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "Sikkerhet",
         "twofaRequired": "Two-factor authentication required"
@@ -741,7 +850,7 @@
         "good": "sterkt",
         "minLength": "for kort",
         "minLengthMessage": "Passordet må inneholde minst 8 tegn",
-        "missingMessage": "Required",
+        "missingMessage": "Påkrevd",
         "required": "stemmer ikke",
         "requiredMessage": "Bruk bare latinske bokstaver, tall og tastatur symboler, unngå ledende og etterfølgende mellomrom",
         "strongMessage": "Sterkt passord!",
@@ -790,9 +899,9 @@
         "finishingMerge": "Ferdigstiller systemsammenslåing",
         "integration": {
             "accept": "Godta",
-            "reject": "Reject",
+            "reject": "Avvis",
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
-            "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon.",
+            "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den samsvarer ikke med offentlig tilgjengelig versjon.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
@@ -807,8 +916,6 @@
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",
-        "filter applied": "filtrert visning",
-        "filters applied": "filtrert visning",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Skriv",
         "hardwareTypes": "Typer",
@@ -816,7 +923,10 @@
         "search_ipvd": "Søk etter modell eller produsent",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Produsent",
-        "vendors": "Produsenter"
+        "vendors": "Produsenter",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "Ingen treff",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -844,10 +954,11 @@
         "successRename": "Servernavn lagret."
     },
     "serverTabTitles": {
-        "View": "Vis",
+        "View": "Visning",
         "Settings": "Innstillingar",
         "Information": "Informasjon",
         "Bookmarks": "Bokmerker",
+        "Layouts": "Visninger",
         "Monitoring": "Overvåking"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(logg all tilgjengelig informasjon)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Lokal",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> ønsker å overføre eierskapet til dette systemet til deg"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> ønsker å overføre eierskapet til dette systemet til deg",
+        "transferTo": "Overfører eierskap til – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "toppnivå",
+        "groupCount": "{count, plural, =0{# grupper} one{# Gruppe} other{# grupper}}",
+        "systemCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}}",
+        "connectionLost": "Tilkoblingen mistet, kobler til på nytt...",
+        "connectionRestored": "Forbindelse gjenopprettet",
+        "couldNotReconnect": "Kunne ikke gjenopprette tilkoblingen",
+        "noConnection": "Ingen tilkobling",
+        "groupAlreadyIn": "Gruppen { srcName } er allerede i { destName }",
+        "systemAlreadyIn": "System { srcName } er allerede i { destName }",
+        "addGroupToSelf": "Du kan ikke legge til en gruppe i seg selv",
+        "errorMsg": {
+            "You can only delete groups that you own": "Du kan bare slette grupper du eier",
+            "You can only move systems that you own.": "Du kan bare flytte systemer du eier.",
+            "You can only move systems into groups that you own.": "Du kan bare flytte systemer inn i grupper du eier.",
+            "You cannot add a group to itself": "Du kan ikke legge til en gruppe i seg selv",
+            "You cannot add a parent group to its child.": "Du kan ikke legge til en overordnet gruppe til dens underordnede gruppe.",
+            "You can only move groups that you own.": "Du kan bare flytte grupper du eier.",
+            "Adding src group to dst group would create a cycle in tree.": "Å legge til src-gruppen til dst-gruppen ville opprette en syklus i treet.",
+            "User does not exist in group": "Bruker eksisterer ikke i gruppen"
+        }
     },
     "systemStatuses": {
         "activated": "aktivert",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Helserapport for system {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1132,7 +1269,7 @@
         "osTimeChangeCheckPeriodMs": "OS-tidsendring, sjekk periode",
         "syncTimeExchangePeriod": "Synkroniser tidssynkroniseringsintervall for nettverksforespørsler",
         "syncTimeEpsilon": "Synkroniser epsilon. Ny verdi blir ikke brukt hvis tidsavgrensningen er mindre enn epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Maks synkroniseringstråder for virtuelt kameraarkiv",
         "updateNotificationsEnabled": "Oppdateringsvarsler aktivert",
         "upnpPortMappingEnabled": "UPNP port kartlegging aktivert",
         "useTextEmailFormat": "Send e-post med vanlig tekst",
@@ -1141,7 +1278,7 @@
         "videoTrafficEncryptionForced": "Påtvunget kryptering av vidostrøm",
         "updateStatus": "Oppdater status",
         "watermarkSettings": "Vannmerkeinnstillinger",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Maks antall HTTP-tilkoblinger som bruker transkoding for serveren. Chrome åpner 2 tilkoblinger samtidig, og lukker deretter den første. Så det anbefales å sette verdi >=2 til denne parameteren.",
         "maxEventLogRecords": "Maksimal hendelsesloggoppføringer for å oppbevare i databasen. Den reelle mengden ubemerkede poster kan være opptil 20% høyere enn den spesifiserte verdien.",
         "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
     },

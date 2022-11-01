@@ -9,10 +9,11 @@ Library      Collections
 Library      OperatingSystem
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
+Library      ScreenCapLibrary
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL NO SEND}
-Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
+Library      NoptixLibrary/ServerAPI5.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
@@ -25,6 +26,7 @@ ${headless}    true
 @{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3     --headless
 ${speed}    0
 ${selenium_timeout}    40
+${video_recording}      ${False}
 
 @{auth}    ${EMAIL OWNER}    ${BASE PASSWORD}
 
@@ -37,6 +39,8 @@ Open Browser and go to URL
         # ...    Release Lock    MyLock
     IF    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"
         Regular Open Browser
+        ${video_recording} =     Set Variable    ${True}
+        Set Suite Variable      ${video_recording}      ${video_recording}
     ELSE
         Open Browser With Options
     END
@@ -45,17 +49,18 @@ Open Browser and go to URL
     Run Keyword If    ${check language}    Run Keywords
        ...    Go To    ${ENV}    AND
        ...    Check Language Anonymous
+    Execute Javascript    window.localStorage.setItem("ngx-webstorage|theme", '"${THEME}"')
     Go To    ${url}
 
 Regular Open Browser
-    Set Screenshot Directory    screenshots
+    SeleniumLibrary.Set Screenshot Directory    screenshots
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
     Set Window Size    1920    1080
     Go To    ${ENV}
 
 Open Browser With Options
-    Set Screenshot Directory    screenshots
+    SeleniumLibrary.Set Screenshot Directory    screenshots
     ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
@@ -120,12 +125,13 @@ Log In
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
-    Sleep    2
+    Sleep    4
     IF    '''${button}''' != "None" 
         Wait Until Element Is Visible    ${button}
     END
     IF    '${validate}' == 'True' and '${2fa}' == 'False'    # adding 2fa to conditions as workaround since if 2fa active Get Account Language is failing on 401
         Check Language Logged In    ${email}    ${password}
+        Set User Theme    ${email}    ${password}    ${THEME}
     END
     IF    '''${button}''' != "None"
         Click Element    ${button}
@@ -216,10 +222,10 @@ Validate Log In
     END    
 
 Check Log In
-    [Arguments]    ${button}=${LOG IN NAV BAR}
+    [Arguments]    ${user}    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email Robot    ${BASE EMAIL}
     Log In    ${random email}    ${password}      validate=False     button=${button}    exists=${False}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Log In    ${user}    ${password}    button=None
 
 Log Out
     # Add a delay to your call if logging in soon after logging oiut to avoid session race condition
@@ -338,7 +344,7 @@ Get Random Email Robot
 Get Email Link
     [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=120
     IF    ${via_email}
-        Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+        Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL NO SEND}    is_secure=True
         ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
         IF    "${link type}"=="activate"
             Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
@@ -354,12 +360,14 @@ Get Email Link
         Close Mailbox
         Return From Keyword    ${links}
     ELSE
-        Get Code From Email    ${recipient}    ${link type}
+        ${code}=    Get Code From API    ${recipient}    ${link type}
+        ${link}=    set variable    ${ENV}/authorize/${link type}/${code}
+        Return From Keyword    ${link}
     END
 Activate
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${from email}=${FROM EMAIL DEFAULT}
     IF    ${from email}
-        ${link}=   Get Email Link    ${email}    activate
+        ${link}=   Get Email Link    ${email}    activate    via email=${from email}
         Go To    ${link}
 
         Wait Until Elements Are Visible
@@ -437,7 +445,7 @@ Restore Password using API
     [Arguments]    ${email}    ${new password}
     ${resp}=   API Restore Password    ${email}    None    None
     Should Be Equal As Strings    ${resp}    200
-    ${code}=   Get Code From Email    ${email}    restore_password
+    ${code}=   Get Code From API    ${email}    restore_password
     ${code}=   Convert Code    ${code}
     ${resp}=   API Restore Password    ${email}    ${code}   ${new password}
     Should Be Equal As Strings    ${resp}    200
@@ -559,6 +567,8 @@ Disconnect from my account
 
 Failure Tasks
     [timeout]    5 minutes
+    ${location}    Get Location
+    Log    ${location}    level=trace
     ${console}    Get Browser Log
     Log    ${console}    level=trace
     Capture Page Screenshot    EMBED
@@ -993,8 +1003,8 @@ Check System Text
     Log Out
     Log in to user and system    ${user}    ${sysId}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${NEW FEATURE MODAL}
-    Click Button    ${NEW FEATURE CLOSE BUTTON}
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Dismiss New Feature Modal
     IF    "${user}"!="${EMAIL ADMIN}"
         Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
     END
@@ -1048,13 +1058,15 @@ Create Docker Server
     ELSE
         ${port}=   Set Variable    ${customPort}
     END
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
-                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+    ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
     ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
     Set to Dictionary    ${server}    name=${name}
+    ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
     Close Connection
     Release Lock   create_server_lock
     [Return]    ${server}
@@ -1076,12 +1088,16 @@ Create Base System
     ${local auth}=   Create List    admin    ${password}
     ${server}=   Create Docker Server    ${container name}    ${custom port}    image=${image}     storage string=${storage string}    network=${network}    
     Sleep    5
-    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
+    IF    '5.0' == $image or '5.1' == $image
+        Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
+    ELSE
+        Setup Local System 42   https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
+    END
     # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
     Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${password}
-    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${password}
+    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${password}    img=${image}
     # If add users is true add local users.  Add cloud users if both are true.
     @{local users}=    Get Dictionary Keys    ${role names}
     ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${password}
@@ -1284,7 +1300,7 @@ Delete All Text
 
 Skip If Irrelevant
     ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
-    Skip If    not ${relevant}    Test skipped - not relevant
+    Skip If    not ${relevant}    Test not meant for ${mode}
 
 Input Content Editable Text
     [Arguments]    ${element}    ${text}
@@ -1363,9 +1379,9 @@ Create system and attach to cloud
     [Return]    ${bind json["id"]}
     
 Connect System to Cloud
-    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
+    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}    ${img}=${IMAGE}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
-    IF    '5' in $IMAGE
+    IF    '5' in $img
         ${system id}=   API Connect To Cloud    ${cloud auth}   ${server ip}    ${cloud host}    ${system name}
         Return From Keyword    ${system id}
     ELSE
@@ -1496,7 +1512,7 @@ Remove User Permissions
     Wait Until Element Is Visible    ${REMOVE BUTTON}
     Click Button    ${REMOVE BUTTON}
 #    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
-    Wait Until Element Is Not Visible    ${User In List}
+    Wait Until Elements Are Not Visible    ${User In List}    ${REMOVE USER MODAL}
 
 Select user in Users List
     [Arguments]    ${user email address}
@@ -1578,4 +1594,22 @@ Click
         Wait Until Keyword Succeeds   10    .1   Click Link      ${locator}
     ELSE
         Fail    Button, Element or Link are the only allowed types.
+    END
+
+Dismiss New Feature Modal
+    Wait Until Element Is Visible    ${NEW FEATURE CLOSE BUTTON}    timeout=2
+    Click Button    ${NEW FEATURE CLOSE BUTTON}
+
+QA Video Recording Start
+    [Arguments]     ${fps}=15      ${width}=1200    ${monitor}=2
+    ${test case} =     Fetch From Left     ${TEST_NAME}   .
+    IF    ${video_recording}
+        ScreenCapLibrary.Set Screenshot Directory    videos
+        Start Video Recording     alias=${TEST_NAME}    name=${SUITE_NAME}_${test case}    fps=${fps}    embed_width=${width}    monitor=${monitor}
+    END
+
+QA Video Recording Stop
+    IF    ${video_recording}
+        Run Keyword If Test Failed      Stop Video Recording   alias=${TEST_NAME}
+        Run Keyword And Ignore Error    Stop Video Recording   alias=${TEST_NAME}    save_to_disk=${False}
     END

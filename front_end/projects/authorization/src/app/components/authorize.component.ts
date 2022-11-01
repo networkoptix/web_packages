@@ -1,6 +1,5 @@
-/* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
     Component,
     ElementRef,
@@ -13,84 +12,32 @@ import {
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, fromEvent, of } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxUtilsService } from '@services/utils.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+import type { ModuleInformationReply } from '@services/system-api.types';
+import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+
+import {
+    AuthorizeParams,
+    AuthenticateResp,
+    AuthorizeState,
+    ClientType
+} from './authorize.component.types';
 
 require('what-input');
-
-export interface AuthorizeParams {
-    response_type: string,
-    client_id: string,
-    redirect_url?: string,
-    redirect_uri?: string,
-    client_type?: ClientType,
-    view_type?: 'desktop' | 'mobile' | 'web',
-    grant_type?: string,
-    scope?: string,
-    signature?: string,
-    state?: string,
-    code?: string,
-    message?: 'passwordReset' | 'activated',
-    email?: string,
-    access_code?: string,
-    access_token?: string
-}
-
-export type AuthorizeStateType = 'email' |
-    'password' |
-    'create' |
-    'activate' |
-    'confirm' |
-    'request' |
-    'reset' |
-    'error' |
-    'auth' |
-    'backup' |
-    'notSecure'
-
-export enum AuthorizeState {
-    email = 'email',
-    password = 'password',
-    create = 'createAccount',
-    activate = 'activateAccount',
-    confirm = 'confirmation',
-    request = 'resetPasswordRequest',
-    reset = 'resetPassword',
-    error = 'error',
-    auth = 'authCode',
-    backup = 'backupCode',
-    notSecure = 'notSecure'
-}
-
-export enum ClientType {
-    loginCloud = 'loginToCloud',
-    loginWebadmin = 'loginToWebadmin',
-    passwordDisconnect = 'confirmPasswordDisconnect',
-    passwordMerge = 'confirmPasswordMerge',
-    passwordBackup = 'confirmPasswordCreateBackup',
-    passwordRestore = 'confirmPasswordRestoreBackup',
-    passwordReset = 'confirmPasswordResetServer',
-    passwordRestart = 'confirmPasswordRestartServer',
-    passwordDetach = 'confirmPasswordDetachServer',
-    create = 'createAccount',
-    connect = 'connectSystemToCloud',
-    setup = 'setupWizard',
-    renewDesktop = 'renewSessionDesktop',
-    renewWeb = 'renewSessionWeb',
-    openClient = 'openClientFromCloud',
-    system2faAuth = 'system2faAuth',
-}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -104,7 +51,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     AuthorizeState = AuthorizeState;
 
-    content: any = {};
+    // content = {};
     footerItems: { name: string, url: string }[];
     companyLink: string;
     companyName: string;
@@ -119,7 +66,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     checkEmailProcess: Process;
     loginCode: string;
     emailLocked = false;
-    action: 'restore_password'| 'activate' | 'register' | 'reset_request';
+    action: 'restore_password' | 'activate' | 'register' | 'reset_request' | '404';
 
     // email
     loginEmail: string;
@@ -179,10 +126,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     backupCodeErrorCode: string;
 
     @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent) {
+    handleKeyboardEvent(event: KeyboardEvent): void {
         // Mobile Chrome doesn't use "code" ... maybe some others -- TT
-        if (['Enter', 'NumpadEnter'].includes(event.code || event.key)) {
-            this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
+        if (['Enter', 'NumpadEnter'].includes(event.code)) {
+            this.elem.nativeElement
+                .querySelector<HTMLButtonElement>('button.on-keypress-enter')
+                .click();
         }
     }
 
@@ -194,31 +143,35 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
         private router: Router,
-        private elem: ElementRef,
+        private elem: ElementRef<HTMLElement>,
         private title: Title,
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
+        private themeService: NxThemeService,
         @Inject(WINDOW) public window: Window
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 
-    private verifyRedirectUrlHelper(systemId) {
+    private verifyRedirectUrlHelper(systemId: string): Observable<boolean> {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
         const redirectPort = new URL(this.initialData.redirect_uri).port;
         return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
             .pipe(
                 untilDestroyed(this),
-                map((servers: any) => {
-                    return servers?.some(({ port, remoteAddresses }) => redirectPort === port.toString() && remoteAddresses
-                        .some((address) => this.initialData.redirect_uri.includes(address))
+                map((servers: ModuleInformationReply[]) => {
+                    return servers?.some(({ port, remoteAddresses }) =>
+                        redirectPort === port.toString() &&
+                        remoteAddresses.some(address =>
+                            this.initialData.redirect_uri.includes(address)
+                        )
                     );
                 }),
                 catchError(() => of(false)));
     }
 
-    private checkRedirectUrl() {
+    private checkRedirectUrl(): Promise<boolean> {
         const { scope } = this.initialData;
         let verifiedCheck = of(true);
         if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
@@ -231,7 +184,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     // method only used by child components to transition between child components
-    setCurrentState(state: string) {
+    setCurrentState(state: string): void {
         // when user uses link to go directly to create-account and presses back, sets them into normal login clientTypes
         if (state === 'email' && this.clientType === ClientType.create) {
             this.clientType = environment.isLocal ? ClientType.loginWebadmin : ClientType.loginCloud;
@@ -241,7 +194,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.title.setTitle(`${this.LANG.pageTitles.auth()} - ${this.CONFIG.cloudName}`);
-        this.footerItems = this.CONFIG.dynamicMenus.footer.nodes;
+        this.footerItems = this.CONFIG.dynamicMenus?.footer?.nodes || [];
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.initProcesses();
@@ -250,25 +203,37 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (this.action) {
             this.loginCode = this.route.snapshot.params.code;
             if (this.loginCode) {
-                this.loginEmail = atob(this.loginCode).split(':')[1];
+                if (atob(this.loginCode).split(':').length === 2) {
+                    this.loginEmail = atob(this.loginCode).split(':')[1];
+                } else if (this.action === 'activate') {
+                    this.action = '404';
+                }
                 this.fromInvite = this.action === 'register';
             }
         }
-        this.route.queryParams.subscribe(async(params: any) => {
-            this.initialData = NxUtilsService.deepCopy(params);
+        this.route.queryParams.subscribe(async (params: AuthorizeParams) => {
+            this.initialData = cloneDeep(params);
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
             this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
+
+            if (this.viewType === 'desktop') {
+                this.themeService.setTheme('dark', 'undefined');
+            }
             const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
             this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= 355;
-            fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
-                const { innerHeight, innerWidth } = event.target;
-                this.windowLargeEnough = innerWidth > 1024 && innerHeight > 768 && this.viewType === 'web';
-                this.windowSmallEnough = innerWidth <= 355;
-            });
+            fromEvent<Event>(this.window, 'resize')
+                .pipe(debounceTime(100))
+                .subscribe(event => {
+                    const { innerHeight, innerWidth } = event.target as Window;
+                    this.windowLargeEnough = innerWidth > 1024 &&
+                        innerHeight > 768 &&
+                        this.viewType === 'web';
+                    this.windowSmallEnough = innerWidth <= 355;
+                });
 
             if ([ClientType.loginCloud, ClientType.create].includes(this.clientType)) {
                 this.initialData.client_id = 'cloud';
@@ -291,6 +256,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.loginCode = access_token || access_code || code;
                 this.redirectLink = redirect_uri;
                 this.currentState = AuthorizeState.auth;
+            } else if (this.action === '404') {
+                this.currentState = AuthorizeState.show404;
             } else if (this.action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (this.action === 'activate') {
@@ -324,20 +291,28 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         });
     }
 
-    handleCloudConnectionError(err: any, process: Process) {
+    handleCloudConnectionError(
+        err: HttpErrorResponse | string | ProgressEvent,
+        process: Process
+    ): void {
         if (err && (
-            [500, 503, 504].includes(err.status) ||
-            err.message?.includes('timeout') ||
+            [500, 503, 504].includes((err as HttpErrorResponse).status) ||
+            (err as HttpErrorResponse).message?.includes('timeout') ||
             (typeof err === 'string' && err.includes('Error occured while trying to proxy to:')) || // occurs when wifi on machine turned off
             err instanceof ProgressEvent // occurs when virtual machine connection turned off (offline testing)
         )) {
-            this.errorType = err.status === 503 ? 'maintenance' : 'connection';
+            this.errorType = (err as HttpErrorResponse).status === 503
+                ? 'maintenance'
+                : 'connection';
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }
     }
 
-    handleLoginSuccess = async ({ link = this.redirectLink, code = this.loginCode }: { link?: string, code?: string }) => {
+    handleLoginSuccess = async ({
+        link = this.redirectLink,
+        code = this.loginCode
+    }: AuthenticateResp): Promise<void> => {
         // bypass for code or backup code for resetPassword workflow
         if (this.action === 'restore_password' && [AuthorizeState.auth, AuthorizeState.backup].includes(this.currentState)) {
             this.errorDialog$.value && this.errorDialog$.next(false);
@@ -366,15 +341,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
         // undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
-        // @ts-ignore
         if (link?.includes('redirect-oauth') || (this.window.nativeClient && !link)) {
             const { client_id, client_type, access_code, access_token } = this.initialData;
-            // @ts-ignore
             if (this.window.nativeClient &&
                 [ClientType.renewDesktop, ClientType.renewWeb].includes(this.clientType) &&
                 (access_code || access_token || code)
             ) {
-                // @ts-ignore
                 nativeClient.twoFaVerified(access_code || code || access_token);
             } else {
                 this.router.navigate(['redirect-oauth'], {
@@ -387,9 +359,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         } else {
             this.redirect(link);
         }
-    }
+    };
 
-    handleVerificationExpiration(process) {
+    handleVerificationExpiration(process: Process): void {
         if (this.loginEmail && this.loginPassword) {
             this.login().then(
                 ({ code, link }) => {
@@ -403,12 +375,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
-    initProcesses() {
+    initProcesses(): void {
         // 3 seconds was creating too many false positives
         // 60 seconds should cover most cases unless we discover different edge cases we need to address
         const timeoutMs = 60000;
         this.checkEmailProcess = this.processService.createProcess(
-            async() => {
+            async () => {
                 this.emailErrorCode = '';
                 const res = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
                 if (this.currentState === AuthorizeState.activate && res.active) {
@@ -458,7 +430,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             err => {
                 if (err?.resultCode) {
                     if (['notAuthorized', 'forbidden'].includes(err.resultCode)) {
-                        this.passwordErrorCode =  err?.errorData?.error !== 'access_denied'
+                        this.passwordErrorCode = err?.errorData?.error !== 'access_denied'
                             ? 'wrongPassword' : 'accountNotAccessSystem';
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
@@ -615,7 +587,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         });
     }
 
-    login = () => {
+    login = (): Promise<AuthenticateResp> => {
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
@@ -623,19 +595,18 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.redirect_uri, // || 'http://localhost:9000/',
             this.initialData.response_type, // || 'code',
             this.initialData.state,
-            this.initialData.scope,
-            this.initialData.signature
+            this.initialData.scope
         );
-    }
+    };
 
-    checkIfActivated = async() => {
+    checkIfActivated = async (): Promise<void> => {
         const { active } = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
         if (active) {
             this.activated$.next(true);
         }
-    }
+    };
 
-    reactivate = () => {
+    reactivate = (): Promise<void> => {
         if (this.blockResendingActivation) {
             return;
         }
@@ -651,11 +622,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.blockResendingActivation = false;
                 }, this.resendActivateTimeout);
             });
-    }
+    };
 
-    redirect = (route?: string) => {
+    redirect = (route?: string): void => {
         this.window.location.href = route || this.initialData.redirect_uri || '/';
-    }
+    };
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 }

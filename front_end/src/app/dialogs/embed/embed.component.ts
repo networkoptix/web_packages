@@ -1,0 +1,108 @@
+import {
+    Component,
+    OnInit,
+    Input,
+    ViewChild,
+    OnDestroy,
+    AfterViewInit,
+    Inject
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
+
+@UntilDestroy()
+@Component({
+    selector: 'nx-modal-embed-content',
+    templateUrl: 'embed.component.html',
+    styleUrls: []
+})
+export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
+    @Input() closable = true;
+
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    auth;
+    params: IParams;
+    embedUrl: string;
+
+    @ViewChild('embedForm', { static: true }) embedForm: NgForm;
+
+    constructor(
+        language: NxLanguageProviderService,
+        configService: NxConfigService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) dialogData: never,
+    ) {
+        this.params = {
+            authString: '',
+            nocameras: false,
+            noheader: false,
+            nocontrols: false
+        };
+
+        this.auth = {
+            email: '',
+            password: ''
+        };
+
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
+    }
+
+    ngOnDestroy(): void {
+    }
+
+    ngOnInit(): void {
+        this.createEmbedUrl(this.params);
+    }
+
+    ngAfterViewInit(): void {
+        this.embedForm.form.valueChanges
+            .pipe(untilDestroyed(this))
+            .subscribe(changes => {
+                this.createEmbedUrl(changes);
+            });
+    }
+
+    createEmbedUrl(params): void {
+        // Cannot use A6 router at this moment - AJS is leading the parade
+        const url = window.location.href.replace('systems', 'embed').split('?')[0];
+        let uri = '';
+
+        for (const paramsKey in params) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (params.hasOwnProperty(paramsKey)) {
+                // filter checkboxes in form
+                if (this.params[paramsKey] !== undefined && !params[paramsKey]) {
+                    uri += (uri === '') ? '?' : '&';
+                    uri += (typeof params[paramsKey] === 'boolean')
+                        ? paramsKey
+                        : params[paramsKey];
+                }
+            }
+        }
+
+        uri += (uri === '') ? '?' : '&';
+        uri += 'auth=' + btoa(params.login_email + ':' + params.login_password);
+
+        // HTML tags are needed for copy to clipboard functionality
+        this.embedUrl = '<iframe ' +
+            'src = "' + url + uri + '" >' +
+            'Your browser doesn\'t support iframe.' +
+            '</iframe>';
+    }
+
+    close = (): void => {
+        this.dialogRef.close();
+    };
+}

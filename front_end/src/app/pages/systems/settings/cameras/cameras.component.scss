@@ -1,0 +1,390 @@
+@use "../../../../styles/typography";
+@use "../../../../styles/mixins";
+@use "../../../../../styles/theme_variables_common" as *;
+@use "styles/src-variables/pages/cameras" as *;
+@use "bootstrap_utils" as bootstrap;
+
+.camera-settings-info {
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: var(--card-header-text);
+
+    .grid-container {
+        display               : grid;
+        grid-column-gap       : .5rem;
+        grid-row-gap          : .5rem;
+        grid-template-columns : max-content 240px;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            grid-template-columns : 1fr;
+        }
+
+        .grid-item {
+            display         : flex;
+            align-items     : center;
+            justify-content : flex-end;
+
+            @include bootstrap.media-breakpoint-down(sm) {
+                justify-content : flex-start;
+            }
+            @include bootstrap.media-breakpoint-down(xs) {
+                margin-bottom: 0 !important;
+                .error-span {
+                    padding-left: 0;
+                }
+            }
+        }
+        &-with-warning {
+            @extend .grid-container;
+            grid-template-columns : max-content 240px max-content;
+            @include bootstrap.media-breakpoint-down(xs) {
+                grid-template-columns : 1fr;
+            }
+            .grid-item {
+                white-space: nowrap;
+                justify-content: flex-start;
+            }
+        }
+    }
+
+    .header-editable {
+        display: flex;
+        flex-direction : column;
+        align-items: flex-start;
+
+        @include bootstrap.media-breakpoint-up(lg) {
+            flex-direction : row;
+            align-items    : center;
+        }
+
+        .camera-button-div {
+            display: flex;
+            .camera-buttons {
+                @include mixins.details-buttons;
+
+                @include bootstrap.media-breakpoint-down(lg) {
+                    &:first-of-type {
+                        padding-left : 0 !important;
+                    }
+                }
+            }
+        }
+    }
+    @include bootstrap.media-breakpoint-down(xs) {
+        div.camera-feed-img {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    }
+
+    .header-table {
+        font-size: $font-size-base;
+        padding: 0;
+        .header-table-cell {
+            display: flex;
+            height: 20px;
+            align-items: flex-end;
+            .cell-title {
+                @include typography.regular13dark9;
+            }
+            .cell-ellipsis {
+                margin-bottom: 2px;
+                border-bottom: 1px dotted var(--light6);
+                flex-grow: 1;
+            }
+        }
+    }
+
+    .camera-setting-buttons {
+        display: flex;
+        justify-content: space-between;
+        .setting-buttons {
+            display: flex;
+            button:first-child {
+                margin-right: 8px;
+            }
+        }
+    }
+
+    @media (max-width: 870px) {
+        .camera-setting-buttons {
+            flex-direction: column;
+            .left button:not(:first-child) {
+                margin-top: 16px;
+            }
+            .right button {
+                margin-top: 16px;
+            }
+            .setting-buttons {
+                flex-direction: column;
+                button {
+                    max-width: 100%;
+                    width: fit-content;
+                }
+                button:first-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+nx-block .card {
+    background-color : var(--card-header-bg);
+}
+
+.preview-wrapper {
+    background-color: var(--card-header-bg);
+    border-radius: 2px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    padding: 0;
+}
+
+.button-wrapper {
+      min-height: 32px;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      & > .btn, & > .btn-default, & button {
+        font-size: 12px;
+    }
+}
+
+.sensitivity-buttons {
+    color: var(--card-header-text) !important;
+    border-radius: 2px;
+    font-size: 12px;
+    width: 32px !important;
+    height          : 32px !important;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    padding: 0 !important;
+    border: 1px solid transparent !important;
+    
+    &:hover, &:active, &.active {
+        border: 1px solid transparent !important;
+    }
+    
+    input {
+        clip           : rect(0, 0, 0, 0);
+        position       : absolute;
+        pointer-events : none;
+    }
+}
+
+.button {
+    &-0 {
+        background-color: rgba($cameras-sensitivity-color-0, 0.3);
+        border: 1px solid var(--sensitivity-button-0-border-color) !important;
+        &:hover {
+            border: 1px solid var(--sensitivity-button-0-border-color) !important;
+            background-color: rgba($cameras-sensitivity-color-0, 0.4) !important;
+        }
+        &:active, &.active{
+            background-color: rgba($cameras-sensitivity-color-0, 0.5) !important;
+            border: 1px solid var(--light13) !important;
+        }
+
+    }
+    &-1 {
+        background-color: rgba($cameras-sensitivity-color-1, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-1, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-1, 0.5) !important;
+        }
+
+    }
+    &-2{
+        background-color: rgba($cameras-sensitivity-color-2, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-2, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-2, 0.5) !important;
+        }
+
+    }
+    &-3 {
+        background-color: rgba($cameras-sensitivity-color-3, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-3, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-3, 0.5) !important;
+        }
+
+    }
+    &-4 {
+        background-color: rgba($cameras-sensitivity-color-4, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-4, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-4, 0.5) !important;
+        }
+
+    }
+    &-5 {
+        background-color: rgba($cameras-sensitivity-color-5, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-5, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-5, 0.5) !important;
+        }
+
+    }
+    &-6 {
+        background-color: rgba($cameras-sensitivity-color-6, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-6, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-6, 0.5) !important;
+        }
+
+    }
+    &-7 {
+        background-color: rgba($cameras-sensitivity-color-7, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-7, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-7, 0.5) !important;
+        }
+
+    }
+    &-8 {
+        background-color: rgba($cameras-sensitivity-color-8, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-8, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-8, 0.5) !important;
+        }
+
+    }
+    &-9 {
+        background-color: rgba($cameras-sensitivity-color-9, 0.3);
+        &:hover {
+            background-color: rgba($cameras-sensitivity-color-9, 0.4);
+        }
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-9, 0.5) !important;
+        }
+
+    }
+}
+
+.disabled-helper-block, .disabled-audio-label {
+    opacity : 0.3;
+    cursor  : default;
+}
+
+.control-label {
+    color : var(--dark9);
+
+    &:hover {
+        color : var(--dark1);
+    }
+}
+
+.details {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: 8px 0 0 0;
+
+    &-section {
+        display: flex;
+        div {
+            display: flex;
+            flex-direction: column;
+            // white-space: nowrap;
+
+            p {
+                margin-bottom: 4px;
+            }
+        }
+        &-keys {
+            p {
+                @include typography.regular13dark9;
+                position: relative;
+                display: flex;
+                justify-content: stretch;
+                & > * {
+                    flex-basis: 0;
+                    flex-grow: 0;
+                }
+                &:after {
+                    content: "";
+                    position: relative;
+                    display: inline-block;
+                    margin: 0 8px 4px 4px;
+                    border-bottom: 1px dotted var(--light3);
+                    z-index: 1;
+                    min-width: 16px;
+                    flex-basis: 1;
+                    flex-grow: 1;
+                }
+            }
+        }
+        &-values {
+            p {
+                @include typography.medium13dark9;
+                margin-right: 16px;
+            }
+        }
+    }
+}
+
+.recording-hint {
+    // do not use typography as we can't overwrite color with input-error
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: var(--label-color);
+    margin: -8px 0 16px 64px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.grayscale {
+    div.switch:before {
+        filter: grayscale(1) !important;
+    }
+}
+
+.sensitivity-hint {
+    color: var(--light16);
+}
+
+.shake-hint {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+#reset-selection {
+    font-size: 14px;
+}
+
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-2px, 0, 0);
+    }
+
+    20%, 80% {
+      transform: translate3d(3px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+      transform: translate3d(-5px, 0, 0);
+    }
+
+    40%, 60% {
+      transform: translate3d(5px, 0, 0);
+    }
+}

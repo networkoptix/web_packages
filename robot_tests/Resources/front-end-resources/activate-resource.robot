@@ -14,3 +14,6 @@ Restart
 
 Open New Browser On Failure
     Close Browser
+
+Activate Test Teardown
+    Run Keyword If Test Failed    activate-resource.Open New Browser On Failure

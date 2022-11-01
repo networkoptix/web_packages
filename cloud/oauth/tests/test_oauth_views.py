@@ -16,7 +16,7 @@ class TestOauthViews:
         self.email = 'testuser@email.com'
         self.arf = arf
         self.password = 'wasd1234'
-        self.user = django_user_model(email = self.email)
+        self.user = django_user_model(email=self.email)
 
     def assert_wrong_parameters(self, response):
         assert response.status_code == 400
@@ -24,25 +24,6 @@ class TestOauthViews:
         assert response.data['errorText'] == 'Parameters are missing'
 
     # Test helper functions
-    @pytest.mark.skip(reason="Removed signature in develop. Temp fix for hotfix. Ticket is VMS-35545")
-    def test_check_signature(self, mocker):
-        mock_validate_signature = mocker.patch('api.controllers.cloud_api.System.validate_signature', return_value='validate signature')
-        system_id = '00000000-0000-0000-0000-000000000000'
-        mock_valid_scope = 'cloudSystemId=' + system_id
-        signature = str(uuid4())
-        redirect_uri = str(uuid4())
-
-        # Valid check_signature
-        check_signature(signature, mock_valid_scope, redirect_uri)
-        mock_validate_signature.assert_called_once_with(system_id, signature, redirect_uri)
-
-        # Test exceptions
-        with pytest.raises(APIRequestException, match='Scope is missing a valid system id'):
-            check_signature(signature, '', redirect_uri)
-
-        mock_validate_signature = mocker.patch('api.controllers.cloud_api.System.validate_signature', side_effect=APILogicException('', ''))
-        with pytest.raises(APIRequestException, match='Signature does not match'):
-            check_signature(signature, mock_valid_scope, redirect_uri)
 
     def test_get_param(self):
         query_param_value = str(uuid4())
@@ -50,6 +31,7 @@ class TestOauthViews:
         assert get_param(req, 'item') == query_param_value
 
         data_param_value = str(uuid4())
+
         class Req:
             method = 'POST'
             data = {
@@ -66,7 +48,7 @@ class TestOauthViews:
 
     # Each view being tested has a wrapper that provides it a request
     # Authenticate View Tests
-    def authenticate(self, password, response_type, request_data = None, signature = None):
+    def authenticate(self, password, response_type, request_data=None):
         if request_data is None:
             data = {
                 'email': self.email,
@@ -77,8 +59,6 @@ class TestOauthViews:
             }
         else:
             data = request_data
-        if signature:
-            data['signature'] = signature
         # The path doesn't actually do anything here, but a path is required and it may as well be the correct path
         engine = import_module(settings.SESSION_ENGINE)
         request = self.arf.post('/oauth/authenticate', data=data)
@@ -86,20 +66,18 @@ class TestOauthViews:
         return authenticate(request)
 
     def test_valid_authenticate(self, mocker):
-        mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'code': str(uuid4())})
-        mocked_check_signature = mocker.patch('oauth.views.check_signature', return_value='')
-        test_signature = str(uuid4())
+        mocker.patch('cloud.controllers.cloud_api.Auth.get_code',
+                     return_value={'code': str(uuid4())})
         redirect_uri = f'https://{uuid4()}.com'
         request_data = {
-                'email': self.email,
-                'password': self.password,
-                'response_type': Auth.RESPONSE_TYPE.code,
-                'client_id': 'cloud_portal',
-                'redirect_uri': redirect_uri
-            }
-        response = self.authenticate(self.password, Auth.RESPONSE_TYPE.code, request_data, test_signature)
-
-        mocked_check_signature.assert_called_with(test_signature, None, redirect_uri)
+            'email': self.email,
+            'password': self.password,
+            'response_type': Auth.RESPONSE_TYPE.code,
+            'client_id': 'cloud_portal',
+            'redirect_uri': redirect_uri
+        }
+        response = self.authenticate(
+            self.password, Auth.RESPONSE_TYPE.code, request_data)
         assert response.status_code == 200
 
     def test_authenticate_raises_wrong_code(self):
@@ -110,8 +88,9 @@ class TestOauthViews:
         assert response.data['errorText'] == 'Invalid value for response_type. It must be code.'
 
     def test_authenticate_raises_not_authorized(self, mocker):
-                                                                # This exception requires some positional arguments
-        mocker.patch('oauth.views.Auth.get_code', side_effect=APINotAuthorisedException('Invalid credentials'), return_value='')
+        # This exception requires some positional arguments
+        mocker.patch('oauth.views.Auth.get_code', side_effect=APINotAuthorisedException(
+            'Invalid credentials'), return_value='')
         response = self.authenticate('wrongPassword', Auth.RESPONSE_TYPE.code)
 
         assert response.status_code == 401
@@ -119,7 +98,7 @@ class TestOauthViews:
         assert response.data['errorText'] == 'Invalid credentials'
 
     # logout View Tests
-    def logout(self, access_token = None, refresh_token = str(uuid4()), cloud_access_token = str(uuid4())):
+    def logout(self, access_token=None, refresh_token=str(uuid4()), cloud_access_token=str(uuid4())):
         self.data = {
             'cloudAccessToken': cloud_access_token,
             'refreshToken': refresh_token
@@ -131,7 +110,8 @@ class TestOauthViews:
         return logout(request)
 
     def test_valid_logout(self, mocker):
-        mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', return_value=True)
+        mock_delete_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.delete_token', return_value=True)
         response = self.logout(access_token=str(uuid4()))
 
         assert response.status_code == 200
@@ -140,7 +120,8 @@ class TestOauthViews:
         assert mock_delete_token.call_count == 3
 
     def test_logout_invalid_tokens(self, mocker):
-        mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', side_effect=APILogicException('', ''))
+        mock_delete_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.delete_token', side_effect=APILogicException('', ''))
         response = self.logout(access_token=str(uuid4()))
 
         assert response.status_code == 401
@@ -150,7 +131,8 @@ class TestOauthViews:
 
     def test_logout_no_access_token(self, mocker):
         # test that Auth.delete_token throws an error, but logout still succeeds
-        mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', side_effect=APILogicException('', ''))
+        mock_delete_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.delete_token', side_effect=APILogicException('', ''))
         # No access token
         response = self.logout()
 
@@ -172,7 +154,8 @@ class TestOauthViews:
         return register_client(request)
 
     def test_register_client(self, mocker):
-        mock_auth_register_client = mocker.patch('api.controllers.cloud_api.Auth.register_client', return_value=Response())
+        mock_auth_register_client = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.register_client', return_value=Response())
         response = self.register_client()
         args, kwargs = mock_auth_register_client.call_args_list[0]
 
@@ -193,7 +176,8 @@ class TestOauthViews:
         monkeypatch.setattr('oauth.views.get_ip', mock_func)
 
     def test_token_valid_refresh_token(self, mock_get_ip, mocker):
-        mock_get_refresh_token = mocker.patch('api.controllers.cloud_api.Auth.get_refresh_token', return_value=Response())
+        mock_get_refresh_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.get_refresh_token', return_value=Response())
         # Refresh token grant_type and token response type
         data = {
             'refresh_token': str(uuid4()),
@@ -202,10 +186,12 @@ class TestOauthViews:
         response = self.token(data)
 
         assert response.status_code == 200
-        mock_get_refresh_token.assert_called_once_with(data['refresh_token'], ip=self.mock_ip, scope=data['scope'])
+        mock_get_refresh_token.assert_called_once_with(
+            data['refresh_token'], ip=self.mock_ip, scope=data['scope'])
 
     def test_token_valid_authorization_code(self, mock_get_ip, mocker):
-        mock_get_access_token = mocker.patch('api.controllers.cloud_api.Auth.get_access_token', return_value=Response())
+        mock_get_access_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.get_access_token', return_value=Response())
         # Authorization code grant_type and token response_type
         data = {
             'code': str(uuid4()),
@@ -213,13 +199,15 @@ class TestOauthViews:
         response = self.token(data)
 
         assert response.status_code == 200
-        mock_get_access_token.assert_called_once_with(data['code'], is_mobile=False, ip=self.mock_ip)
+        mock_get_access_token.assert_called_once_with(
+            data['code'], is_mobile=False, ip=self.mock_ip)
 
     def test_token_valid_password(self, mock_get_ip, mocker):
         mock_code = str(uuid4())
-        mock_get_code = mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'code': mock_code})
-        mock_check_signature = mocker.patch('oauth.views.check_signature', return_value=True)
-        mock_redirect = mocker.patch('oauth.views.redirect', return_value=Response())
+        mock_get_code = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.get_code', return_value={'code': mock_code})
+        mock_redirect = mocker.patch(
+            'oauth.views.redirect', return_value=Response())
         # Password grant_type and code response type
         data = {
             'grant_type': Auth.GRANT_TYPE.password,
@@ -230,21 +218,20 @@ class TestOauthViews:
             'password': str(uuid4()),
             'client_id': str(uuid4()),
             'redirect_uri': str(uuid4()),
-            'signature': str(uuid4()),
             'state': str(uuid4()),
         }
         self.token(data)
 
-        mock_check_signature.assert_called_once_with(data['signature'], data['scope'], data['redirect_uri'])
         mock_get_code.assert_called_once_with(
-                                              data['email'],
-                                              data['password'],
-                                              client_id=data['client_id'],
-                                              ip=self.mock_ip,
-                                              redirect_uri=data['redirect_uri'],
-                                              scope=data['scope']
-                                            )
-        mock_redirect.assert_called_once_with(f"{data['redirect_uri']}?{urllib.parse.urlencode(set_params_for_redirect(mock_code, data['state']))}")
+            data['email'],
+            data['password'],
+            client_id=data['client_id'],
+            ip=self.mock_ip,
+            redirect_uri=data['redirect_uri'],
+            scope=data['scope']
+        )
+        mock_redirect.assert_called_once_with(
+            f"{data['redirect_uri']}?{urllib.parse.urlencode(set_params_for_redirect(mock_code, data['state']))}")
 
     def test_token_require_params_grant_type_and_response_type(self):
         data = {}
@@ -274,7 +261,6 @@ class TestOauthViews:
 
         self.assert_wrong_parameters(response)
         assert 'This field is required.' in response.data['errorData']['code']
-
 
     def test_token_password_require_params(self):
         # Test error from require_params in password authentication
@@ -322,7 +308,8 @@ class TestOauthViews:
         return revoke_token(request)
 
     def test_valid_revoke_token(self, mocker):
-        mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', return_value=Response())
+        mock_delete_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.delete_token', return_value=Response())
         data = {
             'token': str(uuid4())
         }
@@ -346,7 +333,8 @@ class TestOauthViews:
         return validate_token(request)
 
     def test_valid_validate_token(self, mocker):
-        mock_validate_token = mocker.patch('api.controllers.cloud_api.Auth.validate_token', return_value=Response())
+        mock_validate_token = mocker.patch(
+            'cloud.controllers.cloud_api.Auth.validate_token', return_value=Response())
         data = {
             'token': str(uuid4())
         }

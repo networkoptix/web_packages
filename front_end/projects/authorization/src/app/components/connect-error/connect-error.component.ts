@@ -1,14 +1,19 @@
 import {
-    Component, EventEmitter, Input,
-    OnInit, Output
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process } from '@services/process.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { AuthorizeStateType } from '../authorize.component';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -38,7 +43,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    setupNonCloudSystem() {
+    setupNonCloudSystem(): void {
         // future TO-DO
     }
 }

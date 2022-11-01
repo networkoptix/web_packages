@@ -1,0 +1,70 @@
+
+/*
+TODO: For 21.1 drop TTF, SVG fonts as not needed
+... most likely WOFF too as all browsers nowadays support WOFF2
+... http://caniuse.com/woff2
+*/
+
+@font-face {
+    font-family : 'robotolight';
+    src         : local('Roboto Light'), local('Roboto-Light-webfont'),
+    url('./roboto/roboto_light/Roboto-Light-webfont.woff2') format('woff2');
+    font-weight : 300 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotoregular';
+    src: local('Roboto Regular'), local('Roboto-Regular-webfont'),
+    url('./roboto/roboto_regular/Roboto-Regular-webfont.woff2') format('woff2');
+    font-weight : 400 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotomedium';
+    src         : local('Roboto Medium'), local('Roboto-Medium-webfont'),
+    url('./roboto/roboto_medium/Roboto-Medium-webfont.woff2') format('woff2');
+    font-weight : 500 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family : 'robotobold';
+    src         : local('Roboto Bold'), local('Roboto-Bold-webfont'),
+    url('./roboto/roboto_bold/Roboto-Bold-webfont.woff2') format('woff2');
+    font-weight : 700 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotomonoregular';
+    src         : local('RobotoMono Regular'), local('RobotoMono-Regular'),
+    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff2') format('woff2');
+    font-weight : 400 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotomonobold';
+    src         : local('RobotoMono Bold'), local('RobotoMono-Bold'),
+    url('./roboto/roboto_mono_bold/RobotoMono-Bold.woff2') format('woff2');
+    font-weight : 700 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotomonomedium';
+    src         : local('RobotoMono Medium'), local('RobotoMono-Medium'),
+    url('./roboto/roboto_mono_medium/RobotoMono-Medium.woff2') format('woff2');
+    font-weight: 500 !important;
+    font-style: normal;
+    font-display: swap;
+}

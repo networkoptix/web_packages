@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.request import Request
 
 from api.views.account import *
-from api.helpers.exceptions import kill_tokens
+from cloud.helpers.exceptions import kill_tokens
 from notifications.models import PushDevice
 
 
@@ -18,19 +18,21 @@ def test_kill_tokens(arf, mocker):
         mock.assert_any_call(req, token)
 
 
-def test_login_helper(arf, mocker, django_user_model):
+def test_login_helper(arf, mocker, django_user_model, mock_session):
     req = arf.post('/')
-    req.session = {}
+    req.session = mock_session()
     req.data = {'timezone': 'America/Los_Angeles'}
     token = {'refresh_token': 'ref_token', 'access_token': 'acc_token'}
     user = django_user_model(email='test@test.com')
-
+    req.user = user
     mocker.patch.object(django.contrib.auth, 'login')
     timezone_now = timezone.now()
     now = time.time()
     mocker.patch.object(timezone, 'now', return_value=timezone_now)
     mocker.patch.object(time, 'time', return_value=now)
-    mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
+    mocker.patch.object(Account, 'get', return_value={
+                        'account2faEnabled': True})
+    mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
 
     resp = login_helper(req, token, user)
     assert req.session['access_token'] == 'acc_token'
@@ -38,10 +40,11 @@ def test_login_helper(arf, mocker, django_user_model):
     assert req.session['timezone'] == 'America/Los_Angeles'
     assert user.activated_date == timezone_now
     assert req.session['time'] == now
-    assert resp.data == AccountSerializer(user).data
+    assert resp.data == AccountSerializer(req).data
     assert req.session['has2fa'] is True
 
-    mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
+    mocker.patch.object(Account, 'get', return_value={
+                        'account2faEnabled': False})
 
     login_helper(req, token, user)
     assert req.session['has2fa'] is False
@@ -68,20 +71,24 @@ class TestAccountViews:
         }
         self.expected_data = data.copy()
         self.expected_data.update({'language': 'en_US', 'IP': '8.8.8.8'})
-        req = self.arf.post('/api/account/register', data=data, HTTP_X_FORWARDED_FOR='8.8.8.8', REMOTE_ADDR='8.8.8.8')
+        req = self.arf.post('/api/account/register', data=data,
+                            HTTP_X_FORWARDED_FOR='8.8.8.8', REMOTE_ADDR='8.8.8.8')
         req.session = {}
         return register(req)
 
     def test_register_new(self):
-        serializer_mock = self.mocker.patch('api.views.account.CreateAccountSerializer')
+        serializer_mock = self.mocker.patch(
+            'api.views.account.CreateAccountSerializer')
         resp = self.register('new@test.com')
         assert resp.data == {'activated': False}
-        assert dict(serializer_mock.call_args.kwargs['data'].items()) == self.expected_data
+        assert dict(
+            serializer_mock.call_args.kwargs['data'].items()) == self.expected_data
         serializer_mock.return_value.save.assert_called()
 
     def test_register_existing(self, active_user):
         resp = self.register(active_user.email)
-        assert resp.data == {'resultCode': 'alreadyExists', 'errorText': 'User already registered', 'errorData': None}
+        assert resp.data == {'resultCode': 'alreadyExists',
+                             'errorText': 'User already registered', 'errorData': None}
 
     def test_register_cloud_invite(self, active_user):
         active_user.is_active = False
@@ -96,7 +103,8 @@ class TestAccountViews:
     def test_logout(self):
         req = self.arf.post('/api/account/logout')
         req.user = self.user
-        session_data = {'access_token': 'a', 'refresh_token': 'b', 'timezone': 'c', 'time': 'd'}
+        session_data = {'access_token': 'a',
+                        'refresh_token': 'b', 'timezone': 'c', 'time': 'd'}
         req.session = SessionStore()
         req.session.update(session_data)
         self.mocker.patch.object(Auth, 'delete_token')
@@ -117,18 +125,17 @@ class TestAccountViews:
         return self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
 
     def test_index_get(self, mock_cdb_account, active_user):
-        mock_get_2fa_settings = self.mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
+        mock_get_2fa_settings = self.mocker.patch.object(
+            Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
         req = self.arf.get('/api/account')
         req.user = active_user
-        req.session = {}
+        req.session = self.mocker.MagicMock()
+        req.session.get = lambda _, val: val
 
         # Test with totp exists
         resp = index(req)
         assert resp.status_code == status.HTTP_200_OK
-        expected_data = AccountSerializer(req.user).data
-        expected_data['account2faEnabled'] = True
-        expected_data['totpExistsForAccount'] = True
-        expected_data['sessionVerified'] = False
+        expected_data = AccountSerializer(req).data
 
         assert resp.data == expected_data
 
@@ -138,17 +145,18 @@ class TestAccountViews:
         assert not resp.data['totpExistsForAccount']
 
     def test_index_post(self, mock_cdb_account, active_user):
-        mock_get_2fa_settings = self.mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
+        mock_get_2fa_settings = self.mocker.patch.object(
+            Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
         account_update_mock = self.mocker.patch.object(Account, 'update')
-        req = self.arf.post('/api/account', data={'first_name': 'new name', 'last_name': 'new last', 'language': 'en_US'})
+        req = self.arf.post(
+            '/api/account', data={'first_name': 'new name', 'last_name': 'new last', 'language': 'en_US'})
         req.user = active_user
-        req.session = {}
+        req.session = self.mocker.MagicMock()
+        req.session.get = lambda _, val: val
 
         resp = index(req)
-        expected_data = AccountUpdateSerializer(req.user).data
-        expected_data['account2faEnabled'] = True
-        expected_data['totpExistsForAccount'] = True
-        expected_data['sessionVerified'] = False
+        expected_data = AccountUpdateSerializer(req).data
+
         assert resp.data == expected_data
         assert resp.status_code == status.HTTP_200_OK
         assert account_update_mock.call_args.args[1] == 'new name'
@@ -157,7 +165,8 @@ class TestAccountViews:
     def test_auth_key(self):
         req = self.arf.post('/api/account/authKey')
         req.user = self.user
-        self.mocker.patch.object(Account, 'create_temporary_credentials', return_value={'login': 'log', 'password': 'pass'})
+        self.mocker.patch.object(Account, 'create_temporary_credentials', return_value={
+                                 'login': 'log', 'password': 'pass'})
 
         resp = auth_key(req)
         assert resp.status_code == status.HTTP_200_OK
@@ -182,17 +191,20 @@ class TestAccountViews:
 
         resp = delete_user(req)
         assert resp.status_code == status.HTTP_200_OK
-        assert not models.Account.objects.filter(email=active_user.email).exists()
+        assert not models.Account.objects.filter(
+            email=active_user.email).exists()
         kill_token_mock.assert_called()
         kill_session_mock.assert_called()
 
     def test_delete_user_wrong_password(self, delete_mock, active_user):
-        req = self.arf.post('/api/account/delete', data={'password': 'wrong_pass'})
+        req = self.arf.post('/api/account/delete',
+                            data={'password': 'wrong_pass'})
         req.user = active_user
         req.session = {}
 
         resp = delete_user(req)
-        assert resp.data == {'errorData': {'password': '*****'}, 'errorText': 'Wrong password', 'resultCode': 'wrongPassword'}
+        assert resp.data == {'errorData': {'password': '*****'},
+                             'errorText': 'Wrong password', 'resultCode': 'wrongPassword'}
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert models.Account.objects.filter(email=active_user.email).exists()
 
@@ -238,7 +250,8 @@ class TestAccountViews:
         }
         req = self.request_security(active_user, action="deactivate")
         security_mock = self.mock_update_2fa(two_fa)
-        self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={'account2faEnabled': False})
+        self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={
+                                 'account2faEnabled': False})
         view = AccountSecurity().as_view()
 
         assert view(req).status_code == status.HTTP_200_OK
@@ -251,7 +264,8 @@ class TestAccountViews:
             "account2faEnabled": False
         }
         req = self.request_security(active_user, "toggle")
-        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
+        self.mocker.patch.object(Account, 'get', return_value={
+                                 'account2faEnabled': True})
         security_mock = self.mock_update_2fa(two_fa)
         view = AccountSecurity().as_view()
 
@@ -262,7 +276,8 @@ class TestAccountViews:
 
         two_fa["account2faEnabled"] = True
         req = self.request_security(active_user, "toggle")
-        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
+        self.mocker.patch.object(Account, 'get', return_value={
+                                 'account2faEnabled': False})
         security_mock = self.mock_update_2fa(two_fa)
         verify_mock = self.mocker.patch.object(Auth, 'verify_2fa_code')
         view = AccountSecurity().as_view()
@@ -273,7 +288,8 @@ class TestAccountViews:
         assert security_mock.call_args.args[2] is True
 
     def test_security_delete_2fa_enabled(self, active_user):
-        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
+        self.mocker.patch.object(Account, 'get', return_value={
+                                 'account2faEnabled': True})
         req = self.arf.delete('/api/account/security')
         req.user = active_user
         req.session = {}
@@ -282,7 +298,8 @@ class TestAccountViews:
         assert view(req).status_code == status.HTTP_400_BAD_REQUEST
 
     def test_security_delete_2fa_disabled(self, active_user):
-        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
+        self.mocker.patch.object(Account, 'get', return_value={
+                                 'account2faEnabled': False})
         self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={})
         req = self.arf.delete('/api/account/security')
         req.user = active_user
@@ -290,8 +307,6 @@ class TestAccountViews:
 
         view = AccountSecurity().as_view()
         assert view(req).status_code == status.HTTP_200_OK
-
-
 
     def test_review_cookie(self):
         assert not self.user.cookie_reviewed
@@ -331,7 +346,8 @@ class TestAccountViews:
 
         resp = change_password(req)
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
-        assert resp.data == {'errorData': {'new_password': '****'}, 'errorText': 'Incorrect new password', 'resultCode': 'wrongParameters'}
+        assert resp.data == {'errorData': {'new_password': '****'},
+                             'errorText': 'Incorrect new password', 'resultCode': 'wrongParameters'}
 
     def test_change_password_incorrect_old_password(self, active_user, mock_change_password):
         data = {'old_password': 'incorrect_pass', 'new_password': 'new_pass'}
@@ -342,7 +358,8 @@ class TestAccountViews:
         resp = change_password(req)
         mock_change_password.assert_called()
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
-        assert resp.data == {'errorData': None, 'errorText': 'Wrong old password or invalid mfaCode', 'resultCode': 'badRequest'}
+        assert resp.data == {'errorData': None,
+                             'errorText': 'Wrong old password or invalid mfaCode', 'resultCode': 'badRequest'}
 
     def test_verify_password(self):
         account_mock = self.mocker.patch.object(Account, 'get')
@@ -351,7 +368,8 @@ class TestAccountViews:
         req.session = {}
         resp = verify_password(req)
         assert resp.status_code == status.HTTP_200_OK
-        account_mock.assert_called_with({}, email=self.user.email, password='pass')
+        account_mock.assert_called_with(
+            {}, email=self.user.email, password='pass')
 
     def test_activate_missing_params(self):
         req = self.arf.post('/api/account/activate')
@@ -369,12 +387,14 @@ class TestAccountViews:
 
     def test_activate_with_code(self):
         self.user.save()
-        code = str(base64.b64encode(('act_code' + ':' + self.user.email).encode('utf-8')), 'utf-8')
+        code = str(base64.b64encode(
+            ('act_code' + ':' + self.user.email).encode('utf-8')), 'utf-8')
         req = self.arf.post('/api/account/activate', data={'code': code})
         req.session = {}
         timezone_now = timezone.now()
         self.mocker.patch.object(timezone, 'now', return_value=timezone_now)
-        self.mocker.patch.object(Account, 'activate', return_value={'email': self.user.email})
+        self.mocker.patch.object(Account, 'activate', return_value={
+                                 'email': self.user.email})
 
         resp = activate(req)
         assert resp.status_code == status.HTTP_200_OK
@@ -382,7 +402,8 @@ class TestAccountViews:
         assert self.user.activated_date == timezone_now
 
     def test_activate_with_email(self, active_user):
-        req = self.arf.post('/api/account/activate', data={'user_email': self.user.email})
+        req = self.arf.post('/api/account/activate',
+                            data={'user_email': self.user.email})
         req.session = {}
         reactivate_mock = self.mocker.patch.object(Account, 'reactivate')
 
@@ -405,12 +426,16 @@ class TestAccountViews:
         }
 
     def restore_password_with_code(self, password):
-        self.code = str(base64.b64encode(('restore_code' + ':' + self.user.email).encode('utf-8')), 'utf-8')
-        req = self.arf.post('/api/account/restorePassword', data={'code': self.code, 'new_password': password, 'mfaCode': 'mfaCode'})
+        self.code = str(base64.b64encode(
+            ('restore_code' + ':' + self.user.email).encode('utf-8')), 'utf-8')
+        req = self.arf.post('/api/account/restorePassword',
+                            data={'code': self.code, 'new_password': password, 'mfaCode': 'mfaCode'})
         req.session = {}
         self.timezone_now = timezone.now()
-        self.timezone_mock = self.mocker.patch.object(timezone, 'now', return_value=self.timezone_now)
-        self.restore_mock = self.mocker.patch.object(Account, 'restore_password', return_value={'email': self.user.email})
+        self.timezone_mock = self.mocker.patch.object(
+            timezone, 'now', return_value=self.timezone_now)
+        self.restore_mock = self.mocker.patch.object(
+            Account, 'restore_password', return_value={'email': self.user.email})
         return restore_password(req)
 
     def test_restore_password_with_code(self):
@@ -423,7 +448,8 @@ class TestAccountViews:
         self.user.refresh_from_db()
         assert self.user.activated_date == self.timezone_now
         assert not PushDevice.objects.filter(user=self.user).exists()
-        self.restore_mock.assert_called_with(self.code, 'new_pass', 'mfaCode', None)
+        self.restore_mock.assert_called_with(
+            self.code, 'new_pass', 'mfaCode', None)
 
         # Check that date is only updated if none exists
         old_time = self.timezone_now
@@ -436,10 +462,12 @@ class TestAccountViews:
     def test_restore_password_with_code_bad_password(self):
         resp = self.restore_password_with_code('pass')
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
-        assert resp.data == {'errorData': {'new_password': '****'}, 'errorText': 'Wrong new password', 'resultCode': 'wrongParameters'}
+        assert resp.data == {'errorData': {'new_password': '****'},
+                             'errorText': 'Wrong new password', 'resultCode': 'wrongParameters'}
 
     def test_restore_password_with_email(self):
-        req = self.arf.post('/api/account/restorePassword', data={'user_email': self.user.email}, HTTP_X_FORWARDED_FOR='8.8.8.8', REMOTE_ADDR='8.8.8.8')
+        req = self.arf.post('/api/account/restorePassword', data={
+                            'user_email': self.user.email}, HTTP_X_FORWARDED_FOR='8.8.8.8', REMOTE_ADDR='8.8.8.8')
         req.session = {}
         reset_mock = self.mocker.patch.object(Account, 'reset_password')
 
@@ -448,17 +476,22 @@ class TestAccountViews:
         reset_mock.assert_called_with(self.user.email, '8.8.8.8')
 
     def test_check_account_in_portal_doesnt_exist(self):
-        req = self.arf.post('/api/account/check', data={'email': 'not_exist@test.com'})
+        req = self.arf.post('/api/account/check',
+                            data={'email': 'not_exist@test.com'})
         req.session = {}
-        self.mocker.patch.object(Account, 'check_account', side_effect=APINotFoundException(error_text=''))
+        self.mocker.patch.object(Account,
+                                 'check_account',
+                                 side_effect=APINotFoundException(error_text=''))
         resp = check_account_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': False}
 
     def test_check_account_in_cloud_db_exists(self):
-        req = self.arf.post('/api/account/check', data={'email': 'not_exist@test.com'})
+        req = self.arf.post('/api/account/check',
+                            data={'email': 'not_exist@test.com'})
         req.session = {}
-        self.mocker.patch.object(Account, 'check_account', return_value={'status': 'invited'})
+        self.mocker.patch.object(Account, 'check_account', return_value={
+                                 'status': 'invited'})
         resp = check_account_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': True}
@@ -466,7 +499,8 @@ class TestAccountViews:
     def test_check_account_in_portal_not_active(self):
         self.user.activated_date = None
         self.user.save()
-        req = self.arf.post('/api/account/check', data={'email': self.user.email})
+        req = self.arf.post('/api/account/check',
+                            data={'email': self.user.email})
         resp = check_account_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': True}
@@ -474,13 +508,15 @@ class TestAccountViews:
     def test_check_account_in_portal_active(self):
         self.user.activated_date = timezone.now()
         self.user.save()
-        req = self.arf.post('/api/account/check', data={'email': self.user.email})
+        req = self.arf.post('/api/account/check',
+                            data={'email': self.user.email})
         resp = check_account_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': True, 'emailExists': True}
 
     def check_code_in_portal(self, email):
-        code = str(base64.b64encode(('restore_code' + ':' + email).encode('utf-8')), 'utf-8')
+        code = str(base64.b64encode(
+            ('restore_code' + ':' + email).encode('utf-8')), 'utf-8')
         req = self.arf.post('/api/account/checkCode', data={'code': code})
         resp = check_code_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
@@ -502,8 +538,10 @@ class TestAccountViews:
             else:
                 return None
 
-        code = str(base64.b64encode(f'{self.user.email}:{temp_pass}'.encode('utf-8')), 'utf-8')
-        self.mocker.patch('django.contrib.auth.authenticate', side_effect=check_auth)
+        code = str(base64.b64encode(
+            f'{self.user.email}:{temp_pass}'.encode('utf-8')), 'utf-8')
+        self.mocker.patch('django.contrib.auth.authenticate',
+                          side_effect=check_auth)
         req = self.arf.post('/api/account/checkAuthCode', data={'code': code})
         req.session = {}
         return check_auth_code(req)
@@ -516,4 +554,5 @@ class TestAccountViews:
     def test_check_auth_code_incorrect(self):
         resp = self.check_auth_code('wrong_pass')
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
-        assert resp.data == {'errorData': None, 'errorText': 'Auth code has expired.', 'resultCode': 'notAuthorized'}
+        assert resp.data == {
+            'errorData': None, 'errorText': 'Auth code has expired.', 'resultCode': 'notAuthorized'}

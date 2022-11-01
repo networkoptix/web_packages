@@ -10,6 +10,7 @@
     {% if user.is_superuser and package_url %}
     <li><a onclick="event.preventDefault(); pollPackage()" href="{{package_url}}?get_values">Export Current Records</a></li>
     {% endif %}
+    <li><a href="{% url 'admin:pages' original.pk %}">Edit Content</a></li>
     {{ block.super }}
 {% endblock %}
 

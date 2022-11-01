@@ -1,0 +1,6 @@
+<form (submit)="wizardService.next()">
+    <nx-select
+        [(ngModel)]="wizardService.setupConfig.remoteSystem"
+        [items]="wizardService.peers"
+    ></nx-select>
+</form>

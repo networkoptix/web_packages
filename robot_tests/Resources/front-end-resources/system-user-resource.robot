@@ -10,18 +10,18 @@ Users Suite Setup
     Open Browser and go to URL    ${url}
     ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
-    #system(name,port,cont,owner,id) 
-    #local auth, cloud auth, server url, 
+    #system(name,port,cont,owner,id)
+    #local auth, cloud auth, server url,
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
     ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     #Create Base Cloud System    image=${IMAGE}
     ${server 1} =    Create Base System    user0-${random}    owner=${owner}
     Set Suite Variable    ${server 1}    ${server 1}
-    
+
     Save User Role    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}    Client Custom    NoGlobalPermissions
     ${client custom}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${client custom}     ${client custom}
-        
+
     ${server 2} =    Create Base System    user1-${random}    owner=${owner}
     Set Suite Variable    ${server 2}    ${server 2}
     # ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
@@ -43,6 +43,7 @@ Cloud Suite Setup
     Sleep    1
     Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
+    #Dismiss New Feature Modal
     Log Out
 
 #Users Test Setup
@@ -62,7 +63,7 @@ Users Teardown
     # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
     # Disconnect Server via API    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${password}    ${system['owner']}
     # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     # ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
     # ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
     # Remove Temporary Users
@@ -137,7 +138,7 @@ Check Special Hint
         Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
     ELSE IF    "${type}"=="Client Custom"
         Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
-    ELSE    
+    ELSE
         Fail    msg=User type did not match any expected types
     END
 
@@ -219,7 +220,7 @@ Verify In Local Users UI
         ELSE IF    '${email}' == 'admin'
 	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
 		ELSE
-            Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..    
+            Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..
         END
     END
 
@@ -229,7 +230,6 @@ Modify Local Users via Cloud UI
     Verify In Local Users UI    ${local users}    ${email}
     &{local users limited}=    Create Dictionary    &{local users}
     Pop From Dictionary    ${local users limited}    cloudAdmin
-
     FOR    ${user}    IN    @{local users limited}
 # commented out because of CLOUD-6854
         #Click Element    //span[text()="Local+${user}"]
@@ -251,16 +251,14 @@ Modify Local Users via Cloud UI
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email}
         #Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
-
         Log    Change password for ${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        Wait Until Elements Are Visible    //input[@id="newPassword"]    ${LOCAL USER CHANGE PASSWORD SAVE}
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
         Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
         Wait Until Element is Not Visible    //input[@id="newPassword"]
-
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}    permissions=${permissions}[${reverse permission}]
-
         Append To List    ${new locals}    ${new local}
         #Append To List    @{old locals}    &{old local}
     END
@@ -452,7 +450,7 @@ Change All Local User Permissions
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
+        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span/span[text()="${new permission}"]
 	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         ${name} =   Convert To Lowercase    Local+${user}
@@ -469,7 +467,8 @@ Change All Local User Password
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
-        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
+        Wait Until Elements Are Visible   //input[@id="newPassword"]
+        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}    ${LOCAL USER CHANGE PASSWORD SAVE}
         Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         Sleep    5
@@ -573,3 +572,20 @@ Reset
     ELSE
         Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
     END
+
+Share System With New User And Grab Email Link
+    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    ${random email} =   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
+    Append To List    ${TMP USERS}    ${random email}
+    Go To Users List    
+    Share To    ${random email}    ${ADMIN TEXT}
+    Sleep    10
+    Log Out
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True    
+    ${email} =    Wait For Email    recipient=${random email}    timeout=120
+    ${invite link}=   Get Nx Links From Email    ${email}    system_invite     
+    Set Test Variable     ${random email}    ${random email}
+    Set Test Variable     ${invite link}    ${invite link}
+    Delete Email    ${email}   
+    Close Mailbox
+    

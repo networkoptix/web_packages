@@ -1,0 +1,54 @@
+<label
+    class="nx-radio"
+    [for]="componentId"
+    [ngClass]="{ disabled: disabled }"
+>
+    <input
+        type="radio"
+        #inputRadioFocus
+        [id]="componentId"
+        [value]="value"
+        [disabled]="disabled"
+        (click)="changeState()"
+    />
+    <span
+        class="check"
+        [ngClass]="state"
+    >
+        <svg
+            viewBox="0 0 26 26"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <circle
+                class="circle-focus outer"
+                cx="13"
+                cy="13"
+                r="13"
+            />
+            <circle
+                class="circle-focus"
+                cx="13"
+                cy="13"
+                r="11"
+            />
+            <circle
+                class="circle"
+                cx="13"
+                cy="13"
+                r="7"
+            />
+            <circle
+                class="dot"
+                cx="13"
+                cy="13"
+                r="4"
+            />
+        </svg>
+    </span>
+    <span
+        *ngIf="label"
+        class="label-text"
+        >{{ label }}</span
+    >
+</label>

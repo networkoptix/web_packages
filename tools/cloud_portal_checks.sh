@@ -24,7 +24,7 @@ fi
 if git diff --name-only | grep --quiet "$FRONTEND_DIR"
 then
     pushd $FRONTEND_DIR
-    npm install
+    npm run node-modules
     npm run lint
     if [[ "$?" == '1' ]]
     then

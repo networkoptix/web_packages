@@ -2,6 +2,9 @@
 Resource          ../../resource.robot
 
 *** Keywords ***
+Integrations Test Teardown
+    Run Keyword If Test Failed   Go To Integrations Page
+
 Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
     IF    ${is enabled}==${True}

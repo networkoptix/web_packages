@@ -1,6 +1,6 @@
 from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.views import exception_handler
-from api.helpers.exceptions import clean_passwords, handler
+from cloud.helpers.exceptions import clean_passwords, handler
 import logging
 
 logger = logging.getLogger(__name__)

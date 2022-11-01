@@ -1,4 +1,0 @@
-<ng-template #preloader>
-    <nx-pre-loader [minHeight]="editorSettings?.min_height || preloaderHeight"></nx-pre-loader>
-</ng-template>
-<editor *ngIf="valueLoaded && editorSettings; else preloader" [init]="editorSettings" [(ngModel)]="value"></editor>

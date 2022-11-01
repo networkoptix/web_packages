@@ -1,0 +1,97 @@
+<form
+    #resetServerForm="ngForm"
+    name="resetServerForm"
+    novalidate
+    [ngClass]="{ 'hide-errors': hideErrors }"
+    (submit)="hideErrors = false"
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            [innerHTML]="
+                'dialogs.titles.serversReset' | translate: { title: serverName } | safe: 'html'
+            "
+        ></h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div [ngStyle]="{ display: needsUpdate ? 'none' : 'unset' }">
+        <div class="modal-body">
+            <div class="form-group">
+                <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
+                    <p
+                        class="mb-0"
+                        translate
+                    >
+                        All settings for this server will be reset to factory default settings, and
+                        it will be detached from this system and added to a new one.
+                    </p>
+
+                    <p
+                        [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
+                        translate
+                    >
+                        Video archive will remain intact.
+                    </p>
+                    <ng-container *ngIf="system.mediaserver.requiresPassword">
+                        <span translate>Enter password for your account to continue</span
+                        ><span>.</span>
+                    </ng-container>
+                </div>
+                <ng-container *ngIf="system.mediaserver.requiresPassword">
+                    <input
+                        class="form-control"
+                        [(ngModel)]="password"
+                        id="password"
+                        name="password"
+                        type="password"
+                        required
+                        nxFocusMe
+                    />
+                    <p
+                        class="help-block"
+                        *ngIf="
+                            !resetServerForm.controls['password']?.valid &&
+                            resetServerForm.controls['password']?.touched
+                        "
+                    >
+                        <span
+                            class="input-error"
+                            translate
+                            >Password is required</span
+                        >
+                    </p>
+                </ng-container>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <nx-process-button
+                [process]="resetServer"
+                [form]="resetServerForm"
+                [actionType]="'danger'"
+                [buttonDisabled]="needsUpdate"
+                buttonText="{{ 'Reset' | translate }}"
+            ></nx-process-button>
+            <nx-cancel-button
+                [process]="resetServer"
+                [discardFn]="close"
+            ></nx-cancel-button>
+        </div>
+    </div>
+    <nx-update-webadmin-session
+        *ngIf="system.useRest && needsUpdate"
+        (loginSuccess)="needsUpdate = false; resetServer.run()"
+        [noConnectionMsg]="'Failed to reset server.' | translate"
+        [dialogRef]="dialogRef"
+        [system]="system"
+        processAction="danger"
+    ></nx-update-webadmin-session>
+</form>

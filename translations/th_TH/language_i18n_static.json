@@ -1,6 +1,7 @@
 {
     "language": "th_TH",
     "About %CLOUD_NAME%": "เกี่ยวกับ %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "เซิร์ฟเวอร์ทั้งหมด",
     "Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
     "For developers": "For developers",
@@ -133,6 +134,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "สร้างบัญชี %CLOUD_NAME%",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -175,6 +177,38 @@
         "ptz": "กล้อง PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "ขนาด",
+            "state": "สถานะ",
+            "system": "ระบบ",
+            "expires": "หมดอายุแล้ว",
+            "key": "Key"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -187,7 +221,7 @@
         },
         "cameraLinks": {
             "copyActiveText": "คัดลอกไปยังคลิปบอร์ด",
-            "copyDefaultText": "สำเนา",
+            "copyDefaultText": "คัดลอก",
             "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
             "highStream": "สตรีมสูง",
             "lowStream": "สตรีมต่ำ",
@@ -226,6 +260,14 @@
             "high": "สูง",
             "medium": "ปานกลาง",
             "low": "ต่ำ"
+        },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
         "general": "ทั่วไป",
         "generalError": "มีข้อผิดพลาดเกิดขึ้นโปรดลองอีกครั้ง. หากปัญหายังคงมีอยู่โปรดติดต่อทีมสนับสนุนของคุณ",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "คุณกำลังดูรายงานเก่า"
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -309,6 +358,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "กล้อง",
             "cameras": "กล้อง",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "เปิดใช้งาน",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "ย้ายที่เก็บข้อมูลบนคลาวด์",
+                    "action": "ย้าย",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "ลบที่เก็บข้อมูลบนคลาวด์หรือไม่",
+                    "action": "ลบ",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "การบันทึกปัจจุบัน",
                 "whenFullyUsed": "เมื่อใช้อย่างเต็มที่",
@@ -316,6 +387,20 @@
                 "archiveFrom": "เก็บถาวรจาก",
                 "recordingBitrate": "บันทึกบิตเรต",
                 "delayFromLive": "ความล่าช้าในการถ่ายทอดสด"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "ย้าย",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "ลบ",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "ลบที่เก็บข้อมูลบนคลาวด์ได้สำเร็จจากระบบ",
@@ -373,15 +458,11 @@
             "otherSystem": "ระบบอื่น",
             "ownerCanMergeText": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
             "passwordRequired": "จำเป็นต้องใช้รหัสผ่าน",
-            "passwordWrong": "รหัสผ่านผิด",
+            "passwordWrong": "รหัสผ่านไม่ถูกต้อง",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "เราขอแนะนำให้คุณปรึกษากับ",
-                "b_support": "ทีมช่วยเหลือ",
-                "c_proceeding": "ก่อนดำเนินการต่อ"
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
@@ -404,7 +485,8 @@
             "urlEmpty": "ที่อยู่เซิร์ฟเวอร์",
             "urlNotValid": "ป้อน URL ที่ถูกต้อง",
             "unknownError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -448,6 +530,13 @@
             "action": "เข้าสู่ระบบ",
             "message": "Please log in again.",
             "title": "เซสชันของคุณหมดอายุ"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "ข้อผิดพลาด",
@@ -594,7 +683,7 @@
         "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
-        "notAuthorized": "รหัสผ่านผิด",
+        "notAuthorized": "รหัสผ่านไม่ถูกต้อง",
         "badUsername": "ไม่พบบัญชีนี้",
         "notFound": "ไม่​พบ",
         "ok": "ตกลง",
@@ -616,6 +705,10 @@
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+    },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
     },
     "integration": {
         "Access Control": "การควบคุมการเข้าถึง",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -694,6 +788,21 @@
         "server": "เซิร์ฟเวอร์",
         "alert": "Alert"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
+    },
     "pageTitles": {
         "about": "เกี่ยวกับ",
         "account": "การตั้งค่าบัญชี",
@@ -716,14 +825,14 @@
         "register": "สร้างบัญชี",
         "registerSuccess": "ขอต้อนรับสู่:",
         "restorePassword": "รีเซ็ตรหัสผ่าน",
-        "restorePasswordSuccess": "บันทึกรหัสผ่านแล้ว",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "อุปกรณ์ที่รองรับ",
         "system": "ระบบ",
         "systemShare": "ระบบใช้ร่วมกัน-",
         "systems": "ระบบ",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "ดูกล้อง",
+        "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "ความปลอดภัย",
         "twofaRequired": "Two-factor authentication required"
@@ -807,8 +916,6 @@
         "Search": "ค้นหา",
         "analytics": "การวิเคราะห์",
         "analyticsSelected": "วิเคราะห์เหตุการณ์",
-        "filter applied": "ใช้ตัวกรอง",
-        "filters applied": "ใช้ตัวกรอง",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "ประเภท",
         "hardwareTypes": "ประเภท",
@@ -816,7 +923,10 @@
         "search_ipvd": "ค้นหาตามรุ่นหรือผู้ผลิต",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "ผู้ผลิต",
-        "vendors": "ผู้ผลิต"
+        "vendors": "ผู้ผลิต",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -848,6 +958,7 @@
         "Settings": "การตั้งค่า",
         "Information": "ข้อมูล",
         "Bookmarks": "บุ๊คมาร์ค",
+        "Layouts": "เค้าโครง",
         "Monitoring": "การเฝ้าดู"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "( log ข้อมูลทั้งหมดที่มี)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "ท้องถิ่น",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "คลาวด์"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "เปิดใช้งาน",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

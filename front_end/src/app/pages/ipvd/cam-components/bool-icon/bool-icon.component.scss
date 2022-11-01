@@ -1,0 +1,37 @@
+@use "../../../../../styles/theme_variables_common" as theme_vars;
+
+.icon-additional {
+    font-family : theme_vars.$font-family-medium;
+    font-size   : theme_vars.$font-size-ssm;
+    float       : left;
+    margin-left : 2px;
+}
+
+
+.icon-positive {
+    line-height     : 1rem;
+    font-size       : 1.5rem;
+    display         : flex;
+    justify-content : center;
+    margin-top      : -2px;
+    margin-left     : -2px;
+}
+
+.icon-negative {
+    line-height     : 1rem;
+    font-size       : 1.5rem;
+    color           : var(--light10);
+    display         : flex;
+    justify-content : center;
+    margin-top      : -5px;
+    margin-left     : -2px;
+}
+
+.icon-unknown {
+    line-height     : 1rem;
+    font-size       : theme_vars.$font-size-base;
+    font-family     : theme_vars.$font-family-medium;
+    display         : flex;
+    justify-content : center;
+    margin-left     : 1px;
+}

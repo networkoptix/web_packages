@@ -1,0 +1,19 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+
+:host {
+    .stepper-wrapper {
+        height         : 100%;
+        display        : flex;
+        flex-direction : column;
+    }
+    
+    footer {
+        display         : flex;
+        margin          : auto -8px -8px -8px;
+        padding         : 8px;
+        border-top      : 1px solid var(--border-color);
+        background      : var(--body-bg);
+        justify-content : space-between;
+    }
+}

@@ -1,18 +1,22 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output
-}                       from '@angular/core';
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { combineLatest, Observable, interval } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import {
-    combineLatest, Observable, interval
-}                                    from 'rxjs';
-import { filter, map, takeUntil }    from 'rxjs/operators';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { AuthorizeStateType } from '../authorize.component';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,7 +34,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     @Input() loginEmail: string;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
     @Input() checkActivationProcess: Process;
-    @Input() checkIfActivated: () => {};
+    @Input() checkIfActivated: () => void;
     @Input() loginProcess: Process;
     @Input() activated$: Observable<boolean>;
     @Input() fromEmail$: Observable<boolean>;
@@ -53,12 +57,14 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
                 : this.LANG.authorize.createdText();
         }));
         this.contentMessage$ = combineLatest([this.activated$, this.fromEmail$]).pipe(map(([activated, fromEmail]) => {
-            return NxLanguageProviderService.translate(
-                activated
-                    ? fromEmail && this.LANG.authorize.activatedAdditional || (() => '')
-                    : this.LANG.authorize.createdAdditional,
-                { accountEmail: this.loginEmail || '' }
-            );
+            const params = { accountEmail: this.loginEmail || '' };
+            if (activated) {
+                return fromEmail
+                    ? this.LANG.authorize.activatedAdditional(params)
+                    : '';
+            } else {
+                return this.LANG.authorize.createdAdditional(params);
+            }
         }));
 
         // automatically checks if activated every 5 seconds

@@ -56,7 +56,8 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
         if django_db_createdb:
             read_structure_json()
         eng = Language.objects.get_or_create(name='English', code='en_US')[0]
-        Customization.objects.get_or_create(name='default', default_language=eng)
+        Customization.objects.get_or_create(
+            name='default', default_language=eng)
 
 
 @pytest.fixture(autouse=True)
@@ -83,7 +84,6 @@ def superuser(django_user_model, db):
 @pytest.fixture
 def temp_superuser(django_user_model):
     return django_user_model(email='temp_superuser@networkoptix.com', is_superuser=True, is_staff=True)
-
 
 
 @pytest.fixture()
@@ -113,7 +113,8 @@ def english_language(db):
 
 @pytest.fixture()
 def default_customization(english_language, db):
-    cust, created = Customization.objects.get_or_create(name='default', default_language=english_language)
+    cust, created = Customization.objects.get_or_create(
+        name='default', default_language=english_language)
     cust.languages.add(english_language)
     return cust
 
@@ -194,7 +195,7 @@ def asset_factory():
                 ContentVersion, asset=asset, customization=customization, created_by=account, accepted_date=accepted_date, accepted_by=accepted_by)
             if not draft:
                 create_asset(AssetCustomizationReview,
-                           customization=customization, version=version)
+                             customization=customization, version=version)
             if accepted:
                 reviews = AssetCustomizationReview.objects.filter(
                     version__asset=asset)
@@ -208,7 +209,7 @@ def asset_factory():
 
 @pytest.fixture(scope="session")
 def account_factory():
-    def get_account(email='super@user.com', is_superuser=True, customization_name='default', **kwargs):
+    def get_account(email='super@user.com', is_superuser=True, customization_name='default', prepare_only=False, **kwargs):
         """Gets existing Account or creates new.
 
         Args:
@@ -218,12 +219,15 @@ def account_factory():
         Returns:
             Account: Account with superuser value mocked
         """
-        existing = Account.objects.filter(email=email).first()
-        account = existing or baker.make(Account, email=email, is_superuser=is_superuser, customization=customization_name, **kwargs)
+        existing = baker.prepare(Account, email=email, is_superuser=is_superuser, customization=customization_name,
+                                 **kwargs) if prepare_only else Account.objects.filter(email=email).first()
+        account = existing or baker.make(
+            Account, email=email, is_superuser=is_superuser, customization=customization_name, **kwargs)
 
         if existing:
             account.is_superuser = is_superuser
-            account.save()
+            if not prepare_only:
+                account.save()
 
         return account
     return get_account
@@ -270,7 +274,7 @@ def menu_factory():
     return get_menu
 
 
-def get_menu(name='Test Menu', base_url='test', url='menu', menu_type = Menu.MENU_TYPES.docs_knowledgebase):
+def get_menu(name='Test Menu', base_url='test', url='menu', menu_type=Menu.MENU_TYPES.docs_knowledgebase):
     """Gets existing Menu or creates new.
 
     Args:
@@ -284,6 +288,7 @@ def get_menu(name='Test Menu', base_url='test', url='menu', menu_type = Menu.MEN
     """
     return Menu.objects.filter(name=name, base_url=base_url, url=url, type=menu_type).first(
     ) or baker.make(Menu, name=name, base_url=base_url, url=url, type=menu_type, enabled=True)
+
 
 @pytest.fixture(scope="session")
 def asset_menu_node_factory():
@@ -302,10 +307,11 @@ def get_asset_menu_node(asset: Asset, enabled_customizations: Iterable[Customiza
     Returns:
         Menu: Instance of MenuNode
     """
-    existing_node = MenuNode.objects.filter(asset=asset, parent_menu=parent_menu, parent_node=parent_node).first()
+    existing_node = MenuNode.objects.filter(
+        asset=asset, parent_menu=parent_menu, parent_node=parent_node).first()
     if existing_node:
         existing_node.enabled.add(*enabled_customizations)
-    return  existing_node or baker.make(MenuNode, asset=asset, parent_menu=parent_menu, parent_node=parent_node, enabled=enabled_customizations, name=asset.name)
+    return existing_node or baker.make(MenuNode, asset=asset, parent_menu=parent_menu, parent_node=parent_node, enabled=enabled_customizations, name=asset.name)
 
 
 @pytest.fixture(scope="session")
@@ -333,7 +339,8 @@ def add_permission(db, cloud_portal_type):
         group = Group.objects.create(name=f'{user.email}_{codename}_auto',)
         group.options.all_assets = True
         group.options.save()
-        UserGroupsToAssetType.objects.get_or_create(asset_type=cloud_portal_type, group=group)
+        UserGroupsToAssetType.objects.get_or_create(
+            asset_type=cloud_portal_type, group=group)
         permission = Permission.objects.filter(codename=codename).first()
         if not permission:
             raise Exception('Permission not found')
@@ -350,7 +357,8 @@ def bakery():
 
 def check_meta_factory(target_class):
     def check_meta(field, attribute, expected):
-        assert getattr(target_class._meta.get_field(field), attribute, not expected) == expected
+        assert getattr(target_class._meta.get_field(field),
+                       attribute, not expected) == expected
 
     return check_meta
 
@@ -381,3 +389,17 @@ def mock_cache(mocker):
         cache_mock.set.side_effect = dummy_cache.set
         return cache_mock
     return _mock
+
+@pytest.fixture()
+def mock_session(mocker):
+    def _mock_session(session_dict = None):
+        if session_dict is None:
+            session_dict = {}
+
+        session_dict = {}
+        session =  mocker.MagicMock()
+        session.__getitem__.side_effect = session_dict.__getitem__
+        session.__setitem__.side_effect = session_dict.__setitem__
+        return session
+
+    return _mock_session

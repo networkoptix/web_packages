@@ -5,7 +5,8 @@ const routes: Routes = [
     {
         path: 'redirect-oauth',
         loadChildren: () => import('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
-    }, {
+    },
+    {
         path: 'authorize',
         loadChildren: () => import('./components/authorize.module').then(m => m.NxAuthorizeModule)
     },
@@ -16,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

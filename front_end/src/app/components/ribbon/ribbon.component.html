@@ -1,0 +1,68 @@
+<ng-container *ngIf="visibility">
+    <div
+        class="clearfix ribbon"
+        *ngIf="!type"
+    >
+        <div class="message">{{ message }}</div>
+        <div class="action">
+            <ng-container *ngFor="let action of actions">
+                <ng-container *ngIf="action.type === 'link'">
+                    <a
+                        *ngIf="!action.external"
+                        [routerLink]="action.value"
+                        target="_blank"
+                        >{{ action.text }}</a
+                    >
+                    <a
+                        *ngIf="action.external"
+                        [href]="action.value"
+                        target="_blank"
+                        >{{ action.text }}</a
+                    >
+                </ng-container>
+                <nx-process-button
+                    *ngIf="action.type === 'process-button'"
+                    [buttonText]="action.text"
+                    [actionType]="'default'"
+                    [customClass]="'small-button'"
+                    [process]="action.value"
+                ></nx-process-button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div
+        class="clearfix alert-ribbon ribbon"
+        *ngIf="type === 'alert'"
+    >
+        <div class="message">
+            <div class="message-content">
+                <div class="message-content-wrapper">
+                    <div [innerHTML]="message"></div>
+                    <a
+                        *ngIf="updateFunction"
+                        (click)="updateFunction()"
+                        target="_blank"
+                        class="action-link"
+                    >
+                        <svg-icon
+                            *ngIf="actions.length && actions[0].text === 'Refresh'"
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+                            [svgStyle]="{ 'height.px': '20' }"
+                            title="Reload"
+                        ></svg-icon>
+                        <span>{{ actions[0].text }}</span>
+                    </a>
+                </div>
+            </div>
+            <a
+                *ngIf="actions.length && actions[0] && !updateFunction"
+                [href]="actions[0].value"
+                target="_blank"
+                class="ml-2"
+                >{{ actions[0].text }}</a
+            >
+        </div>
+    </div>
+</ng-container>

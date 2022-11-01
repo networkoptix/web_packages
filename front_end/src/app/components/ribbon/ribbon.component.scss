@@ -1,0 +1,116 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+
+.ribbon {
+    @include typography.regular13nocolor;
+    color: var(--ribbon-color);
+    background-color : var(--ribbon-bg);
+    line-height      : 1rem;
+    border-bottom    : 1px solid var(--ribbon-border);
+    padding          : .5rem 1rem;
+    display          : flex;
+    align-items      : center;
+
+    .message {
+        flex : 70%;
+        &-content {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &-wrapper {
+                position: relative;
+            }
+        }
+    }
+
+    .action {
+        flex       : 30%;
+        text-align : right;
+
+        a {
+            @include typography.regular13nocolor;
+            color : var(--ribbon-color);
+            text-decoration : underline;
+
+            &:hover {
+                opacity : .8;
+            }
+        }
+
+        & > * {
+            margin-left: 1rem;
+        }
+    }
+}
+
+.alert-ribbon {
+    border-bottom: 1px solid var(--ribbon-alert-border);
+    background-color: var(--ribbon-alert-bg) !important;
+
+    .message {
+        color: var(--ribbon-alert-color);
+        text-align: center;
+        
+        .larger {
+            @include typography.regular18nocolor;
+        }
+        
+        .action-link {
+            span {
+                color : var(--ribbon-alert-color);
+            }
+        
+            &:hover {
+                span {
+                    color : var(--ribbon-alert-color);
+                }
+            
+                svg * {
+                    stroke : var(--ribbon-alert-color);
+                }
+            }
+        
+            svg * {
+                stroke : var(--ribbon-alert-color);
+            }
+        }
+    }
+
+    a:hover {
+        opacity: .8;
+    }
+}
+
+.message-content-wrapper {
+    display: flex;
+    align-items: center;
+    
+    .action-link {
+        display: flex;
+        align-items: center;
+        margin-left: 32px;
+        cursor: pointer;
+
+        span {
+            text-decoration: underline;
+            margin-left: 2px;
+            color: $blue10;
+            cursor: pointer;
+        }
+
+        &:hover {
+            span {
+                color: $blue9;
+            }
+            svg * {
+                stroke: $blue9;
+            }
+        }
+
+        svg * {
+            stroke: $blue10;
+        }
+    }
+}

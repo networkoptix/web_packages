@@ -1,0 +1,12 @@
+@use '../../../styles/typography';
+
+.section-placeholder {
+    @include typography.placeholder;
+    background-color: var(--card-body-bg) !important;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 !important;
+}

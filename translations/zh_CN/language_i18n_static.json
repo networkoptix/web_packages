@@ -1,9 +1,10 @@
 {
     "language": "英语_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "所有服务器",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
-    "For developers": "开发人员适用",
+    "For developers": "适用开发人员",
     "Integrations (β)": "整合（β）",
     "Privacy": "隐私政策",
     "Support": "技术支持",
@@ -63,7 +64,7 @@
         },
         "advancedViewer": {
             "description": "可以查看实时视频，浏览存档，配置摄像头，控制云台等",
-            "label": "高级操作员"
+            "label": "高级浏览者"
         },
         "cloudAdmin": {
             "description": "可以配置系统和共享它",
@@ -83,7 +84,7 @@
         },
         "liveViewer": {
             "description": "只可以查看视频直播",
-            "label": "实时操作员"
+            "label": "实时浏览者"
         },
         "owner": {
             "description": "不受限制地的访问包括共享和连接断开系统从云的能力",
@@ -91,7 +92,7 @@
         },
         "viewer": {
             "description": "可以查看实时视频和浏览存档",
-            "label": "操作员"
+            "label": "浏览者"
         }
     },
     "account": {
@@ -133,6 +134,7 @@
         "passwordReset": "重置服务器",
         "passwordRestart": "重启服务器",
         "passwordDetach": "分离服务器",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "请重新登录为",
         "createAccountHeader": "创建 %CLOUD_NAME% 帐户",
         "activateHeader": "创建 %CLOUD_NAME% 帐户",
@@ -175,6 +177,38 @@
         "ptz": "PTZ摄像机"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "大小",
+            "state": "状态",
+            "system": "系统",
+            "expires": "到期",
+            "key": "Key"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "可用",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "中",
             "low": "低"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "一般",
         "generalError": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
         "inaccessibleFeatureMessage": "系统处于离线状态，无法读取资讯",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "您目前所查看的是旧版报告。"
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -288,7 +337,7 @@
             "alreadyExists": "This email has already been registered in the %systemName% system"
         },
         "buttons": {
-            "cancel": "取消",
+            "cancel": "撤消",
             "createAccount": "新增帐户",
             "delete": "删除",
             "deleteAccount": "删除帐户",
@@ -309,6 +358,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "摄像机",
             "cameras": "摄像机",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "激活",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "移动云存储",
+                    "action": "移动",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "删除云存储吗?",
+                    "action": "删除",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "当前录像",
                 "whenFullyUsed": "当耗尽时",
@@ -316,6 +387,20 @@
                 "archiveFrom": "存档来自",
                 "recordingBitrate": "录像比特率",
                 "delayFromLive": "与实时影像差距"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "移动",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "删除",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "云存储已成功从系统中删除",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "建议您咨询",
-                "b_support": "技术支持",
-                "c_proceeding": "在继续执行之前："
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
@@ -404,7 +485,8 @@
             "urlEmpty": "输入服务器地址",
             "urlNotValid": "请输入有效的URL。",
             "unknownError": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -448,6 +530,13 @@
             "action": "登录",
             "message": "请再次登录.",
             "title": "您的登录已过期。"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "错误",
@@ -557,7 +646,7 @@
         "This authorization method is forbidden. Please contact your system administrator.": "此授权方式被禁止。请联系系统管理员。",
         "This user does not exist.": "该用户不存在",
         "The user is disabled. Please contact your system administrator.": "此用户為未激活状态。请联系系统管理员。",
-        "This user has been disabled by a system administrator.": "此用户已被系统管理员禁用.",
+        "This user has been disabled by a system administrator.": "此使用者帐户已被系统管理员停用。",
         "cloud_systems_have_different_owners": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "门禁管理",
         "Connector": "连接器",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -693,6 +787,21 @@
         "type": "类型",
         "server": "服务器",
         "alert": "警告"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "关于",
@@ -791,7 +900,7 @@
         "integration": {
             "accept": "同意",
             "reject": "拒绝",
-            "backToEditText": "返回编辑界面",
+            "backToEditText": "返回编辑页面",
             "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
@@ -807,8 +916,6 @@
         "Search": "搜索",
         "analytics": "分析",
         "analyticsSelected": "分析事件",
-        "filter applied": "已使用的筛选项",
-        "filters applied": "已使用的筛选项",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "类型",
         "hardwareTypes": "类型",
@@ -816,7 +923,10 @@
         "search_ipvd": "按型号或制造商搜索",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "制造商",
-        "vendors": "制造商"
+        "vendors": "制造商",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -848,6 +958,7 @@
         "Settings": "设置",
         "Information": "信息",
         "Bookmarks": "书签",
+        "Layouts": "布局",
         "Monitoring": "监测中"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(记录所有可用信息)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "本地",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "网络（smb），已通过VMS添加",
             "cloud": "云"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "根",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "激活",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,18 +1140,18 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "系统资源报告浏览器{systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
             "Time": "时效性",
-            "Trial": "试用版",
+            "Trial": "测试版",
             "Professional": "专业版",
-            "Analog": "类比",
+            "Analog": "模拟",
             "Edge": "Edge",
             "VMAX": "VMAX",
-            "Video Wall": "大屏",
-            "Analog Encoder": "类比",
+            "Video Wall": "电视墙",
+            "Analog Encoder": "模拟编码器",
             "Starter": "Starter",
             "IO Module": "I/O模块",
             "Bridge": "桥接",

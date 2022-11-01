@@ -1,0 +1,86 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
+<ng-template
+    #techBlock
+    let-tech="tech"
+>
+    <div
+        class="tech-block"
+        [title]="tech.title"
+        [routerLink]="tech.url || router.url"
+        [ngClass]="{ disabled: !tech.url }"
+        [tabIndex]="tech.url ? 1 : -1"
+    >
+        <svg-icon
+            nx-add-svg-src
+            *ngIf="tech.icon.includes('.svg')"
+            [svgStyle]="{ 'width.px': '56', 'height.px': '56' }"
+            [src]="CONFIG.images.dirDevelopers + tech.icon"
+        ></svg-icon>
+        <img
+            *ngIf="!tech.icon.includes('.svg')"
+            [src]="CONFIG.images.dirDevelopers + tech.icon"
+        />
+    </div>
+</ng-template>
+
+<ng-template
+    #languageBlock
+    let-language="language"
+>
+    <div
+        class="language-block"
+        [title]="language.title"
+        [routerLink]="language.url || router.url"
+        [ngClass]="{ disabled: !language.url }"
+        [tabIndex]="language.url ? 1 : -1"
+    >
+        {{ language.title }}
+    </div>
+</ng-template>
+
+<section
+    *ngIf="!errorManager.hasErrors; else showError"
+    class="supported-tech"
+>
+    <h2
+        *ngIf="supportedTechNode.url; else noLinkHeader"
+        class="header-link"
+        [routerLink]="supportedTechNode.url"
+    >
+        {{ supportedTechNode.title }}
+    </h2>
+    <ng-template #noLinkHeader>
+        <h2 class="header-non-link">{{ supportedTechNode.title }}</h2>
+    </ng-template>
+    <ng-container *ngFor="let node of supportedTechNode.nodes">
+        <ng-container *ngIf="node?.nodes?.length">
+            <ng-template #tech>
+                <div
+                    *ngIf="node.icon.includes('tech')"
+                    class="tech-wrapper"
+                >
+                    <ng-container *ngFor="let tech of node.nodes">
+                        <ng-container *ngIf="tech.icon">
+                            <ng-container
+                                *ngTemplateOutlet="techBlock; context: { tech: tech }"
+                            ></ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </ng-template>
+            <div
+                *ngIf="node.icon.includes('language'); else tech"
+                class="language-wrapper"
+            >
+                <ng-container *ngFor="let language of node.nodes">
+                    <ng-container
+                        *ngTemplateOutlet="languageBlock; context: { language: language }"
+                    ></ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </ng-container>
+</section>

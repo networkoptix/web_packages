@@ -29,14 +29,15 @@ from drf_yasg.utils import swagger_auto_schema, no_body
 from queue import SimpleQueue
 from waffle.mixins import WaffleFlagMixin
 
-from api.helpers.exceptions import APINotFoundException, APIForbiddenException, api_success, handle_exceptions, require_params
-from api.helpers.permissions import make_customization_visible_to_user
+from cloud.helpers.exceptions import APINotFoundException, APIForbiddenException, api_success, handle_exceptions, require_params
+from cms.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation, zendesk
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import AssetSerializer, ContextManifestSerializer, CustomClient, CustomClientSerializer, ContentManifestSerializer, \
-    GenerateCustomClientSerializer, CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
+from cms.serializers import AssetManifestSerializer, AssetSerializer, CustomClient, CustomClientSerializer, \
+    ContentManifestSerializer, GenerateCustomClientSerializer, CheckPackageCustomClientSerializer, \
+    PackageDownloadIdSerializer
 from cms import tasks
 
 from ..controllers.documentation import DOC_CACHE
@@ -367,18 +368,23 @@ def review_generator(target_reviews):
 def manage_release_note_notification(asset_review):
     asset = asset_review.version.asset
     if asset.asset_type.type == AssetType.ASSET_TYPES.release_notes:
-        create_or_update_notification_for_release_note(asset, asset_review.version)
+        create_or_update_notification_for_release_note(
+            asset, asset_review.version)
+
 
 def create_or_update_notification_for_release_note(asset, version):
-    _, datastructures = get_contexts_and_datastructures_of_asset_type(AssetType.ASSET_TYPES.release_notes)
+    _, datastructures = get_contexts_and_datastructures_of_asset_type(
+        AssetType.ASSET_TYPES.release_notes)
     datastructures = DataStructure.find_actual_values(
-                    datastructures, asset=asset, version_id=version,
-                    customization_name=settings.CUSTOMIZATION, draft=True
-                )
+        datastructures, asset=asset, version_id=version,
+        customization_name=settings.CUSTOMIZATION, draft=True
+    )
 
-    build_ds = next(filter(lambda ds: ds.name == "%build%", datastructures.keys()))
+    build_ds = next(filter(lambda ds: ds.name ==
+                           "%build%", datastructures.keys()))
     build_raw = PortalNotification.calc_build(datastructures[build_ds])
-    portal_notification = PortalNotification.objects.filter(build_raw=build_raw).first() or PortalNotification()
+    portal_notification = PortalNotification.objects.filter(
+        build_raw=build_raw).first() or PortalNotification()
 
     # Do not create if all fields are blank
     if all(not datastructures[datastructure] or datastructure.name == '%build%' for datastructure in datastructures.keys()):
@@ -389,9 +395,9 @@ def create_or_update_notification_for_release_note(asset, version):
     updated_message = "Cloud Portal Has been Updated. See what’s new"
 
     notification_dict = {
-        'title' : updated_message,
-        'body'  : updated_message,
-        'build' : datastructures[build_ds],
+        'title': updated_message,
+        'body': updated_message,
+        'build': datastructures[build_ds],
         'max_ts': datetime.now() + timedelta(weeks=2)
     }
 
@@ -977,7 +983,8 @@ def download_async_package(request, asset_id):
 @permission_classes((IsAuthenticated, ))
 def upload_image(request, asset_id, ds_id, content_uuid=None):
     file = request.data.get('file')
-    content_file = base.File(file, name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + file.name.split('.')[-1].lower())
+    content_file = base.File(
+        file, name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + file.name.split('.')[-1].lower())
     asset = Asset.objects.filter(id=asset_id).first()
     ds = DataStructure.objects.filter(id=ds_id).first()
     ext_file = ExternalFile.objects.create(
@@ -1344,40 +1351,6 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         return response_attachment(package['file'], file_name, 'application/zip', attachment=True)
 
 
-def generate_manifest(asset_type: AssetType):
-    return {
-        'type': asset_type.id,
-        'name': str(asset_type),
-        'manifest': {
-            'contexts': [
-                {
-                    'name': context.name,
-                    'label': context.label,
-                    'global': context.is_global,
-                    'fields': [
-                        {
-                            attr: getattr(ds, attr, '')
-                            for attr in ['name', 'label', 'type', 'description', 'optional']
-                        }
-                        for ds in context.datastructure_set.all()
-                    ]
-                }
-                for context in asset_type.context_set.all()
-            ]
-        }
-    }
-
-
-def generate_manifest_for_asset_type(asset_type: AssetType = None):
-    if asset_type:
-        return api_success(generate_manifest(asset_type))
-
-    return api_success([
-        generate_manifest(asset_type)
-        for asset_type in AssetType.objects.all()
-    ])
-
-
 class AssetViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = AssetSerializer
@@ -1401,14 +1374,14 @@ class AssetViewSet(ModelViewSet):
     def partial_update(self, *args, **kwargs):
         return self.save_asset(*args, **kwargs)
 
-    @action(detail=False)
+    @action(detail=False, serializer_class=AssetManifestSerializer)
     def manifests(self, request):
         asset_type_id = request.query_params.get('id', None)
         asset_type = asset_type_id and get_object_or_404(
             AssetType, id=asset_type_id)
-        return generate_manifest_for_asset_type(asset_type)
+        return api_success(AssetManifestSerializer.generate(asset_type or AssetType.objects.all(), True).data)
 
-    @action(detail=True)
+    @action(detail=True, serializer_class=AssetManifestSerializer)
     def manifest(self, request, pk=None):
         asset = self.get_object()
-        return generate_manifest_for_asset_type(asset.asset_type)
+        return api_success(AssetManifestSerializer.generate(asset.asset_type, True).data)

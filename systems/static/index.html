@@ -1,0 +1,257 @@
+<!doctype html>
+<html class="no-js">
+<head></head>
+<body>
+<div>
+    <button onclick="getCode()">Get access code</button>
+    <button onclick="initWebsocket()">Connect</button>
+    <button onclick="reset()">Reset Inputs</button>
+</div>
+<hr>
+<div>
+    <div>
+        <h3>Aggregator Input</h3>
+        <label for="url">Request url</label>
+        <input id="url">
+    </div>
+    <div>
+        <h3>Groups Inputs</h3>
+        <div>
+            <label for="group-name">Group Name</label>
+            <input id="group-name">
+        </div>
+        <div>
+            <label for="group-id">Group ID</label>
+            <!-- <input id="group-id"> -->
+            <select id="group-id"></select>
+        </div>
+        <div>
+            <label for="target-id">Target Group ID (Moving Groups to Group)</label>
+            <!-- <input id="target-id"> -->
+            <select id="target-id"></select>
+        </div>
+        <div>
+            <label for="system-id">System ID (Moving System to Group)</label>
+            <!-- <input id="system-id"> -->
+            <select id="system-id"></select>
+        </div>
+    </div>
+</div>
+<hr>
+<div>
+    <div>
+        <h3>Group actions</h3>
+        <button onclick="send('create_group')">Create group</button>
+        <button onclick="send('delete_group')">Delete group</button>
+        <button onclick="send('move_system')">Move system to group</button>
+        <button onclick="send('move_group')">Move group to group</button>
+        <button onclick="send('list_groups')">Update list</button>
+    </div>
+    <div>
+        <h3>Aggregated Calls</h3>
+        <button onclick="makeAggregatedRequest()">Make request for all systems</button>
+        <button onclick="makeAggregatedGroupRequest()">Make request for all systems in a group</button>
+    </div>
+</div>
+<div id="logger-container" style="display: none">
+    <hr>
+    <h3>Data from socket</h3>
+    <pre id="logger" style="color: red"></pre>
+</div>
+<div id="group-container" style="display: none">
+    <hr>
+    <h3>Groups/Systems</h3>
+    <pre id="systems-info"></pre>
+</div>
+<script>
+    class Data {
+        action;
+        groupId;
+        name;
+        systemId;
+        targetId;
+        constructor(groupIdInput, groupNameInput, systemIdInput, targetIdInput) {
+            groupIdInput.addEventListener('input', (e) => {
+                this.groupId = e?.target?.value;
+            });
+            groupNameInput.addEventListener('input', (e) => {
+                this.name = e?.target?.value;
+            });
+            systemIdInput.addEventListener('input', (e) => {
+                this.systemId = e?.target?.value;
+            });
+            targetIdInput.addEventListener('input', (e) => {
+                this.targetId = e?.target?.value;
+            });
+            this.reset();
+        }
+
+        reset() {
+            this.action = 'list';
+            this.groupId = '';
+            this.name = '';
+            this.systemId = '';
+            this.targetId = '';
+        }
+
+        toJson() {
+            const { action, groupId, name, systemId, targetId } = this;
+            return { action, name, group_id: groupId, system_id: systemId, target_id: targetId };
+        }
+    }
+</script>
+<script>
+    const cloudHost = 'cloud-test.hdw.mx';
+    const logger = document.getElementById('logger');
+    const loggerContainer = document.getElementById('logger-container');
+    const groupContainer = document.getElementById('group-container');
+    const groupId = document.getElementById('group-id');
+    const groupName = document.getElementById('group-name');
+    const systemId = document.getElementById('system-id');
+    const targetId = document.getElementById('target-id');
+    const url = document.getElementById('url');
+    const pre = window.document.getElementById('systems-info');
+    const data = new Data(groupId, groupName, systemId, targetId);
+
+    let ws;
+
+    const initWebsocket = () => {
+        if (ws) {
+            ws.close();
+        }
+
+        let systems = {};
+        // uncomment to target an instance's system groups
+        ws = new WebSocket(`wss://${cloudHost}/system_groups/ws?code=${window.code}`);
+        // ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
+        ws.onmessage = function (event) {
+            let { action, data } = JSON.parse(event.data);
+            console.log('message received', event, action, data)
+
+            if (action === 'login') {
+                console.log('login action')
+                ws.send(JSON.stringify({action: 'systems'}))
+            } else if (action === 'systems') {
+                console.log('systems action')
+                systemId.innerHTML = data.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`)
+                systemId.value ||= data[0]?.id
+                systems = data.reduce((_systems, system) => {
+                    _systems[system.id] = system;
+                    return _systems;
+                }, {});
+            } else if (action === 'list_groups') {
+                const createGroupOption = (g) => `<option value="${g.id}">${g.name} (${g.id})</option>`;
+                const gidOptions = ['<option value="">Root</option>'];
+
+                const placedSystems = new Set();
+                const mapIdsToSystem = (groupSystems) => groupSystems
+                    .filter(({id}) => systems.hasOwnProperty(id))
+                    .map(system => {
+                        placedSystems.add(system.id);
+                        return {...system, ...systems[system.id]}
+                    });
+                const mapGroupsToSystems = (groups) => groups.map(group => {
+                    gidOptions.push(createGroupOption(group));
+                    return {
+                        ...group,
+                        groups: mapGroupsToSystems(group.groups),
+                        systems: mapIdsToSystem(group.systems)
+                    };
+                })
+                const showData = data.filter((element) => element.type === 'group' || systems.hasOwnProperty(element.id))
+                    .map(element => {
+                        if (element.type === 'group') {
+                            gidOptions.push(createGroupOption(element));
+                            element.groups = mapGroupsToSystems(element.groups);
+                            element.systems = mapIdsToSystem(element.systems);
+                        } else {
+                            element = {...element, ...systems[element.id]};
+                        }
+                        return element;
+                    });
+                const stringOptions = gidOptions.join();
+                groupId.innerHTML = stringOptions;
+                targetId.innerHTML = stringOptions;
+                groupId.value ||= gidOptions[0]?.id;
+                targetId.value ||= gidOptions[0]?.id;
+
+                Object.entries(systems).forEach(([id, system]) => {
+                    if (!placedSystems.has(id)) {
+                        showData.push(system);
+                        placedSystems.add(id)
+                    }
+                });
+                pre.innerText = JSON.stringify(showData, undefined, 4);
+                groupContainer.style.display = 'block'
+            } else {
+                console.log('[other action]')
+                logger.innerText = JSON.stringify(data, undefined, 4);
+                loggerContainer.style.display = 'block'
+            }
+        };
+        ws.addEventListener('open', () => {
+            console.log('ws open')
+            ws.send(JSON.stringify({ action: 'systems' }));
+            console.log('sent systems action')
+        });
+    }
+
+    const makeAggregatedRequest = () => {
+        ws?.send(JSON.stringify({ action: 'aggregate_systems_request', url: url.value, method: 'get' }))
+    }
+
+    const makeAggregatedGroupRequest = () => {
+        ws?.send(JSON.stringify({ action: 'aggregate_request_by_group', group_id: groupId.value, url: url.value, method: 'get' }))
+    }
+
+    const reset = () => {
+        data?.reset();
+        groupId.value = '';
+        groupName.value = '';
+        systemId.value = '';
+        targetId.value = '';
+        url.value = '';
+        loggerContainer.style.display = 'none';
+    }
+
+    const send = (action) => {
+        data.action = action;
+        data.groupId = groupId.value
+        data.groupName = groupName.value
+        data.targetId = targetId.value
+        data.systemId = systemId.value
+        console.log('sending action', action, ws, data, data.toJson())
+        ws?.send(JSON.stringify(data.toJson()));
+    }
+
+    const getCode = () => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "client_id": "cloud_portal",
+            "grant_type": "password",
+            "response_type": "code",
+            "email": "email", // use cloud credentials
+            "password": "password"
+        });
+
+        const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        return fetch(`https://${cloudHost}/oauth/authenticate`, requestOptions)
+            .then(response => response.json())
+            .then(({ code }) => {
+                window.code = code;
+                console.log(`code: ${code}`);
+                console.log('If 2fa is enabled you will need to verify the code before connecting');
+            })
+            .catch(error => console.log('error', error));
+    }
+</script>
+</body>
+</html>

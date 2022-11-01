@@ -1,0 +1,14 @@
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/buttons" as *;
+@use "bootstrap_utils" as bootstrap;
+
+:host {
+    margin-top: 16px;
+    padding-left: 1rem;
+    margin-right: 16px;
+
+    @include bootstrap.media-breakpoint-down(sm) {
+        margin-left: 16px;
+    }
+}

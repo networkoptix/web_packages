@@ -1,0 +1,105 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/bootstrap_utils" as bootstrap;
+
+:host {
+    background: linear-gradient(242.24deg, #F5F7F8 0.43%, #92DBFF 122.68%);
+}
+
+.info-header {
+    padding: 1.5rem 1.5rem 0 1.5rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .tag {
+        @include typography.regular13dark9;
+        padding: 4px 8px;
+        border-radius: 2px;
+        background-color: $yellow_main;
+    }
+
+    .close {
+        position: relative;
+    }
+}
+
+.info-body {
+    min-height: 200px;
+}
+
+// Hardcoded content styling
+
+.heading {
+    display: flex;
+    max-width: 512px;
+    margin: 40px auto 12px auto;
+    @include bootstrap.media-breakpoint-down(sm) {
+        flex-direction: column;
+        max-width: 360px;
+
+        .heading-icon {
+            margin: 0;
+        }
+    }
+
+    .heading-icon {
+        width: 228px;
+        height: 164px;
+        margin-right: 48px;
+    }
+
+    h2 {
+        @include typography.medium24dark9;
+        margin-bottom: 12px;
+    }
+
+    span {
+        @include typography.regular14dark9;
+    }
+}
+
+.actions {
+    display: flex;
+    padding: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    @include bootstrap.media-breakpoint-down(md) {
+        flex-direction: column;
+        align-items: center;
+
+        .action {
+            width: 100% !important;
+            max-width: 360px;
+        }
+    }
+
+    .action {
+        width: 180px;
+        padding: 24px;
+
+        h4 {
+            @include typography.medium16dark9;
+            display: flex;
+            justify-content: flex-start;
+            margin: 0 0 12px 0;
+
+            .action-icon {
+                width: 32px;
+                height: 20px;
+                margin-right: 12px;
+            }
+
+        }
+
+        p {
+            @include typography.regular14dark9;
+        }
+
+    }
+}
+
+.btn-primary {
+    margin: 0 auto 48px auto;
+}

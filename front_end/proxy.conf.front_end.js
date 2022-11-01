@@ -1,16 +1,33 @@
+const legacyTargetConfigs = {
+    prod: 'https://nxvms.com',
+    stage: 'https://stage.nxvms.com'
+};
+
 const proxyTargetConfig = {
-    'cloud-test': 'https://cloud-test.hdw.mx',
     dev2: 'https://dev2.cloud.hdw.mx',
     dev3: 'https://dev3.cloud.hdw.mx',
     local: 'http://localhost:8000',
-    stage: 'https://stage.nxvms.com'
+    'cloud-test': 'https://cloud-test.hdw.mx',
+    ...legacyTargetConfigs
 };
+
 const target = process.env.CLOUD_TARGET || 'cloud-test';
+const rewriteLegacy = target in legacyTargetConfigs;
+const rewritePaths = {
+    '/api/cms': '/api',
+    '/api/notifications': '/api'
+};
+
+const websocketRewrite = {
+    '^/system_groups': ''
+};
+
 const PROXY_CONFIG = [
     {
         context: [
             '/api',
             '/oauth',
+            '/cs',
             // mediaserver specific apis
             '/ec2',
             '/hls',
@@ -25,6 +42,9 @@ const PROXY_CONFIG = [
             '/static/bootstrap',
             '/static/css/main.css',
             // static content from cloud
+            '/static/images/logo.png',
+            '/static/images/promo',
+            '/static/lang_en_US/views/static/landing.html',
             '/static/503.html',
             '/static/customization',
             '/static/lang_ru_RU',
@@ -34,13 +54,18 @@ const PROXY_CONFIG = [
         ],
         target: proxyTargetConfig[target],
         changeOrigin: true,
-        secure: false
-    }, {
+        secure: false,
+        pathRewrite: rewriteLegacy ? rewritePaths : {},
+        bypass: function (req, res, proxyOptions) {
+            req.headers.origin = proxyTargetConfig[target];
+        }
+    },
+    {
         context: [
             '/static/lang_en_US',
             '/static'
         ],
-        target: 'https://localhost:9001',
+        target: 'https://localhost:9000',
         changeOrigin: true,
         secure: false,
         bypass: function (req, res, proxyOptions) {
@@ -49,6 +74,16 @@ const PROXY_CONFIG = [
             }
             return req.url.replace('/static', '');
         }
+    },
+    {
+        context: [
+            '/system_groups',
+        ],
+        target: proxyTargetConfig[target],
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        pathRewrite: target === 'local' ? websocketRewrite : {}
     }
 ];
 

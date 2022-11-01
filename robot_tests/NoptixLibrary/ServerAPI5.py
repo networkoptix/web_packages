@@ -54,6 +54,21 @@ class ServerAPI5(ServerAPI):
             if r.status_code != 200:
                 raise APIError(f'Cannot setup local system: {r.status_code}')
             self.set_system_settings(["admin","qweasd 123"], serverUrl, {"statisticsAllowed": False})
+    
+    @keyword
+    def setup_local_system_42(self, server_url, new_password, system_name):
+        logger.trace("4.2")
+        body = {
+            "password": new_password,
+            "systemName": system_name
+        }
+        r = requests.post(f"{server_url}/api/setupLocalSystem", auth=HTTPBasicAuth("admin", "admin"), json=body,
+                          verify=False)
+
+        auth = ("admin", new_password)
+        self.set_system_settings_42(auth, server_url, {"statisticsAllowed": 'false'})
+
+        return r.json()
 
     @keyword
     def get_server_id(self, serverUrl, auth, serverName=None):
@@ -96,17 +111,17 @@ class ServerAPI5(ServerAPI):
             logger.error(e)
 
     @keyword
-    def save_user(self, 
-        auth, 
-        serverUrl, 
-        name, 
-        permissions, 
-        email, 
-        fullName, 
-        password, 
-        userId=None, 
-        userRoleId=None, 
-        isEnabled=True, 
+    def save_user(self,
+        auth,
+        serverUrl,
+        name,
+        permissions,
+        email,
+        fullName,
+        password,
+        userId=None,
+        userRoleId=None,
+        isEnabled=True,
         isCloud=True,
         patch=False
         ):
@@ -155,6 +170,16 @@ class ServerAPI5(ServerAPI):
             return r.json()
 
     @keyword
+    def set_system_settings_42(self, auth, serverUrl, settings):
+        query = "/api/systemSettings?"
+        for key, val in zip(settings.keys(), settings.values()):
+            settings[key] = str(val).lower()
+        #    query = query + f'{key}={val}&'
+        #query = query[:-1]
+        r = requests.get(f'{serverUrl}{query}', params=settings, auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        return r.json()
+
+    @keyword
     def get_system_settings_from_server(self, auth, serverUrl):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
@@ -187,8 +212,10 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             f = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             logger.trace(f.json())
-            r = s.post(f'{serverUrl}/rest/v1/servers/this/restart', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            token = f.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            r = s.post(f'{serverUrl}/rest/v1/servers/this/restart', verify=False)
             assert r.status_code == 200
 
     @keyword
@@ -305,7 +332,12 @@ class ServerAPI5(ServerAPI):
             body = {"ip": cam_ip, "credentials":{"user": camuser, "password": campassword}, "mode": "addFoundDevices"}
             r = s.post(f'{serverUrl}/rest/v1/devices/*/searches', json=body, verify=False)
             assert r.status_code == 200, f"Endpoint /rest/v1/devices/*/searches status code is {r.status_code}"
-    
+            payload = {"credentials":{"user": camuser, "password": campassword}}
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{uniqueId}', json=payload, verify=False)
+            logger.debug(r.text)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
+
     @keyword
     def get_cameras(self, auth, serverUrl):
         with requests.Session() as s:
@@ -315,15 +347,84 @@ class ServerAPI5(ServerAPI):
             r = s.get(f'{serverUrl}/rest/v1/devices', verify=False)
             assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
             return r.json()
-    
+
     @keyword
-    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth=['admin','QAbur777$']):
+    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth=['root','QAbur777%']):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             time.sleep(1)
             body = {f"{attribute}": value, "credentials":{"user": camera_auth[0], "password": camera_auth[1]}}
             r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=body, verify=False)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
+
+    @keyword
+    def modify_device_record(self, serverUrl, auth, cameraId, payload):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            time.sleep(1)
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=payload, verify=False)
+            logger.debug(r.text)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
+
+    @keyword
+    def start_recording_api(self, serverUrl, auth, cameraId, camera_auth=['root','QAbur777%']):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            payload = {"credentials":{"user": camera_auth[0], "password": camera_auth[1]},
+                       "schedule": {"isEnabled": True},
+                       "tasks":
+                        [
+                           {
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 2,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 3,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 4,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 5,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 6,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 7,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           }
+                       ]
+                    }
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            time.sleep(1)
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=payload, verify=False)
+            logger.debug(r.text)
             assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
             return r.json()
 
@@ -362,3 +463,65 @@ class ServerAPI5(ServerAPI):
             time.sleep(1)
             r = s.post(f'{serverUrl}/ec2/saveCameraUserAttributes',json=cameraJson, verify=False)
             return r.json()
+
+    @keyword
+    def get_storages_via_api(self, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": "admin", "password": "qweasd 123", "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            r = s.get(f'{serverUrl}/rest/v1/servers/this/storages?_format=JSON', verify=False)
+            logger.trace(r.text)
+            return r.json()
+
+    @keyword
+    def save_storages_via_api(self, data, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": "admin", "password": "qweasd 123", "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            listOfResponses = []
+            for storage in data:
+                s.headers.update({'Authorization': "Bearer " + token})
+                time.sleep(1)
+                logger.trace(storage)
+                r = s.patch(f'{serverUrl}/rest/v1/servers/this/storages/{storage["id"]}', json=storage, verify=False)
+                logger.info(r.json())
+                listOfResponses.append(r.json())
+                assert r.status_code == 200, f'Endpoint rest/v1/servers/this/storages/{storage["id"]} is {r.status_code}'
+            return listOfResponses
+
+    @keyword
+    def detach_server_from_cloud(self, serverUrl, auth):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            body= {
+                "password":f"{auth[1]}"
+            }
+            r = s.post(f'{serverUrl}/rest/v1/system/cloudUnbind', json=body, verify=False)
+            return r
+
+    @keyword
+    def turn_on_analytics(self, serverUrl, value, resourceId, auth):
+        body = [
+            {
+                "name": "userEnabledAnalyticsEngines",
+                # "value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]",
+                # "value": "[\"{0bfb37a3-06bd-3505-47f5-8fb8d2712e7f\"]",
+                "value": value,
+                "resourceId": resourceId
+            }
+        ]
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            p = s.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                              headers={'Content-Type': 'application/json'}, json=body, verify=False)
+            assert r.status_code == 200, f'Endpoint /ec2/setResourceParams/ is {r.status_code}'
+        return p.text

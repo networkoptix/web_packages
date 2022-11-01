@@ -31,9 +31,10 @@ Check Old Password Alert
     Check For Alert    ${CANNOT SAVE PASSWORD}:${SPACE}${PASSWORD INCORRECT}
 
 Open Change Password Dialog
+    Open Browser and go to URL      ${url}
     ${email}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${email}    ${email}
-    Open Browser and go to URL    ${url}/account/password
+    Go to    ${url}/account/password
     Log In    ${email}    ${BASE PASSWORD}    button=None
     Validate Log In    ${email}
     Wait Until Element Is Not Visible    ${LOG IN MODAL}

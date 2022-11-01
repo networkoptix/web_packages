@@ -1,0 +1,159 @@
+@use "../../styles/theme_variables_common";
+@use "../styles/typography";
+@forward "../../styles/theme_variables_common";
+
+// Placeholder text
+@mixin placeholder($color: theme_variables_common.$input-color-placeholder) {
+    // Firefox
+    &::-moz-placeholder {
+        color   : $color;
+        font-family: theme_variables_common.$font-family-regular;
+        opacity : 1; // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526
+    }
+    // Internet Explorer 10+
+    &:-ms-input-placeholder {
+        color : $color;
+        font-family: theme_variables_common.$font-family-regular;
+    }
+    // Microsoft Edge
+    ::-ms-input-placeholder {
+        color : $color;
+        font-family: theme_variables_common.$font-family-regular;
+    }
+    // Safari and Chrome
+    &::-webkit-input-placeholder {
+        color : $color;
+        font-family: theme_variables_common.$font-family-regular;
+    }
+}
+
+@mixin ellipsis {
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+    max-width     : 100%;
+    line-height   : initial;
+}
+
+@mixin badge-effects($default, $hover, $active) {
+    background-color : $default;
+    &:hover {
+        background-color : $hover;
+    }
+
+    &:active {
+        background-color : $active;
+    }
+}
+
+@mixin selected-tag {
+    color         : theme_variables_common.$light1 !important;
+    padding-left  : 12px;
+    padding-right : 32px !important;
+}
+
+@mixin badge-selected($default, $hover, $active) {
+    @include selected-tag;
+    background-color : $default;
+
+    & > span.close-button:hover {
+        background-color : $hover;
+    }
+
+    & > span.close-button:active {
+        background-color : $active;
+    }
+}
+
+/* Rotation mixin */
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotating {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@mixin rotate {
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    -ms-animation: rotating 2s linear infinite;
+    -o-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
+}
+
+@mixin keyframe($animation_name) {
+    @-webkit-keyframes #{$animation-name} {
+        @content;
+    }
+
+    @-moz-keyframes #{$animation-name} {
+        @content;
+    }
+
+    @-o-keyframes #{$animation-name} {
+        @content;
+    }
+
+    @keyframes #{$animation-name} {
+        @content;
+    }
+}
+
+@mixin details-buttons {
+    flex: 0 0 auto;
+    &:hover, &:hover > span {
+        color: var(--btn-text-hover-color) !important;
+        svg-icon {
+            svg {
+                g,
+                path {
+                    fill: var(--btn-text-hover-color) !important;
+                }
+            }
+        }
+    }
+    @include typography.regular13nocolor;
+    color: var(--btn-text-color);
+    background-color: inherit;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding-left: 8px;
+    padding-right: 0;
+    svg-icon {
+        svg {
+            height: 20px;
+            g,
+            path {
+                fill: var(--btn-text-color) !important;
+            }
+        }
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}

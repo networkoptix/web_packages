@@ -1,0 +1,69 @@
+<form
+    #createSystemGroupForm="ngForm"
+    name="createSystemGroupForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Create Group
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label
+                for="groupName"
+                translate
+                >New group name</label
+            >
+            <input
+                #groupName="ngModel"
+                class="form-control"
+                id="groupName"
+                name="groupName"
+                [(ngModel)]="newGroupName"
+                autofocus
+                required
+            />
+            <p class="modal-paragraph-light">
+                {{
+                    target_id
+                        ? LANG.dialogs.systemGroups.createdInCurrentGroup()
+                        : LANG.dialogs.systemGroups.createdInRoot()
+                }}
+            </p>
+        </div>
+        <!-- <div class="form-group">
+            <label for="groupParent" translate>Group Parent</label>
+            <nx-select
+                id="groupParent"
+                name="groupParent"
+                [items]="parentOptions"
+                [selected]="selectedParent"
+                [(ngModel)]="selectedParent"
+            ></nx-select>
+        </div> -->
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            [form]="createSystemGroupForm"
+            [process]="createSystemGroupProcess"
+            [buttonText]="'Create' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="createSystemGroupProcess"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

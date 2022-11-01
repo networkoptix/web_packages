@@ -9,8 +9,8 @@ from rest_framework import status
 
 class TestStorageViews:
     @pytest.fixture(autouse=True)
-    def setup(self, account_factory, mocker, db):
-        self.user = account_factory()
+    def setup(self, account_factory):
+        self.user = account_factory(prepare_only=True)
         self.session = {'login': str(uuid4()), 'password': str(uuid4())}
 
     @pytest.fixture
@@ -31,9 +31,11 @@ class TestStorageViews:
     @pytest.fixture
     def mock_storage_controller(self, mocker):
         def handler(patched_method, mocked_return=None):
-            expected_return = str(uuid4()) if mocked_return is None else mocked_return
-            to_patch = f'api.controllers.cloud_api.Storage.{patched_method}'
-            mocked_method = mocker.patch(to_patch, return_value=expected_return)
+            expected_return = str(
+                uuid4()) if mocked_return is None else mocked_return
+            to_patch = f'cloud.controllers.cloud_api.Storage.{patched_method}'
+            mocked_method = mocker.patch(
+                to_patch, return_value=expected_return)
             return mocked_method, expected_return
 
         return handler
@@ -48,6 +50,7 @@ class TestStorageViews:
 
         return handler
 
+    @pytest.mark.no_db
     def test_create(self, mock_cloud_portal_customization_cache, request_factory, mock_storage_controller, assert_auth_required):
         endpoint = '/api/storage/create'
         storage_size = randint(1, 10000)
@@ -71,6 +74,7 @@ class TestStorageViews:
         assert response.data == expected_return
         assert_auth_required(create, endpoint, data)
 
+    @pytest.mark.no_db
     def test_create_storage_size_not_setup(self, mock_cloud_portal_customization_cache, request_factory, mock_storage_controller, assert_auth_required):
         endpoint = '/api/storage/create'
         storage_size = 0
@@ -90,6 +94,7 @@ class TestStorageViews:
         assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
         assert_auth_required(create, endpoint, data)
 
+    @pytest.mark.no_db
     def test_delete(self,  request_factory, mock_storage_controller, mocker, assert_auth_required):
         endpoint = '/api/storage/delete'
         system_id = str(uuid4())
@@ -97,8 +102,10 @@ class TestStorageViews:
         tokens = {'access_token': str(uuid4()), 'refresh_token': str(uuid4())}
         data = {'systemId': system_id, 'password': password}
 
-        mocker.patch('api.controllers.cloud_api.Auth.get_token', return_value=tokens)
-        mocker.patch('api.controllers.cloud_api.TempLogin.__exit__', return_value=None)
+        mocker.patch('cloud.controllers.cloud_api.Auth.get_token',
+                     return_value=tokens)
+        mocker.patch(
+            'cloud.controllers.cloud_api.TempLogin.__exit__', return_value=None)
         request = request_factory(endpoint, data=data)
 
         mock_delete, _ = mock_storage_controller('delete_from_system')
@@ -109,11 +116,13 @@ class TestStorageViews:
         assert response.status_code == status.HTTP_200_OK
         assert_auth_required(delete, endpoint, data)
 
+    @pytest.mark.no_db
     def test_move(self, request_factory, mock_storage_controller, assert_auth_required):
         endpoint = '/api/storage/move'
         destination_system_id = str(uuid4())
         source_system_id = str(uuid4())
-        data = {'destinationSystemId': destination_system_id, 'sourceSystemId': source_system_id}
+        data = {'destinationSystemId': destination_system_id,
+                'sourceSystemId': source_system_id}
 
         request = request_factory(endpoint, data=data)
 
@@ -128,22 +137,25 @@ class TestStorageViews:
         assert response.status_code == status.HTTP_200_OK
         assert_auth_required(move, endpoint, data)
 
-    def test_usage_stats(self, request_factory, mock_storage_controller, mock_cloud_portal_customization_cache, assert_auth_required):
+    def test_usage_stats(self, request_factory, mock_storage_controller, mock_cloud_portal_customization_cache, assert_auth_required, db):
+        self.user.save()
         endpoint = '/api/storage/statistics'
         storage_size = randint(1, 10000)
-        mock_cloud_portal_customization_cache(config={'cloud_storage_size': storage_size})
+        mock_cloud_portal_customization_cache(
+            config={'cloud_storage_size': storage_size})
         system_id = str(uuid4())
         data = {'systemId': system_id}
         expected_storage_info = {
-        'spaceUsed': 0,
-        'currentRecordingBitrate': [],
-        'maxLiveDelay': [],
-        'maxCameraRetention': 0,
-        'cameraCount': 0,
-        'cloudCapacity': 0
+            'spaceUsed': 0,
+            'currentRecordingBitrate': [],
+            'maxLiveDelay': [],
+            'maxCameraRetention': 0,
+            'cameraCount': 0,
+            'cloudCapacity': 0
         }
 
-        keys_to_add = ('cameraCount', 'maxCameraRetention', 'spaceUsed', 'currentRecordingBitrate', 'maxLiveDelay')
+        keys_to_add = ('cameraCount', 'maxCameraRetention',
+                       'spaceUsed', 'currentRecordingBitrate', 'maxLiveDelay')
         storage = {
             'id': str(uuid4()),
             'totalSize': storage_size
@@ -162,7 +174,8 @@ class TestStorageViews:
         storages = [generate_storage() for _ in range(randint(1, 12))]
 
         for key in keys_to_add:
-            value = storage[key] if isinstance(expected_storage_info[key], int) else [storage[key]]
+            value = storage[key] if isinstance(
+                expected_storage_info[key], int) else [storage[key]]
             expected_storage_info[key] = value * len(storages)
 
         expected_storage_info['cloudCapacity'] = storage_size * len(storages)
@@ -175,8 +188,10 @@ class TestStorageViews:
 
         request = request_factory(endpoint, get=True, data=data)
 
-        mock_list_storages, _ = mock_storage_controller('list_system_storages', mocked_return=storages)
-        mock_statistics, _ = mock_storage_controller('statistics', mocked_return=storage)
+        mock_list_storages, _ = mock_storage_controller(
+            'list_system_storages', mocked_return=storages)
+        mock_statistics, _ = mock_storage_controller(
+            'statistics', mocked_return=storage)
         from api.views.storage import usage_stats
         response = usage_stats(request)
 
@@ -187,11 +202,14 @@ class TestStorageViews:
         assert response.data == expected_storage_info
         assert_auth_required(usage_stats, endpoint, data, get=True)
 
+    @pytest.mark.no_db
     def test_usage_stats_no_storage(self, request_factory, mock_storage_controller):
         system_id = str(uuid4())
         data = {'systemId': system_id}
-        request = request_factory('/api/storage/statistics', get=True, data=data)
-        mock_list_storages, _ = mock_storage_controller('list_system_storages', mocked_return=[])
+        request = request_factory(
+            '/api/storage/statistics', get=True, data=data)
+        mock_list_storages, _ = mock_storage_controller(
+            'list_system_storages', mocked_return=[])
 
         from api.views.storage import usage_stats
         response = usage_stats(request)

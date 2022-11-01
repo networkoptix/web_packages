@@ -1,0 +1,52 @@
+<ng-container *ngIf="APIToolService.loadingFailure$ | async; then loadingError"></ng-container>
+
+<ng-container *ngIf="!(APIToolService.loadingFailure$ | async)">
+    <ng-container
+        *ngTemplateOutlet="mainPage; context: { menuNodes: APIJSONService.menuNodes }"
+    ></ng-container>
+</ng-container>
+
+<ng-template
+    #mainPage
+    let-menuNodes="menuNodes"
+>
+    <div class="page-wrapper">
+        <div class="block-container">
+            <div class="row">
+                <div
+                    class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+                    [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
+                >
+                    <nx-api-tool-dropdowns></nx-api-tool-dropdowns>
+                    <span #developersMenu></span>
+                    <nx-developers-menu
+                        *ngIf="!(APIToolService.outDatedSystem$ | async)"
+                        [service]="APIJSONService"
+                        [offsetHeight]="menuOffset"
+                        [queryParamsOnInternalRoute]="'merge'"
+                        (onClick)="APIJSONService.activeNode = $event.node"
+                        #developersMenu
+                    >
+                    </nx-developers-menu>
+                </div>
+                <div
+                    class="swagger-container col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3"
+                >
+                    <nx-swagger [activeNode]="APIJSONService.activeNode"></nx-swagger>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #loadingError>
+    <nx-page-placeholder [type]="APIToolService.loadingErrorType">
+        <button class="btn btn-primary main-button mx-auto">
+            <a
+                routerLink="/"
+                translate
+                >Go to Main Page</a
+            >
+        </button>
+    </nx-page-placeholder>
+</ng-template>

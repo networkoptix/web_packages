@@ -1,0 +1,42 @@
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/typography";
+
+.login-error {
+    border-color : var(--error) !important;
+    color        : var(--error) !important;
+}
+
+section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &:not(:last-of-type) {
+        margin-bottom: 16px;
+    }
+
+    label {
+        @include typography.regular14nocolor;
+    }
+
+    label, input, div {
+        flex: 0 0 100%;
+    }
+
+    nx-select {
+        width: auto !important;
+        min-width: 180px;
+    }
+
+    input {
+        margin: 2px 0 4px 0;
+    }
+
+    div {
+        @include typography.regular13light10;
+    }
+}
+
+nx-process-button:nth-of-type(2) {
+    margin-left: auto !important;
+}

@@ -1,0 +1,44 @@
+<div
+    class="dropdown"
+    [ngClass]="{ show: show }"
+    (nxClickElsewhere)="show = false"
+>
+    <button
+        class="inset btn btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+        (click)="show = !show"
+        type="button"
+        id="activeSystemDropdown"
+        data-toggle="dropdown"
+    >
+        <div class="glyphicon-menu-hamburger"></div>
+    </button>
+    <ul
+        class="dropdown-menu"
+        [nxArrowNav]="show"
+        [style.display]="show ? 'inline-block' : 'none'"
+        aria-labelledby="navLocationDropdown"
+    >
+        <div class="popup arrow up"></div>
+
+        <li class="dropdown-item-container">
+            <a
+                class="dropdown-item inset"
+                [ngClass]="{ selected: location.integrations }"
+                routerLink="/integrations"
+                (click)="hide()"
+            >
+                <span translate>Integrations (beta)</span></a
+            >
+        </li>
+        <li class="dropdown-item-container">
+            <a
+                class="dropdown-item inset"
+                [ngClass]="{ selected: location.ipvd }"
+                routerLink="/ipvd"
+                (click)="hide()"
+            >
+                <span translate>Supported IP Video Devices</span>
+            </a>
+        </li>
+    </ul>
+</div>

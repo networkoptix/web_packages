@@ -543,3 +543,21 @@ class ServerAPI:
         logger.trace(r.status_code)
         logger.trace(r.text)
         assert r.status_code == 200
+
+    @keyword
+    def turn_on_analytics(self, serverUrl, value, resourceId, auth):
+        #         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
+        #         cameraDict = r.json()
+        #         cameraID = cameraDict["id"]
+        body = [
+            {
+                "name": "userEnabledAnalyticsEngines",
+                # "value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]",
+                # "value": "[\"{0bfb37a3-06bd-3505-47f5-8fb8d2712e7f\"]",
+                "value": value,
+                "resourceId": resourceId
+            }
+        ]
+        p = requests.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                          headers={'Content-Type': 'application/json'}, json=body, verify=False)
+        return p.text

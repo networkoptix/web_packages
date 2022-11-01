@@ -10,7 +10,7 @@ Setup
     Open Browser and go to URL    ${url}
     ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${login user}    ${user}
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    2fa-${rand}    image=${IMAGE}    owner=${login user}    add users=${False}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Set Suite Variable    ${system}    ${system}
@@ -48,6 +48,7 @@ Turn on 2fa Functionality
         Click Element    ${2FA QA CODE BTN}
         Wait Until Element Is Visible    ${2FA KEY}
         ${key}=    Get Text    ${2FA KEY}
+        ${key}=    Strip String	   ${key}
         Click Element    ${2FA KEY MODAL NEXT BTN}
     ELSE
         ${key}=    Scan QR and decode to key
@@ -60,7 +61,7 @@ Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA COPY ALL BTN}
     # Get random login code from the list and save to variable
     ${random integer}=    Evaluate    random.randint(1,8)
-    ${random one time backup code}=    Get Text    //two-fa-modal-content//span[text()="${random integer}"]/..
+    ${random one time backup code}=    Get Text    //nx-two-fa-modal-content//span[text()="${random integer}"]/..
     ${random one time backup code}=    Get Substring    ${random one time backup code}    1
     Click Element    ${2FA OK BTN}
     Set Test Variable    ${2fa key value}        ${key}
@@ -99,12 +100,12 @@ Login with one time backup code
 Attempt login with used backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
     Log In    ${email}    ${password}    validate=${False}    2fa=${True}    2fa backup code=${random one time backup code}
-    Element Should Contain    ${2FA BACKUP CODE ERROR}    Wrong Backup Code
+    Wait Until Element Contains    ${2FA BACKUP CODE ERROR}    Wrong Backup Code
 
 
 Scan QR and decode to key
-    Wait Until Element Is Visible    //two-fa-modal-content//qr-code
-    ${qr screenshot}=    Capture Element Screenshot    //two-fa-modal-content//qr-code
+    Wait Until Element Is Visible    //nx-two-fa-modal-content//qr-code
+    ${qr screenshot}=    Capture Element Screenshot    //nx-two-fa-modal-content//qr-code
     ${key}=    decode_qr    ${qr screenshot}
     Click Element    ${2FA KEY MODAL NEXT BTN}
     [return]    ${key}
@@ -139,8 +140,8 @@ Check or uncheck 2fa ask for verification checkbox
         Click Element    ${2FA VERIFICATION CHECKBOX}
         Log    checkbox checked
     END
-    Wait Until Element Is Visible    ${2FA SECURITY PAGE SAVE BTN}
-    Click Element    ${2FA SECURITY PAGE SAVE BTN}
+#    Wait Until Element Is Visible    ${2FA SECURITY PAGE SAVE BTN}
+#    Click Element    ${2FA SECURITY PAGE SAVE BTN}
     Wait Until Element Is Visible    ${2FA TOTP FIELD}
     Element Should Be Visible    ${2FA SETTINGS MODAL HEADER}
     IF    ${checked}

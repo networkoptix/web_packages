@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "Feedback over de camera pagina{{#message.asset}} voor {{{message.asset}}}{{/message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "Eigendomsoverdracht voor {{message.system_name}}"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "Eigendomsoverdracht voor {{message.system_name}} - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} heeft een nieuwe versie om te beoordelen"
   },

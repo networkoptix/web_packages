@@ -24,9 +24,9 @@ from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
 
 from api import models
-from api.controllers.cloud_api import Account, Auth
+from cloud.controllers.cloud_api import Account, Auth
 from api.account_backend import get_ip
-from api.helpers.exceptions import (
+from cloud.helpers.exceptions import (
     APIRequestException, APINotAuthorisedException, APILogicException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
     require_params, kill_session, kill_tokens)
@@ -44,18 +44,23 @@ email__body = openapi.Schema(type=openapi.TYPE_STRING)
 first_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 last_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
-mfa_code_body = openapi.Schema(description="Timed one time password for auth app.", type=openapi.TYPE_STRING)
+mfa_code_body = openapi.Schema(
+    description="Timed one time password for auth app.", type=openapi.TYPE_STRING)
 
 login__body = openapi.Schema(type=openapi.TYPE_STRING)
 remember__body = openapi.Schema(type=openapi.TYPE_BOOLEAN)
-timezone__body = openapi.Schema(description="The users current timezone.", type=openapi.TYPE_STRING)
+timezone__body = openapi.Schema(
+    description="The users current timezone.", type=openapi.TYPE_STRING)
 
-activate_code__body = openapi.Schema(description="The code used to activate the account.", type=openapi.TYPE_STRING)
+activate_code__body = openapi.Schema(
+    description="The code used to activate the account.", type=openapi.TYPE_STRING)
 restore_code__body = openapi.Schema(description="The code used to restore the password for an account.",
                                     type=openapi.TYPE_STRING)
 
-authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
-code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_STRING)
+authorization_code__body = openapi.Schema(
+    description="An authorization code.", type=openapi.TYPE_STRING)
+code__body = openapi.Schema(
+    description="A temporary code.", type=openapi.TYPE_STRING)
 
 # Swagger Responses
 account__response = openapi.Response('Account info.', AccountSerializer)
@@ -90,10 +95,7 @@ def login_helper(request, token, user):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-
-    request.session["has2fa"] = Account.get(request).get("account2faEnabled", False)
-
-    serializer = AccountSerializer(user, many=False)
+    serializer = AccountSerializer(request, many=False)
     return api_success(serializer.data)
 
 
@@ -106,7 +108,8 @@ def login_helper(request, token, user):
                              "last_name": last_name__body,
                              "password": password__body
                          },
-                         required=["email", "first_name", "last_name", "password"]
+                         required=["email", "first_name",
+                                   "last_name", "password"]
                      ),
                      responses={'200': openapi.Schema(type=openapi.TYPE_OBJECT, properties={'activated': openapi.Schema(type=openapi.TYPE_BOOLEAN)})})
 @api_view(['POST'])
@@ -128,12 +131,15 @@ def register(request):
         logger.debug('/api/account/register calling serializer.save')
         serializer.save()
     elif account.is_active:
-        raise APILogicException('User already registered', ErrorCodes.account_exists)
+        raise APILogicException('User already registered',
+                                ErrorCodes.account_exists)
     else:
-        models.AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
+        models.AccountManager().register_cloud_invite_user(
+            data['email'], data['password'], data)
 
     logger.debug('/api/account/register checking if activated')
-    activated = models.AccountManager().check_if_activated(request, data['email'], data['password'])
+    activated = models.AccountManager().check_if_activated(
+        request, data['email'], data['password'])
     logger.debug('/api/account/register completed')
     return api_success({'activated': activated})
 
@@ -141,9 +147,11 @@ def register(request):
 def send_login_failed_signal(sender, email, password, request):
     user_login_failed.send(
         sender=sender,
-        credentials=django.contrib.auth._clean_credentials({'email': email, 'password': password}),
+        credentials=django.contrib.auth._clean_credentials(
+            {'email': email, 'password': password}),
         request=request
     )
+
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
@@ -184,10 +192,12 @@ def login(request):
         # If account was blocked we put it in the session to log the login error
         if 'account_blocked' in request.session:
             request.session.pop('account_blocked', None)
-            raise APINotAuthorisedException("Account is blocked", ErrorCodes.account_blocked)
+            raise APINotAuthorisedException(
+                "Account is blocked", ErrorCodes.account_blocked)
         # try to find user in the DB
         if not models.AccountManager.is_email_in_portal(email):
-            raise APINotFoundException("User not in cloud portal")  # user not found here
+            raise APINotFoundException(
+                "User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
     if 'remember' not in request.data or not request.data['remember']:
@@ -291,30 +301,22 @@ def index(request):
 
     if request.method == 'GET':
         # get authorized user here
-        serializer = AccountSerializer(request.user, many=False)
+        return api_success(AccountSerializer(request, many=False).data)
 
-    elif request.method == 'POST':
-        serializer = AccountUpdateSerializer(request.user, data=request.data)
+    serializer = AccountUpdateSerializer(request, data=request.data)
 
-        if not serializer.is_valid():
-            raise APIRequestException('Wrong form parameters',
-                                      ErrorCodes.wrong_parameters,
-                                      error_data=serializer.errors)
+    if not serializer.is_valid():
+        raise APIRequestException('Wrong form parameters',
+                                    ErrorCodes.wrong_parameters,
+                                    error_data=serializer.errors)
 
-        Account.update(request, request.data['first_name'], request.data['last_name'])
-        # if not success:
-        #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-    data = serializer.data
-    cdb_account = dict()
-    cdb_account_security = dict()
-    if request.user.is_authenticated:
-        cdb_account = Account.get(request)
-        cdb_account_security = Account.get_2fa_settings(request)
-    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
-    data["totpExistsForAccount"] = cdb_account_security.get("totpExistsForAccount", False)
-    data["sessionVerified"] = request.session.get("has2fa", False)
-    return api_success(data)
+    Account.update(
+        request, request.data['first_name'], request.data['last_name'])
+    # if not success:
+    #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.save()
+
+    return api_success(serializer.data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -351,9 +353,11 @@ def renew_session(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def auth_key(request):
-    data = Account.create_temporary_credentials(request, credential_type='short')
+    data = Account.create_temporary_credentials(
+        request, credential_type='short')
 
-    key = base64.b64encode((data['login'] + ':' + data['password']).encode('utf-8'))
+    key = base64.b64encode(
+        (data['login'] + ':' + data['password']).encode('utf-8'))
     return api_success({'auth_key': key})
 
 
@@ -403,7 +407,8 @@ class AccountSecurity(APIView):
         request_body=AccountSecuritySerializer
     ))
     def post(self, request, *args, **kwargs):
-        account_security_serializer = AccountSecuritySerializer(data=request.data)
+        account_security_serializer = AccountSecuritySerializer(
+            data=request.data)
         account_security_serializer.is_valid(raise_exception=True)
 
         mfa_code = account_security_serializer.validated_data.get("mfaCode")
@@ -416,7 +421,8 @@ class AccountSecurity(APIView):
         if action == SecurityAction.toggle.name:
             account = Account.get(request)
             account_2fa_enabled = not account.get("account2faEnabled")
-            res = Account.update_2fa_settings(request, mfa_code, account_2fa_enabled)
+            res = Account.update_2fa_settings(
+                request, mfa_code, account_2fa_enabled)
             if account_2fa_enabled:
                 Auth.verify_2fa_code(mfa_code, request.session.get("access_token"))
                 request.session["has2fa"] = True
@@ -476,7 +482,8 @@ def change_password(request):
 
     try:
         mfa_code = request.data.get('mfaCode')
-        Account.change_password(request, request.user.email, old_password, new_password, mfa_code)
+        Account.change_password(
+            request, request.user.email, old_password, new_password, mfa_code)
         models.Account.objects.get(email=request.user.email).password_changed()
     except APINotAuthorisedException:
         raise APIRequestException('Wrong old password or invalid mfaCode', ErrorCodes.bad_request)
@@ -498,7 +505,8 @@ def change_password(request):
 @permission_classes((IsAuthenticated, ))
 def verify_password(request):
     require_params(request, ['password'])
-    Account.get({}, email=request.user.email, password=request.data["password"])
+    Account.get({}, email=request.user.email,
+                password=request.data["password"])
     return api_success()
 
 
@@ -522,16 +530,19 @@ def activate(request):
         tmp_pass, email = Account.extract_temp_credentials(code)
         account_query = models.Account.objects.filter(email=email).first()
         if account_query and account_query.activated_date:
-            raise APIRequestException('Account has already been activated', ErrorCodes.account_activated)
+            raise APIRequestException(
+                'Account has already been activated', ErrorCodes.account_activated)
 
         user_data = Account.activate(code)
 
         if 'email' not in user_data:
-            raise APIInternalException('No email from cloud_db', ErrorCodes.cloud_invalid_response)
+            raise APIInternalException(
+                'No email from cloud_db', ErrorCodes.cloud_invalid_response)
 
         email = user_data['email'].lower()
         if not models.AccountManager.is_email_in_portal(email):
-            raise APIInternalException('No email in portal_db', ErrorCodes.portal_critical_error)
+            raise APIInternalException(
+                'No email in portal_db', ErrorCodes.portal_critical_error)
 
         user = models.Account.objects.get(email=email)
         user.activated_date = timezone.now()
@@ -639,7 +650,8 @@ def check_account_in_portal(request):
 @permission_classes((AllowAny, ))
 def check_code_in_portal(request):
     require_params(request, ('code',))
-    (temp_password, email) = Account.extract_temp_credentials(request.data['code'])
+    (temp_password, email) = Account.extract_temp_credentials(
+        request.data['code'])
     email_exists = models.AccountManager.is_email_in_portal(email)
     return api_success({'emailExists': email_exists})
 
@@ -658,10 +670,13 @@ def check_code_in_portal(request):
 @permission_classes((AllowAny,))
 def check_auth_code(request):
     require_params(request, ('code',))
-    (email, temp_password) = Account.extract_temp_credentials(request.data['code'])
-    user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
+    (email, temp_password) = Account.extract_temp_credentials(
+        request.data['code'])
+    user = django.contrib.auth.authenticate(
+        request=request, username=email, password=temp_password)
     if user is None:
-        raise APINotAuthorisedException("Auth code has expired.", ErrorCodes.not_authorized)
+        raise APINotAuthorisedException(
+            "Auth code has expired.", ErrorCodes.not_authorized)
     email = user.email
     if request.user.is_anonymous:
         email = ""
@@ -735,12 +750,13 @@ class AccountCustomPropertyView(APIView):
         current_account = models.Account.objects.filter(email=username).first()
 
         if not current_account:
-            raise APIRequestException(f'Failed to save "{endpoint}" for user "{username}". User does not exist', ErrorCodes.not_found)
+            raise APIRequestException(
+                f'Failed to save "{endpoint}" for user "{username}". User does not exist', ErrorCodes.not_found)
 
         try:
             obj, _ = models.AccountCustomProperty.objects.get_or_create(
                 account=current_account, endpoint=endpoint)
-            obj.json_data=request.data
+            obj.json_data = request.data
             obj.save()
             return Response(obj.json_data, status=201)
         except Exception as e:

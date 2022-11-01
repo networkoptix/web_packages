@@ -1,0 +1,86 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
+<ng-template
+    #integrationBlock
+    let-integration="integration"
+>
+    <div
+        class="integration-block"
+        [routerLink]="['/integrations', integration.asset.id]"
+    >
+        <img
+            [src]="integration.asset.information.logo"
+            [alt]="integration.title"
+        />
+    </div>
+</ng-template>
+
+<ng-template #integrationsBlocks>
+    <div
+        *ngIf="integrations"
+        class="card integrations-block"
+    >
+        <h3>{{ integrationsNode.nodes[1].title }}</h3>
+        <div class="integrations-blocks-wrapper">
+            <ng-container *ngFor="let integration of integrations.plugins">
+                <ng-container
+                    *ngTemplateOutlet="integrationBlock; context: { integration: integration }"
+                ></ng-container>
+            </ng-container>
+            <div
+                (click)="navigate(integrations.more.url)"
+                class="integration-block"
+                [ngClass]="integrations.moreStart"
+            >
+                <p [innerHTML]="integrations.translatedCount"></p>
+            </div>
+        </div>
+        <button
+            *ngIf="integrationsNode.nodes[1]?.url && integrationsNode.nodes[1].title"
+            class="btn btn-default store-button"
+            [routerLink]="integrationsNode.nodes[1].url"
+        >
+            {{ integrationsNode.nodes[1].subtitle }}
+        </button>
+    </div>
+</ng-template>
+
+<section
+    *ngIf="!errorManager.hasErrors; else showError"
+    class="integrations"
+>
+    <h2
+        *ngIf="integrationsNode.url; else nonLinkHeader"
+        class="heading-link"
+        [routerLink]="integrationsNode.url"
+    >
+        {{ integrationsNode.title }}
+    </h2>
+    <ng-template #nonLinkHeader>
+        <h2 class="heading-non-link">{{ integrationsNode.title }}</h2>
+    </ng-template>
+    <div class="integrations-wrapper">
+        <div
+            *ngIf="integrationsShortDescription"
+            class="card info-block"
+        >
+            <h3>{{ integrationsNode.nodes[0].title }}</h3>
+            <div [innerHTML]="integrationsShortDescription | safe: 'html'"></div>
+            <button
+                *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].title"
+                class="btn btn-default mr-auto mt-auto"
+                [routerLink]="integrationsNode.nodes[0].url"
+            >
+                {{ integrationsNode.nodes[0].subtitle }}
+            </button>
+        </div>
+        <ng-container *ngIf="currentWindowWidth > 608">
+            <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
+        </ng-container>
+    </div>
+    <ng-container *ngIf="currentWindowWidth <= 608">
+        <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
+    </ng-container>
+</section>

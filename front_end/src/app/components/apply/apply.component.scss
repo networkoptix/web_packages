@@ -1,0 +1,25 @@
+@use "../../../styles/theme_variables_common" as *;
+
+.placeholder-text {
+    color  : $light13;
+
+    &-no-changes {
+        height: 32px;
+        display : flex;
+    }
+}
+
+.unsaved-changes {
+    background: var(--body-bg);
+    border-top: 1px solid var(--border-color);
+    margin: -1px 0 -16px 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    padding: 16px 0;
+}
+
+.warning-text {
+    color : $red-l2;
+}
+

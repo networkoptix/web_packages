@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Alle servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Voor ontwikkelaars",
@@ -8,7 +9,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Ontwikkelaars Console",
     "productName": "",
     "monitoring": {
         "unavailable": "Make sure the specified server is online and try again."
@@ -133,6 +134,7 @@
         "passwordReset": "server herstellen",
         "passwordRestart": "herstart de server",
         "passwordDetach": "server loskoppelen",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Log opnieuw in als",
         "createAccountHeader": "Voer %CLOUD_NAME% account in",
         "activateHeader": "Activeer %CLOUD_NAME% account",
@@ -175,6 +177,38 @@
         "ptz": "PTZ camera's"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Grootte",
+            "state": "Status",
+            "system": "Systeem",
+            "expires": "Verloopt",
+            "key": "Sleutel"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Beschikbaar",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "Middelgroot",
             "low": "Lage"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# jaren} one{# jaar} other{# jaren}}",
+            "monthS": "{count, plural, =0{# maanden} one{# maand} other{# maanden}}",
+            "weekS": "{count, plural, =0{# weken} one{# week} other{# weken}}",
+            "dayS": "{count, plural, =0{# dagen} one{# dag} other{# dagen}}",
+            "hourS": "{count, plural, =0{# uren} one{# uur} other{# uren}}",
+            "minuteS": "{count, plural, =0{# minuten} one{# minuut} other{# minuten}}"
+        },
         "general": "Algemeen",
         "generalError": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
         "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard bewerken is ingeschakeld",
         "dashboardLocked": "Dashboard is vergrendeld",
@@ -309,6 +358,28 @@
             "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
             "camera": "camera",
             "cameras": "camera's",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activeer",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Cloud-opslag verplaatsen",
+                    "action": "Verplaatsen",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Cloud-opslag verwijderen?",
+                    "action": "Verwijder",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Huidige opnamen",
                 "whenFullyUsed": "Wanneer volledig gebruikt",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Archief van",
                 "recordingBitrate": "Bitrate van de opnames",
                 "delayFromLive": "Vertraging vanaf live"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Verplaatsen",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Verwijder",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "Cloudopslag is succesvol verwijderd uit het systeem",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
             "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
             "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "We raden u aan om te overleggen met",
-                "b_support": "ondersteuning",
-                "c_proceeding": ", alvorens verder te gaan."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Fout bij samenvoegen. Beide systemen hebben dezelfde server",
                 "useCloudMerge": "Kan systemen gekoppeld aan de cloud niet samenvoegen",
@@ -404,7 +485,8 @@
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
+            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Tweestapsverificatie zal nu afgedwongen worden voor dit systeem.",
@@ -448,6 +530,13 @@
             "action": "Aanmelden",
             "message": "Log opnieuw in.",
             "title": "Uw sessie is verlopen"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is geen gebruiker in het systeem"
         },
         "titles": {
             "error": "Error",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Vraag uw systeembeheerder om het wachtwoord voor het versleutelen in te voeren om dit archief te decoderen.",
         "webadmin2faRequired": "Tweestapsverificatie is vereist voor toegang tot dit systeem. Je kunt tweestapsverificatie inschakelen in je <a href=\"{ cloudHost }/account/security\">account instellingen</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Toegangscontrole",
         "Connector": "Connector",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Gelieve <span id=\"request\">een verzoek in te dienen</span> voor aanvullende vragen/opmerkingen met betrekking tot ondersteunde apparaten."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} naar volume:",
@@ -693,6 +787,21 @@
         "type": "Type",
         "server": "Server",
         "alert": "Alert"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Over",
@@ -796,7 +905,7 @@
             "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
+            "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
             "installButton": "Refresh to Update"
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
@@ -807,8 +916,6 @@
         "Search": "Zoeken",
         "analytics": "Analytics",
         "analyticsSelected": "analytics events",
-        "filter applied": "filter toegepast",
-        "filters applied": "filters toegepast",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
@@ -816,7 +923,10 @@
         "search_ipvd": "Zoeken op model of fabrikant",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Fabrikanten",
-        "vendors": "Fabrikanten"
+        "vendors": "Fabrikanten",
+        "resultsFound": "{count, plural, =0{# Resultaten} one{# Resultaat} other{# Resultaten}} gevonden",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij verwijderen of bewaren van analysegegevens",
@@ -848,6 +958,7 @@
         "Settings": "Instellingen",
         "Information": "Informatie",
         "Bookmarks": "Bladwijzers",
+        "Layouts": "Schermindelingen",
         "Monitoring": "Monitoring"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(log alle beschikbare informatie)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } logniveau",
         "storageToolTips": {
             "local": "Lokaal",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Netwerk (smb), toegevoegd via VMS",
             "cloud": "Cloud"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wil het eigendom van dit systeem aan u overdragen"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
+        "systemCount": "{count, plural, =0{# systemen} one{# systeem} other{# systemen}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "geactiveerd",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om als cloudgebruiker toegang te krijgen tot dit systeem",
         "twoFaRequired": "Twee-factor-authenticatie is ingeschakeld voor dit account. Voer uw verificatiecode in het pop-upvenster in.",
-        "loggingIn": "Inloggen, even geduld."
+        "loggingIn": "Inloggen, even geduld.",
+        "sessionRenewed": "Sessie is vernieuwd.",
+        "failedToUpdateSession": "Het bijwerken van de sessie is mislukt."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Status rapport voor systeem {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1019,7 +1156,7 @@
             "IO Module": "I/O module",
             "Bridge": "Recorder",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Ongeldig"
         },
         "info": {
             "type": "Type",
@@ -1130,7 +1267,7 @@
         "timeSynchronizationEnabled": "Tijdsynchronisatie ingeschakeld",
         "primaryTimeServer": "Primaire tijdsynchronisatieserver",
         "osTimeChangeCheckPeriodMs": "Controle van de tijd van het besturingssysteem",
-        "syncTimeExchangePeriod": "Tijdsynchronisatie-interval synchroniseren voor netwerkverzoeken",
+        "syncTimeExchangePeriod": "Synchroniseer tijd synchronisatie interval voor netwerkverzoeken",
         "syncTimeEpsilon": "Synchroniseer tijd epsilon. Nieuwe waarde wordt niet toegepast als delta tijd minder is dan epsilon",
         "maxVirtualCameraArchiveSynchronizationThreads": "Max virtuele camera archief sync threads",
         "updateNotificationsEnabled": "Update meldingen ingeschakeld",

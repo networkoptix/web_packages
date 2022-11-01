@@ -1,0 +1,35 @@
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables_common" as *;
+
+nx-vendor-list {
+    width : 100%;
+
+    .ipvd-info {
+        span {
+            margin      : 0;
+            line-height : 2rem;
+            color       : $light16;
+            font-size   : rem(20px);
+        }
+    }
+
+    li {
+        height : 24px;
+
+        a {
+            @include typography.regular15light;
+            height          : 24px;
+            text-decoration : none;
+
+            &:hover {
+                color : $dark15;
+            }
+        }
+    }
+
+    .manufacture-info {
+        width      : 100%;
+        display    : inline-block;
+        margin-top : .75rem;
+    }
+}

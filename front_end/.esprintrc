@@ -1,3 +1,7 @@
 {
-    "paths": ["app/**/*.ts"]
+    "paths": [
+        "./src/**/*.ts",
+        "./projects/authorization/src/**/*.ts",
+        "./**/*.component.html"
+    ]
 }

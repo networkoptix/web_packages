@@ -1,0 +1,44 @@
+@mixin sidebar-level() {
+    h3 {
+        display: inline-block;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+
+    ul {
+        list-style-type: none;
+        padding-inline-start: 1.5rem;
+    }
+
+    a {
+        color: var(--body-text-color);
+        text-decoration: none;
+    }
+
+
+    .group-drop-list.cdk-drop-list-dragging {
+        background-color: rgba(var(--brand-core--rgb), 0.25);
+    }
+}
+
+:host {
+    @include sidebar-level();
+
+    .group-toggle-btn {
+        cursor: pointer;
+    }
+
+    // We need to hide it, but not destroy it so that open/closed state
+    // further inside is preserved
+    .closed-level {
+        display: none;
+    }
+}
+
+.cdk-drag-preview {
+    opacity: 0.35;
+    a {
+        color: var(--body-text-color);
+        text-decoration: none;
+    }
+}

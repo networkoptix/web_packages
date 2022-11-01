@@ -1,6 +1,7 @@
 {
     "language": "en_US",
-    "About %CLOUD_NAME%": "Khoảng %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "Về %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Tất cả máy chủ",
     "Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
     "For developers": "Dành cho nhà phát triển",
@@ -14,7 +15,7 @@
         "unavailable": "Đảm bảo rằng máy chủ được chỉ định đang trực tuyến và thử lại."
     },
     "alarmTypes": {
-        "Servers": "May chủ",
+        "Servers": "Máy chủ",
         "Cameras": "Máy ảnh",
         "Storage Locations": "Vị trí lưu trữ",
         "Network Interfaces": "Giao diện mạng"
@@ -31,7 +32,7 @@
     },
     "deviceTypes": {
         "All Device Types": "Tất cả các loại thiết bị",
-        "servers": "May chủ",
+        "servers": "Máy chủ",
         "cameras": "Máy ảnh",
         "storages": "Lưu trữ",
         "networkInterfaces": "Giao diện"
@@ -133,6 +134,7 @@
         "passwordReset": "để đặt lại máy chủ",
         "passwordRestart": "để khởi động lại máy chủ",
         "passwordDetach": "để tách máy chủ",
+        "passwordTransfer": "để chuyển hệ thống",
         "expiredAccountSubheader": "Vui lòng đăng nhập lại bằng",
         "createAccountHeader": "Tạo tài khoản %CLOUD_NAME%",
         "activateHeader": "Kích hoạt tài khoản %CLOUD_NAME%",
@@ -175,6 +177,38 @@
         "ptz": "Camera PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Kích thước",
+            "state": "Trạng thái",
+            "system": "Hệ thống",
+            "expires": "Hết hạn",
+            "key": "Khóa"
+        },
+        "fromServer": {
+            "ACTIVE": "Hoạt động",
+            "INACTIVE": "Không hoạt động",
+            "Unassigned": "Chưa được gán",
+            "until": "{size} cho đến khi {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Giấy phép này đã bị vô hiệu hóa hơn một lần VÀ đã được kích hoạt lại trong chưa đầy 24 giờ trước",
+            "License key is already activated": "Khóa giấy phép đã được kích hoạt",
+            "Maximum number of items is 10000": "Số lượng mục tối đa là 10000",
+            "This Cloud license does not exist": "Giấy phép Đám mây này không tồn tại",
+            "This license is already activated": "Giấy phép này đã được kích hoạt",
+            "This license is not activated": "Giấy phép này chưa được kích hoạt",
+            "This license has already expired": "Giấy phép này đã hết hạn",
+            "Already has a cloud storage license active": "Đã có giấy phép lưu trữ đám mây đang hoạt động",
+            "Cloud System ID does not match credentials used": "ID hệ thống đám mây không khớp với thông tin đăng nhập được sử dụng",
+            "Not Authorized for cloud system": "Không được phép cho hệ thống đám mây",
+            "This license is not currently activated": "Giấy phép này hiện chưa được kích hoạt",
+            "This license has no deactivations remaining": "Giấy phép này không còn lần hủy kích hoạt nữa",
+            "Cloud system Id does not match license activation": "Id hệ thống đám mây không khớp với kích hoạt giấy phép",
+            "used": "Đã sử dụng {used} trong tổng {total} ({percent}%)",
+            "available": "Khả dụng",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "Bộ nhớ đám mây không được sử dụng để ghi. Đi tới <a href=\"{serverSettings}\">Cài đặt Máy chủ</a> để định cấu hình."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "Trung bình",
             "low": "Thấp"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# phút} other{# phút}}"
+        },
         "general": "Chung",
         "generalError": "Một lỗi xảy ra, xin vui lòng thử lại sau. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với nhóm hỗ trợ của bạn.",
         "inaccessibleFeatureMessage": "Hệ thống là ngoại tuyến và do đó, thông tin không thể truy cập.",
@@ -241,7 +283,7 @@
         "systemNoAlertsMessage": "Hệ thống của bạn phải hoạt động tốt!",
         "systemOffline": "Hệ thống offline",
         "systemOfflineMessage": "Hệ thống này đang ngoại tuyến và không thể truy cập ngay bây giờ.",
-        "systemServerError": "Lỗi nội bộ máy chủ",
+        "systemServerError": "Lỗi máy chủ nội bộ",
         "systemServerErrorMessage": "Một lỗi xảy ra, xin vui lòng thử lại sau. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với nhóm hỗ trợ của bạn.",
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
         "systemUnresponsive": "Hệ thống dường như không phản hồi. Vui lòng tải lại trang.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Bạn đang xem một báo cáo lỗi thời."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Cập nhật lần cuối { date }",
+            "updatingIn": "Cập nhật sau { time } giây"
+        }
+    },
+    "cookieWarning": "Chúng tôi sử dụng cookie để cải thiện trải nghiệm của bạn trên trang web của chúng tôi. Chúng cũng giúp chúng tôi hiểu cách trang web của chúng tôi đang được sử dụng. Tìm hiểu thêm và đặt tùy chọn cookie &nbsp; |tại đây|. Bằng cách tiếp tục sử dụng trang web, bạn đồng ý sử dụng cookie của chúng tôi.",
     "dashboard": {
         "dashboardEditEnabled": "Chỉnh sửa bảng điều khiển được bật",
         "dashboardLocked": "Bảng điều khiển bị khóa",
@@ -309,6 +358,28 @@
             "available": "Vị trí lưu trữ đám mây khả dụng cho tất cả các máy chủ trong hệ thống này. Bạn có thể quản lý nó bằng cách sử dụng máy khách máy tính để bàn {vmsName}.",
             "camera": "máy ảnh",
             "cameras": "máy ảnh",
+            "actions": {
+                "activate": {
+                    "heading": "Kích hoạt lưu trữ đám mây",
+                    "action": "Kích hoạt",
+                    "success": "Bộ nhớ đám mây đã được kích hoạt thành công!"
+                },
+                "modify": {
+                    "heading": "Sửa đổi bộ nhớ đám mây",
+                    "action": "Sửa đổi",
+                    "success": "Đã nâng cấp bộ nhớ đám mây thành công!"
+                },
+                "move": {
+                    "heading": "Di chuyển bộ nhớ đám mây",
+                    "action": "Di chuyển",
+                    "success": "Đã nâng cấp bộ nhớ đám mây thành công!"
+                },
+                "delete": {
+                    "heading": "Xóa bộ nhớ đám mây?",
+                    "action": "Xóa",
+                    "success": "Đã xóa bộ nhớ đám mây thành công!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Bản ghi hiện tại",
                 "whenFullyUsed": "Khi sử dụng đầy đủ",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Lưu trữ từ",
                 "recordingBitrate": "Ghi bitrate",
                 "delayFromLive": "Sự khác biệt từ hình ảnh thời gian thực"
+            },
+            "information": {
+                "update": {
+                    "title": "Chỉnh sửa",
+                    "body": "Bạn có thể thay đổi kích thước Bộ nhớ đám mây hiện tại trong Hệ thống bằng cách sử dụng khóa mới. Tất cả dữ liệu đã ghi sẽ được lưu lại."
+                },
+                "migrate": {
+                    "title": "Di chuyển",
+                    "body": "Lưu trữ đám mây với tất cả dữ liệu đã ghi có thể dễ dàng chuyển sang Hệ thống khác của bạn mà không cần Bộ nhớ đám mây đang hoạt động."
+                },
+                "delete": {
+                    "title": "Xóa",
+                    "body": "Bạn có thể xóa Bộ nhớ Đám mây khỏi Hệ thống bất kỳ lúc nào. Nếu muốn, bạn có thể sử dụng khóa này để kích hoạt lại."
+                }
             },
             "remove": {
                 "success": "Lưu trữ đám mây đã xóa thành công khỏi hệ thống",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "Hệ thống {targetSystem} có phiên bản phần mềm mới hơn không tương thích với hệ thống hiện tại. Cập nhật hệ thống hiện tại lên bản {downloadHTML} để hợp nhất với hệ thống {targetSystem}.",
             "primarySystemOffline": "Hệ thống {primarySystem} ngoại tuyến và không thể hợp nhất với Hệ thống {targetSystem}",
             "primarySystemUnavailable": "Hệ thống {primarySystem} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Chúng tôi khuyên bạn nên tham khảo ý kiến với",
-                "b_support": "hỗ trợ",
-                "c_proceeding": "trước khi tiến hành."
-            },
+            "recommendSupport": "Chúng tôi khuyến nghị bạn nên tham khảo với | hỗ trợ | trước khi tiếp tục.",
             "restError": {
                 "duplicateServer": "Lỗi hợp nhất. Cả hai hệ thống đều có cùng một máy chủ",
                 "useCloudMerge": "Không thể hợp nhất các hệ thống liên kết với đám mây",
@@ -404,7 +485,8 @@
             "urlEmpty": "Nhập địa chỉ máy chủ",
             "urlNotValid": "Nhập URL hợp lệ",
             "unknownError": "Một lỗi không xác định đã xảy ra. Làm mới trang và thử lại. Nếu vấn đề vẫn còn, vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
-            "warning": "Sẽ có nhiều hơn <strong>{maxServers}</strong> máy chủ trong Hệ thống được hợp nhất."
+            "warning": "Sẽ có nhiều hơn <strong>{maxServers}</strong> máy chủ trong Hệ thống được hợp nhất.",
+            "update": "Cập nhật lên &nbsp; | bản dựng mới nhất |"
         },
         "message": {
             "system2faEnabled": "Từ bây giờ xác thực hai yếu tố sẽ là bắt buộc đối với hệ thống này.",
@@ -448,6 +530,13 @@
             "action": "Đăng nhập",
             "message": "Vui lòng đăng nhập lại.",
             "title": "Phiên của bạn đã hết hạn"
+        },
+        "systemGroups": {
+            "createdInRoot": "Nhóm mới sẽ được tạo trong Gốc",
+            "createdInCurrentGroup": "Nhóm mới sẽ được tạo trong nhóm hiện tại"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } không phải là người dùng trong hệ thống này"
         },
         "titles": {
             "error": "Lỗi",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Yêu cầu quản trị viên hệ thống của bạn nhập mật khẩu mã hóa\nđể giải mã kho lưu trữ này.",
         "webadmin2faRequired": "Xác thực hai yếu tố là bắt buộc để truy cập hệ thống này. Bạn có thể bật xác thực hai yếu tố trong cài đặt tài khoản<a href=\"{ cloudHost }/account/security\"></a>."
     },
+    "appHeader": {
+        "mySystems": "Hệ thống của tôi",
+        "systemList": "Danh sách hệ thống"
+    },
     "integration": {
         "Access Control": "Kiểm soát truy cập",
         "Connector": "Kết nối",
@@ -635,7 +728,7 @@
         "Cameras with 2-way audio": "Camera có âm thanh 2 chiều",
         "Extra high resolution cameras": "Camera độ phân giải cao",
         "Fisheye Cameras": "Camera mắt cá",
-        "I / O modules": "Mô đun I / O",
+        "I / O modules": "Mô-đun I/O",
         "Multisensor Cameras": "Camera đa điểm",
         "PTZ cameras": "Camera PTZ",
         "camera": "Máy chụp hình",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Vui lòng <span id=\"request\">gửi yêu cầu</span> nếu bạn có thêm câu hỏi / thắc mắc liên quan đến các thiết bị được hỗ trợ."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "Tìm thấy {count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
     "alertsCount": "{count, plural, =0{# cảnh báo} one{# cảnh báo} other{# cảnh báo}}",
     "ipvdTopXByVolume": "Top {value} theo khối lượng:",
@@ -680,7 +774,7 @@
             "general": "Chung",
             "licenses": "Mã bản quyền",
             "users": "Người sử dụng",
-            "servers": "May chủ",
+            "servers": "Máy chủ",
             "alerts": "Cảnh báo",
             "systems": "Hệ thống",
             "storages": "Vị trí lưu trữ",
@@ -691,15 +785,30 @@
     },
     "tableHeaders": {
         "type": "Kiểu",
-        "server": "May chủ",
+        "server": "máy chủ",
         "alert": "Cảnh báo"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Đối với",
         "account": "Cài đặt tài khoản",
         "activate": "Kích hoạt tài khoản",
         "activateCode": "Kích hoạt tài khoản",
-        "activateSuccess": "Tài khoản đã kích hoạt",
+        "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} dành cho {VMS_NAME}",
         "auth": "Xác thực",
         "changePassword": "Đổi mật khẩu",
@@ -716,10 +825,10 @@
         "register": "Tạo tài khoản tại",
         "registerSuccess": "Chào mừng bạn đến",
         "restorePassword": "Đặt lại mật khẩu",
-        "restorePasswordSuccess": "Đã lưu mật khẩu",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Thiết bị hỗ trợ",
         "system": "Hệ thống",
-        "systemShare": "Chia sẻ Hệ thống",
+        "systemShare": "Share System",
         "systems": "Hệ thống",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
@@ -807,8 +916,6 @@
         "Search": "Tìm kiếm",
         "analytics": "Phân tích",
         "analyticsSelected": "sự kiện phân tích",
-        "filter applied": "áp dụng bộ lọc",
-        "filters applied": "bộ lọc được áp dụng",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Kiểu",
         "hardwareTypes": "Các loại",
@@ -816,7 +923,10 @@
         "search_ipvd": "Tìm kiếm theo mô hình hoặc nhà sản xuất",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Nhà sản xuất",
-        "vendors": "Nhà sản xuất của"
+        "vendors": "Nhà sản xuất của",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "Không có kết quả nào khớp",
+        "userNotFound": "<span class=\"error\">Không tìm thấy người dùng</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Lỗi khi xóa hoặc giữ dữ liệu phân tích",
@@ -848,6 +958,7 @@
         "Settings": "Cài đặt",
         "Information": "Thông tin",
         "Bookmarks": "Dấu trang",
+        "Layouts": "Bố cục",
         "Monitoring": "Giám sát"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(ghi nhật ký tất cả thông tin có sẵn)"
             }
         },
+        "loggerDropdownLabel": "Cấp độ log { loggerName }",
         "storageToolTips": {
             "local": "Địa phương",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Mạng (smb), được thêm vào thông qua VMS",
             "cloud": "Đám mây"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn",
+        "transferTo": "Đang chuyển quyền sở hữu cho - <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Nhóm} one{# Nhóm} other{# Nhóm}}",
+        "systemCount": "{count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "đã kích hoạt",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Đăng nhập bằng %CLOUD_NAME% để truy cập hệ thống này với tư cách người dùng đám mây",
         "twoFaRequired": "Xác thực hai yếu tố đã được bật cho tài khoản này. Vui lòng nhập mã xác minh của bạn vào cửa sổ bật lên.",
-        "loggingIn": "Đang đăng nhập. Vui lòng đợi."
+        "loggingIn": "Đang đăng nhập. Vui lòng đợi.",
+        "sessionRenewed": "Phiên đăng nhập đã được gia hạn.",
+        "failedToUpdateSession": "Cập nhật phiên không thành công."
     },
     "healthMonitor": {
         "groups": {
@@ -961,7 +1098,7 @@
         },
         "keys": {
             "name": "Tên",
-            "servers": "May chủ",
+            "servers": "Máy chủ",
             "cameras": "Các kênh camera",
             "storages": "Vị trí lưu trữ",
             "users": "Người sử dụng",
@@ -1008,16 +1145,16 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Thời gian",
-            "Trial": "Thử nghiệm",
-            "Professional": "Chuyên nghiệp",
-            "Analog": "Tương tự",
-            "Edge": "Edge",
+            "Trial": "thử",
+            "Professional": "Đặc trưng",
+            "Analog": "Phép loại suy",
+            "Edge": "Biên",
             "VMAX": "VMAX",
             "Video Wall": "Bức tường video",
-            "Analog Encoder": "Bộ mã hóa tương tự",
+            "Analog Encoder": "Phép loại suy encoder",
             "Starter": "Khởi đầu",
             "IO Module": "Mô đun IO",
-            "Bridge": "Cầu",
+            "Bridge": "Cầu nối",
             "NVR": "NVR",
             "Invalid": "Không hợp lệ"
         },
@@ -1076,7 +1213,7 @@
         "auditTrailPeriodDays": "Đường mòn kiểm toán ngày",
         "autoDiscoveryEnabled": "Cho phép tự động phát hiện thiết bị",
         "autoUpdateThumbnails": "Tự động cập nhật hình thu nhỏ",
-        "backupNewCamerasByDefault": "Sao lưu máy ảnh mới theo mặc định",
+        "backupNewCamerasByDefault": "Sao lưu camera mới theo mặc định",
         "backupQualities": "Chất lượng dự phòng",
         "cameraSettingsOptimization": "Cho phép tối ưu hóa cài đặt thiết bị",
         "clientStatisticsSettingsUrl": "Thống kê khách hàng url tương đối",
@@ -1100,7 +1237,7 @@
         "ldapUri": "URI LDAP",
         "localSystemId": "ID hệ thống cục bộ",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Chênh lệch tối đa giữa thời gian đồng bộ hóa và Internet (mili giây)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Chênh lệch tối đa giữa đồng bộ hóa và giờ địa phương (mili giây)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Chênh lệch tối đa giữa giờ đồng bộ và giờ cục bộ (mili giây)",
         "maxP2pQueueSizeBytes": "Kích thước hàng đợi P2P tối đa (byte)",
         "maxRecordQueueSizeBytes": "Kích thước hàng đợi bản ghi tối đa (byte)",
         "maxRecordQueueSizeElements": "Kích thước hàng đợi bản ghi tối đa (yếu tố)",

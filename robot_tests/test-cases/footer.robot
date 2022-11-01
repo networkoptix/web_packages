@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/footer-resource.robot
 Suite Setup       Footer Suite Setup
-Test Setup        Footer Test Setup
-Test Teardown     Footer Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start            Footer Test Setup
+Test Teardown        Run Keywords    QA Video Recording Stop         Footer Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags    threaded
 
@@ -53,7 +53,7 @@ Force Tags    threaded
     ...    background-color
     ...    ${THEME COLOR RGB}
     Click Link    ${FOOTER ABOUT LINK}
-    Location Should Be    ${ENV}${ABOUT URL}
+    Wait Until Location Is    ${ENV}${ABOUT URL}
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
@@ -71,6 +71,7 @@ Force Tags    threaded
 7. Supported devices leads to the proper page
     [Tags]    Threaded    C57509    cloud    smoke
     Wait Until Element is Visible    ${FOOTER SUPPORTED DEVICES LINK}
+    Sleep    1
     Click Link    ${FOOTER SUPPORTED DEVICES LINK}
     Wait Until Location Is    ${ENV}/ipvd
 
@@ -79,8 +80,8 @@ Force Tags    threaded
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
     Click Link    ${FOOTER TERMS LINK}
-    Wait Until Number Of Tabs Are Open    2
-    Switch Window    NEW
+    #Wait Until Number Of Tabs Are Open    2
+    #Switch Window    NEW
     Wait Until Location Is    ${ENV}${TERMS URL}
 
 9. Privacy leads to the proper page
@@ -90,4 +91,4 @@ Force Tags    threaded
     Click Link    ${FOOTER PRIVACY LINK}
     Wait Until Number Of Tabs Are Open    2
     Switch Window    NEW
-    Wait Until Location Is    ${PRIVACY POLICY URL HREF}
+    Wait Until Location Is    ${PRIVACY POLICY URL FULL}

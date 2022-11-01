@@ -26,14 +26,15 @@ Upload Json
     Sleep    0.2
 
 Health Monitor Suite Setup
+    Open Browser and go to URL      ${url}
     ${owner}=   Register and activate account with random email    mark    hamill    ${password}
-    ${random}=   Generate Random String
+    ${random}=   Generate Random String      length=5
     ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
     ${server 2}=   Create Base System    HM2-${random}    owner=${owner}
     Set Suite Variable    ${server 1}    ${server 1}
     Set Suite Variable    ${server 2}    ${server 2}
     Stop Docker Server    ${server 2}[id]
-    Open Browser and go to URL    ${ENV}
+    Go to    ${ENV}
     Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[owner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
 
@@ -75,7 +76,12 @@ Click On Page Number
 Count All Alerts and Validate Totals Shown
     Log    Looping through all table pages to count Alerts
     Page Should Contain Element    ${HM FIRST TABLE PAGE ELEMENT}
-    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
+    ${multiple pages}    Run Keyword And Return Status    Element Should Be Visible    ${HM LAST TABLE PAGE ELEMENT}
+    IF    ${multiple pages}
+        ${pages} =    Get Text    ${HM LAST TABLE PAGE ELEMENT}
+    ELSE
+        ${pages} =    Set Variable    1
+    END
     ${camera alerts} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
     ${camera warnings} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
     ${server alerts} =    Get Element Count    ${HM SERVER TABLE OFFLINE}
@@ -85,9 +91,12 @@ Count All Alerts and Validate Totals Shown
     ${network alerts} =    Get Element Count    ${HM NETWORK INTERFACE TABLE ERRORS}
     ${network warnings} =    Get Element Count    ${HM NETWORK INTERFACE TABLE WARNINGS}
     FOR     ${i}    IN RANGE    ${pages}
-        ${last page} =    Run Keyword And Return Status    Page Should Contain Element    ${HM LAST TABLE PAGE ELEMENT}
-        Exit For Loop If    ${last page}
+        ${last page} =    Run Keyword And Return Status    Page Should Contain Element    ${HM LAST TABLE PAGE ELEMENT ACTIVE}
+        IF    ${pages}==1 or ${last page}
+            Exit For Loop
+        END
         Click Link    ${HM NEXT PAGE LINK}
+        sleep    5
         Wait Until Element Is Visible     ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert") or contains(text(),"Warning")]/parent::*/parent::*/parent::td/following-sibling::td
         ${camera alerts x} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
         ${camera warnings x} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
@@ -143,12 +152,13 @@ Health Monitor Suite Teardown
 
 
 Health Monitor Details Setup
-    ${random}=    Generate Random String
+    Open Browser and Go To URL    ${url}
+    ${random}=    Generate Random String      length=5
     ${owner}=    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     ${server} =    Create Base System      hmdetails-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Open Browser and Go To URL    ${url}
+    ...    Go to    ${url}
     ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
     ...    AND    Sleep    20
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300

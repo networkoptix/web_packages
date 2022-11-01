@@ -1,11 +1,10 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/view-page-resource.robot
 Suite Setup       View Page Suite Setup
-Test Setup        View Page Test Setup
-Test Teardown     restart and log out
+Test Setup        Run Keywords    QA Video Recording Start     View Page Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop      restart and log out
 Suite Teardown    Run Keyword and Ignore Error    View Suite Teardown
-
-
+Force Tags        cameras
 
 *** Test Cases ***
 1. Resource Tree is loaded correctly

@@ -1,0 +1,51 @@
+<nx-block
+    *ngIf="licenses?.length"
+    class="d-block mt-3"
+>
+    <header>
+        <h4 translate>Licenses Summary</h4>
+    </header>
+    <nx-section nonPadded>
+        <div class="section-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th translate>Type</th>
+                        <th translate>Channels</th>
+                        <th translate>Available</th>
+                        <th>
+                            <span
+                                *ngIf="system.useRest"
+                                translate
+                                >In use</span
+                            >
+                        </th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-row-spacer"></tr>
+                    <tr *ngFor="let license of licenses; index as i">
+                        <td>{{ license.type }}</td>
+                        <td>{{ license.count }}</td>
+                        <td>{{ license.countAvail }}</td>
+                        <td>
+                            <span *ngIf="system.useRest">{{ license.inUse }}</span>
+                        </td>
+                        <td>
+                            <span
+                                *ngIf="system.useRest && license.required > 0"
+                                class="error-label"
+                                >{{
+                                    'license.messages.required'
+                                        | translate: { number: license.required }
+                                }}</span
+                            >
+                        </td>
+                    </tr>
+                    <tr class="table-row-spacer"></tr>
+                </tbody>
+            </table>
+        </div>
+    </nx-section>
+</nx-block>

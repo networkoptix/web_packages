@@ -1,0 +1,12 @@
+@use "../../../../styles/theme_variables_common" as theme_vars;
+
+.title {
+    font-family : theme_vars.$font-family-medium;
+}
+
+.subtitle {
+    color       : var(--light11);
+    display     : flex;
+    align-items : flex-end;
+    height      : rem(22px);
+}

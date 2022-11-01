@@ -1,0 +1,18 @@
+//@use "../../styles/theme_variables_common";
+
+a {
+    color           : var(--brand-core);
+    text-decoration : underline;
+
+    &:hover {
+        color           : var(--brand-l1);
+        text-decoration : underline;
+    }
+
+    &.disabled {
+        /* Make the disabled links grayish*/
+        color          : gray;
+        /* And disable the pointer events */
+        pointer-events : none;
+    }
+}

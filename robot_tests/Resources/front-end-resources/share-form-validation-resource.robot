@@ -3,12 +3,13 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Share Form Setup
-    ${random}=    Generate Random String
+    Open Browser and go to URL    ${url}
+    ${random}=    Generate Random String      length=5
     ${owner}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     ${server} =    Create Base System      shareform-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Open Browser and Go To URL    ${url}
+    ...    Go to    ${url}
     ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
     ...    AND    Sleep    10
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300

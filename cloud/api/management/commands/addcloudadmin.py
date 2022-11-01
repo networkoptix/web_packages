@@ -1,15 +1,10 @@
-import time
-
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from api.controllers import cloud_api
-from api.helpers.exceptions import APINotFoundException, APINotAuthorisedException
+from cloud.controllers import cloud_api
+from cloud.helpers.exceptions import APINotFoundException, APINotAuthorisedException
 from api.models import Account
 from notifications.models import Message
-
-SLEEP_TIMER = 10
-CHECK_N_TIMES = 30
 
 
 class Command(BaseCommand):
@@ -19,16 +14,37 @@ class Command(BaseCommand):
         parser.add_argument("email", type=str)
         parser.add_argument("password", type=str)
 
-    def handle(self, *args, **options):
-        if not (email := options.get('email', '')):
-            raise ValueError("Missing email!")
+    def activate_account(self, account):
+        message = Message.objects.filter(
+            user_email__iexact=account.email).last()
+        code = message.message.get("code") if message else ""
+        if code:
+            try:
+                cloud_api.Account.activate(code.replace("%3D", "=", 3))
+                account.activated_date = timezone.now()
+                account.save()
+                self.stdout.write(self.style.SUCCESS(
+                    f"Successfully activated {account.email}."))
+            except Exception as e:
+                if isinstance(e, APINotAuthorisedException):
+                    self.stdout.write(self.style.WARNING(
+                        f"{account.email} was already activated ."))
+        else:
+            self.stdout.write(self.style.WARNING(
+                f"Cloud could not find the activation email for {account.email}.\n"
+                f"Please try to login once cloud is running.\n"
+                f"Then you can request for another activation code.\n")
+            )
 
-        if not (password := options.get('password', '')):
-            raise ValueError("Missing password!")
-
+    def create_and_register(self, account, email, password):
         first, last, *_ = email
-        account, _ = Account.objects.get_or_create(email=email, first_name=first, last_name=last,
-                                                   is_superuser=True, is_staff=True, is_active=True)
+        account.first_name = first
+        account.last_name = last
+        account.is_superuser = True
+        account.is_staff = True
+        account.is_active = True
+        account.save()
+
         try:
             cloud_api.Account.register(email, password, first, last)
             self.stdout.write(self.style.SUCCESS(
@@ -38,26 +54,23 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(
                 f"User with {email} already exists."))
 
-        for _ in range(CHECK_N_TIMES):  # SLEEP_TIMER * CHECK_N_TIMES = time waiting for email (Currently 300s)
-            message = Message.objects.filter(user_email__iexact=email).last()
-            if message:
-                self.stdout.write(self.style.NOTICE(
-                    f"Waiting for {SLEEP_TIMER}s to activate the account."))
-                try:
-                    cloud_api.Account.activate(message.message.get("code").replace("%3D", "=", 3))
-                    account.activated_date = timezone.now()
-                    account.save()
-                    self.stdout.write(self.style.SUCCESS(
-                        f"Successfully activated {email}."))
-                    break
-                except Exception as e:
-                    if isinstance(e, APINotAuthorisedException):
-                        self.stdout.write(self.style.WARNING(
-                            f"{email} was already activated ."))
-            time.sleep(SLEEP_TIMER)
+    def handle(self, *args, **options):
+        if not (email := options.get('email', '')):
+            raise ValueError("Missing email!")
 
+        if not (password := options.get('password', '')):
+            raise ValueError("Missing password!")
+
+        account, created = Account.objects.get_or_create(email=email)
+
+        if created:
+            self.create_and_register(account, email, password)
         else:
-            self.stdout.write(
-                self.style.ERROR(f"Failed to activate {email}. Please check your inbox for {email} or try again. "
-                                 f"If it continues to fail please contact support.")
-            )
+            self.stdout.write(self.style.NOTICE(
+                f"Account with {email} already exists. Skipping registration."))
+
+        if not account.activated_date:
+            self.activate_account(account)
+        else:
+            self.stdout.write(self.style.NOTICE(
+                f"Account with {email} has already been activated."))

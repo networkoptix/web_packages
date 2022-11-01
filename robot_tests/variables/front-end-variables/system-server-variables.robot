@@ -89,7 +89,7 @@ ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
 ${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/info.svg")]
 ${STORAGE RESERVED TOOLTIP}         //div[contains(@class, "tooltip-body") and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
-${RESERVED SPACE}                   ${STORAGE POPOVER}//td[text()="Reserved"]/following-sibling::td
+${RESERVED SPACE}                   ${STORAGE POPOVER}//td[contains(text(),"Reserved")]/following-sibling::td
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0-numeric"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
 ${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup-switch-wrapper"]
@@ -122,9 +122,9 @@ ${STORAGE MODE COLUMN}              ${STORAGE SCROLLBAR}//th[contains(text(),"${
 ${STORAGE SPACE COLUMN}             ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS SPACE TEXT}")]
 ${STORAGE SIZE CHART}               //td[@class="size-chart"]
 
-${DELETE STORAGE MODAL}             //div[@class="modal-content"]
-${DELETE STORAGE CLOSE BUTTON}      ${DELETE STORAGE MODAL}//button[@aria-label="Close"]
-${DELETE STORAGE CANCEL BUTTON}     ${DELETE STORAGE MODAL}//button/span/parent::button
+${DELETE STORAGE MODAL}             //div[contains(@class, "modal-body")]
+${DELETE STORAGE CLOSE BUTTON}      //button[@aria-label="Close"]
+${DELETE STORAGE CANCEL BUTTON}     //div[contains(@class, "modal-footer")]//button/span/parent::button
 ${DELETE STORAGE DELETE BUTTON}     //button[contains(text(), "${DELETE BUTTON TEXT}")]
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
@@ -173,7 +173,7 @@ ${CLOUD STORAGE INFO BLOCK}         //nx-cloud-storage/nx-block//h2[contains(tex
 ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") and @name="NO_SETTINGS"]
 ${OFFLINE BANNER}                    //nx-alert-block//span[contains(text(),"${SERVER OFFLINE TEXT}")]
 ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${CHECKING TEXT}")]
-${OUTDATED BANNER}                   //div[@class="warning-margin"]/span[contains(text(), "${STORAGES OUTDATED WARNING TEXT}")]
+${OUTDATED BANNER}                   //div[@class="warning-margin"]/div[contains(text(), "${STORAGES OUTDATED WARNING TEXT}")]
 ${RELOAD ICON}                       //*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/reload.svg")]
 
 # ADVANCED
@@ -224,8 +224,8 @@ ${PERMISSIONS LOG LEVEL DROPDOWN}   //button[@id="PERMISSIONS"]
 ...    ${DEBUG TEXT}
 ...    ${VERBOSE TEXT}
 
-${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${SAVE BUTTON TEXT}']
-${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${CANCEL BUTTON TEXT}']
+${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[contains(text(), '${SAVE BUTTON TEXT}')]
+${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[contains(text(), '${CANCEL BUTTON TEXT}')]
 ${LOG SAVE BUTTON}                 ${LOG SETTINGS TITLE}//ancestor::div[@class='card']//button[text()='${SAVE BUTTON TEXT}']
 
-${ADVANCED SAVE MODAL CLOSE BUTTON}    //nx-modal-generic-content//button[text()="${CLOSE TEXT}"]
+${ADVANCED SAVE MODAL CLOSE BUTTON}    //nx-modal-generic-content//button[contains(text(), "${CLOSE TEXT}")]

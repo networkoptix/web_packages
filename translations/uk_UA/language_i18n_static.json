@@ -1,6 +1,7 @@
 {
     "language": "uk_UA",
     "About %CLOUD_NAME%": "Про %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Всі Сервери",
     "Download %VMS_NAME%": "Завантажити %VMS_NAME%",
     "For developers": "Розробникам",
@@ -116,7 +117,7 @@
     "authorize": {
         "loginCloudHeader": "Увійти до %CLOUD_NAME%",
         "connectHeader": "Підключити систему до %CLOUD_NAME%",
-        "expiredHeader": "Закінчився термін дії вашої сесії",
+        "expiredHeader": "Час сесії минув",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
@@ -133,6 +134,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Створити обліковий запис %CLOUD_NAME%",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -175,6 +177,38 @@
         "ptz": "PTZ камери"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Розмір",
+            "state": "Стан",
+            "system": "Система",
+            "expires": "Закінчується",
+            "key": "Key"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Доступно",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -192,7 +226,7 @@
             "highStream": "Висока якість",
             "lowStream": "Низька якість",
             "transcoding": "Перекодування",
-            "unknown": "Невідомо"
+            "unknown": "Невідомий"
         },
         "cameraStates": {
             "error": "Помилка",
@@ -221,11 +255,19 @@
         },
         "resolution": {
             "various": "- Різні значення -",
-            "auto": "Авто",
+            "auto": "Автоматично",
             "best": "Найкраще",
             "high": "Високий",
             "medium": "Середній",
             "low": "Низький"
+        },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
         "general": "Загальні",
         "generalError": "Сталася помилка, повторіть спробу пізніше. Якщо проблема залишиться, будь ласка, зв'яжіться з вашою командою підтримки.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Ви переглядаєте застарілий звіт."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -309,6 +358,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "камера",
             "cameras": "камери",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Активувати",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Перемістити хмарне сховище",
+                    "action": "Перемістити",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Видалити хмарне сховище?",
+                    "action": "Видалити",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Поточні записи",
                 "whenFullyUsed": "Коли повністю використано",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Архів від",
                 "recordingBitrate": "Бітрейт запису",
                 "delayFromLive": "Затримка в онлайні"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Перемістити",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Видалити",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "Хмарне сховище успішно видалено із системи",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Рекомендуємо проконсультуватися з",
-                "b_support": "підтримка",
-                "c_proceeding": "перед тим, як продовжити."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
@@ -404,7 +485,8 @@
             "urlEmpty": "Введіть адресу сервера",
             "urlNotValid": "Введіть дійсний URL",
             "unknownError": "Сталася невідома помилка. Оновіть сторінку та спробуйте ще раз. Якщо проблема не зникне, будь ласка, <a href=\"%SUPPORT_LINK%\" target=\"_blank\">зв'яжіться з підтримкою</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -447,7 +529,14 @@
         "renewAuth": {
             "action": "Логін",
             "message": "Please log in again.",
-            "title": "Закінчився термін дії вашої сесії"
+            "title": "Час сесії минув"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Помилка",
@@ -557,7 +646,7 @@
         "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
         "This user does not exist.": "This user does not exist.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "This user has been disabled by a system administrator.": "Цей користувач був деактивований системним адміністратором.",
         "cloud_systems_have_different_owners": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Здається, що сервер перелічує себе як у вибраній, так і в поточній системі.</p><p>Видаліть офлайн і несумісні сервери з кожної системи та повторіть спробу.</p>",
         "fail": "{failedSystem} недоступний.",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Контроль доступу",
         "Connector": "З'єднувач",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -693,6 +787,21 @@
         "type": "Тип",
         "server": "Сервер",
         "alert": "Alert"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Про",
@@ -807,8 +916,6 @@
         "Search": "Пошук",
         "analytics": "Аналітика",
         "analyticsSelected": "аналітика подій",
-        "filter applied": "застосований фільтр",
-        "filters applied": "застосовані фільтри",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Тип",
         "hardwareTypes": "Типи",
@@ -816,7 +923,10 @@
         "search_ipvd": "Пошук за моделлю або виробником",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Виробник",
-        "vendors": "Виробники"
+        "vendors": "Виробники",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -848,6 +958,7 @@
         "Settings": "Налаштування",
         "Information": "Інформація",
         "Bookmarks": "Закладки",
+        "Layouts": "Розкладки",
         "Monitoring": "Моніторинг"
     },
     "system": {
@@ -861,8 +972,8 @@
             "notAbleToLoadSecurity": "Не вдалося завантажити параметри безпеки.",
             "notAbleToLoadSystem": "Не вдалося завантажити системні налаштування.",
             "sessionLimitDuration": {
-                "hours": "година",
-                "minutes": "хвилина",
+                "hours": "години",
+                "minutes": "хвилин",
                 "days": "день"
             },
             "warningMessages": {
@@ -877,7 +988,7 @@
             "cloudDelete": "Видалити користувача",
             "localDelete": "Видалити користувача"
         },
-        "yourSystem": "Ваша Система",
+        "yourSystem": "Ваша система",
         "loggers": {
             "none": {
                 "text": "Жоден",
@@ -904,6 +1015,7 @@
                 "help": "(журнал усієї доступної інформації)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Локальний",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "Хмарний"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "активовано",
@@ -925,7 +1060,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "Відновити підключення до %CLOUD_NAME% та спробувати ще раз.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Не вдалося зберегти зміни",
         "reviewAccepted": "The review has been accepted",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,13 +1140,13 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
             "Time": "Час",
             "Trial": "Пробна версія",
-            "Professional": "Професіонал",
+            "Professional": "Професійний",
             "Analog": "Аналоговий",
             "Edge": "Edge",
             "VMAX": "VMAX",
@@ -1125,7 +1262,7 @@
         "statisticsReportTimeCycle": "Інтервал статистичного звіту",
         "statisticsReportUpdateDelay": "Звіт про статистику - період оновлення",
         "synchronizeTimeWithInternet": "Синхронізувати час з Інтернетом",
-        "SystemName": "Назва системи",
+        "SystemName": "Ім'я системи",
         "takeCameraOwnershipWithoutLock": "Взяти управління камерою на себе, не закриваючи доступ іншим",
         "timeSynchronizationEnabled": "Синхронізація часу включена",
         "primaryTimeServer": "Основний сервер синхронізації часу",

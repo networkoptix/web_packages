@@ -1,0 +1,40 @@
+<div class="system-button card card-condensed hoverable">
+    <div
+        class="card-body"
+        (click)="openSystem(system)"
+    >
+        <h2
+            class="old-h12 d-block"
+            [innerHTML]="system.name | unsafe | highlight: search"
+        ></h2>
+        <span
+            class="fs-mask user-name"
+            [innerHTML]="getSystemOwnerName() | unsafe | highlight: search"
+        ></span>
+        <div class="system-list-bottom-bar">
+            <nx-tag
+                style="display: block; margin-top: 24px"
+                [clickable]="false"
+                [type]="tagType"
+                *ngIf="canShowTag()"
+            >
+                <ng-container>{{ systemState }}</ng-container>
+            </nx-tag>
+            <nx-client-button
+                [system]="system"
+                [actionType]="system ? 'default' : 'primary'"
+                *ngIf="canShowButton()"
+            ></nx-client-button>
+            <svg-icon
+                [ngClass]="{
+                    'margin-system-list-status': canShowTag()
+                }"
+                *ngIf="needToConfigureTwoFactor()"
+                nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'lock.svg'"
+                [svgStyle]="{ 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
+        </div>
+    </div>
+</div>

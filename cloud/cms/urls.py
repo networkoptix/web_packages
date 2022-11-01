@@ -1,7 +1,6 @@
-from django.conf.urls import url
-from django.urls import path, include
+from django.urls import path, include, re_path
 
-from cms.views import integration, article, agreement, asset, documentation, menu, release_notes, utils, portal_notifications, openapi_json
+from cms.views import integration, article, agreement, asset, documentation, menu, release_notes, utils, portal_notifications, readonly_api
 
 from rest_framework.routers import DefaultRouter
 
@@ -12,9 +11,9 @@ router.register(r'asset_cms', asset.AssetViewSet, basename='asset')
 
 urlpatterns = [
     path('', include(router.urls)),
-    url(r'^integration/(?P<asset_id>.+?)/?$',
+    re_path(r'^integration/(?P<asset_id>.+?)/?$',
         integration.get_integration, name="get_integration"),
-    url(r'^integrations$', integration.get_integrations, name="get_integrations"),
+    re_path(r'^integrations$', integration.get_integrations, name="get_integrations"),
     path('integration_count', integration.get_integrations_count,
          name='integration_count'),
     path('article/<url_param>/', article.get_article, name='get_article'),
@@ -43,8 +42,9 @@ urlpatterns = [
     path('menu_cancel_sync', menu.menu_cancel_sync, name='menu_cancel_sync'),
     path('sanitize_html', utils.sanitize_html, name='sanitize_html'),
     path('portal_notifications', portal_notifications.notifications, name='portal_notifications'),
-    path('openapi_jsons/<int:json_id>', openapi_json.get_openapi_json, name="get_openapi_json"),
-    path('openapi_jsons', openapi_json.get_openapi_jsons, name="get_openapi_jsons")
+    path('readonly_apis/<int:api_id>', readonly_api.get_readonly_api, name="get_readonly_api"),
+    path('readonly_apis', readonly_api.get_readonly_apis, name="get_readonly_apis")
+
 ]
 
 

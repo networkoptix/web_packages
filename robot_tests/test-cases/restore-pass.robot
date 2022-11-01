@@ -1,12 +1,11 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/restore-pass-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart Restore Pass
-Test Teardown     Run Keyword If Test Failed    restore-pass-resource.Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start     Restart Restore Pass
+Test Teardown     Run Keywords    QA Video Recording Stop      Restore Pass Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags
 
-    
 *** Test Cases ***
 1. Reset password email sent screen
     [Tags]    email    C26260
@@ -73,9 +72,9 @@ Force Tags
     # Failing due to CLOUD-8434
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
-    ${code}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
+    ${restore url}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
 
-    Go To    ${url}/authorize/restore_password/${code}
+    Go To    ${restore url}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}     ${RESET NEXT BUTTON}
     Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${RESET NEXT BUTTON}

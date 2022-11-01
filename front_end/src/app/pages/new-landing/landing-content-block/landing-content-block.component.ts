@@ -1,0 +1,40 @@
+import { Component, Input } from '@angular/core';
+
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+
+type InputType = 'small' | 'wide' | 'adaptive';
+@Component({
+    selector: 'nx-landing-content-block',
+    templateUrl: './landing-content-block.component.html',
+    styleUrls: ['./landing-content-block.component.scss']
+})
+export class NxContentLandingBlockComponent {
+    CONFIG: IConfig;
+
+    @Input() type: InputType;
+    @Input() title: string;
+    @Input() content: string;
+    @Input() svg: string = 'eye_closed';
+    @Input() url: string = '';
+    @Input() externalLink: boolean = false;
+
+    svgSizes = {
+        mainSvg: {
+            width: '64',
+            height: '64'
+        },
+        arrowLarge: {
+            width: '64',
+            height: '50'
+        },
+        arrowSmall: {
+            width: '40',
+            height: '24'
+        }
+    };
+
+    constructor(configService: NxConfigService) {
+        this.CONFIG = configService.getConfig();
+    }
+}

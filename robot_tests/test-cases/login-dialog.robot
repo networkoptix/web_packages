@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/login-dialog-resource.robot
 Suite Setup       login-dialog-resource.Setup
-Test Setup        login-dialog-resource.Restart
-Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start     login-dialog-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop      Login Dialog Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
 
@@ -96,6 +96,7 @@ Force Tags        Threaded
     Click Element    ${RESEND ACTIVATION LINK BUTTON}
     Activate    ${random email}
     Click Element    ${LOG IN BUTTON}
+    Wait Until Element Is Visible     ${PASSWORD INPUT}
     Input Text    ${PASSWORD INPUT}    ${password}
     Click Element    ${LOG IN BUTTON}
     Validate Log In    ${random email}
@@ -236,7 +237,8 @@ Force Tags        Threaded
     ${email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
     Activate    ${email}
-    Click Element    ${LOG IN BUTTON}
+    Wait Until Element Is Visible    ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
+    Click Button    ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
     Wait Until Elements are Visible
     ...    ${LOG IN MODAL}
     ...    ${LOG IN BUTTON}
@@ -257,8 +259,11 @@ Force Tags        Threaded
 
 22. User is logged out of browser after a password change in another browser
     [tags]    C41837
+    Close All Browsers
+    Open Browser and go to URL    ${url}
     Log In    ${login user}    ${password}
     Open Browser and go to URL    ${url}
+    Get Browser Ids
     Switch Browser    1
     #Log In    ${email}    ${password}
     #Switch Browser    1

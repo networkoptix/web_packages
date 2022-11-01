@@ -5,6 +5,7 @@
     "bootstrap": "^3.4.1",
     "csstree-validator": "^2.0.0",
     "split.js": "^1.6.2",
+    "uppy": "^2.7.0",
     "uuid": "^8.3.2"
   }
 }

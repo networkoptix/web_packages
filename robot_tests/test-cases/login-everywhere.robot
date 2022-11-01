@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/login-everywhere-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        login-everywhere-resource.Restart
-Test Teardown     Run Keyword If Test Failed    login-everywhere-resource.Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start    login-everywhere-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop     Login Everywhere Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
 

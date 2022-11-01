@@ -1,0 +1,101 @@
+<div class="camera-details">
+    <div
+        class="close-camera-details-button"
+        (click)="emitClose()"
+    >
+        <svg viewBox="0 0 20 20">
+            <line
+                x1="4.5"
+                y1="4.5"
+                x2="15.5"
+                y2="15.5"
+            ></line>
+            <line
+                x1="4.5"
+                y1="4.5"
+                x2="15.5"
+                y2="15.5"
+                transform="translate(10, 10) rotate(90) translate(-10, -10) "
+            ></line>
+        </svg>
+    </div>
+
+    <h6 translate>Camera Details</h6>
+    <div class="grid-container">
+        <span
+            class="grid-item-key"
+            translate
+            >Name</span
+        >
+        <span class="grid-item-value">{{ camera.name }}</span>
+
+        <span
+            class="grid-item-key"
+            translate
+            >Camera ID</span
+        >
+        <span class="grid-item-value">
+            {{ camera.id }}
+            <br />
+            <a
+                class="text-muted"
+                (click)="copyOnClick(camera.id)"
+                translate
+                >(copy)</a
+            >
+        </span>
+
+        <span
+            class="grid-item-key"
+            translate
+            >IP (URL)</span
+        >
+        <span class="grid-item-value"
+            ><a
+                [href]="cameraUrl | safe: 'url'"
+                target="_blank"
+                >{{ camera.ip }}</a
+            ></span
+        >
+
+        <span
+            class="grid-item-key"
+            translate
+            >View</span
+        >
+        <span class="grid-item-value">
+            <a
+                translate
+                [href]="currentUrl"
+                target="_blank"
+                >Web</a
+            >
+            &nbsp;
+            <a
+                class="text-muted"
+                (click)="copyOnClick(currentUrl)"
+                translate
+                >(copy)</a
+            >
+        </span>
+
+        <ng-container *ngFor="let stream of cameraDetails">
+            <span class="grid-item-key">{{ stream.name }}</span>
+            <span class="grid-item-value">
+                <ng-container *ngFor="let transport of stream.transports; let last = last">
+                    <a
+                        class="text-uppercase"
+                        [href]="transport.url | safe: 'url'"
+                        target="_blank"
+                        >{{ transport.name }}</a
+                    >
+                    <span
+                        *ngIf="!last"
+                        class="transport-spacer"
+                        >/</span
+                    >
+                </ng-container>
+            </span>
+        </ng-container>
+    </div>
+</div>

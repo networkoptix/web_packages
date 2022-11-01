@@ -4,17 +4,23 @@ Resource          system-camera-resource.robot
 Resource          system-server-resource.robot
 
 *** Variables ***
-#${QA BURBANK IP}     10.1.5.34
+${QA BURBANK IP}     10.1.5.34
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
 ${storage string 2}    ${EMPTY}
-${camera}      00-09-18-64-EE-7D
-${camera url}    10.1.5.168
-${camera manufacturer}    3100
-${camera user}    admin
-${camera password}    QAbur777$
-${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+#${camera}      00-09-18-64-EE-7D
+#${camera url}    10.1.5.168
+#${camera manufacturer}    3100
+#${camera user}    admin
+#${camera password}    QAbur777$
+#${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+${camera}      00-02-D1-7E-59-52
+${camera url}    10.1.5.217
+${camera manufacturer}    VIVOTEK
+${camera user}    root
+${camera password}    QAbur777%
+${camera resourceId}   {d6aa35d3-6153-d3cf-8d89-6c4e3f5095f6}
 ${disk location}    /media/nxwitness-storages/disk1
 ${backup initialized}    ${FALSE}
 ${change focus}    //h4[contains(text(),"Storage")]
@@ -26,14 +32,16 @@ ${drives}    5
 Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
     ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 4.3}'    [\"{beee013e-d913-8f47-144f-2092371ee118}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
+    ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 5.0}'    [\"{177334ce-ee4d-9856-bde8-c212b8c5cd7d}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
     Set Suite Variable     ${value}    ${value}
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    ${random} =	   Generate Random String      length=5
     Set Suite Variable     ${random}    ${random}
     ${loglevel} =    Set Loglevel    INFO
     ${ignore} =    Set Loglevel    ${loglevel}
     ${console} =    Set Variable If    '${loglevel}' != 'INFO'    yes    no
     Set Suite Variable    ${console}    ${console}    
     Log    Storage Suite Setup    DEBUG      console=${console}   
+    Open Browser and go to URL    ${url}
     ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     Log    owner created ..... | PASS |    DEBUG      console=${console}
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
@@ -81,13 +89,13 @@ Storage Suite Setup
     Log    camera added ..... | PASS |    DEBUG      console=${console}
     Sleep    15
     # restarting server and creating inaccessible disk
-    Restart Server    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['cloud auth']}
+    Restart Server    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Sleep    3
     Remove Directory    disk-invalid
     Log    disk-invalid deleted ..... | PASS |    DEBUG      console=${console}
     Sleep    90
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
-    Open Browser and go to URL    ${url}
+    Go to    ${url}
     Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
     Verify Storages    5    owner=${server 1['owner']}    system=${server 1['cloud id']}    login=${TRUE}
     Verify Storages    1    owner=${server 1['owner']}    system=${server 2['cloud id']}    login=${TRUE}
@@ -129,20 +137,36 @@ Verify Storages
 
 Turn on Recording
     [Arguments]    ${owner}    ${system}
-    Log in to user and system    ${owner}     ${system}
-    Go To Cameras
-    Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Toggle Recording
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Verify Recording Controls Are Open
-    Click Element    ${RECORD ALWAYS RADIO BUTTON}/..
-    Wait Until Element is Visible    ${SAVE BUTTON}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Click Button    ${SAVE BUTTON}
-    Sleep    2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Log Out
+    IF    ${IMAGE} == ${IMAGE 5.0} or ${IMAGE} == ${IMAGE 5.1}
+        Start Recording API    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}    ${camera resourceId}
+        Log in to user and system    ${owner}     ${system}
+        Go To Cameras
+        ${status} =     Run Keyword and Return Status     Wait Until Element Is Visible    //span[contains(text(), "Edit Credentials")]    timeout=15
+        IF    ${status}
+            Click Element    //span[contains(text(), "Edit Credentials")]
+            Wait Until Element Is Visible    //input[@id="cameraPasswordCredentials"]
+            Input Text    //input[@id="cameraPasswordCredentials"]    ${camera password}
+            Click Button    //button[@type="submit"]
+            Wait Until Element is Not Visible    //h1[contains(text(), "Authentication Credentials")]
+        END
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Log Out
+    ELSE
+        Log in to user and system    ${owner}     ${system}
+        Go To Cameras
+        Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Toggle Recording
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Verify Recording Controls Are Open
+        Click Element    ${RECORD ALWAYS RADIO BUTTON}/..
+        Wait Until Element is Visible    ${SAVE BUTTON}
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Click Button    ${SAVE BUTTON}
+        Sleep    2
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Log Out
+    END
     Log    recording turned on ..... | PASS |    DEBUG      console=${console}
 
 Set Default Storage Config
@@ -154,31 +178,40 @@ Set Default Storage Config
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
+    ${range} =     Get Length    ${storages dict}
     FOR    ${n}    IN RANGE    ${range}
-        ${url} =    Set variable    ${storages dict[${n}]['url']}
+        ${status} =     Run Keyword And Return Status    Dictionary Should Contain Key  ${storages dict[${n}]}    url
+        IF   ${status}
+            ${url} =    Set variable    ${storages dict[${n}]['url']}
+        ELSE
+            ${url} =    Set variable    ${storages dict[${n}]['path']}
+        END
         ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}
         ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
         Run Keyword If    ${disabled disk}   Run Keywords
         ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${FALSE}    AND
+        ...    Set To Dictionary    ${storages dict[${n}]}    isUsedForWriting    ${FALSE}    AND
         ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}
         ...    ELSE IF    ${backup}    Run Keywords
         ...    Set To Dictionary    ${storages dict[${n}]}    isBackup     ${TRUE}    AND
+        ...    Set To Dictionary    ${storages dict[${n}]}    isUsedForWriting    ${TRUE}    AND
         ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${TRUE}
         ...    ELSE    Run Keywords
         ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${TRUE}    AND
+        ...    Set To Dictionary    ${storages dict[${n}]}    isUsedForWriting    ${TRUE}    AND
         ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}
     END
-    Save Storages via API    ${storages dict}    ${server url}
+    ${response} =   Save Storages via API    ${storages dict}    ${server url}
     # Verify changes are correct
-    Sleep    2
-    ${storages string 1} =    Convert To String    ${storages dict}
-    ${storages} =    Get Storages via API    ${server url}
-    ${storages string 2} =    Convert To String    ${storages}
+#    Sleep    2
+#    ${storages string 1} =    Convert To String    ${response}
+#    ${storages} =    Get Storages via API    ${server url}
+#    ${storages string 2} =    Convert To String    ${storages}
     # ${storages string} =    Replace String    ${storages string}    '    "
     # ${storages string} =    Replace String    ${storages string}    False    "False"
     # ${storages string} =    Replace String    ${storages string}    True    "True"
     # ${storages dict 2} =    Evaluate    json.loads("""${storages string}""")    json
-    Should Be Equal     ${storages string 1}     ${storages string 2}
+#    Should Be Equal     ${storages string 1}     ${storages string 2}
     
 Reset to Default Storage Config
     @{disabled} =    Create List    disk2    disk3
@@ -432,10 +465,11 @@ Restart
     Common Restart Logout    ${url}
     Reset to Default Storage Config
 
-Test Setup
+Storage Test Setup
     [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
     ${disabled disks} =    Convert Disk String to List      ${disabled}
     ${backup disks} =    Convert Disk String to List      ${backups}
     Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
+    QA Video Recording Start
     Log in to user and system    ${email}     ${system}
     Go to Servers

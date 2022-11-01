@@ -1,0 +1,125 @@
+<div
+    style="margin-top: 150px"
+    class="row"
+>
+    <div class="col-9">
+        <h4>Toaster</h4>
+        <div class="form-group">
+            <nx-checkbox
+                name="autohide"
+                componentId="autohide"
+                [(ngModel)]="autohide"
+                checked
+            >
+            </nx-checkbox>
+            <label for="autohide">Auto hide</label>
+        </div>
+        <div class="row p-3">
+            <button
+                class="btn btn-primary ml-2"
+                (click)="notify('I\'m info asdas sadasd asd', 'info')"
+            >
+                Info
+            </button>
+            <button
+                class="btn btn-danger ml-2"
+                (click)="notify('I\'m danger', 'danger')"
+            >
+                Danger
+            </button>
+            <button
+                class="btn btn-warning ml-2"
+                (click)="notify('I\'m warning', 'warning')"
+            >
+                Warning
+            </button>
+            <button
+                class="btn btn-default ml-2"
+                (click)="notify('I\'m success', 'success')"
+            >
+                Success
+            </button>
+        </div>
+    </div>
+    <div class="col-3">
+        <h4>Ribbon</h4>
+        <div class="form-group">
+            <nx-radio
+                name="ribbon"
+                componentId="ribbon-alert"
+                value="alert"
+                label="Alert"
+                [(ngModel)]="ribbonType"
+                (change)="showAlertRibbon()"
+            >
+            </nx-radio>
+            <nx-radio
+                name="ribbon"
+                componentId="ribbon-info"
+                value="info"
+                label="Info"
+                [(ngModel)]="ribbonType"
+                (change)="showInfoRibbon()"
+            >
+            </nx-radio>
+        </div>
+    </div>
+</div>
+<div style="margin-top: 50px">
+    <h4>Banner (component)</h4>
+    <div class="mt-3">
+        <h6>error</h6>
+        <nx-alert-block
+            type="error"
+            id="error"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+            [line1]="'Restarting'"
+            [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+            [btnCaption]="'Check Status'"
+            (onAction)="click()"
+        >
+        </nx-alert-block>
+    </div>
+    <div class="mt-3">
+        <h6>warning</h6>
+        <nx-alert-block
+            type="warning"
+            id="warning"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+            [line1]="'Restarting'"
+            [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+            [btnCaption]="'Check Status'"
+            (onAction)="click()"
+        >
+        </nx-alert-block>
+    </div>
+    <div class="mt-3">
+        <h6>info</h6>
+        <nx-alert-block
+            type="info"
+            id="info"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+            [line1]="'Restarting'"
+            [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+            [btnCaption]="'Check Status'"
+            (onAction)="click()"
+        >
+        </nx-alert-block>
+    </div>
+    <div
+        class="mt-3"
+        style="width: 400px"
+    >
+        <h6>warning w/ extra line</h6>
+        <nx-alert-block
+            type="warning"
+            id="two-line-warning"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [line1]="'WARNING'"
+            [line2]="
+                'Once the ownership transfer is complete, you will be removed from the system.'
+            "
+        >
+        </nx-alert-block>
+    </div>
+</div>

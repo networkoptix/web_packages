@@ -1,6 +1,6 @@
 import pytest
 from collections import Counter
-from random import randint
+from random import randint, choice
 from uuid import uuid4
 
 from django.db.models import Count
@@ -245,6 +245,27 @@ class TestModelFunctions:
         assert menu.get('title', False) == menu_name
         assert menu.get('type', False) == menu_type
         assert len(menu.get('nodes', False)) == nodes_count
+
+    def test_get_cached_menu_different_users_get_different_menus(self, uses, account_factory, mocker):
+        uses(account=True, customization=True, menu=True)
+        user_one = account_factory(email='user_one@email.com', is_superuser=False)
+        user_two = account_factory(email='user_two@email.com', is_superuser=False)
+        condition = 'user_one_condition'
+        baker.make(MenuNode, name=f'user1 node', enabled=[self.customization], available=[
+                       self.customization], condition=condition, parent_menu=self.menu)
+        mocker.patch('cms.feature_flags.FLAGS.value_to_key', lambda node_condition: node_condition == condition)
+        mocker.patch('cms.models.feature_flag_is_active', lambda flag, user, _: flag and user == user_one)
+        customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
+
+        # user_one gets an extra node because they have permission
+        cached_menus = get_cached_menu(
+            customization, user=user_one, menu_type=menu_type)
+        assert len(cached_menus.get(menu_name).get('nodes', False)) == nodes_count + 1
+
+        # user_two does not have access to the extra node
+        cached_menus = get_cached_menu(
+            customization, user=user_two, menu_type=menu_type)
+        assert len(cached_menus.get(menu_name).get('nodes', False)) == nodes_count
 
     # External File Test
     def test_slugify_lower(self):
@@ -767,6 +788,7 @@ class TestMenuNodeMethods:
                     'condition': '%DEVELOPERS_ENABLED%',
                     'condition_met': False,
                     'urlified': f'{docs[0].id}-my_url',
+                    'version': docs[0].version_id(cust_1),
                     'name': 'node1',
                     'display_name': 'node1'
                 }, {
@@ -788,6 +810,7 @@ class TestMenuNodeMethods:
                     'condition': '',
                     'condition_met': True,
                     'urlified': f'{docs[1].id}-my_url',
+                    'version': docs[1].version_id(cust_1),
                     'name': 'node2',
                     'display_name': 'node2'
                 }
@@ -1123,7 +1146,8 @@ class TestAssetTypeFields:
                                                                    (4, "article", "Article"),
                                                                    (5, "agreement", "Agreement"),
                                                                    (6, "documentation", "Documentation Page"),
-                                                                   (7, 'release_notes', "Release Notes")])
+                                                                   (7, 'release_notes', "Release Notes"),
+                                                                   (8, 'vms_extension', 'VMS Extension')])
 
     def test_name(self):
         name = self.type._meta.get_field('name')
@@ -1417,7 +1441,8 @@ class TestCustomization:
         assert self.cust._meta.permissions == (
             ('access_customization', 'Can access customization'),
             ('access_integration_store', 'Can access the integration store'),
-            ('access_developers', 'Can see Developers pages')
+            ('access_developers', 'Can see Developers pages'),
+            ('view_integration_drafts', 'Can view all integration drafts')
         )
 
     def test_name(self):
@@ -1842,12 +1867,12 @@ class TestMaintenanceSchedulingAndCompletion:
             assert portal_notification.build == updated_build
             assert portal_notification.build_raw == updated_raw_build
 
-class TestOpenAPIJSON:
+class TestReadOnlyAPI:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.version = str(uuid4())
         self.name = str(uuid4())
-        self.model = baker.prepare('OpenAPIJSON', version=self.version, name=self.name)
+        self.model = baker.prepare(ReadOnlyAPI, version=self.version, name=self.name)
 
     def test_str(self):
         assert str(self.model) == f"{self.name} - {self.version}"
@@ -1860,18 +1885,267 @@ class TestOpenAPIJSON:
     def test_version(self):
         version = self.model._meta.get_field('version')
         assert version.help_text == 'API version'
-        assert version.max_length == 20
-
-    def test_content(self):
-        content = self.model._meta.get_field('content')
-        assert content.help_text == "API JSON"
-        assert content.default == {}
+        assert version_validator in version.validators
+        assert version.max_length == 13
 
     def test_type(self):
         type = self.model._meta.get_field('type')
-        assert type.choices == OpenAPIJSON.JSON_TYPES
+        assert type.choices == ReadOnlyAPI.API_TYPES
 
     def test_enabled(self):
         enabled = self.model._meta.get_field('enabled')
         assert enabled.default == True
 
+    def test_manifest(self):
+        manifest = self.model._meta.get_field('manifest')
+        assert manifest.help_text == 'Content manifest'
+
+
+class TestReadOnlyAPIFile:
+    @pytest.fixture(autouse=True)
+    def setup(self, db):
+        self.readonly_api_name = str(uuid4())
+        self.readonly_api = baker.make(ReadOnlyAPI, name=self.readonly_api_name)
+        self.file_count = 2
+        self.readonly_api_files = baker.make(ReadOnlyAPIFile, _quantity=self.file_count, readonly_api=self.readonly_api)
+
+    def test_content(self):
+        content = self.readonly_api_files[0]._meta.get_field('content')
+        assert content.help_text == "File contents"
+
+    def test_filename(self):
+        filename = self.readonly_api_files[0]._meta.get_field('filename')
+        assert filename.max_length == 46
+
+    def test_type(self):
+        type = self.readonly_api_files[0]._meta.get_field('type')
+        assert type.choices == ReadOnlyAPIFile.FILE_TYPES
+
+    def test_readonly_api_has_files(self):
+        assert len(ReadOnlyAPIFile.objects.filter(readonly_api=self.readonly_api)) == self.file_count
+
+    def make_model_with_invalid_json(self, file_type):
+        invalid_json = str(uuid4())
+        return baker.prepare(ReadOnlyAPIFile, content=invalid_json, type=file_type)
+
+    def test_clean_raises_validation_error(self):
+        readonlyfile = self.make_model_with_invalid_json(ReadOnlyAPIFile.FILE_TYPES.json)
+
+        with pytest.raises(ValidationError):
+            readonlyfile.clean()
+
+    def test_clean_does_not_raise_validation_error(self):
+        non_json_types = [ReadOnlyAPIFile.FILE_TYPES.preamble_markdown, ReadOnlyAPIFile.FILE_TYPES.changelog_markdown]
+        for type in non_json_types:
+            readonlyfile = self.make_model_with_invalid_json(type)
+
+            try:
+                readonlyfile.clean()
+            except ValidationError:
+                pytest.fail('Unexpected Validation error')
+
+    def test_validate_unique(self):
+        unique_types = [ReadOnlyAPIFile.FILE_TYPES.preamble_markdown, ReadOnlyAPIFile.FILE_TYPES.changelog_markdown]
+        file_type = choice(unique_types)
+        first_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)
+        first_readonly.save()
+        second_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)
+        with pytest.raises(ValidationError):
+            second_readonly.validate_unique(self)
+
+class TestDataStructure:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.ds: DataStructure = baker.prepare('DataStructure')
+
+    def test_str(self):
+        name = 'nice data structure'
+        self.ds.name = name
+        assert str(self.ds) == name
+
+    def test_is_protected_true(self, mocker):
+        asset = mocker.MagicMock()
+        asset.version_id.return_value = 4
+        self.ds.protected = True
+        assert self.ds.is_protected(asset)
+
+    def test_is_protected_false(self, mocker):
+        asset = mocker.MagicMock()
+
+        # Not accepted version
+        asset.version_id.return_value = 0
+        self.ds.protected = True
+        assert not self.ds.is_protected(asset)
+
+        # Not protected
+        asset.version_id.return_value = 4
+        self.ds.protected = False
+        assert not self.ds.is_protected(asset)
+
+        # Not protected and not accepted version
+        asset.version_id.return_value = 0
+        self.ds.protected = False
+        assert not self.ds.is_protected(asset)
+
+    def test_cast_value_check_box(self):
+        self.ds.type = DataStructure.DATA_TYPES.check_box
+        assert DataStructure.cast_value(self.ds, 'True') is True
+        assert DataStructure.cast_value(self.ds, 'False') is False
+
+    def test_cast_value_integer(self):
+        self.ds.type = DataStructure.DATA_TYPES.integer
+        assert DataStructure.cast_value(self.ds, '') == 0
+        assert DataStructure.cast_value(self.ds, '0') == 0
+        assert DataStructure.cast_value(self.ds, '5') == 5
+
+    def test_cast_value_object(self):
+        self.ds.type = DataStructure.DATA_TYPES.object
+
+        assert DataStructure.cast_value(self.ds, '') == {}
+        assert DataStructure.cast_value(self.ds, '{}') == {}
+
+        obj = {'key': 2}
+        obj_str = json.dumps(obj)
+        assert DataStructure.cast_value(self.ds, obj_str) == obj
+
+    def test_cast_value_array(self):
+        self.ds.type = DataStructure.DATA_TYPES.array
+
+        assert DataStructure.cast_value(self.ds, '') == []
+        assert DataStructure.cast_value(self.ds, '[]') == []
+
+        arr = ['el1', 'el2']
+        arr_str = json.dumps(arr)
+        assert DataStructure.cast_value(self.ds, arr_str) == arr
+
+    def test_cast_value_multiselect_array(self):
+        self.ds.type = DataStructure.DATA_TYPES.multiselect
+        self.ds.meta_settings['options'] = ['opt1', 'opt2', 'opt3']
+
+        assert DataStructure.cast_value(self.ds, '') == []
+        assert DataStructure.cast_value(self.ds, '[]') == []
+        opts = ['opt2', 'opt3']
+        opts_str = json.dumps(opts)
+        assert DataStructure.cast_value(self.ds, opts_str) == opts
+
+    def test_cast_value_multiselect_dict(self):
+        self.ds.type = DataStructure.DATA_TYPES.multiselect
+        self.ds.meta_settings['options'] = [
+            {'id': 'id1', 'label': 'val1'},
+            {'id': 'id2', 'label': 'val2'},
+            {'id': 'id3', 'label': 'val3'}
+        ]
+
+        assert DataStructure.cast_value(self.ds, '') == []
+        assert DataStructure.cast_value(self.ds, '[]') == []
+
+        opts = ['val1', 'val3']
+        opts_str = json.dumps(opts)
+
+        assert DataStructure.cast_value(self.ds, opts_str) == [
+            {'id': 'id1', 'label': 'val1'},
+            {'id': 'id3', 'label': 'val3'}
+        ]
+
+    def test_cast_value_other(self):
+        self.ds.type = DataStructure.DATA_TYPES.text
+        assert DataStructure.cast_value(self.ds, '') == ''
+        assert DataStructure.cast_value(self.ds, 'some str') == 'some str'
+
+    # TODO: FAV functions are too complex to properly unit test now.
+    # Refactor into smaller units for better coverage and easier mocking.
+
+    @pytest.fixture()
+    def setup_accepted_review(self, default_customization, asset_type_factory):
+        integration_type = asset_type_factory(AssetType.ASSET_TYPES.integration)
+        asset: Asset = baker.make('Asset', customizations=[default_customization], asset_type=integration_type)
+        version: ContentVersion = baker.make('ContentVersion', asset=asset)
+        review: AssetCustomizationReview = baker.make('AssetCustomizationReview', version=version,
+                                                      customization=default_customization,
+                                                      state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        return asset, version, review
+
+    def test_find_actual_value(self, setup_accepted_review):
+        asset, version, review = setup_accepted_review
+        ds: DataStructure = baker.make(
+            'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text', translatable=False
+        )
+
+        # Test default value
+        assert ds.find_actual_value(asset) == ds.default
+
+        dr = baker.make('DataRecord', data_structure=ds, version=version, value='new value', asset=asset)
+        assert ds.find_actual_value(asset) == dr.value
+
+    def test_find_actual_values(self, setup_accepted_review):
+        asset, version, review = setup_accepted_review
+        data_structures = baker.make(
+            'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text', translatable=False,
+            _quantity=3, name=seq('%ds_', suffix='%'),
+        )
+
+        for idx, ds in enumerate(data_structures):
+            baker.make('DataRecord', version=version, data_structure=ds, asset=asset, value=f'val_{idx + 1}')
+
+        values = DataStructure.find_actual_values(data_structures, asset)
+        for idx, ds in enumerate(data_structures):
+            assert values[ds] == f'val_{idx + 1}'
+
+        assert len(values) == len(data_structures)
+
+    def test_to_string_str(self):
+        ds = baker.prepare('DataStructure')
+        value = 'test str'
+        assert DataStructure.to_string(ds, value) == value
+
+    def test_to_string_json(self):
+        ds = baker.prepare('DataStructure', type=DataStructure.DATA_TYPES.array)
+        value = ["array", "here"]
+        assert DataStructure.to_string(ds, value) == '["array", "here"]'
+
+    def test_to_string_other(self):
+        ds = baker.prepare('DataStructure', type=DataStructure.DATA_TYPES.integer)
+        value = 5
+        assert DataStructure.to_string(ds, value) == '5'
+
+    def test_get_type_by_name(self):
+        assert DataStructure.get_type_by_name('text') == DataStructure.DATA_TYPES.text
+        assert DataStructure.get_type_by_name('Text') == DataStructure.DATA_TYPES.text
+        assert DataStructure.get_type_by_name('External File') == DataStructure.DATA_TYPES.external_file
+        assert DataStructure.get_type_by_name('Nonexistant type') == DataStructure.DATA_TYPES.text
+
+    def test_is_file_or_image(self):
+        assert not DataStructure.is_file_or_image('text')
+        assert DataStructure.is_file_or_image('image')
+        assert DataStructure.is_file_or_image('file')
+        assert not DataStructure.is_file_or_image(DataStructure.DATA_TYPES.text)
+        assert DataStructure.is_file_or_image(DataStructure.DATA_TYPES.image)
+        assert DataStructure.is_file_or_image(DataStructure.DATA_TYPES.file)
+
+    def test_is_string(self):
+        for typ in ['text', 'long_text', 'guid', 'html', 'select']:
+            assert DataStructure.is_string(getattr(DataStructure.DATA_TYPES, typ))
+
+        assert not DataStructure.is_string(DataStructure.DATA_TYPES.check_box)
+
+    def test_is_image(self):
+        ds: DataStructure = baker.prepare(DataStructure)
+        ds.type = DataStructure.DATA_TYPES.image
+        assert ds.is_image
+        ds.type = DataStructure.DATA_TYPES.external_image
+        assert ds.is_image
+        ds.type = DataStructure.DATA_TYPES.file
+        assert not ds.is_image
+
+    def test_has_image_field(self):
+        ds: DataStructure = baker.prepare(DataStructure, type=DataStructure.DATA_TYPES.image)
+        assert ds.has_image_field
+
+    def test_has_file_field(self):
+        ds: DataStructure = baker.prepare(DataStructure)
+        ds.type = DataStructure.DATA_TYPES.file
+        assert ds.has_file_field
+        ds.type = DataStructure.DATA_TYPES.external_image
+        assert ds.has_file_field
+        ds.type = DataStructure.DATA_TYPES.external_file
+        assert ds.has_file_field

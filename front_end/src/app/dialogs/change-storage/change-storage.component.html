@@ -1,0 +1,49 @@
+<form
+    #changeStorageForm="ngForm"
+    id="changeStorageForm"
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            What to do with current analytics data?
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="dismiss()"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p translate>
+            Current analytics data will not be automatically moved to another location and will
+            become inaccessible. You can keep it and manually move later, or delete permanently.
+        </p>
+
+        <p [innerHTML]="'dialogs.changeStorage.support' | translate"></p>
+    </div>
+    <div class="modal-footer border-top-0">
+        <nx-process-button
+            [process]="deleteAnalyticsData"
+            actionType="danger"
+            [form]="changeStorageForm"
+            [buttonText]="'Delete' | translate"
+        ></nx-process-button>
+        <nx-process-button
+            [process]="keepAnalyticsData"
+            actionType="default"
+            [form]="changeStorageForm"
+            [buttonText]="'Keep' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="deleteAnalyticsData"
+            [discardFn]="dismiss"
+        ></nx-cancel-button>
+    </div>
+</form>

@@ -1,0 +1,129 @@
+<div class="menu-container">
+    <div
+        class="menu-items"
+        *ngIf="!isProfile; else profile"
+    >
+        <div
+            class="menu-item"
+            *ngIf="showCurrentSystem"
+        >
+            <div class="node-name">
+                {{ currentSystemMenu.display_name }}
+            </div>
+            <ng-container
+                *ngTemplateOutlet="menuItems; context: { nodes: currentSystemMenu.nodes }"
+            ></ng-container>
+        </div>
+        <div
+            *ngFor="let node of menuNodes"
+            class="menu-item"
+        >
+            <div class="node-name">
+                {{ node.display_name }}
+            </div>
+            <ng-container
+                *ngTemplateOutlet="menuItems; context: { nodes: node.nodes }"
+            ></ng-container>
+        </div>
+    </div>
+    <div class="account-button-wrapper">
+        <div
+            class="account-button logout-button btn"
+            (click)="logout()"
+            *ngIf="loggedIn; else logIn"
+            translate
+        >
+            Log Out
+        </div>
+    </div>
+</div>
+
+<ng-template #profile>
+    <div class="menu-items">
+        <div
+            *ngFor="let node of profileMenu"
+            class="level-two-item"
+        >
+            <div
+                class="subnode"
+                (click)="nodeClick(node, $event)"
+                [ngClass]="{
+                    active:
+                        headerService.currentLocation?.path === node.url ||
+                        (!headerService.currentLocation?.path && node.url === 'content/about')
+                }"
+            >
+                {{ node.display_name }}
+                <svg-icon
+                    *ngIf="node.new_window"
+                    [src]="CONFIG.images.dirHeader + 'external_link.svg'"
+                ></svg-icon>
+            </div>
+            <div
+                class="nav-arrow"
+                (click)="nodeClick(node, $event)"
+            >
+                <svg-icon
+                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
+                ></svg-icon>
+            </div>
+        </div>
+    </div>
+    <div class="logout-wrapper">
+        <div
+            class="logout-button btn"
+            (click)="logout()"
+            translate
+        >
+            Log Out
+        </div>
+    </div>
+</ng-template>
+
+<ng-template
+    #menuItems
+    let-nodes="nodes"
+>
+    <div class="menu-items">
+        <div
+            *ngFor="let node of nodes"
+            class="level-two-item"
+        >
+            <div
+                class="subnode"
+                (click)="nodeClick(node, $event)"
+                [ngClass]="{
+                    active:
+                        headerService.currentLocation?.path === node.url ||
+                        (!headerService.currentLocation?.path && node.url === 'content/about')
+                }"
+            >
+                {{ node.display_name }}
+                <svg-icon
+                    *ngIf="node.new_window"
+                    [src]="CONFIG.images.dirHeader + 'external_link.svg'"
+                ></svg-icon>
+            </div>
+            <div
+                class="nav-arrow"
+                (click)="nodeClick(node, $event)"
+            >
+                <svg-icon
+                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
+                ></svg-icon>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #logIn>
+    <a
+        [href]="headerService.authorizeUrl | unsafe"
+        class="btn btn-primary account-button"
+        translate
+    >
+        Log In
+    </a>
+</ng-template>

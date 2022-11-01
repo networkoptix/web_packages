@@ -1,6 +1,7 @@
 {
     "language": "cs_CZ",
     "About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Všechny servery",
     "Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
     "For developers": "For developers",
@@ -63,11 +64,11 @@
         },
         "advancedViewer": {
             "description": "Můžete sledovat živé video, prohlížet archiv, konfigurovat kamery, ovládat PTZ atd",
-            "label": "Rozšířený prohlížeč"
+            "label": "Pokročilý prohlížeč"
         },
         "cloudAdmin": {
             "description": "Můžete nastavit systém a sdílet jej",
-            "label": "Administrátor"
+            "label": "Administrator"
         },
         "custom": {
             "description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client",
@@ -133,6 +134,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Vytvořit účet %CLOUD_NAME%",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -175,6 +177,38 @@
         "ptz": "PTZ kamery"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Velikost",
+            "state": "Stav",
+            "system": "Systém",
+            "expires": "Platnost vyprší",
+            "key": "Key"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Dostupné",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -196,7 +230,7 @@
         },
         "cameraStates": {
             "error": "Chyba",
-            "errorLoading": "Při načítání videa došlo k chybě.",
+            "errorLoading": "Při načítání tohoto videa došlo k chybě.",
             "flashOrWebmRequired": "Pro přehrávání videa v aplikaci Internet Explorer si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a> nebo<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM kodek</a>.",
             "flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
             "iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
@@ -223,9 +257,17 @@
             "various": "- Různé hodnoty -",
             "auto": "Auto",
             "best": "Nejlepší",
-            "high": "Vysoká",
+            "high": "Hlavní",
             "medium": "Střední",
-            "low": "Nízká"
+            "low": "Vedlejší"
+        },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
         "general": "Obecné",
         "generalError": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
@@ -241,7 +283,7 @@
         "systemNoAlertsMessage": "Váš systém musí dobře fungovat!",
         "systemOffline": "Systém je offline",
         "systemOfflineMessage": "Tento systém je offline a momentálně se nelze připojit.",
-        "systemServerError": "Interní chyba serveru",
+        "systemServerError": "Vnitřní chyba serveru",
         "systemServerErrorMessage": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
         "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
@@ -260,7 +302,7 @@
             "expand server": "expand server + [server name]",
             "help": "help | show commands",
             "live": "go to live | show me live",
-            "pause": "pauza",
+            "pause": "pozastavit",
             "play": "přehrát",
             "search": "find + [text for searchbar]",
             "stop listening": "zastavení poslech",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Zobrazujete zastaralou zprávu."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -299,7 +348,7 @@
             "ok": "OK",
             "remove": "Odstranit",
             "stayAs": "Zůstaňte přihlášeni jako {email} ",
-            "stayLoggedIn": "Zůstat přihlášený"
+            "stayLoggedIn": "Zůstat trvale přihlášen"
         },
         "cloudStorage": {
             "title": "Cloudové úložiště",
@@ -309,6 +358,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "kamera",
             "cameras": "kamery",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Povolit",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Přesunout cloudové úložiště",
+                    "action": "Přesunout",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Odstranit Cloudové úložiště?",
+                    "action": "Smazat",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Aktuální nahrávky",
                 "whenFullyUsed": "Při plném použití",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Archiv z",
                 "recordingBitrate": "Nahrávání datového toku",
                 "delayFromLive": "Zpoždění živého přenosu"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Přesunout",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Smazat",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "Cloudové úložiště bylo úspěšně odebráno ze systému",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Doporučujeme vám konzultovat s",
-                "b_support": "podpora",
-                "c_proceeding": "než budete pokračovat."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
@@ -404,7 +485,8 @@
             "urlEmpty": "Zadejte adresu serveru",
             "urlNotValid": "Zadejte platnou URL",
             "unknownError": "Došlo k neznámé chybě. Aktualizujte stránku a zkuste to znovu. Pokud problém přetrvává, kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -448,6 +530,13 @@
             "action": "Přihlásit",
             "message": "Please log in again.",
             "title": "Platnost relace skončila"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Chyba",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Kontrola Přístupu",
         "Connector": "Konektor",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -694,12 +788,27 @@
         "server": "Server",
         "alert": "Alert"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
+    },
     "pageTitles": {
         "about": "O aplikaci",
-        "account": "Nastavení účtu",
-        "activate": "Aktivovat účet",
-        "activateCode": "Aktivovat účet",
-        "activateSuccess": "Účet aktivován",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Authorization",
         "changePassword": "Změnit heslo",
@@ -711,19 +820,19 @@
         "failedToAccessSystem": "Přístup k systému se nezdařil",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
-        "login": "Přihlásit se",
+        "login": "Přihlásit",
         "pageNotFound": "Stránka nenalezna",
         "register": "Vytvořit účet v",
         "registerSuccess": "Vítejte v",
-        "restorePassword": "Obnovit heslo",
-        "restorePasswordSuccess": "Heslo uloženo",
+        "restorePassword": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Podporovaná zařízení",
         "system": "Systém",
-        "systemShare": "Sdílet systém",
+        "systemShare": "Share System",
         "systems": "Systémy",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "Zobrazit kamery",
+        "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "Zabezpečení",
         "twofaRequired": "Two-factor authentication required"
@@ -792,7 +901,7 @@
             "accept": "Přijmout",
             "reject": "Reject",
             "backToEditText": "Zpět na editační rozhraní",
-            "previewRibbon": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
+            "previewRibbon": "Tato stránka představuje náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
@@ -807,8 +916,6 @@
         "Search": "Hledat",
         "analytics": "Analýzy",
         "analyticsSelected": "analytické události",
-        "filter applied": "aplikovány filtry",
-        "filters applied": "aplikovány filtry",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Typ",
         "hardwareTypes": "Typy",
@@ -816,7 +923,10 @@
         "search_ipvd": "Hledání podle modelu nebo výrobce",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Výrobce",
-        "vendors": "Výrobci"
+        "vendors": "Výrobci",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -848,6 +958,7 @@
         "Settings": "Nastavení",
         "Information": "Informace",
         "Bookmarks": "Záložky",
+        "Layouts": "Rozložení",
         "Monitoring": "Monitorování"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(zaznamenat všechny dostupné informace)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Místní",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloudový"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "aktivováno",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

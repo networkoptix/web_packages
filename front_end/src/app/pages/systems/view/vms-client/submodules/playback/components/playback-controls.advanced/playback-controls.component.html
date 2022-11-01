@@ -1,0 +1,24 @@
+<div
+    class="button pauseToggle"
+    [ngClass]="{ enabled: canPause || canUnpause }"
+    (click)="togglePause()"
+>
+    <!-- {{ canPause ? 'Pause' : canUnpause ? 'UnPause' : 'Pause/Unpause' }} -->
+    <span class="glyph"></span>
+</div>
+<div
+    class="button stop"
+    [ngClass]="{ enabled: !(canPause || canUnpause) && canStop }"
+    (click)="stop()"
+>
+    <!-- Stop -->
+    <span class="glyph"></span>
+</div>
+<div
+    class="button playLive"
+    [ngClass]="{ enabled: !(canPause || canUnpause) && !canStop && canPlayLive }"
+    (click)="playLive()"
+>
+    <!-- Play Live -->
+    <span class="glyph"></span>
+</div>

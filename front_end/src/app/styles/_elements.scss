@@ -1,0 +1,217 @@
+@use "./typography";
+@use "./mixins";
+@use "../../styles/theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+
+svg {
+    pointer-events : none;
+    
+    .icon-with-fill {
+        fill : var(--svg-std-icon-fill);
+        stroke : none;
+    }
+}
+
+.outerContainer {
+    display        : flex;
+    flex-direction : column;
+}
+
+.headerContainer {
+    z-index : 999;
+}
+
+.mainContainer {
+    //flex: 1 1 auto;
+    overflow-y : auto;
+    height     : 100%;
+    &.full-screen {
+        overflow: hidden;
+    }
+}
+
+.standalone-delimiter {
+    height           : 1px;
+    background-color : var(--border-color);
+    padding          : 0 12px;
+    position         : relative;
+
+    &:after {
+        height           : 1px;
+        background-color : var(--horizontal-sep-color);
+        content          : "";
+        position         : absolute;
+        width            : calc(100% - 24px);
+    }
+}
+
+.group-label {
+    margin-bottom : 8px;
+    font-family   : $font-family-regular;
+    color         : $light16;
+}
+
+.error-label {
+    @include typography.regular13nocolor;
+    color : var(--error-label) !important;
+}
+
+.disabled-label {
+    @include typography.regular13light10;
+}
+
+.warning-label {
+    color : $brand-danger !important;
+}
+
+.block-container {
+    max-width : $fluid-container-max-width;
+    width     : 100%;
+    padding   : 0 16px;
+}
+
+
+.loading .auth-visible,
+.loading .auth-hidden {
+    display : none !important;
+}
+
+.authorized .auth-hidden,
+.authorized .loading-visible {
+    display : none !important;
+}
+
+.anonymous .auth-visible,
+.anonymous .loading-visible {
+    display : none !important;
+}
+
+@include bootstrap.media-breakpoint-up(sm) {
+    .hoverable .hover-visible {
+        visibility : hidden;
+    }
+
+    .hoverable:hover .hover-visible {
+        visibility : visible;
+    }
+}
+
+.image-link {
+    @include mixins.ellipsis;
+    text-decoration : none !important;
+    display         : flex;
+    align-items     : center;
+
+    &:hover {
+        .glyphicon {
+            background-position-y : -16px;
+        }
+    }
+}
+
+h1.process-success {
+    line-height     : 1.5;
+    display         : flex;
+    justify-content : center;
+}
+
+h1 .badge {
+    margin-left : 8px;
+}
+
+.inactive {
+    opacity : 0.7;
+    cursor  : pointer;
+}
+
+.disabled {
+    color  : var(--elements-disabled) !important;
+    cursor : default !important;
+}
+
+.help-topic {
+    margin-top : 10px;
+}
+
+.min-w-80 {
+    min-width : 80px;
+}
+
+.min-w-100 {
+    min-width : 100px;
+}
+
+.min-w-120 {
+    min-width : 120px;
+}
+
+.wide-button {
+    width : 102px;
+}
+
+.help-block-no-height {
+    min-height : 0 !important;
+}
+
+.light-label {
+    font-weight  : initial;
+    padding-left : 4px;
+}
+
+.light-text {
+    color     : var(--light-text-color);
+    opacity : var(--light-text-opacity);
+    font-size : 13px;
+}
+
+span.marked {
+    background-color : $light4;
+}
+
+.pseudo-anchor {
+    color: var(--brand-core) !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.overlay-backdrop {
+    z-index: 1050 !important;
+    background-color: rgba($dark15, 0.2);
+}
+
+.cdk-global-overlay-wrapper {
+    //position       : fixed !important;
+    display        : block !important;
+    z-index        : 1050 !important;
+    pointer-events : auto !important;
+    overflow-y     : auto;
+}
+
+.cdk-overlay-pane.modal-holder {
+    position         : relative !important;
+    margin           : 100px auto 1.75rem;
+    width            : 500px;
+    background-color : var(--dialog-bg);
+    border           : 1px solid var(--dialog-border-color);
+    max-width        : none;
+    max-height       : none;
+    
+    > * {
+        width : 100%;
+    }
+}
+
+.cdk-overlay-pane.webadmin-window {
+    position         : relative !important;
+    margin           : 0;
+    width            : 500px;
+    background-color : var(--dialog-bg);
+    border           : 1px solid var(--dialog-border-color);
+    max-width        : none;
+    max-height       : none;
+    overflow         : hidden;
+    
+    > * {
+        width : 100%;
+    }
+}

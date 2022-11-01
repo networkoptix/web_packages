@@ -2,8 +2,8 @@ from sys import argv
 import json
 
 target_json_paths = argv[1:]
-description_path = "app/customization/description.json"
-config_path = "app/customization/webadmin_config.json"
+description_path = "src/customization/description.json"
+config_path = "src/customization/webadmin_config.json"
 
 with open(description_path) as description_file:
     description = json.load(description_file)

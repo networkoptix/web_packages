@@ -1,0 +1,68 @@
+<div
+    class="button left"
+    #left
+    [ngClass]="{ enabled: canScrollLeft && !disabled }"
+    (mousedown)="buttonLeftMouseDownHandler()"
+    (touchstart)="buttonLeftMouseDownHandler()"
+    (mouseup)="buttonLeftHandleMouseUp()"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="CONFIG.images.dir + 'timeline_scroll.svg'"
+    ></svg-icon>
+</div>
+<div
+    class="background"
+    #background
+    (mousedown)="backgroundMouseDownHandler($event)"
+    (dblclick)="backgroundDblClickHandler($event)"
+>
+    <div
+        class="current-playback-indicator"
+        #currentPlayback
+        [ngClass]="{ active: isPlaying }"
+        [ngStyle]="{ 'left.px': playbackLeftPixel }"
+    ></div>
+
+    <div
+        class="current-selection-indicator"
+        #currentSelection
+        [ngClass]="{ active: isSelected }"
+        [ngStyle]="{ 'left.px': selectionLeftPixel, 'width.px': selectionWidthPixel }"
+    ></div>
+
+    <div
+        class="bar"
+        #bar
+        (touchstart)="barMouseDownHandler($event)"
+        (mouseup)="barHandleMouseUp($event)"
+        (mousedown)="barMouseDownHandler($event)"
+        [ngClass]="{ grabbed: isBarGrabbed }"
+        [ngStyle]="{ 'left.px': barLeftPx, 'width.px': barWidthPx }"
+    >
+        <span class="stripe"></span>
+        <span class="stripe"></span>
+        <span class="stripe"></span>
+    </div>
+
+    <div
+        class="honest-bar"
+        #honestBar
+        [ngClass]="{ visible: showHonestBar }"
+        [ngStyle]="{ 'left.px': honestBarLeftPx, 'width.px': honestBarWidthPx }"
+    ></div>
+</div>
+
+<div
+    class="button right"
+    #right
+    [ngClass]="{ enabled: canScrollRight && !disabled }"
+    (mousedown)="buttonRightMouseDownHandler()"
+    (touchstart)="buttonRightMouseDownHandler()"
+    (mouseup)="buttonRightHandleMouseUp()"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="CONFIG.images.dir + 'timeline_scroll.svg'"
+    ></svg-icon>
+</div>

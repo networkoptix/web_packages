@@ -1,14 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
-@use "../../../app/styles/_theme_variables" as *;
+@use "../../../src/styles/_theme_variables_common" as *;
 @import "~@angular/cdk/overlay-prebuilt.css";
 
 * {
     .mainContainer {
-        background-color: $additional_light2;
+        background-color: var(--body-bg);
     }
 
     .altMainBackground {
-        background-color: $light1 !important;
+        background-color: var(--alt-body-bg) !important;
     }
 
     .desktopBackground, .desktopBackground .auth-overlay {

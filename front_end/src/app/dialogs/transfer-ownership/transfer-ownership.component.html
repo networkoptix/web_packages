@@ -1,0 +1,129 @@
+<form
+    #transferOwnershipForm="ngForm"
+    name="transferOwnershipForm"
+    novalidate
+    [ngClass]="{ 'hide-errors': hideErrors }"
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Transfer Ownership
+        </h1>
+        <button
+            *ngIf="closable"
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close(transferInfo)"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <ng-container *ngIf="!transferComplete; else transferSuccessTemplate">
+        <div [ngStyle]="{ display: updateSession ? 'none' : 'unset' }">
+            <div class="modal-body mb-4">
+                <div class="form-group">
+                    <label
+                        for="newSystemOwner"
+                        translate
+                        >New system owner:</label
+                    >
+                    <nx-searchable-select
+                        class="fs-mask"
+                        [items]="userItems"
+                        [ngModel]="selectedUser"
+                        (ngModelChange)="selectUser($event)"
+                        (onClickElsewhere)="checkUser($event)"
+                        [selected]="selectedUser"
+                        canSearch
+                        [noMatchMsg]="LANG.search.userNotFound()"
+                        [ngModelOptions]="{ standalone: true }"
+                    ></nx-searchable-select>
+                    <div
+                        class="col-12 ml-n2 d-flex"
+                        *ngIf="transferOwnershipForm.errors"
+                    >
+                        <span
+                            *ngIf="transferOwnershipForm.errors.userDisabled"
+                            class="input-info subtext error-label"
+                            translate
+                            >User disabled</span
+                        >
+                        <span
+                            *ngIf="transferOwnershipForm.errors.userNotFound"
+                            class="input-info subtext error-label"
+                            translate
+                            >User not found</span
+                        >
+                    </div>
+                </div>
+                <nx-alert-block
+                    type="warning"
+                    id="restarting"
+                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                    [line1]="'WARNING' | translate"
+                    [line2]="
+                        'Once the ownership transfer is complete, you will be removed from the system.'
+                            | translate
+                    "
+                >
+                </nx-alert-block>
+            </div>
+            <div class="modal-footer">
+                <nx-process-button
+                    [process]="transferOwnership"
+                    [form]="transferOwnershipForm"
+                    [buttonText]="'Send Request' | translate"
+                    [buttonDisabled]="!selectedUser || !!transferOwnershipForm.errors"
+                ></nx-process-button>
+                <nx-cancel-button
+                    [process]="transferOwnership"
+                    [discardFn]="close"
+                ></nx-cancel-button>
+            </div>
+        </div>
+        <nx-update-webadmin-session
+            *ngIf="updateSession"
+            (loginSuccess)="updateSession = false"
+            [noConnectionMsg]="'Failed to transfer ownership.' | translate"
+            [dialogRef]="dialogRef"
+            [system]="system"
+        ></nx-update-webadmin-session>
+    </ng-container>
+</form>
+
+<ng-template #transferSuccessTemplate>
+    <div class="modal-body d-flex flex-column align-items-center mb-4">
+        <svg-icon
+            nx-add-svg-src
+            class="mt-1 mb-2"
+            [svgStyle]="{ 'height.px': '79' }"
+            [src]="CONFIG.icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
+        ></svg-icon>
+        <p
+            id="request-sent"
+            class="mt-1"
+            translate
+        >
+            Request has been sent
+        </p>
+        <p
+            class="subtext mt-1"
+            translate
+        >
+            Ownership change will occur as soon as the new owner accepts the request
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button
+            class="btn btn-primary min-w-100 mt-4 mb-4"
+            (click)="close(transferInfo)"
+            translate
+        >
+            OK
+        </button>
+    </div>
+</ng-template>

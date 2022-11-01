@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
 
 from util.config import get_config
-from api.helpers.exceptions import handle_exceptions, api_success
+from cloud.helpers.exceptions import handle_exceptions, api_success
 
 PERIOD = 60  # In seconds
 APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD = 600  # In seconds
@@ -70,7 +70,8 @@ def _get_sqs_metrics(queue):
             MaxDatapoints=len(metric_data_queries)):
         for mdr in response['MetricDataResults']:
             if mdr['StatusCode'] == "Complete":
-                metric_result[mdr['Id']] = mdr['Values'][0] if mdr['Values'] else None
+                metric_result[mdr['Id']
+                              ] = mdr['Values'][0] if mdr['Values'] else None
 
     return metric_result
 
@@ -92,6 +93,7 @@ def check_queue(queue, age_threshold, number_visible_threshold):
         }
     })
 
+
 @swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
@@ -99,6 +101,7 @@ def health_email(request):
     return check_queue(
         'celery', APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD, APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
     )
+
 
 @swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])

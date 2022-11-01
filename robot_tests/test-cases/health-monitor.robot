@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/health-monitor-resource.robot
 Suite Setup       Health Monitor Suite Setup
-Test Setup        Health Monitor Test Setup
-Test Teardown     Health Monitor Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start            Health Monitor Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop         Health Monitor Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Health Monitor Suite Teardown
 Force Tags        Threaded    hm
 
@@ -56,6 +56,7 @@ Force Tags        Threaded    hm
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][advancedViewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][advancedViewer][login]
+    Sleep    5
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
@@ -120,13 +121,23 @@ Force Tags        Threaded    hm
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-page
-    Wait Until Element Is Visible    ${HM LAST TABLE PAGE ELEMENT}
-    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
+    Wait Until Element Is Visible    ${HM FIRST TABLE PAGE ELEMENT}
+    ${multiple pages}    Run Keyword And Return Status    Element Should Be Visible    ${HM LAST TABLE PAGE ELEMENT}
+    IF    ${multiple pages}
+        ${pages} =    Get Text    ${HM LAST TABLE PAGE ELEMENT}
+    ELSE
+        ${pages} =    Set Variable    1
+    END
     Should Be Equal As Integers    ${pages}    1
     Set Window Size    1920    600
     Sleep     0.5
     Page Should Not Contain    ${HM LAST TABLE PAGE ELEMENT}
-    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
+    ${multiple pages}    Run Keyword And Return Status    Element Should Be Visible    ${HM LAST TABLE PAGE ELEMENT}
+    IF    ${multiple pages}
+        ${pages} =    Get Text    ${HM LAST TABLE PAGE ELEMENT}
+    ELSE
+        ${pages} =    Set Variable    1
+    END
     Should Not Be Equal As Integers    ${pages}    1
     Count All Alerts and Validate Totals Shown
     Set Window Size    1920    1080

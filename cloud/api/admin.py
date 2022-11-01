@@ -1,11 +1,10 @@
-from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.admin import helpers, SimpleListFilter
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.sessions.models import Session
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import path
+from django.urls import path, re_path
 from django_csv_exports.admin import CSVExportAdmin
 
 from api.forms import *
@@ -98,10 +97,9 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     def save_model(self, request, obj, form, change):
         # forbid creating superusers if their email isn't from the superuser domain
-        obj.is_staff |= obj.email.endswith(settings.SUPERUSER_DOMAIN)
 
         # forbid creating superusers if they're not staff
-        obj.is_superuser &= obj.is_staff
+        obj.is_superuser &= obj.is_staff and obj.email.endswith(settings.SUPERUSER_DOMAIN)
 
         obj.save()
 
@@ -148,7 +146,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
     def get_urls(self):
         urls = super(AccountAdmin, self).get_urls()
         my_urls = [
-            url(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite'),
+            re_path(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite'),
             path('force_logout/<slug:user_id>/', self.force_logout, name='force_logout')
         ]
         return my_urls + urls

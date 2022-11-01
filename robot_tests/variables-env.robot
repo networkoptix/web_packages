@@ -1,10 +1,10 @@
 *** Variables ***
-${IMAGE}                              ${IMAGE 4.2}
-${IMAGE 5.0}                          5.0_test
+${IMAGE}                              ${IMAGE 5.0}
+${IMAGE 5.1}                          5.1
+${IMAGE 5.0}                          5.0
 ${IMAGE 4.3}                          4.3_test
 ${IMAGE 4.2}                          4.2_test
-${IMAGE 4.1}                          4.1_test
-${IMAGE 4.0}                          4.0_test
+
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
@@ -21,8 +21,10 @@ ${BROWSER}                            Chrome
 
 ${MODE}                               cloud
 
-${QA BURBANK SYSTEM IP}                10.1.5.106
-${QA BURBANK SYSTEM ID}                032c7c41-0ddd-48d7-ab09-616bfad7b5cc
+${THEME}                              light
+
+${QA BURBANK SYSTEM IP}               10.1.5.106
+${QA BURBANK SYSTEM ID}               032c7c41-0ddd-48d7-ab09-616bfad7b5cc
 
 #Emails
 ${BASE EMAIL}                         ${TEST EMAIL}+sendemail@gmail.com

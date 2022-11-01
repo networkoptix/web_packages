@@ -3,8 +3,8 @@ Resource          ../Resources/front-end-resources/integrations-resource.robot
 Resource          ../variables-env.robot
 
 Suite Setup       Open Browser and go to URL    ${ENV}
-Test Setup        Go To    ${ENV}
-Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
+Test Setup        Run Keywords    QA Video Recording Start     Go To    ${ENV}
+Test Teardown     Run Keywords    QA Video Recording Stop      Integrations Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        integrations    Threaded 
 

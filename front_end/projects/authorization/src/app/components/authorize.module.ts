@@ -1,18 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import {
-    ReactiveFormsModule,
-    FormsModule
-} from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PipesModule } from '@app/pipes/pipes.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
@@ -26,9 +22,11 @@ import { NxAuthorizeNotSecureComponent } from './not-secure/not-secure.component
 import { NxAuthorizePasswordComponent } from './password/password.component';
 import { NxAuthorizeResetPasswordComponent } from './reset-password/reset-password.component';
 import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.component';
+import { NxAuthorizeShow404Component } from './show-404/show-404.component';
 
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
+    { path: 'activate', component: NxAuthorizeComponent, data: { action: '404' } },
     { path: 'restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } },
     { path: 'restore_password', component: NxAuthorizeComponent, data: { action: 'reset_request' } }, // for systems < 5.0, desktop password reset request
     { path: 'register/:code', component: NxAuthorizeComponent, data: { action: 'register' } },
@@ -39,7 +37,6 @@ export const authorizedRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        NgbModule,
         TranslateModule,
         ReactiveFormsModule,
         FormsModule,
@@ -48,7 +45,7 @@ export const authorizedRoutes: Routes = [
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule.forRoot(),
         DirectivesModule,
-        PipesModule
+        PipesModule,
     ],
     providers: [
     ],
@@ -64,11 +61,10 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeResetRequestComponent,
         NxAuthorizeConnectErrorComponent,
         NxAuthorizeAuthCodeComponent,
-        NxAuthorizeBackupCodeComponent
+        NxAuthorizeBackupCodeComponent,
+        NxAuthorizeShow404Component
     ],
-    exports: [
-        NxAuthorizeComponent
-    ]
+    exports: []
 })
 export class NxAuthorizeModule {
 }

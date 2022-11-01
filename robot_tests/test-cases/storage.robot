@@ -1,19 +1,19 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/storage-resource.robot
 Suite Setup       Storage Suite Setup
-Test Setup        Test Setup    config storage=${False}
-Test Teardown     storage-resource.Restart
+Test Setup        Storage Test Setup     config storage=${False}
+Test Teardown     Run Keywords    QA Video Recording Stop       storage-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
 *** Test Cases ***
 1. Loading State of Storage Locations Block
     [Tags]    C81803
-    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}     ${STORAGE ITEM}
     Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Should Be Equal As Integers    ${height}    259
+    Should Be Equal As Integers    ${height}    273
 
 2. Detailed Info in Storage Locations block
     [Tags]    C81534
@@ -27,7 +27,7 @@ Force Tags        storage
 
 3. Analytics DB Storage dropdown is not visible
     [Tags]    C81740    Analytics     
-    [Setup]     Test Setup     email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
+    [Setup]     Storage Test Setup      email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
     Verify on Servers Page
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
 
@@ -247,7 +247,7 @@ Force Tags        storage
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE POPOVER}       #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
-    Should Contain  ${reserved}    5.0
+    Should Contain  ${reserved}    10
 
 11. No Size Tooltip when Inaccessble
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
@@ -257,7 +257,7 @@ Force Tags        storage
 
 12. Storage Locations Table without control buttons
     [Tags]    C81572
-    [Setup]     Test Setup      email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
+    [Setup]     Storage Test Setup       email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
     Wait Until Elements Are Visible With Retry
     ...    ${STORAGE LOCATIONS BLOCK}
     ...    ${STORAGE ADD BUTTON}
@@ -270,7 +270,7 @@ Force Tags        storage
 
 13. Not able to load storage information
     [Tags]    C84518
-    [Setup]     Test Setup      email=${server 3['owner']}     system=${server 3['cloud id']}     config storage=${False}
+    [Setup]     Storage Test Setup       email=${server 3['owner']}     system=${server 3['cloud id']}     config storage=${False}
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE NOT ABLE TO LOAD}
     Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
@@ -321,7 +321,7 @@ Force Tags        storage
 
 16. Successful changing Analytics DB Storage plus confirmation dialog
     [Tags]    C81779    C81775    C81776    C81777    Analytics    C81754    C81755    CLOUD-9079
-    [Setup]     Test Setup      disk3    disk3
+    [Setup]     Storage Test Setup       disk3    disk3
     ${normal} =    Set Selenium Speed    0.25
     Verify on Servers Page
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
@@ -336,7 +336,7 @@ Force Tags        storage
     Wait Until Element is Visible     ${SAVE BUTTON}
     Click    Button    ${SAVE BUTTON}
     Log    Step 4 - C81779
-    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}    ${value}    ${camera resourceId}
+    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}    ${value}    ${camera resourceId}     ${server 1['local auth']}
     Reload Page
     Log    C81754
     Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
@@ -475,11 +475,11 @@ Force Tags        storage
     Click    Button      ${STORAGE MAIN MODE}/parent::button
     Wait Until Element is Visible    ${STORAGE BACKUP MENU ITEM}
     Wait Until Elements Are Visible
-    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${BACKUP}"]
-    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${NOT IN USE}"]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and contains(text(),"${BACKUP}")]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and contains(text(),"${NOT IN USE}")]
 
 19. Change Storage from Main to Backup
-    [Setup]     Test Setup      disk3    disk1
+    [Setup]     Storage Test Setup       disk3    disk1
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
     Click    Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
@@ -491,7 +491,7 @@ Force Tags        storage
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
 
 20. Change Storage from Backup to Not in Use
-    [Setup]     Test Setup      disk3    disk1 disk2
+    [Setup]     Storage Test Setup       disk3    disk1 disk2
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
     Click    Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
@@ -530,7 +530,7 @@ Force Tags        storage
 
 24. Detailed Info button works (system has one storage)
     [Tags]
-    [Setup]     Test Setup      email=${server 2['owner']}     system=${server 2['cloud id']}
+    [Setup]     Storage Test Setup       email=${server 2['owner']}     system=${server 2['cloud id']}
     Verify on Servers Page
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click    Button     ${STORAGE INFO BUTTON}
@@ -703,7 +703,7 @@ Force Tags        storage
 
 30. Failed to add external storage: server is offline
     [Tags]    C81600    external
-    [Setup]     Test Setup     system=${server 2['cloud id']}   config storage=${False}
+    [Setup]     Storage Test Setup      system=${server 2['cloud id']}   config storage=${False}
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -936,8 +936,8 @@ Force Tags        storage
 
 34. Backup settings block availability for owner, administrator and other users
     [Tags]    C81804    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test     5.0    5.1    msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -959,15 +959,15 @@ Force Tags        storage
 
 35. Backup settings block is not shown if no one storage is assigned “Backup” mode
     [Tags]    C81810    archive
-    [Setup]     Test Setup    disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     Storage Test Setup     disk1 disk2 disk3
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     Verify on Servers Page
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX}
 
 36. Backup off
     [Tags]    C81807    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -981,8 +981,8 @@ Force Tags        storage
 
 37. Backup on – default settings
     [Tags]    C81808    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -996,8 +996,8 @@ Force Tags        storage
 
 38. Backup on – custom settings
     [Tags]    C81809    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1016,8 +1016,8 @@ Force Tags        storage
 
 39. It is not necessary to apply changes to make the backup settings block appear
     [Tags]    C81811    archive     
-    [Setup]     Test Setup    disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     Storage Test Setup     disk1 disk2 disk3
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible With Retry
@@ -1053,8 +1053,8 @@ Force Tags        storage
 
 40. Cancel Backup enabling
     [Tags]    C83183    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1076,8 +1076,8 @@ Force Tags        storage
 
 41. Cancel Backup disabling - default settings
     [Tags]    C83184    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1100,8 +1100,8 @@ Force Tags        storage
 
 42. Cancel Backup disabling - custom settings
     [Tags]    C83185    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1138,8 +1138,8 @@ Force Tags        storage
 
 43. Cancel resetting backup settings for system of 1 server
     [Tags]    C83328    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1185,8 +1185,8 @@ Force Tags        storage
 
 44. Reset backup settings for system of 1 server
     [Tags]    C83330    archive
-    [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    [Setup]     QA Video Recording Start
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1226,7 +1226,7 @@ Force Tags        storage
 
 45. Reindex archive block owerview: only Main storage
     [Tags]    C81605
-    [Setup]     Test Setup    disk2 disk3
+    [Setup]     Storage Test Setup     disk2 disk3
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE REINDEXING BLOCK}    ${STORAGE REINDEX MAIN BUTTON}    ${STORAGE REINDEX ARCHIVE HEADER}    ${STORAGE REINDEX ARCHIVE MSG}
@@ -1236,7 +1236,7 @@ Force Tags        storage
 
 46. Reindex archive block owerview: Main and Backup storages
     [Tags]    C81606    archive     
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible

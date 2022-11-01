@@ -1,0 +1,29 @@
+<div class="player-placeholder">
+    <svg-icon
+        nx-add-svg-src
+        [svgStyle]="{
+            'height.px': height,
+            'pointer-events': 'none'
+        }"
+        [src]="CONFIG.icons.dirNonStandardView + svgFileName + '.svg'"
+    ></svg-icon>
+    <span
+        class="heading"
+        [innerText]="heading"
+    ></span>
+    <span
+        class="description"
+        *ngIf="!!description"
+        [ngStyle]="{ 'line-break': isUrl ? 'anywhere' : undefined }"
+        [innerText]="description"
+    ></span>
+    <a
+        class="description settingsLink"
+        *ngIf="showSettingsLink"
+        [routerLink]="settingsLinkUrl"
+        [fragment]="settingsLinkFragment"
+        target="_blank"
+        translate
+        >edit camera settings</a
+    >
+</div>

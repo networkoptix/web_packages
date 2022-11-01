@@ -1,0 +1,58 @@
+<nx-alert-block
+    *ngIf="storagesOutdated && !isOffline && !isServerOffline"
+    type="warning"
+    id="storages-outdated"
+    [line1]="'Storages outdated. Reload page to update.' | translate"
+    [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+    [btnCaption]="'Reload' | translate"
+    (onAction)="window.location.reload()"
+>
+</nx-alert-block>
+
+<nx-standard-server-component
+    *ngIf="system"
+    (loaded)="serverLoaded = $event"
+    [isOffline]="isOffline"
+    [system]="system"
+    [selectedServer]="selectedServer"
+>
+</nx-standard-server-component>
+
+<nx-server-storage-component
+    *ngIf="!isOffline && serverLoaded && system && (serverId$ | async)"
+    [system]="system"
+    [serverId]="serverId$ | async"
+>
+</nx-server-storage-component>
+
+<ng-container *ngIf="serverLoaded && system && selectedServer?.id">
+    <nx-cloud-storage
+        *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
+        layout="simple"
+        type="servers"
+    ></nx-cloud-storage>
+
+    <ng-container *ngIf="!isOffline && advanced">
+        <nx-alert-block
+            class="d-block mt-3"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [line1]="'Settings displayed below are advanced.' | translate"
+            [line2]="'Changing them may cause server to work incorrectly.' | translate"
+            [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+            [btnCaption]="'Hide Advanced Settings' | translate"
+            (onAction)="hideAdvancedSettings()"
+        ></nx-alert-block>
+
+        <nx-server-advanced-storage-component
+            [system]="system"
+            [serverId]="selectedServer?.id"
+        >
+        </nx-server-advanced-storage-component>
+
+        <nx-server-logger-component
+            [system]="system"
+            [serverId]="selectedServer?.id"
+        >
+        </nx-server-logger-component>
+    </ng-container>
+</ng-container>

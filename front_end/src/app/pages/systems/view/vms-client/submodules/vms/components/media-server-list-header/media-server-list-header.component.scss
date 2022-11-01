@@ -1,0 +1,133 @@
+:host {
+  .search-box {
+    height: 44px;
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    background-color: var(--view-search-bg);
+
+    // transition: background-color .2s ease-in-out;
+
+    &:hover {
+      background-color: var(--view-search-hover-bg);
+    }
+    
+    &:focus-within {
+      background-color : var(--view-search-active-bg);
+    }
+
+    > .search-reset-icon {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 40px;
+      top: 12px;
+      stroke: rgba(var(--dark1--rgb), 0.6);
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    > .search-icon {
+      // TODO: replace with SVG icon
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 44px;
+      height: 44px;
+      padding: 12px;
+      &:after {
+        content: "";
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        right: 12px;
+        bottom: 12px;
+        background-image: url("/static/images/web_interface_sprite@2x.png");
+        background-size: 192px 408px;
+        background-position: -50px -26px;
+      }
+    }
+
+    > input {
+      color : var(--view-search-color);
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: transparent;
+      height: 100%;
+      width: 100%;
+      border: none;
+      padding: 0 64px 0 44px;
+      font-size: 13px;
+
+      // see https://networkoptix.atlassian.net/browse/CLOUD-6846
+      // !important is the last resort against the global styling here
+      box-shadow: none !important;
+  
+      &:hover {
+        color : var(--view-search-hover-color);
+      }
+  
+      &:focus {
+        color : var(--view-search-active-color);
+      }
+
+      &::placeholder {
+        color: var(--light16);
+      }
+    }
+
+    > .details-toggler {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 44px;
+      height: 43px;
+      padding: 12px;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--input-active-bg);
+      }
+      &:active {
+        background: var(--input-active-bg);
+      }
+
+      > svg {
+        // > * {
+          // transition: fill .2s ease-in-out;
+        // }
+        > .outer-circle {
+          stroke: var(--light16);
+          stroke-width: 2;
+          fill: transparent;
+        }
+        > .i-body {
+          stroke: var(--light16);
+          stroke-width: 2;
+        }
+        > .point-over-i {
+          stroke-width: 0;
+          fill: var(--light16);
+        }
+      }
+
+      &.active {
+        > svg {
+          > .outer-circle {
+            stroke: var(--brand-core);
+          }
+          > .i-body {
+            stroke: var(--brand-core);
+          }
+          > .point-over-i {
+            fill: var(--brand-core);
+          }
+        }
+      }
+    }
+  }
+}

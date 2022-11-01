@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-camera-resource.robot
 Suite Setup       Camera Suite Setup
-Test Setup        Camera Test Setup
-Test Teardown     reset cameras and log out
+Test Setup        Run Keywords    QA Video Recording Start     Camera Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop      reset cameras and log out
 Suite Teardown    Run Keyword and Ignore Error    Camera Suite Teardown
 Force Tags        system    cameras
 

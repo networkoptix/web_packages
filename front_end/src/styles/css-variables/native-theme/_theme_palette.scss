@@ -1,0 +1,189 @@
+@use "../../utils" as *;
+@use "../../native-theme/_theme_palette.scss" as *;
+
+:root {
+	@include generateVarAndRgb(--bluez-light, $bluez-light);
+	@include generateVarAndRgb(--bluez, $bluez);
+	@include generateVarAndRgb(--blue8, $blue8);
+	@include generateVarAndRgb(--blue9, $blue9);
+	@include generateVarAndRgb(--blue10, $blue10);
+	@include generateVarAndRgb(--blue11, $blue11);
+	@include generateVarAndRgb(--blue12, $blue12);
+	@include generateVarAndRgb(--blue13, $blue13);
+	@include generateVarAndRgb(--blue14, $blue14);
+
+	@include generateVarAndRgb(--blue50, $blue50);
+	@include generateVarAndRgb(--blue100, $blue100);
+	@include generateVarAndRgb(--blue200, $blue200);
+	@include generateVarAndRgb(--blue300, $blue300);
+	@include generateVarAndRgb(--blue400, $blue400);
+	@include generateVarAndRgb(--blue500, $blue500);
+	@include generateVarAndRgb(--blue600, $blue600);
+	@include generateVarAndRgb(--blue700, $blue700);
+	@include generateVarAndRgb(--blue800, $blue800);
+	@include generateVarAndRgb(--blue900, $blue900);
+
+	@include generateVarAndRgb(--red50, $red50);
+	@include generateVarAndRgb(--red100, $red100);
+	@include generateVarAndRgb(--red200, $red200);
+	@include generateVarAndRgb(--red300, $red300);
+	@include generateVarAndRgb(--red400, $red400);
+	@include generateVarAndRgb(--red500, $red500);
+	@include generateVarAndRgb(--red600, $red600);
+	@include generateVarAndRgb(--red700, $red700);
+	@include generateVarAndRgb(--red800, $red800);
+	@include generateVarAndRgb(--red900, $red900);
+
+	@include generateVarAndRgb(--pink50, $pink50);
+	@include generateVarAndRgb(--pink100, $pink100);
+	@include generateVarAndRgb(--pink200, $pink200);
+	@include generateVarAndRgb(--pink300, $pink300);
+	@include generateVarAndRgb(--pink400, $pink400);
+	@include generateVarAndRgb(--pink500, $pink500);
+	@include generateVarAndRgb(--pink600, $pink600);
+	@include generateVarAndRgb(--pink700, $pink700);
+	@include generateVarAndRgb(--pink800, $pink800);
+	@include generateVarAndRgb(--pink900, $pink900);
+
+	@include generateVarAndRgb(--purple50, $purple50);
+	@include generateVarAndRgb(--purple100, $purple100);
+	@include generateVarAndRgb(--purple200, $purple200);
+	@include generateVarAndRgb(--purple300, $purple300);
+	@include generateVarAndRgb(--purple400, $purple400);
+	@include generateVarAndRgb(--purple500, $purple500);
+	@include generateVarAndRgb(--purple600, $purple600);
+	@include generateVarAndRgb(--purple700, $purple700);
+	@include generateVarAndRgb(--purple800, $purple800);
+	@include generateVarAndRgb(--purple900, $purple900);
+
+	@include generateVarAndRgb(--cyan50, $cyan50);
+	@include generateVarAndRgb(--cyan100, $cyan100);
+	@include generateVarAndRgb(--cyan200, $cyan200);
+	@include generateVarAndRgb(--cyan300, $cyan300);
+	@include generateVarAndRgb(--cyan400, $cyan400);
+	@include generateVarAndRgb(--cyan500, $cyan500);
+	@include generateVarAndRgb(--cyan600, $cyan600);
+	@include generateVarAndRgb(--cyan700, $cyan700);
+	@include generateVarAndRgb(--cyan800, $cyan800);
+	@include generateVarAndRgb(--cyan900, $cyan900);
+
+	@include generateVarAndRgb(--green50, $green50);
+	@include generateVarAndRgb(--green100, $green100);
+	@include generateVarAndRgb(--green200, $green200);
+	@include generateVarAndRgb(--green300, $green300);
+	@include generateVarAndRgb(--green400, $green400);
+	@include generateVarAndRgb(--green500, $green500);
+	@include generateVarAndRgb(--green600, $green600);
+	@include generateVarAndRgb(--green700, $green700);
+	@include generateVarAndRgb(--green800, $green800);
+	@include generateVarAndRgb(--green900, $green900);
+
+	@include generateVarAndRgb(--lime50, $lime50);
+	@include generateVarAndRgb(--lime100, $lime100);
+	@include generateVarAndRgb(--lime200, $lime200);
+	@include generateVarAndRgb(--lime300, $lime300);
+	@include generateVarAndRgb(--lime400, $lime400);
+	@include generateVarAndRgb(--lime500, $lime500);
+	@include generateVarAndRgb(--lime600, $lime600);
+	@include generateVarAndRgb(--lime700, $lime700);
+	@include generateVarAndRgb(--lime800, $lime800);
+	@include generateVarAndRgb(--lime900, $lime900);
+
+	@include generateVarAndRgb(--orange50, $orange50);
+	@include generateVarAndRgb(--orange100, $orange100);
+	@include generateVarAndRgb(--orange200, $orange200);
+	@include generateVarAndRgb(--orange300, $orange300);
+	@include generateVarAndRgb(--orange400, $orange400);
+	@include generateVarAndRgb(--orange500, $orange500);
+	@include generateVarAndRgb(--orange600, $orange600);
+	@include generateVarAndRgb(--orange700, $orange700);
+	@include generateVarAndRgb(--orange800, $orange800);
+	@include generateVarAndRgb(--orange900, $orange900);
+
+	@include generateVarAndRgb(--dark1, $dark1);
+	@include generateVarAndRgb(--dark2, $dark2);
+	@include generateVarAndRgb(--dark3, $dark3);
+	@include generateVarAndRgb(--dark4, $dark4);
+	@include generateVarAndRgb(--dark5, $dark5);
+	@include generateVarAndRgb(--dark6, $dark6);
+	@include generateVarAndRgb(--dark7, $dark7);
+	@include generateVarAndRgb(--dark8, $dark8);
+	@include generateVarAndRgb(--dark9, $dark9);
+	@include generateVarAndRgb(--dark10, $dark10);
+	@include generateVarAndRgb(--dark11, $dark11);
+	@include generateVarAndRgb(--dark12, $dark12);
+	@include generateVarAndRgb(--dark13, $dark13);
+	@include generateVarAndRgb(--dark14, $dark14);
+	@include generateVarAndRgb(--dark15, $dark15);
+	@include generateVarAndRgb(--dark16, $dark16);
+	@include generateVarAndRgb(--dark17, $dark17);
+	@include generateVarAndRgb(--dark18, $dark18);
+	@include generateVarAndRgb(--dark19, $dark19);
+
+	@include generateVarAndRgb(--light1, $light1);
+	@include generateVarAndRgb(--light2, $light2);
+	@include generateVarAndRgb(--light3, $light3);
+	@include generateVarAndRgb(--light4, $light4);
+	@include generateVarAndRgb(--light5, $light5);
+	@include generateVarAndRgb(--light6, $light6);
+	@include generateVarAndRgb(--light7, $light7);
+	@include generateVarAndRgb(--light8, $light8);
+	@include generateVarAndRgb(--light9, $light9);
+	@include generateVarAndRgb(--light10, $light10);
+	@include generateVarAndRgb(--light11, $light11);
+	@include generateVarAndRgb(--light12, $light12);
+	@include generateVarAndRgb(--light13, $light13);
+	@include generateVarAndRgb(--light14, $light14);
+	@include generateVarAndRgb(--light15, $light15);
+	@include generateVarAndRgb(--light16, $light16);
+	@include generateVarAndRgb(--light17, $light17);
+	@include generateVarAndRgb(--light18, $light18);
+	@include generateVarAndRgb(--light19, $light19);
+
+	@include generateVarAndRgb(--additional_light1, $additional_light1);
+	@include generateVarAndRgb(--additional_light2, $additional_light2);
+	@include generateVarAndRgb(--additional_light3, $additional_light3);
+	@include generateVarAndRgb(--additional_light4, $additional_light4);
+
+	@include generateVarAndRgb(--green_main, $green_main);
+	@include generateVarAndRgb(--red_main, $red_main);
+
+	@include generateVarAndRgb(--yellow_main, $yellow_main);
+	@include generateVarAndRgb(--yellow_d1, $yellow_d1);
+	@include generateVarAndRgb(--yellow_d2_lighter, $yellow_d2_lighter);
+	@include generateVarAndRgb(--yellow_d2, $yellow_d2);
+
+	@include generateVarAndRgb(--shadow, $shadow);
+	@include generateVarAndRgb(--shadow_d1, $shadow_d1);
+	@include generateVarAndRgb(--shadow_d3, $shadow_d3);
+	@include generateVarAndRgb(--base, $base);
+	@include generateVarAndRgb(--window, $window);
+	@include generateVarAndRgb(--dark, $dark);
+	@include generateVarAndRgb(--mid, $mid);
+	@include generateVarAndRgb(--brightText, $brightText);
+	@include generateVarAndRgb(--buttonText, $buttonText);
+	@include generateVarAndRgb(--text, $text);
+	@include generateVarAndRgb(--light, $light);
+	@include generateVarAndRgb(--light_l2, $light_l2);
+	@include generateVarAndRgb(--windowText, $windowText);
+
+	@include generateVarAndRgb(--link, $link);
+	@include generateVarAndRgb(--linkVisited, $linkVisited);
+
+	@include generateVarAndRgb(--button_l1, $button_l1);
+	@include generateVarAndRgb(--button, $button);
+	@include generateVarAndRgb(--button_d1, $button_d1);
+	@include generateVarAndRgb(--button_d2, $button_d2);
+	@include generateVarAndRgb(--button_d3, $button_d3);
+
+	@include generateVarAndRgb(--brand_l4, $brand_l4);
+	@include generateVarAndRgb(--brand_l3, $brand_l3);
+	@include generateVarAndRgb(--brand_l2, $brand_l2);
+	@include generateVarAndRgb(--brand_l1, $brand_l1);
+	@include generateVarAndRgb(--brand_core, $brand_core);
+	@include generateVarAndRgb(--brand_d1, $brand_d1);
+	@include generateVarAndRgb(--brand_d2, $brand_d2);
+	@include generateVarAndRgb(--brand_d3, $brand_d3);
+	@include generateVarAndRgb(--brand_d3_darker, $brand_d3_darker);
+	@include generateVarAndRgb(--brand_d4, $brand_d4);
+}

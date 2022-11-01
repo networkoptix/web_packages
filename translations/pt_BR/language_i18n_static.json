@@ -1,6 +1,7 @@
 {
-    "language": "pt_BR",
+    "language": "en_US",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
@@ -20,7 +21,7 @@
         "Network Interfaces": "Interfaces de rede"
     },
     "alarmLevels": {
-        "offline": "Off-line",
+        "offline": "Offline",
         "error": "Erros",
         "warning": "Avisos"
     },
@@ -74,11 +75,11 @@
             "label": "Personalizado"
         },
         "customRole": {
-            "description": "Função de usuário personalizada especificada no sistema",
+            "description": "Perfil de utilizador personalizado especificado no Sistema",
             "label": "Função personalizada"
         },
         "disabled": {
-            "description": "O usuário está desabilitado e não pode fazer ‘login’ no sistema",
+            "description": "O utilizador está desativado e não pode efetuar login no sistema",
             "label": "Desabilitado"
         },
         "liveViewer": {
@@ -133,6 +134,7 @@
         "passwordReset": "para reiniciar o servidor",
         "passwordRestart": "reiniciar o servidor",
         "passwordDetach": "para desanexar o servidor",
+        "passwordTransfer": "para transferir o sistema",
         "expiredAccountSubheader": "Por favor, faça login novamente como",
         "createAccountHeader": "Criar %CLOUD_NAME% conta",
         "activateHeader": "Ativar %CLOUD_NAME% conta",
@@ -175,6 +177,38 @@
         "ptz": "Câmeras PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Tamanho",
+            "state": "Estado",
+            "system": "Sistema",
+            "expires": "Expira",
+            "key": "Chave"
+        },
+        "fromServer": {
+            "ACTIVE": "Ativo",
+            "INACTIVE": "Inativo",
+            "Unassigned": "Não atribuído",
+            "until": "{size} até {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Esta licença foi desativada mais de uma vez E foi reativada há menos de 24 horas",
+            "License key is already activated": "A chave de licença já está ativada",
+            "Maximum number of items is 10000": "O número máximo de itens é 10.000",
+            "This Cloud license does not exist": "Esta licença de nuvem não existe",
+            "This license is already activated": "Esta licença já está ativada",
+            "This license is not activated": "Esta licença não está ativada",
+            "This license has already expired": "Esta licença já expirou",
+            "Already has a cloud storage license active": "Já possui uma licença de armazenamento na nuvem ativa",
+            "Cloud System ID does not match credentials used": "O Cloud System ID não corresponde às credenciais usadas",
+            "Not Authorized for cloud system": "Não autorizado para sistema em nuvem",
+            "This license is not currently activated": "Esta licença não está ativada no momento",
+            "This license has no deactivations remaining": "Esta licença não tem desativações restantes",
+            "Cloud system Id does not match license activation": "O Id do sistema em nuvem não corresponde à ativação da licença",
+            "used": "{used} de {total} ({percent}%) é usado",
+            "available": "Disponível",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "O armazenamento em nuvem não é usado para gravação. Vá para as configurações de <a href=\"{serverSettings}\">Servidores</a> para configurá-lo."
+    },
     "common": {
         "account": {
             "created": {
@@ -197,19 +231,19 @@
         "cameraStates": {
             "error": "Erro",
             "errorLoading": "Ocorreu um erro ao carregar este vídeo.",
-            "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeo no Internet Explorer.",
+            "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeos no Internet Explorer.",
             "flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
-            "iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
-            "ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
+            "iOSVideoTooLarge": "o iOS não oferece suporte a vídeos maiores que fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec</a> WebM para Internet Explorer.",
             "ieWin10": "Por favor, use os navegadores Microsoft Edge ou Google Chrome.",
             "noArmSupport": "Este navegador ou dispositivo não oferece suporte à reprodução de vídeo de servidores baseados em ARM.",
             "noData": "Sem dados",
             "noFormat": "Este navegador não oferece suporte à reprodução de vídeo desta câmera.",
-            "offline": "Off-line",
+            "offline": "Offline",
             "ubuntuNX": "Este navegador não oferece suporte a vídeo de servidores baseados em ARM. Por favor, use o navegador Chromium.",
             "unauthorized": "Autentificação requerida"
         },
-        "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
+        "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas em seu servidor.",
         "copiedToClipboard": "Copiado para a área de transferência",
         "login": "login",
         "recordingSettingsWarning": "Atualize as configurações de gravação ausentes.",
@@ -226,6 +260,14 @@
             "high": "Alta",
             "medium": "Média",
             "low": "Baixa"
+        },
+        "intervals": {
+            "yearS": "{count, plural, =0{# anos} one{# ano} other{# anos}}",
+            "monthS": "{count, plural, =0{# meses} one{# mês} other{# meses}}",
+            "weekS": "{count, plural, =0{#semanas} one{# semana} other{#semanas}}",
+            "dayS": "{count, plural, =0{# dias} one{# dia} other{# dias}}",
+            "hourS": "{count, plural, =0{# horas} one{# hora} other{# horas}}",
+            "minuteS": "{count, plural, =0{# minutos} one{#minuto} other{# minutos}}"
         },
         "general": "Geral",
         "generalError": "Ocorreu um erro, por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com sua equipe de suporte.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Você está visualizando um relatório desatualizado."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Última atualização { date }",
+            "updatingIn": "Atualizando em { time } segundos"
+        }
+    },
+    "cookieWarning": "Usamos cookies para melhorar sua experiência em nosso site. Eles também nos ajudam a entender como nosso site está sendo usado. Saiba mais e defina suas preferências de cookies&nbsp; | aqui | . Ao continuar a usar nosso site, você concorda em usar nossos cookies.",
     "dashboard": {
         "dashboardEditEnabled": "A edição do painel está habilitada",
         "dashboardLocked": "O painel está bloqueado",
@@ -309,6 +358,28 @@
             "available": "O local de armazenamento em nuvem está disponível para todos os servidores neste sistema. Você pode gerenciá-lo usando o cliente {vmsName}.",
             "camera": "câmera",
             "cameras": "câmeras",
+            "actions": {
+                "activate": {
+                    "heading": "Ativar armazenamento em nuvem",
+                    "action": "Ativar",
+                    "success": "Cloud Storage ativado com sucesso!"
+                },
+                "modify": {
+                    "heading": "Modificar o armazenamento em nuvem",
+                    "action": "Modificar",
+                    "success": "Cloud Storage atualizado com sucesso!"
+                },
+                "move": {
+                    "heading": "Mover armazenamento em nuvem",
+                    "action": "Mover",
+                    "success": "Cloud Storage atualizado com sucesso!"
+                },
+                "delete": {
+                    "heading": "Excluir armazenamento em nuvem?",
+                    "action": "Excluir",
+                    "success": "Cloud Storage excluído com sucesso!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Gravações atuais",
                 "whenFullyUsed": "Quando totalmente usado",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Arquivo de",
                 "recordingBitrate": "Taxa de bits de gravação",
                 "delayFromLive": "Atraso ao vivo"
+            },
+            "information": {
+                "update": {
+                    "title": "Modificar",
+                    "body": "Você pode alterar o tamanho atual do Cloud Storage no sistema usando a nova chave. Todos os dados gravados serão salvos."
+                },
+                "migrate": {
+                    "title": "Mover",
+                    "body": "O armazenamento em nuvem com todos os dados registrados pode ser facilmente transferido para seu outro sistema sem armazenamento em nuvem ativo."
+                },
+                "delete": {
+                    "title": "Excluir",
+                    "body": "Você pode remover o Cloud Storage do sistema a qualquer momento. Você pode usar essa chave posteriormente para reativação, se desejar."
+                }
             },
             "remove": {
                 "success": "Armazenamento em nuvem removido com sucesso do sistema",
@@ -355,7 +440,7 @@
             "knownBothSystemsConnectedToCloud": "O sistema {targetSystem} está conectado a %CLOUD_NAME%. Os sistemas em nuvem podem ser mesclados apenas a partir de %CLOUD_NAME% portais.",
             "unknownBothSystemsConnectedToCloud": "Não é possível mesclar dois sistemas conectados à nuvem. Vá para %CLOUD_NAME% para mesclar esses sistemas.",
             "checking": "Verificando...",
-            "cloud": "Nuvem",
+            "cloud": "Cloud",
             "commonText": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Conecte o sistema que deseja mesclar com este para <strong>%CLOUD_NAME%</strong> ou mesclar localmente usando <strong>%VMS_NAME%</strong> Cliente.",
             "failedToFindAnySystemHeader": "Falha ao encontrar qualquer sistema para mesclar com",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "O sistema {targetSystem} possui uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para {downloadHTML} para fundi-lo com o {targetSystem} System.",
             "primarySystemOffline": "O sistema {primarySystem} está offline e não pode ser mesclado com o sistema {targetSystem}",
             "primarySystemUnavailable": "O sistema {primarySystem} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
-            "recommendSupport": {
-                "a_recommend": "Recomendamos que você consulte",
-                "b_support": "suporte",
-                "c_proceeding": "antes de prosseguir."
-            },
+            "recommendSupport": "Recomendamos que você consulte | suporte | antes de proceder.",
             "restError": {
                 "duplicateServer": "Erro de mesclagem. Ambos os sistemas têm o mesmo servidor",
                 "useCloudMerge": "Não é possível mesclar sistemas vinculados à nuvem",
@@ -404,7 +485,8 @@
             "urlEmpty": "Digite o endereço do servidor",
             "urlNotValid": "Insira um URL válido",
             "unknownError": "Ocorreu um erro desconhecido. Atualize a página e tente novamente. Se o problema persistir, entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
-            "warning": "Haverá mais de <strong>{maxServers}</strong> servidores no sistema mesclado."
+            "warning": "Haverá mais de <strong>{maxServers}</strong> servidores no sistema mesclado.",
+            "update": "Atualize-os para o&nbsp; | última compilação |"
         },
         "message": {
             "system2faEnabled": "A autenticação de dois fatores agora será forçada para este sistema.",
@@ -449,12 +531,19 @@
             "message": "Por favor faça login novamente.",
             "title": "Sua sessão expirou"
         },
+        "systemGroups": {
+            "createdInRoot": "Novo grupo será criado na raiz",
+            "createdInCurrentGroup": "Novo grupo será criado no grupo atual"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } não é um usuário no sistema"
+        },
         "titles": {
             "error": "Erro",
             "success": "Sucesso",
             "changeAccount": "Você já está logado como {email}",
             "changePasswordFor": "Alterar senha para o usuário \"{username}\"",
-            "deleteUser": "Deletar usuário?",
+            "deleteUser": "Apagar utilizador?",
             "failedLoginTo": "Falha ao fazer login em {systemName}",
             "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
             "noClientDetected": "Instale %VMS_NAME% para visualizar seu sistema",
@@ -548,7 +637,7 @@
     },
     "errorCodes": {
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Este sistema está conectado a %CLOUD_NAME%, mas tem um proprietário diferente. Os sistemas em nuvem só podem ser integrados se a conta do proprietário for a mesma.",
-        "DUPLICATE_MEDIASERVER_FOUND": "Algumas listas de servidores como existentes em ambos os sistemas - no selecionado e no atual.<br>Remova os servidores offline e incompatíveis de cada sistema e tente novamente.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Algumas listas de servidores como existentes em ambos os Sistemas – no selecionado e no atual.<br> Remova os servidores ‘desligado’ e incompatíveis de cada sistema e tente novamente.",
         "EmailAlreadyExists": "Este e-mail já está registado",
         "FAIL": "O sistema <strong>{failedSystem}</strong> está offline.",
         "Connection timed out": "O sistema <strong>{failedSystem}</strong> está offline.",
@@ -576,17 +665,17 @@
         "cantDeleteAccountOwningSystems": "Não é possível excluir a conta que possui sistemas",
         "cantConnectSystemPrefix": "Não é possível conectar o sistema",
         "cantDisconnectSystemPrefix": "Não é possível excluir o sistema",
-        "cantEditAdmin": "Este usuário tem permissões de administrador",
+        "cantEditAdmin": "Este utilizador tem permissões de administrador",
         "cantEditYourself": "Alterar as próprias permissões não é permitido",
         "cantGetSystemInfoPrefix": "As informações do sistema não estão disponíveis",
         "cantGetSystemsListPrefix": "A lista do sistema não está disponível",
-        "cantGetUsersListPrefix": "A lista de usuários não está disponível",
+        "cantGetUsersListPrefix": "A lista de utilizadores não está disponível",
         "cantOpenClient": "%VMS_NAME% aplicativo não foi detectado.",
         "cantRegisterPrefix": "Ocorreu um erro",
         "cantSendActivationPrefix": "Não é possível enviar e-mail de confirmação",
         "cantSendConfirmationPrefix": "Não é possível enviar e-mail de confirmação",
         "cantSharePrefix": "Não é possível compartilhar o sistema",
-        "cantUnshareWithMeSystemPrefix": "Não é possível excluir sistema",
+        "cantUnshareWithMeSystemPrefix": "Não é possível excluir o sistema",
         "emailNotFound": "Conta não existe.",
         "failedToAccess2FA": "<p class=\"mb-0\">autenticação de dois fatores é necessária para acessar este sistema.</p><p>Você pode habilitar a autenticação de dois fatores em suas <a href=\"/account/security\">configurações de conta</a>.</p>",
         "failedToAccessSystem": "Nenhum sistema pode ser acessado por este link. Isso pode acontecer quando um sistema foi desconectado de %CLOUD_NAME%, o acesso a este sistema foi revogado, o sistema no link não existe ou se você estiver conectado à conta incorreta.",
@@ -608,7 +697,7 @@
         "wrongAuthCode": "Código expirado ou incorreto",
         "wrongCode": "A conta já está ativada ou o código de confirmação está incorreto",
         "wrongCodeRestore": "Código de confirmação já usado ou incorreto",
-        "wrongParameters": "Alguns parâmetros no formulário estão incorretos",
+        "wrongParameters": "Alguns parâmetros do formulário estão incorretos",
         "licenseFail": "Falha ao ativar a licença. Tente novamente ou entre em contato com o suporte.",
         "licenseTimeout": "Falha ao ativar a licença devido a um tempo limite de conexão. Verifique se o servidor está online e tente novamente.",
         "licenseServerError": "Falha ao ativar a licença. O servidor de licença não respondeu. Tente novamente ou entre em contato com o suporte.",
@@ -616,6 +705,10 @@
         "archiveEncrypted": "ARQUIVO\nCRIPTOGRAFADO",
         "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo.",
         "webadmin2faRequired": "A autenticação de dois fatores é necessária para acessar este sistema. Você pode habilitar a autenticação de dois fatores nas configurações da sua conta <a href=\"{ cloudHost }/account/security\"></a>."
+    },
+    "appHeader": {
+        "mySystems": "Meus sistemas",
+        "systemList": "Lista do sistema"
     },
     "integration": {
         "Access Control": "Controle de Acesso",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Por favor, <span id=\"request\">envie uma solicitação</span> para perguntas/preocupações adicionais sobre dispositivos suportados."
     },
+    "layoutAutosave": "Salvamento automático em { time } segundos...",
     "systemsCount": "{count, plural, =0{#Sistemas} one{# Sistema} other{#Sistemas}} encontrado",
     "alertsCount": "{count, plural, =0{#alerta} one{# alerta} other{#alerta}}",
     "ipvdTopXByVolume": "Top {value} por volume:",
@@ -682,7 +776,7 @@
             "users": "Usuários",
             "servers": "Servidores",
             "alerts": "Alertas",
-            "systems": "Sistema",
+            "systems": "System",
             "storages": "Locais de armazenamento",
             "networkInterfaces": "Interfaces de rede",
             "graphs": "Gráficos",
@@ -693,6 +787,21 @@
         "type": "Tipo",
         "server": "Servidor",
         "alert": "Alerta"
+    },
+    "appFooter": {
+        "copyright": "Direitos autorais (c) {currentYear} %COMPANY_NAME%. Todos os direitos reservados"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "O nó do menu <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contém erros"
+        },
+        "downloadHistory": {
+            "published": "PUBLICADO { date }"
+        },
+        "health": {
+            "importedSystem": "Sistema: { system }",
+            "importedTime": "Gerado: { time }"
+        }
     },
     "pageTitles": {
         "about": "Sobre",
@@ -807,8 +916,6 @@
         "Search": "Pesquisa",
         "analytics": "Analytics",
         "analyticsSelected": "eventos analíticos",
-        "filter applied": "filtro aplicado",
-        "filters applied": "filtros aplicados",
         "appliedFilters": "{count, plural, =0{# filtros} one{# filtro} other{# filtros}} aplicado",
         "hardwareType": "Tipo",
         "hardwareTypes": "Tipos",
@@ -816,7 +923,10 @@
         "search_ipvd": "Pesquise por modelo ou fabricante",
         "selected": "{count, plural, =0{# selecionado} one{# selecionado} other{# selecionado}}",
         "vendor": "Fabricante",
-        "vendors": "Fabricantes"
+        "vendors": "Fabricantes",
+        "resultsFound": "{count, plural, =0{# Resultados} one{#Resultado} other{# Resultados}} encontrado",
+        "noMatches": "Sem combinações",
+        "userNotFound": "<span class=\"error\">usuário não encontrado</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Erro ao excluir ou manter dados analíticos",
@@ -848,6 +958,7 @@
         "Settings": "Confirgurações",
         "Information": "Informações",
         "Bookmarks": "Marcadores",
+        "Layouts": "Layouts",
         "Monitoring": "Monitoramento"
     },
     "system": {
@@ -857,7 +968,7 @@
         "mergeUnknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadStorageInfo": "Não foi possível carregar informações de armazenamento.",
+            "notAbleToLoadStorageInfo": "Não é possível carregar informações de armazenamento.",
             "notAbleToLoadSecurity": "Não foi possível carregar as configurações de segurança.",
             "notAbleToLoadSystem": "Não foi possível carregar as configurações do sistema.",
             "sessionLimitDuration": {
@@ -904,6 +1015,7 @@
                 "help": "(registre todas as informações disponíveis)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } Nível de registro",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Rede (smb), adicionada por meio de VMS",
             "cloud": "Nuvem"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> deseja transferir a propriedade deste sistema para você"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> deseja transferir a propriedade deste sistema para você",
+        "transferTo": "Transferência de propriedade para – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "raiz",
+        "groupCount": "{count, plural, =0{#Grupos} one{# Grupo} other{#Grupos}}",
+        "systemCount": "{count, plural, =0{#Sistemas} one{# Sistema} other{#Sistemas}}",
+        "connectionLost": "Conexão perdida, reconectando...",
+        "connectionRestored": "Conexão restaurada",
+        "couldNotReconnect": "Não foi possível restaurar a conexão",
+        "noConnection": "Sem conexão",
+        "groupAlreadyIn": "O grupo { srcName } já está em { destName }",
+        "systemAlreadyIn": "O sistema { srcName } já está em { destName }",
+        "addGroupToSelf": "Você não pode adicionar um grupo a si mesmo",
+        "errorMsg": {
+            "You can only delete groups that you own": "Você só pode excluir grupos de sua propriedade",
+            "You can only move systems that you own.": "Você só pode mover sistemas que você possui.",
+            "You can only move systems into groups that you own.": "Você só pode mover sistemas para grupos de sua propriedade.",
+            "You cannot add a group to itself": "Você não pode adicionar um grupo a si mesmo",
+            "You cannot add a parent group to its child.": "Você não pode adicionar um grupo pai ao seu filho.",
+            "You can only move groups that you own.": "Você só pode mover grupos de sua propriedade.",
+            "Adding src group to dst group would create a cycle in tree.": "Adicionar o grupo src ao grupo dst criaria um ciclo na árvore.",
+            "User does not exist in group": "O usuário não existe no grupo"
+        }
     },
     "systemStatuses": {
         "activated": "ativado",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Faça login com %CLOUD_NAME% para acessar este sistema como usuário da nuvem",
         "twoFaRequired": "A autenticação de dois fatores foi ativada para esta conta. Por favor, insira seu código de verificação na janela popup.",
-        "loggingIn": "Fazendo login. Aguarde."
+        "loggingIn": "Fazendo login. Aguarde.",
+        "sessionRenewed": "A sessão foi renovada.",
+        "failedToUpdateSession": "Falha ao atualizar a sessão."
     },
     "healthMonitor": {
         "groups": {
@@ -964,10 +1101,10 @@
             "servers": "Servidores",
             "cameras": "Canais da câmera",
             "storages": "Locais de armazenamento",
-            "users": "Usuários",
+            "users": "Utilizadores",
             "version": "Versão do sistema",
             "cloudSystemId": "Código do sistema em nuvem",
-            "status": "Status",
+            "status": "Estado",
             "offlineEvents": "Eventos: Servidor Offline (24h)",
             "uptimeS": "Tempo de atividade",
             "cpuUsageP": "CPU %",
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Relatório de saúde para o sistema {systemName}"
+        "healthReportForSystem": "Relatório de integridade para o sistema {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1073,42 +1210,42 @@
         "webSocketEnabled": "Web sockets",
         "arecontRtspEnabled": "Arecont RTSP ativado",
         "auditTrailEnabled": "Trilha de auditoria ativada",
-        "auditTrailPeriodDays": "Dias do período de auditoria",
-        "autoDiscoveryEnabled": "Ativar a descoberta automática de dispositivos",
-        "autoUpdateThumbnails": "Atualização automática de miniaturas",
-        "backupNewCamerasByDefault": "Backup de novas câmeras por padrão",
+        "auditTrailPeriodDays": "Dias do período de trilha de auditoria",
+        "autoDiscoveryEnabled": "Ativar descoberta automática de dispositivos",
+        "autoUpdateThumbnails": "Atualizar miniaturas automaticamente",
+        "backupNewCamerasByDefault": "Faça backup de novas câmeras por padrão",
         "backupQualities": "Qualidades de backup",
-        "cameraSettingsOptimization": "Permitir otimização de configuração de dispositivo",
+        "cameraSettingsOptimization": "Permitir otimização de configuração do dispositivo",
         "clientStatisticsSettingsUrl": "Url relativo das estatísticas do cliente",
         "cloudAccountName": "Conta do proprietário da nuvem",
-        "cloudConnectRelayingEnabled": "Ativar retransmissão para conexão na nuvem",
-        "cloudConnectUdpHolePunchingEnabled": "Ativar perfuração UDP para conexão em nuvem",
+        "cloudConnectRelayingEnabled": "Ativar a retransmissão para conexão na nuvem",
+        "cloudConnectUdpHolePunchingEnabled": "Habilitar perfuração UDP para conexão à nuvem",
         "cloudHost": "Host de nuvem",
-        "cloudSystemID": "Id do sistema em nuvem",
+        "cloudSystemID": "Código do sistema em nuvem",
         "disabledVendors": "Fornecedores desativados",
-        "ec2AliveUpdateIntervalSec": "Intervalo de atualização do sistema (segundos)",
+        "ec2AliveUpdateIntervalSec": "Intervalo de atualização ativa do sistema (segundos)",
         "ec2ConnectionKeepAliveTimeoutSec": "Tempo limite para manter a conexão ativa (segundos)",
-        "ec2KeepAliveProbeCount": "Conexão mantém sondas vivas (segundos)",
+        "ec2KeepAliveProbeCount": "Testes de manutenção de conexão (segundos)",
         "emailFrom": "E-mail de",
         "emailSignature": "Assinatura de e-mail",
         "emailSupportEmail": "E-mail de suporte",
-        "enableEdgeRecording": "Ativar gravação de borda",
-        "eventLogPeriodDays": "Período do log de eventos (dias)",
-        "ldapAdminDn": "DN de administrador LDAP",
+        "enableEdgeRecording": "Habilitar gravação de borda",
+        "eventLogPeriodDays": "Período de registro de eventos (dias)",
+        "ldapAdminDn": "LDAP admin DN",
         "ldapSearchBase": "Base de pesquisa LDAP",
         "ldapSearchFilter": "Filtro de pesquisa LDAP",
         "ldapUri": "URI do LDAP",
         "localSystemId": "ID do sistema local",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Diferença máxima entre o tempo sincronizado e o da Internet (milissegundos)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Diferença máxima entre a hora sincronizada e local (milissegundos)",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Diferença máxima entre o tempo sincronizado e da Internet (milissegundos)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Diferença máxima entre hora sincronizada e local (milissegundos)",
         "maxP2pQueueSizeBytes": "Tamanho máximo da fila P2P (bytes)",
         "maxRecordQueueSizeBytes": "Tamanho máximo da fila de registros (bytes)",
         "maxRecordQueueSizeElements": "Tamanho máximo da fila de registros (elementos)",
         "maxRemoteArchiveSynchronizationThreads": "Máximo de threads de sincronização de arquivo remoto",
-        "maxRtspConnectDurationSeconds": "Duração máx conexão Rtsp segundos",
-        "maxSceneItems": "Máximo de itens de cena (0 significa padrão)",
-        "proxyConnectTimeoutSec": "Tempo Limite de Conexão do Proxy (segundos)",
-        "rtpTimeoutMs": "Tempo limite de RTP (milissegundos)",
+        "maxRtspConnectDurationSeconds": "Duração máxima da conexão Rtsp segundos",
+        "maxSceneItems": "Itens de cena máximos (0 significa padrão)",
+        "proxyConnectTimeoutSec": "Tempo limite de conexão do proxy (segundos)",
+        "rtpTimeoutMs": "Tempo limite em(milissegundos)",
         "sequentialFlirOnvifSearcherEnabled": "Use o buscador sequencial Flir Onvif",
         "serverDiscoveryPingTimeoutSec": "Tempo limite de descoberta do servidor",
         "smtpConnectionType": "Tipo de conexão SMTP",
@@ -1117,33 +1254,33 @@
         "smtpSimple": "SMTP simples",
         "smtpTimeout": "Tempo limite de SMTP",
         "smtpUser": "Usuário SMTP",
-        "statisticsAllowed": "Enviar anonimamente estatísticas de uso e relatórios de falhas",
-        "statisticsReportLastNumber": "Relatório de estatísticas - último número",
+        "statisticsAllowed": "Envie estatísticas de uso anônimas e relatórios de falhas",
+        "statisticsReportLastNumber": "Relatório de estatísticas - última versão",
         "statisticsReportLastTime": "Relatório de estatísticas - última vez",
         "statisticsReportLastVersion": "Relatório de estatísticas - última versão",
-        "statisticsReportServerApi": "Servidor api de estatísticas",
-        "statisticsReportTimeCycle": "Intervalo do relatório de estatísticas",
+        "statisticsReportServerApi": "Api do servidor de estatísticas",
+        "statisticsReportTimeCycle": "Intervalo de relatório de estatísticas",
         "statisticsReportUpdateDelay": "Relatório de estatísticas - atraso na atualização",
         "synchronizeTimeWithInternet": "Sincronizar a hora com a Internet",
-        "SystemName": "Nome do Sistema",
-        "takeCameraOwnershipWithoutLock": "Tome posse de câmaras sem bloqueio",
-        "timeSynchronizationEnabled": "Sincronização de tempo habilitada",
-        "primaryTimeServer": "Servidor de sincronização de tempo primário",
-        "osTimeChangeCheckPeriodMs": "Período de verificação de mudança de horário do sistema operacional",
-        "syncTimeExchangePeriod": "Intervalo de sincronização de hora para requisições de rede",
-        "syncTimeEpsilon": "Tempo de sincronização epsilon. O novo valor não será aplicado se o tempo delta for menor que epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Máximo de threads de sincronização de arquivo de câmera virtual",
+        "SystemName": "Nome do sistema",
+        "takeCameraOwnershipWithoutLock": "Assuma a propriedade das câmeras sem bloqueio",
+        "timeSynchronizationEnabled": "Sincronização de tempo ativada",
+        "primaryTimeServer": "Servidor de sincronização de horário primário",
+        "osTimeChangeCheckPeriodMs": "Período de verificação de mudança de horário do SO",
+        "syncTimeExchangePeriod": "Intervalo de sincronização de tempo de sincronização para solicitações de rede",
+        "syncTimeEpsilon": "Sincronizar tempo epsilon. O novo valor não é aplicado se o delta do tempo for menor que epsilon",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max encadeamentos de sincronização de arquivo de câmera virtual",
         "updateNotificationsEnabled": "Notificações de atualização ativadas",
-        "upnpPortMappingEnabled": "Mapeamento de porta UPNP habilitado",
-        "useTextEmailFormat": "Enviar e-mails em texto simples",
-        "useWindowsEmailLineFeed": "Use o feed de linha do Windows em emails",
+        "upnpPortMappingEnabled": "Mapeamento de porta UPNP ativado",
+        "useTextEmailFormat": "Envie e-mails de texto simples",
+        "useWindowsEmailLineFeed": "Use o feed de linha do Windows em e-mails",
         "trafficEncryptionForced": "Forçar criptografia de tráfego",
         "videoTrafficEncryptionForced": "Forçar criptografia de tráfego de vídeo",
-        "updateStatus": "Atualizar o status",
+        "updateStatus": "Atualizar status",
         "watermarkSettings": "Configurações de marca d'água",
-        "maxHttpTranscodingSessions": "Quantidade máxima de conexões HTTP usando transcodificação para o servidor. O Chrome abre 2 conexões ao mesmo tempo e fecha a primeira. Portanto, é recomendável definir o valor> = 2 para este parâmetro.",
-        "maxEventLogRecords": "Máximo de registros de log de eventos a serem mantidos no banco de dados. A quantidade real de registros não excluídos pode ser até 20% maior do que o valor especificado.",
-        "forceLiveCacheForPrimaryStream": "Se deve armazenar em cache alguns quadros para o fluxo principal. Valores: \"sim\" - sempre ativado (pode usar muita RAM), \"não\" - sempre desativado, exceto quando exigido pela reprodução (por exemplo, HLS), \"automático\" - semelhante a \"não\", mas ativado quando melhora o experiência do usuário (por exemplo, quando algum plugin do Analytics está funcionando na câmera)."
+        "maxHttpTranscodingSessions": "Quantidade máxima de conexões HTTP usando transcodificação para o servidor. O Chrome abre 2 conexões ao mesmo tempo e fecha a primeira. Portanto, é recomendável definir o valor >=2 para este parâmetro.",
+        "maxEventLogRecords": "Máximo de registros de log de eventos a serem mantidos no banco de dados. A quantidade real de registros não excluídos pode ser até 20% maior que o valor especificado.",
+        "forceLiveCacheForPrimaryStream": "Se alguns quadros devem ser armazenados em cache para o fluxo primário. Valores: \"yes\" - sempre habilitado (pode usar muita RAM), \"no\" - sempre desabilitado exceto quando exigido pelo playback (ex.: HLS), \"auto\" - similar a \"no\", mas ligado quando melhora o experiência do usuário (por exemplo, quando algum plug-in do Analytics está funcionando na câmera)."
     },
     "result": "{count, plural, =0{# resultados} one{# resultado} other{# resultados}}",
     "additionalSystems": "{count, plural, =0{+ # Sistemas} one{+ # Sistema} other{+ # Sistemas}}",

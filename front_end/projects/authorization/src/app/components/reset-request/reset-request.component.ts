@@ -5,19 +5,20 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     OnChanges,
     ViewChild
 } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
 
-import { AuthorizeStateType } from '../authorize.component';
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -39,7 +40,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Input() resetRequestProcess: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendEmail: any;
+    sendEmail: () => void;
     @ViewChild('resetPasswordForm', { static: false }) resetPasswordForm: NgForm;
     @ViewChild('email', { static: false }) resetPasswordEmail: NgModel;
 
@@ -60,7 +61,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeResetRequestComponent>): void {
         if (changes.errorCode?.currentValue) {
             setTimeout(() => {
                 this.resetPasswordForm?.controls.resetPasswordEmail.setErrors({
@@ -70,7 +71,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
         }
     }
 
-    goBack() {
+    goBack(): void {
         if (this.confirm) {
             this.confirm = false;
         } else {

@@ -1,0 +1,253 @@
+<nx-pre-loader *ngIf="!system || !system.users || !selectedUser"></nx-pre-loader>
+
+<div
+    *ngIf="system"
+    class="row d-flex align-items-start auth-visible"
+>
+    <div class="col-12">
+        <nx-block
+            *ngIf="selectedUser"
+            header-style="extended"
+        >
+            <header class="header-users">
+                <form
+                    #userEnabledForm="ngForm"
+                    name="userEnabledForm"
+                    novalidate
+                >
+                    <div
+                        class="header-username"
+                        [ngClass]="{ 'mb-2': selectedUser.isCloud }"
+                    >
+                        <h2 class="fs-mask heading-style">{{ username }}</h2>
+                        <div class="user-status-switch-wrapper">
+                            <span
+                                *ngIf="!selectedUser.isEnabled && !editMode"
+                                class="text-danger"
+                                [ngClass]="{ 'pr-2': selectedUser.canBeEdited }"
+                                translate
+                                >User disabled</span
+                            >
+                            <nx-switch
+                                *ngIf="systemAvailable && selectedUser.canBeEdited && !editMode"
+                                [(ngModel)]="selectedUser.isEnabled"
+                                id="user-active-status"
+                                name="user-active-status"
+                                [showWarning]="true"
+                            ></nx-switch>
+                        </div>
+                    </div>
+                </form>
+                <!-- *ngIf="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle" -->
+                <div>
+                    <span
+                        *ngIf="selectedUser.isCloud"
+                        class="fs-mask user-name"
+                        >{{ selectedUser.fullName }}</span
+                    >
+                </div>
+                <!-- <ng-template #editableTitle>
+                    <div class="d-flex align-items-center">
+                        <div class="header-title" [ngClass]="{'w-100': editMode}">
+                            <h2 NxEditable
+                                #editTitle
+                                [ngClass]="{'edit-padding': editMode}"
+                                [(content)]="localUserName"
+                                (contentChange)="handleUserNameChange($event)"
+                                (blur)="handleUserNameBlur()"
+                                (focus)="handleUserNameFocus()"
+                                [hasError]="!localUserName || emptyName"
+                                id="editable-title"></h2>
+                            <span *ngIf="!localUserName" class="input-error" translate>Login cannot be empty</span>
+                            <span *ngIf="emptyName" class="input-error" translate>Please enter a valid name</span>
+                        </div>
+                        <div class="edit-button" [ngClass]="{ 'd-none': editMode }" (click)="editTitle.focus()">
+                            <img alt="pencil icon button to edit username" [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
+                        </div>
+                    </div>
+                </ng-template> -->
+            </header>
+
+            <nx-section>
+                <div
+                    *ngIf="selectedUser.canBeEdited; else roleName"
+                    class="mr-2 my-2"
+                    style="width: 300px"
+                >
+                    <form
+                        #userRoleForm="ngForm"
+                        name="userRoleForm"
+                        novalidate
+                    >
+                        <label
+                            for="permissionsSelect"
+                            translate
+                            >Access level</label
+                        >
+                        <nx-permissions-select
+                            id="permissionsSelect"
+                            name="permissionsSelect"
+                            [disabled]="!systemAvailable"
+                            [user]="selectedUser"
+                            [system]="system"
+                            [roles]="system.accessRoles"
+                            [ngModel]="selectedUser.role"
+                            (ngModelChange)="setPermission($event)"
+                        >
+                        </nx-permissions-select>
+                    </form>
+                </div>
+                <ng-template #roleName>
+                    <h4>{{ role }}</h4>
+                </ng-template>
+                <div>
+                    <span
+                        class="help-block pt-0"
+                        [innerText]="accessDescription"
+                    ></span>
+                </div>
+            </nx-section>
+
+            <nx-section
+                type="no-spacing"
+                *ngIf="!selectedUser.isCloud"
+            >
+                <form
+                    #userSettingsForm="ngForm"
+                    name="userSettingsForm"
+                    class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
+                    novalidate
+                >
+                    <div class="form-group d-md-table-row d-flex flex-column">
+                        <label
+                            for="fullName"
+                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            [ngClass]="{
+                                'disabled-input-label':
+                                    !(environment.isLocal && selectedUser.isMe) &&
+                                    !selectedUser.canBeEdited
+                            }"
+                            translate
+                            >Name</label
+                        >
+                        <input
+                            type="text"
+                            class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                            [(ngModel)]="fullName"
+                            name="fullName"
+                            id="fullName"
+                            [disabled]="
+                                !(environment.isLocal && selectedUser.isMe) &&
+                                !selectedUser.canBeEdited
+                            "
+                            maxlength="255"
+                        />
+                    </div>
+                    <div class="form-group d-md-table-row d-flex flex-column">
+                        <label
+                            for="email"
+                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            [ngClass]="{
+                                'disabled-input-label':
+                                    !(environment.isLocal && selectedUser.isMe) &&
+                                    !selectedUser.canBeEdited
+                            }"
+                            translate
+                            >Email</label
+                        >
+                        <input
+                            type="email"
+                            class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                            [(ngModel)]="email"
+                            name="email"
+                            id="email"
+                            #emailInput="ngModel"
+                            pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
+                            [readonly]="selectedUser.isLdap"
+                            [disabled]="
+                                !(environment.isLocal && selectedUser.isMe) &&
+                                !selectedUser.canBeEdited
+                            "
+                            maxlength="255"
+                        />
+                        <span
+                            class="input-error mt-1 ml-2 d-block"
+                            *ngIf="emailInput.invalid && emailInput.touched"
+                            translate
+                            >Email format incorrect</span
+                        >
+                    </div>
+                </form>
+            </nx-section>
+
+            <nx-section
+                *ngIf="
+                    (!environment.isLocal && selectedUser.isCloud && selectedUser.isMe) ||
+                    (!selectedUser.isCloud && selectedUser.canBeEdited) ||
+                    (selectedUser.isLocalOwner && selectedUser.isMe) ||
+                    selectedUser.canBeEdited
+                "
+            >
+                <div
+                    *ngIf="!environment.isLocal && selectedUser.isCloud && selectedUser.isMe"
+                    class="float-left"
+                >
+                    <button
+                        class="btn btn-default"
+                        id="accountSettingsButton"
+                        (click)="routeToAccountSettings()"
+                        translate
+                    >
+                        Account Settings
+                    </button>
+                </div>
+                <div
+                    *ngIf="
+                        (!selectedUser.isCloud && selectedUser.canBeEdited) ||
+                        (selectedUser.isLocalOwner && selectedUser.isMe)
+                    "
+                    class="float-left"
+                >
+                    <button
+                        class="btn btn-default"
+                        (click)="changePassword()"
+                        [disabled]="selectedUser.isLdap"
+                        translate
+                    >
+                        Change Password
+                    </button>
+                    <span
+                        *ngIf="shouldChangePassword"
+                        class="input-error password-change-required"
+                        translate
+                        >Password has to be changed when the login is changed</span
+                    >
+                </div>
+                <div
+                    class="float-right"
+                    *ngIf="selectedUser.canBeEdited"
+                >
+                    <button
+                        class="btn btn-default has-icon"
+                        [disabled]="!systemAvailable"
+                        (click)="removeUser()"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dir + 'delete.svg'"
+                            [applyClass]="true"
+                            [svgStyle]="{
+                                'width.px': '24',
+                                'height.px': '24',
+                                'pointer-events': 'none'
+                            }"
+                        ></svg-icon>
+                        <ng-container>{{ deleteMessage }}</ng-container>
+                    </button>
+                </div>
+            </nx-section>
+        </nx-block>
+    </div>
+</div>
+
+<ng-container #pageApply></ng-container>

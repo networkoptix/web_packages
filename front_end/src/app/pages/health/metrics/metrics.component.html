@@ -1,0 +1,96 @@
+<div
+    [ngSwitch]="healthLayoutService.metricsValuesCount"
+    class="h-100"
+>
+    <nx-page-placeholder
+        *ngSwitchCase="0"
+        placeholderTitle="No {{ metricName }}"
+        class="section-placeholder"
+    >
+    </nx-page-placeholder>
+
+    <div
+        class="gridMetricContent"
+        #area
+        [ngClass]="fixedLayoutClass"
+        *ngSwitchDefault
+    >
+        <div
+            class="gridMetricContentComponent"
+            *ngIf="selectedData && selectedValues"
+            [hidden]="healthLayoutService.mobileDetailMode && healthLayoutService.activeEntity"
+        >
+            <div class="gridMetricContentComponentWrapper">
+                <div
+                    *ngIf="healthLayoutService.metricsValuesCount === 1"
+                    class="col-12 col-xl-7 col-xxxl-5 p-0"
+                >
+                    <nx-single-entity
+                        [params]="selectedPanelData"
+                        [entity]="objectValues(selectedValues)[0]"
+                    >
+                    </nx-single-entity>
+                </div>
+                <div
+                    *ngIf="healthLayoutService.metricsValuesCount > 1"
+                    class="p-0"
+                    [ngClass]="{ 'data-wrapper': !healthLayoutService.activeEntity }"
+                >
+                    <div
+                        class="mb-3 p-0"
+                        #search
+                        *ngIf="healthLayoutService.metricsValuesCount > 1"
+                    >
+                        <nx-search
+                            name="filterModel"
+                            [ngModel]="filterModel"
+                            (ngModelChange)="modelChanged($event)"
+                            layout="compact"
+                            [placeholder]="LANG.search.Search()"
+                            ngDefaultControl
+                        >
+                        </nx-search>
+                    </div>
+                    <nx-dynamic-table
+                        [headers]="selectedData"
+                        [elements]="selectedValues"
+                        (onRowClick)="setActiveEntity($event)"
+                    >
+                    </nx-dynamic-table>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="gridMetricContentPanelComponent"
+            *ngIf="healthLayoutService.activeEntity"
+            [style.visibility]="healthService.tableReady && layoutReady ? undefined : 'hidden'"
+        >
+            <div class="gridMetricContentPanelComponentWrapper pb-3">
+                <div
+                    class="mb-3 all-results-btn"
+                    [style.display]="!healthLayoutService.mobileDetailMode ? 'none' : 'block'"
+                >
+                    <hr class="pb-3 m-0" />
+                    <button
+                        class="btn btn-default btn-back"
+                        (click)="resetActiveEntity()"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dir + 'arrow_back.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        ></svg-icon>
+                        <span translate>All results</span>
+                    </button>
+                </div>
+
+                <nx-dynamic-table-panel-component
+                    [panelParams]="selectedPanelData"
+                    (onCloseView)="resetActiveEntity()"
+                >
+                </nx-dynamic-table-panel-component>
+            </div>
+        </div>
+    </div>
+</div>

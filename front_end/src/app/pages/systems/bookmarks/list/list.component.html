@@ -1,0 +1,72 @@
+<ng-template
+    #compactTags
+    let-tag="tag"
+>
+    <nx-tag
+        *ngIf="tag.label"
+        (resize)="updateTagSize(tag.label, $event)"
+        class="fs-mask"
+        [style.grid-column]="gridColumnLookup[tag.label]"
+        [ngClass]="{ ready: gridColumnLookup[tag.label] }"
+        [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')"
+    >
+        {{ tag.label }}
+    </nx-tag>
+</ng-template>
+
+<div
+    class="preload-div"
+    *ngIf="!list"
+>
+    <nx-pre-loader *ngIf="!restError; else restErrorMessage"></nx-pre-loader>
+    <ng-template #restErrorMessage>
+        <div class="d-flex flex-column align-items-center">
+            <h3 translate>Error during loading. Please try reloading the page.</h3>
+            <button
+                class="btn btn-primary mt-3"
+                (click)="reloadWindow()"
+                translate
+            >
+                Reload
+            </button>
+        </div>
+    </ng-template>
+</div>
+
+<div
+    class="col text-placeholder d-flex align-items-center"
+    *ngIf="list && !list.length"
+    translate
+>
+    No Bookmarks Available
+</div>
+
+<div
+    class="feed"
+    *ngIf="list && list.length"
+>
+    <div
+        *ngFor="let bookmark of list"
+        class="bookmark-card"
+        (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'"
+        [intersectionThreshold]="0.1"
+    >
+        <header>
+            <span class="fs-mask name">{{ bookmark.name }}</span>
+            <span class="fs-mask date">{{ bookmark.startTimeMs | date: 'medium' }}</span>
+        </header>
+        <main>
+            <clip
+                class="fs-exclude video"
+                [sourceUrl]="bookmark.src"
+                [posterUrl]="bookmark.isVisible ? bookmark.thumbnail : ''"
+            ></clip>
+        </main>
+        <footer class="tags-compact">
+            <ng-container *ngFor="let tag of bookmark.tagsFormatted">
+                <ng-container *ngTemplateOutlet="compactTags; context: { tag: tag }"></ng-container>
+            </ng-container>
+            <p class="fs-mask description mt-2">{{ bookmark.description }}</p>
+        </footer>
+    </div>
+</div>

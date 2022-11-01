@@ -1,0 +1,48 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+
+:host {
+    .drag-wrapper {
+        padding       : 32px 16px !important;
+        margin        : 16px -16px 0 -16px;
+        border-top    : 1px solid var(--border-color);
+        border-bottom : 1px solid var(--border-color);
+        background    : repeating-linear-gradient(
+                        135deg,
+                        transparentize($light3, 0.5),
+                        transparentize($light3, 0.5) 12px,
+                        transparentize($light3, 0.85) 12px,
+                        transparentize($light3, 0.85) 24px
+        ) !important;
+    }
+
+    .preview-wrapper {
+        margin : 0 auto;
+    }
+
+    .dashboard-card {
+        height        : 100%;
+        border        : 1px solid var(--border-color);
+        border-radius : 8px;
+        background    : var(--alt-body-bg);
+        box-shadow    : 0 0 6px 2px $light7;
+    }
+
+    .heading {
+        background      : var(--body-bg);
+        border-bottom   : 1px solid var(--border-color);
+        display         : flex;
+        justify-content : space-between;
+        border-radius   : 6px 6px 0 0;
+
+        & span {
+            padding : 8px;
+            color   : white !important;
+        }
+
+        nx-select {
+            min-width : 0;
+            width     : auto;
+        }
+    }
+}

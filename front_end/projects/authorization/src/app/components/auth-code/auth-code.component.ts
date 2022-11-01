@@ -1,16 +1,27 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild, ElementRef
-}                       from '@angular/core';
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    OnChanges,
+    ViewChild,
+    ElementRef,
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { fromEvent }                 from 'rxjs';
-import { debounceTime }              from 'rxjs/operators';
-import { AuthorizeStateType }        from '../authorize.component';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
+
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -31,12 +42,12 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     @Output() codeChange = new EventEmitter<string>();
     @Input() checkAuthCodeProcess: Process;
     @Input() errorCode: string;
-    @Input() window: any;
+    @Input() window: Window;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendCode: any;
-    @ViewChild('authCodeForm', { static: false }) authCodeForm: HTMLFormElement;
-    @ViewChild('backToPasswordSpan', { static: false }) backToPasswordSpan: ElementRef;
+    sendCode: () => void;
+    @ViewChild('authCodeForm', { static: false }) authCodeForm: NgForm;
+    @ViewChild('backToPasswordSpan', { static: false }) backToPasswordSpan: ElementRef<HTMLSpanElement>;
     needLargerFooter = false;
     restore = false;
     header: string;
@@ -49,7 +60,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
             subHeader: string,
             subHeaderSuffix?: string
         }
-    }
+    };
 
     constructor(
         language: NxLanguageProviderService,
@@ -67,19 +78,20 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         this.restore = this.action === 'restore_password';
         this.setupText();
         this.setText();
-        this.suffixText = NxLanguageProviderService.translate(
-            this.LANG.authorize.authCode.message,
-            {
-                suffix: this.restore ? this.LANG.authorize.authCode.newPass() : this.LANG.authorize.authCode.login()
-            }
-        );
-
-        fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe(() => {
-            this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;
+        this.suffixText = this.LANG.authorize.authCode.message({
+            suffix: this.restore
+                ? this.LANG.authorize.authCode.newPass()
+                : this.LANG.authorize.authCode.login()
         });
+
+        fromEvent<Event>(this.window, 'resize')
+            .pipe(debounceTime(100))
+            .subscribe(() => {
+                this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;
+            });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeAuthCodeComponent>): void {
         if (changes.errorCode?.currentValue) {
             this.authCodeForm?.controls.authCode.setErrors({ [changes.errorCode.currentValue]: true });
         }
@@ -89,7 +101,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         }
     }
 
-    setupText() {
+    setupText(): void {
         const auth = this.LANG.authorize;
         const connect = {
             header: auth.connectHeader(),
@@ -143,6 +155,11 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
                 subHeader,
                 subHeaderSuffix: auth.passwordDetach()
             },
+            confirmPasswordTransfer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordTransfer()
+            },
             connectSystemToCloud: connect,
             setupWizard: connect,
             renewSessionDesktop: renew,
@@ -150,7 +167,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         };
     }
 
-    setText() {
+    setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
         if (this.clientType.includes('Password')) {

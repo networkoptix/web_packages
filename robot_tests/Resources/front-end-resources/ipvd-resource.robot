@@ -97,29 +97,42 @@ IPVD Table Row Count
     [Return]    ${rowCount}
 
 Validate IPVD Device Table Not Empty
+    [Arguments]     ${include last}=${True}
     ${rowCount}=   IPVD Table Row Count
     Should be True    ${rowCount} > 0    Table empty when rows were expected.
-    Wait until Elements are Visible
-    #...    ${IPVD CLEAR TEXT SEARCH BUTTON}
-    ...    ${IPVD PREVIOUS PAGE BUTTON}
-    ...    ${IPVD FIRST PAGE BUTTON}
-    ...    ${IPVD LAST PAGE BUTTON}
-    ...    ${IPVD NEXT PAGE BUTTON}
-    ...    ${IPVD EXPORT TO CSV LINK}
+    IF      ${include last}
+        Wait until Elements are Visible
+        #...    ${IPVD CLEAR TEXT SEARCH BUTTON}
+        ...    ${IPVD PREVIOUS PAGE BUTTON}
+        ...    ${IPVD FIRST PAGE BUTTON}
+        ...    ${IPVD LAST PAGE BUTTON}
+        ...    ${IPVD NEXT PAGE BUTTON}
+        ...    ${IPVD EXPORT TO CSV LINK}
+    ELSE
+        Wait until Elements are Visible
+        #...    ${IPVD CLEAR TEXT SEARCH BUTTON}
+        ...    ${IPVD PREVIOUS PAGE BUTTON}
+        ...    ${IPVD FIRST PAGE BUTTON}
+        ...    ${IPVD NEXT PAGE BUTTON}
+        ...    ${IPVD EXPORT TO CSV LINK}
+    END
     [Return]    ${rowCount}
 
 Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     [Arguments]    ${column}    ${SearchString}
+    Sleep   1
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Click Element    ${IPVD FIRST PAGE BUTTON}
     ${lastPage}=   IPVD Last Page Number
     FOR    ${pageNumber}    IN RANGE    1    ${lastPage}+1
         Validate IPVD Device Table Column Contains Desired Value in all Rows    ${column}    ${SearchString}
+        Sleep   1
         Run Keyword If    ${pageNumber} < ${lastPage}    Click Element    ${IPVD NEXT PAGE BUTTON}
     END
 
 Validate IPVD Device Table Column contains Desired Value in all Rows
     [Arguments]    ${column}    ${SearchString}
+    Sleep    1
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Sleep    1
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
@@ -128,27 +141,28 @@ Validate IPVD Device Table Column contains Desired Value in all Rows
     END
 
 IPVD Select Device from Table Column by Value
-    [Arguments]    ${column}    ${SearchString}
-    ${rowCount}=   Validate IPVD Device Table Not Empty
+    [Arguments]    ${column}    ${SearchString}   ${include last}=${True}
+    ${rowCount}=   Validate IPVD Device Table Not Empty     ${include last}
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
         ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]/div
         Exit For Loop If    '${curText}' == '${SearchString}'
     END
-    IPVD Select Device From Table By Row Number    ${rowNumber}
+    IPVD Select Device From Table By Row Number    ${rowNumber}      ${include last}
     [Return]    ${rowNumber}
 
 IPVD Select Device from Table Randomly
-    ${rowCount}=   Validate IPVD Device Table Not Empty
+    [Arguments]     ${include last}=${True}
+    ${rowCount}=   Validate IPVD Device Table Not Empty      ${include last}
     ${rowNumber}=   Evaluate
     ...    random.randint(1,${rowCount}-1)
     ...    modules=random
-    IPVD Select Device From Table By Row Number    ${rowNumber}
+    IPVD Select Device From Table By Row Number    ${rowNumber}    ${include last}
     [Return]    ${rowNumber}
 
 IPVD Select Device from Table by Row Number
-    [Arguments]    ${rowNumber}=1
-    ${rowCount}=   Validate IPVD Device Table Not Empty
+    [Arguments]    ${rowNumber}=1   ${include last}=${True}
+    ${rowCount}=   Validate IPVD Device Table Not Empty     ${include last}
     Should be True    ${rowCount} >= ${rowNumber}
     ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
     ${rowNumberOffset}=   Evaluate    ${rowNumber}-1
@@ -158,7 +172,7 @@ IPVD Select Device from Table by Row Number
 
 IPVD Active Page Number
     Wait until Element is Visible    ${IPVD PAGINATION}
-    ${page}=   Get Text    ${IPVD PAGINATION}/li[contains(@class,'active')]
+    ${page}=   Get Text    ${IPVD PAGINATION}/a[contains(@class,'active')]
     ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
     [Return]    ${page}
 
@@ -213,7 +227,7 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT4 RGB}
-    Advanced Search Arrow Should Point    up
+    Advanced Search Arrow Should Point    down
     Wait until Element does Not have Class    ${IPVD ADV SEARCH BUTTON}    selected
     Elements should Not be Visible
     # IPVD Advanced Filters
@@ -238,7 +252,7 @@ Verify IPVD Advanced Search is Open
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
-    Advanced Search Arrow Should Point    down
+    Advanced Search Arrow Should Point    up
     Wait until Element has Class    ${IPVD ADV SEARCH BUTTON}    selected
     Wait until Elements are Visible
     # IPVD Advanced Filters
@@ -268,15 +282,14 @@ Validate Manufacturer More Count
 Advanced Search Arrow Should Point
     [Arguments]    ${expected direction}
     Sleep    1
-    ${transform value}=   Get Element Style    ${IPVD ADV SEARCH BUTTON}${IPVD arrow}    transform
-    ${observed direction}=   Set Variable If    "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -1, 1.22465e-16, 0, 0, -1.22465e-16, -1, 0, 0, 0, 0, 1)"    down
-    ...    "${transform value}"=="none"    up
+    ${transform value}=   Run Keyword And Return Status     Wait Until Element is Visible     ${IPVD ADV SEARCH BUTTON}${IPVD arrow}/parent::div/parent::div[contains(@class, "selected")]    timeout=2
+    ${observed direction}=   Set Variable If    ${transform value}    up    down
     Should Be Equal    '''${expected direction}'''    '''${observed direction}'''
 
 Filter Arrow Should Point
     [Arguments]    ${element}    ${expected direction}
     Sleep    1
-    ${transform value}=   Get Element Style    ${element}${IPVD arrow}    transform
+    ${transform value}=   Get Element Style    ${element}${IPVD arrow}//*[name()="polyline"]    transform
     ${observed direction}=   Set Variable If    "${transform value}"=="matrix(1, 0, 0, 1, 0, 0)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.934479, 0.356018, 0, 0, -0.356018, 0.934479, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.999087, 0.0427241, 0, 0, -0.0427241, 0.999087, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -1, 1.22465e-16, 0, 0, -1.22465e-16, -1, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.992888, 0.119053, 0, 0, -0.119053, 0.992888, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -0.572517, 0.819893, 0, 0, -0.819893, -0.572517, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.984495, 0.175413, 0, 0, -0.175413, 0.984495, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -0.572517, 0.819893, 0, 0, -0.819893, -0.572517, 0, 0, 0, 0, 1)"  up
     ...    "${transform value}"=="none"    down
     Should Be Equal    '''${expected direction}'''    '''${observed direction}'''
@@ -307,7 +320,8 @@ Validate Privacy Policy
     ...    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
 #    Select Window    ${windows}[1]
     Switch Window    ${windows}[1]
-    Location should be    ${url}    # TODO: CLOUD-2949
+    ${location}=    Get Location
+    Should Contain    ${url}    ${location}    # TODO: CLOUD-2949
     # Location should be    ${PRIVACY POLICY URL FULL}
     Close Window
 #    Select Window    ${windows}[0]

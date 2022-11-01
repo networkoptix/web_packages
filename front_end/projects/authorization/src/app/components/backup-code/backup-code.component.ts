@@ -1,16 +1,27 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild, ElementRef
-}                       from '@angular/core';
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    OnChanges,
+    ViewChild,
+    ElementRef,
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { fromEvent }                 from 'rxjs';
-import { debounceTime }              from 'rxjs/operators';
-import { AuthorizeStateType }        from '../authorize.component';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
+
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,12 +41,12 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     @Output() codeChange = new EventEmitter<string>();
     @Input() checkBackupCodeProcess: Process;
     @Input() errorCode: string;
-    @Input() window: any;
+    @Input() window: Window;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendCode: any;
-    @ViewChild('backupCodeForm', { static: false }) backupCodeForm: HTMLFormElement;
-    @ViewChild('backToAuthSpan', { static: false }) backToAuthSpan: ElementRef;
+    sendCode: () => void;
+    @ViewChild('backupCodeForm', { static: false }) backupCodeForm: NgForm;
+    @ViewChild('backToAuthSpan', { static: false }) backToAuthSpan: ElementRef<HTMLSpanElement>;
     needLargerFooter = false;
     header: string;
     subHeader: string;
@@ -46,7 +57,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
             subHeader: string,
             subHeaderSuffix?: string
         }
-    }
+    };
 
     constructor(
         language: NxLanguageProviderService,
@@ -64,12 +75,14 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
             this.codeChange.emit(this.code);
         };
 
-        fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe(() => {
-            this.needLargerFooter = this.backToAuthSpan.nativeElement.offsetHeight > 32;
-        });
+        fromEvent<Event>(this.window, 'resize')
+            .pipe(debounceTime(100))
+            .subscribe(() => {
+                this.needLargerFooter = this.backToAuthSpan.nativeElement.offsetHeight > 32;
+            });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeBackupCodeComponent>): void {
         if (changes.errorCode?.currentValue) {
             this.backupCodeForm?.controls.backupCode.setErrors({ [changes.errorCode.currentValue]: true });
         }
@@ -79,7 +92,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    setupText() {
+    setupText(): void {
         const auth = this.LANG.authorize;
         const connect = {
             header: auth.connectHeader(),
@@ -132,6 +145,11 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
                 subHeader,
                 subHeaderSuffix: auth.passwordDetach()
             },
+            confirmPasswordTransfer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordTransfer()
+            },
             connectSystemToCloud: connect,
             setupWizard: connect,
             renewSessionDesktop: renew,
@@ -139,7 +157,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
         };
     }
 
-    setText() {
+    setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
         if (this.clientType.includes('Password')) {

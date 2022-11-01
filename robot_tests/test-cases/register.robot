@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/register-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        register-resource.Restart
-Test Teardown     Open New Browser and Reset DB On Failure
+Test Setup        Run Keywords    QA Video Recording Start        register-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop         Open New Browser and Reset DB On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
 
@@ -223,14 +223,14 @@ Force Tags        Threaded
     ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register Account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and text()="${ACCOUNT ALREADY EXISTS}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and contains(text(),"${ACCOUNT ALREADY EXISTS}")]
 
 20 Cannot register email that is already activated
     [tags]    C41563
     ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register and activate account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and text()="${ACCOUNT ALREADY EXISTS}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and contains(text(),"${ACCOUNT ALREADY EXISTS}")]
 
 21. Check registration email links, colors, cloud name, and user name
     [tags]    C24211    C43021    Customizations    smoke

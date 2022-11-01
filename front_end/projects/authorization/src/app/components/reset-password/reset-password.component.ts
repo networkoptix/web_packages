@@ -1,14 +1,23 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild
-}                       from '@angular/core';
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    OnChanges,
+} from '@angular/core';
+// import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { AuthorizeStateType }        from '../authorize.component';
+import { Process } from '@services/process.service/process';
+import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
+import { NgChanges } from '@utils/ng-changes';
+
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -29,9 +38,9 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
     @Output() passwordChange = new EventEmitter<string>();
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
     // @Input() errorCode: string;
-    weakPassword = null;
-    sendPassword: any;
-    // @ViewChild('resetForm', { static: false }) resetForm: HTMLFormElement;
+    weakPassword: boolean = null;
+    sendPassword: () => void;
+    // @ViewChild('resetForm', { static: false }) resetForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,
@@ -47,7 +56,7 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeResetPasswordComponent>): void {
         // if (changes.errorCode) {
         //     this.resetForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
         // }

@@ -117,11 +117,12 @@ INSTALLED_APPS = (
     'corsheaders',
     'push_notifications',
     'api',
-    'notifications',
     'cms',
+    'notifications',
     'zapier',
     'tinymce',
     'nested_admin',
+    'upload',
     # Needs to be last to insure file deletion isn't interrupted by other exceptions
     'django_cleanup.apps.CleanupConfig'
 )
@@ -227,6 +228,8 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 REDIS_CACHE = {
     "BACKEND": "django_redis.cache.RedisCache",
@@ -343,6 +346,20 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
         "KEY_PREFIX": 'release_notes'
     },
+    "readonly_apis": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT" : REDIS_CACHE['TIMEOUT'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
+        "KEY_PREFIX": 'readonly_apis'
+    },
+    "license_servers": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT" : None,
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
+        "KEY_PREFIX": 'license_servers'
+    }
 }
 
 if DEBUG:
@@ -426,12 +443,12 @@ LOGGING = {
             'propagate': False,
             'handlers': ['console']
         },
-        'api.helpers.exceptions': {
+        'cloud.helpers.exceptions': {
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
-        'api.controllers.cloud_gateway': {
+        'cloud.controllers.cloud_gateway': {
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
@@ -446,7 +463,7 @@ LOGGING = {
             'propagate': False,
             'handlers': ['console']
         },
-        'api.controller.cloud_api': {
+        'cms.controllers.cloud_api': {
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
@@ -490,6 +507,7 @@ AUTHENTICATION_BACKENDS = (
     'api.account_backend.AccountBackend',
 )
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
@@ -663,7 +681,8 @@ NPM_FILE_PATTERNS = {
     'bootstrap': ['dist/*'],
     'split.js': ['dist/*'],
     'uuid': ['dist/*'],
-    'csstree-validator': ['dist/*']
+    'csstree-validator': ['dist/*'],
+    'uppy': ['dist/*']
 }
 
 SILKY_AUTHENTICATION = True
@@ -691,6 +710,7 @@ TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']
 TRAFFIC_RELAY_PROTOCOL = 'https://'
 
 CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
+LICENSE_SERVER = conf.get('licenseServer', 'https://nxlicensed.test.hdw.mx' if LOCAL_ENVIRONMENT else 'https://licensing.vmsproxy.com')
 
 SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'
@@ -771,6 +791,12 @@ NOTIFICATIONS_CONFIG = {
     'ipvd_feedback_detail': {
         'engine': 'email'
     },
+    'ownership_transfer_invite': {
+        'engine': 'email'
+    },
+    'ownership_transfer_response': {
+        'engine': 'email'
+    },
     'push_notification': {
         'queue': 'push-notification'
     },
@@ -815,11 +841,56 @@ FILLDATA_TIMEOUT = 60
 SUPERUSER_DOMAIN = '@networkoptix.com'
 
 # Instant Search Configuration
-if not LOCAL_ENVIRONMENT:
-    MEILISEARCH_ENDPOINT = os.getenv('MEILISEARCH_ENDPOINT')
-    MEILISEARCH_MASTER_KEY = os.getenv('MEILISEARCH_MASTER_KEY')
+if (endpoint := os.getenv('MEILI_ENDPOINT')) and (master_key := os.getenv('MEILI_MASTER_KEY')):
+    MEILISEARCH_ENDPOINT = f'http://{endpoint}:7700'
+    MEILISEARCH_MASTER_KEY = master_key
 else:
     MEILISEARCH_ENDPOINT = 'http://localhost:7700'
     MEILISEARCH_MASTER_KEY = 'qweasd1234'
 
 VERSION = os.getenv('VERSION', '0')
+
+# upload app shared settings
+UPLOAD_BUCKET = conf.get('upload_bucket', f'{AWS_STORAGE_BUCKET_NAME}-uploads')
+UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'
+
+# Testing
+# import boto3
+# import sys
+# from botocore import exceptions
+# AWS_STORAGE_BUCKET_NAME = 'custom-local-bucket-name-here'
+
+# CORS_CONFIG = {
+#     'CORSRules': [
+#         {
+#             "AllowedOrigins": ["*"],
+#             "AllowedMethods": ["GET", "PUT"],
+#             "MaxAgeSeconds": 21600,
+#             "AllowedHeaders": [
+#                 "Authorization",
+#                 "x-amz-date",
+#                 "x-amz-content-sha256",
+#                 "content-type"
+#             ],
+#             "ExposeHeaders": ["ETag"]
+#         },
+#         {
+#             "AllowedOrigins": ["*"],
+#             "AllowedMethods": ["GET"],
+#             "MaxAgeSeconds": 21600
+#         }
+#     ]
+# }
+
+# try:
+#     s3 = boto3.session.Session().client("s3")
+#     # Check if upload bucket exists
+#     s3.head_bucket(Bucket=UPLOAD_BUCKET)
+#     raise exceptions.ClientError({}, 'test')
+# except exceptions.NoCredentialsError:
+#     # Prevent pipeline failure
+#     pass
+# except exceptions.ClientError:
+#     # Create upload bucket if doesn't exist
+#     s3.create_bucket(Bucket=UPLOAD_BUCKET)
+#     s3.put_bucket_cors(Bucket=UPLOAD_BUCKET, CORSConfiguration=CORS_CONFIG)

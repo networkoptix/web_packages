@@ -1,0 +1,7 @@
+Hei, {{message.user_full_name}}
+
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) inviterer deg til å bli systemeier av {{message.system_name}}.
+
+Logg på og behandle forespørselen på systeminnstillingssiden
+
+{{config.portal_url}}/systems/{{message.system_id}}

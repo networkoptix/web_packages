@@ -1,0 +1,7 @@
+Hola, {{message.user_full_name}}
+
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) lo invita a convertirse en propietario del sistema de {{message.system_name}}.
+
+Inicie sesión y procese la solicitud en la página de configuración del sistema
+
+Abra el sistema: {{config.portal_url}}/sistemas/{{message.system_id}}

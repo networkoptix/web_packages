@@ -1,0 +1,7 @@
+Xin chào, {{message.user_full_name}}
+
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) mời bạn trở thành chủ sở hữu hệ thống của {{message.system_name}}.
+
+Đăng nhập và xử lý yêu cầu trên trang Cài đặt Hệ thống
+
+{{config.portal_url}}/ hệ thống /{{message.system_id}}

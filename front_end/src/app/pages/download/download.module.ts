@@ -1,0 +1,45 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { PipesModule } from '@app/pipes/pipes.module';
+import { ComponentsModule } from '@components/components.module';
+import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
+import { DirectivesModule } from '@directives/directives.module';
+
+import { DownloadComponent } from './download.component';
+import { OsResolver } from './os-resolver';
+
+const appRoutes: Routes = [
+    // { path: 'downloads', component: DownloadComponent},
+    // { path: '', redirectTo: 'download', pathMatch: 'full' },
+    { path: '', component: DownloadComponent, resolve: { platform: OsResolver } },
+    { path: ':platform', component: DownloadComponent }
+];
+
+@NgModule({
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        ComponentsModule,
+        DirectivesModule,
+        PipesModule,
+        AngularSvgIconModule.forRoot(),
+        RouterModule.forChild(appRoutes),
+        SectionPlaceholderModule
+    ],
+    providers: [
+        OsResolver
+    ],
+    declarations: [
+        DownloadComponent
+    ],
+    bootstrap: [],
+    exports: []
+})
+export class DownloadModule {
+}

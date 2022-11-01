@@ -1,28 +1,68 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header #activateHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile', 'd-none': (activated$ | async) }">
+<header
+    #activateHeader
+    [ngClass]="{
+        'header-d': viewType === 'desktop',
+        'header-m': viewType === 'mobile',
+        'd-none': (activated$ | async)
+    }"
+>
     <h3 class="authorize-header">{{ LANG.authorize.activateHeader() }}</h3>
 </header>
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
-    [ngStyle]="{ 'height': activateHeader ? 'calc(100% - ' + activateHeader.offsetHeight + 'px)' : '100%' }">
+<main
+    [ngClass]="{
+        'main-w': viewType === 'web',
+        'main-d': viewType === 'desktop',
+        'main-m': viewType === 'mobile'
+    }"
+    [ngStyle]="{
+        height: activateHeader ? 'calc(100% - ' + activateHeader.offsetHeight + 'px)' : '100%'
+    }"
+>
     <form #activateAccountForm="ngForm">
-        <svg-icon nx-add-svg-src
-            [src]="CONFIG.icons.dirSectionPlaceholder + ((activated$ | async) ? 'success' : 'mail') + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
-            [svgStyle]="{'width.px': '280', 'height.px': '120'}"
-            [applyClass]="true"></svg-icon>
-        <h3 class="authorize-header mt-3 mb-2">{{ (contentHeader$ | async) }}</h3>
-        <div class="content-message" [innerHTML]="(contentMessage$ | async)"></div>
+        <svg-icon
+            nx-add-svg-src
+            [src]="
+                CONFIG.icons.dirSectionPlaceholder +
+                ((activated$ | async) ? 'success' : 'mail') +
+                (viewType === 'web' ? '' : '_desktop') +
+                '_placeholder.svg'
+            "
+            [svgStyle]="{ 'width.px': '280', 'height.px': '120' }"
+            [applyClass]="true"
+        ></svg-icon>
+        <h3 class="authorize-header mt-3 mb-2">{{ contentHeader$ | async }}</h3>
+        <div
+            class="content-message"
+            [ngClass]="{ 'fs-mask': !!loginEmail }"
+            [innerHTML]="contentMessage$ | async"
+        ></div>
     </form>
-    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+    <footer
+        [ngClass]="{
+            'footer-w': viewType === 'web',
+            'footer-d': viewType === 'desktop',
+            'footer-m': viewType === 'mobile'
+        }"
+    >
         <div [ngClass]="{ 'd-none': (activated$ | async) }">
-            <button class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
+            <button
+                class="btn text-button"
+                type="button"
+                (click)="setCurrentState.emit('email')"
+            >
                 <span translate>Log In</span>
             </button>
         </div>
-        <div class="right w-100" [ngClass]="{ 'd-none': !(activated$ | async) }">
+        <div
+            class="right w-100"
+            [ngClass]="{ 'd-none': !(activated$ | async) }"
+        >
             <nx-process-button
                 [form]="activateAccountForm"
                 [process]="loginProcess"
-                buttonText="{{ ('Log In' | translate) }}">
+                buttonText="{{ 'Log In' | translate }}"
+            >
             </nx-process-button>
         </div>
     </footer>

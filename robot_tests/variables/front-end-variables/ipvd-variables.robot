@@ -17,7 +17,8 @@ ${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="
 ${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
-${IPVD ARROW}                         //svg-icon[contains(@data-src,"/images/icons/test_buttons/arrow_collapse.svg" or contains(@data-src,"/images/icons/text_buttons/arrow_expand.svg")]
+${IPVD ARROW}                         //*[contains(@data-src,"/images/icons/text_buttons/arrow_expand.svg")]
+
 #IPVD Advanced Filters
 ${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
 ${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
@@ -58,7 +59,7 @@ ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/a[con
 ${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[1]
 ${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[2]
-${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//button[contains(@class, "detailsClose")]
 ${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
 ${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[contains(@class,'active-camera-info')]
 ${IPVD DEVICE INFO PARAMETER}                ${IPVD DEVICE INFO}/div
@@ -79,11 +80,11 @@ ${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr[not(@class='table-r
 ${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][1]
 ${IPVD TABLE LAST ITEM}               ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][last()]
 #IPVD Pagination
-${IPVD PAGINATION}                    //ipvd//ngb-pagination/ul
-${IPVD PREVIOUS PAGE BUTTON}          ${IPVD PAGINATION}/li[1]
-${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/li[1]/following::li[1]
-${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]/preceding::li[1]
-${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
+${IPVD PAGINATION}                    //ipvd//nx-paginator
+${IPVD PREVIOUS PAGE BUTTON}          ${IPVD PAGINATION}/a[@id="paginator-prev"]
+${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/a[@id="paginator-tile-first"]
+${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/a[@id="paginator-tile-last"]
+${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/a[@id="paginator-next"]
 #IPVD Export
 ${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
@@ -98,7 +99,7 @@ ${IPVD FEEDBACK EMAIL}                ${IPVD FEEDBACK FORM}//input[@id='user_ema
 ${IPVD FEEDBACK MESSAGE}              ${IPVD FEEDBACK FORM}//textarea[@id='message']
 ${IPVD FEEDBACK PRIVACY POLICY}       ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
 ${IPVD FEEDBACK SEND BUTTON}          ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
-${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
+${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[contains(@class,'close')]
 
 ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]

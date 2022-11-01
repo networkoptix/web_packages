@@ -8,7 +8,7 @@ Requirements
 How to Use
 ---------------
 
-1. run `npm install http-server -g`
+1. run `npm run node-modules http-server -g`
 2. cd into `robot_tets/Load-Testing/push-device-web-interface`
 3. run `http-server -p 8085`
 4. Visit `http://localhost:8085`

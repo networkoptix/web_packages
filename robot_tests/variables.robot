@@ -2,7 +2,7 @@
 Variables    getvars.py
 Resource     variables/front-end-variables.robot
 Resource     variables/cms-variables.robot
-Resource     variables/cloud-merge-variables.robot
+#Resource     variables/cloud-merge-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast')]//span[contains(@class,'toast-content')]
@@ -12,12 +12,13 @@ ${BROWSER}                            Chrome
 
 ${LANGUAGE DROPDOWN}                  //header//nx-header-language-select//button[@id='dropdownMenuButton']
 ${LANGUAGE TO SELECT}                 //header//nx-header-language-select//span[@lang='${LANGUAGE}']/..
-${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
+${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Client Custom
 
 ${BACKDROP}                           //ngb-modal-backdrop
-${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
+${MODAL DIALOG}                       //nx-modal-generic-content
+${MODAL APPLY DIALOG}                 //nx-modal-apply-content
 
 ${COMBO TEXT}                         Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이
 ${CYRILLIC TEXT}                      Кенгшщзх
@@ -55,9 +56,9 @@ ${ACCOUNT NOT FOUND}                  //nx-authorize-component//div[contains(tex
 ${ACCOUNT DOES NOT EXIST}             //nx-authorize-component//p[contains(text(),'${ACCOUNT DOES NOT EXIST TEXT}')]
 ${YOU CAN CREATE AN ACCOUNT}          //nx-authorize-component//p[contains(text(),'${YOU CAN CREATE ACCOUNT TEXT}')]
 ${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
-${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[text()="${WRONG PASSWORD}"]
-${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST TEXT}"]
-${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[text()="${TOO MANY ATTEMPTS TEXT}"]
+${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[contains(text(),"${WRONG PASSWORD}")]
+${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[contains(text(),"${ACCOUNT DOES NOT EXIST TEXT}")]
+${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[contains(text(),"${TOO MANY ATTEMPTS TEXT}")]
 ${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//form//input[@id="resetPassword"]
 ${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
 ${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${RESET SUCCESS MESSAGE TEXT}')]
@@ -146,9 +147,9 @@ ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(te
 ${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-active-status-switch']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
-${REMOVE USER MODAL}                  ${MODAL DIALOG}
-${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
-${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${REMOVE USER MODAL}                  //nx-modal-remove-user-content
+${REMOVE BUTTON}                      ${REMOVE USER MODAL}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
+${REMOVE CANCEL BUTTON}               ${REMOVE USER MODAL}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
@@ -156,6 +157,9 @@ ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@cla
 
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
+
+${NEW FEATURE MODAL}                  //nx-modal-new-feature-content
+${NEW FEATURE CLOSE BUTTON}           ${NEW FEATURE MODAL}//button//span[contains(@class,"close-icon")]/../..
 
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
@@ -297,13 +301,13 @@ ${COMMON PASSWORD}      qweasd123
 ${LOCAL USER LOGIN}                  //h2
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
-${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
-${LOCAL USER CHANGE PASSWORD SAVE}    //form[@name="changePasswordForm"]//button[text()="${SAVE BUTTON TEXT}"]
+${LOCAL USER CHANGE PASSWORD BUTTON}     //button[contains(text(), "${CHANGE PASSWORD BUTTON TEXT}")]
+${LOCAL USER CHANGE PASSWORD SAVE}    //form[@name="changePasswordForm"]//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${LOCAL USER CHANGE PASSWORD CANCEL}    //form[@name="changePasswordForm"]//button[text()="${CANCEL BUTTON TEXT}"]
 ${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
-${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
-${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="${CANCEL BUTTON TEXT}"]
+${LOCAL USER DELETE CONFIRM BUTTON}   //div[@class="process-button"]/button
+${LOCAL USER DELETE CANCEL BUTTON}    //button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${USER CANCEL}                        //nx-apply//nx-cancel-button/button[@type="reset"]
 ${ACCOUNT CREATION EMAIL SUCCESS}     //nx-authorize-component//nx-authorize-activate-account-component//main//h3
 ${ACTIVATE MODAL LOGIN BTN}           //nx-authorize-component//nx-authorize-activate-account-component//main//nx-process-button//button[@type="submit"]

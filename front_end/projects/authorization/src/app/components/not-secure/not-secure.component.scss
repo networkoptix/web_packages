@@ -1,8 +1,15 @@
-@use '../../../../../../app/src/styles/typography';
-@use '../../../../../../app/src/styles/mixins';
-@use '../../../../../../app/styles/theme_variables' as *;
-
+//@use "../../../../../../src/app/styles/typography";
+//@use "../../../../../../src/app/styles/mixins";
+//@use "../../../../../../src/styles/theme_variables_common" as *;
 
 main form {
     align-items: center;
+}
+
+.cloud-header-st0 {
+    stroke : var(--svg-path-light-color);
+}
+
+.cloud-header-st1 {
+    stroke : var(--svg-path-dark-color);
 }

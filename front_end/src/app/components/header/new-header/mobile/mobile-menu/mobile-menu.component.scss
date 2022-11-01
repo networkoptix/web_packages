@@ -1,0 +1,99 @@
+@use "../../../../../styles/typography";
+@use "../../../../../../styles/theme_variables_common" as *;
+
+.menu-container {
+    position: absolute;
+    background-color: var(--mobile-header-bg);
+    width: 100%;
+    height: calc(100vh - 32px);
+    z-index: 3;
+
+    .menu-items {
+        background-color: var(--mobile-header-bg);
+        .menu-item {
+            width: 100%;
+            .node-name {
+                padding-top: 32px;
+                border-top: solid 1px var(--mobile-header-border-two);
+                @include typography.regular12nocolor;
+                margin: 0 0 12px 16px;
+                color: var(--mobile-level-one-color);
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+.level-two-item {
+    display: flex;
+    width: 100%;
+    height: 48px;
+    border-bottom: solid 1px varvar(--mobile-header-border-one);
+    border-top: solid 1px var(--mobile-header-border-two);
+    &:hover {
+        cursor: pointer;
+    }
+    .subnode {
+        @include typography.regular16nocolor;
+        color:  var(--mobile-level-two-color);
+        margin: 0;
+        width: 100%;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        padding-left: 16px;
+        border-right: solid 1px var(--mobile-header-border-three);
+        svg-icon svg {
+            margin: 0 0 2px 4px;
+        }
+        &.active {
+            background-color: var(--header-level-one-active-bg);
+            border-left: 2px solid var(--brand-core);
+            color: var(--brand-core);
+        }
+    }
+    .nav-arrow {
+        width: 60px;
+        height: 100%;
+        border-left: solid 1px var(--mobile-header-bg);
+        svg-icon {
+            display: block;
+            margin: 12px 27px;
+            .nav-arrow {
+                stroke: var(--mobile-header-item-nav-arrow);
+            }
+        }
+    }
+}
+
+.account-button-wrapper {
+    bottom: 24px;
+    position: fixed;
+    width: 100%;
+
+    .account-button {
+        width: 194px;
+        margin: auto;
+        border-radius: 2px;
+
+        &.logout-button {
+            background-color: var(--mobile-header-logout-btn-bg) !important;
+            @include typography.regular14nocolor;
+            color: var(--mobile-header-logout-btn-color);
+        }
+    }
+}
+
+.logout-wrapper {
+    bottom: 24px;
+    position: fixed;
+    width: 100%;
+}
+.logout-button {
+    width: 194px;
+    margin: auto;
+    background-color: $dark12 !important;
+    border-radius: 2px;
+    @include typography.regular14nocolor;
+    color: $light2;
+}

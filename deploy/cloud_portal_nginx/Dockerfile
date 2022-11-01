@@ -1,12 +1,15 @@
 FROM nginx:1.14.0-alpine
 
+ARG BUILD_NUMBER=''
+ENV PORTAL_HOST=127.0.0.1
+
 RUN apk add --no-cache apache2-utils tini curl jq netcat-openbsd
 
 COPY nginx.conf.template /etc/nginx/conf.d/nginx.conf.template
 COPY proxy.conf /etc/nginx/proxy.conf
 COPY run_nginx.sh /run_nginx.sh
 
-ENV PORTAL_HOST=127.0.0.1
+ENV BUILD="${BUILD_NUMBER}"
 
 ENTRYPOINT ["/sbin/tini", "--"]
 

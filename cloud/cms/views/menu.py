@@ -2,7 +2,7 @@ from django.http.request import QueryDict
 from rest_framework.permissions import AllowAny
 from cms.feature_flags import FLAGS, check_feature_flag
 import time
-from api.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
+from cloud.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
 from django.conf import settings
 
 from dal import autocomplete

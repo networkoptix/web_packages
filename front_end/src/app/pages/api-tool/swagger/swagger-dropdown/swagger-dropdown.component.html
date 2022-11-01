@@ -1,0 +1,17 @@
+<div [class.is-disabled]="isDisabled">
+    <nx-select
+        *ngIf="!isMultiSelect"
+        [items]="singleDropdownOptions"
+        (onSelected)="onSelect($event)"
+        [selected]="singleDropdownOptions[0]"
+    ></nx-select>
+
+    <nx-multi-select
+        *ngIf="isMultiSelect"
+        [items]="multiDropdownOptions"
+        [ngModel]="selectedOptions"
+        (ngModelChange)="onMultiSelect($event)"
+        canSelectAll
+    >
+    </nx-multi-select>
+</div>

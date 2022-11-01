@@ -4,7 +4,8 @@ Resource          system-camera-resource.robot
 
 *** Keywords ***
 View Page Suite Setup
-    ${random}=   Generate Random String
+    Open Browser and go to URL    ${url}
+    ${random}=   Generate Random String      length=5
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}
     ${system}     Create Base System    View_Page-${random}    owner=${owner}
     Set Suite Variable    ${system}
@@ -48,7 +49,7 @@ View Page Suite Setup
     Sleep    30
     Restart Docker Servers    ${system}[name]
     Sleep    90
-    Open Browser and go to URL    ${url}
+    Go to    ${url}
     Take Camera Offline    ${system}[name]    192.168.0.201
 
 View Page Test Setup   

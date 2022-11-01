@@ -5,12 +5,11 @@ from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
 from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import SEARCH_VAR
-from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q, Case, When, Value, BooleanField, Max
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.urls import reverse, path
+from django.urls import reverse, path, re_path
 from django.utils.html import format_html
 
 import nested_admin
@@ -303,6 +302,7 @@ class CMSAdmin(admin.ModelAdmin):
 class AssetTypeAdmin(CMSAdmin):
     list_display = ('name', 'type', 'asset_type_settings', 'can_preview', 'single_customization',)
     list_display_links = ('name', 'type')
+    change_form_template = 'cms/asset_type_change_form.html'
 
     def asset_type_settings(self, obj):
         return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
@@ -474,11 +474,11 @@ class AssetAdmin(CMSAdmin):
     def get_urls(self):
         urls = super(AssetAdmin, self).get_urls()
         my_urls = [
-            url(r'^(?P<asset_id>.+?)/pages/$', self.admin_site.admin_view(self.page_list_view), name='pages'),
-            url(r'^(?P<asset_id>.+?)/pages/(?P<context_id>.+?)/change/$',
+            re_path(r'^(?P<asset_id>.+?)/pages/$', self.admin_site.admin_view(self.page_list_view), name='pages'),
+            re_path(r'^(?P<asset_id>.+?)/pages/(?P<context_id>.+?)/change/$',
                 self.admin_site.admin_view(self.change_page),
                 name='change_page'),
-            url(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
+            re_path(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
         ]
 
         return my_urls + urls
@@ -580,6 +580,7 @@ class AssetAdmin(CMSAdmin):
         admin_files = [
             {'title': upload.file.url.split('/')[-1],  'value': upload.file.url}
             for upload in ExternalFile.objects.exclude(admin_upload=None)
+            if upload.file
         ]
         admin_uploads = [
             upload for upload in admin_files
@@ -958,6 +959,7 @@ class ExternalFileAdmin(CMSAdmin):
     list_display = 'id', 'file_path', 'download', 'admin_uploaded', 'asset_ds_pair_count', 'size', 'md5'
     fields = 'file',
     list_filter = AdminUploadedFilter,
+    change_list_template = 'cms/externalfile_change_list.html'
 
     def asset_ds_pair_count(self, obj):
         return obj.asset_ds_pair.count()
@@ -972,7 +974,7 @@ class ExternalFileAdmin(CMSAdmin):
         return mark_safe(f'<a href="/serve/{obj}" target="_blank">{obj}</a>')
 
     def has_add_permission(self, request):
-        return request.user.is_superuser
+        return False
 
     def has_change_permission(self, request, obj=None):
         return obj.admin_upload == request.user if obj else  request.user.is_superuser
@@ -1304,13 +1306,13 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     @check_feature_flag(FLAGS.zendesk_sync, validate_is_superuser)
     def zendesk_mapping(self, request, customization):
-        from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured
+        from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured, ZendeskInvalidConfiguration
         settings_context = Context.objects.get(name='settings', asset_type=get_cloud_portal_asset().asset_type)
         settings_change_page = reverse('admin:change_page', args=(customization_obj.id, settings_context.id)) if (customization_obj := Customization.objects.filter(name=customization).first()) else ''
         try:
-            mapper = ZendeskMapper(customization_name=customization)
-        except ZendeskNotConfigured:
-            return render(request, 'cms/zendesk_mapping.html', {'items': [], 'unmapped': '', 'empty': '', 'error_message': 'Zendesk Sync not configured', 'settings_page': settings_change_page})
+            mapper = ZendeskMapper(customization_name=customization, verify_auth=True)
+        except (ZendeskNotConfigured, ZendeskInvalidConfiguration) as e:
+            return render(request, 'cms/zendesk_mapping.html', {'items': [], 'unmapped': '', 'empty': '', 'error_message': e.message, 'settings_page': settings_change_page})
 
         mapper.build_struct()
         context = {
@@ -1524,6 +1526,11 @@ class CustomClientAdmin(admin.ModelAdmin):
 class FlagAdmin(WaffleFlagAdmin):
     pass
 
-@admin.register(OpenAPIJSON)
-class OpenAPIJSONAdmin(CMSAdmin):
+@admin.register(ReadOnlyAPI)
+class ReadOnlyAPIAdmin(CMSAdmin):
     pass
+
+@admin.register(ReadOnlyAPIFile)
+class ReadOnlyAPIFileAdmin(CMSAdmin):
+    pass
+

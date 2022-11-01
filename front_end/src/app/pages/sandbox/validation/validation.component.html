@@ -1,0 +1,103 @@
+<div
+    class="p-3"
+    style="border: 1px solid lightgray"
+>
+    <div class="row col-12">
+        <form
+            name="resetPassword"
+            #resetPassword="ngForm"
+            class="form-horizontal w-100"
+            novalidate
+        >
+            <div class="form-group row">
+                <label
+                    for="email"
+                    class="col-sm-4 control-label"
+                    >Email</label
+                >
+                <nx-email-input
+                    class="form-component col-sm-4"
+                    name="email"
+                    componentId="email"
+                    [(ngModel)]="data.email"
+                    [form]="resetPassword"
+                    #email="ngModel"
+                >
+                </nx-email-input>
+
+                <div class="col-sm-4">
+                    <ng-container *ngIf="email.touched && email.errors">
+                        <span
+                            class="help-block input-error"
+                            *ngIf="email.errors.required"
+                            >Email is required</span
+                        >
+                        <span
+                            class="help-block input-error"
+                            *ngIf="email.errors.pattern"
+                            >Please enter a valid Email</span
+                        >
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-4 col-sm-8">
+                    <nx-process-button
+                        [process]="restore"
+                        [form]="resetPassword"
+                        buttonText="Reset"
+                    >
+                    </nx-process-button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <hr />
+
+    <div class="row col-12">
+        <form
+            class="form-horizontal w-100"
+            name="restorePassword"
+            #restorePassword="ngForm"
+            novalidate
+        >
+            <div class="form-group row">
+                <label
+                    for="newPassword"
+                    class="col-sm-4 control-label"
+                    >New Password</label
+                >
+                <nx-password-input
+                    class="form-component col-sm-4"
+                    name="newPassword"
+                    componentId="newPassword"
+                    [(ngModel)]="data.newPassword"
+                    [form]="restorePassword"
+                    [component]="newPassword"
+                    #newPassword="ngModel"
+                >
+                </nx-password-input>
+
+                <div class="col-md-4">
+                    <nx-password-input-validation
+                        [forElement]="newPassword"
+                        [value]="data.newPassword"
+                    >
+                    </nx-password-input-validation>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="offset-sm-4 col-sm-8">
+                    <nx-process-button
+                        [process]="change"
+                        [form]="restorePassword"
+                        buttonText="Save"
+                    >
+                    </nx-process-button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

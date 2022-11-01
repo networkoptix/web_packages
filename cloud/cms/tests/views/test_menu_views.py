@@ -7,10 +7,11 @@ from model_bakery import baker
 from cms.views.menu import *
 
 
+@pytest.mark.no_db
 def test_get_menu(mocker, arf, account_factory, db):
     mock_request = arf.get('')
     mock_request.session = {}
-    mock_request.user = account_factory()
+    mock_request.user = account_factory(prepare_only=True)
     menu_name = str(uuid4())
     mock_generate_menu = mocker.patch(
         'cms.models.Menu.generate_menu', return_value=None)
@@ -25,6 +26,8 @@ def test_get_menu(mocker, arf, account_factory, db):
     mock_menu = str(uuid4())
     mock_generate_menu = mocker.patch(
         'cms.models.Menu.generate_menu', return_value=mock_menu)
+    mocker.patch(
+        'cms.models.Menu.generate_menus', return_value={})
     res = get_menu(mock_request, menu_name)
     assert res.status_code == status.HTTP_200_OK
     assert res.data == mock_menu
@@ -120,7 +123,8 @@ def test_menu_cancel_sync(arf, mocker, account_factory, disable_feature_flags, d
     mock_cancel.assert_called_once_with(mock_log_id)
 
 
-def test_menu_clean_zd(mocker, arf, account_factory, disable_feature_flags, db):
+@pytest.mark.no_db
+def test_menu_clean_zd(mocker, arf, account_factory, disable_feature_flags):
     mock_customization = str(uuid4())
     mock_payload = {str(uuid4()): str(uuid4())}
     mock_data = {'customization': mock_customization, **mock_payload}
@@ -128,7 +132,7 @@ def test_menu_clean_zd(mocker, arf, account_factory, disable_feature_flags, db):
     mock_zendesk_mapper = mocker.patch(
         'cms.controllers.zendesk.ZendeskMapper', return_value=mock_mapper_instance)
     mock_request = arf.post('', mock_data)
-    mock_request.user = account_factory()
+    mock_request.user = account_factory(prepare_only=True)
     mock_request.session = {}
 
     res = menu_clean_zd(mock_request)

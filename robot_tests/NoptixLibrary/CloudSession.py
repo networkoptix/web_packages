@@ -9,7 +9,15 @@ VERIFICATION_CODE = None
 
 
 class CloudSession:
-    def __init__(self, instance, username, password, backup_code=None, verification_code=None, logout=True):
+    def __init__(
+            self,
+            instance,
+            username,
+            password,
+            backup_code=None,
+            verification_code=None,
+            logout=True,
+            verify_ssl_cert=True):
         self.session = requests.Session()
         self.instance = instance
         self.username = username
@@ -17,13 +25,14 @@ class CloudSession:
         self.backup_code = backup_code
         self.verification_code = verification_code
         self.logout = logout
+        self._verify_ssl_cert = verify_ssl_cert
 
     def __enter__(self):
         return self.login()
 
     def __exit__(self, logout, *args, **kwargs):
         if logout:
-            self.logout()
+            self.logout_session()
         pass
 
     def _request_wrapper(self, url, method='get', query=None, data=None):
@@ -38,7 +47,8 @@ class CloudSession:
         else:
             raise ValueError(f"method must be get, post, put, or delete not {method}")
 
-        res = request(f"{self.instance}{url}", params=query, json=data)
+        res = request(
+            f"{self.instance}{url}", params=query, json=data, verify=self._verify_ssl_cert)
         res.raise_for_status()
         return res.json()
 
@@ -85,7 +95,7 @@ class CloudSession:
         self.session.headers.update({'X-CSRFToken': self.session.cookies['csrftoken']})
         return self.session
 
-    def logout(self):
+    def logout_session(self):
         self._request_wrapper("/api/account/logout", method='post')
 
 #  Below is an example of use of the CloudSession class above.

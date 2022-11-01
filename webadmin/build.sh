@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-NODE_VERSION="12.20.1"
-NPM_VERSION="6.14.10"
+NODE_VERSION="16.13.1"
+NPM_VERSION="8.1.2"
 
 WEBADMIN_PACKAGE="webadmin.zip"
 EXTERNAL_PACKAGE="external.dat"
@@ -46,8 +46,8 @@ rsync -a $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --ex
 
 pushd front_end
 # Install dependencies.
-echo -e "\nInstall node dependencies" >&2
-npm install
+echo -e "\nInstalling node modules w/ legacy deps ... as new npm is strict about it" >&2
+npm ci
 
 # Build webadmin.
 echo -e "\nBuild webadmin" >&2
@@ -60,6 +60,12 @@ npm run buildSkins
 
 # Build the inline wizard for each skin
 pushd inline-wizard
+    echo -e "\nRevert nodeenv for inline wizard..."
+    [ -e nenv ] && rm -rf nenv
+    nodeenv --node=12.20.1 nenv
+    . ./nenv/bin/activate
+    echo "Active Node.js: " && node -v
+    echo "Active npm: " && npm -v
     npm install
 popd
 echo -e "\nIterate all skins"

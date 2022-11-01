@@ -51,7 +51,7 @@ ${EXTRA SYSTEM TILE}           ${DROPDOWN SYSTEMS GRID}/nx-additional-systems-ti
 &{platform overview}    title=${PLATFORM OVERVIEW TEXT}    url=${ENV}/docs/developers
 &{knowledgebase}    title=${KNOWLEDGEBASE TEXT}    url=${ENV}/docs/developers/knowledgebase
 @{for developers int pages}    ${platform overview}   ${knowledgebase}
-${FOR DEVELOPERS LINK}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title" and h5="${FOR DEVELOPERS TEXT}"]/../following-sibling::ul//a
+${FOR DEVELOPERS LINK}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title"]/h5[contains(text(), "${FOR DEVELOPERS TEXT}")]
 
 # Services menu items
 &{downloads}    title=${DOWNLOADS TEXT}    url=${ENV}/download
@@ -61,7 +61,7 @@ ${FOR DEVELOPERS LINK}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title
 @{services pages}    ${downloads}    ${ipvd}    ${health viewer}    ${integrations}
 
 # External links
-${EXTERNAL LINKS TITLE}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title" and h5="${EXTERNAL LINKS TEXT}"]
+${EXTERNAL LINKS TITLE}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title"]/h5[contains(text(), "${EXTERNAL LINKS TEXT}")]
 ${EXTERNAL LINK}    ${EXTERNAL LINKS TITLE}/../following-sibling::ul//a
 
 &{FOR DEVS EXTERNAL LINKS}

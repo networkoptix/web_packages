@@ -1,0 +1,141 @@
+@use "../../../../../styles/typography";
+@use "../../../../../../styles/theme_variables_common" as theme_vars;
+@use "bootstrap_utils" as bootstrap;
+
+:host {
+    .server-info {
+        font-family : theme_vars.$font-family-regular;
+        font-size   : theme_vars.$font-size-base;
+        color       : var(--dark9);
+
+        .header-top-bar {
+            display       : flex;
+            align-items   : center;
+            margin-bottom : 16px;
+
+            .header-title {
+                display     : flex;
+                align-items : center;
+                flex-grow   : 1;
+
+                h2 {
+                    font-family : theme_vars.$font-family-regular;
+                    height      : 32px;
+                    font-weight : bold;
+                    font-size   : 24px;
+                }
+
+                .tag {
+                    @include typography.medium11light1;
+                    margin-left    : 8px;
+                    padding        : 4px 8px;
+                    text-transform : uppercase;
+                    border-radius  : 2px;
+                }
+
+                .online {
+                    background-color : var(--brand-core);
+                }
+
+                .offline {
+                    background-color : var(--error-label);
+                }
+
+                .checking {
+                    background-color : var(--light16);
+                }
+            }
+        }
+
+        .header-table {
+            font-size    : theme_vars.$font-size-base;
+            padding-left : 0;
+
+            .header-table-cell {
+                display     : flex;
+                height      : 20px;
+                align-items : flex-end;
+
+                .cell-title {
+                    @include typography.regular13dark9;
+                }
+
+                .cell-ellipsis {
+                    margin-bottom : 2px;
+                    border-bottom : 1px dotted var(--light6);
+                    flex-grow     : 1;
+                }
+            }
+        }
+
+        .server-setting-buttons {
+            display         : flex;
+            justify-content : space-between;
+
+            .setting-buttons {
+                display : flex;
+
+                button:first-child {
+                    margin-right : 8px;
+                }
+            }
+        }
+    }
+
+    .loader-div {
+        width           : 100%;
+        height          : 200px;
+        display         : flex;
+        justify-content : center;
+        align-items     : center;
+    }
+
+    .text-muted {
+        @include typography.regular11light16;
+        line-height : 1.5;
+    }
+
+    .help-block {
+        @include typography.regular11error;
+        padding          : .25rem 0 .5rem;
+        background-color : transparent;
+    }
+
+    .dropdown .dropdown-toggle .ellipsis {
+        max-width : none !important;
+    }
+
+    .break-long {
+        overflow-wrap : break-word;
+        word-wrap     : break-word;
+        word-break    : break-word;
+        hyphens       : auto;
+    }
+
+    .key-align {
+        text-align : left;
+        @include bootstrap.media-breakpoint-up(md) {
+            text-align : right !important;
+        }
+    }
+
+    .justify-keys {
+        justify-content : flex-start;
+
+        & > div {
+            text-align : left !important;
+        }
+
+        @include bootstrap.media-breakpoint-up(md) {
+            justify-content : flex-end !important;
+            & > div {
+                text-align : right !important;
+            }
+        }
+    }
+
+    .form.form-horizontal.row {
+        margin-left  : -8px !important;
+        margin-right : -24px !important;
+    }
+}

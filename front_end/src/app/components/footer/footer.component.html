@@ -1,0 +1,44 @@
+<div
+    class="row"
+    *ngIf="visible"
+>
+    <div
+        class="col-12 p-0"
+        [ngClass]="classes"
+        name="footer"
+    >
+        <footer *ngIf="viewFooter">
+            <div class="row">
+                <ul
+                    class="nav navbar-nav col-12 pr-0 flex-row"
+                    [class.justify-content-center]="center"
+                >
+                    <li *ngFor="let item of footerItems; trackBy: trackItem">
+                        <a
+                            *ngIf="item.new_window || oauth; else internalLink"
+                            [href]="item.url | safe: 'url'"
+                            [target]="item.new_window ? '_blank' : '_self'"
+                            >{{ item.display_name | translate }}</a
+                        >
+                        <ng-template #internalLink>
+                            <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
+                        </ng-template>
+                    </li>
+                </ul>
+            </div>
+            <ul
+                class="nav navbar-nav col-12"
+                [class.justify-content-center]="center"
+            >
+                <li>
+                    <a
+                        [href]="companyLink"
+                        target="_blank"
+                        class="pr-0 copyright"
+                        >&copy;&nbsp;{{ companyName }}</a
+                    >
+                </li>
+            </ul>
+        </footer>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 {
     "language": "he_IL",
     "About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "כל השרתים",
     "Download %VMS_NAME%": "הורד %VMS_NAME%",
     "For developers": "For developers",
@@ -83,7 +84,7 @@
         },
         "liveViewer": {
             "description": "יכול לצפות רק בוידאו חי",
-            "label": "צופה בשידור חי"
+            "label": "צופה בוידאו חי"
         },
         "owner": {
             "description": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן",
@@ -98,7 +99,7 @@
         "account": "חשבון",
         "key": "Key",
         "accountSavedSuccess": "החשבון שלך נשמר בהצלחה",
-        "accountSettings": "הגדרות חשבון",
+        "accountSettings": "הגדרות החשבון",
         "activationLinkSent": "קישור הפעלה נשלח",
         "agreementAccepted": "ההסכם התקבל",
         "changePassword": "שנה סיסמא",
@@ -133,6 +134,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "צור חשבון %CLOUD_NAME%",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -175,6 +177,38 @@
         "ptz": "מצלמות PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "גודל",
+            "state": "מצב",
+            "system": "מערכת",
+            "expires": "יפוג",
+            "key": "Key"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "זמין",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "בינוני",
             "low": "נמוך"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "כללי",
         "generalError": "אירעה שגיאה, נסה שוב מאוחר יותר. אם הבעיה ממשיכה, אנא צור קשר עם צוות התמיכה שלך.",
         "inaccessibleFeatureMessage": "המערכת אינה מקוונת ולכן השרתים אינם נגישים.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "אתה צופה בדוח מיושן."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -289,8 +338,8 @@
         },
         "buttons": {
             "cancel": "ביטול",
-            "createAccount": "צור חשבון חדש",
-            "delete": "מחק",
+            "createAccount": "ליצור חשבון חדש",
+            "delete": "מחיקה",
             "deleteAccount": "מחק חשבון",
             "disable": "השבת",
             "enable": "אפשר",
@@ -309,6 +358,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "מצלמה",
             "cameras": "מצלמות",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "הפעל",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "העבר אחסון בענן",
+                    "action": "העבר",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "מחק אחסון בענן?",
+                    "action": "מחיקה",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "הקלטות נוכחיות",
                 "whenFullyUsed": "כאשר נעשה שימוש מלא",
@@ -316,6 +387,20 @@
                 "archiveFrom": "ארכיון מ-",
                 "recordingBitrate": "קצב סיביות של הקלטות",
                 "delayFromLive": "זמן עיכוב (DELAY)"
+            },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "העבר",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "מחיקה",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "אחסון בענן הוסר בהצלחה מהמערכת",
@@ -372,16 +457,12 @@
             "newSystemDisplayName": "מערכת חדשה",
             "otherSystem": "מערכת אחרת...",
             "ownerCanMergeText": "ניתן למזג רק מערכות שבהן אתה הבעלים",
-            "passwordRequired": "נדרשת סיסמא",
+            "passwordRequired": "נדרשת סיסמה",
             "passwordWrong": "סיסמא שגויה",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "אנו ממליצים לך להתייעץ עם",
-                "b_support": "תמיכה",
-                "c_proceeding": "לפני המשך עיבוד."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
@@ -404,7 +485,8 @@
             "urlEmpty": "הזן כתובת שרת",
             "urlNotValid": "הזן כתובת URL חוקית",
             "unknownError": "אירעה שגיאה לא ידועה. רענן את הדף ונסה שוב. אם נמשכת הבעיה, אנא צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -440,7 +522,7 @@
             }
         },
         "removeSystem": {
-            "action": "נתק",
+            "action": "התנתק",
             "message": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
             "title": "נתק מערכת?"
         },
@@ -448,6 +530,13 @@
             "action": "שם משתמש",
             "message": "Please log in again.",
             "title": "תוקף החיבור שלך הסתיים"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "שגיאה",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "בקרת כניסה",
         "Connector": "מחבר",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
@@ -694,15 +788,30 @@
         "server": "שרת",
         "alert": "Alert"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
+    },
     "pageTitles": {
         "about": "שירותים",
-        "account": "הגדרות חשבון",
+        "account": "Account settings",
         "activate": "הפעל חשבון",
         "activateCode": "הפעל חשבון",
-        "activateSuccess": "החשבון הופעל",
+        "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "אימות",
-        "changePassword": "שינוי סיסמא",
+        "changePassword": "שנה סיסמה",
         "debug": "איתור באגים",
         "default": "%CLOUD_NAME%",
         "download": "הורד %VMS_NAME%",
@@ -716,14 +825,14 @@
         "register": "צור חשבון ב-",
         "registerSuccess": "ברוכים הבאים ל",
         "restorePassword": "אפס סיסמא",
-        "restorePasswordSuccess": "הסיסמא נשמרה",
-        "supportedDevices": "מכשירים נתמכים",
+        "restorePasswordSuccess": "Password saved",
+        "supportedDevices": "התקנים נתמכים",
         "system": "מערכת",
-        "systemShare": "שתף מערכת",
+        "systemShare": "Share System",
         "systems": "מערכות",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "הצג מצלמות",
+        "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "אבטחה",
         "twofaRequired": "Two-factor authentication required"
@@ -740,11 +849,11 @@
         "fairMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמא שלך חזקה יותר",
         "good": "טוב",
         "minLength": "קצר מדי",
-        "minLengthMessage": "הסיסמא חייבת להכיל 8 תווים לפחות",
+        "minLengthMessage": "הסיסמה חייבת להכיל 8 תווים לפחות",
         "missingMessage": "Required",
         "required": "שגוי",
         "requiredMessage": "השתמש רק באותיות לטיניות, מספרים וסמלים במקלדת, הימנע מרווחים בהתחלה ובסוף",
-        "strongMessage": "סיסמה חזקה!",
+        "strongMessage": "סיסמא חזקה!",
         "weak": "חלש",
         "weakMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמא שלך חזקה יותר"
     },
@@ -807,8 +916,6 @@
         "Search": "חיפוש",
         "analytics": "אנליטיקה",
         "analyticsSelected": "אירועי אנליטיקה",
-        "filter applied": "מסננים הופעלו",
-        "filters applied": "מסננים הופעלו",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "סוג",
         "hardwareTypes": "סוגים",
@@ -816,7 +923,10 @@
         "search_ipvd": "חפש לפי דגם או יצרן",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "יצרן",
-        "vendors": "יצרנים"
+        "vendors": "יצרנים",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -848,6 +958,7 @@
         "Settings": "הגדרות",
         "Information": "מידע",
         "Bookmarks": "סימניות",
+        "Layouts": "פריסות",
         "Monitoring": "ניטור"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(רישום כל המידע הזמין)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "מקומי",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "ענן"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "הופעל",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -967,7 +1104,7 @@
             "users": "משתמשים",
             "version": "System version",
             "cloudSystemId": "Cloud system ID",
-            "status": "מצב",
+            "status": "Status",
             "offlineEvents": "Events: Server Offline (24h)",
             "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1013,8 +1150,8 @@
             "Analog": "אנלוגי",
             "Edge": "קצה",
             "VMAX": "VMAX",
-            "Video Wall": "Video Wall",
-            "Analog Encoder": "דוחס אנלוגי",
+            "Video Wall": "קיר וידאו",
+            "Analog Encoder": "מקודד אנלוגי",
             "Starter": "מתחיל",
             "IO Module": "מודול קלט/פלט",
             "Bridge": "Bridge",

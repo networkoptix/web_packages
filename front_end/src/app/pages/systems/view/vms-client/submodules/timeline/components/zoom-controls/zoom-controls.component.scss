@@ -1,0 +1,48 @@
+:host {
+  box-sizing: border-box;
+  background-color: var(--view-bg);
+  width: 40px;
+  overflow: hidden;
+  padding: 6px 1px;
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  &.enabled {
+    box-shadow: 2px 0 0 0 rgba(var(--dark1--rgb), 0.2);
+    z-index: 5;
+  }
+
+  > .button {
+    flex-grow: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    font-size: 25px;
+
+    color: var(--control-color);
+
+    user-select: none;
+
+    // transition: all .2s ease-in-out;
+
+    &.enabled {
+      cursor: pointer;
+      color: var(--control-enabled-color);
+
+      &:hover {
+        background-color: var(--control-hoved-bg);
+      }
+      &:active {
+        background-color: var(--control-active-bg) !important;
+      }
+    }
+  }
+}

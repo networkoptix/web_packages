@@ -1,9 +1,10 @@
 {
     "language": "ru_RU",
     "About %CLOUD_NAME%": "О %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Все серверы",
     "Download %VMS_NAME%": "Скачать %VMS_NAME%",
-    "For developers": "Разработчикам",
+    "For developers": "Для разработчиков",
     "Integrations (β)": "Интеграции (β)",
     "Privacy": "Политика конфиденциальности",
     "Support": "Техническая поддержка",
@@ -62,7 +63,7 @@
             "label": "Видео с камер и архив"
         },
         "advancedViewer": {
-            "description": "Может смотреть живое видео, архив, изменять настройки камер, управлять PTZ и т. д",
+            "description": "Может смотреть видео в реальном времени, архив, изменять настройки камер, управлять PTZ и т. д",
             "label": "Просмотр и настройка"
         },
         "cloudAdmin": {
@@ -82,8 +83,8 @@
             "label": "Отключен"
         },
         "liveViewer": {
-            "description": "Может смотреть только живое видео",
-            "label": "Только видео с камер"
+            "description": "Может смотреть только видео в реальном времени",
+            "label": "Только видео в реальном времени"
         },
         "owner": {
             "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку",
@@ -98,7 +99,7 @@
         "account": "Учетная запись",
         "key": "Ключ",
         "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
-        "accountSettings": "Настройки учетной записи",
+        "accountSettings": "Настройки учётной записи",
         "activationLinkSent": "Ссылка для активации отправлена",
         "agreementAccepted": "Соглашение было принято",
         "changePassword": "Изменить пароль",
@@ -133,6 +134,7 @@
         "passwordReset": "для сброса сервера",
         "passwordRestart": "для перезапуска сервера",
         "passwordDetach": "для отсоединения сервера",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Пожалуйста, войдите снова как",
         "createAccountHeader": "Создать учётную запись %CLOUD_NAME%",
         "activateHeader": "Активировать учетную запись %CLOUD_NAME%",
@@ -175,6 +177,38 @@
         "ptz": "Камеры PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Размер",
+            "state": "Состояние",
+            "system": "Система",
+            "expires": "Срок действия",
+            "key": "Ключ"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Доступно",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "Среднее",
             "low": "Низкое"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# минут} one{#минута} other{# минут}}"
+        },
         "general": "Общие",
         "generalError": "Произошла ошибка, повторите попытку позже. Если проблема повторится, обратитесь в службу поддержки.",
         "inaccessibleFeatureMessage": "Система находится в автономном режиме и, следовательно, информация не доступна.",
@@ -241,7 +283,7 @@
         "systemNoAlertsMessage": "С вашей системой все в порядке!",
         "systemOffline": "Система не в сети",
         "systemOfflineMessage": "Эта система находится в автономном режиме и сейчас недоступна.",
-        "systemServerError": "Внутренняя ошибка сервера",
+        "systemServerError": "Internal server error",
         "systemServerErrorMessage": "Произошла ошибка, повторите попытку позже. Если проблема повторится, обратитесь в службу поддержки.",
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "systemUnresponsive": "Система, кажется, не отвечает. Пожалуйста, перезагрузите страницу.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Вы просматриваете устаревший отчет."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Редактирование панели инструментов включено",
         "dashboardLocked": "Панель управления заблокирована",
@@ -288,14 +337,14 @@
             "alreadyExists": "Этот адрес уже зарегистрирован в системе %systemName%"
         },
         "buttons": {
-            "cancel": "Отмена",
+            "cancel": "Отменить",
             "createAccount": "Создать новую учетную запись",
             "delete": "Удалить",
             "deleteAccount": "Удалить учетную запись",
             "disable": "Отключить",
             "enable": "Включить",
             "download": "Скачать %VMS_NAME%",
-            "logoutAuthorised": "Выход",
+            "logoutAuthorised": "Выйти",
             "ok": "OK",
             "remove": "Удалить",
             "stayAs": "Оставаться зарегистрированным как {email} ",
@@ -309,6 +358,28 @@
             "available": "Местоположение облачного хранилища доступно для всех серверов в этой системе. Вы можете управлять им, используя клиент {vmsName}.",
             "camera": "камера",
             "cameras": "камеры",
+            "actions": {
+                "activate": {
+                    "heading": "Активировать облачное хранилище",
+                    "action": "Активировать",
+                    "success": "Облачное хранилище успешно активировано!"
+                },
+                "modify": {
+                    "heading": "Изменить облачное хранилище",
+                    "action": "Изменить",
+                    "success": "Облачное хранилище успешно обновлено!"
+                },
+                "move": {
+                    "heading": "Переместить облачное хранилище",
+                    "action": "Переместить",
+                    "success": "Облачное хранилище успешно обновлено!"
+                },
+                "delete": {
+                    "heading": "Удалить облачное хранилище?",
+                    "action": "Удалить",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Текущие записи",
                 "whenFullyUsed": "При полном использовании",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Архив от",
                 "recordingBitrate": "Битрейт записи",
                 "delayFromLive": "Задержка с эфира"
+            },
+            "information": {
+                "update": {
+                    "title": "Изменить",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Переместить",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Удалить",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
             },
             "remove": {
                 "success": "Облачное хранилище успешно удалено из системы",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "Система {targetSystem} имеет более новую версию программного обеспечения, несовместимую с текущей Системой. Обновите текущую Систему до {downloadHTML}, чтобы объединить ее с Системой {targetSystem}.",
             "primarySystemOffline": "Система {primarySystem} не находится в сети и не может быть объединена с системой {targetSystem}",
             "primarySystemUnavailable": "Система {primarySystem} в настоящее время недоступна. Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
-            "recommendSupport": {
-                "a_recommend": "Мы рекомендуем вам проконсультироваться с",
-                "b_support": "техническая поддержка",
-                "c_proceeding": "прежде чем продолжить."
-            },
+            "recommendSupport": "Мы рекомендуем вам проконсультироваться с | поддержкой | прежде чем продолжить.",
             "restError": {
                 "duplicateServer": "Ошибка слияния. Обе системы имеют один и тот же сервер",
                 "useCloudMerge": "Невозможно объединить системы, привязанные к облаку",
@@ -404,7 +485,8 @@
             "urlEmpty": "Адрес сервера",
             "urlNotValid": "Введите правильный URL",
             "unknownError": "Неизвестная ошибка. Обновите страницу и повторите попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -423,7 +505,7 @@
             "subject": {
                 "integration_feedback": "Feedback for integration {asset}",
                 "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Отзыв о странице камер",
+                "ipvd_feedback_page": "Отзыв по странице камер",
                 "sales_inquiry": "Sales inquiry for {asset}",
                 "technical_inquiry": "Technical inquiry for {asset}"
             },
@@ -448,6 +530,13 @@
             "action": "Имя пользователя",
             "message": "Please log in again.",
             "title": "Истек срок действия вашей сессии"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Ошибка",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Попросите системного администратора ввести пароль шифрования\nдля расшифровки этого архива.",
         "webadmin2faRequired": "Для доступа к этой системе требуется двухфакторная аутентификация. Вы можете включить двухфакторную аутентификацию в настройках вашей <a href=\"{ cloudHost }/account/security\">учетной записи</a>."
     },
+    "appHeader": {
+        "mySystems": "Мои системы",
+        "systemList": "Список систем"
+    },
     "integration": {
         "Access Control": "Контроль доступа",
         "Connector": "Коннектор",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Пожалуйста, <span id=\"request\">подтвердите запрос</span> на дополнительные вопросы/проблемы относительно поддерживаемых устройств."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Топ {value} по объему:",
@@ -694,12 +788,27 @@
         "server": "Сервер",
         "alert": "Alert"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
+    },
     "pageTitles": {
-        "about": "О",
-        "account": "Настройки учетной записи",
+        "about": "О программе",
+        "account": "Account settings",
         "activate": "Активировать учетную запись",
         "activateCode": "Активировать учетную запись",
-        "activateSuccess": "Учетная запись активирована",
+        "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} для {VMS_NAME}",
         "auth": "Авторизация",
         "changePassword": "Изменить пароль",
@@ -711,19 +820,19 @@
         "failedToAccessSystem": "Не удалось получить доступ к системе",
         "failedToAccessCamera": "Нет доступа к камере",
         "integrations": "Интеграции с %VMS_NAME%",
-        "login": "Войти",
+        "login": "Вход",
         "pageNotFound": "Страница не найдена",
         "register": "Зарегистрироваться в",
         "registerSuccess": "Добро пожаловать в",
         "restorePassword": "Сбросить пароль",
-        "restorePasswordSuccess": "Пароль сохранен",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Поддерживаемые устройства",
         "system": "Система",
-        "systemShare": "Общий доступ",
+        "systemShare": "Share System",
         "systems": "Системы",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "Просмотр камер",
+        "view": "View cameras",
         "apiTool": "Инструмент тестирования API",
         "security": "Безопасность",
         "twofaRequired": "Требуется двухфакторная аутентификация"
@@ -740,7 +849,7 @@
         "fairMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
         "good": "хороший",
         "minLength": "короткий",
-        "minLengthMessage": "Пароль должен содержать по крайней мере 8 символов",
+        "minLengthMessage": "Пароль должен содержать не менее 8 символов",
         "missingMessage": "Обязательный",
         "required": "некорректный",
         "requiredMessage": "Используйте только латинские буквы, цифры и символы клавиатуры, избегайте начальных и конечных пробелов",
@@ -807,8 +916,6 @@
         "Search": "Поиск",
         "analytics": "Аналитика",
         "analyticsSelected": "события аналитики",
-        "filter applied": "фильтр применен",
-        "filters applied": "фильтры применены",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Тип",
         "hardwareTypes": "Типы",
@@ -816,7 +923,10 @@
         "search_ipvd": "Поиск по модели или производителю",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Производитель",
-        "vendors": "Производители"
+        "vendors": "Производители",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Ошибка удаления или сохранения данных аналитики",
@@ -848,6 +958,7 @@
         "Settings": "Настройки",
         "Information": "Информация о продукте",
         "Bookmarks": "Закладки",
+        "Layouts": "Раскладки",
         "Monitoring": "Мониторинг"
     },
     "system": {
@@ -862,7 +973,7 @@
             "notAbleToLoadSystem": "Не удалось загрузить системные настройки.",
             "sessionLimitDuration": {
                 "hours": "часа",
-                "minutes": "минуты",
+                "minutes": "минута",
                 "days": "дней"
             },
             "warningMessages": {
@@ -904,6 +1015,7 @@
                 "help": "(записывать всю доступную информацию)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Локальный",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Сеть (smb), добавленная через VMS",
             "cloud": "Облачный"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "корень",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "активирован",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "loggingIn": "Logging in. Please wait.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1139,7 +1276,7 @@
         "useWindowsEmailLineFeed": "Использовать перевод строки Windows в Email",
         "trafficEncryptionForced": "Принудительное шифрование трафика",
         "videoTrafficEncryptionForced": "Принудительное шифрование видеотрафика",
-        "updateStatus": "Статус обновления",
+        "updateStatus": "Обновить состояние",
         "watermarkSettings": "Настройки водяных знаков",
         "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Максимальное количество записей журнала событий в базе данных. Реальное количество восстановленных записей может быть на 20% выше указанного значения.",

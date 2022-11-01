@@ -1,0 +1,53 @@
+@use "../../../../styles/theme_variables_common";
+@import "./nav-dropdown.component.scss";
+
+.dropdown {
+    color: theme_variables_common.$additional_light1 !important;
+    & button > {
+        color: theme_variables_common.$additional_light1 !important;
+    }
+    &:not(.show) {
+        & > button {
+            background: theme_variables_common.$dark14 !important;
+            color: theme_variables_common.$additional_light1 !important;
+            border: 1px solid transparent !important;
+            &:hover {
+                background: theme_variables_common.$dark15 !important;
+            }
+            &:active {
+                background: theme_variables_common.$dark13 !important;
+            }
+
+        }
+    }
+    &.show {
+        & > button {
+            color: theme_variables_common.$additional_light1 !important;
+            border: 1px solid theme_variables_common.$dark11 !important;
+            background: theme_variables_common.$dark12 !important;
+            &:hover {
+                background: 1px theme_variables_common.$dark13 !important;
+                border: 1px solid theme_variables_common.$dark12 !important;
+            }
+            &:active {
+                background: theme_variables_common.$dark12 !important;
+                border: 1px solid theme_variables_common.$dark11 !important;
+            }
+
+        }
+    }
+
+    #nav-sub-menu-dropdown {
+        & span {
+            background: theme_variables_common.$additional_light1 !important;
+        }
+    }
+
+    svg-icon {
+        bottom : 10px !important;
+
+        #Path-2-Copy {
+            stroke : theme_variables_common.$additional_light1 !important;
+        }
+    }
+}

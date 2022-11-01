@@ -1,0 +1,32 @@
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables_common" as *;
+
+.active {
+    background: $additional_light4 !important;
+}
+
+.additional-systems-tile {
+    @include typography.regular14dark9;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 52px;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: $additional_light2;
+
+    &:hover {
+        background: $additional_light3;
+    }
+
+    &:active {
+        @extend .active;
+    }
+}

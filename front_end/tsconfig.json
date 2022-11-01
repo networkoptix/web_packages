@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2020",
     "module": "es2020",
     "lib": [
-      "es2018",
+      "es2020",
       "dom",
       "DOM.Iterable"
     ],
@@ -11,26 +11,29 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": true,
     "noImplicitAny": false,
+    "noUnusedLocals": true,
     "suppressImplicitAnyIndexErrors": true,
-    "baseUrl": "app",
+    "baseUrl": "src",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@directives/*": ["src/directives/*"],
-      "@dialogs/*": ["src/dialogs/*"],
+      "@components/*": ["app/components/*"],
+      "@decorators/*": ["app/decorators/*"],
+      "@directives/*": ["app/directives/*"],
+      "@dialogs/*": ["app/dialogs/*"],
       "@environments/*": ["environments/*"],
-      "@interceptors/*": ["src/interceptors/*"],
-      "@pages/*": ["src/pages/*"],
-      "@view/*": ["src/pages/systems/view/*"],
-      "@vms-client/*": ["src/pages/systems/view/vms-client/*"],
-      "@guards/*": ["src/routeGuards/*"],
-      "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"],
-      "@src/*": ["src/*"],
-      "@app/*": ["*"]
+      "@interceptors/*": ["app/interceptors/*"],
+      "@pages/*": ["app/pages/*"],
+      "@view/*": ["app/pages/systems/view/*"],
+      "@vms-client/*": ["app/pages/systems/view/vms-client/*"],
+      "@guards/*": ["app/routeGuards/*"],
+      "@services/*": ["app/services/*"],
+      "@utils/*": ["app/utils/*"],
+      "@app/*": ["app/*"],
+      "@lib/*": ["lib/*"],
+      "@src/*": ["*"],
+      "@authorization/*": ["../projects/authorization/*"]
     },
     "typeRoots": [
       "node_modules/@types"
@@ -45,13 +48,13 @@
     "strictTemplates": true
   },
   "include": [
-    "app/main.ts",
-    "app/polyfills.ts"
+    "src/main.ts",
+    "src/polyfills.ts"
   ],
   "exclude": [
     "node_modules",
-    "app/**/*.spec.ts",
-    "app/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
     ".eslintrc.js"
   ]
 }

@@ -1,0 +1,6 @@
+<div
+    *ngIf="additionalSystems$ | async"
+    class="additional-systems-tile"
+    [style.width.px]="width"
+    [innerText]="'additionalSystems' | translate: { count: (additionalSystems$ | async) }"
+></div>

@@ -1,3 +1,4 @@
+import ast
 import hashlib
 import json
 from json.decoder import JSONDecodeError
@@ -6,16 +7,19 @@ import re
 import sys
 from typing import Any, List
 import uuid
+from contextlib import suppress
 from itertools import chain
 from functools import reduce
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from distutils.util import strtobool
+from django.core.validators import RegexValidator
 
 from django.db.models.aggregates import Count
 from util.base_cache import BaseCache
 
 from redis.exceptions import ConnectionError
+from django.apps import apps
 from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -33,13 +37,16 @@ from model_utils import Choices
 from django.core.cache import cache, caches
 from model_utils import FieldTracker
 from waffle.models import AbstractUserFlag, keyfmt, get_cache
+from waffle import flag_is_active, switch_is_active
 
-from .feature_flags import FLAGS
+from .feature_flags import FLAGS, SWITCHES, flag_is_active_for_user
 
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
+INITIALIZATION_TASK_TIMEOUT = 60 * 5
+INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-menus'
 
 class MenuCache(BaseCache):
     def __init__(self):
@@ -55,10 +62,19 @@ class MenuCache(BaseCache):
 
     def clear_cache(self):
         from cms.controllers.documentation import DOC_CACHE
+        from cms.tasks import async_generate_menus
+        from notifications.celery import app
         super().clear_cache()
-        DOC_CACHE.clear_cache()
+        if not settings.TESTING:
+            running_task = cache.get(INITIALIZATION_TASK_KEY)
+            if running_task:
+                app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
+            task = async_generate_menus.apply_async(args=[settings.CUSTOMIZATION, self.cache_key])
+            cache.set(INITIALIZATION_TASK_KEY, str(task), INITIALIZATION_TASK_TIMEOUT)
+            DOC_CACHE.clear_cache()
 
 
+READONLY_API_CACHE = BaseCache(cache_key='readonly_apis')
 MENU_CACHE = MenuCache()
 PORTAL_MANAGER_PERMISSIONS = [
     'access_customization',
@@ -71,6 +87,31 @@ PORTAL_MANAGER_PERMISSIONS = [
 ]
 INTEGRATIONS_DEV_PERMISSIONS = [
     'edit_content', 'change_asset', 'change_assetcustomizationreview']
+
+DEFAULT_MANIFEST = """[
+            {
+                "name": "Current API",
+                "sections": [
+                    {
+                        "name": "REST",
+                        "scheme": "openapi_v1.json"
+                    },
+                    {
+                        "name": "LEGACY",
+                        "scheme": "openapi_legacy.json"
+                    }
+                ]
+            },
+            {
+               "name": "Deprecated API",
+               "sections": [
+                    {
+                        "name": "LEGACY",
+                        "scheme": "openapi_deprecated.json"
+                    }
+                ]
+            }
+        ]"""
 
 
 def get_name_factory(base_group_name):
@@ -134,25 +175,22 @@ def rename_permission_group(group, asset):
     group.save()
 
 
-def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
-    asset = Asset.objects.filter(
-        customizations__name__in=[customization], asset_type__name="",
-        asset_type__type=AssetType.ASSET_TYPES.cloud_portal
-    ).first()
-    if asset:
+def get_cloud_portal_asset(customization=settings.CUSTOMIZATION, no_create=False):
+    if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="", asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
         return asset
 
-    customization_obj = Customization.objects.filter(
-        name=customization).first()
-    if customization_obj:
-        asset_type = AssetType.objects.get(
-            type=AssetType.ASSET_TYPES.cloud_portal, name='')
-        cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}",
-                                            asset_type=asset_type)
+    if no_create:
+        return None
+
+    if customization_obj := Customization.objects.filter(name=customization).first():
+        asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
+
+        cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}", asset_type=asset_type)
+
         cloud_portal.customizations.set([customization_obj])
         return cloud_portal
-    raise Asset.DoesNotExist(f"No cloud portal asset found for {customization}. "
-                             f"Most likely a customization with the name \"{customization}\" doesn't exist.")
+
+    raise Asset.DoesNotExist(f"""No cloud portal asset found for {customization}. Most likely a customization with the name \"{customization}\" doesn't exist.""")
 
 
 def get_vms_asset(customization=settings.CUSTOMIZATION):
@@ -292,29 +330,38 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return data
 
 
-def check_user_menu_permissions(nodes, user):
+def check_user_menu_permissions(nodes, user, overrides=None):
     for i in reversed(range(len(nodes))):
         node = nodes[i]
         condition = node.pop('condition', None)
         condition_met = node.pop('condition_met', False)
         beta_permission = Customization.BETA_PERMISSION_MAP.get(
             condition, None)
-        if not condition_met and condition and \
+        if feature_flag := (FLAGS.value_to_key(condition) or SWITCHES.value_to_key(condition)):
+            if not feature_flag_is_active(feature_flag, user, overrides):
+                del nodes[i]
+                continue
+        elif not condition_met and condition and \
                 not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
                     user, settings.CUSTOMIZATION, f'cms.{beta_permission}'
                 )):
             del nodes[i]
+            continue
+        permissions = node.get('permissions', [])
+        for permission_codename in permissions:
+            if not (user and UserGroupsToAssetPermissions.check_customization_permission(
+                    user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
+            )):
+                del nodes[i]
+                break
         else:
-            permissions = node.get('permissions', [])
-            for permission_codename in permissions:
-                if not (user and UserGroupsToAssetPermissions.check_customization_permission(
-                        user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
-                )):
-                    del nodes[i]
-                    break
-            else:
-                node.pop('permissions', None)
-                check_user_menu_permissions(node.get('nodes', []), user)
+            node.pop('permissions', None)
+            check_user_menu_permissions(node.get('nodes', []), user, overrides)
+
+def feature_flag_is_active(feature_flag, user, overrides=None):
+    flag = getattr(FLAGS, feature_flag, None)
+    switch = getattr(SWITCHES, feature_flag, None)
+    return flag and flag_is_active_for_user(user, flag, overrides) or switch and switch_is_active(switch)
 
 
 def cached_doc_menu_map(customization_name, refresh=False):
@@ -332,7 +379,9 @@ def cached_doc_menu_map(customization_name, refresh=False):
     return menu_map
 
 
-def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
+def get_cached_menu(customization_name, name=None, user=None, menu_type=None, request=None):
+    overrides = {header: value for header, value in request.META.items() if header.startswith('HTTP_FEATURE_')} if request else {}
+
     menu_customization = MENU_CACHE[customization_name]
 
     if menu_customization is None:
@@ -345,7 +394,7 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
             MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
 
     for menu_name, menu in menu_customization.items():
-        check_user_menu_permissions(menu['nodes'], user)
+        check_user_menu_permissions(menu['nodes'], user, overrides)
 
     if menu_type:
         menu_customization = {name: menu for name, menu in menu_customization.items(
@@ -434,7 +483,8 @@ class Customization(models.Model):
         permissions = (
             ('access_customization', 'Can access customization'),
             ('access_integration_store', 'Can access the integration store'),
-            ('access_developers', 'Can see Developers pages')
+            ('access_developers', 'Can see Developers pages'),
+            ('view_integration_drafts', 'Can view all integration drafts')
         )
         ordering = ['name']
     name = models.CharField(max_length=255, unique=True)
@@ -512,7 +562,8 @@ class AssetType(models.Model):
                           (4, "article", "Article"),
                           (5, "agreement", "Agreement"),
                           (6, "documentation", "Documentation Page"),
-                          (7, 'release_notes', "Release Notes"))
+                          (7, 'release_notes', "Release Notes"),
+                          (8, 'vms_extension', 'VMS Extension'))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -709,6 +760,10 @@ class Asset(models.Model):
         if not current_version:
             return ''
         return ContentVersion.objects.get(id=current_version).accepted_date.strftime('%m/%d/%Y')
+
+    @property
+    def can_submit_for_review(self):
+        return self.customizations.exists()
 
     @property
     def admin_link(self):
@@ -1050,7 +1105,8 @@ class DataStructure(models.Model):
                          (10, 'object', 'Object'),
                          (11, 'array', 'Array'),
                          (12, 'multiselect', 'Multiselect'),
-                         (13, 'integer', 'Integer'))
+                         (13, 'integer', 'Integer'),
+                         (14, 'foreign_key', 'Foreign Key'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
@@ -1288,6 +1344,15 @@ class DataStructure(models.Model):
         elif data_structure.type == DataStructure.DATA_TYPES.integer:
             return int(value) if value else 0
 
+        elif data_structure.type == DataStructure.DATA_TYPES.foreign_key:
+            try:
+                foreign_id = int(value)
+            except ValueError:
+                return None
+
+            foreign_model, filters = data_structure.get_foreign_key_config()
+            return foreign_model.objects.filter(pk=foreign_id, **filters).first()
+
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
                                      DataStructure.DATA_TYPES.multiselect]:
             if not value:
@@ -1315,10 +1380,20 @@ class DataStructure(models.Model):
         if data_structure.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.multiselect,
                                    DataStructure.DATA_TYPES.object]:
             value = json.dumps(value)
+        elif data_structure.type == DataStructure.DATA_TYPES.foreign_key:
+            value = str(value.pk) if value is not None else ''
         else:
             value = str(value)
 
         return value
+
+    def get_foreign_key_config(self):
+        foreign_key_options = self.meta_settings.get('foreign_key_config', {})
+        app_name = foreign_key_options.get('app')
+        model_name = foreign_key_options.get('model')
+        filters = self.meta_settings['foreign_key_config'].get('filters', {})
+        foreign_model = apps.get_model(app_name, model_name)
+        return foreign_model, filters
 
     @staticmethod
     def get_type_by_name(name):
@@ -1401,10 +1476,12 @@ class UserGroupsToAssetPermissions(models.Model):
         return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_content")
 
     @staticmethod
-    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None):
+    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None, no_create=True):
+        if not (cloud_portal := get_cloud_portal_asset(customization, no_create)):
+            return False
+
         return UserGroupsToAssetPermissions.\
-            check_permission(user, get_cloud_portal_asset(
-                customization), permission)
+            check_permission(user, cloud_portal, permission)
 
     @staticmethod
     def get_customizations_with_permission(user, permission):
@@ -1699,17 +1776,22 @@ def unblock_child_reviews(sender, instance, **kwargs):
 
 
 class ExternalFileManager(models.Manager):
-    def create(self, file, asset=None, data_structure=None, user=None):
+    def create(self, file=None, asset=None, data_structure=None, user=None, md5=None, size=None):
         '''
         Adds to asset_ds_pair if file already exist else creates new file.
         '''
         raw_bytes = b''
-        md5 = hashlib.md5()
-        for count, chunk in enumerate(file.chunks()):
-            md5.update(chunk)
-            if count < 5:
-                raw_bytes += chunk
-        md5 = md5.hexdigest()
+
+        if file:
+            # Handle new upload, md5 provided for files directly uploaded to s3
+            # TODO: Migrate old md5 using metadata from s3 once all file uploads use chunked uploader
+            md5 = hashlib.md5()
+            for count, chunk in enumerate(file.chunks()):
+                md5.update(chunk)
+                if count < 5:
+                    raw_bytes += chunk
+            md5 = md5.hexdigest()
+
         asset_ds_pair = None
         if asset and data_structure:
             try:
@@ -1725,24 +1807,26 @@ class ExternalFileManager(models.Manager):
         try:
             external_file_obj = ExternalFile.objects.get(md5=md5)
 
-            if not external_file_obj.admin_upload and user:
+            if not external_file_obj.admin_upload and user and not asset_ds_pair:
                 external_file_obj.admin_upload = user
 
         except ExternalFile.DoesNotExist:
             external_file_obj = ExternalFile(
-                md5=md5, size=file.size, admin_upload=user)
+                md5=md5, size=size or file.size, admin_upload=None if asset_ds_pair else user)
             external_file_obj.save()
             external_file_obj.file = file
         else:
             if external_file_obj.file and MediaStorage().exists(external_file_obj.file.name):
-                external_raw_bytes = b''
-                for count, chunk in enumerate(external_file_obj.file.chunks()):
-                    if count < 5:
-                        external_raw_bytes += chunk
-                    else:
-                        break
-                if external_raw_bytes != raw_bytes:
-                    raise ValueError('md5 Hash Collision')
+                if file:
+                    # raw_bytes only populated when uploaded the old way, for files directly uploaded to S3 we just use their calculated hash
+                    external_raw_bytes = b''
+                    for count, chunk in enumerate(external_file_obj.file.chunks()):
+                        if count < 5:
+                            external_raw_bytes += chunk
+                        else:
+                            break
+                    if external_raw_bytes != raw_bytes:
+                        raise ValueError('md5 Hash Collision')
             else:
                 external_file_obj.file = file
 
@@ -1767,7 +1851,7 @@ class ExternalFile(models.Model):
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
     # Since we slugify the asset name, data structure name and file name we need a long length.
     file = models.FileField(upload_to=rename_file,
-                            storage=MediaStorage(), max_length=1000)
+                            storage=MediaStorage(), max_length=1000, blank=True, null=True)
     md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
     asset_ds_pair = models.ManyToManyField(
@@ -1795,16 +1879,29 @@ class ExternalFile(models.Model):
 
 
 def file_saved(sender, created, signal, instance, **kwargs):
-    if not created:
-        file = instance.file
-        md5 = hashlib.md5()
-        for chunk in file.file.chunks():
-            md5.update(chunk)
-        md5 = md5.hexdigest()
-        if instance.md5 != md5:
-            instance.md5 = md5
-            instance.size = file.size
-            instance.save()
+    if created:
+        return
+
+    file = instance.file
+
+    if not file:
+        return
+
+    md5 = hashlib.md5()
+
+    try:
+        chunks = file.file.chunks()
+    except OSError:
+        # Skip if chunked upload transferred directly into S3
+        return
+
+    for chunk in chunks:
+        md5.update(chunk)
+    md5 = md5.hexdigest()
+    if instance.md5 != md5:
+        instance.md5 = md5
+        instance.size = file.size
+        instance.save()
 
 
 if not settings.TESTING:
@@ -1953,7 +2050,7 @@ class Menu(models.Model):
     enabled = models.BooleanField(default=True)
 
     LOGS_TO_SHOW = 10
-    REQUIRED_MENUS = ['header', 'footer', 'configuration']
+    REQUIRED_MENUS = ['Header', 'Footer', 'Configuration']
 
     def __str__(self):
         if self.name:
@@ -2420,8 +2517,8 @@ class MenuNode(models.Model):
             enabled = node.is_enabled(customization)
             condition_met = not node.condition or global_contexts_dict.get(
                 node.condition, False)
-            asset_accepted = not node.asset or node.asset.version_id(
-                customization.name) != 0
+            version = node.asset.version_id(customization.name) if node.asset else 0
+            asset_accepted = not node.asset or version != 0
             if enabled and (asset_accepted or include_not_accepted):
                 if node.asset:
                     pending = AssetCustomizationReview.objects.filter(
@@ -2443,7 +2540,8 @@ class MenuNode(models.Model):
                     'authentication': node.AUTH_CHOICES[node.authentication],
                     'order': node.order,
                     'condition': node.condition,
-                    'condition_met': condition_met
+                    'condition_met': condition_met,
+                    'version': version
                 }
 
                 title_ds = document_dss['title']
@@ -2979,8 +3077,8 @@ class PortalNotification(models.Model):
         self.build_raw = PortalNotification.calc_build(value)
 
     def get_serialized(self):
-        attributes = ['title', 'id', 'body', 'url', 'build']
-        return {attribute: getattr(self, attribute, '') for attribute in attributes}
+        from cms.serializers import PortalNotificationSerializer
+        return PortalNotificationSerializer(self).data
 
     @staticmethod
     def parse_build(build_version: float) -> str:
@@ -3092,23 +3190,77 @@ class MaintenanceCompletion(models.Model):
         if portal_notification:
             portal_notification.maintenancecompletion_set.add(self)
 
+version_validator = RegexValidator(r"^(\d)\.(\d){1,2}\.(\d){1,2}\.(\d){5}$", "Version should be in a valid format. ex: 5.12.11.11111")
 
-class OpenAPIJSON(models.Model):
+class ReadOnlyAPI(models.Model):
     class Meta:
-        verbose_name = "OpenAPI JSON"
+        verbose_name = "Readonly API"
 
-    JSON_TYPES = Choices((0, "VMS", "VMS"))
+    API_TYPES = Choices((0, "VMS", "VMS"))
 
     name = models.CharField(help_text="API display name", max_length=36)
-    version = models.CharField(help_text="API version", max_length=20)
-    content = JSONField(help_text="API JSON", default={})
+    version = models.CharField(help_text="API version", max_length=13, validators=[version_validator])
     type = models.IntegerField(
-        choices=JSON_TYPES, default=JSON_TYPES.VMS)
+       choices=API_TYPES, default=API_TYPES.VMS)
     enabled = models.BooleanField(default=True)
+    manifest = models.TextField(default=DEFAULT_MANIFEST, help_text="Content manifest")
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            # Clear cache
+            READONLY_API_CACHE.lookup_key = "readonlyapi-" + str(self.id)
+            READONLY_API_CACHE.set_cached_item({})
+
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        try:
+            json.loads(self.manifest)
+        except JSONDecodeError:
+            raise ValidationError({'content': 'Content is not valid JSON'})
 
     def __str__(self):
         return f"{self.name} - {self.version}"
 
+class ReadOnlyAPIFile(models.Model):
+    class Meta:
+        verbose_name = "Readonly API file"
+
+    FILE_TYPES = Choices((0, "json", "JSON"),  (1, "preamble_markdown", "Preamble Markdown File"), (2, "changelog_markdown", "Changelog Markdown File"))
+    readonly_api = models.ForeignKey(ReadOnlyAPI, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=46)
+    type = models.IntegerField(
+        choices=FILE_TYPES, default=FILE_TYPES.json)
+    content = models.TextField(blank=True, help_text="File contents")
+
+    def clean(self):
+        if self.type in [self.FILE_TYPES.json]:
+            try:
+                json.loads(self.content)
+            except JSONDecodeError:
+                raise ValidationError({'content': 'Content is not valid JSON'})
+            manifest = json.loads(self.readonly_api.manifest)
+            filename_found = False
+            try:
+                for type in manifest:
+                    for section in type['sections']:
+                        if section['scheme'] == self.filename:
+                            filename_found = True
+            except Exception:
+                raise ValidationError({'content': 'Error parsing manifest to validate file name'})
+            if not filename_found:
+                raise ValidationError({'content': 'File name does not exist in manifest'})
+
+
+    def validate_unique(self, exclude=None):
+        if self.type in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
+            existing_file = ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id)
+            if existing_file:
+                raise ValidationError('This file type already exists for this Readonly API')
+            super(ReadOnlyAPIFile, self).validate_unique(exclude=exclude)
+
+    def __str__(self):
+        return f"{self.readonly_api.name}'s {self.filename}"
 
 class Flag(AbstractUserFlag):
     FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'
@@ -3144,9 +3296,23 @@ class Flag(AbstractUserFlag):
         flag_cache = get_cache()
         flag_cache.delete_many(keys)
 
-    def is_active_for_user(self, user):
-        is_active = super(AbstractUserFlag, self).is_active_for_user(user)
-        if is_active:
+    def get_json_key(self):
+        return FLAGS.json_key(FLAGS.value_to_key(self.name))
+
+    def is_active(self, request):
+        if override := request.META.get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
+            with suppress(ValueError):
+                return bool(int(override))
+
+        return super(AbstractUserFlag, self).is_active(request)
+
+
+    def is_active_for_user(self, user, overrides=None, customization_name=settings.CUSTOMIZATION):
+        if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
+            with suppress(ValueError):
+                return bool(int(override))
+
+        if is_active := super(AbstractUserFlag, self).is_active_for_user(user):
             return is_active
 
         user_ids = self._get_user_ids()
@@ -3154,8 +3320,7 @@ class Flag(AbstractUserFlag):
             return True
 
         if hasattr(user, 'groups'):
-            group_ids = self._get_group_ids()
-            if group_ids:
+            if group_ids := self._get_group_ids():
                 user_groups = set(user.groups.filter(
                     Q(options__all_assets=True, usergroupstoassettype__asset_type__type=AssetType.ASSET_TYPES.cloud_portal) |
                     Q(usergroupstoassetpermissions__asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
@@ -3164,23 +3329,17 @@ class Flag(AbstractUserFlag):
                 if group_ids.intersection(user_groups):
                     return True
 
-        return None
-
-    def is_active(self, request, customization_name=settings.CUSTOMIZATION):
-        if super().is_active(request):
-            return True
-
         try:
             if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
                 return True
         except:
             pass
 
-        return False
+        return None
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            if (key := FLAGS.name_to_key(self.name)) and (ds_name := FLAGS.data_structure_name(key)) and \
+            if (key := FLAGS.value_to_key(self.name)) and (ds_name := FLAGS.data_structure_name(key)) and \
                     (ds := DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
                                                         name=ds_name).first()):
                 self.data_structure = ds

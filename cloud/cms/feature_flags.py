@@ -1,6 +1,7 @@
 from enum import Enum
 import functools
 from django.core.handlers.wsgi import WSGIRequest
+from waffle import get_waffle_flag_model
 
 from rest_framework.request import Request
 
@@ -33,9 +34,9 @@ class _FlagType(type):
         attr = super().__getattribute__(name)
         return attr[1]
 
-    def name_to_key(self, name):
+    def value_to_key(self, value):
         for key in self.all_keys:
-            if super().__getattribute__(key)[0] == name:
+            if value in super().__getattribute__(key):
                 return key
         return None
 
@@ -46,16 +47,27 @@ class _FlagType(type):
 
 class FLAGS(metaclass=_FlagType):
     # python_name = ('Human-readable and actual name', 'jsonKey', 'global_data_structure')
-    custom_clients = ('Custom Clients', 'customClients', '%PUBLIC_CUSTOM_CLIENTS%')
+    custom_clients = ('Custom Clients', 'customClients',
+                      '%PUBLIC_CUSTOM_CLIENTS%')
     zendesk_sync = ('Zendesk Sync', 'zendeskSync', '%ZENDESK_SYNC%')
-    alexa_integration = ('Alexa Integration', 'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
+    alexa_integration = ('Alexa Integration',
+                         'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
     bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
     dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
     archive_selection = ('Archive Selection', 'archiveSelection', '%ARCHIVE_SELECTION_ENABLED%')
     view_camera_details = ('View Camera Details', 'viewCameraDetails', '%VIEW_CAMERA_DETAILS_ENABLED%')
+    themes_enabled = ('Enable themes', 'themesEnabled', '%THEMES_ENABLED%')
+    cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer', '%CLOUD_OWNERSHIP_TRANSFER%')
+    new_header = ('New Header', 'newHeader')
+    cloud_storage = ('Cloud Storage', 'cloudStorage', '%CLOUD_STORAGE_FEATURE_ENABLED%')
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
+    layouts = ('Layouts', 'layouts', '%Layouts_ENABLED%')
+
+    # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
+    five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
+    # *************************************************************************************
 
     def __getattribute__(self, name):
         return dict(FLAGS).get(name)
@@ -65,8 +77,8 @@ class SWITCHES(metaclass=_FlagType):
     landing_page = ('Landing Page', 'landingPage')
     kb_instant_search = ('KnowledgeBase Instant Search', 'kbInstantSearch')
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
+    system_groups = ('System Groups', 'systemGroups')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
-
 
 
 class SAMPLES(metaclass=_FlagType):
@@ -102,6 +114,11 @@ def validate_is_superuser(*args, **kwargs):
 
 def get_feature_flag_error(flag, user):
     return f'Feature {flag} is currently not enabled for user {user}'
+
+
+def flag_is_active_for_user(user, flag_name, overrides=None):
+    flag = get_waffle_flag_model().get(flag_name)
+    return flag.is_active_for_user(user, overrides)
 
 
 def check_feature_flag(flags, custom_validator=None, error_class=PermissionError):

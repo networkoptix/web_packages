@@ -23,7 +23,7 @@ Discard Changes and Log Out
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element Is Visible    ${LOG OUT BUTTON}
     Click Link    ${LOG OUT BUTTON}
-    Wait until Elements are Visible    ${MODAL DIALOG}    ${DISCARD CHANGES BUTTON}
+    Wait until Elements are Visible    ${MODAL APPLY DIALOG}    ${DISCARD CHANGES BUTTON}
     Click Button    ${DISCARD CHANGES BUTTON}
     Validate Log Out
 
@@ -46,3 +46,6 @@ Reset DB and Open New Browser On Failure
     Restore Password using API    ${email}    ${BASE PASSWORD}
     Close Browser
     Open Browser and go to URL    ${url}
+
+Change Pass Test Teardown
+    Run Keyword If Test Failed    change-pass-resource.Reset DB and Open New Browser On Failure

@@ -1,0 +1,17 @@
+<nx-block
+    class="pb-3 d-block"
+    *ngFor="let paramGroup of copyParams.values; first as isFirst"
+>
+    <header>
+        <h4>
+            <span *ngIf="isFirst">{{ entityName }}&nbsp;</span>
+            <span>{{ paramGroup.name }}</span>
+        </h4>
+    </header>
+    <nx-section>
+        <nx-info-block
+            [sectionsOrColumns]="sections[paramGroup.id]"
+            [removeTopMargin]="true"
+        ></nx-info-block>
+    </nx-section>
+</nx-block>

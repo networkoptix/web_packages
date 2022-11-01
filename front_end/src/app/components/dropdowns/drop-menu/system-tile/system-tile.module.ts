@@ -1,0 +1,26 @@
+import { NgModule } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { ComponentsCoreModule } from '@components/components-core.module';
+import { SharedComponentsModule } from '@components/shared-components.module';
+
+import { NxSystemTileComponent } from './system-tile.component';
+
+@NgModule({
+    imports: [
+        AngularSvgIconModule.forRoot(),
+        SharedComponentsModule,
+        ComponentsCoreModule,
+    ],
+    declarations: [
+        NxSystemTileComponent
+    ],
+    providers: [
+        NxSystemTileComponent
+    ],
+    exports: [
+        NxSystemTileComponent
+    ]
+})
+
+export class SystemTileModule {}

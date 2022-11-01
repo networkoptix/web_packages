@@ -1,0 +1,37 @@
+<div>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            [innerHTML]="
+                'dialogs.titles.serversRestart' | translate: { title: serverName } | safe: 'html'
+            "
+        ></h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close('')"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div [ngStyle]="{ display: needsUpdate ? 'none' : 'unset' }">
+        <div class="modal-footer">
+            <nx-process-button
+                [process]="restartServer"
+                [actionType]="'primary'"
+                [buttonDisabled]="needsUpdate"
+                buttonText="{{ 'Restart' | translate }}"
+            ></nx-process-button>
+            <nx-cancel-button [discardFn]="close"></nx-cancel-button>
+        </div>
+    </div>
+    <nx-update-webadmin-session
+        *ngIf="system.useRest && needsUpdate"
+        (loginSuccess)="needsUpdate = false; restartServer.run()"
+        [dialogRef]="dialogRef"
+        [system]="system"
+    ></nx-update-webadmin-session>
+</div>

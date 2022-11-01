@@ -10,7 +10,7 @@ And to activate the app index dashboard::
     ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'cloud.dashboard.CustomAppIndexDashboard'
 """
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 try:
     from django.urls import reverse
 except ImportError:

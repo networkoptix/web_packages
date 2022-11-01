@@ -23,7 +23,6 @@ from email import message_from_string
 from imaplib import IMAP4, IMAP4_SSL
 from re import findall
 from robot.api import logger
-
 import time
 try:
     from urllib.request import urlopen
@@ -116,6 +115,7 @@ class NoptixImapLibrary(object):
         Examples:
         | Delete Email | INDEX |
         """
+        logger.trace(email_index)
         self._imap.uid('STORE', email_index, '+X-GM-LABELS', '\\Trash')
         self._imap.expunge()
 

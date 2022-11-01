@@ -18,7 +18,7 @@ from django.db.models import QuerySet
 from cms.models import *
 from cms.controllers.special_structures import SpecialStructures
 from cloud.debug import timer
-from api.helpers.exceptions import APIForbiddenException, APIInternalException, ErrorCodes
+from cloud.helpers.exceptions import APIForbiddenException, APIInternalException, ErrorCodes
 
 import logging
 logger = logging.getLogger(__name__)
@@ -76,7 +76,8 @@ def global_contexts_to_dict(contexts, asset):
             data_structures['universal'], asset, version_id=version_id, customization_name=customization_name
         )
         del data_structures['universal']
-        data_structure_dict = {ds.name: value for ds, value in universal_vals.items()}
+        data_structure_dict = {ds.name: value for ds,
+                               value in universal_vals.items()}
     else:
         data_structure_dict = {}
 
@@ -125,7 +126,10 @@ def replace_in(collection, key, value='', delete=False):
 def save_content(filename, content):
     make_dir(filename)
     with codecs.open(filename, "w", "utf-8") as file:
-        file.write(content)
+        try:
+            file.write(content)
+        except TypeError:
+            file.write(json.dumps(content, indent=4))
 
 
 @dataclass
@@ -139,10 +143,10 @@ class ContextProcessor:
     custom: bool = False
     custom_data: Dict = None
 
-    def process_global_contexts(self, content, language):
+    def process_global_contexts(self, content, language, prefix=''):
         for global_context in self.global_contexts.all():
             content = self.process_context_structure(
-                context=global_context, content=content, force_global_files=False, language=language
+                context=global_context, content=content, force_global_files=False, language=language, prefix=prefix
             )
 
         for tag in SPECIAL_STRUCTURES.function_dict:
@@ -150,7 +154,8 @@ class ContextProcessor:
                 tag_value = self.global_contexts_dict[tag]
             else:
                 tag_value = SPECIAL_STRUCTURES.calc(tag, self.asset)
-            content = self.process_data_structure(content, tag, DataStructure.DATA_TYPES.text, tag_value)
+            content = self.process_data_structure(
+                content, tag, DataStructure.DATA_TYPES.text, tag_value)
 
         return content
 
@@ -169,7 +174,7 @@ class ContextProcessor:
                 content = content.replace(tag, content_value)
         return content
 
-    def process_context_structure(self, context, content, force_global_files, language=None, context_dict=None):
+    def process_context_structure(self, context, content, force_global_files, language=None, context_dict=None, prefix=''):
         values = DataStructure.find_actual_values(
             context.datastructure_set.all(), asset=self.asset, language=language, version_id=self.version_id,
             draft=self.preview
@@ -197,8 +202,23 @@ class ContextProcessor:
                 else:
                     content_value = values[datastructure.id]
                 # replace marker with value
-                if not DataStructure.is_file_or_image(datastructure.type):
-                    content = self.process_data_structure(content, datastructure.name, datastructure.type, content_value)
+                if datastructure.type == DataStructure.DATA_TYPES.foreign_key:
+                    foreign_model, filters = datastructure.get_foreign_key_config()
+                    if foreign_model is Asset:
+                        foreign_asset = content_value
+                        if foreign_asset:
+                            global_contexts = Context.objects.filter(
+                                is_global=True, hidden=False, asset_type=foreign_asset.asset_type)
+                            foreign_context_processor = ContextProcessor(
+                                asset=foreign_asset, global_contexts=global_contexts,
+                                preview=self.preview, skin=self.skin, version_id=foreign_asset.version_id()
+                            )
+                            foreign_context_processor.process_global_contexts(
+                                content, language=language, prefix=f'{datastructure.name}.')
+
+                elif not DataStructure.is_file_or_image(datastructure.type):
+                    content = self.process_data_structure(
+                        content, f'{prefix}{datastructure.name}', datastructure.type, content_value)
 
                 elif content_value or datastructure.optional:
                     if context.is_global and not force_global_files:
@@ -209,13 +229,15 @@ class ContextProcessor:
                         # if file itself is not translatable - update it only for default language
                         continue
 
-                    image_storage = os.path.join('static', self.asset.asset_root)
+                    image_storage = os.path.join(
+                        'static', self.asset.asset_root)
                     if self.preview:
                         image_storage = os.path.join(image_storage, 'preview')
 
                     file_name = datastructure.name
                     if language:
-                        file_name = file_name.replace("{{language}}", language.code)
+                        file_name = file_name.replace(
+                            "{{language}}", language.code)
 
                     # print "Save file from DB: " + file_name, context, language, context.is_global
                     save_b64_to_file(content_value, file_name, image_storage)
@@ -229,7 +251,8 @@ class ContextProcessor:
         return content
 
     def process_context(self, context: Context, language):
-        context_template_text = context.template_for_language(language, self.asset.default_language, self.skin)
+        context_template_text = context.template_for_language(
+            language, self.asset.default_language, self.skin)
 
         # check if the file is language JSON
         if context.file_path.endswith(".json") and isinstance(context_template_text, str):
@@ -255,8 +278,10 @@ class ContextProcessor:
     def save_context(self, context: Context, language: Language):
         content = self.process_context(context, language)
 
-        if context.template_for_language(language, self.asset.default_language, self.skin):  # if we have template - save context to file
-            target_file_name = target_file(context.file_path, self.asset.asset_root, language.code, self.preview)
+        # if we have template - save context to file
+        if context.template_for_language(language, self.asset.default_language, self.skin):
+            target_file_name = target_file(
+                context.file_path, self.asset.asset_root, language.code, self.preview)
             # print "save file: " + target_file_name
             save_content(target_file_name, content)
 
@@ -266,7 +291,8 @@ class ContextProcessor:
             for language in languages:
                 self.save_context(context=context, language=language)
         else:
-            self.save_context(context=context, language=self.asset.default_language)
+            self.save_context(
+                context=context, language=self.asset.default_language)
 
 
 def read_customized_file(filename, asset, language_code=None,
@@ -274,11 +300,14 @@ def read_customized_file(filename, asset, language_code=None,
     # 1. try to find context for this file
     skin = asset.read_global_value("%SKIN%")
     language = Language.by_code(language_code, asset.default_language)
-    clean_name = filename.replace(language_code, "{{language}}") if language_code else filename
-    context: Context = Context.objects.filter(file_path=clean_name, asset_type=asset.asset_type).first()
+    clean_name = filename.replace(
+        language_code, "{{language}}") if language_code else filename
+    context: Context = Context.objects.filter(
+        file_path=clean_name, asset_type=asset.asset_type).first()
     if context:
         # success -> return process_context
-        global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
+        global_contexts = Context.objects.filter(
+            is_global=True, hidden=False, asset_type=asset.asset_type)
         context_processor = ContextProcessor(
             asset=asset, skin=skin, preview=preview, version_id=version_id, global_contexts=global_contexts
         )
@@ -286,17 +315,20 @@ def read_customized_file(filename, asset, language_code=None,
 
     # 2. try to find datastructure for this file
     # TODO: name is not unique
-    data_structure: DataStructure = DataStructure.objects.filter(name=clean_name, context__asset_type=asset.asset_type).first()
+    data_structure: DataStructure = DataStructure.objects.filter(
+        name=clean_name, context__asset_type=asset.asset_type).first()
     if data_structure:
         # success -> return actual value
-        value = data_structure.find_actual_value(asset, language, version_id, draft=preview)
+        value = data_structure.find_actual_value(
+            asset, language, version_id, draft=preview)
         if not value:
             value = data_structure.placeholder
         return base64.b64decode(value)
 
     # fail - try to read file from drive
     filename = filename.replace("{{language}}", language_code)
-    file_path = os.path.join(settings.STATIC_LOCATION, asset.asset_root, filename)
+    file_path = os.path.join(settings.STATIC_LOCATION,
+                             asset.asset_root, filename)
     try:  # try to read file as text
         with codecs.open(filename, 'r', 'utf-8') as file:
             return file.read()
@@ -312,17 +344,22 @@ def read_customized_file(filename, asset, language_code=None,
 
 def generate_languages_json(save_location, language_codes, preview):
     languages = Language.objects.filter(code__in=language_codes)
-    languages_json = [{"name": lang.name, "language": lang.code} for lang in languages]
-    target_file_name = target_file('static/languages.json', save_location, None, preview)
-    save_content(target_file_name, json.dumps(languages_json, ensure_ascii=False))
+    languages_json = [{"name": lang.name, "language": lang.code}
+                      for lang in languages]
+    target_file_name = target_file(
+        'static/languages.json', save_location, None, preview)
+    save_content(target_file_name, json.dumps(
+        languages_json, ensure_ascii=False))
 
 
 def can_update_static(asset: Asset):
     if not asset.is_cloud_portal:
-        raise APIForbiddenException("Can not run update static files on non cloud_portal assets")
+        raise APIForbiddenException(
+            "Can not run update static files on non cloud_portal assets")
 
     if not asset.can_preview_on_portal:
-        raise APIForbiddenException("Can not update static files for cloud portal on other customizations.")
+        raise APIForbiddenException(
+            "Can not update static files for cloud portal on other customizations.")
 
 
 def init_skin(asset, preview=False, workers=2):
@@ -342,7 +379,8 @@ def init_skin(asset, preview=False, workers=2):
         logger.info("Fill content for " + asset.__str__())
         return fill_content(asset, preview=False, incremental=False, workers=workers)
     else:
-        distutils.dir_util.copy_tree(from_dir, os.path.join(target_dir, 'preview'))
+        distutils.dir_util.copy_tree(
+            from_dir, os.path.join(target_dir, 'preview'))
         logger.info("Fill preview for " + asset.__str__())
         return fill_content(asset, preview=True, incremental=False, workers=workers)
 
@@ -404,11 +442,12 @@ def fill_content(asset,
         nonlocal changed_records
         if not version_id:  # if version_id is None - check if records are actually latest
             changed_records_ids = [DataRecord.objects.
-                                       filter(language_id=record.language_id,
-                                              data_structure_id=record.data_structure_id,
-                                              asset=asset).
-                                       latest('created_date').id for record in changed_records]
-            changed_records = changed_records.filter(id__in=changed_records_ids)
+                                   filter(language_id=record.language_id,
+                                          data_structure_id=record.data_structure_id,
+                                          asset=asset).
+                                   latest('created_date').id for record in changed_records]
+            changed_records = changed_records.filter(
+                id__in=changed_records_ids)
 
     def set_changed():
         nonlocal incremental, changed_records, changed_contexts, changed_languages, default_language_code, \
@@ -419,15 +458,18 @@ def fill_content(asset,
                 # get their datastructures
                 # detect their contexts
 
-                changed_records = DataRecord.objects.filter(version_id=version_id, asset=asset)
+                changed_records = DataRecord.objects.filter(
+                    version_id=version_id, asset=asset)
                 # in case version_id is none - we need to filter by asset as well
                 get_changed_if_no_version()
 
                 changed_context_ids = list(
                     changed_records.values_list('data_structure__context_id', flat=True).distinct())
-                changed_contexts = Context.objects.filter(id__in=changed_context_ids)
+                changed_contexts = Context.objects.filter(
+                    id__in=changed_context_ids)
 
-                changed_global_contexts = changed_contexts.filter(is_global=True)
+                changed_global_contexts = changed_contexts.filter(
+                    is_global=True)
                 if changed_global_contexts.exists():  # global context was changed - force full rebuild
                     incremental = False
                 changed_contexts = changed_contexts.all()
@@ -443,7 +485,8 @@ def fill_content(asset,
                 get_changed_if_no_version()
 
         if not incremental:  # If not incremental - iterate all contexts and all languages
-            changed_contexts = Context.objects.filter(asset_type=asset.asset_type)
+            changed_contexts = Context.objects.filter(
+                asset_type=asset.asset_type)
             changed_languages = asset.languages_list
 
         default_language_code = asset.default_language.code
@@ -453,11 +496,13 @@ def fill_content(asset,
         # the template from the database and fills the template with the correct values before sending the email.
         # If we pass in a changed context its not a queryset object so we cannot use filter or exclude it.
         if type(changed_contexts) is not list:
-            changed_contexts = changed_contexts.exclude(name__startswith=EMAIL_TEMPLATES)
+            changed_contexts = changed_contexts.exclude(
+                name__startswith=EMAIL_TEMPLATES)
 
     def run_workers():
         nonlocal changed_languages
-        global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
+        global_contexts = Context.objects.filter(
+            is_global=True, hidden=False, asset_type=asset.asset_type)
         global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
         error = False
         skin = asset.read_global_value('%SKIN%')
@@ -479,7 +524,8 @@ def fill_content(asset,
                         changed_languages = languages_list
                 languages = Language.objects.filter(code__in=changed_languages)
                 # Add the context to the list of tasks for the thread pool.
-                futures.append(executor.submit(context_processor.save_contexts, context, languages))
+                futures.append(executor.submit(
+                    context_processor.save_contexts, context, languages))
 
             # Catch any errors raise by thread workers.
             for future in futures:
@@ -511,7 +557,8 @@ def fill_content(asset,
 
     generate_languages_json(asset.asset_root, languages_list,  preview)
     if thread_error:
-        logger.warning("Filldata has ran into an exception. If run by the management command it will retry soon.")
+        logger.warning(
+            "Filldata has ran into an exception. If run by the management command it will retry soon.")
     return not thread_error
 
 
@@ -527,7 +574,8 @@ class PackageExporter:
 
     def __post_init__(self):
         self.skin = self.asset.read_global_value('%SKIN%')
-        self.global_contexts = Context.objects.filter(is_global=True, asset_type=self.asset.asset_type)
+        self.global_contexts = Context.objects.filter(
+            is_global=True, asset_type=self.asset.asset_type)
 
         self.context_processor = ContextProcessor(
             asset=self.asset, global_contexts=self.global_contexts,
@@ -538,9 +586,11 @@ class PackageExporter:
     def _zip_context(self, zip_file, context, language):
         default_language = self.asset.default_language
         root_dir = self.asset.asset_root
-        if context.template_for_language(language, default_language, self.skin):  # if we have template - save context to file
+        # if we have template - save context to file
+        if context.template_for_language(language, default_language, self.skin):
             data = self.context_processor.process_context(context, language)
-            name = context.file_path.replace("{{language}}", language.code) if language else context.file_path
+            name = context.file_path.replace(
+                "{{language}}", language.code) if language else context.file_path
             if self.add_root:
                 name = os.path.join(root_dir, name)
             zip_file.writestr(name, data)
@@ -549,7 +599,8 @@ class PackageExporter:
         values = {ds.id: val for ds, val in
                   DataStructure.find_actual_values(file_structures, self.asset, language, self.version_id, draft=self.preview).items()}
         for file_structure in file_structures:
-            name = file_structure.name.replace("{{language}}", language.code) if language else file_structure.name
+            name = file_structure.name.replace(
+                "{{language}}", language.code) if language else file_structure.name
             if self.add_root:
                 name = os.path.join(root_dir, name)
 
@@ -564,7 +615,8 @@ class PackageExporter:
                     data = base64.b64decode(data)
                     zip_file.writestr(name, data)
                 except binascii.Error as e:
-                    logger.error(f'{file_structure.name} had the following Exception {str(e)}')
+                    logger.error(
+                        f'{file_structure.name} had the following Exception {str(e)}')
                     return True
 
     def get_zip_package(self):
@@ -604,7 +656,7 @@ def save_b64_to_file(value, filename, storage_location):
     file_name = os.path.join(storage_location, filename)
     make_dir(file_name)
 
-    image_png = base64.b64decode(value) if value else bytes()
+    image_png = base64.b64decode(value) if value else bytearray()
 
     with open(file_name, 'wb') as f:
         f.write(image_png)
@@ -612,7 +664,8 @@ def save_b64_to_file(value, filename, storage_location):
 
 def host_to_vms_asset(host: str) -> Union[Asset, None]:
     if host:
-        customization: Customization = Customization.objects.filter(host=host).first()
+        customization: Customization = Customization.objects.filter(
+            host=host).first()
         if customization:
             return get_vms_asset(customization=customization.name)
 
@@ -635,7 +688,8 @@ def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, Lis
             if source == 'field':
                 source_field = field.get('sourceField')
                 if source_field is None:
-                    errors.append({'message': f'Field {name} with source="field" missing key "sourceField"'})
+                    errors.append(
+                        {'message': f'Field {name} with source="field" missing key "sourceField"'})
                     continue
             else:
                 source_field = name
@@ -644,7 +698,8 @@ def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, Lis
             if value not in [None, '']:
                 custom_data[name] = value
             elif not field.get('optional', False):
-                errors.append({'message': f'Missing required custom field {source_field}'})
+                errors.append(
+                    {'message': f'Missing required custom field {source_field}'})
 
         elif source == 'constant':
             custom_data[name] = field.get('value')
@@ -668,5 +723,3 @@ def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, Lis
                                 cloud_host_vms_asset)
 
     return custom_data, errors
-
-

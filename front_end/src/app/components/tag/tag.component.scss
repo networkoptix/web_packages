@@ -1,0 +1,151 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/mixins";
+
+a {
+    text-decoration: none !important;
+}
+
+.close-button {
+    border-radius: 2px;
+    display: flex;
+    justify-content : center;
+    align-items     : center;
+    height          : 32px;
+    width           : 32px;
+    cursor          : pointer;
+
+    .tag-close-icon {
+        margin : 0 !important;
+    }
+}
+
+.badge {
+    @include typography.regular12nocolor; //light16
+    color : var(--badge-base-color);
+    background-color : var(--badge-base-bg);
+    font-weight      : 400;
+    line-height      : 18px;
+    height           : 20px;
+    padding          : 0 8px;
+    border-radius    : 2px;
+    position         : relative;
+    cursor           : default;
+
+    &.large {
+        @include typography.regular13nocolor;
+        height      : 2rem !important;
+        line-height : 2rem !important;
+        padding     : 0 12px;
+        position    : relative;
+    }
+}
+
+.badge {
+    position: relative;
+
+    &.btn {
+        cursor : pointer !important;
+
+        &:hover {
+            background-color : var(--badge-base-hover-bg);
+        }
+
+        //&:active {
+        //    background-color : $light6;
+        //}
+    }
+}
+
+.badge-selected {
+    @include typography.regular13nocolor;
+    @include mixins.badge-selected(
+        var(--badge-base-selected-bg),
+        var(--badge-base-selected-hover-bg),
+        var(--badge-base-selected-active-bg)
+    );
+    color: var(--badge-base-color); //dark9
+    cursor        : default !important;
+    padding-right : 32px !important;
+    position      : relative;
+
+    .close-button {
+        position : absolute;
+        right    : 0;
+        top      : 0;
+    }
+}
+
+.badge-brand-selected {
+    @include typography.regular13dark9;
+    @include mixins.badge-selected(var(--brand-core), var(--brand-d1), var(--brand-d2));
+    cursor : default !important;
+}
+
+.badge-integration {
+    &.ready {
+        display: flex !important;
+        justify-content: center;
+        justify-self: stretch;
+    }
+    &:not(.ready) {
+        padding: 0 8px !important;
+    }
+}
+
+$nx-theme-colors :
+    "brand" var(--badge-brand-bg) var(--badge-color),
+    "default" var(--badge-default-bg) var(--badge-color),
+    //"integration" var(--badge-integration-bg) var(--badge-integration-color),
+    "default-dark" $light16 $light1, // Not used?
+    "default-inverted" $light4 $light16, // Not used?
+    "success" var(--badge-success-bg) var(--badge-color),
+    "success-bright" var(--badge-success-bright-bg) var(--badge-color),
+    "info" var(--badge-info-bg) var(--badge-color),
+    "warning" var(--badge-warning-bg) var(--badge-color),
+    "warning-bright" var(--badge-warning-bright-bg) var(--badge-warning-bright-color),
+    "danger" var(--badge-danger-bg) var(--badge-color),
+    "danger-bright" var(--badge-danger-bright-bg) var(--badge-color);
+
+@each $name, $bg-color, $fg-color, $opacity in $nx-theme-colors {
+    .badge-#{$name} {
+        @extend .badge;
+        background-color : $bg-color !important;
+        color: $fg-color !important;
+        opacity: $opacity;
+    }
+    .badge-#{$name}-selected {
+        opacity : $opacity;
+        color: var(----badge-selected-color) !important;
+        @if $name == "brand" {
+            @include mixins.badge-selected(var(--brand-core), var(--brand-core-d10), var(--brand-core-d15));
+        }
+        @else if $name == "info" {
+            @include mixins.badge-selected(var(--brand-info), var(--brand-info-d10), var(--brand-info-15));
+        } @else {
+            @include mixins.badge-selected($bg-color, rgba($bg-color, .9), rgba($bg-color, .85));
+        }
+
+        .close-button {
+            position : absolute;
+            right    : 0;
+            top      : 0;
+        }
+    }
+}
+
+.badge-danger-bright {
+    @extend .badge;
+    background-color : var(--badge-danger-bright-bg) !important;
+    color            : var(--badge-danger-bright-color) !important;
+}
+.badge-danger-bright-selected {
+    color : var(--badge-danger-bright-color) !important;
+    @include mixins.badge-selected(var(--badge-danger-bright-bg), rgba(var(--badge-danger-bright-bg), 90%), rgba(var(--badge-danger-bright-bg), 85%));
+    
+    .close-button {
+        position : absolute;
+        right    : 0;
+        top      : 0;
+    }
+}

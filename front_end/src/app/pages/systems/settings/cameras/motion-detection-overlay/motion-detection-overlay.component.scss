@@ -1,0 +1,32 @@
+@use "styles/theme_variables_common" as theme_vars;
+
+nx-motion-detection-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.motion-canvas {
+    background: transparent;
+    position: absolute;
+    -webkit-backdrop-filter: brightness(125%) contrast(110%);
+    backdrop-filter: brightness(125%) contrast(110%);
+    top: 0;
+    left: 0;
+    color: theme_vars.$brand-info;
+    cursor: crosshair;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#render-canvas {
+    z-index: 10;
+}
+
+#selection-overlay {
+    z-index: 20;
+    pointer-events: none;
+}

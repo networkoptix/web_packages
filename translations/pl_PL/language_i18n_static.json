@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Wszystkie serwery",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "For developers": "Dla programistów",
@@ -133,6 +134,7 @@
         "passwordReset": "zresetuj serwer",
         "passwordRestart": "uruchom ponownie serwer",
         "passwordDetach": "odłącz serwer",
+        "passwordTransfer": "to transfer system",
         "expiredAccountSubheader": "Proszę, zaloguj się ponownie jako",
         "createAccountHeader": "Utwórz konto %CLOUD_NAME%",
         "activateHeader": "Aktywuj konto %CLOUD_NAME%",
@@ -175,6 +177,38 @@
         "ptz": "Kamery PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Rozmiar",
+            "state": "Stan",
+            "system": "System",
+            "expires": "Wygasa",
+            "key": "Klucz"
+        },
+        "fromServer": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Dostępne",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "Średnia",
             "low": "Niski"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minut} one{# minuta} few {# minut} many {# minut} other{# minuty}}"
+        },
         "general": "Ogólne",
         "generalError": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
         "inaccessibleFeatureMessage": "System jest offline i dlatego informacje nie są dostępne.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Przeglądasz nieaktualny raport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
+        }
+    },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Edycja panelu ustawień jest włączona",
         "dashboardLocked": "Pulpit nawigacyjny jest zablokowany",
@@ -309,6 +358,28 @@
             "available": "Miejsce przechowywania w chmurze jest dostępne dla wszystkich serwerów w tym systemie. Możesz nim zarządzać za pomocą klienta {vmsName}.",
             "camera": "kamera",
             "cameras": "kamery",
+            "actions": {
+                "activate": {
+                    "heading": "Aktywuj przechowywanie w chmurze",
+                    "action": "Aktywuj",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modyfikuj",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Przenieś magazyn w chmurze",
+                    "action": "Przenieś",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Usunąć magazyn w chmurze?",
+                    "action": "Usuń",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Aktualne nagrania",
                 "whenFullyUsed": "Przy pełnym użyciu",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Archiwum z",
                 "recordingBitrate": "Bitrate nagrywania",
                 "delayFromLive": "Opóźnienie obrazu na żywo"
+            },
+            "information": {
+                "update": {
+                    "title": "Modyfikuj",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Przenieś",
+                    "body": "Przechowywanie w chmurze ze ze wszystkimi zapisanymi danymi można łatwo przenieść do innego systemu bez aktywnego przechowywania w chmurze."
+                },
+                "delete": {
+                    "title": "Usuń",
+                    "body": "Możesz usunąć przechowywanie w chmurze w dowolnym momencie. Możesz użyć tego klucza później do reaktywacji, jeśli chcesz."
+                }
             },
             "remove": {
                 "success": "Magazyn danych w chmurze został pomyślnie usunięty z systemu",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do wersji {downloadHTML} aby połączyć go z systemem {targetSystem}.",
             "primarySystemOffline": "System {primarySystem} jest w trybie offline i nie można go połączyć z systemem {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-            "recommendSupport": {
-                "a_recommend": "Zalecamy skonsultowanie się z",
-                "b_support": "wsparcie",
-                "c_proceeding": "przed kontynuowaniem."
-            },
+            "recommendSupport": "Zalecamy skonsultowanie się z działem wsparcia technicznego przed kontynuowaniem.",
             "restError": {
                 "duplicateServer": "Błąd scalania. Oba systemy mają ten sam serwer",
                 "useCloudMerge": "Nie można złączyć systemów powiązanych z chmurą",
@@ -404,7 +485,8 @@
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-            "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów."
+            "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Uwierzytelnianie dwuskładnikowe będzie teraz wymuszone w tym systemie.",
@@ -448,6 +530,13 @@
             "action": "Login",
             "message": "Zaloguj się ponownie.",
             "title": "Twoja sesja wygasła"
+        },
+        "systemGroups": {
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } nie jest użytkownikiem w systemie"
         },
         "titles": {
             "error": "Błąd",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum.",
         "webadmin2faRequired": "Aby uzyskać dostęp do tego systemu, wymagane jest uwierzytelnianie dwuskładnikowe. Możesz włączyć uwierzytelnianie dwuskładnikowe w <a href=\"{ cloudHost }/account/security\">ustawieniach konta</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Kontrola dostępu",
         "Connector": "Złącze",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Proszę <span id=\"request\">prześlij zgłoszenie</span> w przypadku dodatkowych pytań/wątpliwości dotyczących obsługiwanych urządzeń."
     },
+    "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alertów} one{# alert} few {# alertów} many {# alertów} other{# alerty}}",
     "ipvdTopXByVolume": "Max {value} wg ilości:",
@@ -693,6 +787,21 @@
         "type": "Rodzaj",
         "server": "Serwer",
         "alert": "Powiadomienie"
+    },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+        },
+        "downloadHistory": {
+            "published": "PUBLISHED { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Generated: { time }"
+        }
     },
     "pageTitles": {
         "about": "Informacje",
@@ -791,8 +900,8 @@
         "integration": {
             "accept": "Zatwierdź",
             "reject": "Odrzuć",
-            "backToEditText": "Powrót do edycji interfejsów",
-            "previewRibbon": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją.",
+            "backToEditText": "Wróć do edycji",
+            "previewRibbon": "Ta strona opisuje zmiany w najnowszej wersji, ale nie jest ona zgodna z wersją udostępnianą publicznie.",
             "publishedRibbon": "Ta strona jest wersją dostępną publicznie."
         },
         "newVersionAvailable": {
@@ -807,8 +916,6 @@
         "Search": "Szukaj",
         "analytics": "Analityka",
         "analyticsSelected": "zdarzenia analityczne",
-        "filter applied": "zastosowany filtr",
-        "filters applied": "zastosowane filtry",
         "appliedFilters": "{count, plural, =0{# filtry} one{# filtrów} other{# filtrów}} zastosowano",
         "hardwareType": "Rodzaj",
         "hardwareTypes": "Typy",
@@ -816,7 +923,10 @@
         "search_ipvd": "Wyszukaj według modelu lub producenta",
         "selected": "{count, plural, =0{# wybrane} one{# wybranych} other{# wybranych}}",
         "vendor": "Producent",
-        "vendors": "Producenci"
+        "vendors": "Producenci",
+        "resultsFound": "{count, plural, =0{# Wyników} one{# Wynik} few {# Wyników} many {# Wyników} other{# Wyniki}} znaleziono",
+        "noMatches": "No matches",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Błąd z usuwaniem lub przechowywaniem danych analitycznych",
@@ -848,6 +958,7 @@
         "Settings": "Ustawienia",
         "Information": "Informacje",
         "Bookmarks": "Zakładki",
+        "Layouts": "Układy",
         "Monitoring": "Monitoring"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(rejestruj wszystkie dostępne informacje)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } poziom logowania",
         "storageToolTips": {
             "local": "Lokalny",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> chce przenieść własność tego systemu na Ciebie"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "root",
+        "groupCount": "{count, plural, one {# grupa} few {# grup} other {# grupy}}",
+        "systemCount": "{count, plural, =0{# Systemów} one{# System} few {# Systemów} many {# Systemów} other{# Systemy}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
+        "errorMsg": {
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
+        }
     },
     "systemStatuses": {
         "activated": "aktywny",
@@ -941,7 +1076,7 @@
                 "failed": "Nie udało się podłączyć systemu do %CLOUD_NAME%"
             },
             "merge": {
-                "failed": "Łączenie systemów nie powiodło się",
+                "failed": "Złączanie systemów nie powiodło się",
                 "success": "Zakończono złączanie systemów"
             },
             "rename": {
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Zaloguj się z %CLOUD_NAME%, aby uzyskać dostęp do tego systemu jako użytkownik chmury",
         "twoFaRequired": "Uwierzytelnianie dwuskładnikowe zostało włączone dla tego konta. Wprowadź kod weryfikacyjny w wyskakującym okienku.",
-        "loggingIn": "Logowanie. Proszę czekać..."
+        "loggingIn": "Logowanie. Proszę czekać...",
+        "sessionRenewed": "Sesja została odnowiona.",
+        "failedToUpdateSession": "Aktualizacja sesji nie powiodła się."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Raport stanu systemu {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1017,7 +1154,7 @@
             "Analog Encoder": "Enkoder analogowy",
             "Starter": "Starter",
             "IO Module": "Moduł I/O",
-            "Bridge": "Bridge",
+            "Bridge": "Łączenie",
             "NVR": "NVR",
             "Invalid": "Nieprawidłowy"
         },

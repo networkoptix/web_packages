@@ -1,0 +1,19 @@
+@use '../../../../styles/typography';
+
+.system-settings {
+    .system-header-bold {
+        font-family: typography.$font-family-bold;
+    }
+
+    #change-ownership {
+        cursor: pointer;
+        @include typography.regular13nocolor;
+        color: var(--light-text-color); // light16
+    }
+
+    #cancel-transfers {
+        cursor: pointer;
+        @include typography.regular13nocolor;
+        color: var(--dropdown-item-error-color);
+    }
+}

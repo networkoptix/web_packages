@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-NODE_VERSION="12.20.1"
-NPM_VERSION="6.14.10"
+NODE_VERSION="16.13.1"
+NPM_VERSION="8.1.2"
 
 function build_frontend () {
     echo "Building front_end"
@@ -10,9 +10,9 @@ function build_frontend () {
     pushd ../front_end
         BUILD=${VERSION//*.}
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' 's@{{BUILD}}@'"$BUILD"'@g' ./app/src/services/nx-config/config.ts
+            sed -i '' 's@{{BUILD}}@'"$BUILD"'@g' ./src/app/services/nx-config/config.ts
         else
-            sed -i 's@{{BUILD}}@'"$BUILD"'@g' ./app/src/services/nx-config/config.ts
+            sed -i 's@{{BUILD}}@'"$BUILD"'@g' ./src/app/services/nx-config/config.ts
         fi
 
         npm run build
@@ -74,8 +74,9 @@ echo "Active npm: " && npm -v
 cd $PORTAL_REPOSITORY
 
 pushd front_end
-    echo -e "\nnpm install cloud portal"
-    npm install
+    echo -e "\nnpm ci cloud portal"
+    echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
+    npm ci
 
 #     echo "Auditing npm packages"
 #     AUDIT=$(npm audit | grep -E "(High)" || true)
@@ -87,8 +88,8 @@ pushd front_end
 popd
 
 pushd cloud
-    echo -e "\nnpm install cloud portal backend"
-    npm install
+    echo -e "\nnpm ci cloud portal backend"
+    npm ci
 popd
 
 pushd build_scripts

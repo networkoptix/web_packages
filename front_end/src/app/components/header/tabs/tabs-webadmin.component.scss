@@ -1,0 +1,46 @@
+@import "./tabs.component.scss";
+
+.tab-link {
+    &:hover {
+        background: var(--tab-link-webadm-hover-bg) !important;
+        border: 1px solid transparent !important;
+    }
+    &:active {
+        background: var(--tab-link-webadm-active-bg) !important;
+        border: 1px solid transparent;
+    }
+    & > * {
+        color: var(--tab-link-webadm-color) !important;
+    }
+    
+    &.active {
+        position   : relative;
+        color      : var(--tab-link-webadm-color);
+    
+        & > a {
+            cursor : default;
+            color  : var(--tab-link-webadm-color) !important;
+        }
+    
+        background : var(--tab-link-webadm-active-bg);
+        border     : 1px solid var(--tab-link-webadm-active-bg) !important;
+    
+        &:hover {
+            background : var(--tab-link-webadm-active-bg) !important;
+            border     : 1px solid var(--tab-link-webadm-active-bg) !important;
+        }
+    
+        &:active {
+            background : var(--tab-link-webadm-active-bg);
+        }
+    
+        &::after {
+            content       : "";
+            position      : absolute;
+            bottom        : 0;
+            left          : 16px;
+            right         : 16px;
+            border-bottom : 2px solid transparent !important;
+        }
+    }
+}

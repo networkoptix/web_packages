@@ -1,0 +1,41 @@
+@use "../../styles/_theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+@import "~sass-rem/rem";
+
+.form-horizontal {
+    .form-group {
+        display       : flex;
+        margin-bottom : 0.5rem;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            margin-bottom : 1rem;
+        }
+
+        & > div {
+            display     : flex;
+            align-items : center;
+            float       : left;
+        }
+    }
+
+    .control-label {
+        float         : left;
+        text-align    : right;
+        margin-bottom : 0;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            margin-bottom : .5rem;
+        }
+    }
+
+    .help-block {
+        display : flex;
+    }
+
+    .badge {
+        font-family : $font-family-bold;
+        font-size   : $font-size-ssm;
+        line-height : $line-height-ssm;
+        padding     : .2em .6em .3em;
+    }
+}

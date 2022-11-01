@@ -8,8 +8,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from jsonfield import JSONField
 
-from api.controllers.cloud_api import Account as cloud_api_account
-from api.helpers.exceptions import (
+from cloud.controllers.cloud_api import Account as cloud_api_account
+from cloud.helpers.exceptions import (
     APIRequestException, APIException, APILogicException, APINotAuthorisedException, ErrorCodes
 )
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, get_cloud_portal_asset
@@ -19,6 +19,7 @@ from cloud.settings import CUSTOMIZATION
 class AccountManager(models.Manager):
 
     """Custom manager for Account."""
+
     def _create_user(self, email, password, **extra_fields):
         """Create and save an Account with the given email and password.
         :param str email: user email
@@ -40,10 +41,12 @@ class AccountManager(models.Manager):
 
         # this line will send request to cloud_db and raise an exception if fails:
         try:
-            cloud_api_account.register(email, password, first_name, last_name, ip=ip, code=code)
+            cloud_api_account.register(
+                email, password, first_name, last_name, ip=ip, code=code)
         except APIException as a:
             if a.error_code == ErrorCodes.account_exists and not AccountManager.is_email_in_portal(email):
-                raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
+                raise APILogicException(
+                    'User is not in portal', ErrorCodes.portal_critical_error)
             else:
                 raise
         user = self.model(email=email,
@@ -70,7 +73,8 @@ class AccountManager(models.Manager):
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")
 
-        cloud_api_account.register(email, password, first_name, last_name, ip=ip)
+        cloud_api_account.register(
+            email, password, first_name, last_name, ip=ip)
         user = Account.objects.get(email=email)
         """
         When an account is created using cloud invites it is disabled because its registration
@@ -92,16 +96,19 @@ class AccountManager(models.Manager):
     def check_email_in_portal(email, check_email_exists):
         mail_exists = AccountManager.is_email_in_portal(email)
         if not mail_exists and check_email_exists:
-            raise APILogicException('User is not in portal', ErrorCodes.not_found)
+            raise APILogicException(
+                'User is not in portal', ErrorCodes.not_found)
         if mail_exists and not check_email_exists:
-            raise APILogicException('User already registered', ErrorCodes.account_exists)
+            raise APILogicException(
+                'User already registered', ErrorCodes.account_exists)
         return True
 
     @staticmethod
     def check_if_activated(request, email, password):
         activated = False
         try:
-            cloud_api_account.get(request, email, password)  # try to authenticate with clouddb to check if activated
+            # try to authenticate with clouddb to check if activated
+            cloud_api_account.get(request, email, password)
             activated = True
         except (APILogicException, APINotAuthorisedException) as exception:
             if exception.error_code != ErrorCodes.account_not_activated:
@@ -129,9 +136,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True, help_text="If false the account is disabled. <br> If user was "
                                                             "invited to the cloud it will switch to true on its own "
                                                             "when the user completes registration.")
-    is_staff = models.BooleanField(default=False, help_text="If true then the user can view cloud admin.")
+    is_staff = models.BooleanField(
+        default=False, help_text="If true then the user can view cloud admin.")
     language = models.CharField(max_length=7, blank=True)
-    cookie_reviewed = models.BooleanField(default=False, help_text="If true then the user has accepted the cookie policy and the cookie banner will not appear.")
+    cookie_reviewed = models.BooleanField(
+        default=False, help_text="If true then the user has accepted the cookie policy and the cookie banner will not appear.")
     customization = models.CharField(max_length=255, null=True)
     password = None
 
@@ -139,12 +148,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['registeredDate', 'createdDate']
 
     def save(self, *args, **kwargs):
-        self.is_staff |= self.email.endswith(settings.SUPERUSER_DOMAIN)
+        if not self.pk:
+            self.is_staff |= self.email.endswith(settings.SUPERUSER_DOMAIN)
         super().save(*args, **kwargs)
         self.add_to_all_releases_group()
 
     def add_to_all_releases_group(self):
-        user_at_superuser_domain = self.email.endswith(settings.SUPERUSER_DOMAIN)
+        user_at_superuser_domain = self.email.endswith(
+            settings.SUPERUSER_DOMAIN)
         if not user_at_superuser_domain:
             return
 
@@ -160,7 +171,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
             permission, created = Permission.objects.get_or_create(
                 name='User can view all releases', codename='user_can_view_all_releases', content_type=content_type)
             release_group.permissions.add(permission)
-            UserGroupsToAssetPermissions.objects.get_or_create(group=release_group, asset=get_cloud_portal_asset(settings.CUSTOMIZATION))
+            UserGroupsToAssetPermissions.objects.get_or_create(
+                group=release_group, asset=get_cloud_portal_asset(settings.CUSTOMIZATION))
 
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
@@ -181,14 +193,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
         permissions = []
         for group in self.groups.all():
-            permissions.extend([permission.codename for permission in group.permissions.all()])
+            permissions.extend(
+                [permission.codename for permission in group.permissions.all()])
         return list(set(permissions))
 
     @property
     def global_permissions(self):
         permissions = []
         for group in self.groups.all():
-            permissions.extend([permission.codename for permission in group.permissions.all()])
+            permissions.extend(
+                [permission.codename for permission in group.permissions.all()])
         return list(set(permissions))
 
     @property
@@ -227,8 +241,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         ]
 
     def assets_with_permission(self, permission):
-        permission_asset_ids = list(UserGroupsToAssetPermissions.objects.filter(group__in=self.groups.all())\
-            .values_list('asset__id', flat=True).distinct())
+        permission_asset_ids = list(UserGroupsToAssetPermissions.objects.filter(group__in=self.groups.all())
+                                    .values_list('asset__id', flat=True).distinct())
 
         wildcard_asset_types = [
             asset_type
@@ -241,7 +255,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         ]
 
         permission_asset_ids.extend(list(
-            Asset.objects.filter(asset_type__in=wildcard_asset_types).values_list('id', flat=True)
+            Asset.objects.filter(
+                asset_type__in=wildcard_asset_types).values_list('id', flat=True)
         ))
         permission_asset_ids = set(permission_asset_ids)
 
@@ -266,8 +281,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
         if self.is_superuser:
             return False
 
-        permission_based_group = Group.objects.filter(user=self, permissions__codename='publish_version').exists()
-        named_group = Group.objects.filter(user=self, name__contains='Portal Manager').exists()
+        permission_based_group = Group.objects.filter(
+            user=self, permissions__codename='publish_version').exists()
+        named_group = Group.objects.filter(
+            user=self, name__contains='Portal Manager').exists()
         return permission_based_group or named_group
 
     @property
@@ -275,8 +292,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
         if self.is_portal_manager or self.is_superuser:
             return False
 
-        permission_based_group = Group.objects.filter(user=self, permissions__codename='edit_content').exists()
-        named_group = Group.objects.filter(user=self, name__contains='Developer').exists()
+        permission_based_group = Group.objects.filter(
+            user=self, permissions__codename='edit_content').exists()
+        named_group = Group.objects.filter(
+            user=self, name__contains='Developer').exists()
         return permission_based_group or named_group
 
     # Called when password is changed
@@ -323,7 +342,8 @@ class ProxyGroup(Group):
 
 
 class GroupOptions(models.Model):
-    group = models.OneToOneField(Group, unique=True, on_delete=models.CASCADE, related_name='options')
+    group = models.OneToOneField(
+        Group, unique=True, on_delete=models.CASCADE, related_name='options')
 
     # options
     all_assets = models.BooleanField(default=False)
@@ -335,7 +355,8 @@ def group_saved(sender, created, signal, instance, **kwargs):
 
 
 post_save.connect(group_saved, sender=Group, dispatch_uid='group_post_save')
-post_save.connect(group_saved, sender=ProxyGroup, dispatch_uid='proxy_group_post_save')
+post_save.connect(group_saved, sender=ProxyGroup,
+                  dispatch_uid='proxy_group_post_save')
 
 
 class AccountCustomProperty(models.Model):
@@ -343,7 +364,8 @@ class AccountCustomProperty(models.Model):
         verbose_name = 'Account Custom Property'
         verbose_name_plural = 'Account Custom Properties'
         constraints = [
-            models.UniqueConstraint(fields=['account', 'endpoint'], name='User Unique Endpoints')
+            models.UniqueConstraint(
+                fields=['account', 'endpoint'], name='User Unique Endpoints')
         ]
 
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -352,3 +374,11 @@ class AccountCustomProperty(models.Model):
 
     def __str__(self):
         return f'{self.account} - {self.endpoint}'
+
+    @staticmethod
+    def alexa_account_linked(email):
+        if account := Account.objects.filter(email=email).first():
+            alexa_settings, _ = AccountCustomProperty.objects.get_or_create(account=account, endpoint='alexa')
+            if not alexa_settings.json_data or not isinstance(alexa_settings.json_data, dict) or not alexa_settings.json_data.get('accountLinked', False):
+                alexa_settings.json_data = {"accountLinked": True}
+                alexa_settings.save()

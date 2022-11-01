@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/header-resource.robot
 Suite Setup       Header Suite Setup
-Test Setup        Header Test Setup
-Test Teardown     Header Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start            Header Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop         Header Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Header Suite Teardown
 Force Tags        cloud
 

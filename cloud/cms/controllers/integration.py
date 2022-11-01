@@ -2,7 +2,7 @@ import os
 
 from django.conf import settings
 from cms.controllers.asset_json import generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, \
-                                       get_current_version, get_global_contexts, get_latest_ds_values,  \
+                                       get_current_version, get_global_contexts, generate_context_dicts_with_actual_values,  \
                                        get_user_assets, process_asset_global_contexts, get_state
 from cms.models import Asset,  AssetType, cloud_portal_customization_cache, get_cloud_portal_asset
 from util.base_cache import BaseCache
@@ -35,7 +35,7 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
             asset_dict = INTEGRATION_CACHE.get_cached_item() or {}
 
             if not asset_dict or asset_dict['version'] != current_version or show_drafts:
-                for context, context_dict in get_latest_ds_values(show_pending, show_drafts,
+                for context, context_dict in generate_context_dicts_with_actual_values(show_pending, show_drafts,
                                                                   contexts, data_structures,
                                                                   asset, current_version):
                     if context_dict or "PYTEST_CURRENT_TEST" in os.environ:

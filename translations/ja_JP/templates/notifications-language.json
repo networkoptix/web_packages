@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "{{{message.asset}}}{{/message.asset}}のカメラページフィードバック{{#message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "{{message.system_name}} の所有権移転"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "{{message.system_name}} の所有権移転 - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} に新しいバージョンがあります。"
   },

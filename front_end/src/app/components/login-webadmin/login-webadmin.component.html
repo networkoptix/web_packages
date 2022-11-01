@@ -1,0 +1,131 @@
+<div
+    *ngIf="loading"
+    id="preloader-container"
+>
+    <nx-pre-loader type="page"></nx-pre-loader>
+</div>
+
+<form
+    #loginForm="ngForm"
+    name="loginForm"
+    novalidate
+    [ngClass]="{
+        'hide-errors': hideErrors,
+        loading: loading
+    }"
+    (submit)="hideErrors = false"
+>
+    <div class="modal-body">
+        <div
+            *ngIf="accountNotOnSystem || account2faRequired"
+            class="error-block mb-2"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            ></svg-icon>
+            <div class="ml-2">
+                <span
+                    *ngIf="accountNotOnSystem"
+                    translate
+                    >Cloud account doesn't exist on this system.</span
+                >
+                <span
+                    *ngIf="account2faRequired"
+                    [innerHTML]="
+                        'errorCodes.webadmin2faRequired'
+                            | translate: { cloudHost: CONFIG.cloudHost }
+                    "
+                ></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label
+                for="login_email"
+                translate
+                >Login</label
+            >
+            <input
+                type="email"
+                class="form-control"
+                id="login_email"
+                name="login_email"
+                #login_email="ngModel"
+                [ngModel]="auth.email"
+                (ngModelChange)="setEmail($event); resetForm()"
+                maxlength="255"
+                [disabled]="loading"
+                required
+                nxFocusMe
+            />
+        </div>
+        <div class="form-group">
+            <label
+                for="login_password"
+                translate
+                >Password</label
+            >
+            <input
+                type="password"
+                class="form-control"
+                name="login_password"
+                id="login_password"
+                #login_password="ngModel"
+                [(ngModel)]="password"
+                (ngModelChange)="resetForm()"
+                maxlength="255"
+                required
+                [disabled]="loading"
+            />
+            <div
+                class="input-error"
+                *ngIf="wrongCredentials"
+                translate
+            >
+                Wrong login or password
+            </div>
+            <div
+                class="input-error"
+                *ngIf="accountBlocked"
+                translate
+            >
+                Too many attempts. Try again in a minute.
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            class="login-full-width-wrapper"
+            buttonText="{{ 'Log In' | translate }}"
+            [style.width.%]="100"
+            customButtonClass="login-full-width"
+            customClass="login-full-width"
+            [form]="loginForm"
+            [process]="login"
+            [buttonDisabled]="loading"
+        >
+        </nx-process-button>
+        <ng-container *ngIf="CONFIG.cloudSystemId">
+            <div
+                class="separator"
+                translate
+            >
+                or
+            </div>
+            <button
+                class="btn btn-default oauth-login"
+                [disabled]="loading"
+                (click)="redirectOauthLogin()"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '20', pointerEvents: 'none' }"
+                    [src]="CONFIG.icons.dirTextButtons + 'storage_cloud.svg'"
+                    [applyClass]="true"
+                ></svg-icon
+                ><span translate>Log In with %CLOUD_NAME%</span>
+            </button>
+        </ng-container>
+    </div>
+</form>

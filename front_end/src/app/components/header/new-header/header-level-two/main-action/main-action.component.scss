@@ -1,0 +1,23 @@
+@use "../../../../../styles/typography";
+@use "../../../../../../styles/theme_variables_common" as *;
+
+
+.context-button-container {
+    background-color: var(--header-level-two-bg);
+    padding: 13px 16px 0px 24px;
+
+    .logout {
+        width: 75px;
+        @include typography.regular14nocolor;
+        color: var(--header-logout-action-color);
+        padding-top: 4px;
+
+        &:hover {
+            cursor: pointer;
+            color: var(--header-level-one-hover-color);
+            svg-icon svg .logout {
+                stroke: var(--header-level-one-hover-color);
+            }
+        }
+    }
+}

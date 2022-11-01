@@ -6,7 +6,7 @@
 #header {
     height: 40px !important;
     line-height: 40px !important;
-    display: block !important;
+    /*display: block !important;*/
 }
 
 #header #branding h1{

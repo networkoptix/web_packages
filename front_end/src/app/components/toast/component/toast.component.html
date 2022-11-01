@@ -1,0 +1,30 @@
+<div
+    class="alert alert-{{ toast.type }} toast"
+    [ngClass]="{ 'alert-dismissible': !toast.autohide }"
+>
+    <ng-container *ngIf="isTemplate(toast.content); else text">
+        <ng-template [ngTemplateOutlet]="toast.content"></ng-template>
+    </ng-container>
+    <ng-template #text>
+        <span
+            *ngIf="toast.showHTML"
+            class="toast-content"
+            [innerHTML]="toast.content"
+        ></span>
+        <span
+            *ngIf="!toast.showHTML"
+            class="toast-content"
+            [innerText]="toast.content"
+        ></span>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+            *ngIf="!toast.autohide"
+            (click)="remove()"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </ng-template>
+</div>

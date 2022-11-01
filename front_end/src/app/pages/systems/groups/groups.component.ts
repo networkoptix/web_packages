@@ -1,0 +1,95 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+
+import type { GroupItem, GroupsItem, SystemItem, Crumb } from './groups.types';
+import { LoadingState } from './groups.types';
+import { NxSystemGroupsService } from './services/system-groups.service';
+import * as GroupActions from './store/groups.actions';
+import {
+    selectCrumbs,
+    selectCurrentGroupItems,
+    selectCurrentSystemItems,
+    selectLoadingState,
+    selectRootGroupItems,
+    selectRootSystemItems,
+} from './store/groups.selectors';
+
+@Component({
+    selector: 'nx-groups',
+    templateUrl: 'groups.component.html',
+    styleUrls: ['groups.component.scss']
+})
+export class NxSystemGroupsComponent implements OnInit, OnDestroy {
+    CONFIG: IConfig;
+
+    loadingState$ = this.store.select<LoadingState>(selectLoadingState);
+
+    rootGroups$ = this.store.select<GroupItem[] | undefined>(
+        selectRootGroupItems
+    );
+    rootSystems$ = this.store.select<SystemItem[] | undefined>(
+        selectRootSystemItems
+    );
+
+    currentGroups$ = this.store.select<GroupItem[] | null>(
+        selectCurrentGroupItems
+    );
+    currentSystems$ = this.store.select<SystemItem[] | null>(
+        selectCurrentSystemItems
+    );
+
+    crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
+
+    private groupId: string;
+
+    LoadingState = LoadingState;
+
+    constructor(
+        configService : NxConfigService,
+        private store: Store,
+        private groupsService: NxSystemGroupsService,
+        private dialogsService: NxDialogsService,
+        private route: ActivatedRoute,
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.groupsService.connect();
+    }
+
+    ngOnInit(): void {
+        this.route.params.subscribe(params => {
+            this.groupId = params.groupId;
+            this.store.dispatch(
+                GroupActions.setCurrentGroupId({
+                    currentGroupId: params.groupId
+                })
+            );
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.groupsService.disconnect();
+    }
+
+    trackItem(_index: number, item: Crumb): string {
+        return item.id;
+    }
+
+    moveToRoot(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
+        this.groupsService.onDrop(event.item.data, null);
+    }
+
+    newGroupDialog(): void {
+        this.dialogsService.createSystemGroup(this.groupId);
+    }
+
+    __crash(): void {
+        // @ts-expect-error Deliberately crash the backend for testing
+        this.groupsService.moveGroup(['foo'], ['bar']);
+    }
+}

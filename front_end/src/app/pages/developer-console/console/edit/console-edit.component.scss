@@ -1,0 +1,48 @@
+@use "../../../../../styles/theme_variables_common" as *;
+@use "../../../../styles/typography";
+
+:host {
+    margin: 16px;
+    max-width: 624px;
+}
+
+header {
+    font-size: 15px !important;
+}
+
+section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    label {
+        @include typography.regular14nocolor;
+    }
+
+    span:not(.input-error) {
+        @include typography.regular14nocolor;
+    }
+
+    input, div {
+        flex: 0 0 100%;
+    }
+
+    input {
+        margin: 2px 0 4px 0;
+    }
+
+    div {
+        @include typography.regular13nocolor;
+    }
+}
+
+.apply-wrapper {
+    background: var(--body-bg);
+    border-top: 1px solid var(--border-color);
+    margin: -1px 0 -16px 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    padding: 16px 0;
+}

@@ -1,0 +1,31 @@
+:host {
+    .input-overlay {
+        input {
+            padding-right : 30px;
+            padding-left  : 30px;
+        }
+
+        .input-overlay-left {
+            position    : absolute;
+            color       : var(--light8);
+            left        : 17px;
+            display     : flex;
+            align-items : center;
+        }
+
+        .input-overlay-right {
+            position    : absolute;
+            color       : var(--light8);
+            right       : 17px;
+            display     : flex;
+            align-items : center;
+        }
+    }
+
+    .search-block {
+        padding-top    : 10px;
+        padding-bottom : 10px;
+        border-bottom:1px solid var(--border-color) !important;
+        margin-bottom  : 10px;
+    }
+}

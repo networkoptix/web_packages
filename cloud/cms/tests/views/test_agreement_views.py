@@ -37,19 +37,19 @@ class TestAgreement:
             if pending_agreement:
                 self.pending_agreement = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.agreement, account=self.superuser, state=AssetCustomizationReview.REVIEW_STATES.pending))
-        
+
 
         return helper
 
     def get_agreement_with(self, user, agreement_id=None, state=None):
         request = self.arf.get(
-            f'/api/agreement?state={state or ""}&id={agreement_id}')
+            f'/api/cms/agreement?state={state or ""}&id={agreement_id}')
         request.session = {}
         request.user = user
         return get_agreement(request)
 
     def accept_agreement_with(self, user, agreement_id = None):
-        request = self.arf.post(f'/api/accept_agreement',
+        request = self.arf.post(f'/api/cms/accept_agreement',
                                 data=agreement_id and {'review_id': agreement_id})
         request.session = {}
         request.user = user
@@ -92,7 +92,7 @@ class TestAgreement:
             self.non_superuser, self.non_existing_agreement_id)
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert response.data == AGREEMENT_REVIEW_NOT_FOUND
-    
+
     def test_accept_no_review_id(self, uses):
         uses(agreement=True)
         response = self.accept_agreement_with(

@@ -1,0 +1,15 @@
+@use '../../../styles/typography';
+@use "../../../../styles/theme_variables_common" as *;
+
+.monitor-wrapper {
+    overflow-y: auto;
+    padding: 8px;
+    height: 100%;
+    user-select: none;
+    display: flex;
+}
+
+monitoring-graph, nx-pre-loader {
+    width: 100%;
+    height: 100%;
+}

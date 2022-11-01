@@ -1,0 +1,72 @@
+<!-- Templates -->
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
+<ng-template
+    #toolBlock
+    let-tool="tool"
+    let-last="last"
+>
+    <div
+        class="card hoverable tool-card card-type-4"
+        (click)="headerService.handleNav({ url: tool.url, new_window: tool.newWindow }, $event)"
+    >
+        <header>
+            <!-- Not sure what default icon should be used if there isn't one defined in the cms -->
+            <svg-icon
+                *ngIf="tool.icon"
+                nx-add-svg-src
+                [src]="CONFIG.images.dirDevelopersDevtools + tool.icon"
+            ></svg-icon>
+        </header>
+        <div class="tool-detail">
+            <h3>{{ tool.title }}</h3>
+            <p>{{ tool.asset?.shortDescription }}</p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template
+    #blocks
+    let-noMargin="noMargin"
+>
+    <div
+        *ngIf="devToolsNode"
+        nxMatchHeight
+        [classToMatch]="'tool-detail'"
+        class="card-grid detail-blocks"
+        [ngClass]="noMargin ? '' : 'stand-alone-blocks'"
+    >
+        <ng-container *ngFor="let tool of devToolsNode.nodes; let last = last">
+            <ng-container
+                *ngTemplateOutlet="toolBlock; context: { tool: tool, last: last }"
+            ></ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+<!-- End of Templates -->
+<ng-container *ngIf="devToolsNode; else preloader">
+    <ng-container *ngIf="!errorManager.hasErrors; else showError">
+        <section
+            *ngIf="title; else blocks"
+            class="dev-tools"
+        >
+            <h2
+                class="heading-link"
+                *ngIf="devToolsNode.url; else nonLinkHeader"
+                [routerLink]="devToolsNode.url"
+            >
+                {{ title }}
+            </h2>
+            <ng-template #nonLinkHeader>
+                <h2 class="heading">{{ title }}</h2>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="blocks; context: { noMargin: true }"></ng-container>
+        </section>
+    </ng-container>
+</ng-container>

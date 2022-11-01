@@ -1,0 +1,8 @@
+<ng-container *ngFor="let substring of subStrings; index as i; trackBy: trackBy">
+    <ng-container *ngIf="!(i % 2)">{{ substring }}</ng-container
+    ><span
+        *ngIf="i % 2"
+        class="highlighted"
+        >{{ substring }}</span
+    >
+</ng-container>

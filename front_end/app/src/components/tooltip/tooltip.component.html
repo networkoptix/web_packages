@@ -1,5 +1,0 @@
-<div class="tooltip-arrow" *ngIf="_text || template"></div>
-<div class="tooltip-body" *ngIf="_text" [innerHTML]="_text"></div>
-<div class="tooltip-body" *ngIf="template">
-    <ng-container [cdkPortalHost]="template"></ng-container>
-</div>

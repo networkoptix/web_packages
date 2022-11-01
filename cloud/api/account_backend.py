@@ -9,9 +9,9 @@ from django.dispatch import receiver
 from rest_framework.authentication import TokenAuthentication
 
 from api.models import AccountLoginHistory, AccountManager, Account
-from api.controllers.cloud_api import Auth
-from api.controllers.cloud_api import Account as Clouddb_Account
-from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
+from cloud.controllers.cloud_api import Auth
+from cloud.controllers.cloud_api import Account as Clouddb_Account
+from cloud.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,8 @@ class AccountBackend(ModelBackend):
                     'email': validate_token['username']
                 }
             else:
-                user = Clouddb_Account.get(request, email=username, password=password)
+                user = Clouddb_Account.get(
+                    request, email=username, password=password)
             if username is None:
                 username = user['email']
         except APINotAuthorisedException as exception:
@@ -57,19 +58,27 @@ class AccountBackend(ModelBackend):
 
         if user and 'email' in user:
             if username.find('@') > -1:
-                if username != user['email']:  # code and email from cloud_db are wrong
-                    raise APILogicException('Login does not match users email', ErrorCodes.wrong_code)
-            elif username.find('-') > -1:  # CLOUD-1661 - temp login now has format: guid-crc32(accountEmail)
+                # code and email from cloud_db are wrong
+                if username != user['email']:
+                    raise APILogicException(
+                        'Login does not match users email', ErrorCodes.wrong_code)
+            # CLOUD-1661 - temp login now has format: guid-crc32(accountEmail)
+            elif username.find('-') > -1:
                 (uuid, temp_crc32) = username.split('-')
-                email_crc32 = zlib.crc32(user['email'].encode('utf-8')) & 0xffffffff  # convert signed to unsigned crc32
+                # convert signed to unsigned crc32
+                email_crc32 = zlib.crc32(
+                    user['email'].encode('utf-8')) & 0xffffffff
                 if email_crc32 != int(temp_crc32):
-                    raise APILogicException('Login does not match users email', ErrorCodes.wrong_code)
+                    raise APILogicException(
+                        'Login does not match users email', ErrorCodes.wrong_code)
 
             if not AccountManager.is_email_in_portal(user['email']):
                 # so - user is in cloud_db, but not in cloud_portal
-                raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
+                raise APILogicException(
+                    'User is not in portal', ErrorCodes.portal_critical_error)
         if validate_token:
-            request.session['access_token'] = validate_token.get('access_token')
+            request.session['access_token'] = validate_token.get(
+                'access_token')
             if 'refresh_token' not in request.session:
                 request.session['refresh_token'] = None
         return Account.objects.get(email=user['email'])
@@ -98,7 +107,8 @@ class BearerAuthentication(TokenAuthentication):
 def user_logged_in_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
     logger.info(f'User logged in: {user.email}, IP: {ip}')
-    AccountLoginHistory.objects.create(action='user_logged_in', ip=ip, email=user.email)
+    AccountLoginHistory.objects.create(
+        action='user_logged_in', ip=ip, email=user.email)
 
 
 @receiver(user_logged_out)
@@ -118,4 +128,5 @@ def user_login_failed_callback(sender, credentials, request, **kwargs):
         ip = get_ip(request)
     user_name = credentials.get('email') or credentials.get('username')
     logger.info(f'Failed login attempt: %{user_name}, IP: {ip}')
-    AccountLoginHistory.objects.create(action='user_login_failed', ip=ip, email=user_name)
+    AccountLoginHistory.objects.create(
+        action='user_login_failed', ip=ip, email=user_name)

@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from celery import result
 
-from api.helpers.exceptions import APINotFoundException, api_success, handle_exceptions
+from cloud.helpers.exceptions import APINotFoundException, api_success, handle_exceptions
 
 from cms.models import PackagesCache
 from cms.permissions import IsSuperuser

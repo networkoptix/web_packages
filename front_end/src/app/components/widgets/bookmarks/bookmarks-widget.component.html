@@ -1,0 +1,128 @@
+<ng-template #editMode>
+    <ng-template #saveButton>
+        <button
+            class="btn btn-primary"
+            (click)="saveSettings()"
+            translate
+        >
+            Save Settings
+        </button>
+    </ng-template>
+    <nx-stepper
+        [saveButton]="saveButton"
+        [columns]="card.size.value.cols"
+    >
+        <cdk-step>
+            <div class="h-100">
+                <h4 translate>Select system to show bookmarks</h4>
+                <nx-select
+                    [items]="systemsDropdownItems$ | async"
+                    [selected]="selectedSystem"
+                    [stillLoading]="!selectedSystem"
+                    (onSelected)="updateSystem($event)"
+                ></nx-select>
+            </div>
+        </cdk-step>
+    </nx-stepper>
+</ng-template>
+
+<ng-template #preloader>
+    <nx-pre-loader [minHeight]="64"></nx-pre-loader>
+</ng-template>
+
+<div class="bookmarks-wrapper">
+    <div *ngIf="!card.editMode && card.config.selectedSystem; else editMode">
+        <h4 [ngClass]="{ 'animate-rotation': loading }">
+            <span>{{ selectedSystem?.name }}</span>
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+                (click)="refreshData()"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20', 'margin.px': '4' }"
+                [applyClass]="true"
+            ></svg-icon>
+        </h4>
+        <cdk-accordion *ngIf="bookmarks$ | async as bookmarks; else preloader">
+            <div
+                *ngIf="!bookmarks.length"
+                translate
+            >
+                No bookmarks
+            </div>
+            <cdk-accordion-item
+                *ngFor="let bookmark of bookmarks; let index = index"
+                #accordionItem="cdkAccordionItem"
+            >
+                <section
+                    class="bookmark-wrapper"
+                    [ngClass]="{ active: accordionItem.expanded }"
+                >
+                    <header
+                        (click)="accordionItem.toggle()"
+                        class="bookmark-heading"
+                        [ngClass]="{ active: accordionItem.expanded }"
+                    >
+                        <div>{{ bookmark.name }}</div>
+                        <div>{{ bookmark.startTimeMs | date: 'medium':'UTC' }}</div>
+                    </header>
+                    <div [ngClass]="{ 'd-none': !accordionItem.expanded }">
+                        <ng-template
+                            #content
+                            let-isModal="isModal"
+                        >
+                            <div [ngClass]="{ 'content-wrapper': isModal }">
+                                <img
+                                    [src]="bookmark.thumbnail || mockThumbnail"
+                                    [alt]="'thumbnail of ' + bookmark.name"
+                                    class="fs-exclude bookmark-thumbnail"
+                                />
+                                <div
+                                    *ngIf="bookmark.description as content"
+                                    class="bookmark-content"
+                                >
+                                    {{ content }}
+                                </div>
+                                <div
+                                    *ngIf="isModal && bookmark.tags.length"
+                                    class="tags-wrapper"
+                                >
+                                    <nx-tag
+                                        *ngFor="let tag of bookmark.tags"
+                                        locked
+                                        type="info"
+                                        >{{ tag }}</nx-tag
+                                    >
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <ng-container *ngTemplateOutlet="content"></ng-container>
+
+                        <ng-template
+                            cdkConnectedOverlay
+                            cdkConnectedOverlayHasBackdrop
+                            [cdkConnectedOverlayViewportMargin]="16"
+                            [cdkConnectedOverlayPush]="true"
+                            [cdkConnectedOverlayOrigin]="trigger"
+                            [cdkConnectedOverlayOpen]="bookmark.isOpen"
+                            (backdropClick)="bookmark.isOpen = false"
+                        >
+                            <ng-container
+                                *ngTemplateOutlet="content; context: { isModal: true }"
+                            ></ng-container>
+                        </ng-template>
+                        <button
+                            (click)="bookmark.isOpen = !bookmark.isOpen"
+                            type="button"
+                            cdkOverlayOrigin
+                            #trigger="cdkOverlayOrigin"
+                            class="btn btn-default m-3 ml-auto"
+                        >
+                            {{ bookmark.isOpen ? 'Collapse' : 'Expand' }}
+                        </button>
+                    </div>
+                </section>
+            </cdk-accordion-item>
+        </cdk-accordion>
+    </div>
+</div>

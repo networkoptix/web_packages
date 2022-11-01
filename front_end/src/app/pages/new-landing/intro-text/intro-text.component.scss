@@ -1,0 +1,143 @@
+@use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/typography";
+@use "../../../styles/mixins";
+
+.wrapper {
+    position: relative;
+}
+
+.root-container {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 600px;
+    height: 380px;
+    color: $dark9;
+    z-index: -1;
+}
+
+.position-absolute-element {
+    margin-left: 4px;
+    position: absolute;
+}
+
+.position-fixed-element {
+    position: fixed;
+    top: 50%;
+}
+
+.root-container-absolute {
+    @extend .root-container;
+    @extend .position-absolute-element;
+    top: 895px;
+}
+
+.root-container-fixed {
+    @extend .root-container;
+    @extend .position-fixed-element;
+    margin-top: -200px;
+}
+
+.hidden-element {
+    visibility: hidden;
+}
+
+.cloud-header {
+    @extend .slide-down-animation;
+    font-family: $font-family-medium;
+    color: $dark9;
+    font-size: 64px;
+    line-height: 72px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-bottom: 16px;
+}
+
+.cloud-sub-header {
+    @extend .slide-down-animation;
+    animation-delay: 100ms;
+    font-family: $font-family-regular;
+    font-size: 16px;
+    color: $dark9;
+    line-height: 24px;
+    width: 420px;
+    inline-size: 300px;
+    margin: auto;
+}
+
+.cloud-icon {
+    margin-bottom: -180px;
+    width: 250px;
+    stroke: var(--brand-core);
+}
+
+.cloud-svg {
+    stroke-dasharray: 473;
+    stroke-dashoffset: 304;
+    animation: dash 1200ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+
+.svg-container {
+    margin: auto;
+    width: 240px;
+    height: 140px;
+    margin-bottom: 36px;
+}
+
+.button-container {
+    text-align: center;
+    z-index: 4 !important;
+    left: 50%;
+    transform:translateX(-50%);
+}
+
+.button-container-fixed {
+    @extend .button-container;
+    @extend .position-fixed-element;
+    margin-top: 125px;
+}
+
+.button-container-absolute {
+    @extend .position-absolute-element;
+    @extend .button-container;
+    top: 1220px;
+}
+
+
+.create-button {
+    @extend .slide-down-animation;
+    animation-delay: 200ms;
+    height: 40px !important;
+    border-radius: 4px !important;
+    font-size: 16px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    margin-top: 50px;
+}
+
+
+// Animations
+@keyframes dash {
+    from {
+      stroke-dasharray: 0, 473;
+    }
+    to {
+      stroke-dasharray: 473, 0;
+    }
+  }
+
+.slide-down-animation {
+    animation: slide-down 400ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    transform-origin: left top;
+    transform: scaleY(0);
+}
+
+@keyframes slide-down {
+    from {
+        transform: scaleY(0)
+    }
+    to {
+        transform: scaleY(1)
+    }
+}

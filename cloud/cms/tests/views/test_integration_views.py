@@ -21,7 +21,7 @@ class TestIntegrations:
 
     def test_get_integration_404(self, mocker, arf):
         self.patch_enabled(mocker)
-        request = arf.get(f'/api/integration/{self.non_existing_asset_id}')
+        request = arf.get(f'/api/cms/integration/{self.non_existing_asset_id}')
         request.session = {}
         request.user = self.superuser
         response = get_integration(request, self.non_existing_asset_id)
@@ -30,7 +30,7 @@ class TestIntegrations:
 
     def test_get_integration_success(self, mocker, arf):
         self.patch_enabled(mocker)
-        request = arf.get(f'/api/integration/{self.existing_asset_id}')
+        request = arf.get(f'/api/cms/integration/{self.existing_asset_id}')
         request.session = {}
         request.user = self.superuser
         response = get_integration(request, self.existing_asset_id)
@@ -38,9 +38,26 @@ class TestIntegrations:
         assert len(response.data) == 1
         assert response.data[0]['id'] == self.existing_asset_id
 
+    def test_get_integration_draft_permission(self, mocker, arf):
+        request = arf.get(f'/api/cms/integration/{self.existing_asset_id}?draft=True')
+        request.session = {}
+        request.user = self.non_superuser
+        mocker.patch('cms.models.UserGroupsToAssetPermissions.check_customization_permission', return_value=True)
+        response = get_integration(request, self.existing_asset_id)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 1
+        assert response.data[0]['id'] == self.existing_asset_id
+
+    def test_get_integration_draft_forbidden(self, mocker, arf):
+        request = arf.get(f'/api/cms/integration/{self.existing_asset_id}?draft=True')
+        request.session = {}
+        request.user = self.non_superuser
+        response = get_integration(request, self.existing_asset_id)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
     def test_get_integration_forbidden(self, mocker, arf):
         self.patch_enabled(mocker, state=False)
-        request = arf.get(f'/api/integration/{self.existing_asset_id}')
+        request = arf.get(f'/api/cms/integration/{self.existing_asset_id}')
         request.session = {}
         response = get_integration(request, self.existing_asset_id)
         assert response.status_code == status.HTTP_403_FORBIDDEN
@@ -49,7 +66,7 @@ class TestIntegrations:
     @pytest.mark.slow
     def test_get_integrations_success(self, mocker, arf):
         self.patch_enabled(mocker)
-        request = arf.get(f'/api/integrations')
+        request = arf.get(f'/api/cms/integrations')
         request.session = {}
         response = get_integrations(request)
         assert response.status_code == status.HTTP_200_OK

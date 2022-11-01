@@ -1,0 +1,141 @@
+@use "../../../../../styles/theme_variables_common" as *;
+@use "../../../../styles/typography";
+@use "src/app/styles/_bootstrap_utils" as bootstrap;
+
+.get-started-heading {
+    font-family: $font-family-light;
+    font-size: 56px !important;
+    margin: 106px 16px 45px 16px;
+    justify-content: center;
+
+    @include bootstrap.media-breakpoint-down(xs) {
+        font-size: 36px !important;
+        margin-top: 36px !important;
+    }
+}
+
+.get-started-heading-link {
+    @extend .get-started-heading;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 0.08em;
+    }
+}
+
+.get-started-section{
+    background: var(--alt-body-bg);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 84px;
+
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-bottom: 24px;
+    }
+
+    .get-started-blocks {
+        padding: 50px 16px 0 16px;
+        width: 100%;
+        max-width: 1440px;
+
+        @include bootstrap.media-breakpoint-down(xs) {
+            padding-top: 36px !important;
+        }
+
+    }
+}
+
+.detail-wrapper {
+    margin-bottom: 14px;
+    justify-content: center;
+    min-height: 246px;
+
+    @include bootstrap.media-breakpoint-down(xs) {
+        min-height: 0 !important;
+        flex: 0 1 99% !important;
+    }
+}
+
+.detail-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    @include bootstrap.media-breakpoint-down(xs) {
+        width: 100% !important;
+        margin-top: -3px;
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        .step-text h3 {
+            color: var(--brand-core) !important;
+        }
+    }
+    &:active {
+        .step-text h3 {
+            color: unset !important;
+        }
+    }
+
+
+    .step-image {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        flex: 1 1 100%;
+
+        img {
+            transition: all ease-out 0.25s;
+            z-index: 2;
+            width: 150px;
+            height: 150px;
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            top: 85px;
+            width: 85%;
+            height: 100px;
+            background-image : var(--spot-gradient);
+            transition: all ease-out 0.25s;
+
+            @include bootstrap.media-breakpoint-down(xs) {
+                width: 55% !important;
+            }
+        }
+    }
+
+    .step-text {
+        z-index: 1;
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: 35px;
+        margin-bottom: 39px;
+
+        @include bootstrap.media-breakpoint-down(xs) {
+            margin-top: 13px;
+        }
+
+        & > h3 {
+            width: 170px;
+            @include typography.medium18nocolor;
+            margin-bottom: 2px;
+        }
+    }
+}
+
+.slide-up {
+    & > svg-icon {
+        transform: translate3d(0, -20px, 0);
+    }
+
+    &:after {
+        filter: opacity(.75) brightness(1.25);
+    }
+}

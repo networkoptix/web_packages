@@ -1,0 +1,41 @@
+<ng-template
+    #errorLevel
+    let-node="node"
+    let-level="level"
+>
+    <div
+        *ngFor="let error of node | keyvalue"
+        [ngClass]="hasMoreErrors(error.value) ? 'error-block' : 'error-text-wrapper'"
+    >
+        <h2 *ngIf="error.key !== 'name'">
+            {{ error.key }}:
+            <span
+                *ngIf="!hasMoreErrors(error.value)"
+                class="error-text"
+                >{{ error.value }}</span
+            >
+        </h2>
+        <ng-container *ngIf="hasMoreErrors(error.value)">
+            <ng-container
+                *ngTemplateOutlet="errorLevel; context: { node: error.value, level: level + 1 }"
+            ></ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+
+<div
+    *ngIf="(accountService.accountSubject | async)?.is_superuser || pendingOrReview"
+    class="error-block-wrapper"
+>
+    <div class="error-display-block">
+        <div class="heading bg-warning">
+            {{ LANG.pages.developers.menuNodeContainsErrors({ menuNodeName }) }}
+        </div>
+        <div class="error-wrapper error-block">
+            <h2 translate>Errors:</h2>
+            <ng-container
+                *ngTemplateOutlet="errorLevel; context: { node: errorsToDisplay, level: 1 }"
+            ></ng-container>
+        </div>
+    </div>
+</div>

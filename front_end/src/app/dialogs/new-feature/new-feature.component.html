@@ -1,0 +1,82 @@
+<!-- Modal Wrapper -->
+<div class="info-header">
+    <span
+        class="tag"
+        translate
+        >New Feature</span
+    >
+    <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <div class="close-content"></div>
+    </button>
+</div>
+<div class="info-body">
+    <!-- Separating hard coded content in case we dynamically pass content in the future or use cms content -->
+    <ng-container [ngTemplateOutlet]="dynamicTemplate || hardCodedTemplate"></ng-container>
+</div>
+
+<!-- Modal Content -->
+<ng-template #hardCodedTemplate>
+    <ng-container [ngSwitch]="templateName">
+        <div *ngSwitchCase="'cloudStorage'">
+            <div class="heading">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirCloudStorage + 'cloud_storage.svg'"
+                    [applyClass]="true"
+                    class="heading-icon"
+                ></svg-icon>
+                <div>
+                    <h2 translate>New Cloud Storage Experience</h2>
+                    <span translate>Increase the security of your data</span>
+                </div>
+            </div>
+            <div class="actions">
+                <ng-container *ngFor="let actionId of ['update', 'migrate', 'delete']">
+                    <div
+                        *ngIf="LANG.dialogs.cloudStorage.information[actionId]"
+                        class="action"
+                    >
+                        <h4 class="action-heading">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="CONFIG.icons.dirCloudStorage + actionId + '_storage.svg'"
+                                [applyClass]="true"
+                                class="action-icon"
+                                [svgStyle]="{ 'width.px': '44', 'height.px': '20' }"
+                            >
+                            </svg-icon>
+                            <span>{{
+                                'dialogs.cloudStorage.information.' + actionId + '.title'
+                                    | translate
+                            }}</span>
+                        </h4>
+                        <p>
+                            {{
+                                'dialogs.cloudStorage.information.' + actionId + '.body' | translate
+                            }}
+                        </p>
+                    </div>
+                </ng-container>
+            </div>
+            <button
+                class="btn btn-primary btn-big"
+                translate
+                (click)="close(); dialogsService.cloudStorageActivate(dialogData.licenseManager)"
+            >
+                Activate Cloud Storage
+            </button>
+        </div>
+        <div
+            *ngSwitchDefault
+            translate
+        >
+            Not Implemented
+        </div>
+    </ng-container>
+</ng-template>

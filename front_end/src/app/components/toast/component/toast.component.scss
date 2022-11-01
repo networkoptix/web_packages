@@ -1,0 +1,58 @@
+.toast {
+    transition : .5s linear all;
+    max-width  : 600px;
+    opacity    : 1;
+    
+    &.hide {
+        opacity : 0;
+        display : block;
+    }
+    
+    &-body {
+        padding : 0;
+        
+        .close {
+            height : 100% !important;
+            width  : auto;
+            
+            span {
+                line-height : .5;
+            }
+        }
+    }
+}
+
+.close-button {
+    position : absolute;
+    right    : 1rem;
+    top      : .5rem;
+}
+
+.alert {
+    margin-bottom : 8px;
+}
+
+.alert-success {
+    color            : var(--toast-success-color);
+    background-color : var(--toast-success-bg);
+    border-color     : var(--toast-success-border-color);
+}
+
+.alert-warning {
+    color            : var(--toast-warning-color);
+    background-color : var(--toast-warning-bg);
+    border-color     : var(--toast-warning-border-color);
+}
+
+.alert-danger {
+    color            : var(--toast-danger-color);
+    background-color : var(--toast-danger-bg);
+    border-color     : var(--toast-danger-border-color);
+}
+
+.alert-info {
+    color            : var(--toast-info-color);
+    background-color : var(--toast-info-bg);
+    border-color     : var(--toast-info-border-color);
+}
+

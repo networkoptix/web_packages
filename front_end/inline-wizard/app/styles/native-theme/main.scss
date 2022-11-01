@@ -30,11 +30,6 @@
   }
 }
 
-* {
-  @import '_theme_hint';
-  @import '~hint.css/src/hint';
-}
-
 html {
   position: relative;
   height: 100%;
@@ -143,7 +138,7 @@ body {
       input ~ .tick {
         svg polygon.box,
         svg polyline.box {
-          stroke : $error;
+          stroke : var(--error);
         }
       }
     }

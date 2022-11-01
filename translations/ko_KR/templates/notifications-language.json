@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "{{{message.asset}}}{{/message.asset}}에 카메라 페이지 피드백{{#message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "Ownership transfer for {{message.system_name}}"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}}에 새로운 버전이 있습니다."
   },

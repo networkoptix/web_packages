@@ -1,6 +1,7 @@
 {
-    "language": "sv_SE",
+    "language": "en_US",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
+    "Administration": "Administration",
     "All Servers": "Alla servrar",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "For developers": "För utvecklare",
@@ -20,7 +21,7 @@
         "Network Interfaces": "Nätverksgränssnitt"
     },
     "alarmLevels": {
-        "offline": "Offline",
+        "offline": "Frånkopplade",
         "error": "Fel",
         "warning": "Varningar"
     },
@@ -79,7 +80,7 @@
         },
         "disabled": {
             "description": "Användaren är inaktiverad och kan inte logga in på System",
-            "label": "Avaktiverad"
+            "label": "Inaktiverad"
         },
         "liveViewer": {
             "description": "Kan bara visa live video",
@@ -133,6 +134,7 @@
         "passwordReset": "att återställa servern",
         "passwordRestart": "för att starta om servern",
         "passwordDetach": "att koppla från servern",
+        "passwordTransfer": "att överföra systemet",
         "expiredAccountSubheader": "Logga in igen som",
         "createAccountHeader": "Skapa %CLOUD_NAME% konto",
         "activateHeader": "Aktivera %CLOUD_NAME% konto",
@@ -175,6 +177,38 @@
         "ptz": "PTZ-kameror"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Storlek",
+            "state": "Läge",
+            "system": "System",
+            "expires": "Förfaller",
+            "key": "Nyckel"
+        },
+        "fromServer": {
+            "ACTIVE": "Aktiv",
+            "INACTIVE": "Inaktiv",
+            "Unassigned": "Ej tilldelad",
+            "until": "{size} till {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Denna licens avaktiverades mer än en gång OCH återaktiverades för mindre än 24 timmar sedan",
+            "License key is already activated": "Licensen är redan aktiverad",
+            "Maximum number of items is 10000": "Maximalt antal artiklar är 10 000",
+            "This Cloud license does not exist": "Denna molnlicens finns inte",
+            "This license is already activated": "Licensen är redan aktiverad",
+            "This license is not activated": "Denna licens är inte aktiverad",
+            "This license has already expired": "Denna licens har redan löpt ut",
+            "Already has a cloud storage license active": "Har redan en aktiv molnlagringslicens",
+            "Cloud System ID does not match credentials used": "Cloud System ID matchar inte inloggningsuppgifter som används",
+            "Not Authorized for cloud system": "Ej auktoriserad för molnsystem",
+            "This license is not currently activated": "Denna licens är för närvarande inte aktiverad",
+            "This license has no deactivations remaining": "Denna licens har inga avaktiveringar kvar",
+            "Cloud system Id does not match license activation": "Molnsystem-Id matchar inte licensaktivering",
+            "used": "{used} av {total} ({percent}%) används",
+            "available": "Tillgänglig",
+            "usedSpace": "{usageSpace} ({percentage}%)"
+        },
+        "notUsedWarning": "Molnlagringen används inte för inspelning. Gå till <a href=\"{serverSettings}\">Servers inställningar</a> för att konfigurera den."
+    },
     "common": {
         "account": {
             "created": {
@@ -227,6 +261,14 @@
             "medium": "Medel",
             "low": "Låg"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# år} one{# år} other{# år}}",
+            "monthS": "{count, plural, =0{# månader} one{# månad} other{# månader}}",
+            "weekS": "{count, plural, =0{# veckor} one{# vecka} other{# veckor}}",
+            "dayS": "{count, plural, =0{# dagar} one{# dag} other{# dagar}}",
+            "hourS": "{count, plural, =0{# timmar} one{# timme} other{# timmar}}",
+            "minuteS": "{count, plural, =0{# minuter} one{# minut} other{# minuter}}"
+        },
         "general": "Allmänt",
         "generalError": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
         "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
@@ -268,6 +310,13 @@
         },
         "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
+    "components": {
+        "widgets": {
+            "lastUpdated": "Senast uppdaterad { date }",
+            "updatingIn": "Uppdaterar om { time } sekunder"
+        }
+    },
+    "cookieWarning": "Vi använde cookies för att förbättra din upplevelse på vår webbplats. De hjälper oss också att förstå hur vår webbplats används. Ta reda på mer och ställ in dina cookies-preferenser&nbsp; | här | . Genom att fortsätta använda vår sida samtycker du till att använda våra cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard redigering är aktiverad",
         "dashboardLocked": "Instrumentpanelen är låst",
@@ -309,6 +358,28 @@
             "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbordsklienten {vmsName}.",
             "camera": "kamera",
             "cameras": "kameror",
+            "actions": {
+                "activate": {
+                    "heading": "Aktivera molnlagring",
+                    "action": "Aktivera",
+                    "success": "Molnlagring har aktiverats!"
+                },
+                "modify": {
+                    "heading": "Ändra molnlagring",
+                    "action": "Ändra",
+                    "success": "Molnlagring har uppgraderats!"
+                },
+                "move": {
+                    "heading": "Flytta molnlagring",
+                    "action": "Flytta",
+                    "success": "Molnlagring har uppgraderats!"
+                },
+                "delete": {
+                    "heading": "Radera molnlagring?",
+                    "action": "Radera",
+                    "success": "Molnlagring har raderats!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Aktuella inspelningar",
                 "whenFullyUsed": "När fullt använd",
@@ -316,6 +387,20 @@
                 "archiveFrom": "Arkiv från",
                 "recordingBitrate": "Bitrate inspelning",
                 "delayFromLive": "Fördröjning från live"
+            },
+            "information": {
+                "update": {
+                    "title": "Redigera",
+                    "body": "Du kan ändra storleken på molnlagring i systemet med den nya nyckeln. Alla inspelade data kommer att sparas."
+                },
+                "migrate": {
+                    "title": "Flytta",
+                    "body": "Molnlagring med all inspelad data kan enkelt överföras till ditt andra system utan aktiv molnlagring."
+                },
+                "delete": {
+                    "title": "Radera",
+                    "body": "Du kan när som helst ta bort molnlagring från systemet. Du kan använda denna nyckel senare för återaktivering, om du vill."
+                }
             },
             "remove": {
                 "success": "Molnlagring har tagits bort från systemet",
@@ -377,11 +462,7 @@
             "primaryCannotMerge": "System {targetSystem} har en nyare programversion som är oförenlig med det nuvarande systemet. Uppdatera det nuvarande systemet till {downloadHTML} att slå samman det med {targetSystem} systemet.",
             "primarySystemOffline": "System {primarySystem} är offline och kan inte slås samman med System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Vi rekommenderar att du rådgör med",
-                "b_support": "support",
-                "c_proceeding": "innan fortsättning."
-            },
+            "recommendSupport": "Vi rekommenderar att du rådgör med | support | innan du fortsätter.",
             "restError": {
                 "duplicateServer": "Sammanfogningsfel. Båda systemen har samma server",
                 "useCloudMerge": "Kan inte slå samman system som är bundna till molnet",
@@ -404,7 +485,8 @@
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Det kommer att finnas mer än <strong>{maxServers}</strong> servrar i det sammanslagna systemet."
+            "warning": "Det kommer att finnas mer än <strong>{maxServers}</strong> servrar i det sammanslagna systemet.",
+            "update": "Uppdatera dem till&nbsp; | senaste bygget |"
         },
         "message": {
             "system2faEnabled": "Tvåfaktorsautentisering kommer nu att tvingas till detta system.",
@@ -448,6 +530,13 @@
             "action": "Logga in",
             "message": "Var god logga in igen.",
             "title": "Din session har gått ut"
+        },
+        "systemGroups": {
+            "createdInRoot": "Ny grupp kommer att skapas i root",
+            "createdInCurrentGroup": "Ny grupp kommer att skapas i nuvarande grupp"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } är inte en användare i systemet"
         },
         "titles": {
             "error": "Fel",
@@ -617,6 +706,10 @@
         "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet för att dekryptera detta arkiv.",
         "webadmin2faRequired": "Tvåfaktorsautentisering krävs för att komma åt detta system. Du kan aktivera tvåfaktorsautentisering i dina <a href=\"{ cloudHost }/account/security\">-kontoinställningar</a>."
     },
+    "appHeader": {
+        "mySystems": "Mina system",
+        "systemList": "Systemlista"
+    },
     "integration": {
         "Access Control": "Åtkomstkontroll",
         "Connector": "Anslutare",
@@ -669,6 +762,7 @@
     "ipvdFeedback": {
         "request": "Vänligen <span id=\"request\">skicka in en begäran</span> för ytterligare frågor/bekymmer angående enheter som stöds."
     },
+    "layoutAutosave": "Spara automatiskt om { time } sekunder...",
     "systemsCount": "{count, plural, =0{# System} one{# Systemet} other{# System}}",
     "alertsCount": "{count, plural, =0{# varningar} one{# varna} other{# varningar}}",
     "ipvdTopXByVolume": "Topp {value} efter volym:",
@@ -694,6 +788,21 @@
         "server": "Server",
         "alert": "Varning"
     },
+    "appFooter": {
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. Alla rättigheter förbehållna"
+    },
+    "pages": {
+        "developers": {
+            "menuNodeContainsErrors": "Menynod <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> innehåller fel"
+        },
+        "downloadHistory": {
+            "published": "PUBLISERAD { date }"
+        },
+        "health": {
+            "importedSystem": "System: { system }",
+            "importedTime": "Genererad: { time }"
+        }
+    },
     "pageTitles": {
         "about": "Om",
         "account": "Kontoinställningar",
@@ -714,7 +823,7 @@
         "login": "Logga in",
         "pageNotFound": "Det gick inte att hitta sidan",
         "register": "Skapa konto i",
-        "registerSuccess": "Välkommen till",
+        "registerSuccess": "Welcome to",
         "restorePassword": "Återställ lösenord",
         "restorePasswordSuccess": "Lösenordet sparat",
         "supportedDevices": "Enheter som stöds",
@@ -792,7 +901,7 @@
             "accept": "Godkänn",
             "reject": "Avvisa",
             "backToEditText": "Tillbaka till redigeringsgränssnittet",
-            "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
+            "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna och den matchar inte publikt tillgänglig version.",
             "publishedRibbon": "Den här sidan är den liveversionen som är allmänt tillgänglig."
         },
         "newVersionAvailable": {
@@ -807,8 +916,6 @@
         "Search": "Sök",
         "analytics": "Analys",
         "analyticsSelected": "analyshändelse",
-        "filter applied": "filter används",
-        "filters applied": "filter används",
         "appliedFilters": "{count, plural, =0{# filter} one{# filter} other{# filter}} tillämpas",
         "hardwareType": "Typ",
         "hardwareTypes": "Typer",
@@ -816,7 +923,10 @@
         "search_ipvd": "Sök efter modell eller tillverkare",
         "selected": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
         "vendor": "Tillverkare",
-        "vendors": "Tillverkare"
+        "vendors": "Tillverkare",
+        "resultsFound": "{count, plural, =0{# Resultat} one{# Resultat} other{# Resultat}} hittades",
+        "noMatches": "Inga träffar",
+        "userNotFound": "<span class=\"error\">Användaren kunde inte hittas</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fel vid borttagning eller bevarande av analysdata",
@@ -848,6 +958,7 @@
         "Settings": "Inställningar",
         "Information": "Information",
         "Bookmarks": "Bokmärken",
+        "Layouts": "Vyer",
         "Monitoring": "Övervakning"
     },
     "system": {
@@ -904,6 +1015,7 @@
                 "help": "(logga all tillgänglig information)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } loggnivå",
         "storageToolTips": {
             "local": "Lokal",
             "usb": "USB",
@@ -911,7 +1023,30 @@
             "smb": "Nätverk (smb), läggs till via VMS",
             "cloud": "Moln"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> vill överföra ägandet av detta system till dig"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> vill överföra äganderätten till detta system till dig",
+        "transferTo": "Överför äganderätten till – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "root": "rot",
+        "groupCount": "{count, plural, =0{# Grupper} one{# Grupp} other{# Grupper}}",
+        "systemCount": "{count, plural, =0{# System} one{# System} other{# System}}",
+        "connectionLost": "Anslutning förlorad, återansluter...",
+        "connectionRestored": "Anslutningen återställd",
+        "couldNotReconnect": "Det gick inte att återställa anslutningen",
+        "noConnection": "Ingen anslutning",
+        "groupAlreadyIn": "Grupp { srcName } är redan i { destName }",
+        "systemAlreadyIn": "System { srcName } är redan i { destName }",
+        "addGroupToSelf": "Du kan inte lägga till en grupp till sig själv",
+        "errorMsg": {
+            "You can only delete groups that you own": "Du kan bara ta bort grupper som du äger",
+            "You can only move systems that you own.": "Du kan bara flytta system som du äger.",
+            "You can only move systems into groups that you own.": "Du kan bara flytta system till grupper som du äger.",
+            "You cannot add a group to itself": "Du kan inte lägga till en grupp till sig själv",
+            "You cannot add a parent group to its child.": "Du kan inte lägga till en överordnad grupp till dess underordnade grupp.",
+            "You can only move groups that you own.": "Du kan bara flytta grupper som du äger.",
+            "Adding src group to dst group would create a cycle in tree.": "Lägga till grupp i grupp skulle skapa en loop i träd.",
+            "User does not exist in group": "Användaren finns inte i gruppen"
+        }
     },
     "systemStatuses": {
         "activated": "aktiverad",
@@ -950,7 +1085,9 @@
         },
         "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare",
         "twoFaRequired": "Tvåfaktorsautentisering har aktiverats för det här kontot. Vänligen ange din verifieringskod i popup-fönstret.",
-        "loggingIn": "Loggar in. Vänligen vänta."
+        "loggingIn": "Loggar in. Vänligen vänta.",
+        "sessionRenewed": "Sessionen har förnyats.",
+        "failedToUpdateSession": "Det gick inte att uppdatera sessionen."
     },
     "healthMonitor": {
         "groups": {
@@ -1003,7 +1140,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath-rapport för system {systemName}"
+        "healthReportForSystem": "Hälsorapport för system {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -1120,7 +1257,7 @@
         "statisticsAllowed": "Skicka anonym användningsstatistik och kraschrapporter",
         "statisticsReportLastNumber": "Statistikrapport - sista nummer",
         "statisticsReportLastTime": "Statistik rapport - senaste gången",
-        "statisticsReportLastVersion": "Statistikrapport - senaste versionen",
+        "statisticsReportLastVersion": "Rapport om statistik - senaste versionen",
         "statisticsReportServerApi": "Statistikserver api",
         "statisticsReportTimeCycle": "Statistikrapportintervall",
         "statisticsReportUpdateDelay": "Statistik rapport - uppdateringsfördröjning",

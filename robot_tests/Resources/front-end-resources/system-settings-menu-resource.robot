@@ -3,7 +3,11 @@ Resource          ../../resource.robot
 Resource          system-admin-resource.robot
 
 *** Keywords ***
+Settings Menu Test Teardown
+    Run Keyword If Test Failed    System Settings Menu Test Restart
+
 System Settings Menu Test Setup
+    Run Keyword and Ignore Error    Dismiss New Feature Modal
     Log Out
     Log in to system    ${system 1}    ${system 1}[owner]
     Wait Until Element is Visible    ${SERVERS LINK}
@@ -17,9 +21,9 @@ System Settings Menu Test Restart
     END
 
 System Settings Menu Suite Setup
-    ${rand}=   Generate Random String
+    Open Browser and go to URL    ${url}
+    ${rand}=   Generate Random String      length=5
     ${owner}=   Register and activate account with random email    SystemsMenu    Owner    ${BASE PASSWORD}
-
     FOR    ${i}    IN RANGE    1    4
         ${system}=   Create Base System    container name=systems_menu_${rand}_${i}    owner=${owner}
         Set Suite Variable    ${system ${i}}    ${system}
@@ -29,9 +33,7 @@ System Settings Menu Suite Setup
         cdb Merge Cloud Systems    ${system 1}[cloud id]    ${system ${i}}[cloud id]    ${system 1}[cloud auth][0]    ${system 1}[cloud auth][1]
         Sleep    60
     END
-
-    Open Browser and go to URL    ${url}
-
+    Go to   ${url}
     Log in to system    ${system 1}    ${system 1}[owner]
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}

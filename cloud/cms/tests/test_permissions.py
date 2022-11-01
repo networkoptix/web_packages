@@ -4,9 +4,9 @@ from uuid import uuid4
 from cms.permissions import *
 
 
-def test_is_superuser_permission(account_factory, mocker, db):
-    superuser = account_factory(email=str(uuid4()))
-    non_superuser = account_factory(email=str(uuid4()), is_superuser=False)
+def test_is_superuser_permission(account_factory, mocker):
+    superuser = account_factory(email=str(uuid4()), prepare_only=True)
+    non_superuser = account_factory(email=str(uuid4()), is_superuser=False, prepare_only=True)
     request, view = [mocker.MagicMock() for _ in range(2)]
 
     instance = IsSuperuser()
@@ -19,7 +19,7 @@ def test_is_superuser_permission(account_factory, mocker, db):
     request.user = non_superuser
     assert not instance.has_permission(request, view)
 
-
+@pytest.mark.no_db
 def test_can_view_developers_permission(account_factory, mocker, db):
     superuser = account_factory(email=str(uuid4()))
     non_superuser = account_factory(email=str(uuid4()), is_superuser=False)
