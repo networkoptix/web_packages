@@ -997,8 +997,8 @@
             "localSuccess": "System ist betriebsbereit",
             "merge": "Server zu einem bestehenden System verbinden",
             "mergeFailure": "Systeme können nicht zusammengeführt werden",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
+            "mergeProcess": "Systeme zusammenführen",
+            "start": "Erste Schritte mit %VMS_NAME%",
             "systemName": "Systemname eingeben"
         },
         "advancedSettings": {
@@ -1006,7 +1006,7 @@
             "autoDiscoveryEnabled": "Automatische Geräteerkennung aktivieren",
             "statisticsAllowed": "Senden Sie anonyme Nutzungsstatistiken und Absturzberichte",
             "standard": "Standard",
-            "safe": "Safe"
+            "safe": "Sicher"
         }
     },
     "system": {
