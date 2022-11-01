@@ -77,7 +77,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             .subscribe(translations => {
                 setTimeout(() => {
                     this.LANG = translations;
-                    this.pageService.pageTitle = this.LANG.pageTitles.account();
+                    this.pageService.pageTitle(this.LANG.pageTitles.account());
                     this.initProcess();
                     if (this.langChanged) {
                         this.langChanged = false;
@@ -91,7 +91,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.account();
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.initProcess();

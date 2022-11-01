@@ -11,6 +11,7 @@ import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeh
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { GraphsComponent } from './graphs/graphs.component';
 import { LogsComponent } from './logs/logs.component';
@@ -25,10 +26,12 @@ const appRoutes: Routes = [
         children: [
             {
                 path: '',
+                title: SystemTitleResolver,
                 component: GraphsComponent,
             },
             {
                 path: 'logs',
+                title: SystemTitleResolver,
                 component: LogsComponent,
             }
         ]

@@ -9,7 +9,6 @@ import { processLanguageFactory } from '@utils/general';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxPageService } from './page.service';
 import { WINDOW } from './window-provider';
 
 @Injectable({
@@ -26,7 +25,6 @@ export class NxBootstrapProvider {
     constructor(
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
-        private pageService: NxPageService,
         private http: HttpClient,
         @Inject(WINDOW) private window: Window
     ) {
@@ -139,10 +137,6 @@ export class NxBootstrapProvider {
         const processLanguage = processLanguageFactory(customStrings);
         this.languageService.setTranslations(data.language, processLanguage(data));
         this.LANG = this.languageService.translations;
-        this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
-        if (!this.CONFIG.isLocal && !this.pageService.pageTitle) {
-            this.pageService.pageTitle = this.LANG.pageTitles.default?.();
-        }
 
         this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
     }

@@ -89,7 +89,7 @@ export class DownloadHistoryComponent implements OnInit {
     }
 
     // Only for response from NxCloudApiService.getDownloadsHistory(this.build),
-    // doesn't acually check object contents
+    // doesn't actually check object contents
     private isSingleBuild(_data: BuildHistory | Build): _data is Build {
         return !!this.build;
     }
@@ -114,12 +114,22 @@ export class DownloadHistoryComponent implements OnInit {
                     };
                 }
 
-                this.pageService.pageTitle = startCase(this.currentTab || this.noteTypes[0]);
+                if (!this.currentTab) {
+                    this.pageService.pageTitle(startCase(this.noteTypes[0]));
+                }
 
                 setTimeout(() => {
                     this.tabsVisible = true;
                 });
-            }, this.pageService.show404
+            }, () => {
+                this.router
+                    .navigate(['404'], {
+                        replaceUrl: true,
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
             )
             .finally(() => {
                 this.sub.unsubscribe();
@@ -162,7 +172,13 @@ export class DownloadHistoryComponent implements OnInit {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.pageService.show404();
+                            this.router
+                                .navigate(['404'], {
+                                    replaceUrl: true,
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
                         }
                     });
             } else {
@@ -183,7 +199,6 @@ export class DownloadHistoryComponent implements OnInit {
     public switchTo(name: string): false {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
-        this.pageService.pageTitle = startCase(name);
 
         this.uriService
             .updateURI('/downloads/' + name, {})

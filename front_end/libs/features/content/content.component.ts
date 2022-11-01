@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
@@ -47,6 +47,7 @@ export class NxContentComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private router: Router,
         private route: ActivatedRoute,
         private http: HttpClient,
         private pageService: NxPageService,
@@ -110,7 +111,18 @@ export class NxContentComponent implements OnInit {
             this.articleParam = paramMap.get('article_param');
             if (this.articleParam === 'temp_url' && this.state === 'draft') {
                 // Internal no need to translate
-                return this.pageService.show404('No saved content to preview. Please save draft or submit for review to view preview.');
+                const queryParams: Record<string, string> = {};
+
+                queryParams.message = 'No saved content to preview. Please save draft or submit for review to view preview.';
+                this.router
+                    .navigate(['404'], {
+                        replaceUrl: true,
+                        queryParams
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                return;
             }
 
             if (this.agreement) {
@@ -145,8 +157,7 @@ export class NxContentComponent implements OnInit {
             (data: any) => {
                 this.title = data.title;
                 this.body = data.body;
-                this.pageService.pageTitle = this.title;
-                this.pageService.pageDescription = data.shortDescription;
+                this.pageService.pageTitle(this.title, data.shortDescription);
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;
@@ -164,7 +175,13 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.pageService.show404();
+                    this.router
+                        .navigate([this.CONFIG.redirect.page404], {
+                            replaceUrl: true,
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
             });
     }
@@ -180,9 +197,10 @@ export class NxContentComponent implements OnInit {
                 this.body = result;
                 const parser = new DOMParser();
                 const content = parser.parseFromString(result, 'text/html');
-                this.pageService.pageTitle =
+                this.pageService.pageTitle(
                     content.querySelector('h1')?.innerText ||
-                    this.LANG.productName();
+                    this.LANG.productName()
+                );
                 this.loaded = true;
                 /* If content was successfully compiled from static files,
                     add to staticContent so we don't do an API call each time we switch pages */
@@ -193,7 +211,13 @@ export class NxContentComponent implements OnInit {
                 );
             }).catch(e => {
                 if (e.status === 404) {
-                    this.pageService.show404();
+                    this.router
+                        .navigate(['404'], {
+                            replaceUrl: true,
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
                 console.error(e);
             });

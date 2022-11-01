@@ -168,17 +168,24 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     );
                                 }
 
-                                this.pageService.pageTitle =
+                                this.pageService.pageTitle(
                                     this.LANG.pageDescriptions.integrationDetails({
                                         PLUGIN_NAME: this.plugin.information.name,
                                         PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName
-                                    });
+                                    })
+                                );
 
                                 this.integrationService.setIntegrationPlugin(this.plugin);
                             }
                         }).add(() => {
                             if (!this.plugin) {
-                                this.pageService.show404();
+                                this.router
+                                    .navigate(['404'], {
+                                        replaceUrl: true,
+                                    })
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
                             }
                         });
                 }

@@ -15,6 +15,7 @@ import { IntegrationsListModule } from './list/list.module';
 const appRoutes: Routes = [
     {
         path: '',
+        title: '{ "baseTitle": "integrations", "descr": ["integration", "seoPageDesc"] }',
         component: NxIntegrationsComponent
     }
 

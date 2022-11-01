@@ -10,7 +10,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import type {
     NxSystemWithUserInfo
@@ -75,7 +74,6 @@ export class NxDebugComponent {
         private cloudApiService: NxCloudApiService,
         private dialogsService: NxDialogsService,
         private languageService: NxLanguageProviderService,
-        private pageService: NxPageService,
         private processService: NxProcessService,
         private systemsService: NxSystemsService,
         private urlProtocol: NxUrlProtocolService,
@@ -83,7 +81,6 @@ export class NxDebugComponent {
     ) {
         this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
-        this.pageService.pageTitle = this.LANG.pageTitles.debug?.();
         this.accountService.get().then(acc => {
             this.init();
         });

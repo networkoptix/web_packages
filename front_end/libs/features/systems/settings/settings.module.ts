@@ -12,6 +12,7 @@ import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';
@@ -36,57 +37,68 @@ export const cloudSettingsRoutes: Routes = [
         children: [
             {
                 path: '',
+                title: SystemTitleResolver,
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'advanced',
+                title: SystemTitleResolver,
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'users',
+                title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'users/:userId',
+                title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers',
+                title: SystemTitleResolver,
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers/:serverId',
+                title: SystemTitleResolver,
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers/:serverId/advanced',
+                title: SystemTitleResolver,
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'cameras',
+                title: SystemTitleResolver,
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'cameras/:cameraId',
+                title: SystemTitleResolver,
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'cloud-storage',
+                title: SystemTitleResolver,
                 canActivate: [SystemGuard],
                 component: NxCloudStorageComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'licenses',
+                title: SystemTitleResolver,
                 component: NxSystemLicensesComponent
             }
         ]

@@ -525,6 +525,7 @@ export interface Integration {
     embedInfo: EmbedInfo;
     filter: Filter;
     myTagId: string;
+    seoPageDesc: string;
 }
 
 export interface DefaultPlatformNames {

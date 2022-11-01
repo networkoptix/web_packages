@@ -19,7 +19,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
@@ -77,14 +76,12 @@ export class NxSystemsListComponent implements OnInit {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
         this.search = { value: '' };
     }
 
     constructor(
         configService: NxConfigService,
         private language: NxLanguageProviderService,
-        private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private processService: NxProcessService,

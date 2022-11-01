@@ -10,7 +10,11 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxOAuthRedirectComponent } from './oauth-redirect.component';
 
 const appRoutes: Routes = [
-    { path: '', component: NxOAuthRedirectComponent }
+    {
+        path: '',
+        title: 'default',
+        component: NxOAuthRedirectComponent
+    }
 ];
 
 @NgModule({

@@ -18,6 +18,7 @@ import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
 import { NxSystemAlertCardComponent } from './card/card.component';
@@ -46,14 +47,19 @@ const appRoutes: Routes = [
         children: [
             {
                 path: '',
+                title: 'reportViewer',
                 component: NxSystemAlertsComponent,
                 pathMatch: 'full'
             },
             {
-                path: 'alerts', component: NxSystemAlertsComponent
+                path: 'alerts',
+                title: 'reportViewer',
+                component: NxSystemAlertsComponent
             },
             {
-                path: ':metric', component: NxSystemMetricsComponent
+                path: ':metric',
+                title: 'reportViewer',
+                component: NxSystemMetricsComponent
             }
         ]
     },
@@ -68,10 +74,14 @@ const appRoutes: Routes = [
                 pathMatch: 'full'
             },
             {
-                path: 'alerts', component: NxSystemAlertsComponent
+                path: 'alerts',
+                title: SystemTitleResolver,
+                component: NxSystemAlertsComponent
             },
             {
-                path: ':metric', component: NxSystemMetricsComponent
+                path: ':metric',
+                title: SystemTitleResolver,
+                component: NxSystemMetricsComponent
             }
         ]
         // FIXME: runGuardsAndResolvers : 'always' breaks /health/

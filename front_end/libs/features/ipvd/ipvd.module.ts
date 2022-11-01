@@ -22,7 +22,11 @@ import { IpvdSearchService } from './ipvd-search.service';
 import { NxIpvdComponent } from './ipvd.component';
 
 const appRoutes: Routes = [
-    { path: '', component: NxIpvdComponent }
+    {
+        path: '',
+        title: 'supportedDevices',
+        component: NxIpvdComponent
+    }
 ];
 
 @NgModule({

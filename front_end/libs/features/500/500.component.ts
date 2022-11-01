@@ -4,7 +4,6 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 
 @Component({
     selector: 'nx-500',
@@ -18,10 +17,8 @@ export class Nx500Component {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private pageService: NxPageService
     ) {
         this.LANG = languageService.translations;
-        this.pageService.pageTitle = this.LANG.common.systemServerError?.();
         this.CONFIG = configService.getConfig();
     }
 }

@@ -11,7 +11,12 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxLandingComponent } from './landing.component';
 
 const appRoutes: Routes = [
-    { path: '', component: NxLandingComponent, pathMatch: 'full' }
+    {
+        path: '',
+        title: '{"baseTitle": "", "type": "product", "descr": ["landing", "description"]}',
+        component: NxLandingComponent,
+        pathMatch: 'full'
+    }
 ];
 
 @NgModule({

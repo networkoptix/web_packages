@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
@@ -8,7 +9,6 @@ import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxUriService } from '@services/uri.service';
 
 import { IntegrationService } from './integration.service';
@@ -47,8 +47,8 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         private uri: NxUriService,
         private integrations: IntegrationService,
         private language: NxLanguageProviderService,
-        private pageService: NxPageService,
         private accountService: NxAccountService,
+        private router: Router,
     ) {
         this.setupDefaults(configService);
     }
@@ -57,8 +57,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.LANG = this.language.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
-        this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
         // Example URI
         // /integrations?search=node
@@ -78,7 +76,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                             .then(() => {
                                 this.setIntegrations(result);
                             })
-                            .catch(this.pageService.show404);
+                            .catch(this.show404);
                     } else {
                         this.setIntegrations(result);
                     }
@@ -87,7 +85,17 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 }
             }, error => {
                 console.error('Integration plugins error -> ', error);
-                this.pageService.show404();
+                this.show404();
+            });
+    }
+
+    private show404(): any {
+        this.router
+            .navigate([this.CONFIG.redirect.page404], {
+                replaceUrl: true,
+            })
+            .catch(error => {
+                console.error(error);
             });
     }
 

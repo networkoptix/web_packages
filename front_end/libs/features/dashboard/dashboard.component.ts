@@ -271,7 +271,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.menu = menu;
         this.dragEnabled = Boolean(widgetUrl || dragEnabled && menu.length);
         this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems();
-        this.pageService.pageTitle = this.dashboardGroupName;
+        this.pageService.pageTitle(this.dashboardGroupName);
 
         this.updateCards(dashboardId, this.menu);
 
@@ -464,7 +464,7 @@ export class NxDashboardComponent implements DashboardGroup {
             this.updateCards(activeId, menu);
             this.dragEnabled = dragEnabled;
             this.dashboardGroupName = dashboardGroupName;
-            this.pageService.pageTitle = dashboardGroupName;
+            this.pageService.pageTitle(dashboardGroupName);
             this.updatePersistedConfig();
         };
         fileReader.readAsText(settingsFile);

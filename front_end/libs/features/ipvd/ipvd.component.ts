@@ -33,7 +33,6 @@ import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
@@ -147,7 +146,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         private location: Location,
         private breakpointObserver: BreakpointObserver,
         private router: Router,
-        private pageService: NxPageService,
         private accountService: NxAccountService,
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(PLATFORM_ID) private platformId: object,
@@ -211,8 +209,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.CONFIG.ipvd.showAnalyticsEvents ||
             this.debug ||
             this.beta;
-
-        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices();
 
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;

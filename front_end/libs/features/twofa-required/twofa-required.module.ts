@@ -8,7 +8,11 @@ import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeh
 import { TwofaRequiredComponent } from './twofa-required.component';
 
 const routes: Routes = [
-    { path: '', component: TwofaRequiredComponent }
+    {
+        path: '',
+        title: 'twofaRequired',
+        component: TwofaRequiredComponent
+    }
 ];
 
 @NgModule({

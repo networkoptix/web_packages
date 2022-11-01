@@ -12,15 +12,18 @@ import { NxLayoutViewComponent } from '@components/layout-view/layout-view.compo
 import { LayoutViewModule } from '@components/layout-view/layout-view.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
+import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 const appRoutes: Routes = [
     {
         path: '',
+        title: SystemTitleResolver,
         component: NxLayoutViewComponent,
         canActivate: [AuthGuard],
     },
     {
         path: ':layoutId',
+        title: SystemTitleResolver,
         component: NxLayoutViewComponent,
         canActivate: [AuthGuard],
     },

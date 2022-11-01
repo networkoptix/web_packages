@@ -18,6 +18,7 @@ import { NxSetupComponent } from './setup/setup.component';
 const appRoutes: Routes = [
     {
         path: '',
+        title: 'integrations',
         component: NxIntegrationDetailsComponent,
         children: [
             { path: '', component: NxOverviewComponent },

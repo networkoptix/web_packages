@@ -24,7 +24,7 @@ import type { Arm, Groups } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
+// import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -64,7 +64,7 @@ export class DownloadComponent implements OnInit {
         private deviceService: DeviceDetectorService,
         private route: ActivatedRoute,
         private router: Router,
-        private pageService: NxPageService,
+        // private pageService: NxPageService,
         @Inject(PLATFORM_ID) private platformId: object,
         @Inject(DOCUMENT) private document: Document,
     ) {
@@ -80,22 +80,13 @@ export class DownloadComponent implements OnInit {
                 .subscribe((event: ActivationEnd) => {
                     this.paramPlatform = event.snapshot.params.platform;
 
-                    if (this.paramPlatform) {
-                        let title: string;
-                        if (this.paramPlatform) {
-                            title = this.LANG.pageTitles.downloadPlatform() + this.paramPlatform;
-                        } else {
-                            title = this.LANG.pageTitles.download();
-                        }
-                        this.pageService.pageTitle = title;
-
-                        if (this.sortedPlatforms?.length) {
-                            this.calcDisplayedPackages(this.paramPlatform);
-                            this.activePlatform = this.sortedPlatforms.find(
-                                platform => platform.name === this.paramPlatform
-                            );
-                        }
+                    if (this.paramPlatform && this.sortedPlatforms?.length) {
+                        this.calcDisplayedPackages(this.paramPlatform);
+                        this.activePlatform = this.sortedPlatforms.find(
+                            platform => platform.name === this.paramPlatform
+                        );
                     }
+                    // }
                 });
         }
     }

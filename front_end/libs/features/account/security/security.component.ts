@@ -20,7 +20,6 @@ import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import {
@@ -60,7 +59,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         private accountService: NxAccountService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
-        private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
@@ -72,7 +70,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.security();
         this.account = this.accountService.account;
 
         this.account2faEnabled = this.account.account2faEnabled;

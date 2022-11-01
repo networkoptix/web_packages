@@ -21,7 +21,6 @@ import { NxApplyService } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -78,7 +77,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private applyService: NxApplyService,
-        private pageService: NxPageService,
         private dialogs: NxDialogsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
@@ -120,9 +118,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             )
             .subscribe(system => {
                 this.system = system;
-                if (!this.environment.isLocal) {
-                    this.pageService.pageTitle = this.system.info.name;
-                }
+
                 // Route guard did not work :( ... so doing it the old way
                 if (!this.system.userManager.permissions?.editUsers) {
                     this.uriService

@@ -1568,15 +1568,6 @@
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
         },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
-        },
-        "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
-        },
         "default": {
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems.",
             "site_name": "%CLOUD_NAME%",
@@ -1619,6 +1610,7 @@
         "apiTool": "API testing tool",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Authorization",
+        "betas": "Betas",
         "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -1630,17 +1622,22 @@
         "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
         "pageNotFound": "Page not found",
+        "patches": "Patches",
         "register": "Create account in",
         "registerSuccess": "Welcome to",
+        "releases": "Releases",
+        "reportViewer": "Health report",
         "restorePassword": "Reset password",
         "restorePasswordSuccess": "Password saved",
         "security": "Security",
         "supportedDevices": "Supported Devices",
         "system": "System",
+        "systemServerError": "Internal server error",
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
+        "twofa": "Two-factor authentication",
         "twofaRequired": "Two-factor authentication required",
         "view": "View cameras"
     },

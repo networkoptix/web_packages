@@ -9,7 +9,6 @@ import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -41,7 +40,6 @@ export class NxLandingComponent implements OnInit {
     constructor(
         private configService: NxConfigService,
         private accountService: NxAccountService,
-        private pageService: NxPageService,
         private language: NxLanguageProviderService,
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
@@ -64,13 +62,10 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.productName();
-        this.pageService.pageDescription = this.CONFIG.landing.description;
         if (this.startUrl === '/logout') {
             this.accountService.logout();
         } else if (this.startUrl.includes('/content/about')) {
             this.loaded = true;
-            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
         } else {
             this.sessionService.loginStateSubject
                 .pipe(untilDestroyed(this))

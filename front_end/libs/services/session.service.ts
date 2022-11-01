@@ -3,6 +3,8 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { NxSystemInfo } from '@services/systems.service.types';
+
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSwCacheService } from './sw-cache.service';
 import { WINDOW } from './window-provider';
@@ -50,6 +52,22 @@ export class NxSessionService {
                 this.window.location.reload();
             }
         });
+    }
+
+    get systems(): NxSystemInfo[] {
+        return this.session.retrieve('systems');
+    }
+
+    set systems(systems: NxSystemInfo[]) {
+        this.session.store('systems', systems);
+    }
+
+    get systemId(): string {
+        return this.session.retrieve('systemId');
+    }
+
+    set systemId(systemId: string) {
+        this.session.store('systemId', systemId);
     }
 
     invalidateSession(): void {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { combineLatest, of, Subject } from 'rxjs';
@@ -15,7 +15,6 @@ import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -50,10 +49,11 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         private bookmarkService: BookmarkService,
         private language: NxLanguageProviderService,
-        private pageService: NxPageService,
+        // private pageService: NxPageService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router,
     ) {
         this.setupDefaults(configService);
     }
@@ -62,8 +62,6 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.LANG = this.language.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
-        this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
         this.route.queryParams
             .pipe(untilDestroyed(this))
@@ -102,7 +100,13 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                 if (err.message === 'should only be using rest version') {
                     this.restEndpointUsed = false;
                 } else {
-                    this.pageService.show404();
+                    this.router
+                        .navigate([this.CONFIG.redirect.page404], {
+                            replaceUrl: true,
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
             });
 

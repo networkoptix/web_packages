@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -13,11 +13,36 @@ import { DirectivesModule } from '@directives/directives.module';
 import { DownloadComponent } from './download.component';
 import { OsResolver } from './os-resolver';
 
+@Injectable({ providedIn: 'root' })
+class TitleResolver implements Resolve<string> {
+    resolve(route: ActivatedRouteSnapshot): string {
+        if (route.params.platform && route.params.platform !== 'sdk') {
+            return `
+                {
+                    "baseTitle": "downloadPlatform",
+                    "modifier": "${route.params.platform}"
+                }
+            `;
+        }
+
+        return 'download';
+    }
+}
+
 const appRoutes: Routes = [
     // { path: 'downloads', component: DownloadComponent},
     // { path: '', redirectTo: 'download', pathMatch: 'full' },
-    { path: '', component: DownloadComponent, resolve: { platform: OsResolver } },
-    { path: ':platform', component: DownloadComponent }
+    {
+        path: '',
+        title: 'download',
+        component: DownloadComponent,
+        resolve: { platform: OsResolver }
+    },
+    {
+        path: ':platform',
+        title: TitleResolver,
+        component: DownloadComponent,
+    }
 ];
 
 @NgModule({

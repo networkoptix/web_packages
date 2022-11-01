@@ -27,7 +27,6 @@ import type { SystemTransferInfo, CloudResponse } from '@services/nx-cloud-api/n
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -163,9 +162,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.systemName !== systemName) {
             this.systemName = systemName;
             this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
-            if (!this.CONFIG.isLocal) {
-                this.pageService.pageTitle = this.systemName;
-            }
 
             setTimeout(() => {
                 this.systemNameFormWatcher = this.applyService.createFormWatcher(
@@ -192,7 +188,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
-        private pageService: NxPageService,
         private dialogs: NxDialogsService,
         private systemsService: NxSystemsService,
         private settingsService: NxSettingsService,
@@ -321,7 +316,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             },
             { ignoreError: true },
             () => {
-                this.pageService.pageTitle = this.systemName;
                 this.systemsService.forceUpdateSystems().subscribe();
             },
             () => {

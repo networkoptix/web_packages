@@ -25,6 +25,7 @@
             "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
             "@guards/*": ["libs/routeGuards/*"],
             "@services/*": ["libs/services/*"],
+            "@resolvers/*": ["libs/resolvers/*"],
             "@utils/*": ["libs/utils/*"],
             "@authorization/*": ["apps/authorization/*"],
             "@pipes/*": ["libs/pipes/*"],

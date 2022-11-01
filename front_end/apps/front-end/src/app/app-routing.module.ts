@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { NxPageTitleStrategy } from '@app/resolvers/title-resolver';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -51,6 +52,23 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/new-landing/new-landing.module').then(m => m.NewLandingModule)
     },
     {
+        path: 'systems',
+        title: 'systems',
+        loadChildren: () => import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule)
+    },
+    {
+        path: 'systems/:systemId',
+        loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule)
+    },
+    {
+        path: 'systems/groups',
+        loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
+        canLoad: [FeatureGuard],
+        data: {
+            flags: FeatureFlagStrings.systemGroups
+        },
+    },
+    {
         path: 'systems/:systemId/health',
         loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule),
         canActivate: [AuthGuard, SystemGuard, TwofaGuard]
@@ -73,18 +91,6 @@ const lazyRoutes: Routes = [
     {
         path: 'integrations',
         loadChildren: () => import('@pages/integration/integrations.module').then(m => m.IntegrationsModule)
-    },
-    {
-        path: 'systems',
-        loadChildren: () => import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule)
-    },
-    {
-        path: 'systems/groups',
-        loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
-        canLoad: [FeatureGuard],
-        data: {
-            flags: FeatureFlagStrings.systemGroups
-        },
     },
     {
         path: 'download',
@@ -116,10 +122,6 @@ const lazyRoutes: Routes = [
         }
     },
     {
-        path: 'systems/:systemId',
-        loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule)
-    },
-    {
         path: 'twofa-required',
         loadChildren: () => import('@pages/twofa-required/twofa-required.module').then(m => m.TwofaRequiredModule)
     },
@@ -149,6 +151,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'content/about',
+        title: 'about',
         loadChildren: () => import('@pages/landing/landing.module').then(m => m.LandingModule)
     },
     {
@@ -223,7 +226,11 @@ const lazyRoutes: Routes = [
     providers: [
         ApplyGuard,
         AuthGuard,
-        RedirectAuthGuard
+        RedirectAuthGuard,
+        {
+            provide: TitleStrategy,
+            useClass: NxPageTitleStrategy
+        }
     ],
     exports: []
 })

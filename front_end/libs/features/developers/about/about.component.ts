@@ -102,7 +102,15 @@ export class NxAboutComponent {
         this.baseName = baseName;
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
-            setTimeout(this.pageService.show404);
+            setTimeout(() => {
+                this.router
+                    .navigate(['404'], {
+                        replaceUrl: true,
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
             return;
         }
         return true;
@@ -111,8 +119,7 @@ export class NxAboutComponent {
     private updatePageMeta = (): void => {
         this.menusService.getMenu(this.menuName).pipe(
             tap(menu => {
-                this.pageService.pageTitle = menu.title;
-                this.pageService.pageDescription = menu.description;
+                this.pageService.pageTitle(menu.title, menu.description);
             }),
             untilDestroyed(this)
         ).toPromise();

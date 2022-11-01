@@ -7,7 +7,6 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxPageService } from '@services/page.service';
 
 @Component({
     selector: 'nx-503',
@@ -21,7 +20,6 @@ export class Nx503Component implements OnInit {
     constructor(
         configService: NxConfigService,
         private appState: NxAppStateService,
-        private pageService: NxPageService,
         private router: Router,
         private sanitizer: DomSanitizer,
         private apiService: NxCloudApiService,
@@ -29,7 +27,6 @@ export class Nx503Component implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.pageService.pageTitle = 'Maintenance is in progress';
         this.appState.footerVisibility = false;
         this.appState.headerVisibility = false;
     }

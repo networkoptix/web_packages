@@ -17,7 +17,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -50,7 +49,6 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
-        private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -59,7 +57,6 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.changePassword();
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.changePassword = this.processService.createProcess(() => {

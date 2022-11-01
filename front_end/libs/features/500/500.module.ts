@@ -11,7 +11,11 @@ import { DirectivesModule } from '@directives/directives.module';
 import { Nx500Component } from './500.component';
 
 const appRoutes: Routes = [
-    { path: '', component: Nx500Component }
+    {
+        path: '',
+        title: 'systemServerError',
+        component: Nx500Component
+    }
 ];
 
 @NgModule({

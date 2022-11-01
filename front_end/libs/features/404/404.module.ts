@@ -11,7 +11,11 @@ import { DirectivesModule } from '@directives/directives.module';
 import { Nx404Component } from './404.component';
 
 const appRoutes: Routes = [
-    { path: '', component: Nx404Component }
+    {
+        path: '',
+        title: 'pageNotFound',
+        component: Nx404Component
+    }
 ];
 
 @NgModule({

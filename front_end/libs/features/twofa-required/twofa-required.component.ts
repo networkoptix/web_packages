@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
-
 @UntilDestroy({ })
 @Component({
     selector: 'nx-src-twofa-required',
@@ -17,11 +14,7 @@ export class TwofaRequiredComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        languageService: NxLanguageProviderService,
-        pageService: NxPageService,
     ) {
-        const LANG = languageService.translations;
-        pageService.pageTitle = LANG.pageTitles.twofaRequired();
     }
 
     ngOnInit(): void {

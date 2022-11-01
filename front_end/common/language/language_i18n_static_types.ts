@@ -911,11 +911,8 @@ export interface MenuTitles {
 }
 
 export interface MetaDefaults {
-    default:         MetaDefaultsDefault;
-    "/systems":      Docs;
-    "/integrations": Docs;
-    "/docs":         Docs;
-    "/ipvd":         Docs;
+    default: MetaDefaultsDefault;
+    "/docs": Docs;
 }
 
 export interface MetaDefaultsDefault {
@@ -971,6 +968,7 @@ export interface PageTitles {
     restorePassword:        (params?: Record<string, string | number>) => string;
     restorePasswordSuccess: (params?: Record<string, string | number>) => string;
     supportedDevices:       (params?: Record<string, string | number>) => string;
+    reportViewer:           (params?: Record<string, string | number>) => string;
     system:                 (params?: Record<string, string | number>) => string;
     systemShare:            (params?: Record<string, string | number>) => string;
     systems:                (params?: Record<string, string | number>) => string;
@@ -979,7 +977,12 @@ export interface PageTitles {
     view:                   (params?: Record<string, string | number>) => string;
     apiTool:                (params?: Record<string, string | number>) => string;
     security:               (params?: Record<string, string | number>) => string;
+    twofa:                  (params?: Record<string, string | number>) => string;
     twofaRequired:          (params?: Record<string, string | number>) => string;
+    releases:               (params?: Record<string, string | number>) => string;
+    patches:                (params?: Record<string, string | number>) => string;
+    betas:                  (params?: Record<string, string | number>) => string;
+    systemServerError:      (params?: Record<string, string | number>) => string;
 }
 
 export interface Pages {

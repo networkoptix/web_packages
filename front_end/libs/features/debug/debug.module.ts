@@ -14,7 +14,10 @@ import { NxDebugComponent } from './debug.component';
 
 const appRoutes: Routes = [
     {
-        path: 'debug', component: NxDebugComponent, canActivate: [AuthGuard]
+        path: 'debug',
+        title: 'debug',
+        component: NxDebugComponent,
+        canActivate: [AuthGuard]
     }
 ];
 

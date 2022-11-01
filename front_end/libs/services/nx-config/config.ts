@@ -323,7 +323,8 @@ export const nxConfig: IConfig = {
             items: '',
             limitation: ''
         },
-        myTagId: 'mine'
+        myTagId: 'mine',
+        seoPageDesc: ''
     },
     interceptor: {
         cloudUnavailable: {

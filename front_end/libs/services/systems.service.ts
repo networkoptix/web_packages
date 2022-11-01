@@ -8,6 +8,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { NxSessionService } from '@services/session.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
@@ -60,6 +61,7 @@ export class NxSystemsService implements OnDestroy {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private uriService: NxUriService,
+        private sessionService: NxSessionService,
         private cloudApi: NxCloudApiService,
         // private store: Store,
         @Inject(LOCALE_ID) private locale: string,
@@ -215,9 +217,13 @@ export class NxSystemsService implements OnDestroy {
                     this.systemsInPool = systems.length;
                     this.processSystems(systems);
                 }),
-                distinctUntilChanged((a, b) => isEqual(a, b))
+                distinctUntilChanged((a, b) => isEqual(a, b)),
+                untilDestroyed(this)
             )
-            .subscribe(() => this.systemsSubject.next(this.systems));
+            .subscribe((): void => {
+                this.sessionService.systems = this.systems;
+                this.systemsSubject.next(this.systems);
+            });
     }
 
     stopPoll(): void {

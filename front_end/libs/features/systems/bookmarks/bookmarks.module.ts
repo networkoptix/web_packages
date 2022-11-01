@@ -8,6 +8,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
 import { BookmarksListModule } from './list/list.module';
@@ -15,6 +16,7 @@ import { BookmarksListModule } from './list/list.module';
 const appRoutes: Routes = [
     {
         path: '',
+        title: SystemTitleResolver,
         component: NxBookmarksComponent
     }
 

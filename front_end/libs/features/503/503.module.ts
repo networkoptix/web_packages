@@ -10,7 +10,11 @@ import { DirectivesModule } from '@directives/directives.module';
 import { Nx503Component } from './503.component';
 
 const appRoutes: Routes = [
-    { path: '', component: Nx503Component }
+    {
+        path: '',
+        title: 'Maintenance is in progress',
+        component: Nx503Component
+    }
 ];
 
 @NgModule({

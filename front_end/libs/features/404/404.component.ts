@@ -10,7 +10,6 @@ import type { RouteCheckTuple } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -27,7 +26,6 @@ export class Nx404Component {
 
     constructor(
         languageService: NxLanguageProviderService,
-        pageService: NxPageService,
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
@@ -44,7 +42,6 @@ export class Nx404Component {
         } else {
             this.message = this.route.snapshot.queryParams.message || '';
             this.redirecting = false;
-            pageService.pageTitle = this.LANG.pageTitles.pageNotFound?.();
         }
     }
 

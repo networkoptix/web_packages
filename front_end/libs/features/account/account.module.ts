@@ -28,16 +28,19 @@ const appRoutes: Routes = [
         children: [
             {
                 path: '',
+                title: 'account',
                 component: NxAccountSettingsComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'password',
+                title: 'changePassword',
                 component: NxAccountPasswordComponent,
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'security',
+                title: 'twofa',
                 component: NxAccountSecurityComponent,
                 canDeactivate: [ApplyGuard]
             }

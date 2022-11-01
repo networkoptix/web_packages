@@ -25,10 +25,12 @@ import { NxVersionMessageComponent } from './version-message/version-message.com
 const appRoutes: Routes = [
     {
         path: ':route',
+        title: 'apiTool',
         component: NxAPIToolComponent
     },
     {
         path: '',
+        title: 'apiTool',
         redirectTo: 'main',
         pathMatch: 'full'
     }

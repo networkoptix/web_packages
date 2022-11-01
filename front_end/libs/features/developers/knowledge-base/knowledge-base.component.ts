@@ -438,7 +438,13 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.findKBWithArticle(assetId, assetParam);
         } else {
             if (!this.kbService.menuName && !this.kbService.activeAssetId) {
-                this.pageService.show404();
+                this.router
+                    .navigate(['404'], {
+                        replaceUrl: true,
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
             return this.cloudApi.getDocumentation(
                 this.kbService.menuName,
@@ -519,7 +525,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         script: any
     ): void {
         this.search = { ...this.search };
-        this.pageService.pageTitle = originalTitle;
+        this.pageService.pageTitle(originalTitle);
         this.pageService.pageDescription = shortDescription;
         this.pageNode = KnowledgeNode.normalHeader(
             title,
@@ -608,7 +614,13 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 }
             } else {
                 // Navigate to 404 and replace failing url so going history back will load requesting page
-                this.pageService.show404();
+                this.router
+                    .navigate(['404'], {
+                        replaceUrl: true,
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
         } else {
             this.kbService.contentAssetId = null;
