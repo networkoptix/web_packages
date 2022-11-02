@@ -486,8 +486,9 @@ class CustomizationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomizationForm, self).__init__(*args, **kwargs)
 
-        self.fields['parent'].queryset = Customization.objects.exclude(id=self.instance.id) \
-            .exclude(id__in=self.instance.get_children_ids(self.instance))
+        if self.instance.pk:
+            self.fields['parent'].queryset = Customization.objects.exclude(id=self.instance.id) \
+                .exclude(id__in=self.instance.get_children_ids(self.instance))
 
     def clean_parent(self):
         data = self.cleaned_data['parent']

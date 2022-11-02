@@ -120,7 +120,7 @@ do
             fi
 
             find /app/app/static | xargs touch
-            exec gunicorn cloud.wsgi --capture-output --workers ${PORTAL_WORKERS} --bind :5000 --log-level=debug --timeout 300
+            exec gunicorn cloud.asgi:application --capture-output --workers ${PORTAL_WORKERS} --bind :5000 --log-level=debug --timeout 300 -k uvicorn.workers.UvicornWorker
             ;;
         celery)
             write_my_cnf

@@ -2,6 +2,7 @@ import traceback
 import logging
 
 from django.conf import settings
+from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
@@ -9,13 +10,7 @@ from rest_framework import status
 logger = logging.getLogger(__name__)
 
 
-class CatchExceptionMiddleware(object):
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        return self.get_response(request)
-
+class CatchExceptionMiddleware(MiddlewareMixin):
     @staticmethod
     def process_exception(request, exception):
         logging.info(request)
@@ -26,12 +21,8 @@ class CatchExceptionMiddleware(object):
             return HttpResponse("Error with request", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class HeaderMiddleware(object):
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
+class HeaderMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
         referer = request.headers.get('Referer')
         # If the http_referer has embed in it then we have to remove samesite from the cookies.
         if referer and "embed" in referer and response.cookies:
@@ -42,13 +33,9 @@ class HeaderMiddleware(object):
         return response
 
 
-class FilterErrorMiddleware(object):
+class FilterErrorMiddleware(MiddlewareMixin):
     # Redirects if user enters a filter querystring that causes a database error
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
+    def process_response(self, request, response):
         if request.path_info.startswith('/admin') and hasattr(response, 'template_name'):
             if type(response.template_name) == list:
                 template_name = response.template_name[0]

@@ -7,11 +7,12 @@ from django.urls import reverse
 from py import process
 from uuid import uuid4
 
+from asgiref.sync import sync_to_async
 import requests
 from django.core.cache import cache, caches
 from django.conf import settings
 from django.shortcuts import redirect
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import serializers, status
@@ -22,6 +23,7 @@ from waffle import flag_is_active, switch_is_active, sample_is_active
 
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
+from cloud.drf_async import async_api_view as api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType
@@ -101,7 +103,7 @@ def filter_releases(releases):
                      ))
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-def visited_key(request):
+async def visited_key(request):
     global_cache = caches['global']
     if request.method == 'GET':
         # Check cache value here
@@ -109,7 +111,7 @@ def visited_key(request):
             raise APIRequestException('Parameter key is missing', ErrorCodes.wrong_parameters,
                                       error_data=request.query_params)
         key = 'visited_key_' + request.query_params['key']
-        value = global_cache.get(key, False)
+        value = await global_cache.aget(key, False)
 
         logger.debug(f'check visited: {key}: {value}')
 
@@ -118,7 +120,7 @@ def visited_key(request):
         require_params(request, ('key',))
         key = 'visited_key_' + request.data['key']
         value = datetime.datetime.now().strftime('%c')
-        global_cache.set(key, value, settings.LINKS_LIVE_TIMEOUT)
+        await global_cache.aset(key, value, settings.LINKS_LIVE_TIMEOUT)
 
         logger.debug(f'visited: {key}: {value}')
 
@@ -141,10 +143,10 @@ def visited_key(request):
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
-def language(request):
+async def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
-        lang = detect_language_by_request(request)
+        lang = await sync_to_async(detect_language_by_request)(request)
         language_file = f'/static/lang_{lang}/language_compiled.json?version={settings.VERSION}'
         # Return: redirect to language.json file for selected language
         response = redirect(language_file)
@@ -163,7 +165,7 @@ def language(request):
         # Save account value
         if request.user.is_authenticated:
             request.user.language = lang
-            request.user.save()
+            await sync_to_async(request.user.save)()
 
         response = Response({'language': lang})
         # Save cookie

@@ -233,11 +233,8 @@ DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 REDIS_CACHE = {
-    "BACKEND": "django_redis.cache.RedisCache",
-    "TIMEOUT": None,
-    "OPTIONS": {
-        "CLIENT_CLASS": "django_redis.client.DefaultClient",
-    }
+    "BACKEND": "django.core.cache.backends.redis.RedisCache",
+    "TIMEOUT": None
 }
 
 if not LOCAL_ENVIRONMENT:
@@ -249,31 +246,26 @@ else:
 CACHES = {
     "default": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/0',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "customization": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "deployment": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/2',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "filters": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/3',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "push_authentication": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "TIMEOUT": 60 * 60 * 24,  # 1 day
         "LOCATION": REDIS_CACHE['LOCATION'] + '/4',
         "KEY_PREFIX": "push_authentication"
@@ -281,19 +273,16 @@ CACHES = {
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 15 * 60,  # 15 minutes
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/5',
         "KEY_PREFIX": "push_config"
     },
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
         "KEY_PREFIX": "global"
     },
     "integrations": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/7',
         "KEY_PREFIX": "integrations",
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
@@ -301,13 +290,11 @@ CACHES = {
     "menus": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/8',
         "KEY_PREFIX": "menus"
     },
     "packages": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/9',
         "KEY_PREFIX": "packages",
         "TIMEOUT": 60 * 60
@@ -315,27 +302,23 @@ CACHES = {
     "documentation": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 24 * 60 * 60,  # 1 day
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/10',
         "KEY_PREFIX": 'documentation'
     },
     "article": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 24 * 60 * 60,  # 1 day
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/11',
         "KEY_PREFIX": 'article'
     },
     "agreement": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/12',
         "KEY_PREFIX": 'agreement'
     },
     "emails": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/14',
         "KEY_PREFIX": "emails",
         "TIMEOUT": 60 * 60  # 1 hour
@@ -343,21 +326,18 @@ CACHES = {
     "release_notes": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 24 * 60 * 60,  # 1 day
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
         "KEY_PREFIX": 'release_notes'
     },
     "readonly_apis": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "TIMEOUT" : REDIS_CACHE['TIMEOUT'],
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
         "KEY_PREFIX": 'readonly_apis'
     },
     "license_servers": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT" : None,
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
         "KEY_PREFIX": 'license_servers'
     }
@@ -367,7 +347,6 @@ if DEBUG:
     CACHES["testing"] = {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
-        "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
         "KEY_PREFIX": 'testing'
     }

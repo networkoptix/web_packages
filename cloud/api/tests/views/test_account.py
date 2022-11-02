@@ -1,5 +1,7 @@
 from django.contrib.sessions.backends.db import SessionStore
 
+from asgiref.sync import async_to_sync
+import asyncio
 import pytest
 from rest_framework import status
 from rest_framework.request import Request
@@ -19,6 +21,7 @@ def test_kill_tokens(arf, mocker):
 
 
 def test_login_helper(arf, mocker, django_user_model, mock_session):
+    login_helper_sync = async_to_sync(login_helper)
     req = arf.post('/')
     req.session = mock_session()
     req.data = {'timezone': 'America/Los_Angeles'}
@@ -34,7 +37,7 @@ def test_login_helper(arf, mocker, django_user_model, mock_session):
                         'account2faEnabled': True})
     mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
 
-    resp = login_helper(req, token, user)
+    resp = login_helper_sync(req, token, user)
     assert req.session['access_token'] == 'acc_token'
     assert req.session['refresh_token'] == 'ref_token'
     assert req.session['timezone'] == 'America/Los_Angeles'
@@ -46,7 +49,7 @@ def test_login_helper(arf, mocker, django_user_model, mock_session):
     mocker.patch.object(Account, 'get', return_value={
                         'account2faEnabled': False})
 
-    login_helper(req, token, user)
+    login_helper_sync(req, token, user)
     assert req.session['has2fa'] is False
 
 
@@ -63,6 +66,7 @@ class TestAccountViews:
     def register(self, email):
         self.manager_mock = self.mocker.patch.object(models, 'AccountManager')
         self.manager_mock.return_value.check_if_activated.return_value = False
+        self.manager_mock.return_value.register_cloud_invite_user = self.mocker.AsyncMock()
         data = {
             'email': email,
             'first_name': 'First',
@@ -74,7 +78,7 @@ class TestAccountViews:
         req = self.arf.post('/api/account/register', data=data,
                             HTTP_X_FORWARDED_FOR='8.8.8.8', REMOTE_ADDR='8.8.8.8')
         req.session = {}
-        return register(req)
+        return async_to_sync(register)(req)
 
     def test_register_new(self):
         serializer_mock = self.mocker.patch(
@@ -93,7 +97,6 @@ class TestAccountViews:
     def test_register_cloud_invite(self, active_user):
         active_user.is_active = False
         active_user.save()
-
         resp = self.register(active_user.email)
         assert self.manager_mock.return_value.register_cloud_invite_user.called_with(
             self.expected_data['email'], self.expected_data['password'], self.expected_data
@@ -109,14 +112,14 @@ class TestAccountViews:
         req.session.update(session_data)
         self.mocker.patch.object(Auth, 'delete_token')
 
-        resp = logout(req)
+        resp = async_to_sync(logout)(req)
         assert resp.status_code == status.HTTP_200_OK
         for key in session_data:
             assert key not in req.session
 
     def test_index_anonymous(self):
         req = self.arf.get('/api/account')
-        resp = index(req)
+        resp = async_to_sync(index)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'is_authenticated': False}
 
@@ -138,12 +141,12 @@ class TestAccountViews:
         req = get_request('/api/account')
 
         # Test cache redirect
-        resp = index(req)
+        resp = async_to_sync(index)(req)
         assert resp.status_code == status.HTTP_302_FOUND
         req = get_request(resp.url)
 
         # Test with totp exists
-        resp = index(req)
+        resp = async_to_sync(index)(req)
         assert resp.status_code == status.HTTP_200_OK
         expected_data = AccountSerializer(req).data
 
@@ -151,7 +154,7 @@ class TestAccountViews:
 
         # Test with totp doesn't exist
         mock_get_2fa_settings.return_value = {'totpExistsForAccount': False}
-        resp = index(req)
+        resp = async_to_sync(index)(req)
         assert not resp.data['totpExistsForAccount']
 
     def test_index_post(self, mock_cdb_account, active_user):
@@ -164,7 +167,7 @@ class TestAccountViews:
         req.session = self.mocker.MagicMock()
         req.session.get = lambda _, val: val
 
-        resp = index(req)
+        resp = async_to_sync(index)(req)
         expected_data = AccountUpdateSerializer(req).data
 
         assert resp.data == expected_data
@@ -178,7 +181,7 @@ class TestAccountViews:
         self.mocker.patch.object(Account, 'create_temporary_credentials', return_value={
                                  'login': 'log', 'password': 'pass'})
 
-        resp = auth_key(req)
+        resp = async_to_sync(auth_key)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'auth_key': b'bG9nOnBhc3M='}
 
@@ -199,7 +202,7 @@ class TestAccountViews:
         kill_token_mock = self.mocker.patch('api.views.account.kill_tokens')
         kill_session_mock = self.mocker.patch('api.views.account.kill_session')
 
-        resp = delete_user(req)
+        resp = async_to_sync(delete_user)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert not models.Account.objects.filter(
             email=active_user.email).exists()
@@ -212,7 +215,7 @@ class TestAccountViews:
         req.user = active_user
         req.session = {}
 
-        resp = delete_user(req)
+        resp = async_to_sync(delete_user)(req)
         assert resp.data == {'errorData': {'password': '*****'},
                              'errorText': 'Wrong password', 'resultCode': 'wrongPassword'}
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
@@ -237,7 +240,7 @@ class TestAccountViews:
 
     def test_security_missing_activate(self, active_user):
         req = self.request_security(active_user)
-        view = AccountSecurity().as_view()
+        view = async_to_sync(AccountSecurity().as_view())
         assert view(req).status_code == status.HTTP_400_BAD_REQUEST
 
     def test_security_activate(self, active_user):
@@ -246,7 +249,7 @@ class TestAccountViews:
         }
         req = self.request_security(active_user, action="activate")
         security_mock = self.mock_update_2fa(two_fa)
-        view = AccountSecurity().as_view()
+        view = async_to_sync(AccountSecurity().as_view())
 
         assert view(req).status_code == status.HTTP_200_OK
         assert view(req).data == {'account2faEnabled': True}
@@ -262,7 +265,7 @@ class TestAccountViews:
         security_mock = self.mock_update_2fa(two_fa)
         self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={
                                  'account2faEnabled': False})
-        view = AccountSecurity().as_view()
+        view = async_to_sync(AccountSecurity().as_view())
 
         assert view(req).status_code == status.HTTP_200_OK
         assert view(req).data == {'account2faEnabled': False}
@@ -277,7 +280,7 @@ class TestAccountViews:
         self.mocker.patch.object(Account, 'get', return_value={
                                  'account2faEnabled': True})
         security_mock = self.mock_update_2fa(two_fa)
-        view = AccountSecurity().as_view()
+        view = async_to_sync(AccountSecurity().as_view())
 
         assert view(req).status_code == status.HTTP_200_OK
         assert view(req).data == {'account2faEnabled': False}
@@ -289,8 +292,7 @@ class TestAccountViews:
         self.mocker.patch.object(Account, 'get', return_value={
                                  'account2faEnabled': False})
         security_mock = self.mock_update_2fa(two_fa)
-        verify_mock = self.mocker.patch.object(Auth, 'verify_2fa_code')
-        view = AccountSecurity().as_view()
+        self.mocker.patch.object(Auth, 'verify_2fa_code')
 
         assert view(req).status_code == status.HTTP_200_OK
         assert view(req).data == {'account2faEnabled': True}
@@ -304,7 +306,7 @@ class TestAccountViews:
         req.user = active_user
         req.session = {}
 
-        view = AccountSecurity().as_view()
+        view = async_to_sync(AccountSecurity().as_view())
         assert view(req).status_code == status.HTTP_400_BAD_REQUEST
 
     def test_security_delete_2fa_disabled(self, active_user):
@@ -315,14 +317,14 @@ class TestAccountViews:
         req.user = active_user
         req.session = {}
 
-        view = AccountSecurity().as_view()
+        view = async_to_sync(AccountSecurity().as_view())
         assert view(req).status_code == status.HTTP_200_OK
 
     def test_review_cookie(self):
         assert not self.user.cookie_reviewed
         request = self.arf.post(f'/api/account/reviewCookie')
         request.user = self.user
-        response = review_cookie(request)
+        response = async_to_sync(review_cookie)(request)
         assert response.status_code == status.HTTP_200_OK
         assert self.user.cookie_reviewed
 
@@ -343,7 +345,7 @@ class TestAccountViews:
         req.user = active_user
         req.session = {}
 
-        resp = change_password(req)
+        resp = async_to_sync(change_password)(req)
         mock_change_password.assert_called()
         assert resp.status_code == status.HTTP_200_OK
         assert not PushDevice.objects.filter(user=active_user).exists()
@@ -354,7 +356,7 @@ class TestAccountViews:
         req.user = active_user
         req.session = {}
 
-        resp = change_password(req)
+        resp = async_to_sync(change_password)(req)
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert resp.data == {'errorData': {'new_password': '****'},
                              'errorText': 'Incorrect new password', 'resultCode': 'wrongParameters'}
@@ -365,7 +367,7 @@ class TestAccountViews:
         req.user = active_user
         req.session = {}
 
-        resp = change_password(req)
+        resp = async_to_sync(change_password)(req)
         mock_change_password.assert_called()
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert resp.data == {'errorData': None,
@@ -376,7 +378,7 @@ class TestAccountViews:
         req = self.arf.post('/api/account/verify', data={'password': 'pass'})
         req.user = self.user
         req.session = {}
-        resp = verify_password(req)
+        resp = async_to_sync(verify_password)(req)
         assert resp.status_code == status.HTTP_200_OK
         account_mock.assert_called_with(
             {}, email=self.user.email, password='pass')
@@ -384,7 +386,7 @@ class TestAccountViews:
     def test_activate_missing_params(self):
         req = self.arf.post('/api/account/activate')
         req.session = {}
-        resp = activate(req)
+        resp = async_to_sync(activate)(req)
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert resp.data == {
             'errorData': {
@@ -406,7 +408,7 @@ class TestAccountViews:
         self.mocker.patch.object(Account, 'activate', return_value={
                                  'email': self.user.email})
 
-        resp = activate(req)
+        resp = async_to_sync(activate)(req)
         assert resp.status_code == status.HTTP_200_OK
         self.user.refresh_from_db()
         assert self.user.activated_date == timezone_now
@@ -417,14 +419,14 @@ class TestAccountViews:
         req.session = {}
         reactivate_mock = self.mocker.patch.object(Account, 'reactivate')
 
-        resp = activate(req)
+        resp = async_to_sync(activate)(req)
         assert resp.status_code == status.HTTP_200_OK
         reactivate_mock.assert_called_with(self.user.email)
 
     def test_restore_password_missing_params(self):
         req = self.arf.post('/api/account/restorePassword')
         req.session = {}
-        resp = restore_password(req)
+        resp = async_to_sync(restore_password)(req)
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert resp.data == {
             'errorData': {
@@ -446,7 +448,7 @@ class TestAccountViews:
             timezone, 'now', return_value=self.timezone_now)
         self.restore_mock = self.mocker.patch.object(
             Account, 'restore_password', return_value={'email': self.user.email})
-        return restore_password(req)
+        return async_to_sync(restore_password)(req)
 
     def test_restore_password_with_code(self):
         self.user.activated_date = None
@@ -481,7 +483,7 @@ class TestAccountViews:
         req.session = {}
         reset_mock = self.mocker.patch.object(Account, 'reset_password')
 
-        resp = restore_password(req)
+        resp = async_to_sync(restore_password)(req)
         assert resp.status_code == status.HTTP_200_OK
         reset_mock.assert_called_with(self.user.email, '8.8.8.8', request=reset_mock.mock_calls[0].kwargs['request'])
 
@@ -492,7 +494,7 @@ class TestAccountViews:
         self.mocker.patch.object(Account,
                                  'check_account',
                                  side_effect=APINotFoundException(error_text=''))
-        resp = check_account_in_portal(req)
+        resp = async_to_sync(check_account_in_portal)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': False}
 
@@ -502,7 +504,7 @@ class TestAccountViews:
         req.session = {}
         self.mocker.patch.object(Account, 'check_account', return_value={
                                  'status': 'invited'})
-        resp = check_account_in_portal(req)
+        resp = async_to_sync(check_account_in_portal)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': True}
 
@@ -511,7 +513,7 @@ class TestAccountViews:
         self.user.save()
         req = self.arf.post('/api/account/check',
                             data={'email': self.user.email})
-        resp = check_account_in_portal(req)
+        resp = async_to_sync(check_account_in_portal)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': True}
 
@@ -520,7 +522,7 @@ class TestAccountViews:
         self.user.save()
         req = self.arf.post('/api/account/check',
                             data={'email': self.user.email})
-        resp = check_account_in_portal(req)
+        resp = async_to_sync(check_account_in_portal)(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': True, 'emailExists': True}
 
@@ -528,7 +530,7 @@ class TestAccountViews:
         code = str(base64.b64encode(
             ('restore_code' + ':' + email).encode('utf-8')), 'utf-8')
         req = self.arf.post('/api/account/checkCode', data={'code': code})
-        resp = check_code_in_portal(req)
+        resp = async_to_sync(check_code_in_portal)(req)
         assert resp.status_code == status.HTTP_200_OK
         return resp
 
@@ -554,7 +556,7 @@ class TestAccountViews:
                           side_effect=check_auth)
         req = self.arf.post('/api/account/checkAuthCode', data={'code': code})
         req.session = {}
-        return check_auth_code(req)
+        return async_to_sync(check_auth_code)(req)
 
     def test_check_auth_code_correct(self):
         resp = self.check_auth_code('right_pass')

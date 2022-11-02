@@ -3,12 +3,14 @@ from typing import Iterable
 import os
 import json
 from uuid import uuid4
+from asgiref.sync import sync_to_async
 import pytest
 from random import randint
 import model_bakery
 from model_bakery import baker
 
 from api.tests.utils import NxTestClient, NxAPIClient, MockCache
+from cloud.utils import is_async
 from cms.controllers.structure import read_structure_json
 from cms.models import *
 from api.models import Account

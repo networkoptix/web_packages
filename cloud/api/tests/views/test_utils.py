@@ -5,6 +5,7 @@ from api.tests.utils import MockResponse
 from api.views import utils
 from uuid import uuid4
 
+from asgiref.sync import async_to_sync
 from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core.cache import caches, cache
 
@@ -88,20 +89,20 @@ class TestVisitedKey:
     def test_get(self, arf):
         request = arf.get('/api/utils/visitedKey', {'key': self.key})
         request.session = {}
-        response = utils.visited_key(request)
+        response = async_to_sync(utils.visited_key)(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {'visited': False}
 
     def test_get_missing_key(self, arf):
         request = arf.get('/api/utils/visitedKey')
         request.session = {}
-        response = utils.visited_key(request)
+        response = async_to_sync(utils.visited_key)(request)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_post(self, arf):
         request = arf.post('/api/utils/visitedKey', {'key': self.key})
         request.session = {}
-        response = utils.visited_key(request)
+        response = async_to_sync(utils.visited_key)(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['visited']
         try:
@@ -120,7 +121,7 @@ class TestLanguage:
 
         request = arf.get('/api/utils/language')
         request.session = {}
-        response = utils.language(request)
+        response = async_to_sync(utils.language)(request)
         lang_detect.assert_called()
         assert response.status_code == status.HTTP_302_FOUND
         assert response.url == f'/static/lang_en_US/language_compiled.json?version={version}'
@@ -137,7 +138,7 @@ class TestLanguage:
         request.session = {}
         request.user = AnonymousUser
 
-        response = utils.language(request)
+        response = async_to_sync(utils.language)(request)
         self.check_post_assertions(request, response)
 
         # Authenticated
@@ -145,7 +146,7 @@ class TestLanguage:
         request.session = {}
         request.user = active_user
 
-        response = utils.language(request)
+        response = async_to_sync(utils.language)(request)
         self.check_post_assertions(request, response)
         active_user.refresh_from_db()
         assert active_user.language == 'es_ES'

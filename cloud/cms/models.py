@@ -2689,7 +2689,7 @@ class ZendeskCategory(models.Model):
         previous_name = self.tracker.previous('name')
         name_changed = previous_name != self.name
 
-        if general_changed:
+        if general_changed and self.pk:
             existing_section = self.zendesksection_set.filter(
                 name=previous_general_title).first()
             if existing_section:
@@ -3146,7 +3146,7 @@ class MaintenanceScheduling(models.Model):
             'title': self.MESSAGE_TITLE,
             'body': self.user_message,
             'min_ts': self.datetime,
-            'max_ts': completed.datetime if (completed := self.maintenancecompletion_set.first()) else self.datetime + timedelta(weeks=1)
+            'max_ts': completed.datetime if self.pk and (completed := self.maintenancecompletion_set.first()) else self.datetime + timedelta(weeks=1)
         }
 
     def save(self, *args, **kwargs):
@@ -3156,7 +3156,7 @@ class MaintenanceScheduling(models.Model):
             if self.portal_notification:
                 self.portal_notification.delete()
                 self.portal_notification = None
-            if (mc := self.maintenancecompletion_set.first()) and mc.portal_notification:
+            if self.pk and (mc := self.maintenancecompletion_set.first()) and mc.portal_notification:
                 mc.portal_notification.delete()
 
         else:

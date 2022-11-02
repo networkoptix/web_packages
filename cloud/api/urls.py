@@ -1,6 +1,6 @@
 __author__ = 'noptix'
 
-from django.urls import re_path
+from django.urls import re_path, path
 from django.conf import settings
 
 from api.views import two_fa, account, common, robot, storage, systems, transfer, utils
@@ -83,3 +83,8 @@ urlpatterns = [
         account.AccountCustomPropertyView.as_view()),
     re_path(r'^robot/get_code$', robot.get_code)
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('long_request', common.long_request)
+    ]

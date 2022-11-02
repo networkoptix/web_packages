@@ -14,4 +14,5 @@ RUN set -ex \
     && apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget \
         libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt mariadb-connector-c musl openjpeg tiff yaml zlib \
         curl jq netcat-openbsd \
+    && python -m pip install --upgrade pip \
     && pip install --prefer-binary -r /app/requirements.txt

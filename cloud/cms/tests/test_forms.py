@@ -700,7 +700,7 @@ class TestCustomizationForm:
     @pytest.fixture()
     def new_customization_form(self, customization_factory):
         self.form = CustomizationForm()
-        customization_factory(name ="cust1")
+        customization_factory(name="cust1")
         customization_factory(name="cust2")
 
     @pytest.fixture()

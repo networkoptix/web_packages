@@ -1,7 +1,9 @@
 from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.views import exception_handler
 from cloud.helpers.exceptions import clean_passwords, handler
+from cloud.utils import is_async
 import logging
+from concurrent.futures import ThreadPoolExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -30,4 +32,8 @@ def cloud_exception_handler(exc, context):
                     f'Error: {exc}')
         return response
     else:
+        # If in async context, run in separatee thread due to some db operations inside
+        if is_async():
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                return executor.submit(handler, request, exc).result()
         return handler(request, exc)

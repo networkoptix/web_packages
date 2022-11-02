@@ -1,3 +1,4 @@
+from asgiref.sync import sync_to_async
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
@@ -72,14 +73,14 @@ class AccountManager(models.Manager):
         return self._create_user(email, password, **extra_fields)
 
     @staticmethod
-    def register_cloud_invite_user(email, password, data):
+    async def register_cloud_invite_user(email, password, data):
         ip = data.get("IP", "")
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")
 
-        cloud_api_account.register(
+        await sync_to_async(cloud_api_account.register, thread_sensitive=False)(
             email, password, first_name, last_name, ip=ip)
-        user = Account.objects.get(email=email)
+        user = await Account.objects.aget(email=email)
         """
         When an account is created using cloud invites it is disabled because its registration
         is different from regular users. Once the user has registered their account it is set to
@@ -88,7 +89,7 @@ class AccountManager(models.Manager):
         user.is_active = True
         user.first_name = first_name
         user.last_name = last_name
-        user.save()
+        await sync_to_async(user.save)()
 
         return user
 
@@ -304,9 +305,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return permission_based_group or named_group
 
     # Called when password is changed
-    def password_changed(self):
+    async def password_changed(self):
         from notifications.models import PushDevice
-        PushDevice.delete_for_account(self)
+        await PushDevice.delete_for_account(self)
 
     def short_email(self):
         return format_html("<div class='truncate-email'><span>{}</span></div>", self.email)

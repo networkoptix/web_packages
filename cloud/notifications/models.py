@@ -301,8 +301,8 @@ class PushDevice(GCMDevice):
             return gcm_error.args[0]
 
     @staticmethod
-    def delete_for_account(account):
-        PushDevice.objects.filter(user=account).delete()
+    async def delete_for_account(account):
+        await PushDevice.objects.filter(user=account).adelete()
 
     def __str__(self):
         return self.name or 'Unnamed Device'

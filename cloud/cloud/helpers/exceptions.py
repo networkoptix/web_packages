@@ -1,3 +1,4 @@
+import asyncio
 from functools import wraps
 import logging
 import json
@@ -466,15 +467,30 @@ def handle_exceptions(func):
     :param func:
     :return:
     """
-    @functools.wraps(func)
-    def caller(*args, **kwargs):
-        # noinspection PyBroadException
-        try:
-            data = func(*args, **kwargs)
-            if not isinstance(data, (Response, HttpResponseRedirect, HttpResponse)):
-                return Response(data, status=status.HTTP_200_OK)
-            return data
-        except Exception as exception:
-            return handler(args[0], exception)
+
+    view_is_async = asyncio.iscoroutinefunction(func)
+
+    if view_is_async:
+        @functools.wraps(func)
+        async def caller(*args, **kwargs):
+            # noinspection PyBroadException
+            try:
+                data = await func(*args, **kwargs)
+                if not isinstance(data, (Response, HttpResponseRedirect, HttpResponse)):
+                    return Response(data, status=status.HTTP_200_OK)
+                return data
+            except Exception as exception:
+                return handler(args[0], exception)
+    else:
+        @functools.wraps(func)
+        def caller(*args, **kwargs):
+            # noinspection PyBroadException
+            try:
+                data = func(*args, **kwargs)
+                if not isinstance(data, (Response, HttpResponseRedirect, HttpResponse)):
+                    return Response(data, status=status.HTTP_200_OK)
+                return data
+            except Exception as exception:
+                return handler(args[0], exception)
 
     return caller

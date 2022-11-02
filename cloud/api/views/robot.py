@@ -1,9 +1,10 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from cloud.helpers.exceptions import require_params, api_success, APIForbiddenException
+from cloud.drf_async import async_api_view as api_view
 from notifications.models import Message
 
 email__body = openapi.Schema(
@@ -19,7 +20,7 @@ type__body = openapi.Schema(type=openapi.TYPE_STRING,
                                            "can use this endpoint to get info on other noptixautoqa accounts")
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-def get_code(request):
+async def get_code(request):
     NOPTIX_AUTOQA_EMAIL = 'noptixautoqa'
     require_params(request, ('email', 'type'))
     data = request.data
@@ -30,8 +31,8 @@ def get_code(request):
     if f"{NOPTIX_AUTOQA_EMAIL}@gmail.com" != user_email or \
             f"{NOPTIX_AUTOQA_EMAIL}+" not in target_email:
         raise APIForbiddenException('Usage of this endpoint is forbidden')
-    message = Message.objects.filter(
-        user_email__iexact=data['email'], type=data['type']).last()
+    message = await Message.objects.filter(
+        user_email__iexact=data['email'], type=data['type']).alast()
     code = message.message.get(
         'code', 'Does not exist') if message else 'Does not exist'
     return api_success({"code": code})
