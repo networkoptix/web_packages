@@ -20,6 +20,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -43,6 +44,7 @@ interface ResourceLookup<T = { id: string }> {
 export class NxLayoutViewComponent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    ptzControlTarget: ICamera;
 
     refreshLayouts$ = new BehaviorSubject('trigger update');
 
@@ -158,10 +160,14 @@ export class NxLayoutViewComponent {
                     id: parentId
                 }
             }
-        }) => [
-            ...(mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts({ _keepDefault: true, parentId }).toPromise() : []),
-            this.createNewLayout(systemId, parentId)
-        ]),
+        }) => {
+            const layouts = mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts({ _keepDefault: true, parentId }).toPromise() : [];
+            if (!layouts.length || this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) {
+                layouts.push(this.createNewLayout(systemId, parentId, (this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) ? this.LANG.layouts.createNew() : this.LANG.layouts.pleaseAddNew()));
+            }
+
+            return layouts;
+        }),
         shareReplay({
             bufferSize: 1,
             refCount: true
@@ -238,13 +244,15 @@ export class NxLayoutViewComponent {
         private systemsService: NxSystemsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-
+        this.CONFIG = configService.config;
+        this.LANG = languageService.translations;
     }
 
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;
         this.#fetchingLayout$.next('fetching');
         WebRTCStreamManager.updatePosition();
+        this.ptzControlTarget = null;
         this.router.navigateByUrl(`${this.router.url.split('layouts')[0]}layouts/${layoutId}`);
     }
 
@@ -252,7 +260,7 @@ export class NxLayoutViewComponent {
         return { name, value: cleanId(id) };
     }
 
-    createNewLayout = (systemId: string, parentId: string): Layout => ({
+    createNewLayout = (systemId: string, parentId: string, name: string): Layout => ({
         backgroundHeight: -1,
         backgroundImageFilename: '',
         backgroundOpacity: 0.699999988079071,
@@ -265,7 +273,7 @@ export class NxLayoutViewComponent {
         items: [],
         locked: false,
         logicalId: 0,
-        name: 'Create New Layout',
+        name,
         systemId,
         parentId
     });

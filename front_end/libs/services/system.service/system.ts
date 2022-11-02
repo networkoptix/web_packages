@@ -22,6 +22,7 @@ import { NxSystemAPIService } from '../system-api.service';
 import {
     EventRule,
     EventTypes,
+    PtzCommand,
     RawRule,
     SystemConfigSettings
 } from '../system-api.types';
@@ -693,6 +694,10 @@ export class NxSystem {
                             return Promise.reject(err);
                         });
             });
+    }
+
+    public ptz(ptzCommand: PtzCommand) {
+        return this.mediaserver.ptz(ptzCommand);
     }
 
     public getLicenseServerApi() {

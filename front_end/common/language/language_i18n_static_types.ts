@@ -15,6 +15,7 @@ export interface LanguageI18NStaticTypes {
     alarmTypes:            AlarmTypes;
     alarmLevels:           AlarmLevels;
     alertFilters:          AlertFilters;
+    layouts:               Layouts;
     deviceTypes:           DeviceTypes;
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
@@ -840,6 +841,22 @@ export interface Ipvd {
 
 export interface IpvdFeedback {
     request: (params?: Record<string, string | number>) => string;
+}
+
+export interface Layouts {
+    createNew:       (params?: Record<string, string | number>) => string;
+    pleaseAddNew:    (params?: Record<string, string | number>) => string;
+    ptzActionLabels: PtzActionLabels;
+}
+
+export interface PtzActionLabels {
+    up:    (params?: Record<string, string | number>) => string;
+    down:  (params?: Record<string, string | number>) => string;
+    left:  (params?: Record<string, string | number>) => string;
+    right: (params?: Record<string, string | number>) => string;
+    in:    (params?: Record<string, string | number>) => string;
+    out:   (params?: Record<string, string | number>) => string;
+    exit:  (params?: Record<string, string | number>) => string;
 }
 
 export interface License {

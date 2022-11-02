@@ -6,6 +6,7 @@
 .layout-wrapper {
     height: calc(100% - 32px);
     display: grid;
+    overflow-x: hidden;
     grid-template-rows: minmax(0, 1fr) auto;
     grid-template-areas:
         "main"

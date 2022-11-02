@@ -1,0 +1,58 @@
+@use "typography";
+@use "theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
+
+:host {
+    width: auto;
+    height: 36px;
+    transition-property: height, background;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    &:not(:hover):not(.show-ptz) > :not(h3) {
+        display: none;
+    }
+
+    &:hover, &.show-ptz {
+        background: var(--header-bg);
+        height: 108px;
+        & > h3 {
+            display: none;
+        }
+    }
+
+    .control-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: stretch;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+
+        .control-center {
+            width: min(75%, 504px);
+            height: 100%;
+            display: grid;
+            gap: 2px;
+            grid-template-rows: 50% 50%;
+            grid-template-columns: repeat(5, 20%);
+            grid-template-areas:
+                "in left up right exit"
+                "out left down right exit";
+            & > button {
+                height: 100% !important;
+                &.active-action {
+                    background-color: var(--brand-core);
+                }
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+}

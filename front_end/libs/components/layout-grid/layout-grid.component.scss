@@ -13,12 +13,11 @@
 }
 
 .sidebar-wrapper {
-    grid-area: left;
     height: 100%;
     width: 32px;
     position: relative;
     transition-property: width, background;
-    transition-duration: 0.1s;
+    transition-duration: 0.15s;
     transition-timing-function: ease-in-out;
     background: transparent;
 
@@ -26,12 +25,37 @@
     .adding-item {
         width: min(50vw, 360px);
     }
+
+    &.left {
+        grid-area: left;
+        & > .menu-tabs {
+            right: 0;
+            & > h3 {
+                transform: rotate(180deg);
+            }
+        }
+
+        & > .resources-sidebar {
+            right: 32px;
+        }
+    }
+
+    &.right {
+        grid-area: right;
+        & > .menu-tabs {
+            left: 0;
+        }
+
+        & > .resources-sidebar {
+            left: 32px;
+        }
+    }
+
 }
 
 .menu-tabs {
     position: absolute;
     top: 0;
-    right: 0;
     bottom: 0;
     width: 32px;
     display: flex;
@@ -48,7 +72,6 @@
         justify-content: center;
         align-items: center;
         writing-mode: vertical-rl;
-        transform: rotate(180deg);
 
         &.active-menu {
             background: var(--header-bg);
@@ -65,7 +88,6 @@
     height: 100%;
     position: absolute;
     top: 0;
-    right: 32px;
     bottom: 0;
     width: calc(min(50vw, 360px) - 32px);
     display: flex;
@@ -83,6 +105,15 @@
 
     cdk-drag {
         padding-left: 16px !important;
+    }
+
+    .placeholder-menu {
+        font-size: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: var(--brand-core);
     }
 }
 

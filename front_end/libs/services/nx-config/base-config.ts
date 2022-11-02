@@ -200,7 +200,12 @@ const FeatureFlagKeys = [
     'cloudStorage',
     'logRocket',
     'fullStory',
-    'layouts'
+    'layouts',
+    'layoutsLeftMenu',
+    'layoutsRightMenu',
+    'layoutsTimeline',
+    'layoutsPtz',
+    'layoutsDemo'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

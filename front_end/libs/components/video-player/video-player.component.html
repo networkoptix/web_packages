@@ -17,3 +17,16 @@
 >
     Full Screen
 </div>
+
+<div
+    *ngIf="
+        !streamManager.position &&
+        (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo) &&
+        camera.controlEnabled
+    "
+    class="ptz parent-hover"
+    (click)="showPtz.emit(camera)"
+    translate
+>
+    Ptz Controls
+</div>

@@ -1,5 +1,6 @@
 <div
-    class="sidebar-wrapper"
+    *ngIf="CONFIG.featureFlags.layoutsLeftMenu || CONFIG.featureFlags.layoutsDemo"
+    class="sidebar-wrapper left"
     [ngClass]="{ 'adding-item': addingItem }"
     (mouseleave)="closeMenu()"
 >
@@ -163,7 +164,7 @@
                         <span>{{
                             layoutItemLookup[item.resourceId]?.name || 'Not Supported'
                         }}</span>
-                        <div>
+                        <div *ngIf="!layout.locked">
                             <svg-icon
                                 nx-add-svg-src
                                 (click)="removeItem(item)"
@@ -196,6 +197,7 @@
                                 cdkDragHandle
                                 [cdkDragHandleDisabled]="layout.locked"
                                 [camera]="itemDetail.details"
+                                (showPtz)="showPtz.emit($event)"
                             >
                             </nx-video-player>
                         </ng-container>
@@ -232,5 +234,52 @@
                 </div>
             </div>
         </ng-container>
+    </div>
+</div>
+
+<div
+    *ngIf="CONFIG.featureFlags.layoutsRightMenu || CONFIG.featureFlags.layoutsDemo"
+    class="sidebar-wrapper right"
+    [ngClass]="{ 'adding-item': addingItem }"
+    (mouseleave)="closeMenu()"
+>
+    <header class="menu-tabs">
+        <h3
+            #analytics
+            (click)="toggleMenu(analytics, true)"
+            (mouseover)="toggleMenu(analytics)"
+            [ngClass]="{ 'active-menu': openMenu === analytics }"
+            translate
+        >
+            Analytics
+        </h3>
+        <h3
+            #bookmarks
+            (click)="toggleMenu(bookmarks, true)"
+            (mouseover)="toggleMenu(bookmarks)"
+            [ngClass]="{ 'active-menu': openMenu === bookmarks }"
+            translate
+        >
+            Bookmarks
+        </h3>
+    </header>
+    <div
+        class="resources-sidebar"
+        (mouseover)="toggleMenu()"
+    >
+        <div
+            *ngIf="openMenu === analytics"
+            class="placeholder-menu"
+            translate
+        >
+            Analytics Events
+        </div>
+        <div
+            *ngIf="openMenu === bookmarks"
+            class="placeholder-menu"
+            translate
+        >
+            Bookmarks
+        </div>
     </div>
 </div>

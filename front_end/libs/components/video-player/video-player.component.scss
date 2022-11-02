@@ -4,14 +4,24 @@ vm-player, video {
     height: 100%;
 }
 
-.full-screen {
+.overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
     background: var(--body-bg);
     padding: 2px 4px;
     z-index: 175;
     cursor: pointer;
+}
+
+.full-screen {
+    @extend .overlay;
+    bottom: 0;
+    left: 0;
+}
+
+.ptz {
+    @extend .overlay;
+    bottom: 0;
+    right: 0;
 }
 
 nx-pre-loader, img.poster {

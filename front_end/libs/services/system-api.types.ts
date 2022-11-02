@@ -852,3 +852,44 @@ export interface Layout {
 }
 
 export type Layouts = Layout[];
+
+interface CameraId {
+    cameraId: string;
+}
+
+interface Speed {
+    speed: number;
+}
+
+export enum PtzCommands {
+    RELATIVE_MOVE = 'RelativeMovePtzCommand',
+    RELATIVE_FOCUS = 'RelativeFocusPtzCommand'
+}
+
+export interface BasePtzCommand<Command> extends CameraId {
+    command: Command;
+}
+
+export interface Pan {
+    pan: number;
+}
+
+export interface Tilt {
+    tilt: number;
+}
+
+export interface Zoom {
+    zoom: number;
+}
+
+export interface PtzMoveParams extends Speed, Pan, Tilt, Zoom {}
+
+export interface Focus {
+    focus: number;
+}
+
+export interface PtzMoveCommand extends BasePtzCommand<PtzCommands.RELATIVE_MOVE>, PtzMoveParams {}
+
+export interface PtzFocusCommand extends BasePtzCommand<PtzCommands.RELATIVE_FOCUS>, Focus {}
+
+export type PtzCommand = PtzMoveCommand | PtzFocusCommand;

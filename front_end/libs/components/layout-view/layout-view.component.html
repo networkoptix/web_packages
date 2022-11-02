@@ -10,13 +10,26 @@
 <div class="layout-wrapper">
     <nx-layout-grid
         (layoutChanged)="updateLayout($event)"
+        (showPtz)="ptzControlTarget = $event"
         [layout]="selectedLayout$ | async"
         [layoutItemLookup]="layoutItemLookup$ | async"
         [system]="selectedSystem$ | async"
     ></nx-layout-grid>
     <nx-layout-timeline
+        *ngIf="
+            !ptzControlTarget &&
+            (CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo)
+        "
         [cameras]="cameras$ | async"
         [layoutItemLookup]="layoutItemLookup$ | async"
         [records]="recordedTimes$ | async"
     ></nx-layout-timeline>
+    <nx-layout-ptz
+        *ngIf="
+            ptzControlTarget && (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo)
+        "
+        [camera]="ptzControlTarget"
+        [system]="selectedSystem$ | async"
+        (exitPtz)="ptzControlTarget = null"
+    ></nx-layout-ptz>
 </div>

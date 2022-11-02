@@ -1,0 +1,47 @@
+<ng-template
+    #actionButton
+    let-value="value"
+    let-label="label"
+>
+    <ng-template #buttonTooltip>
+        <ng-template
+            #actionTooltip
+            translate
+            >Click action to perform fine adjustments. Hold down to do larger
+            adjustments.</ng-template
+        >
+        <ng-container
+            *ngIf="value === 'exit'; else actionTooltip"
+            translate
+            >Exit PTZ Mode</ng-container
+        >
+    </ng-template>
+    <button
+        [style]="{ 'grid-area': value }"
+        [ngClass]="{ 'active-action': value === (action$ | async) }"
+        [value]="value"
+        [nxTooltip]="buttonTooltip"
+    >
+        {{ LANG.layouts.ptzActionLabels[value]() }}
+    </button>
+</ng-template>
+
+<h3 translate>Show PTZ Controls</h3>
+<div
+    (mouseleave)="showPtz = false"
+    class="control-wrapper"
+>
+    <h3>{{ camera.name }}</h3>
+    <div
+        class="control-center"
+        (mousedown)="triggerAction($event)"
+        (mouseup)="triggerAction()"
+        (mouseleave)="triggerAction()"
+    >
+        <ng-container *ngFor="let action of LANG.layouts.ptzActionLabels | keyvalue">
+            <ng-container
+                *ngTemplateOutlet="actionButton; context: { value: action.key }"
+            ></ng-container>
+        </ng-container>
+    </div>
+</div>

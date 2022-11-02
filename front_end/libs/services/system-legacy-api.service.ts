@@ -1419,6 +1419,10 @@ export class NxSystemAPI {
         return this.post('/ec2/saveEventRule', eventRule);
     }
 
+    ptz(ptzCommand: t.PtzCommand): Observable<unknown> {
+        return this.post('/api/ptz', ptzCommand);
+    }
+
     /**
      * Alias removeResource which is used for deleting event rules.
      */

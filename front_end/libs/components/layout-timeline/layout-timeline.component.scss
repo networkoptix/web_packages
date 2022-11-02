@@ -124,6 +124,7 @@
         left: 0;
         transform: translateY(-100%);
         padding: 8px;
+        z-index: 300;
         background: var(--header-bg);
         min-height: 144px;
         width: 216px;

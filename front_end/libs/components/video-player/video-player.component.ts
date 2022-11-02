@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -22,6 +22,8 @@ export class NxVideoPlayerComponent {
     @IBool() @Input() autoplay: CoercedBoolInput = false;
     @IBool() @Input() autopause: CoercedBoolInput = false;
 
+    @Output() showPtz = new EventEmitter<ICamera>();
+
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
 
     static POSTER_RETRIES = 5
@@ -33,6 +35,7 @@ export class NxVideoPlayerComponent {
     poster$ = WebRTCStreamManager.sync$.pipe(untilDestroyed(this), filter((val) => val % NxVideoPlayerComponent.POSTER_INTERVAL && this.webRtcPlayerRef?.nativeElement.paused && this.posterFailures < NxVideoPlayerComponent.POSTER_RETRIES), map(() => `${this.camera.previewUrl}&hash=${uuid()}`))
     posterFailures = 0
     error = '';
+    streamManager = WebRTCStreamManager;
 
     enterFullscreen(): void {
         this.webRtcPlayerRef.nativeElement.requestFullscreen({ navigationUI: 'hide' })

@@ -16,6 +16,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -75,6 +76,7 @@ export class NxLayoutGridComponent {
     @Input() system: NxSystem;
 
     @Output() layoutChanged = new EventEmitter<string>();
+    @Output() showPtz = new EventEmitter<ICamera>();
 
     SAVE_DELAY = 0;
 
@@ -413,7 +415,7 @@ export class NxLayoutGridComponent {
         this.#wrapperSize$.next({ height, width });
     };
 
-    parseLayout = (layout: Layout): ParsedLayout => ({ ...layout, renderConfig: this.generateRenderConfig(layout), settings: this.SETTINGS_CONFIG });
+    parseLayout = (layout: Layout): ParsedLayout => ({ ...layout, locked: !(this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) || layout.locked, renderConfig: this.generateRenderConfig(layout), settings: this.SETTINGS_CONFIG });
 
     entered(event: CdkDragEnter): void {
         console.log(event);
@@ -490,6 +492,7 @@ export class NxLayoutGridComponent {
         }
         if (_layout.id === this.layout.id) {
             this.layoutChanged.emit(_layout.id);
+            this.showPtz.emit();
         }
     };
 

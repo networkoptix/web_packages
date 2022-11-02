@@ -63,7 +63,12 @@ class FLAGS(metaclass=_FlagType):
     cloud_storage = ('Cloud Storage', 'cloudStorage', '%CLOUD_STORAGE_FEATURE_ENABLED%')
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
-    layouts = ('Layouts', 'layouts', '%Layouts_ENABLED%')
+    layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
+    layouts_left_menu = ('Layouts Left Menu', 'layoutsLeftMenu', '%LAYOUTS_LEFT_ENABLED%')
+    layouts_right_menu = ('Layouts Right Menu', 'layoutsRightMenu', '%LAYOUTS_RIGHT_ENABLED%')
+    layouts_timeline = ('Layouts Timeline', 'layoutsTimeline', '%LAYOUTS_TIMELINE_ENABLED%')
+    layouts_ptz_control = ('Layouts PTZ Control', 'layoutsPtz', '%LAYOUTS_PTZ_ENABLED%')
+    layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
