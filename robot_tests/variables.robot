@@ -139,7 +139,7 @@ ${SYSTEM CANCEL}                      //button[@id="cancelSettingsBtn"]
 
 ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner')]/span[contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
-${DISCONNECT FROM MY ACCOUNT}         //button/span[@id="disconnectFromCloud" and contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
+${DISCONNECT FROM MY ACCOUNT}         //button[@id="disconnectAccountBtn" and contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='componentId']
 ${ACCESS LEVEL DROPDOWN MENU}         ${SYSTEM USER DETAILS}//nx-section//ul[contains(@class, "dropdown-menu")]

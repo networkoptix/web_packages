@@ -1521,9 +1521,9 @@ Select user in Users List
     IF    ${status} == ${False}
         Go To Users List
     END
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//nx-search-highlight[text()='${user email address}']/../../..
     Wait Until Element Is Visible    ${User In List}
-    Click Link    ${User In List}
+    Click Element    ${User In List}
     Wait Until Element Is Visible    ${USER EMAIL}
     Wait Until Element Contains    ${USER EMAIL}    ${user email address}
     [Return]    ${user email address}

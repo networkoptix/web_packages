@@ -539,7 +539,7 @@ Force Tags        system    Threaded    users
     sleep    10
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    Wait Until Element Is Visible     //nx-search-highlight[contains(text(),"${random email}")]
     ${text}=   Get Text    ${LOCAL USER NAME HEADER}
     Should Be Empty    ${text}
     Log Out
@@ -621,8 +621,8 @@ Force Tags        system    Threaded    users
 #    Log In   ${random email}   ${BASE PASSWORD}
     Go To    ${ENV}/systems/${server 1['cloud id']}
     Go To Users List
-    Wait Until Element Is Visible     //nx-menu//span[contains(text(),"${random email}")]
-    Click Element    //nx-menu//span[contains(text(),"${random email}")]
+    Wait Until Element Is Visible     //nx-menu//nx-search-highlight[contains(text(),"${random email}")]
+    Click Element    //nx-menu//nx-search-highlight[contains(text(),"${random email}")]
     ${text}=   Get Text    ${LOCAL USER NAME HEADER}
     Element Text Should Be    ${LOCAL USER NAME HEADER}    ${TEST FIRST NAME} ${TEST LAST NAME}
 
