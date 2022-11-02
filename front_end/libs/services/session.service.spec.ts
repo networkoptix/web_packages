@@ -37,15 +37,6 @@ describe('Session service', () => {
         expect(session).toBeTruthy();
     });
 
-    it('should return empty email if not set', () => {
-        expect(session.email).toBe(undefined);
-    });
-
-    it('should have setter and getter (email)', () => {
-        session.email = 'roadrunner@acme.com';
-        expect(session.email).toBe('roadrunner@acme.com');
-    });
-
     it('should have setter and getter (language)', () => {
         session.language = 'en_US';
         expect(session.language).toBe('en_US');

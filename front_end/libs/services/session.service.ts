@@ -6,6 +6,7 @@ import { filter } from 'rxjs/operators';
 import { NxSystemInfo } from '@services/systems.service.types';
 
 import { NxConfigService } from './nx-config/nx-config.service';
+import type { LoginParams } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
 import { WINDOW } from './window-provider';
 
@@ -14,8 +15,8 @@ import { WINDOW } from './window-provider';
 })
 export class NxSessionService {
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
-    email$: BehaviorSubject<string>;
     loginStateSubject: BehaviorSubject<string>;
+    loginParams$: BehaviorSubject<LoginParams>;
     language$: BehaviorSubject<string>;
     langChanged$: BehaviorSubject<boolean>;
     private session: LocalStorageService;
@@ -27,10 +28,13 @@ export class NxSessionService {
     ) {
         this.session = this.localStorageService;
 
-        this.email$ = new BehaviorSubject<string>(this.session.retrieve('email'));
-        this.loginStateSubject = new BehaviorSubject<string>(this.loginState || '');
-        this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
-        this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
+        this.loginStateSubject = new BehaviorSubject(this.loginState || '');
+        this.loginParams$ = new BehaviorSubject(this.loginParams ?? {
+            code: null,
+            auth: null,
+            refreshToken: null,
+        });
+        this.language$ = new BehaviorSubject(this.session.retrieve('language'));
 
         let hasSkippedFirstNull = !!this.session.retrieve('loginState');
         // Listens to changes from other browser tabs.
@@ -78,15 +82,6 @@ export class NxSessionService {
         });
     }
 
-    get email(): string | undefined {
-        return this.email$?.getValue();
-    }
-
-    set email(email: string) {
-        this.session.store('email', email);
-        this.email$.next(email);
-    }
-
     get language(): string | undefined {
         return this.language$?.getValue();
     }
@@ -112,5 +107,27 @@ export class NxSessionService {
     set loginState(email: string) {
         this.session.store('loginState', email);
         this.loginStateSubject.next(email);
+    }
+
+    get loginParams(): LoginParams {
+        return this.session.retrieve('loginParams');
+    }
+
+    set loginParams(newParams: LoginParams) {
+        const params = {
+            ...this.loginParams,
+            ...Object.fromEntries<string>(
+                Object.entries(newParams).filter(([_k, v]) => v !== null)
+            )
+        };
+        this.session.store('loginParams', params);
+        this.loginParams$.next(params);
+    }
+
+    // Setter ignores nulls
+    clearLoginParams(): void {
+        const cleared = { code: null, auth: null, refreshToken: null };
+        this.session.store('loginParams', cleared);
+        this.loginParams$.next(cleared);
     }
 }

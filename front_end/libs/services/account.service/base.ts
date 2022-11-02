@@ -316,7 +316,6 @@ export abstract class BaseAccount implements OnDestroy {
 
         return this.login(tempLogin, tempPassword, false)
             .then(() => this.clearAuthFromUri()).catch(() => {
-                this.sessionService.email = '';
                 // If the key login fails ask the user to login manually.
                 return this.loginService.login(true, true)
                     .catch(() => {

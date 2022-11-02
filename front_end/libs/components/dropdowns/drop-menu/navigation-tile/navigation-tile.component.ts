@@ -3,11 +3,10 @@ import { Component, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { Auth, MenuNode } from '@services/menus.service.types';
+import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxSessionService } from '@services/session.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -20,12 +19,10 @@ export class NxNavigationTileComponent {
     @Input() width = 240;
     CONFIG: IConfig;
     iconsDir: string;
-    authState: Auth = Auth.LOGGED_OUT;
     loginStateSubscription: SubscriptionLike;
 
     constructor(
         configService: NxConfigService,
-        private sessionService: NxSessionService,
         public headerService: NxHeaderService
     ) {
         this.CONFIG = configService.config;
@@ -33,13 +30,6 @@ export class NxNavigationTileComponent {
     }
 
     ngOnInit(): void {
-        this.loginStateSubscription =
-            this.sessionService.loginStateSubject.subscribe(_ => {
-                this.authState = this.sessionService.email
-                    ? Auth.LOGGED_IN
-                    : Auth.LOGGED_OUT;
-            });
-
         this._setupIds();
     }
 

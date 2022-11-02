@@ -18,7 +18,6 @@ import {
 } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Store } from '@ngrx/store';
 import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -27,7 +26,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
 import { debounceTime, filter, take } from 'rxjs/operators';
 
-import { accountActions } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -37,6 +35,7 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
@@ -141,7 +140,7 @@ export class AppComponent implements OnInit {
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
         private themeService: NxThemeService,
-        private store: Store,
+        private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -153,9 +152,7 @@ export class AppComponent implements OnInit {
         const code = url.searchParams.get('code');
         const refreshToken = url.searchParams.get('refresh_token');
 
-        this.store.dispatch(
-            accountActions.setParams({ params: { auth, code, refreshToken } })
-        );
+        this.sessionService.loginParams = { auth, code, refreshToken };
 
         if (refreshToken) {
             this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {

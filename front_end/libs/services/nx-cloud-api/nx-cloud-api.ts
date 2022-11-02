@@ -508,7 +508,10 @@ export class NxCloudApiService {
         return this.http.get<Account>(endpoint, { headers })
             .pipe(
                 map(account => {
-                    account.isCloud = true;
+                    if (!account.isCloud) {
+                        // Returned object is readonly sometimes for some reason
+                        account = { ...account, isCloud: true };
+                    }
                     this.currentAccount = account;
                     return account;
                 },

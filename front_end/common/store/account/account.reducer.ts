@@ -5,11 +5,6 @@ import type { AccountState } from './account.state';
 
 const initialState: AccountState = {
     currentUser: undefined,
-    params: {
-        code: undefined,
-        auth: undefined,
-        refreshToken: undefined
-    }
 };
 
 export const accountReducer = createReducer(
@@ -24,16 +19,5 @@ export const accountReducer = createReducer(
             ...state,
             currentUser: { ...state.currentUser, ...update }
         })
-    ),
-    on(
-        accountActions.setParam,
-        (state, { key, value }): AccountState => ({
-            ...state,
-            params: { ...state.params, [key]: value }
-        })
-    ),
-    on(
-        accountActions.setParams,
-        (state, { params }): AccountState => ({ ...state, params })
     ),
 );

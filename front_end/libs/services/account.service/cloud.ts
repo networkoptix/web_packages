@@ -114,7 +114,6 @@ export class CloudAccount extends BaseAccount {
     }
 
     login(email: string, password: string, remember: boolean, navigateHome = false) {
-        this.sessionService.email = email;
         this.requestingLogin = this.cloudApi.login(email, password, remember);
 
         return this.requestingLogin.then((result: any) => {
@@ -135,7 +134,6 @@ export class CloudAccount extends BaseAccount {
                 }
 
                 if (result.email || result.name) { // (result.data.resultCode === L.errorCodes.ok)
-                    this.sessionService.email = result.email;
                     this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
                 }
 
