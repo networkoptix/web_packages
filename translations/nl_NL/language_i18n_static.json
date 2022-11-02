@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Beheer",
     "All Servers": "Alle servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Voor ontwikkelaars",
@@ -853,6 +853,7 @@
         "restorePassword": "Reset wachtwoord",
         "restorePasswordSuccess": "Wachtwoord opgeslagen",
         "supportedDevices": "Ondersteunde apparaten",
+        "reportViewer": "Health report",
         "system": "Systeem",
         "systemShare": "Deel Systeem",
         "systems": "Systemen",
@@ -861,7 +862,12 @@
         "view": "Bekijk camera's",
         "apiTool": "API testtool",
         "security": "Beveiliging",
-        "twofaRequired": "Tweestapsverificatie is vereist"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Tweestapsverificatie is vereist",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "De Integratie Marktplaats is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS producten zoals %VMS_NAME%, alle beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-video systeem te bouwen en aan te passen.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud Portaal",
             "description": "%CLOUD_NAME%, een eenvoudige manier om verbinding mee te maken, %VMS_NAME% systemen te beheren en uit te breiden."
         },
-        "/systems": {
-            "title": "Systemen - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% integraties - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentatie - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Ondersteunde apparaten - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

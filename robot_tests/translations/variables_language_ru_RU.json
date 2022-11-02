@@ -545,5 +545,9 @@
     "VIEW PAGE TRANSPORT TEXT": "Передача",
     "VIEW PAGE HLS TEXT": "hls",
     "VIEW PAGE CAMERA OFFLINE TEXT": "Не в сети",
-    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Требуется аутентификация"
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Требуется аутентификация",
+    "ENABLE 2FA TEXT": "Enable 2FA",
+    "DISABLE 2FA TEXT": "Disable",
+    "DISABLED TEXT": "DISABLED",
+    "ENABLED TEXT": "ENABLED"
 }

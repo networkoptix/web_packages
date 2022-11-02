@@ -1,7 +1,7 @@
 {
     "language": "th_TH",
     "About %CLOUD_NAME%": "เกี่ยวกับ %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "ผู้ดูแลระบบ",
     "All Servers": "เซิร์ฟเวอร์ทั้งหมด",
     "Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
     "For developers": "For developers",
@@ -853,6 +853,7 @@
         "restorePassword": "รีเซ็ตรหัสผ่าน",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "อุปกรณ์ที่รองรับ",
+        "reportViewer": "Health report",
         "system": "ระบบ",
         "systemShare": "ระบบใช้ร่วมกัน-",
         "systems": "ระบบ",
@@ -861,7 +862,12 @@
         "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "ความปลอดภัย",
-        "twofaRequired": "Two-factor authentication required"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Two-factor authentication required",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud Portal",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
-        "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

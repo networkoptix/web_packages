@@ -545,5 +545,9 @@
     "VIEW PAGE TRANSPORT TEXT": "Transport",
     "VIEW PAGE HLS TEXT": "hls",
     "VIEW PAGE CAMERA OFFLINE TEXT": "Hors ligne",
-    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentification requise"
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentification requise",
+    "ENABLE 2FA TEXT": "Enable 2FA",
+    "DISABLE 2FA TEXT": "Disable",
+    "DISABLED TEXT": "DISABLED",
+    "ENABLED TEXT": "ENABLED"
 }

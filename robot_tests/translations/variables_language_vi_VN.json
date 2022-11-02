@@ -545,5 +545,9 @@
     "VIEW PAGE TRANSPORT TEXT": "Vận chuyển",
     "VIEW PAGE HLS TEXT": "hls",
     "VIEW PAGE CAMERA OFFLINE TEXT": "Ngoại tuyến",
-    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Yêu cầu xác thực"
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Yêu cầu xác thực",
+    "ENABLE 2FA TEXT": "Enable 2FA",
+    "DISABLE 2FA TEXT": "Disable",
+    "DISABLED TEXT": "DISABLED",
+    "ENABLED TEXT": "ENABLED"
 }

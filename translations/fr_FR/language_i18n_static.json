@@ -853,6 +853,7 @@
         "restorePassword": "Réinitialiser mot de passe",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Périphériques supportés",
+        "reportViewer": "Health report",
         "system": "Système",
         "systemShare": "Share System",
         "systems": "Systèmes",
@@ -861,7 +862,12 @@
         "view": "View cameras",
         "apiTool": "Outil de test d'API",
         "security": "Sécurité",
-        "twofaRequired": "Authentification à deux facteurs requise"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Authentification à deux facteurs requise",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Le Marché des Intégrations est un écosystème centralisé de produits qui s'intègrent parfaitement aux produits VMS comme %VMS_NAME%, tous disponibles en %CLOUD_NAME% afin que vous puissiez trouver des solutions pour construire et personnaliser votre système vidéo IP.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Portail Nuage",
             "description": "%CLOUD_NAME%, un moyen simple de se connecter, de gérer et d'étendre les systèmes %VMS_NAME%."
         },
-        "/systems": {
-            "title": "Systèmes - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "Intégrations de %VMS_NAME% - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "Documentation de %VMS_NAME% - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Appareils pris en charge - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

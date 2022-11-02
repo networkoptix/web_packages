@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Administrering",
     "All Servers": "Alla servrar",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "For developers": "För utvecklare",
@@ -853,6 +853,7 @@
         "restorePassword": "Återställ lösenord",
         "restorePasswordSuccess": "Lösenordet sparat",
         "supportedDevices": "Enheter som stöds",
+        "reportViewer": "Health report",
         "system": "System",
         "systemShare": "Dela system",
         "systems": "System",
@@ -861,7 +862,12 @@
         "view": "Visa kameror",
         "apiTool": "API-testverktyg",
         "security": "Säkerhet",
-        "twofaRequired": "Tvåfaktorsautentisering krävs"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Tvåfaktorsautentisering krävs",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Molnportal",
             "description": "%CLOUD_NAME%, ett enkelt sätt att ansluta till, hantera och utöka %VMS_NAME% system."
         },
-        "/systems": {
-            "title": "System - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrationer - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Dokumentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Enheter som stöds - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

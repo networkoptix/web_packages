@@ -1,7 +1,7 @@
 {
     "language": "ru_RU",
     "About %CLOUD_NAME%": "О %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Администрирование",
     "All Servers": "Все серверы",
     "Download %VMS_NAME%": "Скачать %VMS_NAME%",
     "For developers": "Для разработчиков",
@@ -853,6 +853,7 @@
         "restorePassword": "Сбросить пароль",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Поддерживаемые устройства",
+        "reportViewer": "Health report",
         "system": "Система",
         "systemShare": "Share System",
         "systems": "Системы",
@@ -861,7 +862,12 @@
         "view": "View cameras",
         "apiTool": "Инструмент тестирования API",
         "security": "Безопасность",
-        "twofaRequired": "Требуется двухфакторная аутентификация"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Требуется двухфакторная аутентификация",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Интеграции Marketplace представляет собой централизованную экосистему продуктов, которые интегрируются с продуктами %VMS_NAME%, и доступны в %CLOUD_NAME%, так что вы можете найти решения для построения и настройки системы IP Video.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Облачный портал",
             "description": "%CLOUD_NAME%, простой способ подключения, управления и расширения любой системы %VMS_NAME%."
         },
-        "/systems": {
-            "title": "Системы - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Интеграции - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Документация - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Поддерживаемые устройства - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

@@ -853,6 +853,7 @@
         "restorePassword": "Passwort zurücksetzen",
         "restorePasswordSuccess": "Passwort gespeichert",
         "supportedDevices": "Unterstützte Geräte",
+        "reportViewer": "Health report",
         "system": "System",
         "systemShare": "System freigeben",
         "systems": "Systeme",
@@ -861,7 +862,12 @@
         "view": "Kameras ansehen",
         "apiTool": "API-Testing Tool",
         "security": "Sicherheit",
-        "twofaRequired": "Zwei-Faktor-Authentifizierung erforderlich"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Zwei-Faktor-Authentifizierung erforderlich",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Der Integrations Marketplace ist ein zentralisiertes Ökosystem von Produkten, die sich nahtlos in VMS-Produkte wie %VMS_NAME% integrieren lassen. Sie sind alle in %CLOUD_NAME% verfügbar, sodass Sie Lösungen zum Aufbau und zur Anpassung Ihres IP-Videosystems finden können.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud-Portal",
             "description": "%CLOUD_NAME%, eine einfache Möglichkeit, sich mit %VMS_NAME% Systemen zu verbinden, sie zu verwalten und zu erweitern."
         },
-        "/systems": {
-            "title": "Systeme - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME%-Integrationen - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME%-Dokumentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Unterstützte Geräte - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

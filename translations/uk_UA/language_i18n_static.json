@@ -1,7 +1,7 @@
 {
     "language": "uk_UA",
     "About %CLOUD_NAME%": "Про %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Панель керування",
     "All Servers": "Всі Сервери",
     "Download %VMS_NAME%": "Завантажити %VMS_NAME%",
     "For developers": "Розробникам",
@@ -853,6 +853,7 @@
         "restorePassword": "Відновити пароль",
         "restorePasswordSuccess": "Пароль збережений",
         "supportedDevices": "Пристрої, що підтримуються",
+        "reportViewer": "Health report",
         "system": "Система",
         "systemShare": "Спільна система",
         "systems": "Системи",
@@ -861,7 +862,12 @@
         "view": "Подивитися камери",
         "apiTool": "API testing tool",
         "security": "Безпека",
-        "twofaRequired": "Two-factor authentication required"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Two-factor authentication required",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud Portal",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
-        "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

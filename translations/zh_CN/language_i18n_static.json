@@ -1,7 +1,7 @@
 {
     "language": "英语_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "管理员",
     "All Servers": "所有服务器",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
     "For developers": "适用开发人员",
@@ -853,6 +853,7 @@
         "restorePassword": "重置密码",
         "restorePasswordSuccess": "密码已保存。",
         "supportedDevices": "支持设备",
+        "reportViewer": "Health report",
         "system": "系统",
         "systemShare": "共享系统",
         "systems": "系统",
@@ -861,7 +862,12 @@
         "view": "查看摄像机",
         "apiTool": "API testing tool",
         "security": "安全性",
-        "twofaRequired": "Two-factor authentication required"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Two-factor authentication required",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud Portal",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
-        "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

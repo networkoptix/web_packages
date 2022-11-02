@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Administracja",
     "All Servers": "Wszystkie serwery",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "For developers": "Dla programistów",
@@ -853,6 +853,7 @@
         "restorePassword": "Resetuj hasło",
         "restorePasswordSuccess": "Hasło zapisano",
         "supportedDevices": "Obsługiwane urządzenia",
+        "reportViewer": "Health report",
         "system": "System",
         "systemShare": "Udostępnij system",
         "systems": "Systemy",
@@ -861,7 +862,12 @@
         "view": "Podgląd kamer",
         "apiTool": "Narzędzie testowania API",
         "security": "Ochrona",
-        "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace to scentralizowany ekosystem produktów, które bezproblemowo integrują się z produktami VMS, takimi jak %VMS_NAME%, wszystkie dostępne w %CLOUD_NAME% dzięki czemu można znaleźć rozwiązania umożliwiające zbudowanie i dostosowanie systemu wideo IP.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Portal w chmurze",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
-        "/systems": {
-            "title": "Systemy - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integracje - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Dokumentacja - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Obsługiwane urządzenia - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

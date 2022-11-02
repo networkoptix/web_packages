@@ -853,6 +853,7 @@
         "restorePassword": "Reset wachtwoord",
         "restorePasswordSuccess": "Wachtwoord opgeslagen",
         "supportedDevices": "Ondersteunde apparaten",
+        "reportViewer": "Health report",
         "system": "Systeem",
         "systemShare": "Deel Systeem",
         "systems": "Systemen",
@@ -861,7 +862,12 @@
         "view": "Bekijk camera's",
         "apiTool": "API testing tool",
         "security": "Beveiliging",
-        "twofaRequired": "Tweestapsverificatie vereist"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Tweestapsverificatie vereist",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloudportaal",
             "description": "%CLOUD_NAME%, een eenvoudige manier om verbinding mee te maken, %VMS_NAME% systemen te beheren en uit te breiden."
         },
-        "/systems": {
-            "title": "Systemen - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% integraties - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentatie - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Ondersteunde apparaten - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

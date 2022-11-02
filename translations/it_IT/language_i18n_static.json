@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Amministrazione",
     "All Servers": "Tutti i server",
     "Download %VMS_NAME%": "Scarica %VMS_NAME%",
     "For developers": "Per gli sviluppatori",
@@ -853,6 +853,7 @@
         "restorePassword": "Reimpostare la Password",
         "restorePasswordSuccess": "Password salvata",
         "supportedDevices": "Dispositivi supportati",
+        "reportViewer": "Health report",
         "system": "Sistema",
         "systemShare": "Condivisione sistema",
         "systems": "Sistemi",
@@ -861,7 +862,12 @@
         "view": "Visualizza telecamere",
         "apiTool": "Strumento di test API",
         "security": "Sicurezza",
-        "twofaRequired": "Two-factor authentication required"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Two-factor authentication required",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace è un ecosistema centralizzato di prodotti che si integrano perfettamente con i prodotti VMS come %VMS_NAME%, tutti disponibili in %CLOUD_NAME% +permettendo di trovare soluzioni per costruire e personalizzare il tuo sistema video IP.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud Portal",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
-        "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

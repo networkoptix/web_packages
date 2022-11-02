@@ -853,6 +853,7 @@
         "restorePassword": "Resetear contraseña",
         "restorePasswordSuccess": "Contraseña guardada",
         "supportedDevices": "Dispositivos soportados",
+        "reportViewer": "Health report",
         "system": "Sistema",
         "systemShare": "Compartir sistema",
         "systems": "Sistemas",
@@ -861,7 +862,12 @@
         "view": "Ver cámaras",
         "apiTool": "Herramienta de prueba de API",
         "security": "Seguridad",
-        "twofaRequired": "Two-factor authentication required"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Two-factor authentication required",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "El Marketplace de Integraciones es un ecosistema centralizado de productos que se integran perfectamente con productos VMS como %VMS_NAME%, todo disponible en %CLOUD_NAME% para que pueda encontrar soluciones para construir y personalizar su sistema de vídeo IP.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cloud Portal",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
-        "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

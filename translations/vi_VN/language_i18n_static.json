@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Về %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Quản Trị",
     "All Servers": "Tất cả máy chủ",
     "Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
     "For developers": "Dành cho nhà phát triển",
@@ -853,6 +853,7 @@
         "restorePassword": "Đặt lại mật khẩu",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Thiết bị hỗ trợ",
+        "reportViewer": "Health report",
         "system": "Hệ thống",
         "systemShare": "Share System",
         "systems": "Hệ thống",
@@ -861,7 +862,12 @@
         "view": "Xem camera",
         "apiTool": "Công cụ kiểm tra API",
         "security": "Bảo mật",
-        "twofaRequired": "Yêu cầu xác thực hai yếu tố"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Yêu cầu xác thực hai yếu tố",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "Nền tảng tích hợp là một hệ sinh thái tập trung các sản phẩm tích hợp liền mạch với các sản phẩm VMS như %VMS_NAME%, tất cả đều có sẵn trong %CLOUD_NAME% từ đó bạn có thể tìm giải pháp để xây dựng và tùy chỉnh hệ thống Video IP của mình.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Cổng đám mây",
             "description": "%CLOUD_NAME%, một cách đơn giản để kết nối, quản lý và mở rộng Hệ thống %VMS_NAME%."
         },
-        "/systems": {
-            "title": "Hệ thống - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% Tích hợp - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "Tài liệu %VMS_NAME% - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Thiết bị được hỗ trợ - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {

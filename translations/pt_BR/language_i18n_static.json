@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Administração",
     "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
@@ -853,6 +853,7 @@
         "restorePassword": "Redefinir senha",
         "restorePasswordSuccess": "Senha salva",
         "supportedDevices": "Dispositivos suportados",
+        "reportViewer": "Health report",
         "system": "Sistema",
         "systemShare": "Compartilhar Sistema",
         "systems": "Sistemas",
@@ -861,7 +862,12 @@
         "view": "Ver câmeras",
         "apiTool": "Ferramenta de teste de API",
         "security": "Segurança",
-        "twofaRequired": "Autenticação de dois fatores necessária"
+        "twofa": "Two-factor authentication",
+        "twofaRequired": "Autenticação de dois fatores necessária",
+        "releases": "Releases",
+        "patches": "Patches",
+        "betas": "Betas",
+        "systemServerError": "Internal server error"
     },
     "pageDescriptions": {
         "integrations": "As integrações de Marketplace é um ecossistema centralizado de produtos que se integram perfeitamente com produtos VMS como %VMS_NAME%, todos disponíveis em %CLOUD_NAME% para que você possa encontrar soluções para construir e personalizar seu sistema de Vídeo IP.",
@@ -1377,17 +1383,8 @@
             "title": "%CLOUD_NAME% - Portal da nuvem",
             "description": "%CLOUD_NAME%, uma maneira simples de se conectar, gerenciar e expandir %VMS_NAME% Sistemas."
         },
-        "/systems": {
-            "title": "Sistemas - %CLOUD_NAME%"
-        },
-        "/integrations": {
-            "title": "%VMS_NAME% integrações - %CLOUD_NAME%"
-        },
         "/docs": {
             "title": "%VMS_NAME% Documentação - %CLOUD_NAME%"
-        },
-        "/ipvd": {
-            "title": "Dispositivos Suportados - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {
