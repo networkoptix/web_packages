@@ -515,6 +515,7 @@ export interface DialogsMerge {
     adminPasswordWrong:                 (params?: Record<string, string | number>) => string;
     knownBothSystemsConnectedToCloud:   (params?: Record<string, string | number>) => string;
     unknownBothSystemsConnectedToCloud: (params?: Record<string, string | number>) => string;
+    check:                              (params?: Record<string, string | number>) => string;
     checking:                           (params?: Record<string, string | number>) => string;
     cloud:                              (params?: Record<string, string | number>) => string;
     commonText:                         (params?: Record<string, string | number>) => string;
@@ -529,6 +530,7 @@ export interface DialogsMerge {
     mergeFailedTitle:                   (params?: Record<string, string | number>) => string;
     mergeSuccess:                       (params?: Record<string, string | number>) => string;
     mergeSystemsTitle:                  (params?: Record<string, string | number>) => string;
+    next:                               (params?: Record<string, string | number>) => string;
     noServerFound:                      (params?: Record<string, string | number>) => string;
     newSystemDisplayName:               (params?: Record<string, string | number>) => string;
     otherSystem:                        (params?: Record<string, string | number>) => string;

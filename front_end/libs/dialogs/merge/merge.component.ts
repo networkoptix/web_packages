@@ -84,6 +84,7 @@ export class MergeModalContent {
     updateSession = false;
     wrongPassword = false;
     private remotePassword: string;
+    checkMergeButtonText: string;
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -269,6 +270,9 @@ export class MergeModalContent {
                 show[e] = !!showUpdates[newShow][e];
             });
             if (this.machine.currentState === this.checkMerge) {
+                this.checkMergeButtonText = newShow.includes('Error')
+                    ? this.LANG.dialogs.merge.check() : this.LANG.dialogs.merge.next();
+
                 const newBodyTitle = newShow.includes('noOtherSystem')
                     ? this.LANG.dialogs.merge.enterSystemAddressTitle?.()
                     : this.LANG.dialogs.merge.mergeSystemsTitle?.();
@@ -428,6 +432,7 @@ export class MergeModalContent {
             .then(
                 res => {
                     if (res !== 'canceled') {
+                        this.checkMergeButtonText = this.LANG.dialogs.merge.next();
                         this.checking = false;
                         // covers case where system (cloud & non-cloud) is not set up yet
                         if (res.isNew) {
@@ -458,6 +463,7 @@ export class MergeModalContent {
                         return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     }
                     if (err !== 'canceled') {
+                        this.checkMergeButtonText = this.LANG.dialogs.merge.check();
                         this.checking = false;
                         if (err.message === 'Timeout has occurred') {
                             err.message = this.noServerFound;

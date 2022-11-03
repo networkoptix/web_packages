@@ -1125,6 +1125,7 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
+            "check": "Check",
             "checking": "Checking...",
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
@@ -1141,6 +1142,7 @@
             "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
             "mergeSystemsTitle": "Merge current system with",
             "newSystemDisplayName": "New System",
+            "next": "Next",
             "noServerFound": "No server found",
             "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner",

@@ -144,7 +144,7 @@
                 actionType="primary"
                 [buttonDisabled]="!systemsLoaded"
                 [svg]="{ src: 'arrow_right' }"
-                buttonText="{{ 'Next' | translate }}"
+                [buttonText]="checkMergeButtonText"
             ></nx-process-button>
         </div>
     </div>
