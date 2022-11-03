@@ -592,6 +592,11 @@ export const nxConfig: IConfig = {
         }
     },
     newSystem: false,
+    serverDocumentation: {
+        windowsPath: 'HKEY_LOCAL_MACHINE\SOFTWARE\{VMS Vendor}\{VMS Vendor}',
+        defaultPath: '/opt/{vmsvendor}/mediaserver/etc/mediaserver.conf.',
+        tableHeaders: ['Name', 'Description', 'Default Value']
+    },
     oauthStore: {
         code: 'code',
         verify2fa: 'verify2fa'

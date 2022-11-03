@@ -1,0 +1,41 @@
+@use 'typography';
+@use 'theme_variables_common' as *;
+
+.container {
+    margin-top: 30px;
+}
+
+.h1, .h2 {
+    margin-top: 20px;
+}
+
+table {
+    padding: 0 10px;
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid var(--border-color) !important;
+    tbody tr td:first-of-type {
+        min-width: 6em;
+    }
+
+    thead {
+        height: 34px;
+        @include typography.medium13dark10;
+        tr {
+            th {
+                background-color: var(--card-header-bg);
+                border: 1px solid var(--border-color);
+                @include typography.medium14nocolor;
+                color: var(--swagger-table-header-color);
+                padding-left: 20px;
+            }
+        }
+    }
+
+    td {
+        background-color: var(--card-body-bg);
+        height: 25px !important;
+        border: 1px solid var(--border-color);
+        padding: 15px 8px 8px 24px;
+    }
+}

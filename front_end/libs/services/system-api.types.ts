@@ -784,6 +784,21 @@ export interface WebPage {
     typeId: uuid;
 }
 
+export interface ServerDocumentationSettings {
+    defaultValue: boolean | string | number;
+    name: string;
+    description: string;
+}
+
+export interface ServerDocumentation {
+    error: string;
+    errorId: string;
+    errorString: string;
+    reply: {
+        settings: ServerDocumentationSettings[]
+    }
+}
+
 export type WebPages = WebPage[];
 
 type int = number;

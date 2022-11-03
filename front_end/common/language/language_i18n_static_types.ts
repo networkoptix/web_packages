@@ -59,6 +59,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemGroups:          LanguageI18NStaticTypesSystemGroups;
     systemStatuses:        SystemStatuses;
+    serverDocumentation:   ServerDocumentation;
     toastMessage:          ToastMessage;
     healthMonitor:         HealthMonitor;
     headerLabels:          HeaderLabels;
@@ -1110,6 +1111,10 @@ export interface SecurityTwoFa {
     v5Warning:            (params?: Record<string, string | number>) => string;
     v5WarningExplanation: (params?: Record<string, string | number>) => string;
     disableWarning:       (params?: Record<string, string | number>) => string;
+}
+
+export interface ServerDocumentation {
+    accessibleAt: (params?: Record<string, string | number>) => string;
 }
 
 export interface ServerTabTitles {

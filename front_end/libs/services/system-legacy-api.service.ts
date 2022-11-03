@@ -669,6 +669,10 @@ export class NxSystemAPI {
         );
     }
 
+    getSettingsDocumentation(): Promise<t.ServerDocumentation> {
+        return this.get('/api/settingsDocumentation').toPromise();
+    }
+
     /**
      * Start of Storage
      */

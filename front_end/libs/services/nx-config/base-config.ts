@@ -111,6 +111,7 @@ export interface BaseConfig {
     responseOk: string;
     timelineMouseEventTimeout: number;
     updateInterval: number;
+    serverDocumentation: ServerDocumentation
     webclient: Webclient;
     settingsConfig: SettingsConfig;
     defaultLanguage: string;
@@ -384,6 +385,12 @@ export interface Groups {
     macos: Arm;
     arm: Arm;
     sdk: Arm;
+}
+
+export interface ServerDocumentation {
+    windowsPath: string;
+    defaultPath: string;
+    tableHeaders: string[];
 }
 
 export interface Arm {
