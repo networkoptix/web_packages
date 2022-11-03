@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
@@ -30,7 +31,7 @@ import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import { CAMERA_STATUS, ICamera, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
 import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -51,11 +52,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
     private systemsSubscription: Subscription;
 
-    private _state: VmsState;
-
     public systemId: string;
     public system: NxSystem;
     public systems: NxSystemInfo[];
+    public selectedCameraId: string;
+    public mediaservers: MediaServer[];
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -80,12 +81,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     public get $self(): HTMLElement {
         return this.self.nativeElement as HTMLElement;
-    }
-
-    public get mediaServers(): Array<MediaServer> {
-        return this._state && this._state.mode !== VMS_MODE.NOT_INITIALIZED
-            ? this._state.mediaServers
-            : [];
     }
 
     private _windowWidth = 1024; // should be larger than the threshold
@@ -118,6 +113,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private renderer: Renderer2,
         private router: Router,
         private route: ActivatedRoute,
+        private cookieService: CookieService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
@@ -270,7 +266,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private _onVmsSubjectChange(s: VmsState): void {
-        this._state = s;
+        if (s.mode === VMS_MODE.CAMERA_SELECTED) {
+            const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
+            this.cookieService.set(cookieName, s.selectedCameraId, 365, '/');
+            this.selectedCameraId = s.selectedCameraId;
+        } else {
+            this.selectedCameraId = '';
+        }
     }
 
     private _setInitializationState(initialized, initializedWithError): void {
@@ -496,6 +498,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     );
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
+                    this.mediaservers = cachedMediaServers;
                     processingMediaServers = false;
 
                     firstLoad.next(true);
@@ -506,13 +509,47 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         });
     }
 
+    private getCameraFromCookies(): string {
+        const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
+        const cookieCameraId = this.cookieService.get(cookieName);
+        if (cookieCameraId) {
+            const thisCameraExists = !!this.mediaservers
+                .find(ms => ms.cameras.find(c => c.id === cookieCameraId));
+            if (thisCameraExists) {
+                return cookieCameraId;
+            }
+        }
+        return '';
+    }
+
+    private findOnlineCamera(): string {
+        const cameraChecker = (c: ICamera) => c.isOnline;
+        const firstMediaServerWithAnOnlineCamera =
+            this.mediaservers.find(ms => ms.cameras.find(cameraChecker));
+        let id = '';
+        if (firstMediaServerWithAnOnlineCamera) {
+            id = firstMediaServerWithAnOnlineCamera.cameras.find(cameraChecker)?.id || '';
+        }
+        return id;
+    }
+
+    private getFirstCamera(): string {
+        const firstMediaServer = this.mediaservers.find(ms =>
+            ms.cameras?.length
+        );
+        if (firstMediaServer) {
+            return firstMediaServer.cameras[0].id;
+        }
+        return '';
+    }
+
     private _tryToRedirectToCamera(): void {
-        const cid = this.vms.getLastAccessedCameraId();
+        const cid = this.getCameraFromCookies() || this.findOnlineCamera() || this.getFirstCamera();
         if (cid) {
             this.router.navigate([cid], {
                 relativeTo: this.route,
                 replaceUrl: true
-            });
+            }).catch(e => console.error(e));
         }
     }
 }

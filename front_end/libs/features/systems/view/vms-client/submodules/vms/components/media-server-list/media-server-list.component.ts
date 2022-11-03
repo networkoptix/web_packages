@@ -1,29 +1,30 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { alphabeticalSort } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 import { MediaServer } from '../../datatypes/MediaServer';
-import { VmsState, VMS_MODE } from '../../datatypes/VmsState';
-import { VideoManagementSystemService } from '../../services/vms.service';
 
-@UntilDestroy()
 @Component({
     selector: 'nx-media-server-list',
     templateUrl: 'media-server-list.component.html',
     styleUrls: ['media-server-list.component.scss']
 })
-export class MediaServerListComponent implements OnInit {
+export class MediaServerListComponent implements OnChanges {
+    @Input('mediaservers') _mediaservers: Array<MediaServer> = [];
+    @Input() selectedCameraId: string;
+    @Input() systemId: string;
+
     CONFIG: IConfig;
 
-    protected _mediaservers: Array<MediaServer>;
     public showIP: boolean = false;
     public token: string = '';
 
     public mediaservers: Array<MediaServer>;
+    public processedMediaservers: Array<MediaServer>;
 
     public previewLoaded = {};
     public isCameraVisible: { [key: string]: boolean } = {};
@@ -40,53 +41,31 @@ export class MediaServerListComponent implements OnInit {
         [serverId: string]: boolean
     } = {};
 
-    public activeCameraId: string;
-
     constructor(
         private localStorage: LocalStorageService,
-        private vms: VideoManagementSystemService,
         configService: NxConfigService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
     }
 
-    public ngOnInit(): void {
-        this.vms.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: VmsState) => {
-                this._onVmsSubjectChange(s);
+    public ngOnChanges(changes: NgChanges<MediaServerListComponent>) {
+        if (changes._mediaservers.previousValue !== changes._mediaservers.currentValue) {
+            this.processedMediaservers = this._mediaservers || [];
+            this.processedMediaservers.sort(alphabeticalSort(this.locale, ms => ms.name));
+            this.processedMediaservers.forEach(ms => {
+                ms.cameras.sort(alphabeticalSort(this.locale, cam => cam.name));
             });
-    }
-
-    protected _onVmsSubjectChange(s: VmsState) {
-        switch (s.mode) {
-            case VMS_MODE.NOT_INITIALIZED:
-                this._mediaservers = [];
-                break;
-            case VMS_MODE.CAMERA_NOT_SELECTED:
-            case VMS_MODE.CAMERA_SELECTED:
-                this._mediaservers = s.mediaServers;
-                setTimeout(() => {
-                    this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED
-                        ? this.vms.selectedCamera?.id
-                        : undefined;
-                }, 0);
-                this._mediaservers.sort(alphabeticalSort(this.locale, ms => ms.name));
-                this._mediaservers.forEach(ms => {
-                    ms.cameras.sort(alphabeticalSort(this.locale, cam => cam.name));
-                });
         }
         this._resetServersVisibility();
         this.updateFilteredList(this.token);
     }
 
     protected _resetServersVisibility(): void {
-        if (this._mediaservers) {
-            this.isServerExpanded = this._mediaservers.reduce(
+        if (this.processedMediaservers) {
+            this.isServerExpanded = this.processedMediaservers.reduce(
                 (acc, ms) => {
-                    const systemId = this.vms.systemId;
-                    const key = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
+                    const key = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`;
                     const status = this.localStorage.retrieve(key);
                     acc[ms.id] = status ? JSON.parse(status) : true;
                     return acc;
@@ -100,8 +79,7 @@ export class MediaServerListComponent implements OnInit {
 
     public changeServerVisibility(serverId: string): void {
         this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
-        const systemId = this.vms.systemId;
-        const key = `nx_system_${systemId}_server_${serverId}_expansion_status`;
+        const key = `nx_system_${this.systemId}_server_${serverId}_expansion_status`;
         this.localStorage.store(key, JSON.stringify(this.isServerExpanded[serverId]));
     }
 
@@ -112,11 +90,11 @@ export class MediaServerListComponent implements OnInit {
     public updateFilteredList(token: string) {
         this.token = token;
         if (!token) {
-            this.mediaservers = this._mediaservers;
+            this.mediaservers = this.processedMediaservers;
             return;
         }
         token = token.toLocaleLowerCase();
-        this.mediaservers = this._mediaservers.reduce((acc: any[], ms) => {
+        this.mediaservers = this.processedMediaservers.reduce((acc: any[], ms) => {
             const cameras = ms.cameras.filter(c =>
                 c.name.toLocaleLowerCase().includes(token) ||
                 c.url.toLocaleLowerCase().includes(token)
