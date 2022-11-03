@@ -43,7 +43,7 @@ export class NxMobileHeaderMenuComponent {
       });
 
       headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
-          this.showCurrentSystem = currentLocation?.path.includes('/systems/');
+          this.showCurrentSystem = currentLocation?.path?.includes('/systems/');
       });
   }
 

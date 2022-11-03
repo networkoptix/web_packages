@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 import {
     BehaviorSubject,
     combineLatest,
-    SubscriptionLike
 } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
@@ -24,7 +23,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-account-settings-select',
     templateUrl: 'account-settings.component.html',
@@ -44,8 +43,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     newHeader = false;
     isAccountRoute = false;
     displayedFullName = '';
-
-    widthSubscription: SubscriptionLike;
 
     readonly environment = environment;
 
@@ -98,8 +95,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                     this.displayedFullName = '';
                 }
             });
-        this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)
-            .subscribe(([dropdown, button]) => {
+        combineLatest(this.dropdownWidth$, this.buttonWidth)
+            .pipe(untilDestroyed(this)).subscribe(([dropdown, button]) => {
                 if (dropdown && button) {
                     const self = this?.dropdown.nativeElement;
                     let widthFromRightEdge = 0;

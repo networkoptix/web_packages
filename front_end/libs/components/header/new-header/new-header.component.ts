@@ -3,7 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { cloneDeep } from 'lodash-es';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
@@ -28,7 +28,7 @@ export class NxNewHeaderComponent {
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
     loggedIn: boolean | undefined = undefined;
-    isMobile$ = new Subject<boolean>();
+    isMobile$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         public headerService: NxHeaderService,
@@ -39,7 +39,7 @@ export class NxNewHeaderComponent {
     ) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
             if (event.url === '/') {
-                this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
+                this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, '/content/about');
                 return;
             }
             if (event.url.includes('/systems/')) {
@@ -67,12 +67,16 @@ export class NxNewHeaderComponent {
 
         this.headerService.nodes$.pipe(untilDestroyed(this)).subscribe(nodes => {
             this.displayedNodes = nodes;
-            this.selectedNode = this.findNodeBasedOnURL(nodes, this.headerService.currentLocation?.path);
+            this.selectedNode = this.findNodeBasedOnURL(nodes, this.headerService.currentLocation?.path || router.url);
         });
 
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
             this.isMobile$.next(width < GridBreakpoints.SM);
         });
+
+        if (router.url === '/') {
+            this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
+        }
     }
 
     handleNodeSelect(node: MenuNode): void {

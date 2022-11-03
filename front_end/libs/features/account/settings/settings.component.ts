@@ -125,6 +125,13 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     private initProcess(): void {
         this.saveAccount = undefined;
         this.saveAccount = this.processService.createProcess(() => {
+            // Optimistic update
+            const { first_name, last_name } = this.account;
+            this.store.dispatch(
+                accountActions.updateCurrentUser({
+                    update: { first_name, last_name }
+                })
+            );
             return this.cloudApiService.accountPost(this.account);
         }, {
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),

@@ -1,17 +1,20 @@
 @use "typography";
 @use "theme_variables_common" as *;
 
+:host {
+    background-color: var(--mobile-header-bg) !important;
+}
 
 .menu-container {
     position: absolute;
+    height: 100%;
     background-color: var(--mobile-header-bg);
     width: 100%;
-    height: calc(100vh - 32px);
     z-index: 3;
 
-    .menu-items {
+    .menu-items-container {
+        padding-bottom: 88px;
         background-color: var(--mobile-header-bg);
-
         .menu-item {
             width: 100%;
 
@@ -77,11 +80,15 @@
 }
 
 .account-button-wrapper {
-    bottom: 24px;
+    bottom: 0px;
+    height: 88px;
     position: fixed;
     width: 100%;
+    background-color: var(--mobile-header-bg);
 
     .account-button {
+        position: relative;
+        top: 32px;
         width: 194px;
         margin: auto;
         border-radius: 2px;
@@ -92,12 +99,6 @@
             color: var(--mobile-header-logout-btn-color);
         }
     }
-}
-
-.logout-wrapper {
-    bottom: 24px;
-    position: fixed;
-    width: 100%;
 }
 
 .logout-button {
