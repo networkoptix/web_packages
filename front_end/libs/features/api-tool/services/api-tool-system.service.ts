@@ -23,7 +23,7 @@ import { processLanguageFactory } from '@utils/general';
 
 import type { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, IndexDBCacheObject, ServerInfo } from './api-tool-service-types';
+import type { EmitInfo, IndexDBCacheObject, MarkdownObj, ServerInfo } from './api-tool-service-types';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
 @UntilDestroy()
@@ -291,7 +291,7 @@ export class NxAPIToolSystemService {
     async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc): Promise<void> {
         let markdown = await this.getAPIInfoMarkdown(server.id);
         markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
-        this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json);
+        this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json, markdown);
         this.setRequestURL(json);
         this.currentServerId = this.currentServerId || server.id;
         this.emitServer(server, json, false, '', markdown);
@@ -471,11 +471,15 @@ export class NxAPIToolSystemService {
         return cachedObject;
     }
 
-    cacheJSON(route: string, systemId: string, systemVersion: string, json: APIDoc) : void {
-        if (this.queryParams.disableCache) return null;
+    cacheJSON(route: string, systemId: string, systemVersion: string, json: APIDoc, markdown: MarkdownObj = null) : void {
+        if (this.queryParams.disableCache) {
+            this.indexedDbService.deleteByKey('jsons', this.makeCacheKey(systemId, route)).pipe(take(1)).subscribe(() => {});
+            return null;
+        }
         this.indexedDbService.add('jsons', {
             json,
             version: systemVersion,
+            markdown,
             key: this.makeCacheKey(systemId, route)
         }).pipe(take(1)).subscribe(() => {});
     }
