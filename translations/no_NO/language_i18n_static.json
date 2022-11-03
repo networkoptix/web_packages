@@ -30,6 +30,19 @@
         "warning": "Kun advarsler",
         "error": "Kun feil"
     },
+    "layouts": {
+        "createNew": "Create New Layout",
+        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "ptzActionLabels": {
+            "up": "UP",
+            "down": "DOWN",
+            "left": "LEFT",
+            "right": "RIGHT",
+            "in": "ZOOM IN",
+            "out": "ZOOM OUT",
+            "exit": "Exit PTZ"
+        }
+    },
     "deviceTypes": {
         "All Device Types": "Alle enhetstyper",
         "servers": "Server",
@@ -853,7 +866,7 @@
         "restorePassword": "Reset password",
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Støttede enheter",
-        "reportViewer": "Health report",
+        "reportViewer": "Helserapport",
         "system": "System",
         "systemShare": "Share System",
         "systems": "Systemer",
@@ -862,12 +875,12 @@
         "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "Sikkerhet",
-        "twofa": "Two-factor authentication",
+        "twofa": "Tofaktor autentisering",
         "twofaRequired": "Two-factor authentication required",
-        "releases": "Releases",
-        "patches": "Patches",
-        "betas": "Betas",
-        "systemServerError": "Internal server error"
+        "releases": "Utgivelser",
+        "patches": "Feilrettinger",
+        "betas": "Betaer",
+        "systemServerError": "Intern server feil"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",

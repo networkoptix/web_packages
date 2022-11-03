@@ -546,8 +546,8 @@
     "VIEW PAGE HLS TEXT": "hls",
     "VIEW PAGE CAMERA OFFLINE TEXT": "Frånkopplade",
     "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Autentisering krävs",
-    "ENABLE 2FA TEXT": "Enable 2FA",
-    "DISABLE 2FA TEXT": "Disable",
-    "DISABLED TEXT": "DISABLED",
-    "ENABLED TEXT": "ENABLED"
+    "ENABLE 2FA TEXT": "Aktivera 2FA",
+    "DISABLE 2FA TEXT": "Inaktivera",
+    "DISABLED TEXT": "INAKTIVERAD",
+    "ENABLED TEXT": "AKTIVERAD"
 }

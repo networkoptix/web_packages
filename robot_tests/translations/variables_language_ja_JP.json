@@ -546,8 +546,8 @@
     "VIEW PAGE HLS TEXT": "hls",
     "VIEW PAGE CAMERA OFFLINE TEXT": "オフライン",
     "VIEW PAGE CAMERA AUTHENTICATION TEXT": "要認証",
-    "ENABLE 2FA TEXT": "Enable 2FA",
-    "DISABLE 2FA TEXT": "Disable",
-    "DISABLED TEXT": "DISABLED",
-    "ENABLED TEXT": "ENABLED"
+    "ENABLE 2FA TEXT": "二要素認証を有効化",
+    "DISABLE 2FA TEXT": "無効化",
+    "DISABLED TEXT": "無効",
+    "ENABLED TEXT": "有効"
 }

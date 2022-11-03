@@ -30,6 +30,19 @@
         "warning": "Endast varningar",
         "error": "Endast fel"
     },
+    "layouts": {
+        "createNew": "Create New Layout",
+        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "ptzActionLabels": {
+            "up": "UP",
+            "down": "DOWN",
+            "left": "LEFT",
+            "right": "RIGHT",
+            "in": "ZOOM IN",
+            "out": "ZOOM OUT",
+            "exit": "Exit PTZ"
+        }
+    },
     "deviceTypes": {
         "All Device Types": "Alla enhetstyper",
         "servers": "Server",
@@ -853,7 +866,7 @@
         "restorePassword": "Återställ lösenord",
         "restorePasswordSuccess": "Lösenordet sparat",
         "supportedDevices": "Enheter som stöds",
-        "reportViewer": "Health report",
+        "reportViewer": "Hälsorapport",
         "system": "System",
         "systemShare": "Dela system",
         "systems": "System",
@@ -862,12 +875,12 @@
         "view": "Visa kameror",
         "apiTool": "API-testverktyg",
         "security": "Säkerhet",
-        "twofa": "Two-factor authentication",
+        "twofa": "Tvåfaktorsautentisering",
         "twofaRequired": "Tvåfaktorsautentisering krävs",
-        "releases": "Releases",
-        "patches": "Patches",
-        "betas": "Betas",
-        "systemServerError": "Internal server error"
+        "releases": "Releaser",
+        "patches": "Patchar",
+        "betas": "Betaversioner",
+        "systemServerError": "Internt serverfel"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",

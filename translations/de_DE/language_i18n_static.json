@@ -30,6 +30,19 @@
         "warning": "Nur Warnungen",
         "error": "Nur Fehler"
     },
+    "layouts": {
+        "createNew": "Create New Layout",
+        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "ptzActionLabels": {
+            "up": "UP",
+            "down": "DOWN",
+            "left": "LEFT",
+            "right": "RIGHT",
+            "in": "ZOOM IN",
+            "out": "ZOOM OUT",
+            "exit": "Exit PTZ"
+        }
+    },
     "deviceTypes": {
         "All Device Types": "Alle Gerätetypen",
         "servers": "Server",
@@ -853,7 +866,7 @@
         "restorePassword": "Passwort zurücksetzen",
         "restorePasswordSuccess": "Passwort gespeichert",
         "supportedDevices": "Unterstützte Geräte",
-        "reportViewer": "Health report",
+        "reportViewer": "Aktivitätsbericht",
         "system": "System",
         "systemShare": "System freigeben",
         "systems": "Systeme",
@@ -862,12 +875,12 @@
         "view": "Kameras ansehen",
         "apiTool": "API-Testing Tool",
         "security": "Sicherheit",
-        "twofa": "Two-factor authentication",
+        "twofa": "Zwei-Faktor-Authentifizierung",
         "twofaRequired": "Zwei-Faktor-Authentifizierung erforderlich",
         "releases": "Releases",
         "patches": "Patches",
         "betas": "Betas",
-        "systemServerError": "Internal server error"
+        "systemServerError": "Interner Serverfehler"
     },
     "pageDescriptions": {
         "integrations": "Der Integrations Marketplace ist ein zentralisiertes Ökosystem von Produkten, die sich nahtlos in VMS-Produkte wie %VMS_NAME% integrieren lassen. Sie sind alle in %CLOUD_NAME% verfügbar, sodass Sie Lösungen zum Aufbau und zur Anpassung Ihres IP-Videosystems finden können.",

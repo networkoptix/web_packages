@@ -30,6 +30,19 @@
         "warning": "Only Warnings",
         "error": "Only Errors"
     },
+    "layouts": {
+        "createNew": "Create New Layout",
+        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "ptzActionLabels": {
+            "up": "UP",
+            "down": "DOWN",
+            "left": "LEFT",
+            "right": "RIGHT",
+            "in": "ZOOM IN",
+            "out": "ZOOM OUT",
+            "exit": "Exit PTZ"
+        }
+    },
     "deviceTypes": {
         "All Device Types": "All Device Types",
         "servers": "Palvelin",

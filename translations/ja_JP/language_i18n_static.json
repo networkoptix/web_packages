@@ -30,6 +30,19 @@
         "warning": "警告のみ",
         "error": "エラーのみ"
     },
+    "layouts": {
+        "createNew": "Create New Layout",
+        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "ptzActionLabels": {
+            "up": "UP",
+            "down": "DOWN",
+            "left": "LEFT",
+            "right": "RIGHT",
+            "in": "ZOOM IN",
+            "out": "ZOOM OUT",
+            "exit": "Exit PTZ"
+        }
+    },
     "deviceTypes": {
         "All Device Types": "すべてのデバイスタイプ",
         "servers": "サーバー",
@@ -853,7 +866,7 @@
         "restorePassword": "パスワードの再設定",
         "restorePasswordSuccess": "パスワードを保存しました",
         "supportedDevices": "対応デバイス",
-        "reportViewer": "Health report",
+        "reportViewer": "ヘルスレポート",
         "system": "システム",
         "systemShare": "システムを共有",
         "systems": "システム",
@@ -862,12 +875,12 @@
         "view": "カメラを表示",
         "apiTool": "API テストツール",
         "security": "セキュリティ",
-        "twofa": "Two-factor authentication",
+        "twofa": "二要素認証",
         "twofaRequired": "二要素認証が必須です",
-        "releases": "Releases",
-        "patches": "Patches",
-        "betas": "Betas",
-        "systemServerError": "Internal server error"
+        "releases": "リリース版",
+        "patches": "修正版",
+        "betas": "ベータ版",
+        "systemServerError": "内部サーバーエラー"
     },
     "pageDescriptions": {
         "integrations": "インテグレーションマーケットプレイスは、%VMS_NAME% などのVMS製品とシームレスに統合する製品の集中型エコシステムであり、すべて %CLOUD_NAME% で利用できるため、IPビデオシステムを構築およびカスタマイズするためのソリューションを見つけることができます。",
