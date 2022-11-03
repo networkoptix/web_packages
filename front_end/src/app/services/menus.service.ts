@@ -75,7 +75,7 @@ export class NxMenusService {
     };
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
-        let menu = { ...this.menusStructure?.[name.toLowerCase()] } as MenuStructure;
+        let menu = name.toLowerCase() in this.menusStructure ? { ...this.menusStructure?.[name.toLowerCase()] } as MenuStructure : undefined;
         // Update to also make request if no menu
 
         if (environment.isLocal) {
