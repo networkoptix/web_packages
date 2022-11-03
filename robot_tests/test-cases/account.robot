@@ -15,7 +15,7 @@ Force Tags        account
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}
     Verify in account page
-    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
+#    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
 
 2. Can access the account page from direct link while logged in
     [Tags]
