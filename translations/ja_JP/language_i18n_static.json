@@ -31,16 +31,16 @@
         "error": "エラーのみ"
     },
     "layouts": {
-        "createNew": "Create New Layout",
-        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "createNew": "新しいレイアウトを作成",
+        "pleaseAddNew": "レイアウトを表示するには、シッククライアントにレイアウトを追加してください",
         "ptzActionLabels": {
-            "up": "UP",
-            "down": "DOWN",
-            "left": "LEFT",
-            "right": "RIGHT",
-            "in": "ZOOM IN",
-            "out": "ZOOM OUT",
-            "exit": "Exit PTZ"
+            "up": "上",
+            "down": "下",
+            "left": "左",
+            "right": "右",
+            "in": "ズームイン",
+            "out": "ズームアウト",
+            "exit": "PTZを終了"
         }
     },
     "deviceTypes": {
@@ -452,6 +452,7 @@
             "adminPasswordWrong": "adminユーザーのパスワードが間違っています",
             "knownBothSystemsConnectedToCloud": "システム {targetSystem} は %CLOUD_NAME%に接続されています。クラウドシステムは %CLOUD_NAME% ポータルからのみ統合できます。",
             "unknownBothSystemsConnectedToCloud": "クラウドに接続されている2つのシステムを統合することはできません。これらのシステムを統合するには %CLOUD_NAME% に移動してください。",
+            "check": "Check",
             "checking": "確認中…",
             "cloud": "クラウド",
             "commonText": "システム <strong>{primarySystem}</strong> および <strong>{secondarySystem}</strong>を統合できませんでした。",
@@ -466,6 +467,7 @@
             "mergeFailedTitle": "システム統合が失敗しました",
             "mergeSuccess": "システム {primaryName} と {secondaryName} の統合が完了しました",
             "mergeSystemsTitle": "次のシステムと統合",
+            "next": "Next",
             "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
             "otherSystem": "他のシステム...",

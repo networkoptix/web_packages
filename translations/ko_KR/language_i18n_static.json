@@ -31,16 +31,16 @@
         "error": "Only Errors"
     },
     "layouts": {
-        "createNew": "Create New Layout",
-        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "createNew": "새 레이아웃 만들기",
+        "pleaseAddNew": "레이아웃을 보려면 로컬 클라이언트에서 레이아웃을 추가하십시오.",
         "ptzActionLabels": {
-            "up": "UP",
-            "down": "DOWN",
-            "left": "LEFT",
-            "right": "RIGHT",
-            "in": "ZOOM IN",
-            "out": "ZOOM OUT",
-            "exit": "Exit PTZ"
+            "up": "위",
+            "down": "아래",
+            "left": "왼쪽",
+            "right": "오른쪽",
+            "in": "확대",
+            "out": "축소",
+            "exit": "PTZ 종료"
         }
     },
     "deviceTypes": {
@@ -452,6 +452,7 @@
             "adminPasswordWrong": "관리자의 비밀번호가 잘못되었습니다.",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "check": "Check",
             "checking": "확인...",
             "cloud": "클라우드",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
@@ -466,6 +467,7 @@
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
             "mergeSuccess": "시스템 {primaryName} 과 {secondaryName} 병합 완료",
             "mergeSystemsTitle": "와 현재 시스템을 병합",
+            "next": "Next",
             "noServerFound": "미디어 서버 없음",
             "newSystemDisplayName": "새로운 시스템",
             "otherSystem": "다른 시스템...",

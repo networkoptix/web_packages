@@ -31,16 +31,16 @@
         "error": "Nur Fehler"
     },
     "layouts": {
-        "createNew": "Create New Layout",
-        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "createNew": "Neues Layout erstellen",
+        "pleaseAddNew": "Bitte fügen Sie das Layout auf dem Client hinzu, um die Layouts anzuzeigen",
         "ptzActionLabels": {
-            "up": "UP",
-            "down": "DOWN",
-            "left": "LEFT",
-            "right": "RIGHT",
-            "in": "ZOOM IN",
-            "out": "ZOOM OUT",
-            "exit": "Exit PTZ"
+            "up": "OBEN",
+            "down": "UNTEN",
+            "left": "LINKS",
+            "right": "RECHTS",
+            "in": "HINEINZOOMEN",
+            "out": "HERAUSZOOMEN",
+            "exit": "PTZ verlassen"
         }
     },
     "deviceTypes": {
@@ -452,6 +452,7 @@
             "adminPasswordWrong": "Das Passwort für den Administrator ist falsch",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} ist mit %CLOUD_NAME% verbunden. Cloud-Systeme können nur über das Portal %CLOUD_NAME% zusammengeführt werden.",
             "unknownBothSystemsConnectedToCloud": "Zwei mit der Cloud verbundene Systeme können nicht zusammengeführt werden. Bitte gehen Sie zu %CLOUD_NAME%, um diese Systeme zusammenzuführen.",
+            "check": "Check",
             "checking": "Prüfung...",
             "cloud": "Cloud",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong>.",
@@ -466,6 +467,7 @@
             "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
             "mergeSuccess": "Zusammenführung der Systeme {primaryName} und {secondaryName} abgeschlossen",
             "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
+            "next": "Next",
             "noServerFound": "Keine Server gefunden",
             "newSystemDisplayName": "Neues System",
             "otherSystem": "Andere Systeme...",

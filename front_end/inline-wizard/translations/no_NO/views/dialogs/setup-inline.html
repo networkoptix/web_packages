@@ -291,7 +291,7 @@
                      !forms.localForm.passwordInput.$dirty &&
                      !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
-                Password must contain different types of characters and have at least 8 symbols
+                Passord må inneholde forskjellige typer tegn og ha minst 8 tegn
             </div>
         </div>
         <div class="form-group has-error" ng-if="!forms.localForm.passwordInput.password.$valid">
@@ -314,7 +314,7 @@
                     forms.localForm.localPasswordConfirmation.$touched &&
                     forms.localForm.localPasswordConfirmation.$error.required)">
             <div class="help-block">
-                All fields are required
+                Alle felt må fylles ut
             </div>
         </div>
 
@@ -322,14 +322,14 @@
              ng-if= "forms.localForm.$valid &&
                      (settings.localPasswordConfirmation != settings.localPassword)">
             <div class="help-block">
-                Passwords do not match
+                Passordene er ikke like
             </div>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
-    <h2>Connect the server to the existing System</h2>
+    <h2>Koble serveren til det eksisterende systemet</h2>
     <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
         <input type="submit" hidden>
         <div class="form-group" validate-field>
@@ -341,7 +341,7 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
- placeholder="Existing System URL (https://host:port)"
+ placeholder="Eksisterende system-URL (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
  class="form-control">
@@ -353,20 +353,20 @@
         <div class="form-group" validate-field>
             <input ng-model="settings.remoteLogin" name="remoteLogin" class="form-control" type="text"
                    ng-change="clearRemoteError(true)"
-                   placeholder="Login" required>
+                   placeholder="Logg Inn" required>
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.remotePassword"
                    name="remotePassword" autocomplete="new-password" class="form-control" type="password"
                    ng-change="clearRemoteError(true)"
-                   placeholder="Password" required>
+                   placeholder="Passord" required>
         </div>
         <div class="form-group has-error"
              ng-if="forms.remoteSystemForm.remoteSystemName.$touched &&  forms.remoteSystemForm.remoteSystemName.$error.required||
                     forms.remoteSystemForm.remoteLogin.$touched && forms.remoteSystemForm.remoteLogin.$error.required ||
                     forms.remoteSystemForm.remotePassword.$touched && forms.remoteSystemForm.remotePassword.$error.required">
             <div class="help-block">
-                All fields are required
+                Alle felt må fylles ut
             </div>
         </div>
 
@@ -381,108 +381,108 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Merging Systems ...</h2>
-    <p class="master-description">It may take several minutes</p>
+    <h2>Slår sammen systemer ...</h2>
+    <p class="master-description">Det kan ta flere minutter</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Merging Systems ...</h2>
-    <p class="master-description">Trying to connect to the System</p>
+    <h2>Slår sammen systemer ...</h2>
+    <p class="master-description">Prøver å koble til systemet</p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('mergeFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot merge Systems</h2>
+    <h2>Kan ikke slå sammen systemer</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup a separate System</button>
+        <button class="btn btn-default" ng-click="retry()">Prøv igjen</button>
+        <button class="btn btn-default" ng-click="skip()">Sett opp et separat system</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('mergeTemporaryFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>System was successfully merged, but is not ready yet.</h2>
+    <h2>Systemet ble slått sammen, men er ikke klart ennå.</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-click="retry()">Prøv igjen</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Connecting to {{Config.cloud.productName}} ...</h2>
-    <p class="master-description">It may take several moments</p>
+    <h2>Kobler til {{Config.cloud.productName}}...</h2>
+    <p class="master-description">Det kan ta flere øyeblikk</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>System is ready for use</h2>
-    <p>Login</p>
+    <h2>Systemet er klart til bruk</h2>
+    <p>Logg Inn</p>
     <h4>{{settings.cloudEmail}}</h4>
-    <p>Sharing and account settings</p>
-    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="open {{Config.cloud.productName}}"
+    <p>Deling og kontoinnstillinger</p>
+    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="åpne {{Config.cloud.productName}}"
            ng-click="openLink($event)">{{portalShortLink}}</a></h4>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>System is ready for use</h2>
-    <p>Server address</p>
+    <h2>Systemet er klart til bruk</h2>
+    <p>Serveradresse</p>
     <h4>{{serverAddress}}</h4>
-    <p>Administrator login</p>
+    <p>Administratorpålogging</p>
     <h4>{{settings.localLogin}}</h4>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('configureWrongNetwork')">
-    <p><b>Please configure network settings first</b></p>
+    <p><b>Vennligst konfigurer nettverksinnstillingene først</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
+        <button class="btn btn-primary" ng-click="retry()">Lagre innstillinger og start enheten på nytt</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('configureNetworkForInternet')">
-    <p><b>Configure the network to set up Internet connection</b></p>
+    <p><b>Konfigurer nettverket for å sette opp Internett-tilkobling</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
+        <button class="btn btn-primary" ng-click="retry()">Lagre innstillinger og start enheten på nytt</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnServer')">
-    <h2>Connect the server to the Internet</h2>
+    <h2>Koble serveren til Internett</h2>
     <p class="master-description">
-        Set up Internet connection on the server to be able <br> to connect to it anywhere using {{Config.cloud.productName}}.
+        Sett opp Internett-tilkobling på serveren for å kunne koble til den hvor som helst med <br> {{Config.cloud.productName}}.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Prøv igjen</button>
+        <button class="btn btn-default" ng-click="skip()">Konfigurer lokalt system</button>
     </p>
     <p ng-if="serverInfo.flags.canSetupNetwork" class="vertical-bottom">
-        <a href="" ng-click="next('configureNetworkForInternet')">Configure network settings</a>
+        <a href="" ng-click="next('configureNetworkForInternet')">Konfigurer nettverksinnstillinger</a>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
-    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
+    <h2>Kan ikke koble til {{Config.cloud.productName}}</h2>
     <p class="master-description">
-        Check the Internet connection.
+        Sjekk Internett-tilkoblingen.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Prøv igjen</button>
+        <button class="btn btn-default" ng-click="skip()">Konfigurer lokalt system</button>
     </p>
 </div>
 
