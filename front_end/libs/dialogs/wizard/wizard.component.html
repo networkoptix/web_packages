@@ -1,8 +1,15 @@
+<style>
+    iframe {
+        border: 0 solid transparent;
+    }
+</style>
+
 <div class="modal-body">
     <iframe
+        #iframe
         src="/static/inline.html"
-        [attr.frameborder]="0"
         height="100%"
         width="100%"
+        (load)="setFocus()"
     ></iframe>
 </div>

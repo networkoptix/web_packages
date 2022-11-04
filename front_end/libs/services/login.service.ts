@@ -111,7 +111,7 @@ export class NxLoginService extends DialogBase {
 
         if (environment.isLocal) {
             if (this.bootstrapProvider.newSystem) {
-                return;
+                return Promise.resolve('newSystem');
             }
             Object.assign(config, {
                 keyboard: false,
