@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
@@ -24,6 +24,8 @@ export class NxContentComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    injector: Injector;
+
     public title: string;
     public body: string;
     public loaded = false;
@@ -45,9 +47,9 @@ export class NxContentComponent implements OnInit {
     }
 
     constructor(
+        injector: Injector,
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private router: Router,
         private route: ActivatedRoute,
         private http: HttpClient,
         private pageService: NxPageService,
@@ -111,17 +113,9 @@ export class NxContentComponent implements OnInit {
             this.articleParam = paramMap.get('article_param');
             if (this.articleParam === 'temp_url' && this.state === 'draft') {
                 // Internal no need to translate
-                const queryParams: Record<string, string> = {};
+                const message = 'No saved content to preview. Please save draft or submit for review to view preview.';
+                this.injector.get(NxPageService).redirect404(message);
 
-                queryParams.message = 'No saved content to preview. Please save draft or submit for review to view preview.';
-                this.router
-                    .navigate(['404'], {
-                        replaceUrl: true,
-                        queryParams
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
                 return;
             }
 
@@ -175,13 +169,7 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.router
-                        .navigate([this.CONFIG.redirect.page404], {
-                            replaceUrl: true,
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    this.injector.get(NxPageService).redirect404();
                 }
             });
     }
@@ -211,13 +199,7 @@ export class NxContentComponent implements OnInit {
                 );
             }).catch(e => {
                 if (e.status === 404) {
-                    this.router
-                        .navigate(['404'], {
-                            replaceUrl: true,
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    this.injector.get(NxPageService).redirect404();
                 }
                 console.error(e);
             });

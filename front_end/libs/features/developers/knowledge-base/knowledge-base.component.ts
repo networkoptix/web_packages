@@ -6,7 +6,8 @@ import {
     ViewChild,
     ElementRef,
     Inject,
-    OnDestroy
+    OnDestroy,
+    Injector
 } from '@angular/core';
 import {
     ActivatedRoute,
@@ -144,6 +145,7 @@ class KnowledgeNode {
 export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
+    injector: Injector;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     currentSearchResultPage = 0;
@@ -270,6 +272,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     constructor(
+        injector: Injector,
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public cloudApi: NxCloudApiService,
@@ -283,10 +286,11 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         private pageService: NxPageService,
         @Inject(WINDOW) private window: Window,
         private appStateService: NxAppStateService,
-        public kbService: NxKnowledgebaseService
+        public kbService: NxKnowledgebaseService,
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
+        this.injector = injector;
     }
 
     prefetchDocument({ assetId, state = null, version = 0 }): void {
@@ -438,13 +442,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.findKBWithArticle(assetId, assetParam);
         } else {
             if (!this.kbService.menuName && !this.kbService.activeAssetId) {
-                this.router
-                    .navigate(['404'], {
-                        replaceUrl: true,
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.injector.get(NxPageService).redirect404();
             }
             return this.cloudApi.getDocumentation(
                 this.kbService.menuName,
@@ -614,13 +612,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 }
             } else {
                 // Navigate to 404 and replace failing url so going history back will load requesting page
-                this.router
-                    .navigate(['404'], {
-                        replaceUrl: true,
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.injector.get(NxPageService).redirect404();
             }
         } else {
             this.kbService.contentAssetId = null;

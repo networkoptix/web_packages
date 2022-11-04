@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
@@ -32,6 +32,7 @@ import {
     styleUrls: ['about.component.scss']
 })
 export class NxAboutComponent {
+    injector: Injector;
     CONFIG: IConfig;
     account: Account;
     LANG: LanguageI18NStaticTypes;
@@ -81,10 +82,13 @@ export class NxAboutComponent {
         private menusService: NxMenusService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        injector: Injector,
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
+        this.injector = injector;
+
         this.loadMenu(this.route.snapshot.paramMap.get('name'));
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
@@ -103,13 +107,7 @@ export class NxAboutComponent {
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
             setTimeout(() => {
-                this.router
-                    .navigate(['404'], {
-                        replaceUrl: true,
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.injector.get(NxPageService).redirect404();
             });
             return;
         }

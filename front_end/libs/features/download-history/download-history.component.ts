@@ -3,7 +3,8 @@ import {
     Component,
     OnInit,
     Inject,
-    PLATFORM_ID
+    PLATFORM_ID,
+    Injector
 } from '@angular/core';
 import {
     ActivatedRoute,
@@ -40,6 +41,7 @@ export class DownloadHistoryComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    injector: Injector;
     build: string;
     canViewRelease: boolean = false;
     tabsVisible: boolean = false;
@@ -61,10 +63,12 @@ export class DownloadHistoryComponent implements OnInit {
         private router: Router,
         private pageService: NxPageService,
         private uriService: NxUriService,
-        @Inject(PLATFORM_ID) private platformId: object
+        @Inject(PLATFORM_ID) private platformId: object,
+        injector: Injector,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+        this.injector = injector;
 
         if (isPlatformBrowser(this.platformId)) {
             this.router.events
@@ -122,13 +126,7 @@ export class DownloadHistoryComponent implements OnInit {
                     this.tabsVisible = true;
                 });
             }, () => {
-                this.router
-                    .navigate(['404'], {
-                        replaceUrl: true,
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.injector.get(NxPageService).redirect404();
             }
             )
             .finally(() => {
@@ -172,13 +170,7 @@ export class DownloadHistoryComponent implements OnInit {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.router
-                                .navigate(['404'], {
-                                    replaceUrl: true,
-                                })
-                                .catch(error => {
-                                    console.error(error);
-                                });
+                            this.injector.get(NxPageService).redirect404();
                         }
                     });
             } else {

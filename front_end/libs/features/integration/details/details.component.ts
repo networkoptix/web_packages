@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -35,6 +35,7 @@ import { IntegrationService } from '../integration.service';
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
+    injector: Injector;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
@@ -44,6 +45,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     private account: Account;
 
     constructor(
+        injector: Injector,
         configService: NxConfigService,
         language: NxLanguageProviderService,
         public sanitizer: DomSanitizer,
@@ -63,6 +65,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+        this.injector = injector;
     }
 
     setUpRouteSubscription(): void {
@@ -179,13 +182,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                             }
                         }).add(() => {
                             if (!this.plugin) {
-                                this.router
-                                    .navigate(['404'], {
-                                        replaceUrl: true,
-                                    })
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
+                                this.injector.get(NxPageService).redirect404();
                             }
                         });
                 }

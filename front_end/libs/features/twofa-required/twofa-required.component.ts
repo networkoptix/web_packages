@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ })
 @Component({
@@ -9,18 +11,20 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     styleUrls: ['./twofa-required.component.scss']
 })
 export class TwofaRequiredComponent implements OnInit {
+    injector: Injector;
     systemName: string;
 
     constructor(
-        private router: Router,
+        injector: Injector,
         private route: ActivatedRoute,
     ) {
+        this.injector = injector;
     }
 
     ngOnInit(): void {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             if (params.systemName === undefined) {
-                this.router.navigate(['404']);
+                this.injector.get(NxPageService).redirect404();
             }
             this.systemName = params.systemName;
         });

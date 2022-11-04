@@ -36,4 +36,21 @@ export class NxPageService {
     public setDesktopLayout(): void {
         this.metaService.updateLookups('viewport', this.CONFIG.meta.viewport.desktopLayout);
     }
+
+    public redirect404 = (message = ''): void => {
+        const queryParams: Record<string, string> = {};
+
+        if (message) {
+            queryParams.message = message;
+        }
+
+        this.router
+            .navigate(['404'], {
+                replaceUrl: true,
+                queryParams
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    };
 }
