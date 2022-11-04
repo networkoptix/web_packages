@@ -182,10 +182,12 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     public switchTo(name: string) {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
-        this.pageService.pageTitle = new TitleCasePipe().transform(name);
 
         this.uriService
             .updateURI('/downloads/' + name, {})
+            .then(() => {
+                this.pageService.pageTitle = new TitleCasePipe().transform(name);
+            })
             .catch(error => {
                 console.error(error);
             });
