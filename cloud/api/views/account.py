@@ -90,7 +90,7 @@ async def create_user(email, first_name=None, last_name=None, customization=None
 
 
 async def login_helper(request, token, user):
-    django.contrib.auth.login(request, user)
+    await sync_to_async(django.contrib.auth.login)(request, user)
     request.session['access_token'] = token['access_token']
     request.session['refresh_token'] = token['refresh_token']
 
