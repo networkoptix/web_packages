@@ -640,19 +640,13 @@ export class SystemConfigSettings {
     statisticReportLastVersion: string;
     systemName: string;
     mergeInfo: any;
-    videoTrafficEncryptionForced?: boolean;
-    exposeDeviceCredentials?: boolean;
+    settingsPreset: string;
 
     constructor(params: Params[]) {
         params.forEach(({ name, value }) => {
             this[name] = value;
         });
     }
-}
-
-export class SystemAdvancedConfigSettings {
-    videoTrafficEncryptionForced?: boolean;
-    exposeDeviceCredentials?: boolean;
 }
 
 enum EventState {

@@ -18,10 +18,13 @@ import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 
+import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
+
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
+import { SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -125,14 +128,16 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private setupSystem(
         systemName: string,
-        systemSettings: t.SystemAdvancedConfigSettings,
+        systemSettings: Partial<SystemConfigSettings>,
         cloudSystemID = '',
         cloudAuthKey = '',
         owner = '',
-        password = ''
+        password = '',
+        securityLevel: string = SECURITY_LEVEL.STANDARD,
     ) {
         const config = {
             name: systemName,
+            settingsPreset: 'security',
             settings: systemSettings,
             local: {
                 password
@@ -143,6 +148,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 owner
             }
         };
+
+        if (securityLevel === SECURITY_LEVEL.STANDARD) {
+            delete config.settingsPreset;
+        }
+
         !cloudSystemID ? delete config.cloud : delete config.local;
         return this.post('/rest/v1/system/setup', config).toPromise();
     }
@@ -768,7 +778,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
     setupLocalSystem(
         systemName: string,
         password: string,
-        systemSettings: t.SystemAdvancedConfigSettings
+        systemSettings: Partial<SystemConfigSettings>,
+        securityLevel: string = SECURITY_LEVEL.STANDARD,
     ) {
         return this.setupSystem(
             systemName,
@@ -776,7 +787,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             undefined,
             undefined,
             undefined,
-            password
+            password,
+            securityLevel,
         );
     }
 

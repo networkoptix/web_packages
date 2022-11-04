@@ -12,7 +12,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemAPIService } from '@services/system-api.service';
-import { ModuleInformationReply, NormalResponse, SystemAdvancedConfigSettings, SystemConfigSettings, UserSession } from '@services/system-api.types';
+import { ModuleInformationReply, NormalResponse, SystemConfigSettings, UserSession } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
@@ -168,6 +168,7 @@ export class WizardStateService {
     };
 
     systemSettings: SystemConfigSettings = {
+        settingsPreset: SECURITY_LEVEL.STANDARD,
         cloudAccountName: '',
         cloudHost: '',
         cloudSystemID: '',
@@ -179,14 +180,12 @@ export class WizardStateService {
         statisticReportLastVersion: '',
         systemName: '',
         mergeInfo: {},
-        videoTrafficEncryptionForced: true,
-        exposeDeviceCredentials: false
     };
 
-    systemAdvancedSettings: SystemAdvancedConfigSettings = {
-    };
+    // eslint-disable-next-line nx/no-untyped-init
+    systemAdvancedSettings = {};
 
-    securityLevel = 'standard';
+    securityLevel = SECURITY_LEVEL.STANDARD;
     simpleURLRegex: string;
     formValidateSubject = new BehaviorSubject<boolean>(false);
 
@@ -680,8 +679,7 @@ export class WizardStateService {
 
     initSystem(): void {
         const { localPassword, systemName } = this.setupConfig;
-
-        const settings: SystemAdvancedConfigSettings = {};
+        const settings: Partial<SystemConfigSettings> = {};
         // eslint-disable-next-line array-callback-return
         Object.keys(this.systemAdvancedSettings).map((key: string): void => {
             if (typeof this.systemAdvancedSettings[key] === 'object') {
@@ -691,12 +689,7 @@ export class WizardStateService {
             }
         });
 
-        if (this.securityLevel === SECURITY_LEVEL.SAFE) {
-            settings.videoTrafficEncryptionForced = true;
-            settings.exposeDeviceCredentials = false;
-        }
-
-        this.server.setupLocalSystem(systemName, localPassword, settings)
+        this.server.setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
             .then(_ => {
                 return this.updateCredentials(this.defaultUser, localPassword, false)
                     .catch(this.offlineErrorHandler);
@@ -796,7 +789,7 @@ export class WizardStateService {
     }
 
     setSecurityLevel(level: string): void {
-        this.securityLevel = level;
+        this.securityLevel = <SECURITY_LEVEL>level;
     }
 
     initWizard = (): void => {

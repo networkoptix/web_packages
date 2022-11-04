@@ -1006,7 +1006,7 @@
             "autoDiscoveryEnabled": "Enable device auto discovery",
             "statisticsAllowed": "Send anonymous usage statistics and crash reports",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "High"
         }
     },
     "system": {

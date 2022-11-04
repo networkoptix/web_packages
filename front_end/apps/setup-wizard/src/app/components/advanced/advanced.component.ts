@@ -20,7 +20,7 @@ export class AdvancedComponent {
     ) {
         this.itemsSecurity = [
             { value: 'standard', name: translate.instant('setupWizard.advancedSettings.standard') },
-            { value: 'safe', name: translate.instant('setupWizard.advancedSettings.safe') }
+            { value: 'high', name: translate.instant('setupWizard.advancedSettings.high') }
         ];
 
         this.selectedSecurity = this.itemsSecurity[0];
