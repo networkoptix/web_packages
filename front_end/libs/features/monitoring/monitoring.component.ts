@@ -12,7 +12,6 @@ import { NxMenuService } from '@app/menu/menu.service';
 import { Content } from '@app/menu/menu.types';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
@@ -138,35 +137,25 @@ export class NxMonitoringComponent implements OnInit {
             this.monitoringService.system = undefined;
             this.monitoringService.selectedServerId = undefined;
 
-            let system: NxSystem;
-            if (environment.isLocal) {
-                system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi, account.id, account.email
-                );
-            } else {
-                system = this.systemService.createSystem(account.email, this.systemId);
+            this.system = this.systemService.getCurrentSystem();
+            this.systemOnline = this.system.isOnline;
+
+            if (this.systemOnline) {
+                this.system.serverManager.initSystemMediaServers()
+                    .then(() => {
+                        this.system.infoSubject
+                            .pipe(
+                                untilDestroyed(this),
+                                takeUntil(this.destroy$)
+                            )
+                            .subscribe(() => {
+                                this.updateMonitor(this.system);
+                            });
+                    });
             }
 
-            system.update().then(() => {
-                this.systemOnline = system.isOnline;
-                if (this.systemOnline) {
-                    system.serverManager.initSystemMediaServers()
-                        .then(() => {
-                            this.system = system;
-                            this.system.infoSubject
-                                .pipe(
-                                    untilDestroyed(this),
-                                    takeUntil(this.destroy$)
-                                )
-                                .subscribe(() => {
-                                    this.updateMonitor(this.system);
-                                });
-                        });
-
-                    this.content.base = this.sourceService.getMonitoringMenuBase(system);
-                    this.content = { ...this.content }; // trigger onChange
-                }
-            });
+            this.content.base = this.sourceService.getMonitoringMenuBase(this.system);
+            this.content = { ...this.content }; // trigger onChange
         });
     }
 

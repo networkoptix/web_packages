@@ -82,16 +82,14 @@ export class SystemGuard implements CanActivate {
                 return;
             }
             let currSystem = this.systemService.getCurrentSystem();
-            if (currSystem.userManager.users === undefined) {
+            if (currSystem && currSystem.userManager.users === undefined) {
                 await currSystem.userManager.getUsersDataFromTheSystem();
-            }
-
-            if (!this.settingsService.system) {
-                this.settingsService.system = currSystem;
             }
 
             return new Promise(resolve => {
                 if (currSystem) {
+                    this.settingsService.system = currSystem;
+
                     resolve(checkPermissionsFor(currSystem));
                 } else {
                     if (environment.isLocal) {
