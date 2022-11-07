@@ -57,10 +57,10 @@
         },
         "Advanced Viewer": {
             "description": "ライブ表示、アーカイブ表示、PTZコントロール 等ができます",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "Custom": {
-            "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
+            "description": "カスタム権限の調整を行うには、 %VMS_NAME% クライアントアプリケーションを使用してください",
             "label": "カスタム"
         },
         "Live Viewer": {
@@ -68,7 +68,7 @@
             "label": "ライブビューアー"
         },
         "Owner": {
-            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "共有する機能およびシステムとクラウドの接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "Viewer": {
@@ -84,15 +84,15 @@
             "label": "アドミニストレーター"
         },
         "custom": {
-            "description": "%VMS_NAME% クライアントアプリケーションを使用してカスタム権限を設定してください",
+            "description": "カスタム権限の調整を行うには、 %VMS_NAME% クライアントアプリケーションを使用してください",
             "label": "カスタム"
         },
         "customRole": {
-            "description": "システムで指定されたカスタムのユーザーの役割",
-            "label": "カスタムの役割"
+            "description": "システムで指定されたカスタムのユーザーロール",
+            "label": "カスタムロール"
         },
         "disabled": {
-            "description": "ユーザーが無効の為にシステムにログインできません",
+            "description": "ユーザーが無効になっているため、システムにログインできません",
             "label": "無効"
         },
         "liveViewer": {
