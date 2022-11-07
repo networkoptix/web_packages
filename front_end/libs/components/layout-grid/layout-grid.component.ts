@@ -5,6 +5,7 @@ import {
     ChangeDetectorRef,
     Component, EventEmitter, Input, Output
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime } from 'rxjs/operators';
@@ -64,6 +65,7 @@ interface Collisions {
     background?: 'red';
 }
 
+@UntilDestroy()
 @Component({
     selector: 'nx-layout-grid',
     templateUrl: 'layout-grid.component.html',
@@ -94,17 +96,6 @@ export class NxLayoutGridComponent {
     #initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
     #countdownTimer$ = new Subject<number>();
-
-    autoSaveHandler$ = this.#countdownTimer$.pipe(
-        debounceTime(2500),
-        skip(1),
-        switchMap(time => interval(1000).pipe(map(cur => time - cur))),
-        tap(time => !time && this.saveLayout()),
-        shareReplay({
-            bufferSize: 1,
-            refCount: true
-        })
-    );
 
     layout$ = this.#initialLayout$.pipe(
         filter(layout => !!layout),
@@ -287,6 +278,20 @@ export class NxLayoutGridComponent {
         if (layoutItemLookup?.currentValue && !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)) {
             this.dataSource = new ArrayDataSource(layoutItemLookup.currentValue.tree);
         }
+    }
+
+    ngOnInit(): void {
+        this.#countdownTimer$.pipe(
+            debounceTime(2500),
+            skip(1),
+            switchMap(time => interval(1000).pipe(map(cur => time - cur))),
+            tap(time => !time && this.saveLayout()),
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            }),
+            untilDestroyed(this)
+        ).subscribe();
     }
 
     async ngOnDestroy(): Promise<void> {

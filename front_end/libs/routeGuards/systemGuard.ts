@@ -82,37 +82,35 @@ export class SystemGuard implements CanActivate {
                 return;
             }
             let currSystem = this.systemService.getCurrentSystem();
-            if (currSystem && currSystem.userManager.users === undefined) {
+
+            if (!currSystem) {
+                if (environment.isLocal) {
+                    currSystem = this.systemService.createLocalSystem(
+                        this.accountService.mediaServerApi,
+                        account.id,
+                        account.email
+                    );
+                } else {
+                    currSystem = this.systemService.createSystem(
+                        account.email,
+                        systemId,
+                        undefined,
+                        true
+                    );
+                }
+
+                await currSystem.update();
+                this.settingsService.system = currSystem;
+            }
+            if (currSystem.userManager.users === undefined) {
                 await currSystem.userManager.getUsersDataFromTheSystem();
             }
 
-            return new Promise(resolve => {
-                if (currSystem) {
-                    this.settingsService.system = currSystem;
+            if (!this.settingsService.system) {
+                this.settingsService.system = currSystem;
+            }
 
-                    resolve(checkPermissionsFor(currSystem));
-                } else {
-                    if (environment.isLocal) {
-                        currSystem = this.systemService.createLocalSystem(
-                            this.accountService.mediaServerApi,
-                            account.id,
-                            account.email
-                        );
-                    } else {
-                        currSystem = this.systemService.createSystem(
-                            account.email,
-                            systemId,
-                            undefined,
-                            true
-                        );
-                    }
-
-                    currSystem.update().then(_ => {
-                        this.settingsService.system = currSystem;
-                        resolve(checkPermissionsFor(currSystem));
-                    });
-                }
-            });
+            return checkPermissionsFor(currSystem);
         });
     }
 }
