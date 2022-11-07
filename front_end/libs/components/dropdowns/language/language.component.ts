@@ -42,6 +42,8 @@ class BaseLanguageDropdown extends BaseDropdown {
     languagesCol1 = [];
     languagesCol2 = [];
 
+    newHeader: boolean = false;
+
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
@@ -52,6 +54,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     ) {
         super(languageService, configService);
 
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.currentLang = languageService.currentLang;
     }
 

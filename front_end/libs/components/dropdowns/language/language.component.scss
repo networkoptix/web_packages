@@ -1,16 +1,89 @@
+@use "typography";
+@use "theme_variables_common" as *;
+
 nx-language-select {
     width   : 300px;
     display : block;
-    
+
     &.auto {
         width: auto;
     }
-    
+
     .dropdown-menu {
         padding-bottom : 4px !important;
 
         .dropdown-item {
             cursor : pointer;
+        }
+    }
+}
+
+.new-header {
+    padding: 0 !important;
+    margin-top: 4px;
+
+    .dropdown-arrow-wrapper {
+        width: 20px;
+        border-radius: 4px;
+        height: 20px;
+        display: inline-flex;
+        position: relative;
+
+        .dropdown-arrow {
+            position: relative;
+            left: 6.5px;
+            top: 1px;
+        }
+    }
+    span {
+        @include typography.regular11nocolor;
+        margin-left: 5px;
+        margin-right: 5px;
+        color: var(--header-level-one-color);
+    }
+
+    &:hover {
+        span {
+            color: var(--header-level-one-hover-color);
+        }
+        .dropdown-arrow-wrapper {
+            background-color: var(--header-profile-hover-bg);
+
+            .dropdown-arrow {
+                .profile-dropdown-arrow {
+                    fill: var(--header-profile-hover-color);
+                }
+            }
+        }
+        .language-icon {
+            .language {
+                fill: var(--header-profile-hover-color);
+            }
+        }
+    }
+
+    &.active {
+        span {
+            color: var(--header-level-one-active-color);
+            background-color: var(--header-level-one-active-bg) !important;
+        }
+        .dropdown-arrow-wrapper {
+            background-color: var(--header-profile-active-bg) !important;
+
+            .dropdown-arrow {
+                transform: scaleY(-1);
+                top: initial !important;
+                bottom: 1px;
+
+                .profile-dropdown-arrow {
+                    fill: var(--header-profile-active-color) !important;
+                }
+            }
+        }
+        .language-icon {
+            .language {
+                fill: var(--header-profile-active-color) !important;
+            }
         }
     }
 }

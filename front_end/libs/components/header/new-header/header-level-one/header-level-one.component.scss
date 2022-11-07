@@ -25,13 +25,18 @@
         right: 0px;
     }
 
+    nx-header-language-select {
+        position: absolute;
+        right: 10px;
+    }
+
     .create-account {
         white-space: nowrap;
         @extend .header-button;
         text-decoration: inherit;
         color: inherit;
         min-height: 24px;
-        margin: 13px 16px 10px auto;
+        margin: 13px 95px 10px auto;
     }
 }
 
