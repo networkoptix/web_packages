@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
@@ -11,7 +14,14 @@ export class LocalSuccessComponent implements OnInit {
     address: string;
     username: string;
 
-    constructor(private wizardService: WizardStateService) { }
+    CONFIG: IConfig;
+
+    constructor(
+        configService: NxConfigService,
+        private wizardService: WizardStateService,
+    ) {
+        this.CONFIG = configService.getConfig();
+    }
 
     ngOnInit(): void {
         const { ip, port } = this.wizardService.networkInfo;
