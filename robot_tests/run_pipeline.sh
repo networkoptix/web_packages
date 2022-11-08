@@ -22,7 +22,24 @@ CLOUD_HOST=$("$PYTHON" -m 'wait_for_cloud' "$DEPLOYMENT_JOB_URL")
 if [ ! "$CLOUD_HOST" ]; then
   echo >&2 "Failed to deploy cloud with backend revision '$BACKEND_REVISION'" \
     "and frontend revision '$FRONTEND_REVISION'"
-  CLOUD_HOST=$("$PYTHON" -m 'get_cloud_host' "$DEPLOYMENT_JOB_URL")
+
+  echo >&2 "Checking if something is left and whether it needs to be removed"
+  ATTEMPTS_LEFT=5
+  while true; do
+    CLOUD_HOST=$("$PYTHON" -m 'get_cloud_host' "$DEPLOYMENT_JOB_URL")
+    if [ "$CLOUD_HOST" ]; then
+      break
+    fi
+
+    ATTEMPTS_LEFT=$((ATTEMPTS_LEFT - 1))
+    if [ "$ATTEMPTS_LEFT" -eq 0 ]; then
+      break
+    fi
+
+    echo >&2 "Failed to get cloud host. Wait a second before trying again"
+    sleep 1
+  done
+
   if [ ! "$CLOUD_HOST" ]; then
     echo >&2 "Cloud is not deployed. There is nothing to remove"
     exit 1
