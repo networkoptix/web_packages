@@ -506,13 +506,6 @@ Get Cloud User Role
         END
     END
 
-Get Cloud User Id By Email
-   [Arguments]    ${auth}    ${email}    ${system id}
-   @{users}=   Get Cloud System Users    ${auth}    ${system id}
-   FOR    ${user}    IN    @{users}
-       Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    ${user}[vmsUserId]
-   END
-
 Get System User Id By Email
     [Arguments]    ${email}
     ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}

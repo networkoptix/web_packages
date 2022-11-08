@@ -18,8 +18,9 @@ from requests import head
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
 from robot.api.deco import keyword, library
-from ServerAPI import ServerAPI
 from ServerAPI5 import ServerAPI5
+from CloudPortalAPI import CloudPortalAPI
+
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -730,3 +731,10 @@ class GenericKeywords(object):
     def detect_language(self, text):
         detected_langs = str(Translator().detect(text))
         return detected_langs
+
+    @keyword
+    def Get_Cloud_User_Id_By_Email(auth, email, system_id):
+        users = CloudPortalAPI.get_cloud_system_users(auth, system_id)
+        for user in users:
+            if user == email:
+                return    user["vmsUserId"]
