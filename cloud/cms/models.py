@@ -3375,5 +3375,6 @@ class Flag(AbstractUserFlag):
                                                         name=ds_name).first()):
                 self.data_structure = ds
         ret = super().save(*args, **kwargs)
+        caches['customization'].delete('features_cache_key')
         Flag.flush_global_vals()
         return ret

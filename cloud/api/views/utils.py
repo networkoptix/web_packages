@@ -406,11 +406,18 @@ def get_settings(request):
     user_changed = not user or not current_user or user != current_user
     version = request.query_params.get('version')
     current_version = global_cache.get(f'global_version_{customization}')
-    if user_changed or not version:
+    version_changed = version != str(current_version)
+    features = request.query_params.get('features')
+    current_features = str(uuid4())
+    added = global_cache.add('features_cache_key', current_features)
+    if not added:
+        current_features = global_cache.get('features_cache_key')
+    features_changed = features != current_features
+    if user_changed or version_changed or features_changed:
         if not current_user:
             current_user = str(uuid4())
             cache.set(user_key, current_user)
-        return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}')
+        return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}&features={current_features}')
 
     data = get_settings_from_cache(customization=customization)
     serializer = SettingsSerializer(
