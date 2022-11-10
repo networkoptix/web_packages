@@ -65,6 +65,7 @@
                 [readonly]="emailProcess.processing"
                 email
                 nxFocusMe
+                autocomplete="username"
                 [setFocus]="true"
             />
             <div
@@ -161,6 +162,7 @@
                 [readonly]="emailProcess.processing"
                 required
                 nxFocusMe
+                autocomplete="username"
                 [setFocus]="true"
             />
             <ng-container *ngIf="login.invalid && login.dirty && login.touched">

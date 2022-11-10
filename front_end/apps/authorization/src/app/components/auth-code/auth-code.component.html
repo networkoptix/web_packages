@@ -83,7 +83,7 @@
                 [(ngModel)]="code"
                 [readonly]="checkAuthCodeProcess.processing"
                 #authCode="ngModel"
-                autocomplete="off"
+                autocomplete="one-time-code"
                 required
                 nxFocusMe
                 [setFocus]="true"

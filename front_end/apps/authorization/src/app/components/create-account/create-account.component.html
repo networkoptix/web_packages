@@ -75,6 +75,7 @@
                     [form]="createAccountForm"
                     [authorize]="true"
                     [setFocus]="true"
+                    [isUsername]="true"
                     #createAccountEmail="ngModel"
                 ></nx-email-input>
                 <ng-container
@@ -144,7 +145,7 @@
                     }"
                     [(ngModel)]="createFirstName"
                     #firstName="ngModel"
-                    autocomplete="off"
+                    autocomplete="given-name"
                     maxlength="255"
                     required
                     nxFocusMe
@@ -187,7 +188,7 @@
                     }"
                     [(ngModel)]="createLastName"
                     #lastName="ngModel"
-                    autocomplete="off"
+                    autocomplete="family-name"
                     maxlength="255"
                     required
                     (change)="createLastName = createLastName.trim()"

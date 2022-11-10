@@ -50,6 +50,7 @@
                 [pattern]="CONFIG.credentialsValidation.emailRegex"
                 required
                 email
+                autocomplete="username"
                 nxFocusMe
             />
             <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">

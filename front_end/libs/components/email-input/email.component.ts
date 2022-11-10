@@ -46,6 +46,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() hideErrors = false;
     @Input() setFocus = false;
     @Input() authorize = false;
+    @Input() isUsername = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
