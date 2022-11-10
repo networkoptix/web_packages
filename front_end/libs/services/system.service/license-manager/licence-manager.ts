@@ -95,10 +95,20 @@ export class LicenseManager extends Destroyable {
         return params;
     };
 
+    #inspectLicense = (license: LicenseInfo): Promise<LicenseInfo> => {
+        if (!+license.params.services.cloudStorage.cloudStorageSizeBytes) {
+            // Will add to lang file after lang refactor has been merged in
+            return Promise.reject({ licenseKey: ['This license does not include cloud storage.'] });
+        }
+        return Promise.resolve(license);
+    };
+
     /** Cloud Storage Actions */
 
     public readonly activate = (key: string): Observable<LicenseInfo> => {
-        return this.licenseServerApi.activateLicense(this.#generateUpdateParams(key)).pipe(
+        return this.licenseServerApi.inspectLicense(LicenseManager.normalizeKey(key)).pipe(
+            switchMap(this.#inspectLicense),
+            switchMap(() => this.licenseServerApi.activateLicense(this.#generateUpdateParams(key))),
             tap(() => this.#updateLicense()),
             this.onDestroyed
         );

@@ -6,7 +6,7 @@ html[data-theme="dark"] {
         background-color: #0D0E0F;
         color : #A5B7C0;
     }
-    
+
     --test-bg : #0D0E0F;
     --body-bg    : #0D0E0F; //$dark3;
     --alt-body-bg : #000000; //$dark1;
@@ -120,10 +120,10 @@ html[data-theme="dark"] {
     --border-hover-color   : #263137; //$dark8;
     --border-active-color  : #1C2327; //$dark6;
     --horizontal-sep-color : #2B383F; //$dark9;
-    
+
     --label-color          : #E1E7EA; //light4;
     --label-disabled-color : #E1E7EA; //light4;
-    
+
     --placehoder-cloud-color   : #171C1F; //$dark5
     --placehoder-cloud-opacity : 0;
     --placeholder-light-color : #E1E7EA; //$light4;
@@ -541,7 +541,7 @@ html[data-theme="dark"] {
     --input-active-color        : #E1E7EA; //$light4;
     --input-active-border-color : #5D7E8F; //$dark19;
     --input-color-placeholder   : #A5B7C0; //$light10;
-    
+
     --input-disabled-color : #{$light10};
     --input-disabled-border-color : #35464F; //$dark11;
 
@@ -582,4 +582,9 @@ html[data-theme="dark"] {
 
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
+    --new-feature-gradient: linear-gradient(242.24deg, var(--dark2) 0.43%, var(--brand-d4) 122.68%);
+    --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, var(--dark2) 0%, var(--brand-d4) 0.01%, transparent 98.65%);
+    --cloud-storage-focus: var(--dark6);
+    --cloud-storage-focus-2: var(--dark6);
+    --cloud-storage-info-text: var(--light9);
 }

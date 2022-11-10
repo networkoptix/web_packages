@@ -4,10 +4,10 @@
 
 
 :host {
-    background: linear-gradient(242.24deg, #F5F7F8 0.43%, #92DBFF 122.68%);
+    background-image: var(--new-feature-gradient);
 }
 
-.info-header {
+.modal-info-header {
     padding: 1.5rem 1.5rem 0 1.5rem !important;
     display: flex;
     align-items: center;
@@ -27,6 +27,11 @@
 
 .info-body {
     min-height: 200px;
+}
+
+#closeNewFeatureBtn {
+    right: 16px !important;
+    top: 16px !important;
 }
 
 // Hardcoded content styling
@@ -54,10 +59,12 @@
     h2 {
         @include typography.medium24dark9;
         margin-bottom: 12px;
+        color: var(--body-text-color) !important;
     }
 
     span {
         @include typography.regular14dark9;
+        color: var(--body-text-color) !important;
     }
 }
 
@@ -83,6 +90,7 @@
 
         h4 {
             @include typography.medium16dark9;
+            color: var(--body-text-color) !important;
             display: flex;
             justify-content: flex-start;
             margin: 0 0 12px 0;
@@ -97,6 +105,7 @@
 
         p {
             @include typography.regular14dark9;
+            color: var(--body-text-color) !important;
         }
 
     }

@@ -700,7 +700,7 @@ export class NxSystem {
         return this.mediaserver.ptz(ptzCommand);
     }
 
-    public getLicenseServerApi() {
+    public getLicenseServerApi = () => {
         let _cloudHost = '';
         return this.updateOrGetSystemSettings().pipe(
             map(({ reply: { settings: { licenseServer, cloudHost } } }) => {
@@ -709,15 +709,15 @@ export class NxSystem {
             }),
             catchError(() => Promise.resolve('')),
             switchMap(licenseServer => this.cloudApi.checkLicenseServer(this.id, licenseServer)),
-            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, _cloudHost || this.CONFIG.cloudHost))
+            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, _cloudHost))
         );
-    }
+    };
 
-    public getLicenseManager() {
+    public getLicenseManager = () => {
         return this.getLicenseServerApi().pipe(
             map(licenseServerApi => new LicenseManager(licenseServerApi, this, this.systemsService, this.translateService)
             ));
-    }
+    };
 
     public getCloudStorageManager(cloudStorageApi: CloudStorageAPI) {
         return new CloudStorageManager(cloudStorageApi, this, this.systemsService, this.translateService);

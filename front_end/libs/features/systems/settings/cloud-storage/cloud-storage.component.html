@@ -80,7 +80,7 @@
 <ng-template #usageBlock>
     <div class="usage-info-block">
         <h4>
-            <span *ngIf="(usages$ | async).length; else notUsed">{{ usageMessage$ | async }}</span>
+            <span *ngIf="(usages$ | async)?.length; else notUsed">{{ usageMessage$ | async }}</span>
         </h4>
         <ng-template #activateNotice>
             <div class="usage-popover">

@@ -144,7 +144,9 @@ nx-modal-wizard {
             margin: 0 !important;
             padding: 0 !important;
         }
+    }
 
+    &-header, &-info-header {
         .close {
             color: var(--card-header-text) !important;
             opacity: 1 !important;

@@ -29,6 +29,12 @@
     }
 }
 
+input#license:read-only {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border-color) !important;
+    color: var(--input-color) !important;
+}
+
 .svg-icon {
     svg {
         height: 24px;

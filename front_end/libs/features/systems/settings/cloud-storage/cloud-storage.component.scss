@@ -57,7 +57,7 @@ header.with-child {
         display: flex;
         justify-content: center;
         align-items: center;
-        background: radial-gradient(50% 50% at 50% 50%, #D9D9D9 0%, #A8E1FE 0.01%, rgba(255, 255, 255, 0) 98.65%);
+        background-image: var(--cloud-storage-spot-gradient);
         margin-bottom: -64px;
         padding-bottom: 64px;
     }
@@ -69,11 +69,13 @@ header.with-child {
 
     h2 {
         @include typography.medium24dark9;
+        color: var(--cloud-storage-info-text) !important;
         margin-bottom: 12px;
     }
 
     span {
         @include typography.regular14dark9;
+        color: var(--cloud-storage-info-text) !important;
     }
 
 }
@@ -188,15 +190,16 @@ td {
 
         &:hover {
             cursor: pointer;
-            background-color: $additional_light3;
+            background-color: var(--cloud-storage-focus);
         }
 
         &:not(:last-child) {
-            border-right: 2px solid $light3;
+            border-right: 2px solid var(--cloud-storage-focus);
         }
 
         h4 {
             @include typography.medium16dark9;
+            color: var(--cloud-storage-info-text) !important;
             margin-top: 0;
             display: flex;
             justify-content: flex-start;
@@ -212,6 +215,7 @@ td {
 
         p {
             @include typography.regular14dark9;
+            color: var(--cloud-storage-info-text) !important;
             margin-bottom: 0;
         }
 
@@ -232,7 +236,7 @@ td {
 
     .usage-bar {
         height: 20px;
-        border: 1px solid $light7;
+        border: 1px solid var(--cloud-storage-focus-2);
         border-radius: 2px;
         display: flex;
     }
@@ -250,7 +254,7 @@ td {
         flex-shrink: 0;
         margin-right: 12px;
         border-radius: 2px;
-        border: 1px solid $light7;
+        border: 1px solid var(--cloud-storage-focus-2);
     }
 
     .description {

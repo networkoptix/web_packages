@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injector } from '@angular/core';
 import { catchError, Observable, switchMap } from 'rxjs';
 
 import { environment } from '@environments/environment';
+import { WINDOWS_PROVIDERS, WINDOW } from '@services/window-provider';
 import { staticImplements } from '@utils/general';
 
 import { WithFreshSession } from '../nx-cloud-api.types';
@@ -60,6 +62,8 @@ export abstract class BaseCloudServiceAPI {
         if (this.serverUrl.endsWith('/') && this.apiBase.startsWith('/')) {
             this.serverUrl = this.serverUrl.slice(0, -1);
         }
+
+        this.hostOrCustomization ||= environment.cloudHost || Injector.create({ providers: WINDOWS_PROVIDERS }).get(WINDOW).location.hostname;
     }
 
     protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.get<T>(url, options), this.#processOptionsFactory(options));

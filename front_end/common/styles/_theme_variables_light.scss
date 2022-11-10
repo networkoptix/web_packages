@@ -8,20 +8,20 @@ html[data-theme="light"] {
         background-color: #{$additional_light2};
         color: #{$dark9};
     }
-    
+
     --test-bg : #{$additional_light2};
-    --body-bg    : #{$additional_light2};
+    --body-bg : #{$additional_light2};
     --alt-body-bg : #{$light1};
     --body-text-color : #{$dark9};
 
-    --header-bg                  : #{$light1};
-    --header-border-color        : #{$light4};
-    --header-webadm-bg           : #{$dark14};
+    --header-bg : #{$light1};
+    --header-border-color : #{$light4};
+    --header-webadm-bg : #{$dark14};
     --header-webadm-border-color : transparent;
 
-    --ribbon-bg     : var(--bluez-light);
+    --ribbon-bg : var(--bluez-light);
     --ribbon-border : var(--bluez-light);
-    --ribbon-color  : #{$dark9};
+    --ribbon-color : #{$dark9};
 
     --ribbon-alert-bg : #{$yellow_l2};
     --ribbon-alert-border : #{$yellow_l1};
@@ -31,36 +31,32 @@ html[data-theme="light"] {
     --image-box-selected-border-color : var(--brand-l1);
 
     --storage-size-available : #{$additional_light1};
-    --storage-size-reserved : repeating-linear-gradient(
-                -45deg,
-                #{$light3},
-                #{$light3} 4.25px,
-                #{$light4} 4.25px,
-                #{$light4} 9px
-    );
+    --storage-size-reserved : repeating-linear-gradient(-45deg,
+        #{$light3},
+        #{$light3} 4.25px,
+        #{$light4} 4.25px,
+        #{$light4} 9px);
     --storage-size-reserved-border : #{$light5};
 
-    --search-link-color               : #{$dark9};
-    --search-link-hover-color         : #{$dark15};
-    --search-link-visited-color       : #{$dark19};
+    --search-link-color : #{$dark9};
+    --search-link-hover-color : #{$dark15};
+    --search-link-visited-color : #{$dark19};
     --search-link-visited-hover-color : #{$light14};
-    --search-highlight-color          : rgba(var(--yellow_main--rgb), 0.5);
+    --search-highlight-color : rgba(var(--yellow_main--rgb), 0.5);
 
     --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
 
-    --spot-gradient : radial-gradient(
-            ellipse farthest-corner at center center,
-            #A5B7C0 0,
-            #AFBFC7 3%,
-            #B9C7CE 5%,
-            #C3CFD5 10%,
-            #CDD7DC 15%,
-            #D7DFE3 20%,
-            #E1E7EA 23%,
-            #EBEFF1 25%,
-            #F5F7F8 30%,
-            #FFFFFF 40%
-    );
+    --spot-gradient : radial-gradient(ellipse farthest-corner at center center,
+        #A5B7C0 0,
+        #AFBFC7 3%,
+        #B9C7CE 5%,
+        #C3CFD5 10%,
+        #CDD7DC 15%,
+        #D7DFE3 20%,
+        #E1E7EA 23%,
+        #EBEFF1 25%,
+        #F5F7F8 30%,
+        #FFFFFF 40%);
 
     --h1 : #{$dark9};
     --h2 : #{$dark9};
@@ -83,9 +79,9 @@ html[data-theme="light"] {
 
     --text-placeholder-color : #{$light16};
 
-    --scrollbar-color                   : var(--light16);
-    --scrollbar-thumb-bg                : var(--light10);
-    --scrollbar-thumb-border-color      : var(--additional_light1);
+    --scrollbar-color : var(--light16);
+    --scrollbar-thumb-bg : var(--light10);
+    --scrollbar-thumb-border-color : var(--additional_light1);
     --menu-scrollbar-thumb-border-color : var(--light6);
 
     --tooltip-shadow-color : #{$dark15};
@@ -93,40 +89,40 @@ html[data-theme="light"] {
     --tooltip-color : #{$light1};
 
     --popover-shadow-color : 0 1rem 2rem 0 #{$light15};
-    --popover-bg           : #{$light1};
-    --popover-color        : #{$dark9};
+    --popover-bg : #{$light1};
+    --popover-color : #{$dark9};
 
-    --radio-color              : #{$dark11};
-    --radio-check-color        : var(--brand-core);
-    --radio-hover-color        : #{$dark3};
-    --radio-hover-check-color  : var(--brand-core);
-    --radio-active-color       : #{$dark11};
+    --radio-color : #{$dark11};
+    --radio-check-color : var(--brand-core);
+    --radio-hover-color : #{$dark3};
+    --radio-hover-check-color : var(--brand-core);
+    --radio-active-color : #{$dark11};
     --radio-active-check-color : var(--brand-core);
     --radio-active-hover-color : #{$dark3};
 
-    --checkbox-color              : #{$dark9};
-    --checkbox-check-color        : var(--brand-core);
-    --checkbox-hover-color        : #{$dark1};
-    --checkbox-hover-check-color  : var(--brand-core);
-    --checkbox-active-color       : #{$dark9};
+    --checkbox-color : #{$dark9};
+    --checkbox-check-color : var(--brand-core);
+    --checkbox-hover-color : #{$dark1};
+    --checkbox-hover-check-color : var(--brand-core);
+    --checkbox-active-color : #{$dark9};
     --checkbox-active-check-color : var(--brand-core);
     --checkbox-active-hover-color : #{$dark1};
 
-    --auth-header-bg       : #{$additional_light1};
-    --auth-header-color    : #{$dark9};
+    --auth-header-bg : #{$additional_light1};
+    --auth-header-color : #{$dark9};
     --auth-subheader-color : #{$dark9};
-    --auth-body-bg         : #{$light1};
-    --auth-pill-bg         : #{$light3};
+    --auth-body-bg : #{$light1};
+    --auth-pill-bg : #{$light3};
 
-    --border-color         : #{$light4};
-    --border-hover-color   : #{$light8};
-    --border-active-color  : #{$light10};
+    --border-color : #{$light4};
+    --border-hover-color : #{$light8};
+    --border-active-color : #{$light10};
     --horizontal-sep-color : #{$light6};
-    
-    --label-color          : #{$dark9};
+
+    --label-color : #{$dark9};
     --label-disabled-color : #{$dark10};
 
-    --placehoder-cloud-color   : var(--brand-core);
+    --placehoder-cloud-color : var(--brand-core);
     --placehoder-cloud-opacity : .1;
     --placeholder-accent-color : #{$dark7};
     --placeholder-light-color : #{$light1};
@@ -135,158 +131,158 @@ html[data-theme="light"] {
     --placehoder-title-color : #{$dark9};
     --placehoder-body-color : #{$dark9};
 
-    --progress-bar-color                  : #{$light4};
-    --progress-bar-border-color           : #{$light6};
-    --progress-bar-reindex-color          : var(--brand-core);
-    --progress-bar-heder-title-color      : var(--brand-core);
+    --progress-bar-color : #{$light4};
+    --progress-bar-border-color : #{$light6};
+    --progress-bar-reindex-color : var(--brand-core);
+    --progress-bar-heder-title-color : var(--brand-core);
     --progress-bar-heder-persentage-color : #{$dark9};
 
-    --switch-slider-bg            : #{$light8};
-    --switch-slider-hover-bg      : #{$light7};
-    --switch-disabled-color       : #{$light8};
+    --switch-slider-bg : #{$light8};
+    --switch-slider-hover-bg : #{$light7};
+    --switch-disabled-color : #{$light8};
     --switch-disabled-hover-color : #{$light7};
-    --switch-selected-color       : #{$green_main};
+    --switch-selected-color : #{$green_main};
     --switch-selected-hover-color : #{$green_l1};
-    --switch-button-color         : #{$light1};
-    --switch-bar-color            : #{$green_l2};
-    --switch-bar-hover-color      : #{$green_l2};
-    --switch-bar-disable-color    : #{$light12};
-    --switch-warning-color        : #{$red_l1};
-    --switch-warning-hover-color  : #{$red_l2};
+    --switch-button-color : #{$light1};
+    --switch-bar-color : #{$green_l2};
+    --switch-bar-hover-color : #{$green_l2};
+    --switch-bar-disable-color : #{$light12};
+    --switch-warning-color : #{$red_l1};
+    --switch-warning-hover-color : #{$red_l2};
     --switch-warning-circle-color : #{$red_d2};
-    --switch-circle-color         : #{$light12};
-    --switch-circle-hover-color   : #{$light12};
+    --switch-circle-color : #{$light12};
+    --switch-circle-hover-color : #{$light12};
     --switch-circle-disable-color : #{$light12};
 
     --developer-menu-bg : #{$additional_light2};
     --developer-menu-base-color : #{$dark10};
 
     // *** arch svg ***********************
-    --arch-svg-dash-stroke              : var(--brand-l4);
-    --arch-svg-solid-path-arrow-fill    : #{$dark1};
-    --arch-svg-level1-fill              : #{$light10};
-    --arch-svg-level1-color             : #{$dark9};
-    --arch-svg-level2-fill              : #{$light6};
-    --arch-svg-level3-fill              : #{$light1};
-    --arch-svg-spacer-fill              : #{$light1};
-    --arch-svg-cloud-fill               : rgba(var(--brand_l4--rgb), 0.3);
-    --arch-svg-cloud-color              : #{$dark9};
-    --arch-svg-cloud-relay-fill         : rgba(var(--brand_l2--rgb), 0.3);
-    --arch-svg-cloud-relay-color        : #{$dark9};
-    --arch-svg-third-party-fill         : #{$light4};
-    --arch-svg-built-in-fill            : #{$light1};
-    --arch-svg-built-in-color           : #{$dark9};
-    --arch-svg-rest-streaming-api-fill  : #{$light1};
+    --arch-svg-dash-stroke : var(--brand-l4);
+    --arch-svg-solid-path-arrow-fill : #{$dark1};
+    --arch-svg-level1-fill : #{$light10};
+    --arch-svg-level1-color : #{$dark9};
+    --arch-svg-level2-fill : #{$light6};
+    --arch-svg-level3-fill : #{$light1};
+    --arch-svg-spacer-fill : #{$light1};
+    --arch-svg-cloud-fill : rgba(var(--brand_l4--rgb), 0.3);
+    --arch-svg-cloud-color : #{$dark9};
+    --arch-svg-cloud-relay-fill : rgba(var(--brand_l2--rgb), 0.3);
+    --arch-svg-cloud-relay-color : #{$dark9};
+    --arch-svg-third-party-fill : #{$light4};
+    --arch-svg-built-in-fill : #{$light1};
+    --arch-svg-built-in-color : #{$dark9};
+    --arch-svg-rest-streaming-api-fill : #{$light1};
     --arch-svg-rest-streaming-api-color : #{$dark9};
-    --arch-svg-server-fill              : #{$light4};
-    --arch-svg-server-hover-fill        : #{$light4};
-    --arch-svg-transparent-tile-stroke  : #{$light18};
+    --arch-svg-server-fill : #{$light4};
+    --arch-svg-server-hover-fill : #{$light4};
+    --arch-svg-transparent-tile-stroke : #{$light18};
     // ***************************************
 
-    --left-menu-border-color                    : transparent;
-    --left-menu-l1-bg                           : transparent;
-    --left-menu-l1-bg-hover                     : #{$additional_light3};
-    --left-menu-l1-bg-active                    : #{$light5};
-    --left-menu-l1-color                        : #{$dark9};
-    --left-menu-l1-selected-bg                  : #{$light5};
-    --left-menu-l1-selected-hover-bg            : #{$light6};
-    --left-menu-l3-scroll                       : #{$light5};
-    --left-menu-l3-shadow                       : transparent;
-    --left-menu-l3-bg                           : #{$light5};
-    --left-menu-l3-color                        : #{$dark9};
-    --left-menu-l3-additional-color             : #{$light16};
-    --left-menu-l3-hover-bg                     : #{$light6};
-    --left-menu-l3-hover-color                  : #{$dark9};
-    --left-menu-l3-opacity                      : 1;
-    --left-menu-l3-selected-bg                  : #{$light16};
-    --left-menu-l3-selected-color               : #{$light1};
-    --left-menu-disabled-item-color             : #{$light13};
+    --left-menu-border-color : transparent;
+    --left-menu-l1-bg : transparent;
+    --left-menu-l1-bg-hover : #{$additional_light3};
+    --left-menu-l1-bg-active : #{$light5};
+    --left-menu-l1-color : #{$dark9};
+    --left-menu-l1-selected-bg : #{$light5};
+    --left-menu-l1-selected-hover-bg : #{$light6};
+    --left-menu-l3-scroll : #{$light5};
+    --left-menu-l3-shadow : transparent;
+    --left-menu-l3-bg : #{$light5};
+    --left-menu-l3-color : #{$dark9};
+    --left-menu-l3-additional-color : #{$light16};
+    --left-menu-l3-hover-bg : #{$light6};
+    --left-menu-l3-hover-color : #{$dark9};
+    --left-menu-l3-opacity : 1;
+    --left-menu-l3-selected-bg : #{$light16};
+    --left-menu-l3-selected-color : #{$light1};
+    --left-menu-disabled-item-color : #{$light13};
     --left-menu-disabled-item-addtitional-color : #{$light10};
 
     // New header ******************************
-    --header-level-one-color              : #{$light13};
-    --header-level-one-bg                 : #{$dark4};
-    --header-level-one-active-bg          : #{$dark5};
-    --header-level-one-active-color       : #{$light4};
-    --header-level-one-hover-color        : #{$light10};
-    --header-level-two-bg                 : #{$dark6};
-    --header-item-disabled                : #{$dark13};
+    --header-level-one-color : #{$light13};
+    --header-level-one-bg : #{$dark4};
+    --header-level-one-active-bg : #{$dark5};
+    --header-level-one-active-color : #{$light4};
+    --header-level-one-hover-color : #{$light10};
+    --header-level-two-bg : #{$dark6};
+    --header-item-disabled : #{$dark13};
     --header-level-two-hover-border-color : #{$dark11};
-    --header-arrow-hover                  : #{$dark8};
-    --header-nav-arrow-bg                 : #{$dark7};
-    --header-logout-action-color          : #{$light16};
+    --header-arrow-hover : #{$dark8};
+    --header-nav-arrow-bg : #{$dark7};
+    --header-logout-action-color : #{$light16};
 
     // Logo;
-    --header-logo-text-color              : #{$light4};
-    --header-logo-border                  : #{$dark11};
+    --header-logo-text-color : #{$light4};
+    --header-logo-border : #{$dark11};
 
     // Mobile header
-    --mobile-header-bg                    : #{$dark4};
-    --mobile-level-one-color              : #{$dark15};
-    --mobile-level-two-color              : #{$light6};
-    --mobile-header-svg-color             : #{$light1};
-    --mobile-header-border-one            : #{$dark2};
-    --mobile-header-border-two            : #{$dark5};
-    --mobile-header-border-three          : #{$dark3};
-    --mobile-header-item-nav-arrow        : #{$dark13};
-    --mobile-header-logout-btn-bg         : #{$dark12};
-    --mobile-header-logout-btn-color      : #{$light2};
+    --mobile-header-bg : #{$dark4};
+    --mobile-level-one-color : #{$dark15};
+    --mobile-level-two-color : #{$light6};
+    --mobile-header-svg-color : #{$light1};
+    --mobile-header-border-one : #{$dark2};
+    --mobile-header-border-two : #{$dark5};
+    --mobile-header-border-three : #{$dark3};
+    --mobile-header-item-nav-arrow : #{$dark13};
+    --mobile-header-logout-btn-bg : #{$dark12};
+    --mobile-header-logout-btn-color : #{$light2};
 
     // Header profile dropdown
-    --header-profile-bg                   : #{$dark7};
-    --header-profile-color                : #{$light13};
-    --header-profile-hover-bg             : #{$dark9};
-    --header-profile-hover-color          : #{$light10};
-    --header-profile-active-color         : #{$light4};
-    --header-profile-active-bg            : #{$dark9};
+    --header-profile-bg : #{$dark7};
+    --header-profile-color : #{$light13};
+    --header-profile-hover-bg : #{$dark9};
+    --header-profile-hover-color : #{$light10};
+    --header-profile-active-color : #{$light4};
+    --header-profile-active-bg : #{$dark9};
 
     // Footer
-    --footer-bg                           : #{$dark4};
-    --footer-text-color                   : #{$dark9};
-    --footer-link-color                   : #{$dark15};
+    --footer-bg : #{$dark4};
+    --footer-text-color : #{$dark9};
+    --footer-link-color : #{$dark15};
 
     // View tab ********************************
-    --view-bg                    : #{$additional_light2};
-    --view-search-bg             : #{$additional_light2};
-    --view-search-color          : #{$dark9};
-    --view-search-hover-bg       : #{$light2};
-    --view-search-hover-color    : #{$dark9};
-    --view-search-active-bg      : #{$light1};
-    --view-search-active-color   : #{$dark9};
+    --view-bg : #{$additional_light2};
+    --view-search-bg : #{$additional_light2};
+    --view-search-color : #{$dark9};
+    --view-search-hover-bg : #{$light2};
+    --view-search-hover-color : #{$dark9};
+    --view-search-active-bg : #{$light1};
+    --view-search-active-color : #{$dark9};
 
-    --control-color              : #{$light4};
-    --control-enabled-color      : #{$light16};
-    --control-hoved-bg           : #{$additional_light3};
-    --control-active-bg          : #{$light5};
+    --control-color : #{$light4};
+    --control-enabled-color : #{$light16};
+    --control-hoved-bg : #{$additional_light3};
+    --control-active-bg : #{$light5};
 
-    --left-menu-view-hover-bg    : #{$additional_light3};
+    --left-menu-view-hover-bg : #{$additional_light3};
     --left-menu-view-selected-bg : #{$light5};
     // end View tab ****************************
 
     --sidebar-toggling-ear-color : #{$light16};
 
-    --time-under-mouse-bg               : rgba(var(--light6--rgb), 0.9);
-    --time-under-mouse-color            : #{$dark9};
-    --timeline-bg                       : #{$light1};
-    --timeline-scrollbar-bg             : #{$light16};
-    --timeline-scrollbar-hover-bg       : #{$light14};
-    --timeline-scrollbar-stripe-bg      : #{$dark12};
-    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.5);
-    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.9);
-    --timeline-playback-indicator-bg    : rgba(var(--dark9--rgb), 0.9);
+    --time-under-mouse-bg : rgba(var(--light6--rgb), 0.9);
+    --time-under-mouse-color : #{$dark9};
+    --timeline-bg : #{$light1};
+    --timeline-scrollbar-bg : #{$light16};
+    --timeline-scrollbar-hover-bg : #{$light14};
+    --timeline-scrollbar-stripe-bg : #{$dark12};
+    --timeline-scrollbutton-bg : rgba(var(--dark9--rgb), 0.5);
+    --timeline-scrollbutton-hover-bg : rgba(var(--dark9--rgb), 0.9);
+    --timeline-playback-indicator-bg : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-color : #{$light1};
-    --timeline-selection-panel-bg       : var(--brand-core);
-    --timeline-selection-panel-hover-bg       : var(--brand-l1);
-    --timeline-selection-panel-active-bg      : var(--brand-d1);
-    --timeline-selection-panel-color    : #{$light1};
-    --timeline-selection-picker         : light;
+    --timeline-selection-panel-bg : var(--brand-core);
+    --timeline-selection-panel-hover-bg : var(--brand-l1);
+    --timeline-selection-panel-active-bg : var(--brand-d1);
+    --timeline-selection-panel-color : #{$light1};
+    --timeline-selection-picker : light;
     --timeline-selection-panel-delimiter-color : rgba(var(--light4--rgb), 0.25);
-    --timeline-selection-panel-close-bg        : var(--brand-d2);
-    --timeline-selection-panel-close-hover-bg        : var(--brand-d1);
-    --timeline-selection-panel-close-active-bg        : var(--brand-d4);
-    --timeline-control-color            : #{$dark9};
+    --timeline-selection-panel-close-bg : var(--brand-d2);
+    --timeline-selection-panel-close-hover-bg : var(--brand-d1);
+    --timeline-selection-panel-close-active-bg : var(--brand-d4);
+    --timeline-control-color : #{$dark9};
 
-    --paginator-bg    : #{$light4};
+    --paginator-bg : #{$light4};
     --paginator-color : #{$light16};
     --paginator-hover-bg : #{$light5};
     --paginator-hover-color : #{$light16};
@@ -295,90 +291,94 @@ html[data-theme="light"] {
 
     --btn-download-hover-bg : #{$light5};
 
-    --btn-close-hover-bg  : #{$additional_light2};
+    --btn-close-hover-bg : #{$additional_light2};
     --btn-close-hover-color : #{$light10};
     --btn-close-active-bg : #{$additional_light3};
     --btn-close-active-color : #{$light17};
 
-    --btn-text-color        : #{$light16};
-    --btn-text-hover-color  : #{$dark15};
+    --btn-text-color : #{$light16};
+    --btn-text-hover-color : #{$dark15};
     --btn-text-active-color : #{$light16};
 
-    --btn-clear-bg    : transparent;
+    --btn-clear-bg : transparent;
     --btn-clear-color : #{$dark9};
-    --btn-clear-hover-bg  : transparent;
-    --btn-clear-hover-color  : #{$dark9};
+    --btn-clear-hover-bg : transparent;
+    --btn-clear-hover-color : #{$dark9};
     --btn-clear-active-bg : transparent;
     --btn-clear-active-color : #{$dark9};
 
-    --btn-dropdown-toggle-bg             : #{$light4};
-    --btn-dropdown-toggle-color          : #{$dark9};
+    --btn-dropdown-toggle-bg : #{$light4};
+    --btn-dropdown-toggle-color : #{$dark9};
     --btn-dropdown-toggle-selected-color : #{$light1};
-    --btn-dropdown-toggle-shadow-color   : inset 0px -1px 0px #{$light7};
-    --btn-dropdown-toggle-hover-bg       : #{$light5};
-    --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #{$light8};
-    --btn-dropdown-toggle-active-bg      : #{$light6};
-    --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #{$light8};
+    --btn-dropdown-toggle-shadow-color : inset 0px -1px 0px #{$light7};
+    --btn-dropdown-toggle-hover-bg : #{$light5};
+    --btn-dropdown-toggle-hover-shadow : inset 0 -1px 0 0 #{$light8};
+    --btn-dropdown-toggle-active-bg : #{$light6};
+    --btn-dropdown-toggle-active-shadow : inset 0 1px 0 0 #{$light8};
 
-    --btn-tag-bg                         : #{$light4};
-    --btn-tag-color                      : #{$light16};
-    --btn-tag-selected-bg                : #{$light16};
-    --btn-tag-selected-hover-bg          : #{$light17};
-    --btn-tag-selected-active-bg         : #{$light18};
-    --btn-tag-selected-color             : #{$light1};
+    --btn-tag-bg : #{$light4};
+    --btn-tag-color : #{$light16};
+    --btn-tag-selected-bg : #{$light16};
+    --btn-tag-selected-hover-bg : #{$light17};
+    --btn-tag-selected-active-bg : #{$light18};
+    --btn-tag-selected-color : #{$light1};
 
-    --btn-arrow-bg             : #{$light4};
-    --btn-arrow-color          : #{$light16};
-    --btn-arrow-hover-bg       : #{$light5};
-    --btn-arrow-hover-color    : #{$light16};
-    --btn-arrow-selected-bg    : #{$light6};
+    --btn-arrow-bg : #{$light4};
+    --btn-arrow-color : #{$light16};
+    --btn-arrow-hover-bg : #{$light5};
+    --btn-arrow-hover-color : #{$light16};
+    --btn-arrow-selected-bg : #{$light6};
     --btn-arrow-selected-color : #{$light16};
 
-    --btn-default-bg                : #{$light4};
-    --btn-default-color             : #{$dark9};
-    --btn-default-shadow            : inset 0 -1px 0 0 #{$light7};
-    --btn-default-hover-bg          : #{$light5};
-    --btn-default-hover-color       : #{$dark9};
-    --btn-default-hover-shadow      : inset 0 -1px 0 0 #{$light8};
-    --btn-default-active-bg         : #{$light6};
-    --btn-default-active-color      : #{$dark9};
-    --btn-default-active-shadow     : inset 0 1px 0 0 #{$light9};
-    --btn-default-focus-shadow      : #{$light14};
-    --btn-default-focus-outline-rgb : 125, 151, 164; //$light14;
+    --btn-default-bg : #{$light4};
+    --btn-default-color : #{$dark9};
+    --btn-default-shadow : inset 0 -1px 0 0 #{$light7};
+    --btn-default-hover-bg : #{$light5};
+    --btn-default-hover-color : #{$dark9};
+    --btn-default-hover-shadow : inset 0 -1px 0 0 #{$light8};
+    --btn-default-active-bg : #{$light6};
+    --btn-default-active-color : #{$dark9};
+    --btn-default-active-shadow : inset 0 1px 0 0 #{$light9};
+    --btn-default-focus-shadow : #{$light14};
+    --btn-default-focus-outline-rgb : 125,
+    151,
+    164; //$light14;
 
-    --btn-primary-bg                : var(--brand-core);
-    --btn-primary-color             : #{$light1};
-    --btn-primary-shadow            : inset 0 -1px 0 0 var(--brand-d2);
-    --btn-primary-hover-bg          : var(--brand-d1);
-    --btn-primary-hover-color       : #{$light1};
-    --btn-primary-hover-shadow      : inset 0 -1px 0 0 var(--brand-d3);
-    --btn-primary-active-bg         : var(--brand-d2);
-    --btn-primary-active-color      : #{$light1};
-    --btn-primary-active-shadow     : inset 0 1px 0 0 var(--brand-d4);
-    --btn-primary-focus-shadow      : var(--brand-d1);
+    --btn-primary-bg : var(--brand-core);
+    --btn-primary-color : #{$light1};
+    --btn-primary-shadow : inset 0 -1px 0 0 var(--brand-d2);
+    --btn-primary-hover-bg : var(--brand-d1);
+    --btn-primary-hover-color : #{$light1};
+    --btn-primary-hover-shadow : inset 0 -1px 0 0 var(--brand-d3);
+    --btn-primary-active-bg : var(--brand-d2);
+    --btn-primary-active-color : #{$light1};
+    --btn-primary-active-shadow : inset 0 1px 0 0 var(--brand-d4);
+    --btn-primary-focus-shadow : var(--brand-d1);
     --btn-primary-focus-outline-rgb : var(--brand_d1--rgb);
 
-    --btn-danger-bg                : #{$red_main};
-    --btn-danger-color             : #{$light1};
-    --btn-danger-shadow            : #{$red_d2};
-    --btn-danger-hover-bg          : #{$red_d1};
-    --btn-danger-hover-color       : #{$light1};
-    --btn-danger-hover-shadow      : #{$red_d3};
-    --btn-danger-active-bg         : #{$red_d2};
-    --btn-danger-active-color      : #{$light1};
-    --btn-danger-active-shadow     : #{$red_d4};
-    --btn-danger-focus-shadow      : #{$red_d1};
-    --btn-danger-focus-outline-rgb : 170, 30, 30; //$red_d1;
+    --btn-danger-bg : #{$red_main};
+    --btn-danger-color : #{$light1};
+    --btn-danger-shadow : #{$red_d2};
+    --btn-danger-hover-bg : #{$red_d1};
+    --btn-danger-hover-color : #{$light1};
+    --btn-danger-hover-shadow : #{$red_d3};
+    --btn-danger-active-bg : #{$red_d2};
+    --btn-danger-active-color : #{$light1};
+    --btn-danger-active-shadow : #{$red_d4};
+    --btn-danger-focus-shadow : #{$red_d1};
+    --btn-danger-focus-outline-rgb : 170,
+    30,
+    30; //$red_d1;
 
     --btn-header-saparator-color : #{$light4};
-    --btn-header-main-bg         : #{$light4};
-    --btn-header-main-color      : #{$dark9};
-    --btn-header-main-hover-bg   : #{$light2};
+    --btn-header-main-bg : #{$light4};
+    --btn-header-main-color : #{$dark9};
+    --btn-header-main-hover-bg : #{$light2};
 
-    --btn-header-webadm-main-bg         : #{$dark14};
-    --btn-header-webadm-main-color      : #{$additional_light1};
-    --btn-header-webadm-main-hover-bg   : #{$dark15};
-    --btn-header-webadm-main-active-bg  : #{$dark13};
+    --btn-header-webadm-main-bg : #{$dark14};
+    --btn-header-webadm-main-color : #{$additional_light1};
+    --btn-header-webadm-main-hover-bg : #{$dark15};
+    --btn-header-webadm-main-active-bg : #{$dark13};
 
     --dialog-bg : #{$light1};
     --dialog-border-color : #{$additional_light8};
@@ -390,15 +390,15 @@ html[data-theme="light"] {
     --light-text-color : #{$light16};
     --light-text-opacity : 1;
 
-    --tab-link-hover-bg            : #{$light3};
-    --tab-link-hover-bottom-color  : #{$light6};
-    --tab-link-active-bg           : #{$light3};
+    --tab-link-hover-bg : #{$light3};
+    --tab-link-hover-bottom-color : #{$light6};
+    --tab-link-active-bg : #{$light3};
     --tab-link-active-bottom-color : #{$light6};
-    --tab-link-selected-color      : var(--brand-core);
+    --tab-link-selected-color : var(--brand-core);
 
-    --tab-link-webadm-color               : #{$additional_light1};
-    --tab-link-webadm-hover-bg            : #{$dark15};
-    --tab-link-webadm-active-bg           : #{$dark13};
+    --tab-link-webadm-color : #{$additional_light1};
+    --tab-link-webadm-hover-bg : #{$dark15};
+    --tab-link-webadm-active-bg : #{$dark13};
 
     --dropdown-menu-arrow-color : #{$light4};
     --dropdown-menu-arrow-fill-color : #{$additional_light1};
@@ -413,7 +413,7 @@ html[data-theme="light"] {
     --dropdown-item-color: #{$dark9};
     --dropdown-item-active-bg : #{$light4};
     --dropdown-item-active-color : #{$dark9};
-    --dropdown-item-hover-bg    : #{$light3};
+    --dropdown-item-hover-bg : #{$light3};
     --dropdown-item-hover-color : #{$dark9};
     --dropdown-item-selected-bg : #{$light16};
     --dropdown-item-selected-color : #{$light1};
@@ -434,11 +434,11 @@ html[data-theme="light"] {
     --system-tile-nav-link-active-border-color : #{$light6};
     // *****************
 
-    --swagger-get-bg    : #{$blue9};
-    --swagger-put-bg    : #{$orange_l1};
+    --swagger-get-bg : #{$blue9};
+    --swagger-put-bg : #{$orange_l1};
     --swagger-delete-bg : #{$red_l1};
-    --swagger-patch-bg  : #{$cyan400};
-    --swagger-post-bg   : #{$green_l1};
+    --swagger-patch-bg : #{$cyan400};
+    --swagger-post-bg : #{$green_l1};
     --swagger-btn-execute-bg : #{$blue1};
     --swagger-btn-execute-color : #{$light1};
     --swagger-btn-value-text-color : #{$dark9};
@@ -490,20 +490,20 @@ html[data-theme="light"] {
     --card-body-bg : #{$light1};
     --card-hover-bg : #{$light1};
 
-    --card-simple-info-bg           : rgba(var(--bluez-light--rgb), .3);
+    --card-simple-info-bg : rgba(var(--bluez-light--rgb), .3);
     --card-simple-info-border-color : rgba(var(--bluez-light--rgb), .1);
-    --card-simple-info-color        : #{$dark9};
-    --card-simple-info-svg-color    : var(--bluez-light);
+    --card-simple-info-color : #{$dark9};
+    --card-simple-info-svg-color : var(--bluez-light);
 
-    --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
+    --card-simple-warning-bg : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
-    --card-simple-warning-color        : #{$dark9};
+    --card-simple-warning-color : #{$dark9};
 
     --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
     --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
     --card-simple-error-color : #{$dark9};
-    --card-simple-error-svg-color    : #{$red-main};
-    --card-simple-error-svg-ornament-color    : #{$light1};
+    --card-simple-error-svg-color : #{$red-main};
+    --card-simple-error-svg-ornament-color : #{$light1};
 
     --card-simple-default-bg : #{$red2};
     --card-simple-default-color : #{$dark9};
@@ -524,22 +524,22 @@ html[data-theme="light"] {
     --error-label : #{$red-l2};
     --error : #{$red-l2};
 
-    --input-bg                 : #{$light1};
-    --input-hover-bg           : #{$additional_light2};
-    --input-color              : #{$dark9};
-    --input-border-color       : #{$light6};
-    --input-error-color        : #{$red_l2};
+    --input-bg : #{$light1};
+    --input-hover-bg : #{$additional_light2};
+    --input-color : #{$dark9};
+    --input-border-color : #{$light6};
+    --input-error-color : #{$red_l2};
     --input-error-border-color : #{$red_l2};
-    --input-hover-color        : #{$dark9};
+    --input-hover-color : #{$dark9};
     --input-hover-border-color : #{$light8};
-    --input-focus-color        : #{$dark9};
+    --input-focus-color : #{$dark9};
     --input-focus-border-color : var(--brand-core);
     --input-focus-shadow-color : var(--brand_l1--rgb);
-    --input-active-bg           : #{$light1};
-    --input-active-color        : #{$dark9};
+    --input-active-bg : #{$light1};
+    --input-active-color : #{$dark9};
     --input-active-border-color : #{$light6};
-    --input-color-placeholder   : #{$light16};
-    
+    --input-color-placeholder : #{$light16};
+
     --input-disabled-color : #{$light16};
     --input-disabled-border-color : #{$light6};
 
@@ -557,16 +557,16 @@ html[data-theme="light"] {
     --badge-default-bg : #{$light8};
     --badge-color : #{$light1};
     --badge-selected-color : #{$light1};
-    --badge-danger-bg    : #{$red_main};
-    --badge-danger-bright-bg    : #{$red_l2};
+    --badge-danger-bg : #{$red_main};
+    --badge-danger-bright-bg : #{$red_l2};
     --badge-danger-bright-color : #{$light1};
-    --badge-warning-bg        : #{$yellow_d1};
+    --badge-warning-bg : #{$yellow_d1};
     --badge-warning-bright-bg : #{$yellow_main};
     --badge-warning-bright-color : #{$light1};
-    --badge-success-bg        : #{$green_main};
+    --badge-success-bg : #{$green_main};
     --badge-success-bright-bg : #{$green_l2};
     --badge-brand-bg : var(--brand-d2);
-    --badge-info-bg  : var(--brand-core);
+    --badge-info-bg : var(--brand-core);
     --badge-integration-bg : #{$light4};
     --badge-integration-color : #{$light16};
 
@@ -608,4 +608,8 @@ html[data-theme="light"] {
 
     --card-context-bg: #{$light4};
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
+    --new-feature-gradient: linear-gradient(242.24deg, var(--light2) 0.43%, var(--brand-l4) 122.68%);
+    --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, #D9D9D9 0%, #A8E1FE 0.01%, rgba(255, 255, 255, 0) 98.65%);
+    --cloud-storage-focus: var(--light3);
+    --cloud-storage-focus-2: var(--light7);
 }
