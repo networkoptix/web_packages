@@ -43,7 +43,7 @@
         href
         class="ml-3"
         (click)="card.expanded = !card.expanded; (false)"
-        >{{ LANG.downloads.groups[platform.name].label() || platform.name }}</a
+        >{{ LANG.downloads.groups[platform.name]?.label() || platform.name }}</a
     >
 
     <ul *ngIf="card.expanded">

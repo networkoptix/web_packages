@@ -661,14 +661,15 @@ export interface AppTypes {
 }
 
 export interface DownloadsGroups {
-    android: ArmClass;
-    arm:     ArmClass;
-    ios:     ArmClass;
-    linux:   ArmClass;
-    mac:     MAC;
-    macos:   MAC;
-    sdk:     ArmClass;
-    windows: MAC;
+    android:   ArmClass;
+    arm:       ArmClass;
+    ios:       ArmClass;
+    linux:     ArmClass;
+    mac:       MAC;
+    macos:     MAC;
+    sdk:       ArmClass;
+    windows:   MAC;
+    universal: MAC;
 }
 
 export interface ArmClass {
