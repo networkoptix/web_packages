@@ -120,8 +120,8 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     public getAuth(systemId = '*', realm = 'VMS'): Observable<{ authGet: string, authPost: string, authPlay: string }> {
         const digestFactory = (login: string, password: string, nonce: string) => (method: string) => {
             const loginDigest = md5(`${login}:${realm}:${password}`);
-            const methodDigest = md5(`${loginDigest}${method}:`);
-            const authDigest = md5(`${loginDigest}${loginDigest}:${nonce}:${methodDigest}`);
+            const methodDigest = md5(`${method}:`);
+            const authDigest = md5(`${loginDigest}:${nonce}:${methodDigest}`);
             const auth = `${login}:${nonce}:${authDigest}`;
             return btoa(auth);
         };
@@ -135,9 +135,9 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
             ]) => {
                 const digest = digestFactory(login, password, nonce);
                 return {
-                    authGet: digest('authGet'),
-                    authPost: digest('authPost'),
-                    authPlay: digest('authPlay')
+                    authGet: digest('GET'),
+                    authPost: digest('POST'),
+                    authPlay: digest('PLAY')
                 };
             })
         );
