@@ -95,7 +95,7 @@ def get_article(request, url_param, **kwargs):
             _, datastructures = get_contexts_and_datastructures_of_asset_type(
                 AssetType.ASSET_TYPES.article)
             actual_values = find_actual_values(
-                datastructures, article, version, draft, review, ['title', 'body'])
+                datastructures, article, version, draft, review, name_filter=['title', 'body'])
             article_dict = map_ds_attribute_to_actual_value(
                 actual_values, 'name')
 
