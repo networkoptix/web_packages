@@ -294,7 +294,7 @@ Force Tags        merge
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
     Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
-    Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//span[text()="${system 2}[name]"]
+    Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//span[contains(text(),"${system 2}[name]")]
 
     Log    Step 3: Select System 2 and press 'Next'
     Choose System From Dropdown    ${system 2}[name]

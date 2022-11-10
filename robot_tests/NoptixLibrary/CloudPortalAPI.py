@@ -131,7 +131,7 @@ class CloudPortalAPI(object):
                 json={'language': new_language},
                 verify=_ssl_certs_path)
             assert 200 == r.status_code, f"api/utils/language failed: {r.status_code}"
-            return r.json()
+            return r.json()            
 
     @keyword
     def set_user_theme(self, email, password, theme):

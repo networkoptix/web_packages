@@ -75,12 +75,12 @@ Validate Choose Primary Dialog
     ...    ${MERGE NEXT BUTTON}
     IF    ${from target}    
         Wait Until Elements Are Visible
-        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem"]//span[@class="check unchecked"]/following-sibling::span[text()="${system 1}"]/..
-        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem"]//span[@class="check checked"]/following-sibling::span[text()="${system 2}"]/..
+        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem"]//span[@class="check unchecked"]/following-sibling::span[contains(text(),"${system 1}")]/..
+        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem"]//span[@class="check checked"]/following-sibling::span[contains(text(),"${system 2}")]/..
     ELSE    
         Wait Until Elements Are Visible
-        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem"]//span[@class="check checked"]/following-sibling::span[text()="${system 1}"]/..
-        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem"]//span[@class="check unchecked"]/following-sibling::span[text()="${system 2}"]/..
+        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem"]//span[@class="check checked"]/following-sibling::span[contains(text(),"${system 1}")]/..
+        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem"]//span[@class="check unchecked"]/following-sibling::span[contains(text(),"${system 2}")]/..
     END
 
 Validate Confirm Merge Dialog
@@ -147,8 +147,8 @@ Choose System From Dropdown
     IF    ${menu shown} == ${False}
         Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
     END
-    Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
-    Slow    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]    timeout=0.5
+    Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(),"${target system name}")]
+    Slow    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(),"${target system name}")]    timeout=0.5
     IF    ${check url}==${True}
         Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
     END

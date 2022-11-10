@@ -34,6 +34,15 @@ from googletrans import Translator
 
 @library
 class GenericKeywords(object):
+    def __init__(self):
+        self.cloud = CloudPortalAPI()
+        self.permissions={
+            "cloudAdmin":"GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
+            "viewer":"GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
+            "liveViewer":"GlobalAccessAllMediaPermission",
+            "advancedViewer":"GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
+            "custom":"NoGlobalPermissions",
+            }
 
     @keyword
     def go_forward(self):
@@ -733,8 +742,45 @@ class GenericKeywords(object):
         return detected_langs
 
     @keyword
-    def Get_Cloud_User_Id_By_Email(auth, email, system_id):
-        users = CloudPortalAPI.get_cloud_system_users(auth, system_id)
+    def Get_Cloud_User_Id_By_Email(self, auth, email, systemId):
+        users = CloudPortalAPI.get_cloud_system_users(auth, systemId)
         for user in users:
             if user == email:
                 return    user["vmsUserId"]
+
+    @keyword
+    def Convert_Code(self, code):
+        code = re.sub(code, "%3D")
+        code = re.sub(code, "%2b")
+        return code
+
+    @keyword
+    def Get_Cloud_User_Role(self, auth, email, systemId):
+        users = self.cloud.get_cloud_system_users(auth, systemId)
+        for user in users:
+            if user["accountEmail"] == email:
+                return user["accessRole"]
+
+    @keyword
+    def User_Is_In_Cloud_System(self, email, systemId, auth):
+        users = self.cloud.get_cloud_system_users(auth, systemId)
+        for user in users:
+            if user["accountEmail"] == email:
+                return True
+        
+    @keyword
+    def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth):
+        isThere = self.User_Is_In_Cloud_System(email, systemId, auth)
+        if isThere:
+            CloudPortalAPI.share(auth, systemId, accessRole, email, self.permissions[accessRole])
+
+
+    @keyword
+    def Get_Key_From_Value(self, dict, value):
+        return list(dict.keys())[list(dict.values()).index(value)]
+
+    @keyword
+    def Add_Cloud_Users(self, auth, users, systemId):
+        for user in users:
+            permission = self.Get_Key_From_Value(users, users[user])
+            self.Add_user_to_cloud_system_if_not_there(systemId, permission, user, auth)

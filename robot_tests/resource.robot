@@ -497,25 +497,6 @@ Rename System or hardware
     Sleep    1
     Input Content Editable Text    ${EDITABLE TITLE}    ${name}
 
-Get Cloud User Role
-    [Arguments]    ${auth}    ${email}    ${system id}
-    @{users}=   Get Cloud System Users   ${auth}    ${system id}
-    FOR    ${user}    IN    @{users}
-        IF   '${user}[accountEmail]'=='${email}'    
-            Return From Keyword    ${user}[accessRole]
-        END
-    END
-
-Get System User Id By Email
-    [Arguments]    ${email}
-    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    FOR    ${user}    IN    @{users}
-        Run Keyword If    '${user}[email]'=='${email}'    Run Keywords
-        ...    Set Test Variable    ${id}    ${user}[id]
-        ...    AND     Exit For Loop
-    END
-    [Return]    ${id}
-
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
     Wait Until Element Is Visible    ${ALERT}/../span[contains(text(),"${alert text}")]    ${timeout}
@@ -622,123 +603,12 @@ Slow
     Run Keyword    ${keyword}    @{args}
     Sleep    ${timeout}
 
-#Reset resources
-Clean up email noperm
-    Register Keyword To Run On Failure    None
-    Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}    ${False}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Verify In System    Auto Tests
-    Go To Users List
-    Register Keyword To Run On Failure    NONE
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']    5
-    Run Keyword If    ${status}    Run Keyword And Ignore Error    Remove User Permissions    ${EMAIL NOPERM}
-    Register Keyword To Run On Failure    Failure Tasks
-    Close Browser
-
-Clean up random emails
-    Register Keyword To Run On Failure    None
-    Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}    ${False}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Go To Users List
-    ${status}    Run Keyword And Return Status    Wait Until Page Contains Element
-    ...    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
-    Run Keyword If    ${status}    Find and remove emails
-    Close Browser
-
-Find and remove emails
-    ${random emails}    Get WebElements    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
-    FOR    ${element}    IN    @{random emails}
-        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]
-        Remove User Permissions    ${email}
-    END
-
-Reset user noperm first/last name
-    Register Keyword To Run On Failure    None
-    Open Browser and go to URL    ${url}
-    Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
-
-    Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
-    Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
-    Register Keyword To Run On Failure    Failure Tasks
-
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    # In case Kyle forgets about this it's a test to see if it fixes a problem with not changing the name back in some cases
-    Sleep    2
-    Close Browser
-
-Add notowner
-    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
-    Click Button    ${ADD USER BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
-    Input Text    ${ADD USER EMAIL}    ${EMAIL NOT OWNER}
-    Click Button    ${ADD USER BUTTON MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
-    Check User Permissions    ${EMAIL NOT OWNER}    ${CUSTOM TEXT}
-    Close Browser
-
-Make sure notowner is in the system
-    Register Keyword To Run On Failure    None
-    Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}    ${False}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
-    IF    ${status} == ${False}
-        Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
-    END
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL NOT OWNER}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Browser
-
-Make sure viewer is in the system
-    Register Keyword To Run On Failure    None
-    Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}    ${False}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${VIEWER IN SYSTEM}
-    IF    ${status} == ${False}
-        Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
-    END
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Close Browser
-
-User is in cloud system
-    [Arguments]    ${user email}    ${system id}    ${auth}=${auth}
-    @{users}=   Get Cloud System Users    ${auth}    ${system id}
-    FOR    ${user}    IN    ${users}
-        ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
-        Run Keyword If   ${status}    Exit For Loop
-    END
-    [Return]    ${status}
-
-Add user to cloud system if not there
-    [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
-    ${is there}=   User is in cloud system    ${email}    ${system id}    ${auth}
-    IF    ${is there} == ${False}
-        Share    ${auth}    ${system id}    ${access role}    ${email}     ${permissions}[${access role}]
-    END
-
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
     ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
     Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
     ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
     [Return]    ${current cloud system id}
-
-Reset System Names
-    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${AUTO TESTS 2}
-    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    ${AUTO TESTS}
 
 Validate Input Field State
     [arguments]    ${FIELD LOCATOR}    ${Valid True or False}
@@ -856,12 +726,6 @@ Common Restart Logout
     Go To    ${url}
     Sleep    2
 
-Convert Code
-    [Arguments]    ${code}
-    ${code}=   Replace String Using Regexp    ${code}    %3D    =
-    ${code}=   Replace String Using Regexp    ${code}    %2B    +
-    [Return]    ${code}
-
 Get the link from email
     [Arguments]    ${email host}    ${email receipient}    ${password}    ${path}    ${timeout}=120
     Open Mailbox    host=${BASE HOST}    password=${password}    port=${BASE PORT}    user=${email host}    is_secure=True
@@ -870,13 +734,6 @@ Get the link from email
     Delete Email    ${email index}
     Close Mailbox
     [Return]    ${link}
-
-Get Key from Value
-    [Arguments]    ${dict}   ${value}
-    @{dict keys} =    Get Dictionary Keys    ${dict}
-    FOR    ${key}     IN     @{dict keys}
-        Return From Keyword If    '${dict['${key}']}' == '${value}'   ${key}
-    END
 
 Create Local Users via API
     [Arguments]    ${auth}    ${server}    ${locals}    ${password}
@@ -1024,12 +881,6 @@ Register and Activate Generic Users
         Sleep    0.1
     END
     [Return]    ${generic users}
-
-Add Cloud Users
-    [Arguments]    ${auth}    ${users}    ${system id}
-    FOR  ${permission}  ${user}  IN  &{users}
-        Add user to cloud system if not there    ${system id}    ${permission}    ${user}    auth=${auth}
-    END
 
 Get Random Available Port
     ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
