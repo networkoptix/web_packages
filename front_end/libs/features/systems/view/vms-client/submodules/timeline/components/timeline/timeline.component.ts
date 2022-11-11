@@ -50,6 +50,7 @@ const CLICK_AND_HOLD_TIMEOUT = 250;
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
+    @ViewChild('canvasWrapper') canvasWrapper: ElementRef<HTMLDivElement>;
 
     protected _state: TimelineServiceStatus;
     protected _mouseDownScreenX: px = 0;
@@ -203,6 +204,30 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public canvasMouseEnterHandler(e: MouseEvent): void {
         this.timeUnderMouse.handleMouseEnter(e);
+    }
+
+    exitEdge(mouse: MouseEvent, elem: HTMLDivElement): string {
+        const elemBounding = elem.getBoundingClientRect();
+        const elementLeftEdge = elemBounding.left;
+        const elementRightEdge = elemBounding.right;
+
+        const mouseX = mouse.pageX;
+
+        if (mouseX <= elementLeftEdge) {
+            return 'left';
+        } else if (mouseX >= elementRightEdge) {
+            return 'right';
+        }
+    }
+
+    public timelineMouseLeaveHandler(e: MouseEvent): void {
+        if (this.archiveSelectionEnabled && this.isDragging) {
+            const edge = this.exitEdge(e, this.canvasWrapper.nativeElement);
+            switch (edge) {
+                case 'left' : this.selection.fitStart(); return;
+                case 'right' : this.selection.fitEnd();
+            }
+        }
     }
 
     public canvasMouseLeaveHandler(e: MouseEvent): void {

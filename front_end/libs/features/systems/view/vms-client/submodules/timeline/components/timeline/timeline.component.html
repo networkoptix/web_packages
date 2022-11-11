@@ -1,5 +1,7 @@
 <div
+    #canvasWrapper
     class="timeline"
+    (mouseleave)="timelineMouseLeaveHandler($event)"
     [ngClass]="{
         dragging: isDragging
     }"

@@ -116,6 +116,16 @@ export class TimelineSelectionService {
         this._rightEar = e;
     }
 
+    public fitStart(): void {
+        this._selectedRange.fitStart(this.timeline.fullRange);
+        this._emit();
+    }
+
+    public fitEnd(): void {
+        this._selectedRange.fitEnd(this.timeline.fullRange);
+        this._emit();
+    }
+
     public get leftEarClientLeft(): px {
         return this._leftEar?.getBoundingClientRect().left || Infinity;
     }
