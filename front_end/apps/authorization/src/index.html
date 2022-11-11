@@ -9,21 +9,26 @@
         <link rel="icon" href="static/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="static/styles/skin.css" />
         <link rel="stylesheet" href="static/fonts/fonts.css"/>
-
-        <style>
-            /* immediate css */
-            body {
-                background-color: #808080;
-            }
-        </style>
     </head>
     <body>
-        <nx-auth-app-root></nx-auth-app-root>
         <script>
             const viewType = new URLSearchParams(window.location.search).get('view_type') ?? 'web';
             if (viewType !== 'web' && ['desktop', 'mobile'].includes(viewType)) {
                 document.body.classList.add(viewType === 'desktop' ? 'desktopBackground' : 'mobileBackground');
+            } else {
+                const themes = {
+                    dark: '#0D0E0F',
+                    light: '#F0F3F4'
+                }
+                const themeFromStorage = window.localStorage.getItem('ngx-webstorage|loginstate') && window.localStorage.getItem('ngx-webstorage|theme')?.replaceAll('"', '')
+                const localStorageTheme = themeFromStorage in themes && themeFromStorage;
+                const storedTheme = localStorageTheme || 'auto';
+                const systemTheme = this.window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light'
+                const theme = storedTheme === 'auto' ? systemTheme : storedTheme;
+                document.querySelector('html').setAttribute('data-theme', theme);
+                document.querySelector('body').style.backgroundColor = themes[theme];
             }
         </script>
+        <nx-auth-app-root></nx-auth-app-root>
     </body>
 </html>

@@ -100,6 +100,8 @@ def create_response_with_cookies(data, status_code, cookies, additional_headers=
         for name, value in cookies.items():
             if value == '':
                 response.delete_cookie(name)
+            elif isinstance(value, dict):
+                response.set_cookie(name, **value)
             else:
                 response.set_cookie(name, value, httponly=True, secure=True)
     return response

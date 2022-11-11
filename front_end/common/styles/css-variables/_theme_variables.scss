@@ -3,7 +3,6 @@
 
 :root {
 	@include generateVarAndRgb(--gray-light, $gray-light);
-	@include generateVarAndRgb(--body-bg, $body-bg);
 	@include generateVarAndRgb(--text-color, $text-color);
 	@include generateVarAndRgb(--navbar-default-bg, $navbar-default-bg);
 	@include generateVarAndRgb(--navbar-default-link-color, $navbar-default-link-color);

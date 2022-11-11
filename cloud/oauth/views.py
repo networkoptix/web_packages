@@ -201,7 +201,13 @@ def authenticate(request):
     elif link_alexa:
         AccountCustomProperty.alexa_account_linked(email)
 
-    return api_success(data)
+    theme_cookie = {'theme': { 'value': 'auto', 'httponly': False, 'secure': False }}
+
+    theme_custom_property = AccountCustomProperty.objects.filter(endpoint='theme', account__email=email).first();
+    if theme_custom_property and isinstance(theme_custom_property.json_data, dict) and (user_theme := theme_custom_property.json_data.get('theme')):
+        theme_cookie['theme']['value'] = user_theme
+
+    return api_success(data, cookies=theme_cookie)
 
 
 # @swagger_auto_schema(method="GET", auto_schema=None,

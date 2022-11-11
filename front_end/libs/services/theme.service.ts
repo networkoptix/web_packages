@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -21,6 +22,7 @@ export class NxThemeService {
         configService: NxConfigService,
         private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
+        private cookieService: CookieService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
@@ -55,11 +57,9 @@ export class NxThemeService {
                 return;
             }
             NxConfigService.isDarkTheme = e.matches;
-            if (e.matches) {
-                this.window.document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                this.window.document.documentElement.setAttribute('data-theme', 'light');
-            }
+            const theme = NxConfigService.isDarkTheme ? 'dark' : 'light';
+            this.window.document.documentElement.setAttribute('data-theme', theme);
+            this.cookieService.set('theme', theme);
         });
 
         if (loginState) {
@@ -82,7 +82,7 @@ export class NxThemeService {
         return this.themeSelected;
     }
 
-    async setTheme(themeSelected: string, username:string): Promise<void> {
+    async setTheme(themeSelected: string, username: string): Promise<void> {
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
         let { themesEnabled } = this.CONFIG.featureFlags;
         if (username === 'setup') {
@@ -97,10 +97,12 @@ export class NxThemeService {
         ) {
             this.localStorageService.store('theme', themeSelected);
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
+            const theme = NxConfigService.isDarkTheme && themesEnabled ? 'dark' : 'light';
             this.window.document.documentElement.setAttribute(
                 'data-theme',
-                NxConfigService.isDarkTheme && themesEnabled ? 'dark' : 'light'
+                theme
             );
+            this.cookieService.set('theme', theme);
         } else {
             if (docTheme === this.userTheme) {
                 return; // avoid reloading if same theme is set
@@ -111,20 +113,21 @@ export class NxThemeService {
                 'data-theme',
                 themeSelected
             );
+            this.cookieService.set('theme', themeSelected);
         }
 
         username &&
-        username !== 'setup' &&
-        this.userTheme !== themeSelected &&
-        await this.cloudApi.saveCustomAccountProperty(
-            { theme: themeSelected },
-            'theme',
-            username
-        ).toPromise()
-            .then(result => {
-                this.themeSelected = result.theme;
-            }, err => {
-                console.warn('Cannot save theme: ', err);
-            });
+            username !== 'setup' &&
+            this.userTheme !== themeSelected &&
+            await this.cloudApi.saveCustomAccountProperty(
+                { theme: themeSelected },
+                'theme',
+                username
+            ).toPromise()
+                .then(result => {
+                    this.themeSelected = result.theme;
+                }, err => {
+                    console.warn('Cannot save theme: ', err);
+                });
     }
 }
