@@ -27,6 +27,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     @Input() dropup;
     @Input() short;
     @Input() altStyle;
+    @Input() newHeader = false;
     @Output() langChange = new EventEmitter<string>();
 
     currentLang: string;
@@ -42,8 +43,6 @@ class BaseLanguageDropdown extends BaseDropdown {
     languagesCol1 = [];
     languagesCol2 = [];
 
-    newHeader: boolean = false;
-
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
@@ -54,7 +53,6 @@ class BaseLanguageDropdown extends BaseDropdown {
     ) {
         super(languageService, configService);
 
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.currentLang = languageService.currentLang;
     }
 

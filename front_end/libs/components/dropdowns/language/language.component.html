@@ -30,7 +30,7 @@
         id="dropdownMenuButton"
         (click)="show = !show"
         data-toggle="dropdown"
-        class="btn-dropdown-toggle new-header"
+        class="btn-dropdown-toggle new-header-lang"
         [ngClass]="{ active: show }"
     >
         <svg-icon
@@ -38,7 +38,7 @@
             nx-add-svg-src
             [src]="CONFIG.images.dirHeader + 'language.svg'"
         ></svg-icon>
-        <span>{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span>
+        <span id="activeLang">{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span>
         <div class="dropdown-arrow-wrapper">
             <svg-icon
                 nx-add-svg-src
