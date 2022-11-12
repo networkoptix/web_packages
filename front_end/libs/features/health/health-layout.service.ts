@@ -4,8 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { layout } from '@lib/variables/static-variables';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 import { NxHealthService } from './health.service';
@@ -16,7 +15,6 @@ import { NxHealthService } from './health.service';
 export class NxHealthLayoutService {
     private static ELEMENT_SEARCH_HEIGHT = 40; // px
 
-    CONFIG: IConfig;
     previousActiveEntity = undefined;
     activeEntitySubject = new BehaviorSubject(undefined);
     fixedLayoutClassSubject = new BehaviorSubject('');
@@ -156,13 +154,11 @@ export class NxHealthLayoutService {
     }
 
     constructor(
-        configService: NxConfigService,
         private ribbonService: NxRibbonService,
         private healthService: NxHealthService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = configService.getConfig();
-        this.pageSize = this.CONFIG.layout.tableLarge.rows;
+        this.pageSize = layout.tableLarge.rows;
 
         this.dimensionsSubject.pipe(debounceTime(10)).subscribe(() => {
             if (this.tableHeaderElement) {

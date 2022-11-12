@@ -39,11 +39,10 @@ import {
 } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { icons, cameraCredentialUpdateTimeout, menus, settingsConfig } from '@lib/variables/static-variables';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -91,7 +90,6 @@ class Alert {
     styleUrls: ['cameras.component.scss']
 })
 export class NxCamerasComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
@@ -139,6 +137,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     canSeeInfo = false;
     editMode = false;
     recordingSettings: IRecordingSettings;
+    icons = icons;
 
     // Added for handing non camera devices CLOUD-8669
     settingsDisabled = false;
@@ -424,7 +423,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private router: Router,
         private menuService: NxMenuService,
@@ -439,7 +437,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
@@ -504,7 +501,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             this.fullInfoPath = this.uriService.getSystemSettingsRoute({
                                 systemId: this.system.id,
                                 childRoute: ChildRoutes.HEALTH
-                            }) + this.CONFIG.menus.systemSettings.cameras.path;
+                            }) + menus.systemSettings.cameras.path;
                         }
                     }
                 } else {
@@ -532,7 +529,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                 }
                             } else {
                                 this.cameraViewPath =
-                                    this.CONFIG.menus.systemSettings.baseUrl +
+                                    menus.systemSettings.baseUrl +
                                     this.system.id +
                                     '/view/' +
                                     this.parsedCameraId;
@@ -659,7 +656,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 rotation: `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled: this.recordingWatcher.value,
                 motionType: this.motionType,
-                motionMask: this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
+                motionMask: this.motionMaskWatcher.value || settingsConfig.defaultMotionMask
             };
 
             return Promise.all([
@@ -706,7 +703,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateCredentials() {
         this.credentialsUpdateInProgress = true;
         const update = () => {
-            const { cameraCredentialUpdateTimeout } = this.CONFIG;
             this.showUnauthorized = false;
             return of('').pipe(
                 delay(cameraCredentialUpdateTimeout),
@@ -990,7 +986,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask ||
-                this.CONFIG.settingsConfig.defaultMotionMask;
+                settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();

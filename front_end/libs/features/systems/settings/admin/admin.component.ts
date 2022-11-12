@@ -18,6 +18,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { icons, clientMode, menus, redirect, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
@@ -79,6 +80,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     systemName: string;
     systemNameFormWatcher: FormWatcher;
     systemNameProcess: Process;
+    icons = icons;
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
@@ -110,10 +112,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     private setupDefaults(): void {
         this.advanced = (this.router.url.includes('/advanced') ||
             this.route.snapshot.routeConfig.path === 'advanced');
-        this.debugMode = this.CONFIG.clientMode.debug;
-        this.betaMode = this.CONFIG.clientMode.beta;
-        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
-        this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
+        this.debugMode = clientMode.debug;
+        this.betaMode = clientMode.beta;
+        this.menuService.section = menus.systemSettings.admin.id;
+        this.menuService.detail = menus.systemSettings.general.id;
 
         this.connectToCloudProcess = this.processService.createProcess(
             () => this.connectLocalToCloud(),
@@ -321,7 +323,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             () => {
                 this.toastService.notify(
                     this.LANG.toastMessage.nameFail({ type: this.LANG.common.system() }),
-                    this.CONFIG.toast.warning,
+                    toast.warning,
                 );
             });
     }
@@ -395,7 +397,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         setTimeout(() => this.window.location.reload(), 2000);
                     } else {
                         this.router
-                            .navigate([this.CONFIG.redirect.authorised])
+                            .navigate([redirect.authorised])
                             .catch(error => {
                                 console.error(error);
                             });
@@ -437,7 +439,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     setTimeout(() => this.window.location.reload(), 2000);
                                 } else {
                                     this.router
-                                        .navigate([this.CONFIG.redirect.authorised])
+                                        .navigate([redirect.authorised])
                                         .catch(error => {
                                             console.error(error);
                                         });
@@ -457,7 +459,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 setTimeout(() => {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised])
+                        .navigate([redirect.authorised])
                         .catch(error => {
                             console.error(error);
                         });
@@ -492,13 +494,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 systemName: this.system.info.systemName ||
                                     this.system.info.name
                             }),
-                            this.CONFIG.toast.success,
+                            toast.success,
                         );
                     }, err => {
                         console.error(err);
                         this.toastService.show(
                             this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
-                            this.CONFIG.toast.danger,
+                            toast.danger,
                         );
                     },
                     this.updateAndGoToSystems

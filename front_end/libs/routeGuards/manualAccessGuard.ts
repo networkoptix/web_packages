@@ -7,22 +7,17 @@ import {
 } from '@angular/router';
 
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
+
+import { redirect } from '../variables/static-variables';
 
 @Injectable()
 export class ManualAccessGuard implements CanActivate {
-    CONFIG: IConfig;
-
     constructor(
-        configService: NxConfigService,
         @Inject(WINDOW) private window: Window,
         private router: Router,
         private appStateService: NxAppStateService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> | boolean {
         if (state.url.includes('/activate/') || state.url.includes('/restore_password/')) {
@@ -32,7 +27,7 @@ export class ManualAccessGuard implements CanActivate {
             });
         }
         if (!this.appStateService.canManuallyAccess) {
-            return this.router.navigate([this.CONFIG.redirect.unauthorised]);
+            return this.router.navigate([redirect.unauthorised]);
         }
         return this.appStateService.canManuallyAccess;
     }

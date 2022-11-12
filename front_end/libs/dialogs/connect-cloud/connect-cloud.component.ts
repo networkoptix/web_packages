@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
+import { apiBase, oauthStore } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import * as t from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -42,6 +43,7 @@ export class ConnectCloudModalContent implements OnInit {
     codeSubscription: Subscription;
     connectProcess: Process;
     wrongPassword: boolean;
+    apiBase: string = apiBase;
 
     auth = {
         username: '',
@@ -70,7 +72,7 @@ export class ConnectCloudModalContent implements OnInit {
         this.setupProcess();
         this.setupAuth();
 
-        this.codeSubscription = this.storage.observe(this.CONFIG.oauthStore.code)
+        this.codeSubscription = this.storage.observe(oauthStore.code)
             .subscribe(code => this.handleCode(code));
 
         this.window.open('/#/cloud-authorize?state=connect', '_blank').focus();
@@ -80,7 +82,7 @@ export class ConnectCloudModalContent implements OnInit {
         let headers = new HttpHeaders();
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
         return this.http.post<t.CloudResponse>(
-            this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect',
+            this.CONFIG.cloudHost + this.apiBase + '/systems/connect',
             { name: systemName, email },
             { headers }
         );
@@ -92,7 +94,7 @@ export class ConnectCloudModalContent implements OnInit {
                 this.codeExists = !!code;
                 this.cloudTokens = res;
                 this.codeSubscription && this.codeSubscription.unsubscribe();
-                this.storage.clear(this.CONFIG.oauthStore.code);
+                this.storage.clear(oauthStore.code);
             });
     }
 

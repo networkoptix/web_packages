@@ -2,24 +2,19 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageMetaService } from '@services/page-meta.service';
+
+import { meta } from '../variables/static-variables';
 
 @UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
 export class NxPageService {
-    CONFIG: IConfig;
-
     constructor(
-        configService: NxConfigService,
         private router: Router,
         private metaService: NxPageMetaService,
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     public pageTitle(title: string, description: string = '') {
         this.metaService.setMetaProperties(this.router.url, { title, description });
@@ -30,11 +25,11 @@ export class NxPageService {
     }
 
     public setDefaultLayout(): void {
-        this.metaService.updateLookups('viewport', this.CONFIG.meta.viewport.default);
+        this.metaService.updateLookups('viewport', meta.viewport.default);
     }
 
     public setDesktopLayout(): void {
-        this.metaService.updateLookups('viewport', this.CONFIG.meta.viewport.desktopLayout);
+        this.metaService.updateLookups('viewport', meta.viewport.desktopLayout);
     }
 
     public redirect404 = (message = ''): void => {

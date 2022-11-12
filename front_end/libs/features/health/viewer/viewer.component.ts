@@ -18,10 +18,9 @@ import { flatMap } from 'rxjs/operators';
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { icons, healthMonitoring } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -42,7 +41,6 @@ import { NxHealthService } from '../health.service';
 })
 export class NxReportViewerComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     account: Account;
     system: NxSystem;
     server: NxSystemAPI;
@@ -60,11 +58,12 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     mediaLayoutClass: string;
 
+    icons = icons;
+
     @ViewChild('loadReport') loadReport: ElementRef;
     @ViewChild('loadReportMain') loadReportMain;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private appStateService: NxAppStateService,
         private router: Router,
@@ -77,7 +76,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
@@ -382,7 +380,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             this.healthService.alertsCount[type] = 0;
         });
         this.healthService.alertsValues = [];
-        const unset = this.CONFIG.healthMonitoring.classFormats.unset;
+        const unset = healthMonitoring.classFormats.unset;
         Object.entries(this.healthService.alarms).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 Object.entries(groups).forEach(([group, params]) => {
@@ -432,7 +430,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
-                    header.formatClass = this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format';
+                    header.formatClass = healthMonitoring.classFormats[header.format] || 'no-format';
                     return header.display.includes(displayFilter);
                 });
             });

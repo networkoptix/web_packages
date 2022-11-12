@@ -83,7 +83,6 @@ require('what-input');
 export class AppComponent implements OnInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
-    // isInIframe: boolean;
     newSystem: boolean;
     newHeader: boolean = false;
     loading: boolean;

@@ -7,8 +7,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type {
@@ -25,7 +23,6 @@ import { WINDOW } from '@services/window-provider';
 })
 export class NxDebugComponent {
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     // eslint-disable-next-line no-tabs
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
@@ -77,10 +74,8 @@ export class NxDebugComponent {
         private processService: NxProcessService,
         private systemsService: NxSystemsService,
         private urlProtocol: NxUrlProtocolService,
-        private configService: NxConfigService
     ) {
         this.LANG = this.languageService.translations;
-        this.CONFIG = this.configService.getConfig();
         this.accountService.get().then(acc => {
             this.init();
         });
@@ -224,7 +219,7 @@ export class NxDebugComponent {
     }
 
     notify(): void {
-        const states = Object.values(this.CONFIG.toast);
+        const states = Object.values(toast);
         const type = states[Math.floor(Math.random() * states.length)];
         const hold = Math.random() > 0.9;
         this.dialogsService.notify(
@@ -240,8 +235,8 @@ export class NxDebugComponent {
                 // @ts-expect-error
                 this.window.protocolCheck(
                     link,
-                    this.CONFIG.openClientTimeout,
-                    this.CONFIG.openMobileClientTimeout,
+                    openClientTimeout,
+                    openMobileClientTimeout,
                     () => { alert('Protocol not recognized'); },
                     () => { alert('Ok - protocol is working'); }
                 );

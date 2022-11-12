@@ -20,8 +20,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
@@ -43,7 +42,6 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     filterModel: SearchFilter = { query: '', selects: [] };
     params: any = {};
@@ -77,6 +75,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     windowSizeSubscription;
     tableWrapper: number;
+    icons = icons;
 
     @ViewChild('tiles', { static: false }) tilesElement: ElementRef;
     @ViewChild('search', { static: false }) searchElement: ElementRef;
@@ -84,7 +83,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
@@ -96,7 +94,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 

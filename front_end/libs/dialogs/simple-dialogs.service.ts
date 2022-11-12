@@ -15,6 +15,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 
+import { toast } from '../variables/static-variables';
+
 import { GenericModalContent } from './generic/generic.component';
 import { NxToastService } from './toast.service';
 
@@ -53,7 +55,7 @@ export class NxSimpleDialogsService extends DialogBase {
 
     public notify(
         message: string,
-        type: string = this.CONFIG.toast.info,
+        type: string = toast.info,
         hold?: boolean
     ): void {
         this.toastService.show(message, type, { autohide: !hold });

@@ -33,7 +33,7 @@
                     'svg-large': type === 'wide' || 'adaptive',
                     'svg-small': type === 'small'
                 }"
-                [src]="CONFIG.icons.dirLandingIcons + svg + '.svg'"
+                [src]="icons.dirLandingIcons + svg + '.svg'"
                 [svgStyle]="{
                     'width.px': svgSizes.mainSvg.width,
                     'height.px': svgSizes.mainSvg.height
@@ -52,7 +52,7 @@
                     nx-add-svg-src
                     class="arrow-svg"
                     [src]="
-                        CONFIG.images.dirLanding +
+                        images.dirLanding +
                         (type === 'small' ? 'arrow_small.svg' : 'arrow_large.svg')
                     "
                     [svgStyle]="

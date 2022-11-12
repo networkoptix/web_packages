@@ -14,6 +14,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { credentialsValidation, icons } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -50,6 +51,8 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     subHeader: string | undefined;
     templateText: TemplateText;
     emailAutoFilled = false;
+    credentialsValidation = credentialsValidation;
+    icons = icons;
 
     constructor(
         language: NxLanguageProviderService,

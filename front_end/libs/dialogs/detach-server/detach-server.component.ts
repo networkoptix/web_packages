@@ -3,9 +3,8 @@ import { Component, Inject, Input } from '@angular/core';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -24,7 +23,6 @@ export class DetachServerModalContent {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     system: NxSystem;
     serverName: string;
@@ -35,7 +33,6 @@ export class DetachServerModalContent {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
         private simpleDialogService: NxSimpleDialogsService,
@@ -44,7 +41,6 @@ export class DetachServerModalContent {
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
@@ -63,7 +59,7 @@ export class DetachServerModalContent {
                     this.close('success');
                     this.toastService.notify(
                         this.LANG.servers.detachSystemSuccess(),
-                        this.CONFIG.toast.success,
+                        toast.success,
                     );
                     this.window.location.reload();
                     // may need to remove & update system eventually
@@ -74,7 +70,7 @@ export class DetachServerModalContent {
                 err => {
                     if (
                         err.errorId ===
-                        this.CONFIG.servers.errors.oldSessionErrorId
+                        servers.errors.oldSessionErrorId
                     ) {
                         this.needsUpdate = true;
                         this.loginService.currentSystem = this.system;
@@ -85,14 +81,14 @@ export class DetachServerModalContent {
                                     this.detachServer.run();
                                 }
                             });
-                    } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     } else {
                         this.close();
                         this.system.currentServerNotBusy = true;
                         this.toastService.notify(
                             this.LANG.servers.detachSystemFailed(),
-                            this.CONFIG.toast.warning,
+                            toast.warning,
                         );
                     }
                 }

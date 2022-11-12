@@ -21,12 +21,12 @@ import {
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { icons, clientMode, menus, servers, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { Servers } from '@services/nx-config/base-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -50,8 +50,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() selectedServer: NxSystemServer;
     @Input() isOffline: boolean;
     @Output() loaded = new EventEmitter<boolean>(false);
-
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     editMode = false;
@@ -90,6 +88,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     serversSubscription: SubscriptionLike;
     storageSubscription: SubscriptionLike;
     destroyRestartTake$ = new Subject<boolean>();
+    icons = icons;
+    servers: Servers;
 
     readonly environment = environment;
 
@@ -121,7 +121,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.portChangeDisabled = true;
         this.serverUnavailable = true;
         this.serverRestarting = false;
-        // this.debugMode = this.CONFIG.clientMode.debug;
+        // this.debugMode = clientMode.debug;
         this.menuService.section = 'servers';
         this.fullInfoPath = '';
 
@@ -129,7 +129,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private appState: NxAppStateService,
         private accountService: NxAccountService,
@@ -141,7 +140,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         private uriService: NxUriService,
         private toastService: NxToastService
     ) {
-        this.CONFIG = configService.getConfig();
+        this.servers = servers;
         this.LANG = language.translations;
 
         this.setupDefaults();
@@ -152,7 +151,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.fullInfoPath = this.uriService.getSystemSettingsRoute({
                 systemId: this.system.id,
                 childRoute: ChildRoutes.HEALTH
-            }) + this.CONFIG.menus.systemSettings.servers.path;
+            }) + menus.systemSettings.servers.path;
         }
 
         if (changes.selectedServer?.currentValue) {
@@ -185,7 +184,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         this.applyService.setVisible(false);
         this.serverLoaded = false;
-        this.betaMode = this.CONFIG.clientMode.beta ||
+        this.betaMode = clientMode.beta ||
             this.route.snapshot.queryParams.beta !== undefined;
         this.serverName = this.selectedServer.name;
         this.serverNameWatcher.originalValue = this.selectedServer.name;
@@ -262,7 +261,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         this.LANG.toastMessage.nameFail({
                             type: this.LANG.common.server()
                         }),
-                        this.CONFIG.toast.warning,
+                        toast.warning,
                     );
                 });
             }
@@ -328,19 +327,19 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     setStatus(status?: string): void {
         this.selectedServer.internalStatus = status
-            ? this.CONFIG.servers.status[status]
+            ? servers.status[status]
             : '';
         this.selectedServer.shownStatus = status
             ? this.LANG.servers.status[status]?.()
             : '';
         this.certError = (
-            this.CONFIG.servers.status.mismatchedcertificate ===
+            servers.status.mismatchedcertificate ===
             this.selectedServer.internalStatus
         );
         this.serverOffline = [
-            this.CONFIG.servers.status.mismatchedcertificate,
-            this.CONFIG.servers.status.offline,
-            this.CONFIG.servers.status.checking
+            servers.status.mismatchedcertificate,
+            servers.status.offline,
+            servers.status.checking
         ].includes(this.selectedServer.internalStatus);
 
         this.serverUnavailable = this.serverOffline || (
@@ -354,7 +353,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 this.system.currentBusyServerIds.has(this.selectedServer.id)
             )
         ) {
-            this.selectedServer.internalStatus = this.CONFIG.servers.status.restarting;
+            this.selectedServer.internalStatus = servers.status.restarting;
         }
 
         if (this.serverOffline || this.serverUnavailable) {
@@ -384,14 +383,14 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 }
             }, err => {
                 console.error(err);
-                this.setStatus(this.CONFIG.servers.status.offline);
+                this.setStatus(servers.status.offline);
                 this.applyService.setVisible(true);
             });
     }
 
     checkStatus(): void {
         this.checking = true;
-        this.setStatus(this.CONFIG.servers.status.checking);
+        this.setStatus(servers.status.checking);
 
         if (this.serversSubscription) {
             this.serversSubscription.unsubscribe();
@@ -409,10 +408,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         server.id === this.selectedServer.id
                     ).status === 'Online';
                     this.setStatus(
-                        isOnline ? '' : this.CONFIG.servers.status.offline
+                        isOnline ? '' : servers.status.offline
                     );
                 } else {
-                    this.setStatus(this.CONFIG.servers.status.offline);
+                    this.setStatus(servers.status.offline);
                 }
                 this.checking = false;
             });
@@ -461,7 +460,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                                 this.destroyRestartTake$.next(true);
                                 this.toastService.notify(
                                     this.LANG.servers.restartSuccessful(),
-                                    this.CONFIG.toast.success
+                                    toast.success
                                 );
                             }
                         });
@@ -512,15 +511,15 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.portBusy = false;
         if (
             port &&
-            port >= this.CONFIG.servers.port.min &&
-            port < this.CONFIG.servers.port.max
+            port >= servers.port.min &&
+            port < servers.port.max
         ) {
             this.ipPortWatcher.value = port;
         }
         this.applyService.unsetInvalidField('port');
         if (this.ipPortWatcher.value === null) {
             this.applyService.setInvalidField('port');
-        } else if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
+        } else if (this.ipPortWatcher.value < servers.port.restrictedMax) {
             this.applyService.setInvalidField('port');
             this.applyService.setWarn(this.LANG.servers.portWarning());
         } else {
@@ -571,7 +570,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.notify(
                             this.LANG.servers.analyticsDataPolicyError(),
-                            this.CONFIG.toast.warning,
+                            toast.warning,
                         );
                     } else if (closeRes === 'cancel') {
                         this.selectedStorage = { ...this.selectedStorage };

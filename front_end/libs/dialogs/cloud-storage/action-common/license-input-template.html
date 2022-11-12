@@ -1,6 +1,6 @@
 <ng-template #successMessage>
     <div class="success-body">
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + 'success.svg'" [svgStyle]="{
+        <svg-icon nx-add-svg-src [src]="icons.dirCloudStorage + 'success.svg'" [svgStyle]="{
             'width.px': '104',
             'height.px': '74'
         }" [applyClass]="true" class="success-icon"></svg-icon>
@@ -23,7 +23,7 @@
     <div class="modal-body">
         <ng-container [ngSwitch]="actionType">
             <div *ngSwitchCase="ACTION_TYPES.MODIFY" class="modal-heading">
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + 'update_storage.svg'" [svgStyle]="{
+                <svg-icon nx-add-svg-src [src]="icons.dirCloudStorage + 'update_storage.svg'" [svgStyle]="{
                     'width.px': '64',
                     'height.px': '40'
                 }" [applyClass]="true" class="heading-icon"></svg-icon>
@@ -34,7 +34,7 @@
                 </ul>
             </div>
             <div *ngSwitchCase="ACTION_TYPES.MOVE" class="modal-heading">
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + 'migrate_storage.svg'" [svgStyle]="{
+                <svg-icon nx-add-svg-src [src]="icons.dirCloudStorage + 'migrate_storage.svg'" [svgStyle]="{
                     'width.px': '64',
                     'height.px': '40'
                 }" [applyClass]="true" class="heading-icon"></svg-icon>
@@ -44,7 +44,7 @@
                 </ul>
             </div>
             <div *ngSwitchCase="ACTION_TYPES.DELETE" class="modal-heading">
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + 'delete_storage.svg'" [svgStyle]="{
+                <svg-icon nx-add-svg-src [src]="icons.dirCloudStorage + 'delete_storage.svg'" [svgStyle]="{
                     'width.px': '64',
                     'height.px': '40'
                 }" [applyClass]="true" class="heading-icon"></svg-icon>

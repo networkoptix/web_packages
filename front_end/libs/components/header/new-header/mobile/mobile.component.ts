@@ -2,10 +2,9 @@ import { Component, Input } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
+import { icons } from '@lib/variables/static-variables';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -24,12 +23,9 @@ export class NxHeaderMobileComponent {
     isProfile$ = new BehaviorSubject(false);
     currentSystemMenu: MenuNode;
     iconState: mobileIconState;
-    CONFIG: IConfig;
-    constructor(configService: NxConfigService,
-                public headerService: NxHeaderService,
-                menusService: NxMenusService) {
-        this.CONFIG = configService.getConfig();
-
+    icons = icons;
+    constructor(public headerService: NxHeaderService,
+        menusService: NxMenusService) {
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.setIconState(this.loggedIn, currentLocation?.path);
         });

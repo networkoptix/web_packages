@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 @Component({
     selector: 'nx-alert-counter',
@@ -11,10 +10,5 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 export class NxAlertCounter {
     @Input() count: number;
     @Input() type: string;
-
-    CONFIG: IConfig;
-
-    constructor(private configService: NxConfigService) {
-        this.CONFIG = this.configService.getConfig();
-    }
+    icons = icons;
 }

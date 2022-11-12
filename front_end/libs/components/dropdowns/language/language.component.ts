@@ -12,6 +12,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { environment } from '@environments/environment';
+import { icons, images } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -38,6 +39,8 @@ class BaseLanguageDropdown extends BaseDropdown {
         language: '',
         name: ''
     };
+    icons = icons;
+    images = images;
 
     languages: ILanguages = [];
     languagesCol1 = [];
@@ -52,7 +55,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         @Inject(LOCALE_ID) private locale: string,
     ) {
         super(languageService, configService);
-
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.currentLang = languageService.currentLang;
     }
 

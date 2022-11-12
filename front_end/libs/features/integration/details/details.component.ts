@@ -13,6 +13,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { MessageParams } from '@dialogs/message/message.component.types';
+import { icons, dialogs } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -40,6 +41,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     plugin;
     content: Content;
+    icons = icons;
 
     private acceptProcess: Process;
     private account: Account;
@@ -229,7 +231,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             asset: this.plugin.information.name
         };
         this.dialogs
-            .message(this.accountService, this.CONFIG.dialogs.message.type.integration, data)
+            .message(this.accountService, dialogs.message.type.integration, data)
             .then(() => { });
     }
 

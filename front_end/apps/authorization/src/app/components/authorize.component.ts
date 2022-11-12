@@ -21,6 +21,7 @@ import { catchError, debounceTime, map } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { oauthStore } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -331,12 +332,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
 
         if (this.clientType === 'renewSessionWeb') {
-            this.localStorageService.store(this.CONFIG.oauthStore.verify2fa, code);
+            this.localStorageService.store(oauthStore.verify2fa, code);
             this.window.close();
             return;
         }
         if (this.clientType === 'system2faAuth') {
-            this.localStorageService.store(this.CONFIG.oauthStore.verify2fa, code);
+            this.localStorageService.store(oauthStore.verify2fa, code);
         }
         const params = link?.includes('?') && new URLSearchParams(
             link.match(/.*(\?.*)/i)[1]

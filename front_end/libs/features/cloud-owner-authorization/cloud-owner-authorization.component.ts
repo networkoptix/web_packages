@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { oauthStore } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { WINDOW } from '@services/window-provider';
@@ -14,10 +13,8 @@ import { WINDOW } from '@services/window-provider';
     template: ''
 })
 export class CloudOwnerAuthorizationComponent implements OnInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(WINDOW) protected window: Window,
         private oauthService: OauthService,
@@ -25,11 +22,10 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         private activatedRoute: ActivatedRoute
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     handleCode(code: string): void {
-        this.storageService.store(this.CONFIG.oauthStore.code, code);
+        this.storageService.store(oauthStore.code, code);
         this.window.close();
     }
 

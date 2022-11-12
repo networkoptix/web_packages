@@ -8,9 +8,8 @@ import { map, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
+import { responseOk, toast } from '@lib/variables/static-variables';
 
-import type { IConfig } from '../nx-config/config-types';
-import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxSessionService } from '../session.service';
 
@@ -83,7 +82,6 @@ export const formatError = (
 };
 
 export class Process {
-    private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     public settings: ProcessSettings = {
         errorCodes: {},
@@ -109,7 +107,6 @@ export class Process {
     public caller$: Observable<any>;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
         private toastService: NxToastService,
@@ -121,7 +118,6 @@ export class Process {
         // @ts-ignore: Deprecated, kept for compatibility
         private _catchHandler: Handler = logError
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.settings.errorPrefix = settings?.errorPrefix || '';
         this.settings = { ...this.settings, ...settings };
@@ -130,7 +126,7 @@ export class Process {
 
     private checkResponseHasError<_T extends any>(data: any) {
         // this is not a repetition
-        if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
+        if (data?.resultCode && data.resultCode !== responseOk) {
             return data;
         }
         return false;
@@ -174,7 +170,7 @@ export class Process {
             if (this.settings.successMessage && data !== false) {
                 this.toastService.show(
                     this.settings.successMessage,
-                    this.CONFIG.toast.success,
+                    toast.success,
                     { autohide: !this.settings.holdAlerts }
                 );
             }
@@ -259,7 +255,7 @@ export class Process {
 
             this.toastService.show(
                 message,
-                this.CONFIG.toast.danger,
+                toast.danger,
                 { autohide: !this.settings.holdAlerts }
             );
         }

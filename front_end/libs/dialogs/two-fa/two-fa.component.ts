@@ -26,11 +26,10 @@ import {
 } from '@components/info-block/info-block.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
+import { icons, apiBase, credentialsValidation, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -56,7 +55,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     // @Input() num2FaSystems: number;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     type: string;
     cancellable: boolean;
@@ -64,6 +62,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     oldPassword: string;
     num2FaSystems: number;
     infoBlockSizeEnum = InfoBlockSize;
+    apiBase: string = apiBase;
+    credentialsValidation = credentialsValidation;
+    icons = icons;
 
     private account: Account;
     currentStep: T_FA_STEPS;
@@ -143,7 +144,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 if (res.isSuccess) {
                     this.toastService.notify(
                         this.LANG.common.copiedToClipboard(),
-                        this.CONFIG.toast.success,
+                        toast.success,
                     );
                 }
             });
@@ -156,7 +157,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     constructor(
-        configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private renderer: Renderer2,
@@ -173,9 +173,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
-
         this.setupDefaults();
     }
 
@@ -188,7 +186,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             },
             keepalive: true
         };
-        fetch(`${this.CONFIG.apiBase}/account/security`, options)
+        fetch(`${this.apiBase}/account/security`, options)
             .catch(() => { console.error('something went wrong'); });
     };
 
@@ -328,7 +326,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 noBackupCodes: () => {
                     this.toastService.notify(
                         this.LANG.common.generalError(),
-                        this.CONFIG.toast.danger,
+                        toast.danger,
                     );
                 },
                 forbidden: codeProcessUnauthorizedHandles,
@@ -371,7 +369,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 noBackupCodes: () => {
                     this.toastService.notify(
                         this.LANG.common.generalError(),
-                        this.CONFIG.toast.danger
+                        toast.danger
                     );
                 },
                 forbidden: () => {
@@ -482,7 +480,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.close();
                     this.toastService.notify(
                         this.LANG.common.generalError(),
-                        this.CONFIG.toast.danger
+                        toast.danger
                     );
                 });
         } else {

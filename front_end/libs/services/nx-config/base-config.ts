@@ -9,10 +9,6 @@
 // match the expected interface, even if the JSON is valid.
 
 import type {
-    ConsoleManifest,
-    ConsoleSection
-} from '@components/console-table/console-table.component.types';
-import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import type {
@@ -22,68 +18,33 @@ import type { SearchTag } from '@components/search/search.component.types';
 
 import type { MenuNode } from '../menus.service.types';
 
-interface OauthStoreFlags {
+export interface OauthStoreFlags {
     code: string;
     verify2fa: string;
 }
 
 export interface BaseConfig {
-    staticBase: string;
+    accountDropdown: AccountDropdown[];
+    accountDropdownStaff: AccountDropdown[];
     commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;
     customization: string;
     previewPath?: string;
-    alertTimeout: number;
-    accountDropdown: AccountDropdown[];
-    accountDropdownStaff: AccountDropdown[];
-    longAlertTimeout: number;
-    maxNumberServerChecked: number;
-    simpleURLRegex: string
-    extendedRequestTimeout: number;
-    apiRequestAttempts: number;
-    animations: Animations;
-    apiBase: string;
-    apiDocURL: APIDocURL;
-    apiTool: APIToolSettings;
-    cameraCredentialUpdateTimeout: number;
-    cameraSettings: CameraSettings;
-    clientMode: ClientMode;
-    credentialsValidation: CredentialsValidation;
-    dialogs: Dialogs;
-    developers: Developers;
-    downloads: Downloads;
     featureFlags: FeatureFlags;
     featureFlagStrings: Record<FeatureFlagType, FeatureFlagType>
-    healthMonitoring: HealthMonitoring;
-    icons: Icons;
-    images: Images;
     // TODO Need to double check this type, object in config but accessed as array in integrations.component.ts
     // This is on line 107
     integration: Integration | any;
-    interceptor: any;
     ipvd: Ipvd;
     isInIframe: boolean;
     isLocal: boolean;
     isDarkTheme: boolean;
     landing: Landing;
-    layout: Layout;
     licenseServer: string;
-    maintenanceTimeout: number;
-    manifest: Record<ConsoleSection, ConsoleManifest>
-    maxServers: number;
-    meta: Meta;
-    menus: Menus;
+    downloads: Downloads;
     newSystem: boolean;
-    oauthStore: OauthStoreFlags;
-    permissions: Permissions;
-    pollingTimeout: number;
-    redirect: Redirect;
-    showHeaderAndFooter: boolean;
-    search: Search;
-    servers: Servers;
     system: System;
-    toast: Toast;
     cloudCapabilities: CloudCapabilities;
     cloudName: string;
     cloudHost: string;
@@ -96,32 +57,18 @@ export interface BaseConfig {
     licenseTypes: LicenseTypes;
     googleTagManagerId: string;
     trialLicenseKey: string;
-    licenseDeactivations: number,
     pushConfig: {};
     testedOperatingSystems: Record<string, string>;
     trafficRelayHost: string;
     vmsName: string;
     accessRoles: AccessRoles;
-    allowBetaMode: boolean;
     allowDebugMode: boolean;
-    debug: Debug;
-    globalViewArchivePermission: string;
-    openClientTimeout: number;
-    openClientError: string;
-    openMobileClientTimeout: number;
-    responseOk: string;
-    timelineMouseEventTimeout: number;
-    updateInterval: number;
-    webclient: Webclient;
-    settingsConfig: SettingsConfig;
     defaultLanguage: string;
     supportedLanguages: string[];
     headerHeight: number;
-    ribbonHeight: number;
     browserNotSupported: boolean;
-    sessionFreshnessSec: number;
-    // loggersConfig: LoggersConfig;
     metaDefaults: Record<string, Record<string, string>>;
+    // loggersConfig: LoggersConfig;
     webadminRoutesLookup: RouteCheckTuple[];
     cloudMonitoring: CloudMonitoring;
 }
@@ -1013,7 +960,6 @@ export interface SettingsConfig {
 //         { json: 'vmsName', js: 'vmsName', typ: '' },
 //         { json: 'accessRoles', js: 'accessRoles', typ: r('AccessRoles') },
 //         { json: 'allowBetaMode', js: 'allowBetaMode', typ: true },
-//         { json: 'allowDebugMode', js: 'allowDebugMode', typ: true },
 //         { json: 'debug', js: 'debug', typ: r('Debug') },
 //         { json: 'globalViewArchivePermission', js: 'globalViewArchivePermission', typ: '' },
 //         { json: 'openClientTimeout', js: 'openClientTimeout', typ: 0 },

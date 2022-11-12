@@ -11,8 +11,7 @@ import { startWith } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { healthMonitoring, icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxHealthService } from '../health.service';
@@ -26,20 +25,18 @@ import { NxHealthService } from '../health.service';
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter<boolean>();
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     lastUpdate: string;
     timerSubscription: Subscription;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private healthService: NxHealthService,
         private ribbonService: NxRibbonService
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnDestroy(): void { }
@@ -70,7 +67,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.timerSubscription = timer(0, minute)
             .pipe(startWith(currentHmAge))
             .subscribe(minutes => {
-                if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
+                if (minutes >= healthMonitoring.staleReportTimeout) {
                     this.ribbonService.show(
                         this.LANG.common.viewingOutdatedReport(),
                         [{ type: 'link', text: 'Refresh', value: '' }],

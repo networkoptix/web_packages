@@ -15,8 +15,10 @@ import {
 import { accountSelectors } from '@common/store/account';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
+import { icons, accountDropdown } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
+import { AccountDropdown } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -44,6 +46,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     isAccountRoute = false;
     displayedFullName = '';
 
+    icons = icons;
+
     readonly environment = environment;
 
     settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser' | 'first_name' | 'last_name'> = {
@@ -54,6 +58,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         is_staff: false,
         is_superuser: false
     };
+    accountDropdownStaff: AccountDropdown[];
+    accountDropdown: AccountDropdown[];
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -63,6 +69,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         private store: Store,
     ) {
         super(languageService, configService);
+        this.accountDropdown = accountDropdown;
+        this.accountDropdownStaff = accountDropdown;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');

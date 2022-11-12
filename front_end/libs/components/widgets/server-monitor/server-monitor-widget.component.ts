@@ -6,8 +6,6 @@ import { debounceTime, switchMap, shareReplay, map, filter } from 'rxjs/operator
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemService } from '@services/system.service/system.service';
 
 import { NxHealthMonitorWidgetComponent } from '../health-monitor/health-monitor-widget.component';
@@ -26,7 +24,6 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxServerMonitorWidgetComponent extends FirstPartyWidget<
     typeof NxServerMonitorWidgetComponent.BASE_CONFIG
 > {
-    CONFIG: IConfig;
     static IDENTIFIER = 'server-monitor';
     static NAME = 'Server Monitor';
     static SIZES = [
@@ -141,13 +138,11 @@ export class NxServerMonitorWidgetComponent extends FirstPartyWidget<
 
     constructor(
         cd: ChangeDetectorRef,
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
         NxHealthMonitorWidgetComponent.systemUpdater$.pipe(
             untilDestroyed(this)

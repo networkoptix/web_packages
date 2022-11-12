@@ -39,10 +39,9 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
+import { pollingTimeout, icons, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -90,7 +89,6 @@ export class NxSystemStorageComponent implements OnInit {
     @Input() serverId: string;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     viewContainerRef: ViewContainerRef;
     storageTypes = STORAGE_TYPES;
     storageModes = MODE;
@@ -119,6 +117,7 @@ export class NxSystemStorageComponent implements OnInit {
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
     cancelPolling$ = new Subject<string>();
+    icons = icons;
 
     dropdownOffsetCalc$ = combineLatest([
         this.dropdownOffset$.pipe(distinctUntilChanged()),
@@ -138,7 +137,6 @@ export class NxSystemStorageComponent implements OnInit {
 
     constructor(
         languageService: NxLanguageProviderService,
-        configService: NxConfigService,
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
@@ -149,7 +147,6 @@ export class NxSystemStorageComponent implements OnInit {
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
         this.viewContainerRef = viewContainerRef;
         this.loading = true;
 
@@ -272,7 +269,7 @@ export class NxSystemStorageComponent implements OnInit {
         const pollUpdater$ = new Subject<number>();
         pollUpdater$.pipe(
             tap(time => {
-                if (started < (time - this.CONFIG.pollingTimeout)) {
+                if (started < (time - pollingTimeout)) {
                     this.changedModes = [];
                     this.updatingModes = [];
                     triggerUpdate(UpdateTriggers.STATS)
@@ -517,7 +514,7 @@ export class NxSystemStorageComponent implements OnInit {
         const svgName = this.updatingModes.includes(store.storageId) || !store.storageType
             ? 'loading.svg'
             : `storage_${store.storageType}.svg`;
-        return `${this.CONFIG.icons.dirTextButtons}${svgName}`;
+        return `${this.icons.dirTextButtons}${svgName}`;
     }
 
     doesModeExist = (mode: MODE): boolean => {
@@ -821,7 +818,7 @@ export class NxSystemStorageComponent implements OnInit {
         if (action) {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
         }
-        let toastType = this.CONFIG.toast.success;
+        let toastType = toast.success;
         let message: string;
 
         defer(() => this.system.storageManager
@@ -870,7 +867,7 @@ export class NxSystemStorageComponent implements OnInit {
             err => {
                 console.error(err);
                 message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`]();
-                toastType = this.CONFIG.toast.warning;
+                toastType = toast.warning;
             }
         ).add(() => {
             this.updateStorageStatus(type, STORAGE_STATUS.IN_USE);

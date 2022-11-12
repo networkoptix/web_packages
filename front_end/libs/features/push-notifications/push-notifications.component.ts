@@ -5,10 +5,9 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 
+import { redirect } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
@@ -21,8 +20,6 @@ import { WINDOW } from '@services/window-provider';
 })
 
 export class PushComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
-
     notification;
     systems: NxSystemInfo[];
     devices;
@@ -64,7 +61,6 @@ export class PushComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         private accountService: NxAccountService,
         private systemsService: NxSystemsService,
         private afMessaging: AngularFireMessaging,
@@ -73,7 +69,6 @@ export class PushComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
     ) {
         this.setupDefaults();
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnDestroy(): void {}
@@ -88,7 +83,7 @@ export class PushComponent implements OnInit, OnDestroy {
                 this.setSystems();
                 this.setFirebase();
             } else {
-                this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                this.router.navigate([redirect.unauthorised]);
             }
         });
     }

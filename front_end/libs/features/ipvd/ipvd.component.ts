@@ -27,6 +27,7 @@ import type {
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { MessageParams } from '@dialogs/message/message.component.types';
+import { dialogs, icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -100,6 +101,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     windowSizeSubscription: SubscriptionLike;
     offsetSubscription: SubscriptionLike;
     getIPVDSubscription: SubscriptionLike;
+
+    icons = icons;
 
     @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef<HTMLDivElement>;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef<HTMLDivElement>;
@@ -586,8 +589,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     openFeedback(param: 'device' | 'page'): false {
         const type = (param === 'device')
-            ? this.CONFIG.dialogs.message.type.ipvd_device
-            : this.CONFIG.dialogs.message.type.ipvd_page;
+            ? dialogs.message.type.ipvd_device
+            : dialogs.message.type.ipvd_page;
         const device = (param === 'device' && this.activeCamera)
             ? this.activeCamera.model
             : '';

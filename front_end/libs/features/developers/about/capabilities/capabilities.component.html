@@ -18,13 +18,13 @@
                     'linear-gradient(to right, ' +
                     (capability.icon.split(' ')[3] || '#35464f') +
                     ' 25%, rgba(53, 70, 79, 0)), url(' +
-                    CONFIG.icons.backgrounds +
+                    icons.backgrounds +
                     capability.icon.split(' ')[1]
             }"
         >
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.images.dirDevelopers + capability.icon.split(' ')[0]"
+                [src]="images.dirDevelopers + capability.icon.split(' ')[0]"
             ></svg-icon>
             <div class="intro-line">{{ capability.subtitle }}</div>
             <h3>{{ capability.title }}</h3>

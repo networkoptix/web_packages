@@ -13,7 +13,7 @@
             <svg-icon
                 nx-add-svg-src
                 [svgStyle]="{ 'width.px': '24' }"
-                [src]="CONFIG.icons.dir + 'system.svg'"
+                [src]="icons.dir + 'system.svg'"
             ></svg-icon>
             {{ systemListText }}
         </div>
@@ -32,7 +32,7 @@
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{ 'width.px': '24' }"
-                    [src]="CONFIG.icons.dir + 'arrow_back.svg'"
+                    [src]="icons.dir + 'arrow_back.svg'"
                 ></svg-icon>
             </div>
             <span
@@ -46,7 +46,7 @@
             *ngSwitchCase="'logo'"
             nx-add-svg-src
             [svgStyle]="isMobile ? { 'width.px': '130', 'height.px': '32' } : null"
-            [src]="CONFIG.images.dirHeader + 'logo.svg'"
+            [src]="images.dirHeader + 'logo.svg'"
             id="logo"
         >
         </svg-icon>

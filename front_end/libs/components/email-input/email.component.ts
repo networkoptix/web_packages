@@ -14,8 +14,7 @@ import {
 } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { credentialsValidation } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
@@ -48,7 +47,6 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() authorize = false;
     @Input() isUsername = false;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     public value: string;
@@ -69,7 +67,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
             };
         }
 
-        const EMAIL_REGEXP = new RegExp(this.CONFIG.credentialsValidation.emailRegex);
+        const EMAIL_REGEXP = new RegExp(credentialsValidation.emailRegex);
         if (!EMAIL_REGEXP.test(c.value)) {
             return {
                 pattern: true
@@ -79,9 +77,8 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
         return null; // valid
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
         private language: NxLanguageProviderService) {
-        this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
     }
 

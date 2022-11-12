@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, images } from '@lib/variables/static-variables';
 
 type InputType = 'small' | 'wide' | 'adaptive';
 @Component({
@@ -10,14 +9,15 @@ type InputType = 'small' | 'wide' | 'adaptive';
     styleUrls: ['./landing-content-block.component.scss']
 })
 export class NxContentLandingBlockComponent {
-    CONFIG: IConfig;
-
     @Input() type: InputType;
     @Input() title: string;
     @Input() content: string;
     @Input() svg: string = 'eye_closed';
     @Input() url: string = '';
     @Input() externalLink: boolean = false;
+
+    icons = icons;
+    images = images;
 
     svgSizes = {
         mainSvg: {
@@ -33,8 +33,4 @@ export class NxContentLandingBlockComponent {
             height: '24'
         }
     };
-
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
-    }
 }

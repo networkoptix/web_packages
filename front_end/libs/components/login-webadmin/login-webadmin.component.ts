@@ -13,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { icons, redirect } from '@lib/variables/static-variables';
 import type { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -79,6 +80,7 @@ export class LoginWebadminModalContent implements OnInit {
     accountBlocked: boolean;
     accountNotOnSystem: boolean;
     account2faRequired: boolean;
+    icons = icons;
 
     private readonly urlUpdateTimeout: number = 150;
 
@@ -273,7 +275,7 @@ export class LoginWebadminModalContent implements OnInit {
             if (this.keepPage) {
                 if (isRootPath) {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised])
+                        .navigate([redirect.authorised])
                         .then(() => {
                             // ensure language reload as translations are loaded on page load
                             this.window.location.reload();
@@ -296,7 +298,7 @@ export class LoginWebadminModalContent implements OnInit {
                 setTimeout(() => {
                     this.router
                         .navigate(
-                            [this.CONFIG.redirect.authorised],
+                            [redirect.authorised],
                             { replaceUrl: isRootPath }
                         ).then(() => {
                             // ensure language reload as translations are loaded on page load

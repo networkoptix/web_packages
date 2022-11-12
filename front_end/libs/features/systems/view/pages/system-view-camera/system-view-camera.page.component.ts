@@ -17,6 +17,7 @@ import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { icons, pollingTimeout } from '@lib/variables/static-variables';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -70,6 +71,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     showElementsInFSM: boolean;
     onShowElements: any;
     onMoveShowElements: any;
+    icons = icons;
 
     public settingsShown: boolean = false;
 
@@ -599,7 +601,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 setTimeout(() => {
                     this.getRecordsInProgress = undefined;
                     this._getRecords();
-                }, this.CONFIG.pollingTimeout);
+                }, pollingTimeout);
             });
         }
 

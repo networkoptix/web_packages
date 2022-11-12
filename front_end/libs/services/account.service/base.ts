@@ -11,6 +11,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { accountActions, accountSelectors } from '@common/store/account';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
+import { oauthStore, redirect, updateInterval } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -124,7 +125,7 @@ export abstract class BaseAccount implements OnDestroy {
         if (!environment.isLocal) {
             this.accountPoll = this.pollService.createPoll(
                 () => this.cloudApi.account(true),
-                this.CONFIG.updateInterval
+                updateInterval
             );
         }
 
@@ -135,7 +136,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.loginService.accountService = this;
 
         this.localStorage = injector.get(LocalStorageService);
-        this.localStorage.observe(this.CONFIG.oauthStore.verify2fa).pipe(
+        this.localStorage.observe(oauthStore.verify2fa).pipe(
             filter(() => !!this.tokens)
         ).subscribe(accessToken => {
             if (this.tokens.access_token !== accessToken) {
@@ -150,7 +151,7 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.loginTokens(tokens).then((res: any) => {
             this.tokens = undefined;
             this.clearCodeFromUri();
-            this.localStorage.clear(this.CONFIG.oauthStore.verify2fa);
+            this.localStorage.clear(oauthStore.verify2fa);
             this.localStorage.clear('systemId');
             // Changing "loginState" is enough here. Re-init routes are subscribed to it.
             this.sessionService.loginState = res.email;
@@ -210,7 +211,7 @@ export abstract class BaseAccount implements OnDestroy {
             .then((account: Account) => {
                 if (account && !environment.isLocal) {
                     this.router
-                        .navigate([(this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : this.CONFIG.redirect.authorised])
+                        .navigate([(this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : redirect.authorised])
                         .catch(error => {
                             console.error(error);
                         });
@@ -223,20 +224,20 @@ export abstract class BaseAccount implements OnDestroy {
             .then((account: Account) => {
                 if (account) {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised])
+                        .navigate([redirect.authorised])
                         .catch(error => {
                             console.error(error);
                         });
                 } else {
                     this.router
-                        .navigate([this.CONFIG.redirect.unauthorised])
+                        .navigate([redirect.unauthorised])
                         .catch(error => {
                             console.error(error);
                         });
                 }
             }).catch(() => {
                 this.router
-                    .navigate([this.CONFIG.redirect.unauthorised])
+                    .navigate([redirect.unauthorised])
                     .catch(error => {
                         console.error(error);
                     });
@@ -246,7 +247,7 @@ export abstract class BaseAccount implements OnDestroy {
     redirectAfterLogout(doNotRedirect, skipReload): void {
         if (!doNotRedirect) {
             this.router
-                .navigate([this.CONFIG.redirect.unauthorised])
+                .navigate([redirect.unauthorised])
                 .finally(() => {
                     setTimeout(() => {
                         this.account = undefined;
@@ -320,7 +321,7 @@ export abstract class BaseAccount implements OnDestroy {
                 return this.loginService.login(true, true)
                     .catch(() => {
                         // @ts-expect-error: TODO Type Error location.path expects boolean and is being passed a string
-                        this.location.path(this.CONFIG.redirect.unauthorised);
+                        this.location.path(redirect.unauthorised);
                     });
             });
     }

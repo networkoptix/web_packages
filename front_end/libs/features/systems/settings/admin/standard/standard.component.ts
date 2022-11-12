@@ -19,6 +19,7 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -110,6 +111,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         sessionLimitMinutes: 0
     };
 
+    icons = icons;
+
     systemAndSecuritySettingsFormWatcher: FormWatcher;
 
     @ViewChild('systemAndSecuritySettingsForm', { read: NgForm }) systemAndSecuritySettingsForm: NgForm;
@@ -159,8 +162,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                 max: 999999
             }
         };
-        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
-        this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
+        this.menuService.section = menus.systemSettings.admin.id;
+        this.menuService.detail = menus.systemSettings.general.id;
         this.limitSessionTimeItems = [...Object.values(this.limitSessionTimeUnits)];
         this.initProcess();
 

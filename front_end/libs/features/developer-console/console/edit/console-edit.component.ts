@@ -9,8 +9,6 @@ import { ConfigType, ConsoleSection } from '@components/console-table/console-ta
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
@@ -32,7 +30,6 @@ export class NxDevConsoleEditComponent {
     @ViewChild('editForm', { static: true }) editForm: HTMLFormElement;
 
     INPUT_TYPE = ConfigType;
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     saveContext: Process;
     context: ContextManifest;
@@ -42,7 +39,6 @@ export class NxDevConsoleEditComponent {
     // watchers: {[key: string]: Watcher<any, NxDevConsoleEditComponent>} = {};
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private router: Router,
@@ -52,7 +48,6 @@ export class NxDevConsoleEditComponent {
         private consoleService: NxConsoleService,
         private location: Location
     ) {
-        this.CONFIG = configService.config;
         this.LANG = languageService.translations;
     }
 

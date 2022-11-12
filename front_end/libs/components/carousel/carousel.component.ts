@@ -1,10 +1,8 @@
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { animations } from '@lib/variables/static-variables';
 import { mod } from '@utils/general';
-
-const config = new NxConfigService(null).config;
 
 @Component({
     selector: 'nx-carousel',
@@ -18,7 +16,7 @@ const config = new NxConfigService(null).config;
                     visibility: 'visible'
                 }),
                 animate(
-                    config.animations.carouselImage.leave,
+                    animations.carouselImage.leave,
                     style({ opacity: 0, visibility: 'hidden' })
                 )
             ]),
@@ -28,7 +26,7 @@ const config = new NxConfigService(null).config;
                     visibility: 'hidden'
                 }),
                 animate(
-                    config.animations.carouselImage.enter,
+                    animations.carouselImage.enter,
                     style({ opacity: 1, visibility: 'visible' })
                 )
             ])

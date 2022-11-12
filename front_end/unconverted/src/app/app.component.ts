@@ -244,7 +244,6 @@ export class AppComponent implements AfterViewInit {
             this.localStorageService.clear('cloudApiRefreshToken');
             // **********************************************************
             this.newSystem = true;
-            this.CONFIG.newSystem = true;
             this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
             return;

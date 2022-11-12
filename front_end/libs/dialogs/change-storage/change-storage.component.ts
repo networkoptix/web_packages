@@ -3,8 +3,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -19,20 +17,17 @@ export class ChangeStorageModalContent {
     @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     system: NxSystem;
     deleteAnalyticsData: Process;
     keepAnalyticsData: Process;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) dialogData: { system: NxSystem }
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
         this.system = dialogData.system;
     }

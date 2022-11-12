@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { permissions } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -163,7 +164,7 @@ export class DownloadHistoryComponent implements OnInit {
                         this.canViewRelease = isAccount(account) && (
                             account.is_superuser ||
                             account.permissions.includes(
-                                this.CONFIG.permissions.canViewRelease
+                                permissions.canViewRelease
                             )
                         );
 

@@ -7,6 +7,7 @@ import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
 import { catchError, delay, distinctUntilChanged, filter, finalize, retryWhen, take, tap, timeout } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import { apiTool } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -488,6 +489,6 @@ export class NxAPIToolSystemService {
         this.systemChangeLockout = true;
         setTimeout(() => {
             this.systemChangeLockout = false;
-        }, (this.CONFIG.apiTool.manualSystemChangeCooldown));
+        }, (apiTool.manualSystemChangeCooldown));
     };
 }

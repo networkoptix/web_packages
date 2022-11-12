@@ -12,9 +12,8 @@ import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -32,7 +31,6 @@ export class MessageModalContent implements OnInit {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     account: NxAccountService;
     messageType: string;
@@ -48,11 +46,10 @@ export class MessageModalContent implements OnInit {
     subjectMessage: string;
     subjects: Subject[];
     url: string;
-
+    credentialsValidation = credentialsValidation;
     @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
@@ -63,7 +60,6 @@ export class MessageModalContent implements OnInit {
         this.subject = '';
         this.subjectMessage = '';
         this.url = this.window.location.href;
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
@@ -94,17 +90,17 @@ export class MessageModalContent implements OnInit {
 
     initForm(): void {
         this.placeholder = '';
-        if (this.messageType === this.CONFIG.dialogs.message.type.ipvd_page) {
+        if (this.messageType === dialogs.message.type.ipvd_page) {
             this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();
         }
 
         this.title = this.LANG.dialogs.message.title[this.messageType](
-            this.messageType !== this.CONFIG.dialogs.message.type.integration
+            this.messageType !== dialogs.message.type.integration
                 ? { asset: this.data.asset }
                 : { companyName: this.data.to }
         );
 
-        this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType]
+        this.subjects = dialogs.message.subjects[this.messageType]
             .map(subject => {
                 return {
                     value: subject,

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { icons } from '@lib/variables/static-variables';
+
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
@@ -8,6 +10,8 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./init-failure.component.scss']
 })
 export class InitFailureComponent implements OnInit {
+    icons = icons;
+
     constructor(
         public wizardService: WizardStateService
     ) { }

@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
@@ -43,19 +42,15 @@ export class NxEditableHeading implements OnInit, OnChanges {
 
     @HostBinding('class') hostClass = 'w-auto';
 
-    CONFIG: IConfig;
     componentId: string;
     value: string;
+    icons = icons;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
     // @ts-expect-error False lint error - not used
     private onTouchedCallback = (): void => {};
     private onChangeCallback = (_: any): void => {};
-
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.config;
-    }
 
     ngOnInit(): void {
         this.componentId = (this.id || this.name) + '-editable';

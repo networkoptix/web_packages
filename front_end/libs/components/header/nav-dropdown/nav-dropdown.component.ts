@@ -1,6 +1,7 @@
 import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 
 import { environment } from '@environments/environment';
+import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -21,6 +22,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
 
     name = '';
     offset = 0;
+    icons = icons;
 
     get path() {
         return this.nodeLocation?.path || false;

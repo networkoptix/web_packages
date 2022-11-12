@@ -14,7 +14,7 @@
         *ngIf="!(menuOpen$ | async); else closeButton"
         class="menu-button"
         nx-add-svg-src
-        [src]="CONFIG.icons.dirHeader + 'menu.svg'"
+        [src]="icons.dirHeader + 'menu.svg'"
         [svgStyle]="{ 'width.px': '32', 'height.px': '32' }"
     >
     </svg-icon>
@@ -38,7 +38,7 @@
         <svg-icon
             class="user-section"
             nx-add-svg-src
-            [src]="CONFIG.icons.dirHeader + 'add_user.svg'"
+            [src]="icons.dirHeader + 'add_user.svg'"
             [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
         >
         </svg-icon>
@@ -48,7 +48,7 @@
         class="user-section"
         nx-add-svg-src
         (click)="openProfile()"
-        [src]="CONFIG.icons.dirHeader + 'user.svg'"
+        [src]="icons.dirHeader + 'user.svg'"
         [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
     >
     </svg-icon>
@@ -57,7 +57,7 @@
         (click)="headerService.handleNav({ url: '/systems', new_window: false }, $event)"
         class="user-section"
         nx-add-svg-src
-        [src]="CONFIG.icons.dirHeader + 'return_to_systems.svg'"
+        [src]="icons.dirHeader + 'return_to_systems.svg'"
         [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
     >
     </svg-icon>
@@ -66,7 +66,7 @@
         (click)="toggleMenuOpen()"
         class="user-section back-arrow"
         nx-add-svg-src
-        [src]="CONFIG.icons.dir + 'arrow_back.svg'"
+        [src]="icons.dir + 'arrow_back.svg'"
         [svgStyle]="{ 'width.px': '27', 'height.px': '20' }"
     >
     </svg-icon>
@@ -80,7 +80,7 @@
     <svg-icon
         class="user-section"
         nx-add-svg-src
-        [src]="CONFIG.icons.dirHeader + 'user.svg'"
+        [src]="icons.dirHeader + 'user.svg'"
         [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
     >
     </svg-icon>
@@ -91,7 +91,7 @@
         (click)="toggleMenuOpen()"
         class="menu-button close-btn"
         nx-add-svg-src
-        [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+        [src]="icons.dirTextButtons + 'close.svg'"
         [svgStyle]="{ 'width.px': '32', 'height.px': '20' }"
     >
     </svg-icon>

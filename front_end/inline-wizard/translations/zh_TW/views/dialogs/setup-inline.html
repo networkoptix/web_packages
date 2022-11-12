@@ -75,7 +75,7 @@
     <h2>進階系統設定</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
-            <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
+            <div class="new-style-checkbox" ng-if="settingsConfig[setting].type == 'checkbox' ">
                 <label class="nx-checkbox">
                     <input type="checkbox"
                            id="{{setting}}"
@@ -99,14 +99,14 @@
                 </label>
             </div>
 
-            <label ng-if="Config.settingsConfig[setting].type != 'checkbox' "
+            <label ng-if="settingsConfig[setting].type != 'checkbox' "
                    for="{{setting}}" >{{LANG.settingsConfig[setting]}}</label>
-            <input ng-if="Config.settingsConfig[setting].type == 'number' " type="number"
+            <input ng-if="settingsConfig[setting].type == 'number' " type="number"
                    id="{{setting}}"
                    placeholder="{{}}"
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
-            <input ng-if="Config.settingsConfig[setting].type == 'text'" type="text"
+            <input ng-if="settingsConfig[setting].type == 'text'" type="text"
                    id="{{setting}}"
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>

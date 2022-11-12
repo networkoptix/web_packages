@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { takeWhile } from 'rxjs/operators';
 
+import { images } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -26,6 +27,7 @@ export class NxDevToolsComponent implements OnInit {
     CONFIG: IConfig;
     menuName = '';
     errorManager: ErrorStateManager;
+    images = images;
 
     constructor(
         configService: NxConfigService,

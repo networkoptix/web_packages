@@ -2,10 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
 
 import { NxToastService } from '@dialogs/toast.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -16,8 +15,6 @@ import { Process } from '@services/process.service/process';
 })
 
 export class DynamicFormApplyExampleComponent {
-    CONFIG: IConfig;
-
     // page process
     saveAll: Process;
 
@@ -28,14 +25,11 @@ export class DynamicFormApplyExampleComponent {
     saveForm3: Process;
 
     constructor(
-        configService: NxConfigService,
         private formBuilder: FormBuilder,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private toastService: NxToastService
-    ) {
-        this.CONFIG = configService.config;
-    }
+    ) {}
 
     ngOnInit(): void {
         this.form2Group = this.formBuilder.group({
@@ -45,7 +39,7 @@ export class DynamicFormApplyExampleComponent {
         this.saveForm3 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
-            this.toastService.notify('form3 saved', this.CONFIG.toast.success);
+            this.toastService.notify('form3 saved', toast.success);
         }, _ => {
         });
     }

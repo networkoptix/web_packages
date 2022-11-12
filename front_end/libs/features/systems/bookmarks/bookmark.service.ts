@@ -2,8 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 
 import type { Bookmark } from './bookmark.types';
@@ -48,8 +46,6 @@ import type { Bookmark } from './bookmark.types';
     providedIn: 'root'
 })
 export class BookmarkService implements OnDestroy {
-    CONFIG: IConfig;
-
     systemSubject = new BehaviorSubject(undefined);
 
     get system() {
@@ -58,12 +54,6 @@ export class BookmarkService implements OnDestroy {
 
     set system(system: NxSystem) {
         this.systemSubject.next(system);
-    }
-
-    constructor(
-        configService: NxConfigService
-    ) {
-        this.CONFIG = configService.getConfig();
     }
 
     getBookmarks(text?: string, limit?: number) {

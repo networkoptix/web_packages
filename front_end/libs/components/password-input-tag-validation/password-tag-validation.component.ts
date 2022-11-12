@@ -5,8 +5,6 @@ import {
 } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
@@ -18,7 +16,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 export class NxPasswordTagValidationComponent {
     @Input() forElement;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     fairPassword: boolean;
     passwordToggle: boolean;
@@ -26,10 +23,8 @@ export class NxPasswordTagValidationComponent {
     weak: boolean;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 }

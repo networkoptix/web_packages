@@ -9,6 +9,7 @@ import {
     DIALOG_DATA,
     DialogRef
 } from '@dialogs/dialog-ref';
+import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
@@ -22,6 +23,7 @@ import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../a
 })
 export class CloudStorageDeleteModalContent extends BaseCloudStorageActionModalContent {
     actionType = CloudStorageActionType.DELETE;
+    icons = icons;
 
     constructor(
         configService: NxConfigService,

@@ -8,8 +8,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import type { NgChanges } from '@utils/ng-changes';
 
 import type { Level3Item } from '../menu.types';
@@ -30,18 +29,14 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() first: boolean;
     @Input() idx: number;
 
-    CONFIG: IConfig;
-
     itemPath: string;
     menuNavItemId: string;
     search: RegExp;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         private menuService: NxMenuService,
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.navItemSubject

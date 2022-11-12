@@ -25,7 +25,7 @@
                 <svg-icon
                     nx-add-svg-src
                     [src]="
-                        CONFIG.icons.dir +
+                        icons.dir +
                         (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')
                     "
                     [applyClass]="true"
@@ -51,7 +51,7 @@
                 <svg-icon
                     nx-add-svg-src
                     class="expand"
-                    [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
                 ></svg-icon>
             </div>
 
@@ -107,7 +107,7 @@
                                 !camera.isOnline
                             "
                             [src]="
-                                CONFIG.icons.dirNonStandardView +
+                                icons.dirNonStandardView +
                                 'cameras_list_placeholder_' +
                                 (!camera.isOnline
                                     ? 'offline'

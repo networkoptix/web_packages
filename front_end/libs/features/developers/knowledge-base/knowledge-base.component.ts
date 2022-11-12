@@ -37,6 +37,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
+import { icons, search } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -162,8 +163,11 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     searchQuery$ = new BehaviorSubject({ query: '' });
     relatedLinks$ = new BehaviorSubject<RelatedLinks>({ type: '', nodes: [] });
     relatedLinksFiltered$: Observable<MenuNodeWithParent[]>;
+    searchConfig = search;
 
     CardClasses = CardClasses;
+
+    icons = icons;
 
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (this.kbService.menuName) {
@@ -290,6 +294,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
+        this.searchConfig = search;
         this.injector = injector;
     }
 

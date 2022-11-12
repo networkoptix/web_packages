@@ -12,6 +12,7 @@ import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, s
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { icons } from '@lib/variables/static-variables';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -89,6 +90,7 @@ export class NxLayoutGridComponent {
     previousOpenMenu: HTMLElement = null;
     unsaved: Layout | false = false;
     addingItem = false;
+    icons = icons;
     readonly EDGE_GAP = 60;
     readonly INITIAL_DRAG_STATE = { move: { x: 0, y: 0 }, resize: { x: 0, y: 0 }, id: '', transformOrigin: 'top left' };
     readonly SETTINGS_CONFIG = SETTINGS_CONFIG;

@@ -6,8 +6,6 @@ import { debounceTime, switchMap, shareReplay, map, tap, scan } from 'rxjs/opera
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -24,7 +22,6 @@ interface SystemDropdownItem extends DropdownItem<string> {
     styleUrls: ['./system-license-summary-widget.component.scss']
 })
 export class NxSystemLicenseSummaryWidget extends FirstPartyWidget<typeof NxSystemLicenseSummaryWidget.BASE_CONFIG> {
-    CONFIG: IConfig;
     static IDENTIFIER = 'system-license-summary';
     static NAME = 'System License Summary';
     static SIZES = [
@@ -113,13 +110,11 @@ export class NxSystemLicenseSummaryWidget extends FirstPartyWidget<typeof NxSyst
 
     constructor(
         cd: ChangeDetectorRef,
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         NxSystemLicenseSummaryWidget.cloudApi = this.cloudApi;
         NxSystemLicenseSummaryWidget.updateSystems$.next('update');
 

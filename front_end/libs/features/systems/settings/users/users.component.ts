@@ -17,9 +17,8 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { credentialsValidation, icons, menus, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -41,7 +40,6 @@ import { NxSettingsService } from '../settings.service';
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
@@ -59,6 +57,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     email: string;
     username: string;
     role: string;
+    credentialsValidation = credentialsValidation;
+    icons = icons;
 
     private passwordChanged: boolean = false;
     private userSubscription: Subscription;
@@ -73,7 +73,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private applyService: NxApplyService,
@@ -84,7 +83,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         private uriService: NxUriService,
         private toastService: NxToastService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         this.menuService.section = 'users';
@@ -123,7 +121,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 if (!this.system.userManager.permissions?.editUsers) {
                     this.uriService
                         .navigateSystem(
-                            `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`,
+                            `${menus.systemSettings.baseUrl}SYSTEM_ID`,
                             this.system
                         )
                         .catch(error => {
@@ -185,7 +183,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             } catch (_) {
                 this.toastService.notify(
                     this.LANG.toastMessage.userChangesFail(),
-                    this.CONFIG.toast.warning,
+                    toast.warning,
                 );
             } finally {
                 this.locked.delete(user.email);
@@ -211,7 +209,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
                 this.uriService
                     .navigateSystem(
-                        `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${nextUserId}`,
+                        `${menus.systemSettings.baseUrl}SYSTEM_ID/users/${nextUserId}`,
                         this.system
                     ).catch(error => {
                         console.error(error);
@@ -248,7 +246,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
                 this.uriService
                     .navigateSystem(
-                        `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`,
+                        `${menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`,
                         this.system
                     ).catch(error => {
                         console.error(error);

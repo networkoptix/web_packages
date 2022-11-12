@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { icons, openClientError } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -32,6 +33,7 @@ export class NxSystemCardComponent implements OnInit {
 
     openClient: Process;
     modalActive: boolean;
+    icons = icons;
 
     get tagType(): string {
         return this.CONFIG.system.status[this.system.stateOfHealth]?.style ||
@@ -70,7 +72,7 @@ export class NxSystemCardComponent implements OnInit {
             },
             {
                 errorCodes: {
-                    [this.CONFIG.openClientError]: () => { }
+                    [openClientError]: () => { }
                 }
             },
             () => {

@@ -17,6 +17,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
+import { icons, maxServers, servers } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -85,6 +86,8 @@ export class MergeModalContent {
     wrongPassword = false;
     private remotePassword: string;
     checkMergeButtonText: string;
+    maxServers: number;
+    icons = icons;
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -139,6 +142,7 @@ export class MergeModalContent {
         @Inject(WINDOW) private window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
+        this.maxServers = maxServers;
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
@@ -457,9 +461,9 @@ export class MergeModalContent {
                     }
                 },
                 err => {
-                    if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    if (err.errorId === servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
-                    } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     }
                     if (err !== 'canceled') {
@@ -573,9 +577,9 @@ export class MergeModalContent {
                     this.adminPasswordInput.nativeElement.focus();
                     return;
                 }
-                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                if (err.errorId === servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
-                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 }
                 console.error(err);
@@ -677,9 +681,9 @@ export class MergeModalContent {
                     this.confirmMergeInput.nativeElement.focus();
                     return;
                 }
-                if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
+                if (error.errorId === servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
                     return this.handleOldSession(this.mergingProcess);
-                } else if (error.status === 403 || error.errorId === this.CONFIG.servers.errors.unauthorized) {
+                } else if (error.status === 403 || error.errorId === servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 }
                 // for errors that pop up during the merge
@@ -868,7 +872,7 @@ export class MergeModalContent {
                 if (target.some(server => serverIds[server.id])) {
                     throw Error(this.duplicateServers);
                 }
-                this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
+                this.tooManyServers = servers.length + target.length > maxServers;
             } else {
                 throw Error(`systemVersion${sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old'}`);
             }

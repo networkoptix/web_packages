@@ -10,10 +10,9 @@ import type {
     SearchTag,
     SearchFilter
 } from '@components/search/search.component.types';
+import { redirect } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -29,7 +28,6 @@ import type { Bookmark } from './bookmark.types';
 })
 
 export class NxBookmarksComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     allElements: Bookmark[];
@@ -39,14 +37,11 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     account: Account;
     restEndpointUsed = true;
 
-    private setupDefaults(configService): void {
-        this.CONFIG = configService.getConfig();
-
+    private setupDefaults(): void {
         this.allElements = [];
     }
 
     constructor(
-        configService: NxConfigService,
         private bookmarkService: BookmarkService,
         private language: NxLanguageProviderService,
         // private pageService: NxPageService,
@@ -55,7 +50,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
     ) {
-        this.setupDefaults(configService);
+        this.setupDefaults();
     }
 
     ngOnDestroy(): void { }
@@ -101,7 +96,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                     this.restEndpointUsed = false;
                 } else {
                     this.router
-                        .navigate([this.CONFIG.redirect.page404], {
+                        .navigate([redirect.page404], {
                             replaceUrl: true,
                         })
                         .catch(error => {

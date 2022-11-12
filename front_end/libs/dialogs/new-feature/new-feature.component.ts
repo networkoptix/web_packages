@@ -7,8 +7,7 @@ import {
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogRef, DIALOG_DATA } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 
@@ -20,11 +19,10 @@ import { LicenseManager } from '@services/system.service/license-manager/licence
 export class NewFeatureInformationModalContent<T> {
     templateName: string;
     dynamicTemplate: TemplateRef<T>;
+    icons = icons;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     constructor(
-        config: NxConfigService,
         language: NxLanguageProviderService,
         public dialogsService: NxDialogsService,
         private dialogRef: DialogRef,
@@ -34,7 +32,6 @@ export class NewFeatureInformationModalContent<T> {
         }
     ) {
         this.LANG = language.translations;
-        this.CONFIG = config.getConfig();
         if (dialogData.template instanceof TemplateRef) {
             this.dynamicTemplate = dialogData.template;
         } else {

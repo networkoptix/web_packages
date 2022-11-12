@@ -27,6 +27,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { PackageProgress } from '@dialogs/download-async/download-async.component.types';
 import { PackageHandler } from '@dialogs/download-async/package-handler';
 import { NxToastService } from '@dialogs/toast.service';
+import { icons, manifest, toast } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxMenusService } from '@services/menus.service';
@@ -37,8 +38,6 @@ import {
     ContextManifest,
     DocAsset
 } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
@@ -56,7 +55,6 @@ export class NxConsoleTableComponent {
     @Input() contextList: ContextManifest[];
     @Output() editValues = new EventEmitter();
 
-    CONFIG: IConfig;
     CONFIG_TYPE = ConfigType;
     CONSOLE_MODE = ConsoleMode;
     OPTIONAL_FEATURES = OptionalFeatures;
@@ -79,9 +77,9 @@ export class NxConsoleTableComponent {
     contentManifest: ContentManifest;
     docAsset: DocAsset;
     perPageSelectedOption: DropdownItem<string>;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         private route: ActivatedRoute,
         private router: Router,
         private dialogService: NxDialogsService,
@@ -93,7 +91,6 @@ export class NxConsoleTableComponent {
         private consoleService: NxConsoleService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.CONFIG = configService.config;
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
     }
 
@@ -114,7 +111,7 @@ export class NxConsoleTableComponent {
             ]).subscribe(([list, contentManifest, docAsset]) => {
                 this.contentManifest = contentManifest as ContentManifest;
                 this.docAsset = docAsset;
-                this.selectedManifest = this.CONFIG.manifest[this.sectionParam];
+                this.selectedManifest = manifest[this.sectionParam];
                 this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
@@ -251,7 +248,7 @@ export class NxConsoleTableComponent {
         const notifyDownload = (url: string): void => {
             this.toastService.show(
                 buildDownloadToast(url),
-                this.CONFIG.toast.success,
+                toast.success,
                 { showHTML: true }
             );
         };

@@ -11,10 +11,9 @@ import { map, delay, retryWhen, take } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { settingsConfig } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -32,7 +31,6 @@ interface SystemSetting {
 })
 
 export class NxSystemAdvancedAdminComponent implements OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: NxSystem;
@@ -46,15 +44,14 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     advancedFormWatcher: FormWatcher;
     saveAdvancedSettings: Process;
     reset$ = new Subject();
+    settingsConfig = settingsConfig;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
@@ -125,7 +122,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
     canSee(key) {
         return ['number', 'text', 'password'].includes(
-            this.CONFIG.settingsConfig[key]?.type
+            settingsConfig[key]?.type
         );
     }
 
@@ -172,10 +169,10 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     settingsToBeDisplayedOrUpdated = (settings): void => {
         Object.entries(settings).reduce((systemSettings: SystemSetting, [key, value]: [string, unknown]) => {
             // CLOUD-6350: Refactor advanced global settings page
-            if (this.CONFIG.settingsConfig[key]?.hiddenInAdvanced) {
+            if (settingsConfig[key]?.hiddenInAdvanced) {
                 return systemSettings;
             }
-            let type = this.CONFIG.settingsConfig[key]?.type;
+            let type = settingsConfig[key]?.type;
             if (type === undefined) {
                 type = 'text';
                 if (Number.isInteger(value)) {
@@ -183,7 +180,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 } else if (['true', 'false'].includes(value as string)) {
                     type = 'checkbox';
                 }
-                this.CONFIG.settingsConfig[key] = { type };
+                settingsConfig[key] = { type };
             }
             switch (type) {
                 case 'number':

@@ -8,7 +8,7 @@
         <div class="heading-icon-wrapper">
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dirCloudStorage + 'cloud_storage.svg'"
+                [src]="icons.dirCloudStorage + 'cloud_storage.svg'"
                 [applyClass]="true"
                 class="heading-icon"
                 [svgStyle]="{ 'width.px': '148', 'height.px': '96' }"
@@ -48,7 +48,7 @@
                 <h4>
                     <svg-icon
                         nx-add-svg-src
-                        [src]="CONFIG.icons.dirCloudStorage + actionId + '_storage.svg'"
+                        [src]="icons.dirCloudStorage + actionId + '_storage.svg'"
                         [applyClass]="true"
                         class="action-icon"
                         [svgStyle]="{ 'width.px': '44', 'height.px': '20' }"
@@ -139,8 +139,8 @@
     type="warning"
     id="cloud-storage-not-used"
     [line1]="'cloudStorage.notUsedWarning' | translate: { serverSettings: serverSettings }"
-    [iconSrc]="CONFIG.icons.dirTextButtons + 'info.svg'"
-    [btnIconSrc]="CONFIG.icons.dirTextButtons + 'close.svg'"
+    [iconSrc]="icons.dirTextButtons + 'info.svg'"
+    [btnIconSrc]="icons.dirTextButtons + 'close.svg'"
 >
 </nx-alert-block>
 
@@ -165,7 +165,7 @@
             <span>
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                    [src]="icons.dirTextButtons + 'info.svg'"
                     [applyClass]="true"
                 >
                 </svg-icon>
@@ -207,7 +207,7 @@
         <h4>
             <span translate>Your Keys</span>
             <svg-icon
-                [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                [src]="icons.dirTextButtons + 'info.svg'"
                 [title]="
                     'Inactive keys can be re-used to activate Cloud Storage on another Systems'
                         | translate
@@ -228,7 +228,7 @@
         >
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
             ></svg-icon>
         </div>
     </header>
@@ -265,7 +265,7 @@
                         >
                             <svg-icon
                                 nx-add-svg-src
-                                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
                             >
                             </svg-icon>
                         </div>

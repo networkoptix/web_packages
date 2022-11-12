@@ -5,9 +5,8 @@ import {
 } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { images } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxThemeService } from '@services/theme.service';
 
@@ -20,17 +19,15 @@ export class NxThemeSwitcherComponent implements OnInit {
     @Input() layout: string = 'extended';
     @Input() account: Account;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    images = images;
 
     selectedTheme: string;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private themeService: NxThemeService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 

@@ -93,7 +93,7 @@ xdescribe('NxCapabilitiesComponent', () => {
 
     it('should display the correct block heading background', () => {
         const backgroundImage = last(capability.icon.split(' '));
-        const backgroundImageUrl = `url("${configMock.config.icons.backgrounds}${backgroundImage}")`;
+        const backgroundImageUrl = `url("${configMock.icons.backgrounds}${backgroundImage}")`;
         expect(blockContent.headerBackground).toContain(backgroundImageUrl);
     });
 

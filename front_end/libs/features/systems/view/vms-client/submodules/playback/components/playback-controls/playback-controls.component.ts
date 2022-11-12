@@ -3,8 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
@@ -21,7 +20,7 @@ type BtnClassesEnum = 'play' | 'pause';
 export class PlaybackControlsComponent implements OnInit {
     @Input() enabled: boolean;
 
-    CONFIG: IConfig;
+    icons = icons;
 
     protected subscription: Subscription;
     protected state: PlaybackState;
@@ -43,12 +42,9 @@ export class PlaybackControlsComponent implements OnInit {
     }
 
     constructor(
-        configService: NxConfigService,
         public playback: PlaybackService,
         protected selection: TimelineSelectionService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     public ngOnInit(): void {
         this.subscription = this.playback.subject

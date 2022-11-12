@@ -6,7 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { WINDOW } from '@services/window-provider';
 
-import type { IConfig } from './nx-config/config-types';
+import { menus } from '../variables/static-variables';
+
 import { NxConfigService } from './nx-config/nx-config.service';
 import { ChildRoutes, RouteResolverParams } from './uri.service.types';
 
@@ -14,7 +15,6 @@ import { ChildRoutes, RouteResolverParams } from './uri.service.types';
     providedIn: 'root'
 })
 export class NxUriService {
-    private CONFIG: IConfig;
     private _pageOffset: number;
 
     queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
@@ -24,9 +24,7 @@ export class NxUriService {
         private router: Router,
         private route: ActivatedRoute,
         @Inject(WINDOW) private window: Window,
-    ) {
-        this.CONFIG = configService.config;
-    }
+    ) {}
 
     get queryParams() {
         return this.queryParamsSubject.getValue();
@@ -157,7 +155,7 @@ export class NxUriService {
         //     }
         // });
 
-        let base = this.CONFIG.menus.systemSettings.baseUrl;
+        let base = menus.systemSettings.baseUrl;
         let childRoute = '';
 
         if (!environment.isLocal) {

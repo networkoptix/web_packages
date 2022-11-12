@@ -1,6 +1,7 @@
 import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
+import { icons } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { alphabeticalSort } from '@utils/general';
@@ -19,6 +20,7 @@ export class MediaServerListComponent implements OnChanges {
     @Input() systemId: string;
 
     CONFIG: IConfig;
+    icons = icons;
 
     public showIP: boolean = false;
     public token: string = '';

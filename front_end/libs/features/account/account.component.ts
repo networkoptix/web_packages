@@ -4,8 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { menus } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 
@@ -17,7 +16,6 @@ import { NxSessionService } from '@services/session.service';
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     content: Content;
@@ -25,12 +23,10 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     userEmail: string;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
         private menuService: NxMenuService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         languageService.translateSubject
@@ -48,8 +44,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.content = {
-            base: this.CONFIG.menus.account.baseUrl,
-            selectedSection: this.CONFIG.menus.account.settings.id,
+            base: menus.account.baseUrl,
+            selectedSection: menus.account.settings.id,
             level1: [],
         };
 
@@ -78,7 +74,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     }
 
     private initMenu(): void {
-        const accountMenu = this.CONFIG.menus.account;
+        const accountMenu = menus.account;
         this.content.level1 = [{
             id: accountMenu.settings.id,
             svg: accountMenu.icon,

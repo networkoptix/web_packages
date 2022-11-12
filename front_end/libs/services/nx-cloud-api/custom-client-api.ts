@@ -5,11 +5,10 @@ import { v4 as uuid } from 'uuid';
 import type {
     PackageStatus
 } from '@dialogs/download-async/download-async.component.types';
+import { apiBase } from '@lib/variables/static-variables';
 import {
     NxConsoleService
 } from '@pages/developer-console/console/console.service';
-
-import type { IConfig } from '../nx-config/config-types';
 
 import type * as t from './nx-cloud-api.types';
 
@@ -17,11 +16,10 @@ export class CustomClientAPI {
     private readonly apiBase: string;
 
     constructor(
-        private config: IConfig,
         private http: HttpClient,
         private consoleService: NxConsoleService
     ) {
-        this.apiBase = this.config.apiBase + '/custom_clients/';
+        this.apiBase = apiBase + '/custom_clients/';
     }
 
     create = (name: string, baseVms?, values: Record<string, string> = {}) => {

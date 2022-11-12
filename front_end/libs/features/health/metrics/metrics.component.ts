@@ -15,8 +15,7 @@ import { delay, throttleTime } from 'rxjs/operators';
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -38,7 +37,6 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     account;
 
@@ -62,6 +60,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     menu;
     metricName: string;
+    icons = icons;
 
     objectValues = Object.values;
 
@@ -81,7 +80,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
@@ -92,7 +90,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 

@@ -21,10 +21,9 @@ import type {
 } from '@components/developers-menu/developers-menu-types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -57,7 +56,6 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     @ViewChild('swaggerDescription') swaggerDescriptionRef: ElementRef;
     @Input() activeNode: MenuNodeWithParent;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     currentAPIDoc: APIDoc;
     swagger: SwaggerUI;
@@ -77,14 +75,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     constructor(public APIToolSystemService: NxAPIToolSystemService,
         public openAPIJSONService: NxOpenAPIJSONService,
         private loginService: NxLoginService,
-        private configService: NxConfigService,
         private renderer2: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private toastService: NxToastService,
         languageService: NxLanguageProviderService,
         @Inject(DOCUMENT) private document: Document) {
         this.LANG = languageService.translations;
-        this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit(): void {
@@ -164,7 +160,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                     return request;
                 },
                 responseInterceptor: response => {
-                    if (response.status === 403 && response?.obj?.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    if (response.status === 403 && response?.obj?.errorId === servers.errors.oldSessionErrorId) {
                         this.handleOldSession();
                     }
                     return response;
@@ -209,7 +205,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         this.loginService.updateSession('renewWeb')
             .then(ready => {
                 const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
-                const { success, danger } = this.CONFIG.toast;
+                const { success, danger } = toast;
                 const toastMessage = ready ? sessionRenewed() : failedToUpdateSession();
                 this.toastService.notify(toastMessage, ready ? success : danger);
             });

@@ -21,6 +21,7 @@ import { SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { icons, search } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -106,6 +107,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     resizeSubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
     queryParamSubscription: SubscriptionLike;
+    icons = icons;
 
     @ViewChild('tableHead', { static: false }) tableHeadElement: ElementRef;
     @ViewChild('tableTitle', { static: false }) tableTitleElement: ElementRef;
@@ -166,7 +168,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.queryParamSubscription = this.uri
             .getParams()
-            .pipe(debounceTime(this.CONFIG.search.debounceShortTime))
+            .pipe(debounceTime(search.debounceShortTime))
             .subscribe(params => {
                 this.params = params;
                 if (this.params.page) {

@@ -7,6 +7,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
@@ -49,6 +50,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     @IBool() @Input() canSelectAll: CoercedBoolInput;
     @IBool() @Input() canSearch: CoercedBoolInput;
 
+    icons = icons;
     public items: MultiSelectItem[] = [];
     public filter: string = '';
     public textSelected: string;

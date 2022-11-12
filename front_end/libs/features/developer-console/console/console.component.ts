@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
+import { manifest } from '@lib/variables/static-variables';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import type { ConsoleMenuNode } from './menu/console-menu.component.types';
@@ -21,7 +20,6 @@ import type { ConsoleMenuNode } from './menu/console-menu.component.types';
     styleUrls: ['console.component.scss']
 })
 export class NxDevConsoleComponent {
-    CONFIG: IConfig;
     modes: ConsoleMode[] = [ConsoleMode.EDIT];
     CONSOLE_MODE = ConsoleMode;
 
@@ -33,13 +31,11 @@ export class NxDevConsoleComponent {
     currentEdit;
 
     constructor(
-        configService: NxConfigService,
         _route: ActivatedRoute,
         private router: Router,
         private cloudApi: NxCloudApiService,
         private headerService: NxHeaderService
     ) {
-        this.CONFIG = configService.config;
         _route.params.pipe(
             map(this.mapRoute),
             tap(({ sectionParam, mode, context }) => {
@@ -88,7 +84,7 @@ export class NxDevConsoleComponent {
     mapRoute = params => {
         const { section, mode, id, context } = params;
         const sections = Object.values(
-            this.CONFIG.manifest
+            manifest
         ).sort(
             ({ sort: prev }, { sort: cur }) => prev - cur
         ).map(({ title, url, icon }) => ({ title, url, icon }));

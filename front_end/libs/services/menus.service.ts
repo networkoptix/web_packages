@@ -14,6 +14,8 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { environment } from '@environments/environment';
 import { Auth, MenuNode } from '@services/menus.service.types';
 
+import { apiBase } from '../variables/static-variables';
+
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -30,6 +32,7 @@ export class NxMenusService {
     private LANG: LanguageI18NStaticTypes;
     private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
+    apiBase: string = apiBase;
 
     endpoint: Partial<{
         view: boolean,
@@ -103,7 +106,7 @@ export class NxMenusService {
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
             .pipe(
                 switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache || !menu
-                    ? this.http.get<MenuStructure>(this.CONFIG.apiBase + `/cms/menus/${encodeURI(name)}`).pipe(
+                    ? this.http.get<MenuStructure>(this.apiBase + `/cms/menus/${encodeURI(name)}`).pipe(
                         map((menu): [string, MenuStructure] => [login, menu])
                     )
                     : Promise.resolve([login, menu])

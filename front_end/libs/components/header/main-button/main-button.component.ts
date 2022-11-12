@@ -8,9 +8,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
@@ -34,19 +33,17 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() node: MenuNode;
     @Input() hideArrow = false;
     @Input() maxWidth = 175;
-    CONFIG: IConfig;
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     systemCounter: number;
     state: string;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public headerService: NxHeaderService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         languageService.translateSubject
@@ -91,7 +88,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     }
 
     get icon() {
-        const iconsDir = this.CONFIG.icons.dir;
+        const iconsDir = icons.dir;
         switch (this.getState()) {
             case mainButtonState.NODE:
                 return iconsDir + 'menu.svg';

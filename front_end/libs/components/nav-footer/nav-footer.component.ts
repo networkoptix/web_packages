@@ -4,6 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, filter } from 'rxjs';
 
 import { environment } from '@environments/environment';
+import { icons } from '@lib/variables/static-variables';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
@@ -24,6 +25,7 @@ export class NxNavFooterComponent implements OnInit {
     visible$ = new BehaviorSubject(true);
     returnToTopVisible$ = new BehaviorSubject(true);
     copyright: string;
+    icons = icons;
 
     constructor(
         config: NxConfigService,

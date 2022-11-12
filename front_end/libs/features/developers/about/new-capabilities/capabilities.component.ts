@@ -1,7 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
 
 import type { AboutNode } from '../about.component.types';
@@ -16,17 +15,15 @@ export class NxNewCapabilitiesComponent implements OnInit {
     @Input() devCapabilitiesNode: AboutNode;
 
     errorManager: ErrorStateManager;
-    CONFIG: IConfig;
     svg = {
         width: '72',
         height: '76'
     };
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.CONFIG = configService.config;
         this.errorManager = new ErrorStateManager(this.window);
     }
 

@@ -17,6 +17,7 @@ import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import { icons } from '@lib/variables/static-variables';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -65,6 +66,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     showElementsInFSM: boolean;
     onShowElements: any;
     onMoveShowElements: any;
+    icons = icons;
 
     public initialized: boolean = false;
     public initializedWithError: boolean = false;

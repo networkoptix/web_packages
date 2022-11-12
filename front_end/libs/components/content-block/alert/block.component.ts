@@ -9,10 +9,10 @@ import {
 
 /* Usage
  <nx-alert-block
-    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+    [iconSrc]="icons.dirNonStandard + 'error.svg'"
     [line1]="'Settings displayed below are advanced.' | translate"
     [line2]="'Changing them may cause server to work incorrectly.' | translate"
-    [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+    [btnIconSrc]="icons.dir + 'eye_closed.svg'"
     [btnCaption]="'Settings displayed below are advanced.' | translate"
     (onAction)="hideAdvancedSettings()">
  </nx-alert-block>

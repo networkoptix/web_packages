@@ -16,16 +16,15 @@ import {
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 /* Usage
  <nx-numeric
      id?="remember"
      name="remember"
      [class]="'pl-2'"
-     [min]="CONFIG.servers.port.min"
-     [max]="CONFIG.servers.port.max"
+     [min]="servers.port.min"
+     [max]="servers.port.max"
      [(ngModel)]="user.remember_me"
      (onChange)?="onClick($event)"
      disabled? | [disabled]='isDisabled'?
@@ -65,12 +64,12 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     @Output() onChange = new EventEmitter<number>();
 
-    CONFIG: IConfig;
     componentId: string;
     _value: number;
     _previousValue: number;
     _invalid: boolean;
     _touched: boolean;
+    icons = icons;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -79,12 +78,6 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     private onChangeCallback = (_: any): void => {
     };
-
-    constructor(
-        configService : NxConfigService,
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<number>): ValidationErrors | null {

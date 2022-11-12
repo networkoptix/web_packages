@@ -5,8 +5,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import { NxRibbonService } from './ribbon.service';
@@ -20,20 +19,17 @@ import type { RibbonAction } from './ribbon.types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxRibbonComponent implements OnInit {
-    CONFIG: IConfig;
     message: string = '';
     actions: RibbonAction[] = [];
     visibility: boolean = false;
     type?: string;
     updateFunction?: () => void;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         private ribbonService: NxRibbonService,
         public headerService: NxHeaderService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.ribbonService.contextSubject

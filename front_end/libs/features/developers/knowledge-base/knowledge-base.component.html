@@ -68,7 +68,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dir + node.cardIcon"
+                    [src]="icons.dir + node.cardIcon"
                     [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                 ></svg-icon>
             </div>
@@ -162,7 +162,7 @@
             (click)="fetchNext()"
             (nxOnIntersect)="fetchNext($event)"
             [intersectionDebounce]="
-                CONFIG.featureFlags.kbInstantSearch ? 0 : CONFIG.search.debounceTime
+                CONFIG.featureFlags.kbInstantSearch ? 0 : searchConfig.debounceTime
             "
         ></div>
     </div>

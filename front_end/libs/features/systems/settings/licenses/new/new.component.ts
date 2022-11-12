@@ -13,8 +13,6 @@ import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -32,7 +30,6 @@ interface ServerOption extends DropdownItem<string> {
     styleUrls: ['new.component.scss']
 })
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     serverOptions: ServerOption[] = [];
@@ -112,12 +109,10 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 

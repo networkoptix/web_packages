@@ -5,11 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystem } from '@services/system.service/system';
@@ -30,7 +29,7 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
     typeof NxEventGeneratorWidgetComponent.BASE_CONFIG
 > implements OnInit {
-    CONFIG: IConfig;
+    icons = icons;
     createEvent: Process;
     errorParams: boolean;
     response: string = '';
@@ -80,15 +79,12 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
 
     constructor(
         cd: ChangeDetectorRef,
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private processService: NxProcessService,
     ) {
         super(cd);
-
-        this.CONFIG = configService.config;
     }
 
     ngOnInit(): void {

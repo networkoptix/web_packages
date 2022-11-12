@@ -22,10 +22,7 @@
                 <div class="form-group col-12 row p-0 m-0">
                     <div
                         class="col-12 row p-0"
-                        *ngIf="
-                            CONFIG.settingsConfig[setting.key]?.type === 'checkbox';
-                            else otherInput
-                        "
+                        *ngIf="settingsConfig[setting.key]?.type === 'checkbox'; else otherInput"
                     >
                         <div
                             class="col-12 col-md-4 m-0 pr-1 pl-3 d-flex align-items-start justify-keys flex-row"
@@ -69,9 +66,9 @@
                             >
                                 <input
                                     *ngIf="canSee(setting.key)"
-                                    [type]="CONFIG.settingsConfig[setting.key]?.type"
+                                    [type]="settingsConfig[setting.key]?.type"
                                     [autocomplete]="
-                                        CONFIG.settingsConfig[setting.key]?.type === 'password'
+                                        settingsConfig[setting.key]?.type === 'password'
                                             ? 'new-password'
                                             : 'off'
                                     "
@@ -84,7 +81,7 @@
                                 <p
                                     *ngIf="
                                         ['static', 'undefined'].includes(
-                                            CONFIG.settingsConfig[setting.key]?.type || 'undefined'
+                                            settingsConfig[setting.key]?.type || 'undefined'
                                         )
                                     "
                                     class="form-control-static input-sm m-0"
@@ -94,10 +91,8 @@
 
                                 <div
                                     class="help-block text-left"
-                                    *ngIf="CONFIG.settingsConfig[setting.key]?.alert"
-                                    [innerHTML]="
-                                        CONFIG.settingsConfig[setting.key]?.alert | safe: 'html'
-                                    "
+                                    *ngIf="settingsConfig[setting.key]?.alert"
+                                    [innerHTML]="settingsConfig[setting.key]?.alert | safe: 'html'"
                                 ></div>
                             </div>
                         </div>

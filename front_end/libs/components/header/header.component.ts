@@ -28,6 +28,7 @@ import { map, startWith } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { icons, showHeaderAndFooter } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -90,6 +91,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     hideWebAdmin = false;
     newHeader = false;
     logoSrc: string;
+    icons = icons;
 
     @ViewChild('newHeaderRef', { read: ViewContainerRef }) newHeaderRef: ViewContainerRef;
 
@@ -334,7 +336,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         this.navVisible = false;
         this.dropdownsVisible = false;
-        this.viewHeader = this.CONFIG.showHeaderAndFooter;
+        this.viewHeader = showHeaderAndFooter;
         this.active = {};
 
         this.appState.headerVisibleSubject

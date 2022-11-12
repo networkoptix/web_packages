@@ -27,7 +27,7 @@
                     <span>
                         <svg-icon
                             nx-add-svg-src
-                            [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                            [src]="icons.dirTextButtons + 'info.svg'"
                             [applyClass]="true"
                         ></svg-icon>
                     </span>
@@ -108,7 +108,7 @@
                                                 nx-add-svg-src
                                                 class="ml-1"
                                                 [nxTooltip]="getStatusTooltip(store.statusTooltip)"
-                                                [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                                                [src]="icons.dirTextButtons + 'info.svg'"
                                             ></svg-icon>
                                         </div>
                                         <div
@@ -136,7 +136,7 @@
                                                     (dropdownOffsetCalc$ | async) + ddWidth - 20
                                                 "
                                                 [nxTooltip]="LANG.storage.stillHasArchives()"
-                                                [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                                                [src]="icons.dirNonStandard + 'error.svg'"
                                             ></svg-icon>
                                         </div>
                                         <div
@@ -214,7 +214,7 @@
                                 >
                                     <svg-icon
                                         nx-add-svg-src
-                                        [src]="CONFIG.icons.dir + 'delete.svg'"
+                                        [src]="icons.dir + 'delete.svg'"
                                     ></svg-icon>
                                     <span
                                         class="ml-1"

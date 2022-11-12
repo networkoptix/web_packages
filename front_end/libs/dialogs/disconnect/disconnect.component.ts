@@ -7,10 +7,9 @@ import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
+import { servers, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -31,7 +30,6 @@ export class DisconnectModalContent {
 
     readonly environment: IEnvironment = environment;
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     needsUpdate: boolean;
     disconnect: Process;
     disconnectInterval: number;
@@ -50,7 +48,6 @@ export class DisconnectModalContent {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private processService: NxProcessService,
         private loginService: NxLoginService,
         private simpleDialogService: NxSimpleDialogsService,
@@ -65,7 +62,6 @@ export class DisconnectModalContent {
         @Inject(WINDOW) private window: Window,
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
@@ -122,10 +118,10 @@ export class DisconnectModalContent {
             this.close(true);
             this.toastService.notify(
                 this.LANG.toastMessage.system.disconnected.success(),
-                this.CONFIG.toast.success,
+                toast.success,
             );
         }, err => {
-            if (err?.resultCode === 'userPasswordRequired' || err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+            if (err?.resultCode === 'userPasswordRequired' || err.errorId === servers.errors.oldSessionErrorId) {
                 this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;
                 return this.loginService.updateSession('disconnect')
@@ -135,7 +131,7 @@ export class DisconnectModalContent {
                             this.disconnect.run();
                         }
                     });
-            } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+            } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                 return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
             }
         });

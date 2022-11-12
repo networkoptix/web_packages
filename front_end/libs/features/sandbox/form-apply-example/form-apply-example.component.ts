@@ -9,10 +9,9 @@ import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxToastService } from '@dialogs/toast.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -22,7 +21,6 @@ import { Process } from '@services/process.service/process';
     styleUrls: ['form-apply-example.component.scss']
 })
 export class FormApplyExampleComponent {
-    CONFIG: IConfig;
     // Refs to use for rendering apply component instances
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply: ViewContainerRef;
 
@@ -57,15 +55,12 @@ export class FormApplyExampleComponent {
     tags: { name: string, selected: boolean, type?: string }[];
 
     constructor(
-        configService: NxConfigService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private menuService: NxMenuService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
-        this.CONFIG = configService.config;
-
         this.show1 = false;
         this.show2 = false;
         this.blah = 'blah1';
@@ -121,7 +116,7 @@ export class FormApplyExampleComponent {
         this.saveForm1 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
-            this.toastService.notify('form1 saved', this.CONFIG.toast.success);
+            this.toastService.notify('form1 saved', toast.success);
         }, _ => {
         });
 
@@ -130,7 +125,7 @@ export class FormApplyExampleComponent {
         this.saveForm2 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
-            this.toastService.notify('form2 saved', this.CONFIG.toast.success);
+            this.toastService.notify('form2 saved', toast.success);
         }, _ => {
         });
     }

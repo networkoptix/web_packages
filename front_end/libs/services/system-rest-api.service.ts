@@ -18,6 +18,8 @@ import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 
+import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
+
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
@@ -513,7 +515,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap(res => {
-                return of(res.ageS < this.CONFIG.sessionFreshnessSec);
+                return of(res.ageS < sessionFreshnessSec);
             }));
     }
 
@@ -595,7 +597,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     getApiDoc(type: APIDocType = 'main') {
-        return this.get<APIDoc>(this.CONFIG.apiDocURL[type]).toPromise();
+        return this.get<APIDoc>(apiDocURL[type]).toPromise();
     }
 
     fetchApiToolJSON(route: string) {
@@ -603,7 +605,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     getAPIToolManifest(): Promise<MenuManifest> {
-        return this.get('/static/openapi_manifest.json').toPromise().catch(() => this.CONFIG.apiTool.defaultManifest);
+        return this.get('/static/openapi_manifest.json').toPromise().catch(() => apiTool.defaultManifest);
     }
 
     getApiChangelog(): Promise<string> {

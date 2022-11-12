@@ -15,6 +15,7 @@ import { filter, startWith } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { environment } from '@environments/environment';
+import { images } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -39,6 +40,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    images = images;
 
     constructor(
         languageService: NxLanguageProviderService,

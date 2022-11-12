@@ -2,8 +2,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { NxMenusService } from '@services/menus.service';
 import type { MenuNode } from '@services/menus.service.types';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
 @Component({
@@ -16,12 +14,9 @@ export class NxHeaderLevelOneComponent {
     @Input() selectedNode: MenuNode;
     @Input() loggedIn: boolean | undefined = undefined;
     @Output() nodeSelect = new EventEmitter<MenuNode>();
-    CONFIG: IConfig;
     profileDropdownOpen = false;
 
-    constructor(public headerService: NxHeaderService, configService: NxConfigService, private menusService: NxMenusService) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor(public headerService: NxHeaderService, private menusService: NxMenusService) {}
 
     onNodeSelect(event: MenuNode): void {
         this.nodeSelect.emit(event);

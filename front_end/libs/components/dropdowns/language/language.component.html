@@ -20,7 +20,7 @@
         <div class="arrow-flip">
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
             ></svg-icon>
         </div>
     </button>
@@ -36,14 +36,14 @@
         <svg-icon
             class="language-icon"
             nx-add-svg-src
-            [src]="CONFIG.images.dirHeader + 'language.svg'"
+            [src]="images.dirHeader + 'language.svg'"
         ></svg-icon>
         <span id="activeLang">{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span>
         <div class="dropdown-arrow-wrapper">
             <svg-icon
                 nx-add-svg-src
                 class="dropdown-arrow"
-                [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"
+                [src]="icons.dirHeader + 'profile_dropdown_arrow.svg'"
             ></svg-icon>
         </div>
     </button>

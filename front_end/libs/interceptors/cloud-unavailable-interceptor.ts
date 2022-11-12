@@ -10,8 +10,9 @@ import { catchError, flatMap } from 'rxjs/operators';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { interceptor } from '../variables/static-variables';
 
 @Injectable()
 export class CloudUnavailableInterceptor implements HttpInterceptor {
@@ -21,12 +22,10 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
     retryTimeout: number;
 
     constructor(
-        configService: NxConfigService,
         injector: Injector
     ) {
-        const CONFIG = configService.getConfig();
-        this.error = CONFIG.interceptor.cloudUnavailable.error;
-        this.retryTimeout = CONFIG.interceptor.cloudUnavailable.timeout;
+        this.error = interceptor.cloudUnavailable.error;
+        this.retryTimeout = interceptor.cloudUnavailable.timeout;
         setTimeout(() => {
             this.LANG = injector.get(NxLanguageProviderService).translations;
             this.dialogService = injector.get(NxDialogsService);

@@ -4,8 +4,7 @@ import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, toast } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy()
@@ -15,14 +14,12 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
     styleUrls: ['./copy-to-clipboard.component.scss']
 })
 export class NxCopyToClipboardComponent {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    icons = icons;
 
-    constructor(private configService: NxConfigService,
-        private clipboardService: ClipboardService,
+    constructor(private clipboardService: ClipboardService,
         private toastService: NxToastService,
         private languageService: NxLanguageProviderService) {
-        this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.translations;
 
         this.clipboardService.copyResponse$
@@ -31,7 +28,7 @@ export class NxCopyToClipboardComponent {
                 if (res.isSuccess) {
                     this.toastService.notify(
                         this.LANG.common.copiedToClipboard(),
-                        this.CONFIG.toast.success,
+                        toast.success,
                     );
                 }
             });

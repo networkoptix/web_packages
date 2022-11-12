@@ -15,10 +15,9 @@ import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
@@ -35,7 +34,6 @@ import {
     styleUrls: ['security.component.scss']
 })
 export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     account: Account;
@@ -45,7 +43,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     twoFaSystems: NxSystemInfo[] = [];
     subV5Systems: NxSystemInfo[] = [];
-
+    icons = icons;
     private targets: PseudoAnchorTarget[] = [];
 
     @ViewChild('twoFaSystemsSpan') private twoFaSystemsSpan: ElementRef<HTMLSpanElement>;
@@ -54,7 +52,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('popLegendSubV5Template') private popLegendSubV5Template: TemplateRef<unknown>;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private accountService: NxAccountService,
         private dialogs: NxDialogsService,
@@ -63,7 +60,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
         this.menuService.detail = 'security';

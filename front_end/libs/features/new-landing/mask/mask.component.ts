@@ -8,8 +8,7 @@ import {
     OnInit,
 } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { images } from '@lib/variables/static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { NxLandingService } from '../landing.service';
@@ -24,20 +23,17 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
     componentInitialized = false;
     scale = 2;
     isSafari: boolean;
+    images = images;
 
     calculationProperties = {
         scrollSpeedCoefficient: 0.0005,
         maskCoefficient: 2.4
     };
 
-    CONFIG: IConfig;
-
     constructor(
-        configService: NxConfigService,
         platform: Platform,
         public landingService: NxLandingService
     ) {
-        this.CONFIG = configService.getConfig();
         this.isSafari = platform.SAFARI;
     }
 

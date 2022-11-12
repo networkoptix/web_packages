@@ -17,11 +17,11 @@
             nx-add-svg-src
             *ngIf="tech.icon.includes('.svg')"
             [svgStyle]="{ 'width.px': '56', 'height.px': '56' }"
-            [src]="CONFIG.images.dirDevelopers + tech.icon"
+            [src]="images.dirDevelopers + tech.icon"
         ></svg-icon>
         <img
             *ngIf="!tech.icon.includes('.svg')"
-            [src]="CONFIG.images.dirDevelopers + tech.icon"
+            [src]="images.dirDevelopers + tech.icon"
         />
     </div>
 </ng-template>

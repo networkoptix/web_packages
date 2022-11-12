@@ -7,8 +7,7 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy({ checkProperties: true })
@@ -18,8 +17,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
     styleUrls: ['confirmation.component.scss']
 })
 export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    icons = icons;
 
     @Input() viewType: string;
     @Input() clientType: string;
@@ -27,10 +26,8 @@ export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {

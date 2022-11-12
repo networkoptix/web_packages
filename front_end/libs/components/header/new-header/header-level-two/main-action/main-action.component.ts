@@ -2,9 +2,8 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild }
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
@@ -15,15 +14,13 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
     styleUrls: ['./main-action.component.scss']
 })
 export class NxMainActionComponent implements AfterViewInit {
-    CONFIG: IConfig;
-
   @Output() widthChange = new EventEmitter<number>();
   @ViewChild('mainAction') mainActionRef: ElementRef<HTMLElement>;
 
   action$ = new BehaviorSubject<'login' | 'logout' | 'none'>('none');
+  icons = icons;
 
-  constructor(public headerService: NxHeaderService, scrollMechanics: NxScrollMechanicsService, configService: NxConfigService, private accountService: NxAccountService) {
-      this.CONFIG = configService.getConfig();
+  constructor(public headerService: NxHeaderService, scrollMechanics: NxScrollMechanicsService, private accountService: NxAccountService) {
       scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(() => {
           this.getMainActionWidth();
       });

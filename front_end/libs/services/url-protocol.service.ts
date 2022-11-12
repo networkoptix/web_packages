@@ -5,9 +5,9 @@ import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { protocolCheck } from '@utils/protocolcheck';
 
+import { openClientError, openClientTimeout, openMobileClientTimeout } from '../variables/static-variables';
+
 import { NxAccountService } from './account.service';
-import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import type { LinkSettings } from './url-protocol.service.types';
 import { WINDOW } from './window-provider';
@@ -16,17 +16,14 @@ import { WINDOW } from './window-provider';
     providedIn: 'root'
 })
 export class NxUrlProtocolService {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     constructor(
         @Inject(WINDOW) private window: Window,
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
@@ -169,10 +166,10 @@ export class NxUrlProtocolService {
                         resolve();
                     },
                     () => {
-                        reject({ resultCode: this.CONFIG.openClientError });
+                        reject({ resultCode: openClientError });
                     },
-                    this.CONFIG.openClientTimeout,
-                    this.CONFIG.openMobileClientTimeout,
+                    openClientTimeout,
+                    openMobileClientTimeout,
                 );
             });
         });

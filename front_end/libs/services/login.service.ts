@@ -19,6 +19,8 @@ import { environment } from '@environments/environment';
 import type { NxAccountService } from '@services/account.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
+import { oauthStore, redirect } from '../variables/static-variables';
+
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -128,7 +130,7 @@ export class NxLoginService extends DialogBase {
                 this.closeResult = `Closed with: ${result}`;
 
                 if (redirectClose && result === 'canceled') {
-                    return this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                    return this.router.navigate([redirect.unauthorised]);
                 }
                 return result;
             }, reason => {
@@ -153,7 +155,7 @@ export class NxLoginService extends DialogBase {
             }
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;
             this.window.open(authorizeUrl, '_blank').focus();
-            return this.storage.observe(this.CONFIG.oauthStore.code)
+            return this.storage.observe(oauthStore.code)
                 .pipe(
                     take(1),
                     switchMap(code => this.handleCode(code)),

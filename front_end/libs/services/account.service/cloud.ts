@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 
+import { redirect, responseOk } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -106,7 +107,7 @@ export class CloudAccount extends BaseAccount {
                 }
 
                 this.router
-                    .navigate([this.CONFIG.redirect.unauthorised])
+                    .navigate([redirect.unauthorised])
                     .catch(error => {
                         console.error(error);
                     });
@@ -128,7 +129,7 @@ export class CloudAccount extends BaseAccount {
                     return Promise.resolve({
                         data: {
                             account: result,
-                            resultCode: this.CONFIG.responseOk
+                            resultCode: responseOk
                         }
                     });
                 }
@@ -140,7 +141,7 @@ export class CloudAccount extends BaseAccount {
                 return Promise.resolve({
                     data: {
                         account: result,
-                        resultCode: this.CONFIG.responseOk
+                        resultCode: responseOk
                     }
                 });
             }
@@ -148,7 +149,7 @@ export class CloudAccount extends BaseAccount {
         }).then(result => {
             // Add the reload back until we solve the issues with configservice
             // TODO: CLOUD-7267: Handle account changes without reload
-            if (result.data?.resultCode === this.CONFIG.responseOk) {
+            if (result.data?.resultCode === responseOk) {
                 (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload());
             }
             return result;
@@ -199,7 +200,7 @@ export class CloudAccount extends BaseAccount {
                 }
             }).catch(err => {
                 console.error(err);
-                this.router.navigate([this.CONFIG.redirect.unauthorised]).catch(_ => {});
+                this.router.navigate([redirect.unauthorised]).catch(_ => {});
             });
     }
 }

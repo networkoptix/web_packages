@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { escape } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -54,7 +55,7 @@ export class IntegrationService implements OnDestroy {
                         };
                         this.formatRequirementsAndCompatibility(plugin);
 
-                        plugin.information.logo = plugin.information.logo || this.CONFIG.icons.default;
+                        plugin.information.logo = plugin.information.logo || icons.default;
 
                         plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
 
@@ -187,7 +188,7 @@ export class IntegrationService implements OnDestroy {
     setPlatformIcons(plugin) {
         const platformIcons = [];
 
-        this.CONFIG.icons.platforms.forEach(icon => {
+        icons.platforms.forEach(icon => {
             const platform = plugin.requirementsAndCompatibility
                 .platforms
                 .find(platform => {

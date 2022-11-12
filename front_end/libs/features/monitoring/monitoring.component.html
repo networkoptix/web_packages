@@ -24,7 +24,7 @@
                 *ngIf="selectedServer?.disabled"
                 type="error"
                 id="server-offline"
-                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [iconSrc]="icons.dirNonStandard + 'error.svg'"
                 [line1]="'Server offline' | translate"
             ></nx-alert-block>
             <router-outlet></router-outlet>

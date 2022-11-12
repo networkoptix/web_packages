@@ -23,8 +23,8 @@ import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, search } from '@lib/variables/static-variables';
+import { Search } from '@services/nx-config/base-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
@@ -41,7 +41,7 @@ import type { SearchFilter } from './search.component.types';
      (ngModelChange)="modelChanged($event)"
      layout?="[compact | full]"     <- DEFAULT to "full"
      [placeholder]?="placeholder"   <- DEFAULT to "Search"
-     instant?                       <- no debounce for search criteria DEFAULT to CONFIG.search.debounceTime
+     instant?                       <- no debounce for search criteria DEFAULT to search.debounceTime
      ngDefaultControl?>
  </nx-search>
 
@@ -86,7 +86,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     public filtersSelected: string = '';
     public localFilter: SearchFilter = { query: '' };
 
-    CONFIG: IConfig;
     Direction: Direction;
     LANG: LanguageI18NStaticTypes;
 
@@ -99,9 +98,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     showAdvancedOptions: boolean;
     buttonArrowTypeUp: ButtonArrowType = ButtonArrowType.up;
     buttonArrowTypeDown: ButtonArrowType = ButtonArrowType.down;
+    icons = icons;
+    search: Search;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private _route: ActivatedRoute,
         // private location: Location,
@@ -110,8 +110,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+        this.search = search;
     }
 
     ngOnInit(): void {
@@ -119,8 +119,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             this.debounceShortTime = 0;
             this.debounceTime = 0;
         } else {
-            this.debounceShortTime = this.CONFIG.search.debounceShortTime;
-            this.debounceTime = this.CONFIG.search.debounceTime;
+            this.debounceShortTime = search.debounceShortTime;
+            this.debounceTime = search.debounceTime;
         }
         this.showAdvancedOptions = this.layout !== 'full';
         // hide advanced search in "full" layout

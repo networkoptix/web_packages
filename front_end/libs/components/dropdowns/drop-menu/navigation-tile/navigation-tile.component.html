@@ -62,11 +62,7 @@
                 <svg-icon
                     style="width: 24px; height: 24px"
                     *ngIf="link.new_window || link.icon"
-                    [src]="
-                        link.icon
-                            ? iconsDir + link.icon
-                            : CONFIG.icons.dirTextButtons + 'external.svg'
-                    "
+                    [src]="link.icon ? iconsDir + link.icon : icons.dirTextButtons + 'external.svg'"
                     [svgStyle]="{
                         'margin-top.px': '-1',
                         'width.px': '20',

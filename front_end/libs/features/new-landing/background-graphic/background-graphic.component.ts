@@ -6,8 +6,7 @@ import {
     OnChanges,
 } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { images } from '@lib/variables/static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { NxLandingService } from '../landing.service';
@@ -24,10 +23,10 @@ interface layer {
 })
 export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
     @Input() scrollPosition: number;
-    CONFIG: IConfig;
     componentInitialized = false;
     isSafari: boolean;
     layers: layer[] = [];
+    images = images;
 
     graphicPaths = ['1', '2', '3', '4', '5', '6', '7', 'contrast'];
 
@@ -42,11 +41,9 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
     };
 
     constructor(
-        configService: NxConfigService,
         platform: Platform,
         public landingService: NxLandingService
     ) {
-        this.CONFIG = configService.getConfig();
         for (const graphic of this.graphicPaths) {
             this.layers.push({
                 path: 'land_layer_' + graphic + '.svg',

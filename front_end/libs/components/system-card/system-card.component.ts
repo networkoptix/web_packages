@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { icons } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -21,6 +22,7 @@ export class SystemCardComponent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    icons = icons;
 
     get tagType(): string {
         return this.CONFIG.system.status[this.system.stateOfHealth]?.style ||

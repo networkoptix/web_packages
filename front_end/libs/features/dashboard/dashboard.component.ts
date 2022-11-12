@@ -22,6 +22,7 @@ import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/s
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { icons, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -97,6 +98,7 @@ export class NxDashboardComponent implements DashboardGroup {
     showSidePanel = true;
     downloadFileName;
     activeAction;
+    icons = icons;
 
     /**
      * Handles moving a selected card using arrows, or using tab and shift + tab to move forward and back between selected cards.
@@ -223,7 +225,7 @@ export class NxDashboardComponent implements DashboardGroup {
         const downloaded = await this.http.get(dashboardUrlCleaned).toPromise().catch(_ => {
             this.toastService.show(
                 'Unable to download dashboard requested dashboard, please check link and try again. If you keep having issues try downloading the dashboard first and applying config directly.',
-                this.CONFIG.toast.danger,
+                toast.danger,
             );
             return false as const;
         }) as Promise<Record<any, any>>;

@@ -7,8 +7,6 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { cleanId } from '@utils/general';
@@ -33,8 +31,6 @@ interface CameraDropdownItem extends DropdownItem<string> {
 export class NxLiveViewWidgetComponent extends FirstPartyWidget<
     typeof NxLiveViewWidgetComponent.BASE_CONFIG
 > {
-    CONFIG: IConfig;
-
     static IDENTIFIER = 'live-view';
     static NAME = 'Live View';
     static SIZES = [
@@ -151,13 +147,11 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
 
     constructor(
         cd: ChangeDetectorRef,
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         NxLiveViewWidgetComponent.cloudApi = this.cloudApi;
         NxLiveViewWidgetComponent.systemUpdater$.pipe(
             untilDestroyed(this)

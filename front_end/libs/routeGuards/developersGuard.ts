@@ -11,6 +11,8 @@ import { Observable } from 'rxjs';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
+import { redirect } from '../variables/static-variables';
+
 @Injectable()
 export class DevelopersGuard implements CanActivate {
     CONFIG: IConfig;
@@ -29,7 +31,7 @@ export class DevelopersGuard implements CanActivate {
         if (this.CONFIG.cloudCapabilities.developersEnabled) {
             return true;
         } else {
-            this.router.navigate([this.CONFIG.redirect.page404]);
+            this.router.navigate([redirect.page404]);
             return false;
         }
     }

@@ -17,6 +17,8 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 
+import { apiTool } from '../variables/static-variables';
+
 import { Account } from './account.service/account';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
@@ -447,7 +449,7 @@ export class NxSystemAPI {
     }
 
     getAPIToolManifest(): Promise<MenuManifest> {
-        return Promise.resolve(this.CONFIG.apiTool.legacyManifest);
+        return Promise.resolve(apiTool.legacyManifest);
     }
 
     public getApiPreamble(): void {

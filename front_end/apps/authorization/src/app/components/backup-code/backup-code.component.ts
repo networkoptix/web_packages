@@ -15,6 +15,7 @@ import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { icons } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -33,6 +34,7 @@ import { setupText, TemplateText } from '../setupText';
 export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    icons = icons;
 
     @Input() viewType: string;
     @Input() clientType: string;

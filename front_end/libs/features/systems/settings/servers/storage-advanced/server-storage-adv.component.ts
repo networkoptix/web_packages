@@ -12,9 +12,8 @@ import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { icons } from '@lib/variables/static-variables';
 import { Watcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -171,7 +170,6 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() serverId: string;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     currentStorageState: CurrentStorageState;
     loading: boolean = true;
@@ -181,18 +179,17 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     storages: AdvancedStorage[] = [];
     watchers: Watcher<unknown>[] = [];
     failedToLoad = false;
+    icons = icons;
 
     Math = Math;
 
     constructor(
         languageService: NxLanguageProviderService,
-        configService: NxConfigService,
         @Inject(LOCALE_ID) private locale: string,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.config;
     }
 
     ngOnChanges(changes: NgChanges<NxSystemAdvancedStorageComponent>): void {

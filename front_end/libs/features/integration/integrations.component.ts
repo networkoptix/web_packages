@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
+import { redirect } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -91,7 +92,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     private show404(): any {
         this.router
-            .navigate([this.CONFIG.redirect.page404], {
+            .navigate([redirect.page404], {
                 replaceUrl: true,
             })
             .catch(error => {

@@ -8,8 +8,6 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 
@@ -22,7 +20,6 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['connect-error.component.scss']
 })
 export class NxAuthorizeConnectErrorComponent implements OnInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
@@ -34,10 +31,8 @@ export class NxAuthorizeConnectErrorComponent implements OnInit {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {

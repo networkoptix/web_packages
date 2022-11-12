@@ -6,11 +6,10 @@ import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxj
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -57,8 +56,8 @@ const summarizeByLevel = (
 export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
     typeof NxHealthMonitorWidgetComponent.BASE_CONFIG
 > {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    icons = icons;
     static IDENTIFIER = 'health-monitor';
     static NAME = 'Health Monitor';
     static SIZES = [
@@ -214,7 +213,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
         console.log(element);
         const queryParams = id ? { id } : {};
         const childRoute = resourceId || key;
-        const route = [this.CONFIG.menus.systemSettings.baseUrl, this.system.id, 'health', childRoute];
+        const route = [menus.systemSettings.baseUrl, this.system.id, 'health', childRoute];
         const url = this.router.serializeUrl(this.router.createUrlTree(route, { queryParams }));
         const segments = [name, this.card.config.resources[key]?.name, this.selectedSystem.name, 'Health Monitor'];
         const label = segments.reduce((combined, segment) => !segment ? combined : combined ? `${combined} - ${segment}` : segment, '');
@@ -265,7 +264,6 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
 
     constructor(
         cd: ChangeDetectorRef,
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
@@ -273,7 +271,6 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
         private router: Router
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
         NxHealthMonitorWidgetComponent.systemUpdater$.pipe(

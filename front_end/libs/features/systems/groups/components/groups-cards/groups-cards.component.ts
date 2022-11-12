@@ -4,8 +4,6 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
@@ -23,7 +21,6 @@ export class NxGroupsCardsComponent implements OnInit {
     @Input() systems: SystemItem[];
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     account: Account;
 
@@ -33,12 +30,10 @@ export class NxGroupsCardsComponent implements OnInit {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private accountService: NxAccountService,
         private groupsService: NxSystemGroupsService,
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.config;
     }
 
     ngOnInit(): void {

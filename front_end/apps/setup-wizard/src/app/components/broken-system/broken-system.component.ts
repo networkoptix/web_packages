@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { icons } from '@lib/variables/static-variables';
+
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
@@ -8,6 +10,8 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./broken-system.component.scss']
 })
 export class BrokenSystemComponent implements OnInit {
+    icons = icons;
+
     constructor(
         public wizardService: WizardStateService
     ) { }

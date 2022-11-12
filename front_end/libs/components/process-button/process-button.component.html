@@ -30,7 +30,7 @@
         <ng-container *ngIf="svg">
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + svg.src + '.svg'"
+                [src]="icons.dir + svg.src + '.svg'"
                 [ngClass]="{
                     'white-svg': svg.color === 'light1',
                     'ml-2': !reverseButton,
@@ -52,7 +52,7 @@
         >
             <ng-container *ngIf="!process.processing">
                 <svg-icon
-                    [src]="CONFIG.icons.dirTextButtons + 'external.svg'"
+                    [src]="icons.dirTextButtons + 'external.svg'"
                     [svgStyle]="{ 'margin-right': '2px', 'width.px': '20' }"
                 ></svg-icon>
                 <a

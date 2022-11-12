@@ -12,11 +12,10 @@ import { NxMenuService } from '@app/menu/menu.service';
 import { Content } from '@app/menu/menu.types';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -30,7 +29,6 @@ import { NxMonitoringService } from './monitoring.service';
     templateUrl: 'monitoring.component.html',
 })
 export class NxMonitoringComponent implements OnInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     content: Content;
@@ -40,11 +38,11 @@ export class NxMonitoringComponent implements OnInit {
     selectedServer: DropdownItem<string>;
     systemOnline: boolean = true;
     systemId: string;
+    icons = icons;
 
     private destroy$ = new Subject<true>();
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private menuService: NxMenuService,
@@ -54,7 +52,6 @@ export class NxMonitoringComponent implements OnInit {
         private systemService: NxSystemService,
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
 
         this.content = {
             base: '',
@@ -62,15 +59,15 @@ export class NxMonitoringComponent implements OnInit {
             selectedSubSection: '',
             level1: [
                 {
-                    id: this.CONFIG.menus.systemMonitoring.graphs.id,
-                    svg: this.CONFIG.menus.systemMonitoring.graphs.icon,
+                    id: menus.systemMonitoring.graphs.id,
+                    svg: menus.systemMonitoring.graphs.icon,
                     label: this.LANG.menu.titles.graphs(),
-                    path: this.CONFIG.menus.systemMonitoring.graphs.path,
+                    path: menus.systemMonitoring.graphs.path,
                 }, {
-                    id: this.CONFIG.menus.systemMonitoring.logs.id,
-                    svg: this.CONFIG.menus.systemMonitoring.logs.icon,
+                    id: menus.systemMonitoring.logs.id,
+                    svg: menus.systemMonitoring.logs.icon,
                     label: this.LANG.menu.titles.logs(),
-                    path: this.CONFIG.menus.systemMonitoring.logs.path,
+                    path: menus.systemMonitoring.logs.path,
                 }
             ]
         };

@@ -10,10 +10,9 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -31,7 +30,6 @@ export class ResetServerModalContent {
     @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     system: NxSystem;
     serverName: string;
@@ -42,7 +40,6 @@ export class ResetServerModalContent {
     hideErrors = true;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private appState: NxAppStateService,
         private loginService: NxLoginService,
@@ -57,7 +54,6 @@ export class ResetServerModalContent {
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
@@ -67,14 +63,14 @@ export class ResetServerModalContent {
             console.error(`Error in reset-server dialog from ${from}:`, error);
             this.toastService.notify(
                 this.LANG.servers.resetFailed(),
-                this.CONFIG.toast.warning,
+                toast.warning,
             );
         };
 
         const wrongPasswordHandler = (): false => {
             this.toastService.notify(
                 this.LANG.servers.resetFailed(),
-                this.CONFIG.toast.warning,
+                toast.warning,
             );
             return false;
         };
@@ -161,7 +157,7 @@ export class ResetServerModalContent {
                                         .resetSuccessful({
                                             serverName: this.serverName
                                         });
-                                    this.toastService.notify(successMessage, this.CONFIG.toast.success);
+                                    this.toastService.notify(successMessage, toast.success);
                                     serverSubscription.unsubscribe();
                                 },
                                 err => {
@@ -173,7 +169,7 @@ export class ResetServerModalContent {
                     })
                     .catch(err => handleResetFailError('restartServer', err));
             }, err => {
-                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('reset')
@@ -183,7 +179,7 @@ export class ResetServerModalContent {
                                 this.resetServer.run();
                             }
                         });
-                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 }
             });

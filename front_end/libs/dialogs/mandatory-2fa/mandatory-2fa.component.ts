@@ -3,10 +3,9 @@ import type { NgForm } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -24,7 +23,6 @@ export class Mandatory2faModalContent {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     system: NxSystem;
     system2faEnabled: boolean;
@@ -41,7 +39,6 @@ export class Mandatory2faModalContent {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
@@ -50,7 +47,6 @@ export class Mandatory2faModalContent {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
@@ -86,7 +82,7 @@ export class Mandatory2faModalContent {
                     : this.LANG.dialogs.message.system2faDisabled();
                 this.toastService.notify(
                     successMessage,
-                    this.CONFIG.toast.success,
+                    toast.success,
                 );
                 // });
             }, err => {

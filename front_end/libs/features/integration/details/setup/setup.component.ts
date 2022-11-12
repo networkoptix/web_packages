@@ -5,8 +5,6 @@ import { SubscriptionLike } from 'rxjs';
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
@@ -21,7 +19,6 @@ import { IntegrationService } from '../../integration.service';
 
 export class NxSetupComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     plugin: Partial<Integration> = {};
     pluginSubscription: SubscriptionLike;
@@ -31,13 +28,11 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private pageService: NxPageService,
         private integrationService: IntegrationService,
         private menuService: NxMenuService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
         this.setupDefaults();

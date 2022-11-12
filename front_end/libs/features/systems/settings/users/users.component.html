@@ -142,7 +142,7 @@
                             name="email"
                             id="email"
                             #emailInput="ngModel"
-                            pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
+                            pattern="{{ credentialsValidation.emailRegex }}"
                             [readonly]="selectedUser.isLdap"
                             [disabled]="
                                 !(environment.isLocal && selectedUser.isMe) &&
@@ -215,7 +215,7 @@
                     >
                         <svg-icon
                             nx-add-svg-src
-                            [src]="CONFIG.icons.dir + 'delete.svg'"
+                            [src]="icons.dir + 'delete.svg'"
                             [applyClass]="true"
                             [svgStyle]="{
                                 'width.px': '24',

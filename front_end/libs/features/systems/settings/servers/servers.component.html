@@ -3,7 +3,7 @@
     type="warning"
     id="storages-outdated"
     [line1]="'Storages outdated. Reload page to update.' | translate"
-    [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+    [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
     [btnCaption]="'Reload' | translate"
     (onAction)="window.location.reload()"
 >
@@ -35,10 +35,10 @@
     <ng-container *ngIf="!isOffline && advanced">
         <nx-alert-block
             class="d-block mt-3"
-            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [iconSrc]="icons.dirNonStandard + 'error.svg'"
             [line1]="'Settings displayed below are advanced.' | translate"
             [line2]="'Changing them may cause server to work incorrectly.' | translate"
-            [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+            [btnIconSrc]="icons.dir + 'eye_closed.svg'"
             [btnCaption]="'Hide Advanced Settings' | translate"
             (onAction)="hideAdvancedSettings()"
         ></nx-alert-block>

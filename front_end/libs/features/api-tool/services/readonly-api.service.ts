@@ -8,7 +8,6 @@ import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ReadOnlyAPI, ReadOnlyAPIDetail } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { FeatureFlagStrings, MenuManifest } from '@services/nx-config/base-config';
-import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
@@ -20,7 +19,6 @@ import type { EmitInfo, Store, ReadOnlyAPIStore, MarkdownObj } from './api-tool-
 @UntilDestroy()
 @Injectable()
 export class NxReadonlyAPIService {
-    CONFIG: IConfig;
     isEnabled = true;
     currentReadonlyAPI$ = new BehaviorSubject<ReadOnlyAPIStore>(null);
     readonlyAPIEmitter$ = new Subject<EmitInfo<ReadOnlyAPI>>();
@@ -40,7 +38,6 @@ export class NxReadonlyAPIService {
         private configService: NxConfigService,
         private api: NxCloudApiService,
         private _route: ActivatedRoute) {
-        this.CONFIG = this.configService.getConfig();
         this.isEnabled = this.configService.flagsEnabled(FeatureFlagStrings.readonlyAPIs);
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.queryParams = params;

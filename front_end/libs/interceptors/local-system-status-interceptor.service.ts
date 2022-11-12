@@ -17,6 +17,8 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
+import { servers } from '../variables/static-variables';
+
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
     CONFIG: IConfig;
@@ -81,7 +83,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         } else if (
             res instanceof HttpErrorResponse &&
             (status === 401 || status === 422 && res.url.includes('rest/v1/login/sessions') &&
-                res.error?.errorId === this.CONFIG.servers.errors.oldSessionErrorId) ||
+                res.error?.errorId === servers.errors.oldSessionErrorId) ||
             (status === 0 && res.url?.includes('oauth/token'))
         ) {
             // Session expired

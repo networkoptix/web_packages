@@ -13,8 +13,6 @@ import {
     InfoBlockSections,
     InfoBlockLine
 } from '@components/info-block/info-block.component.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 import { NxHealthLayoutService } from '../../health-layout.service';
@@ -29,7 +27,6 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
     @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 
-    CONFIG: IConfig;
     name: string;
 
     windowSize: any = {};
@@ -41,12 +38,10 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
     @ViewChild('nxPanelView', { static: false }) nxPanelView: ElementRef;
 
     constructor(
-        configService: NxConfigService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.name = '';
     }
 

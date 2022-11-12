@@ -1,7 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, images } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
 
 import type { AboutNode } from '../about.component.types';
@@ -15,14 +14,13 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxCapabilitiesComponent {
     @Input() capabilitiesNode: AboutNode;
 
-    CONFIG: IConfig;
     errorManager: ErrorStateManager;
+    icons = icons;
+    images = images;
 
     constructor(
-        configService: NxConfigService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.CONFIG = configService.config;
         this.errorManager = new ErrorStateManager(this.window);
     }
 

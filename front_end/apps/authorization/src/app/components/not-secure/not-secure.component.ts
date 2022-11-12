@@ -7,8 +7,7 @@ import {
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -20,8 +19,8 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 })
 
 export class NxAuthorizeNotSecureComponent {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    icons = icons;
     readonly environment = environment;
 
     @Input() viewType: string;
@@ -32,11 +31,9 @@ export class NxAuthorizeNotSecureComponent {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService
     ) {
         const lang = language.translations;
         this.LANG = lang;
-        this.CONFIG = configService.getConfig();
     }
 
     next(): void {

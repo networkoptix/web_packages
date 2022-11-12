@@ -3,9 +3,8 @@ import { Component, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
+import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -17,16 +16,14 @@ import { NxHeaderService } from '@services/nx-header.service';
 export class NxNavigationTileComponent {
     @Input() node: MenuNode;
     @Input() width = 240;
-    CONFIG: IConfig;
+    icons = icons;
     iconsDir: string;
     loginStateSubscription: SubscriptionLike;
 
     constructor(
-        configService: NxConfigService,
         public headerService: NxHeaderService
     ) {
-        this.CONFIG = configService.config;
-        this.iconsDir = this.CONFIG.icons.dir;
+        this.iconsDir = icons.dir;
     }
 
     ngOnInit(): void {

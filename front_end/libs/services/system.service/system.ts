@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import { apiRequestAttempts, updateInterval } from '@lib/variables/static-variables';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -248,7 +249,7 @@ export class NxSystem {
         }
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId, this.locale);
-        this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
+        this.systemPoll = this.pollService.createPoll<any>(() => this.update(), updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
             this.systemApiService,
@@ -685,7 +686,7 @@ export class NxSystem {
                                 timeZoneOffset: parseInt(i.timeZoneOffset)
                             }));
                         }, err => {
-                            if (err.name === 'TimeoutError' && this.attempts < this.CONFIG.apiRequestAttempts) {
+                            if (err.name === 'TimeoutError' && this.attempts < apiRequestAttempts) {
                                 this.attempts++;
                                 return this.getServerTimes();
                             }

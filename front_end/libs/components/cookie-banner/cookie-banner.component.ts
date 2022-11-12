@@ -5,8 +5,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { first } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 @UntilDestroy()
 @Component({
@@ -15,16 +14,13 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     styleUrls: ['./cookie-banner.component.scss']
 })
 export class NxCookieBannerComponent implements OnInit {
-    CONFIG: IConfig;
     cookieBannerReviewed: boolean;
+    icons = icons;
 
     constructor(
-        config: NxConfigService,
         private localStorage: LocalStorageService,
         private store: Store,
-    ) {
-        this.CONFIG = config.getConfig();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.cookieBannerReviewed =

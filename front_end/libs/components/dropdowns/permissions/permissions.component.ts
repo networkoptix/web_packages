@@ -7,6 +7,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { icons } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -42,6 +43,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     componentId: string;
     selection: string;
     accessRoles: NxSystemRole[] = [];
+    icons = icons;
 
     private selected: NxSystemRole;
 

@@ -2,8 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 @UntilDestroy()
 @Component({
@@ -19,11 +18,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
     classMutationObserver: MutationObserver;
     isVisible = false;
     cachedLoading: Element;
-    CONFIG: IConfig;
-
-    constructor(private configService: NxConfigService) {
-        this.CONFIG = this.configService.getConfig();
-    }
+    icons = icons;
 
     ngOnInit(): void {
         this.classMutationObserver = new MutationObserver(mutations => {

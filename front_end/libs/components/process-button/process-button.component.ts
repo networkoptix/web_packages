@@ -5,8 +5,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 
 interface SvgData {
@@ -39,11 +38,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() id: string;
 
     buttonClass: string;
-    CONFIG: IConfig;
-
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
-    }
+    icons = icons;
 
     ngOnInit(): void {
         if (!this.clickFn) {

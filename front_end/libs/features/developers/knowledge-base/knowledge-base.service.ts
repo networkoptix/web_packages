@@ -8,8 +8,6 @@ import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { MenuStructure } from '@services/nx-config/base-config';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +20,6 @@ export class NxKnowledgebaseService {
     activeAssetState = '';
     prefetchedDocuments: { assetId: number, version?: number, state?: string }[] = [];
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     account: Account;
 
@@ -36,11 +33,9 @@ export class NxKnowledgebaseService {
     loadingMenu = false;
 
     constructor(
-        configService: NxConfigService,
         private menusService: NxMenusService,
         private accountService: NxAccountService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.accountService.get().then(account => {
             this.account = account;
         });

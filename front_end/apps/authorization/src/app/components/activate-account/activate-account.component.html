@@ -23,7 +23,7 @@
         <svg-icon
             nx-add-svg-src
             [src]="
-                CONFIG.icons.dirSectionPlaceholder +
+                icons.dirSectionPlaceholder +
                 ((activated$ | async) ? 'success' : 'mail') +
                 (viewType === 'web' ? '' : '_desktop') +
                 '_placeholder.svg'

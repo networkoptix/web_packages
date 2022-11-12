@@ -25,9 +25,9 @@
                     *ngIf="showUnauthorized"
                     type="error"
                     id="unauthorized-warning"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
                     [line1]="'Camera is unauthorized' | translate"
-                    [btnIconSrc]="CONFIG.icons.dir + 'settings.svg'"
+                    [btnIconSrc]="icons.dir + 'settings.svg'"
                     [btnCaption]="'Edit Credentials' | translate"
                     (onAction)="updateCredentials()"
                 >
@@ -35,21 +35,21 @@
                 <nx-alert-block
                     *ngIf="showOffline"
                     type="error"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
                     [line1]="'Camera is offline' | translate"
                 >
                 </nx-alert-block>
                 <nx-alert-block
                     *ngFor="let error of errors"
                     type="error"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
                     [line1]="error"
                 >
                 </nx-alert-block>
                 <nx-alert-block
                     *ngFor="let warning of warnings"
                     type="warning"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'"
+                    [iconSrc]="icons.dirNonStandard + 'warning.svg'"
                     [line1]="warning"
                 >
                 </nx-alert-block>
@@ -77,7 +77,7 @@
                                     <span>
                                         <svg-icon
                                             nx-add-svg-src
-                                            [src]="CONFIG.icons.dirTextButtons + 'play.svg'"
+                                            [src]="icons.dirTextButtons + 'play.svg'"
                                             [applyClass]="true"
                                         ></svg-icon>
                                     </span>
@@ -97,7 +97,7 @@
                                     <span>
                                         <svg-icon
                                             nx-add-svg-src
-                                            [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                                            [src]="icons.dirTextButtons + 'info.svg'"
                                             [applyClass]="true"
                                         ></svg-icon>
                                     </span>

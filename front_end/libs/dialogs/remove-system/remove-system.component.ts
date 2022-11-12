@@ -11,8 +11,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -29,7 +28,6 @@ export class RemoveSystemModalContent {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     disconnectFromAccount: Process;
     system: NxSystem;
@@ -48,7 +46,6 @@ export class RemoveSystemModalContent {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private processService: NxProcessService,
         private renderer: Renderer2,
         private toastService: NxToastService,
@@ -56,7 +53,6 @@ export class RemoveSystemModalContent {
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
         this.isLocal = environment.isLocal;
     }
 
@@ -90,7 +86,7 @@ export class RemoveSystemModalContent {
             const msg = this.LANG.toastMessage.system.deleted.success({
                 systemName: this.system.info.systemName || this.system.info.name
             });
-            this.toastService.notify(msg, this.CONFIG.toast.success);
+            this.toastService.notify(msg, toast.success);
         }, err => console.error(err));
     }
 

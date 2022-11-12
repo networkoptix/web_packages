@@ -121,7 +121,7 @@
                             <ng-template #icon>
                                 <svg-icon
                                     nx-add-svg-src
-                                    [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
+                                    [src]="icons.dirTextButtons + field.meta.icon"
                                     [svgStyle]="{
                                         'width.px': '24',
                                         'height.px': '24',
@@ -184,7 +184,7 @@
                                     <svg-icon
                                         nx-add-svg-src
                                         [src]="
-                                            CONFIG.icons.dirTextButtons +
+                                            icons.dirTextButtons +
                                             element[field.name].manifest.fields[0].meta.icon
                                         "
                                         [svgStyle]="{
@@ -203,7 +203,7 @@
                                     "
                                     nx-add-svg-src
                                     class="animate-rotation in-progress-svg"
-                                    [src]="CONFIG.icons.dirTextButtons + 'loading.svg'"
+                                    [src]="icons.dirTextButtons + 'loading.svg'"
                                     [svgStyle]="{
                                         'width.px': '24',
                                         'height.px': '24',
@@ -264,7 +264,7 @@
                                     >
                                         <svg-icon
                                             nx-add-svg-src
-                                            [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                                            [src]="icons.dirTextButtons + 'close.svg'"
                                             [svgStyle]="{ 'width.px': '12', 'height.px': '12' }"
                                             class="close-svg"
                                             [applyClass]="true"
@@ -284,7 +284,7 @@
                             <a (click)="handleModal(element[field.name])">
                                 <svg-icon
                                     nx-add-svg-src
-                                    [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
+                                    [src]="icons.dirTextButtons + field.meta.icon"
                                     [svgStyle]="{
                                         'width.px': '24',
                                         'height.px': '24',
@@ -383,7 +383,7 @@
             <div class="create-placeholder">
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dirPagePlaceholder + selectedManifest.actions[0].icon"
+                    [src]="icons.dirPagePlaceholder + selectedManifest.actions[0].icon"
                     [svgStyle]="{ 'width.px': '64', 'height.px': '64', 'margin.px': '8' }"
                     [applyClass]="true"
                 ></svg-icon>

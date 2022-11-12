@@ -12,11 +12,10 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { search } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
@@ -42,7 +41,6 @@ type Endpoint = Partial<{
 })
 
 export class NxSystemsListComponent implements OnInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     showSearch: boolean;
     fetchComplete: boolean;
@@ -72,15 +70,12 @@ export class NxSystemsListComponent implements OnInit {
     chosenSystemName: string;
     show2faRequired = false;
 
-    private setupDefaults(configService: NxConfigService): void {
-        this.CONFIG = configService.getConfig();
+    private setupDefaults(): void {
         this.LANG = this.language.translations;
-
         this.search = { value: '' };
     }
 
     constructor(
-        configService: NxConfigService,
         private language: NxLanguageProviderService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
@@ -92,7 +87,7 @@ export class NxSystemsListComponent implements OnInit {
         private route: ActivatedRoute,
         private location: Location
     ) {
-        this.setupDefaults(configService);
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
@@ -123,7 +118,7 @@ export class NxSystemsListComponent implements OnInit {
                         this.openSystem(this.systems[0]);
                     }
 
-                    this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
+                    this.showSearch = this.systems.length >= search.minSystems;
 
                     this.searchSystems();
                 }
@@ -140,7 +135,7 @@ export class NxSystemsListComponent implements OnInit {
 
         this.searchChanged
             .pipe(
-                debounceTime(this.CONFIG.search.debounceTime),
+                debounceTime(search.debounceTime),
                 untilDestroyed(this)
             ).subscribe(() => {
                 this.searchSystems();

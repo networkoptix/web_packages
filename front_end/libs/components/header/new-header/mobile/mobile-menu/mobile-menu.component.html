@@ -60,7 +60,7 @@
                 {{ node.display_name }}
                 <svg-icon
                     *ngIf="node.new_window"
-                    [src]="CONFIG.images.dirHeader + 'external_link.svg'"
+                    [src]="images.dirHeader + 'external_link.svg'"
                 ></svg-icon>
             </div>
             <div
@@ -69,7 +69,7 @@
                 (click)="nodeClick(node, $event)"
             >
                 <svg-icon
-                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [src]="icons.dirHeader + 'nav_arrow.svg'"
                     [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
                 ></svg-icon>
             </div>
@@ -107,7 +107,7 @@
                 {{ subnode.display_name }}
                 <svg-icon
                     *ngIf="subnode.new_window"
-                    [src]="CONFIG.images.dirHeader + 'external_link.svg'"
+                    [src]="images.dirHeader + 'external_link.svg'"
                 ></svg-icon>
             </div>
             <div
@@ -116,7 +116,7 @@
                 (click)="nodeClick(subnode, $event)"
             >
                 <svg-icon
-                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [src]="icons.dirHeader + 'nav_arrow.svg'"
                     [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
                 ></svg-icon>
             </div>

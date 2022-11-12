@@ -20,6 +20,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { credentialsValidation, icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -61,6 +62,8 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     passwordToggle: boolean;
     clicked: boolean = false;
     tagWidth: number;
+    credentialsValidation = credentialsValidation;
+    icons = icons;
 
     public value: string;
 
@@ -85,14 +88,14 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         }
 
         // check pattern
-        if (!new RegExp(this.CONFIG.credentialsValidation.passwordRequirements.requiredRegex).test(c.value)) {
+        if (!new RegExp(credentialsValidation.passwordRequirements.requiredRegex).test(c.value)) {
             return {
                 pattern: true
             };
         }
 
         // check length
-        if (c.value.length < this.CONFIG.credentialsValidation.passwordRequirements.minLength) {
+        if (c.value.length < credentialsValidation.passwordRequirements.minLength) {
             return {
                 minlength: true
             };
@@ -107,10 +110,10 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         const complexity = this.checkComplexity(c.value);
 
         if (complexity) {
-            if (complexity >= this.CONFIG.credentialsValidation.passwordRequirements.strongClassesCount) {
+            if (complexity >= credentialsValidation.passwordRequirements.strongClassesCount) {
                 this.form.form.get(this.componentId).fairPassword = false;
                 return null; // valid
-            } else if (complexity > 1 && complexity < this.CONFIG.credentialsValidation.passwordRequirements.strongClassesCount) {
+            } else if (complexity > 1 && complexity < credentialsValidation.passwordRequirements.strongClassesCount) {
                 this.form.form.get(this.componentId).fairPassword = true;
                 return null; // valid
             } else {

@@ -13,8 +13,7 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -35,7 +34,6 @@ export class UpdateWebadminSessionComponent implements OnInit {
 
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     login: Process;
 
@@ -53,13 +51,11 @@ export class UpdateWebadminSessionComponent implements OnInit {
     };
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
@@ -75,7 +71,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
                 this.close();
                 this.toastService.notify(
                     `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`,
-                    this.CONFIG.toast.danger,
+                    toast.danger,
                 );
             }
         }).catch(() => {

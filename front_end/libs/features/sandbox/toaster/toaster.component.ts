@@ -4,8 +4,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 
@@ -15,21 +14,19 @@ import { NxProcessService } from '@services/process.service';
     styleUrls: ['toaster.component.scss']
 })
 export class ToasterComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     autohide: boolean;
     ribbonType: string;
+    icons = icons;
 
     constructor(
         languageService: NxLanguageProviderService,
-        configService: NxConfigService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private ribbonService: NxRibbonService,
         private processService: NxProcessService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 

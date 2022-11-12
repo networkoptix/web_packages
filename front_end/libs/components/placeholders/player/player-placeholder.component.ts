@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import type { NxSystem } from '@services/system.service/system';
 import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
 
@@ -30,12 +29,8 @@ export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() system?: NxSystem;
     @Input() camera?: ICamera;
 
-    CONFIG: IConfig;
     isUrl: boolean;
-
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
-    }
+    icons = icons;
 
     ngOnInit(): void {
         this.height = this.height || '96';

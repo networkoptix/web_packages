@@ -11,6 +11,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { caseInsenstiveSearch } from '@utils/general';
@@ -68,6 +69,7 @@ export class NxGenericDropdown<
     };
 
     @Output() onSelected = new EventEmitter<Item>();
+    icons = icons;
 
     dropdownType: string;
     nativeElementTop: number = 0;

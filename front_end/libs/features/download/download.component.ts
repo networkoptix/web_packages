@@ -16,11 +16,12 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { permissions } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { Arm, Groups } from '@services/nx-config/base-config';
+import type { Arm, Groups, Images } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -42,6 +43,7 @@ export class DownloadComponent implements OnInit {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    images: Images;
 
     activePlatform: Platform;
 
@@ -192,7 +194,7 @@ export class DownloadComponent implements OnInit {
             account && (
                 account.is_superuser ||
                 account.permissions.includes(
-                    this.CONFIG.permissions.canViewRelease
+                    permissions.canViewRelease
                 )
             )
         );

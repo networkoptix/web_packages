@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { apiBase } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -23,6 +24,7 @@ import { WINDOW } from '@services/window-provider';
 export class NxContentComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    apiBase: string = apiBase;
 
     injector: Injector;
 
@@ -136,9 +138,9 @@ export class NxContentComponent implements OnInit {
     getContent(): void {
         let uri;
         if (this.agreement) {
-            uri = `${this.CONFIG.apiBase}/cms/agreement?`;
+            uri = `${this.apiBase}/cms/agreement?`;
         } else {
-            uri = `${this.CONFIG.apiBase}/cms/article/${this.articleParam}/?`;
+            uri = `${this.apiBase}/cms/article/${this.articleParam}/?`;
         }
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';

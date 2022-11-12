@@ -22,14 +22,14 @@ import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_t
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import type { NgChanges } from '@utils/ng-changes';
+
+import { menus } from '../variables/static-variables';
 
 import { NxMenuService } from './menu.service';
 import type {
@@ -100,14 +100,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
     private origLevel3: string;
     private menuOverflowCalc: number;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @ViewChild('menuWrapper') menuWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('scrollArea') scrollArea: ElementRef<HTMLDivElement>;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private router: Router,
         private route: ActivatedRoute,
@@ -118,7 +116,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         public menuService: NxMenuService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
@@ -435,7 +432,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
         const levelItems = item.level2?.filter(subSection =>
-            subSection.id !== this.CONFIG.menus.systemSettings.buttons.id
+            subSection.id !== menus.systemSettings.buttons.id
         );
 
         return levelItems ?? [];
@@ -445,7 +442,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
         const level2Item = item.level2?.find(subSection =>
-            subSection.id === this.CONFIG.menus.systemSettings.buttons.id
+            subSection.id === menus.systemSettings.buttons.id
         );
 
         return level2Item?.items ?? [];

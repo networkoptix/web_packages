@@ -11,8 +11,7 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
@@ -26,8 +25,8 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['reset-password.component.scss']
 })
 export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnDestroy {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    icons = icons;
 
     @Input() viewType: string;
     @Input() loginEmail: string;
@@ -44,10 +43,8 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {

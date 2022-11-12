@@ -4,8 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 import type { GroupItem, GroupsItem, SystemItem, Crumb } from './groups.types';
 import { LoadingState } from './groups.types';
@@ -27,7 +26,7 @@ import {
     styleUrls: ['groups.component.scss']
 })
 export class NxSystemGroupsComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
+    icons = icons;
 
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
 
@@ -53,13 +52,11 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     LoadingState = LoadingState;
 
     constructor(
-        configService : NxConfigService,
         private store: Store,
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
     ) {
-        this.CONFIG = configService.getConfig();
         this.groupsService.connect();
     }
 

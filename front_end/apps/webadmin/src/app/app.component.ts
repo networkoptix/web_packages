@@ -84,13 +84,11 @@ require('what-input');
 export class AppComponent implements AfterViewInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
-    // isInIframe: boolean;
     newSystem: boolean;
     newHeader: boolean = false;
     loading: boolean;
     reauthorizing: boolean;
     headerHeight: number;
-
     CONFIG: IConfig;
     readonly environment = environment;
 
@@ -258,7 +256,6 @@ export class AppComponent implements AfterViewInit {
             this.localStorageService.clear('cloudApiRefreshToken');
             // **********************************************************
             this.newSystem = true;
-            this.CONFIG.newSystem = true;
             this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
             return;

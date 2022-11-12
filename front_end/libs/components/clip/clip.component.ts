@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 @Component({
     selector: 'nx-clip',
@@ -14,8 +14,8 @@ export class ClipComponent {
     readonly internalPoster: string;
     posterLoadingError = false;
 
-    constructor(config: NxConfigService) {
-        this.internalPoster = config.getConfig()?.icons.dirNonStandardView + 'placeholder_camera_offline.svg';
+    constructor() {
+        this.internalPoster = icons.dirNonStandardView + 'placeholder_camera_offline.svg';
     }
 
     handler(e: ErrorEvent | Event): void {

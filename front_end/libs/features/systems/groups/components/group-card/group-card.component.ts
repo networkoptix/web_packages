@@ -2,8 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import type { GroupItem } from '../../groups.types';
@@ -22,16 +21,14 @@ export class NxGroupCardComponent implements OnInit {
     @Input() search: string = '';
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
+    icons = icons;
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private router: Router,
         private groupsService: NxSystemGroupsService,
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.config;
     }
 
     ngOnInit(): void { }

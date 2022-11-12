@@ -6,11 +6,10 @@ import type {
     SearchableDropdownItem
 } from '@components/dropdowns/searchable/searchable.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { icons, servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -32,7 +31,6 @@ export class TransferOwnershipModalContent implements OnInit {
     @ViewChild('transferOwnershipForm') form: NgForm;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     transferInfo: SystemTransferInfo;
     transferComplete: boolean = false;
@@ -42,9 +40,9 @@ export class TransferOwnershipModalContent implements OnInit {
 
     userItems: UserItem[];
     selectedUser: UserItem;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
@@ -54,7 +52,6 @@ export class TransferOwnershipModalContent implements OnInit {
             system: NxSystem,
         },
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
         this.system = this.dialogData.system;
@@ -95,7 +92,7 @@ export class TransferOwnershipModalContent implements OnInit {
                 this.transferInfo = res;
             },
             err => {
-                if (err?.resultCode === 'userPasswordRequired' || err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                if (err?.resultCode === 'userPasswordRequired' || err.errorId === servers.errors.oldSessionErrorId) {
                     this.updateSession = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('transfer')

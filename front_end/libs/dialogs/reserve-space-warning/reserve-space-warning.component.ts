@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DialogRef } from '@dialogs/dialog-ref';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -14,21 +13,19 @@ import { Process } from '@services/process.service/process';
     styleUrls: ['reserve-space-warning.component.scss']
 })
 export class ReserveSpaceWarningModalContent implements OnInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     accepted: boolean = false;
     acceptOverwrite: Process;
+    icons = icons;
 
     constructor(
         private processService: NxProcessService,
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private dialogRef: DialogRef,
         // @Inject(DIALOG_DATA) private dialogData: never,
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {

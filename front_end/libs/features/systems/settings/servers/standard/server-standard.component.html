@@ -9,12 +9,12 @@
         class="col-12"
         type="error"
         id="certificate-error"
-        [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+        [iconSrc]="icons.dirNonStandard + 'error.svg'"
         [line1]="'Server is offline due to certificate error' | translate"
     >
     </nx-alert-block>
     <div
-        *ngIf="serverOffline || selectedServer?.internalStatus === CONFIG.servers.status.restarting"
+        *ngIf="serverOffline || selectedServer?.internalStatus === servers.status.restarting"
         class="col-12"
     >
         <ng-container *ngIf="!checking">
@@ -22,20 +22,20 @@
                 *ngIf="serverOffline && !certError"
                 type="error"
                 id="server-offline"
-                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [iconSrc]="icons.dirNonStandard + 'error.svg'"
                 [line1]="'Server offline' | translate"
-                [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+                [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
                 (onAction)="checkStatus()"
             >
             </nx-alert-block>
             <nx-alert-block
-                *ngIf="selectedServer.internalStatus === CONFIG.servers.status.restarting"
+                *ngIf="selectedServer.internalStatus === servers.status.restarting"
                 type="info"
                 id="restarting"
-                [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+                [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
                 [line1]="'Restarting' | translate"
-                [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
+                [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
                 (onAction)="checkStatus()"
             >
@@ -45,7 +45,7 @@
             *ngIf="checking"
             type="info"
             id="checking-active"
-            [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+            [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
             [line1]="'Checking' | translate"
             (onAction)="checkStatus()"
         >
@@ -92,7 +92,7 @@
                             <span>
                                 <svg-icon
                                     nx-add-svg-src
-                                    [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                                    [src]="icons.dirTextButtons + 'info.svg'"
                                     [applyClass]="true"
                                 ></svg-icon>
                             </span>
@@ -170,8 +170,8 @@
                             <nx-numeric
                                 name="server-port"
                                 class="fs-mask pl-2"
-                                [min]="CONFIG.servers.port.min"
-                                [max]="CONFIG.servers.port.max"
+                                [min]="servers.port.min"
+                                [max]="servers.port.max"
                                 [disabled]="portChangeDisabled || serverUnavailable"
                                 [(ngModel)]="ipPortWatcher.value"
                                 (onChange)="onPortChange($event)"

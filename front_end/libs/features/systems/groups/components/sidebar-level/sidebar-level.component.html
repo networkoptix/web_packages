@@ -12,7 +12,7 @@
                 (click)="openState[group.id] = !openState[group.id]"
                 nx-add-svg-src
                 [src]="
-                    CONFIG.icons.dir +
+                    icons.dir +
                     (openState[group.id] ? 'triangle_opened.svg' : 'triangle_closed.svg')
                 "
                 [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
@@ -20,7 +20,7 @@
             ></svg-icon>
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + (openState[group.id] ? 'folder_open.svg' : 'folder.svg')"
+                [src]="icons.dir + (openState[group.id] ? 'folder_open.svg' : 'folder.svg')"
                 [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
                 svgClass="folder"
             ></svg-icon>

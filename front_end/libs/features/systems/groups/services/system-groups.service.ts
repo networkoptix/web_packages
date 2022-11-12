@@ -9,8 +9,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
@@ -29,7 +28,6 @@ import {
 })
 export class NxSystemGroupsService {
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     private WEBSOCKET_URL: string;
 
     private reconnectInterval: number;
@@ -38,7 +36,6 @@ export class NxSystemGroupsService {
     sidebarOpenSubject = new Subject<boolean>();
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private store: Store,
         private http: HttpClient,
@@ -46,7 +43,6 @@ export class NxSystemGroupsService {
         private toastService: NxToastService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
         this.WEBSOCKET_URL = `wss://${this.window.location.host}/system_groups/ws`;
     }
@@ -91,7 +87,7 @@ export class NxSystemGroupsService {
         this.disconnect();
         this.toastService.show(
             this.LANG.systemGroups.connectionLost(),
-            this.CONFIG.toast.danger,
+            toast.danger,
         );
         let retries = 5;
         this.reconnectInterval = this.window.setInterval(() => {
@@ -102,7 +98,7 @@ export class NxSystemGroupsService {
                 this.resetReconnect();
                 this.toastService.show(
                     this.LANG.systemGroups.couldNotReconnect(),
-                    this.CONFIG.toast.danger,
+                    toast.danger,
                 );
             }
         }, 2000);
@@ -123,7 +119,7 @@ export class NxSystemGroupsService {
             console.error('No WebSocket connection');
             this.toastService.notify(
                 this.LANG.systemGroups.noConnection(),
-                this.CONFIG.toast.danger,
+                toast.danger,
             );
             return;
         }
@@ -137,7 +133,7 @@ export class NxSystemGroupsService {
                 this.toastService.remove();
                 this.toastService.notify(
                     this.LANG.systemGroups.connectionRestored(),
-                    this.CONFIG.toast.success,
+                    toast.success,
                 );
             }
             return;
@@ -145,7 +141,7 @@ export class NxSystemGroupsService {
         if (isObject(data) && 'error' in data) {
             this.toastService.notify(
                 this.LANG.systemGroups.errorMsg[data.msg]?.() ?? data.msg,
-                this.CONFIG.toast.danger,
+                toast.danger,
             );
             return;
         }
@@ -171,7 +167,7 @@ export class NxSystemGroupsService {
         if (src.id === dest?.id) {
             this.toastService.notify(
                 this.LANG.systemGroups.addGroupToSelf(),
-                this.CONFIG.toast.danger
+                toast.danger
             );
         }
 
@@ -181,7 +177,7 @@ export class NxSystemGroupsService {
             const msg = src.type === 'group'
                 ? this.LANG.systemGroups.groupAlreadyIn({ srcName: src.name, destName })
                 : this.LANG.systemGroups.systemAlreadyIn({ srcName: src.name, destName });
-            this.toastService.notify(msg, this.CONFIG.toast.info);
+            this.toastService.notify(msg, toast.info);
             return;
         }
 

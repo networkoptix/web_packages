@@ -12,8 +12,7 @@ import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { responseOk, toast } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -34,7 +33,6 @@ export class AddStorageModalContent {
     @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     serverId: string;
     storageManager: StorageManager;
@@ -55,14 +53,12 @@ export class AddStorageModalContent {
     loginPasswordWrong = false;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
@@ -140,14 +136,14 @@ export class AddStorageModalContent {
                 return id;
             }, { ignoreError: true },
             (res: any) => {
-                let toastType = this.CONFIG.toast.danger;
+                let toastType = toast.danger;
                 let message = this.LANG.storage.failed();
                 if (res.id) {
-                    toastType = this.CONFIG.toast.success;
+                    toastType = toast.success;
                     message = this.LANG.storage.success();
                 }
                 this.storageForm.reset();
-                this.close(res.id && this.CONFIG.responseOk);
+                this.close(res.id && responseOk);
                 this.toastService.notify(message, toastType);
             },
             err => {
@@ -170,7 +166,7 @@ export class AddStorageModalContent {
                     if (message) {
                         this.toastService.notify(
                             message,
-                            this.CONFIG.toast.danger
+                            toast.danger
                         );
                     }
                     this.addStorage.processing = false;
@@ -208,7 +204,7 @@ export class AddStorageModalContent {
             }
             if (
                 reply.status.toLowerCase() ===
-                this.CONFIG.responseOk && reply.storage.isWritable
+                responseOk && reply.storage.isWritable
             ) {
                 const size = reply.storage.totalSpace;
                 const upperBound = 107374182400; // 100GB

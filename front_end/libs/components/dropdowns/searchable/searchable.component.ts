@@ -11,6 +11,7 @@ import {
 import { NgForm, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormControl, Validator, ValidationErrors } from '@angular/forms';
 import { escapeRegExp } from 'lodash-es';
 
+import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { caseInsenstiveSearch } from '@utils/general';
@@ -72,6 +73,7 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
     filter: RegExp;
     _items: Item[];
     helpText: string = '';
+    icons = icons;
 
     @ViewChild('searchInput', { static: false })
     searchInput: ElementRef<HTMLSpanElement>;

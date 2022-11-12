@@ -6,8 +6,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
@@ -22,7 +20,6 @@ import { AuthorizeParams, ClientType } from '../components/authorize.component.t
 })
 
 export class NxOAuthRedirectComponent implements OnInit {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     initialData: AuthorizeParams;
@@ -30,7 +27,7 @@ export class NxOAuthRedirectComponent implements OnInit {
     viewType: 'desktop' | 'mobile' | 'web';
     state: 'readyToLogin' | 'noNativeClient' | undefined;
 
-    constructor(configService: NxConfigService,
+    constructor(
         private route: ActivatedRoute,
         private language: NxLanguageProviderService,
         private router: Router,
@@ -38,7 +35,6 @@ export class NxOAuthRedirectComponent implements OnInit {
         private deviceService: DeviceDetectorService,
         @Inject(WINDOW) public window: Window
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
     }
 

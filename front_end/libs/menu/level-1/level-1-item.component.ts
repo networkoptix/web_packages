@@ -9,8 +9,7 @@ import {
 import { Router } from '@angular/router';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import type { NgChanges } from '@utils/ng-changes';
 
 import type { Level1Item } from '../menu.types';
@@ -35,16 +34,12 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     _toggle: boolean;
     _type: string;
     _searchableItemsLength: number;
-
-    CONFIG: IConfig;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         private router: Router,
         private menuService: NxMenuService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.itemPath = this.base;

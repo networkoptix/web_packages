@@ -10,8 +10,6 @@ import {
     InfoBlockLine,
     InfoBlockSection
 } from '@components/info-block/info-block.component.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxHealthService } from '../../health.service';
@@ -30,7 +28,6 @@ export class NxSingleEntityComponent implements OnChanges {
     @Input() params;
     @Input() entity;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     copyParams;
@@ -38,11 +35,9 @@ export class NxSingleEntityComponent implements OnChanges {
     sections: SectionLookup;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private healthService: NxHealthService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 

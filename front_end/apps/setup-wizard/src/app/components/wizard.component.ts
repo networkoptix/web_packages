@@ -2,8 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
 
 import { WizardStateService } from '../services/wizard-state.service';
@@ -16,7 +15,7 @@ import { iState, WIZARD_STATE } from '../types/wizard-state.types';
     styleUrls: ['./wizard.component.scss']
 })
 export class WizardComponent implements OnInit {
-    CONFIG: IConfig;
+    icons = icons;
 
     showFooter: boolean;
     nextDisabled = false;
@@ -37,12 +36,9 @@ export class WizardComponent implements OnInit {
     ];
 
     constructor(
-        config: NxConfigService,
         private wizardService: WizardStateService,
         @Inject(WINDOW) public window: Window
-    ) {
-        this.CONFIG = config.getConfig();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.wizardService.init();

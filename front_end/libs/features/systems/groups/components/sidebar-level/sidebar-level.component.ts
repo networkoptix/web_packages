@@ -3,8 +3,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
@@ -23,15 +22,13 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
 
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
-    CONFIG: IConfig;
     openState: Record<string, boolean> = {};
+    icons = icons;
 
     constructor(
-        configService : NxConfigService,
         private groupsService: NxSystemGroupsService,
         private store: Store,
     ) {
-        this.CONFIG = configService.getConfig();
         groupsService.sidebarOpenSubject
             .pipe(untilDestroyed(this))
             .subscribe(state => this.setAll(state));

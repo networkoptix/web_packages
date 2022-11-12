@@ -4,8 +4,7 @@ import { filter } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { isUUID } from '@utils/general';
 
 import { NxAPIToolSystemService } from '../services/api-tool-system.service';
@@ -34,7 +33,6 @@ interface TypeDropdownItem extends DropdownItem<number> {
     styleUrls: ['./api-tool-dropdowns.component.scss']
 })
 export class NxAPIToolDropdownsComponent implements OnInit {
-    CONFIG: IConfig;
     readonly environment = environment;
 
     system : SystemDropdownItem;
@@ -50,13 +48,10 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     types: TypeDropdownItem[] = [];
 
     constructor(
-        private configService: NxConfigService,
         public APIToolSystemService: NxAPIToolSystemService,
         private openAPIJSONService: NxOpenAPIJSONService,
         public readonlyAPIService: NxReadonlyAPIService
-    ) {
-        this.CONFIG = this.configService.getConfig();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.APIToolSystemService.systemEmitter$.pipe(untilDestroyed(this), filter(systemInfo => !!systemInfo)).subscribe(({ info: system, disabled, error }) => {
@@ -72,7 +67,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                     value: system.id,
                     name: displayName,
                     disabled,
-                    icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg'
+                    icon: icons.dirTextButtons + 'storage_cloud.svg'
                 });
             }
         });
@@ -131,7 +126,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                     value: api.id.toString(),
                     name: displayName,
                     disabled,
-                    icon: this.CONFIG.icons.dirNonStandard + 'api.svg'
+                    icon: icons.dirNonStandard + 'api.svg'
                 });
             }
         });

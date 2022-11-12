@@ -22,6 +22,8 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
+import { toast } from '../variables/static-variables';
+
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
@@ -71,7 +73,7 @@ export class NxDialogsService extends DialogBase {
 
     public notify(
         message: string,
-        type: string = this.CONFIG.toast.info,
+        type: string = toast.info,
         hold?: boolean
     ): void {
         this.toastService.show(message, type, { autohide: !hold });

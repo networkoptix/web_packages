@@ -13,7 +13,7 @@
                 >
                     <svg-icon
                         nx-add-svg-src
-                        [src]="CONFIG.images.dirTheme + 'dark.svg'"
+                        [src]="images.dirTheme + 'dark.svg'"
                         [applyClass]="true"
                     ></svg-icon>
                 </button>
@@ -21,7 +21,7 @@
                     <svg-icon
                         *ngIf="selectedTheme === 'dark'"
                         nx-add-svg-src
-                        [src]="CONFIG.images.dirTheme + 'check.svg'"
+                        [src]="images.dirTheme + 'check.svg'"
                         [applyClass]="true"
                     ></svg-icon>
                     <span translate>Dark</span>
@@ -36,7 +36,7 @@
                 >
                     <svg-icon
                         nx-add-svg-src
-                        [src]="CONFIG.images.dirTheme + 'light.svg'"
+                        [src]="images.dirTheme + 'light.svg'"
                         [applyClass]="true"
                     ></svg-icon>
                 </button>
@@ -44,7 +44,7 @@
                     <svg-icon
                         *ngIf="selectedTheme === 'light'"
                         nx-add-svg-src
-                        [src]="CONFIG.images.dirTheme + 'check.svg'"
+                        [src]="images.dirTheme + 'check.svg'"
                         [applyClass]="true"
                     ></svg-icon>
                     <span translate>Light</span>
@@ -59,7 +59,7 @@
                 >
                     <svg-icon
                         nx-add-svg-src
-                        [src]="CONFIG.images.dirTheme + 'auto.svg'"
+                        [src]="images.dirTheme + 'auto.svg'"
                         [applyClass]="true"
                     ></svg-icon>
                 </button>
@@ -67,7 +67,7 @@
                     <svg-icon
                         *ngIf="selectedTheme === 'auto'"
                         nx-add-svg-src
-                        [src]="CONFIG.images.dirTheme + 'check.svg'"
+                        [src]="images.dirTheme + 'check.svg'"
                         [applyClass]="true"
                     ></svg-icon>
                     <span translate>Use device theme</span>

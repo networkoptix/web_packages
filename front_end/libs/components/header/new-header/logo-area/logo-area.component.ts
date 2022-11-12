@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, images } from '@lib/variables/static-variables';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService } from '@services/systems.service';
@@ -22,16 +21,16 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() menuOpen = false;
     @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     logoState = logoAreaState.LOGO;
     systemListText: string;
     singleSystem = false;
+    icons = icons;
+    images = images;
+
     constructor(public headerService: NxHeaderService,
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         systemsService: NxSystemsService) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.checkLogoState(currentLocation);

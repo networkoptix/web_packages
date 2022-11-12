@@ -14,9 +14,8 @@ import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
@@ -35,8 +34,6 @@ import { NxSettingsService } from '../settings.service';
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
-
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
@@ -50,9 +47,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     isServerOffline: boolean = false;
     serverLoaded: boolean = false;
     storagesOutdated: boolean = false;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private route: ActivatedRoute,
         private router: Router,
@@ -64,7 +61,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) public window: Window,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
@@ -133,7 +129,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     if (this.system && !this.system.userManager.permissions?.isAdmin) {
                         this.uriService
                             .navigateSystem(
-                                `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`,
+                                `${menus.systemSettings.baseUrl}SYSTEM_ID`,
                                 this.system
                             ).catch(error => {
                                 console.error(error);
@@ -204,7 +200,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 ) {
                     server = this.system.serverManager.servers[0];
                     const id = cleanId(server.id);
-                    let path = this.CONFIG.menus.systemSettings.baseUrl;
+                    let path = menus.systemSettings.baseUrl;
                     path += (this.environment.isLocal) ? '' : `${this.system.id}`;
                     path += `/servers/${id}`;
 

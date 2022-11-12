@@ -13,13 +13,12 @@ import {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { toast } from '@lib/variables/static-variables';
 import {
     ConsoleMode
 } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -54,7 +53,6 @@ export class EditModalContent {
     processDisabled = false;
     name = '';
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     createContext: Process;
     saveContext: Process;
     deleteContext: Process;
@@ -66,7 +64,6 @@ export class EditModalContent {
     } = {};
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
@@ -76,7 +73,6 @@ export class EditModalContent {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.CONFIG = configService.config;
         this.LANG = language.translations;
     }
 
@@ -197,7 +193,7 @@ export class EditModalContent {
                 // Need spec for saving message
                 this.toastService.notify(
                     'Custom Client Saved',
-                    this.CONFIG.toast.success,
+                    toast.success,
                 );
                 this.close({ id: this.values.id, action: 'save' });
             },
@@ -213,7 +209,7 @@ export class EditModalContent {
                 // Need spec for saving deleting message
                 this.toastService.notify(
                     'Custom Client Deleted',
-                    this.CONFIG.toast.success,
+                    toast.success,
                 );
                 this.close({ id: this.values.id, action: 'delete' });
             }, err => { console.error(err); });

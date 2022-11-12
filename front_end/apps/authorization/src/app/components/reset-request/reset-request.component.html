@@ -12,7 +12,7 @@
         >
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [src]="icons.dir + 'arrow_back_button.svg'"
                 [svgStyle]="{ 'width.px': '36', 'height.px': '36' }"
                 [applyClass]="true"
             ></svg-icon>
@@ -47,7 +47,7 @@
                 [(ngModel)]="resetEmail"
                 [disabled]="resetRequestProcess.processing"
                 #email="ngModel"
-                [pattern]="CONFIG.credentialsValidation.emailRegex"
+                [pattern]="credentialsValidation.emailRegex"
                 required
                 email
                 autocomplete="username"
@@ -83,7 +83,7 @@
                 <svg-icon
                     nx-add-svg-src
                     [src]="
-                        CONFIG.icons.dirSectionPlaceholder +
+                        icons.dirSectionPlaceholder +
                         'mail' +
                         (viewType === 'web' ? '' : '_desktop') +
                         '_placeholder.svg'
@@ -120,7 +120,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                    [src]="icons.dir + 'arrow_back_button.svg'"
                     [svgStyle]="{ 'width.px': '24', 'height.px': '20' }"
                     [applyClass]="true"
                 ></svg-icon>

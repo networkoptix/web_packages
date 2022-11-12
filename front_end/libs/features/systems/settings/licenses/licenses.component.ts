@@ -5,6 +5,7 @@ import { delay, distinctUntilChanged, filter, map, retryWhen, takeUntil } from '
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { menus } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -94,8 +95,8 @@ export class NxSystemLicensesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
-        this.menuService.detail = this.CONFIG.menus.systemSettings.licenses.id;
+        this.menuService.section = menus.systemSettings.admin.id;
+        this.menuService.detail = menus.systemSettings.licenses.id;
     }
 
     private createLicenseInfo(item): void {

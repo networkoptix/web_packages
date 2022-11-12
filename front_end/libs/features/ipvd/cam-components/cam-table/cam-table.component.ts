@@ -22,6 +22,7 @@ import { Subject, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { icons, layout, search } from '@lib/variables/static-variables';
 import type { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -102,6 +103,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     windowScrollSubscription: SubscriptionLike;
     elementTableWidthSubscription: SubscriptionLike;
     resizeSubscription: SubscriptionLike;
+    icons = icons;
 
     // Options for the CSV export
     public csvFilename: number;
@@ -174,7 +176,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         ];
 
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
-        this.pageSize = this.CONFIG.layout.tableLarge.rows;
+        this.pageSize = layout.tableLarge.rows;
 
         this.disclaimerParams = {
             companyName: this.CONFIG.company.name,
@@ -210,7 +212,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
         this.uriSubscription = this.uri
             .getParams()
-            .pipe(debounceTime(this.CONFIG.search.debounceShortTime))
+            .pipe(debounceTime(search.debounceShortTime))
             .subscribe(params => {
                 this.params = params;
                 this.setDebugAndBetaMode();

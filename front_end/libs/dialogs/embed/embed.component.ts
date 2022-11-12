@@ -12,8 +12,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { credentialsValidation } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
@@ -31,16 +30,14 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     auth;
     params: IParams;
     embedUrl: string;
-
+    credentialsValidation = credentialsValidation;
     @ViewChild('embedForm', { static: true }) embedForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) dialogData: never,
         @Inject(WINDOW) private window: Window,
@@ -56,8 +53,6 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
             email: '',
             password: ''
         };
-
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 

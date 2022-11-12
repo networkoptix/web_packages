@@ -14,10 +14,9 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { maxNumberServerChecked, servers, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -34,7 +33,6 @@ export class RestartServerModalContent {
     @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     system: NxSystem;
     serverName: string;
@@ -44,7 +42,6 @@ export class RestartServerModalContent {
     private applyService: NxApplyService;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
@@ -60,7 +57,6 @@ export class RestartServerModalContent {
         @Inject(WINDOW) private window: Window,
         injector: Injector,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         setTimeout(() => {
             this.applyService = injector.get(NxApplyService);
@@ -114,7 +110,7 @@ export class RestartServerModalContent {
                          *     --> not sure how we can handle this
                          */
                 this.system.currentBusyServerIds.add(this.serverId);
-                this.close(this.CONFIG.servers.status.restarting);
+                this.close(servers.status.restarting);
                 let systemOfflineShown = false;
                 let serverHasGoneOfflineOnce = false;
                 let serverOnlineChecked = 0;
@@ -139,7 +135,7 @@ export class RestartServerModalContent {
                                 }
                                 if (
                                     !serverHasGoneOfflineOnce ||
-                                        serverOnlineChecked < this.CONFIG.maxNumberServerChecked
+                                        serverOnlineChecked < maxNumberServerChecked
                                 ) {
                                     serverOnlineChecked++;
                                     throw Error('still in the process of restarting');
@@ -216,9 +212,9 @@ export class RestartServerModalContent {
 
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                     message = this.LANG.servers.serverOffline();
-                    this.close(this.CONFIG.servers.status.offline);
-                    this.toastService.notify(message, this.CONFIG.toast.warning);
-                } else if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    this.close(servers.status.offline);
+                    this.toastService.notify(message, toast.warning);
+                } else if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('restart')
@@ -228,10 +224,10 @@ export class RestartServerModalContent {
                                 this.restartServer.run();
                             }
                         });
-                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 } else {
-                    this.toastService.notify(message, this.CONFIG.toast.warning);
+                    this.toastService.notify(message, toast.warning);
                 }
             });
     }

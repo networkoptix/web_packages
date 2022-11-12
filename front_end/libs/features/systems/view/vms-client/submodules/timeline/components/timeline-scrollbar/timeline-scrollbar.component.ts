@@ -9,8 +9,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval } from 'rxjs';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { images } from '@lib/variables/static-variables';
 import {
     PlaybackState,
     PLAYBACK_MODE
@@ -40,7 +39,7 @@ import type {
     styleUrls: ['./timeline-scrollbar.component.scss']
 })
 export class TimelineScrollbarComponent implements AfterViewInit {
-    CONFIG: IConfig;
+    images = images;
 
     @ViewChild('background') backgroundView: ElementRef<HTMLDivElement>;
     @ViewChild('bar') barView: ElementRef<HTMLDivElement>;
@@ -79,10 +78,8 @@ export class TimelineScrollbarComponent implements AfterViewInit {
         protected scrollbarRelative: TimelineScrollbarRelativeService,
         protected playback: PlaybackService,
         protected selection: TimelineSelectionService,
-        configService: NxConfigService,
         deviceService: DeviceDetectorService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.useTouch = deviceService.isTablet() || deviceService.isMobile();
     }
 

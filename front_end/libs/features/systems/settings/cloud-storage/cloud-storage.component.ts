@@ -11,9 +11,8 @@ import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { icons, menus } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
@@ -31,7 +30,6 @@ import { NxSettingsService } from '../settings.service';
 export class NxCloudStorageComponent implements OnInit {
     @Input() type: string;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     TRANSLATION_KEY = LicenseManager.TRANSLATION_KEY;
@@ -50,6 +48,7 @@ export class NxCloudStorageComponent implements OnInit {
     #sort$ = new BehaviorSubject<LicenseKeyFields>(null);
     systemLicenses$ = new BehaviorSubject<ProcessedLicenseKey[]>(null);
     userLicenses$ = new BehaviorSubject<ProcessedLicenseKey[]>(null);
+    icons = icons;
 
     // Need to figure out how how we'll get this info and also when server storage settings will be updated
     cloudStorageNotUsed = false;
@@ -95,7 +94,6 @@ export class NxCloudStorageComponent implements OnInit {
     closePopover = () => this.popoverService.close();
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         settingsService: NxSettingsService,
         private cloudApi: NxCloudApiService,
@@ -104,7 +102,6 @@ export class NxCloudStorageComponent implements OnInit {
         public dialogService: NxDialogsService,
         private menuService: NxMenuService,
     ) {
-        this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         if (environment.isLocal) {
             this.serverSettings = '/settings/servers';
@@ -156,8 +153,8 @@ export class NxCloudStorageComponent implements OnInit {
     ngOnInit(): void {
         if (this.type !== 'servers') {
             this.cloudApi.checkFeatureNotice('cloudStorage', () => this.dialogService.cloudStorageInfo({ licenseManager: this.licenseManager })).toPromise();
-            this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
-            this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
+            this.menuService.section = menus.systemSettings.admin.id;
+            this.menuService.detail = menus.systemSettings.cloudStorage.id;
         }
     }
 

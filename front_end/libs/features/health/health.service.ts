@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import type { SearchFilter } from '@components/search/search.component.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { healthMonitoring } from '@lib/variables/static-variables';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { GridBreakpoints, GRID_PANEL_WIDTH, GRID_SUPER_WIDE_PANEL_WIDTH } from '@styles/theme-variables-common';
 
@@ -38,13 +37,9 @@ export class NxHealthService {
     ready: boolean;
     lastUpdate: number;
 
-    CONFIG: IConfig;
-
     constructor(
-        configService: NxConfigService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.importedData = false;
     }
 
@@ -146,7 +141,7 @@ export class NxHealthService {
         let formatDisplay = header.format || '';
         if (header.format) {
             const format = header.format;
-            const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
+            const valueFormats = healthMonitoring.valueFormats;
             if (Array.isArray(retValue)) {
                 retValue = retValue.join(',\n');
             } else if (valueFormats[format]) {
@@ -169,7 +164,7 @@ export class NxHealthService {
         return {
             text: retValue,
             format: header.format || '',
-            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
+            formatClass: healthMonitoring.classFormats[header.format] || 'no-format',
             value
         };
     }

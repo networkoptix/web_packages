@@ -13,6 +13,8 @@ import { alphabeticalSort, paramSortFunc } from '@utils/general';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
+import { clientMode, toast, updateInterval } from '../variables/static-variables';
+
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from './nx-config/config-types';
@@ -70,7 +72,7 @@ export class NxSystemsService implements OnDestroy {
         this.CONFIG = configService.getConfig();
         // this.registerStoreConnection();
         if (!environment.isLocal) {
-            this.systemsPoll = pollService.createPoll(() => this._getSystems(), this.CONFIG.updateInterval);
+            this.systemsPoll = pollService.createPoll(() => this._getSystems(), updateInterval);
         } else {
             this.systemsSubject.next([]);
         }
@@ -123,7 +125,7 @@ export class NxSystemsService implements OnDestroy {
                 primary: undefined,
                 secondary: undefined
             };
-            this.toastService.notify(message, this.CONFIG.toast.success);
+            this.toastService.notify(message, toast.success);
             this.finishedMerged = true;
         }
     }
@@ -245,8 +247,8 @@ export class NxSystemsService implements OnDestroy {
             const canMerge = !!(
                 isMine && (
                     system.capabilities.cloudMerge ||
-                    this.CONFIG.clientMode.debug ||
-                    this.CONFIG.clientMode.beta
+                    clientMode.debug ||
+                    clientMode.beta
                 )
             );
             const versionMatch = system.version.match(/(\d*\.\d*)\.\d*\.\d*/);

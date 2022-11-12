@@ -19,6 +19,7 @@ import type { Content } from '@app/menu/menu.types';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import { healthMonitoring, icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
@@ -65,6 +66,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     mediaLayoutClass: string;
     selectedSubscription: Subscription;
+    icons = icons;
 
     constructor(
         configService: NxConfigService,
@@ -116,13 +118,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.importedData = false;
         this.menu = {
             selectedSection: '', // updated by selectedSectionSubject
-            base: '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
+            base: '', // `${menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${.menus.systemHealth.baseUrl}`,
             level1: [
                 {
-                    id: this.CONFIG.menus.systemHealth.alerts.id,
+                    id: menus.systemHealth.alerts.id,
                     label: this.LANG.menu.titles.alerts(),
-                    path: this.CONFIG.menus.systemHealth.alerts.path,
-                    svg: this.CONFIG.menus.systemHealth.alerts.icon
+                    path: menus.systemHealth.alerts.path,
+                    svg: menus.systemHealth.alerts.icon
                 }
             ]
         };
@@ -453,7 +455,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.healthService.alertsCount[type] = 0;
         });
         this.healthService.alertsValues = [];
-        const unset = this.CONFIG.healthMonitoring.classFormats.unset;
+        const unset = healthMonitoring.classFormats.unset;
         Object.entries(this.healthService.alarms).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 Object.entries(groups).forEach(([group, params]) => {
@@ -503,7 +505,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
-                    header.formatClass = this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format';
+                    header.formatClass = healthMonitoring.classFormats[header.format] || 'no-format';
                     return header.display.includes(displayFilter);
                 });
             });

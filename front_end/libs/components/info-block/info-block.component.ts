@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 
 import {
     InfoBlockStyle,
@@ -25,13 +24,9 @@ export class NxInfoBlockComponent implements OnInit {
 
     heightCache = {};
 
-    CONFIG: IConfig;
     singleColumn: boolean;
     InfoBlockType: (InfoBlockColumns | InfoBlockSections)[];
-
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.config;
-    }
+    icons = icons;
 
     ngOnInit(): void {
         this.singleColumn = this.sectionsOrColumns[0] && !this.sectionsOrColumns[0][0];

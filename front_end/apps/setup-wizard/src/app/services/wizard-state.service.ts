@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
+import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@lib/variables/static-variables';
 import { Setting } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -97,6 +98,7 @@ interface SetupConfig {
 })
 export class WizardStateService {
     currentState$ = new BehaviorSubject<WIZARD_STATE >(undefined);
+    icons = icons;
 
     set currentState(state: WIZARD_STATE) {
         this.currentState$.next(state);
@@ -185,7 +187,6 @@ export class WizardStateService {
     systemAdvancedSettings: Partial<SystemAdvancedConfigSettings> = {};
 
     securityLevel = 'standard';
-    simpleURLRegex: string;
     formValidateSubject = new BehaviorSubject<boolean>(false);
 
     constructor(
@@ -200,7 +201,6 @@ export class WizardStateService {
     ) {
         this.CONFIG = config.getConfig();
         this.LANG = language.translations;
-        this.simpleURLRegex = this.CONFIG.simpleURLRegex;
 
         const [host, port] = this.window.location.host.split(':');
         this.networkInfo = {
@@ -417,7 +417,7 @@ export class WizardStateService {
     }
 
     getURLRegex(): string {
-        return this.simpleURLRegex;
+        return simpleURLRegex;
     }
 
     // nativeClient helpers
@@ -642,7 +642,7 @@ export class WizardStateService {
         let headers = new HttpHeaders();
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
         return this.http.post<BindResponse>(
-            this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect',
+            this.CONFIG.cloudHost + apiBase + '/systems/connect',
             { name: systemName, email },
             { headers }
         );
@@ -715,7 +715,7 @@ export class WizardStateService {
                     clearInterval(pingInterval);
                     this.window.location.reload();
                 });
-        }, this.CONFIG.alertTimeout);
+        }, alertTimeout);
     }
 
     checkIfSystemIsReady(): void {
@@ -735,7 +735,7 @@ export class WizardStateService {
                 this.setupConfig.localPassword = '';
                 clearInterval(systemReadyInterval);
             });
-        }, this.CONFIG.alertTimeout);
+        }, alertTimeout);
     }
 
     // Initializers
@@ -766,7 +766,7 @@ export class WizardStateService {
     getAdvancedSettings(): Promise<void> {
         return this.server.wizardGetSystemSettings().toPromise()
             .then(systemSettings => {
-                Object.entries(this.CONFIG.settingsConfig).forEach(([settingKey, settingConfig]: [string, Setting]) => {
+                Object.entries(settingsConfig).forEach(([settingKey, settingConfig]: [string, Setting]) => {
                     // eslint-disable-next-line no-prototype-builtins
                     if (!systemSettings.hasOwnProperty(settingKey)) {
                         return;

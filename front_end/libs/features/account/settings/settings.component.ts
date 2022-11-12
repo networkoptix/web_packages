@@ -16,6 +16,7 @@ import { accountActions } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { icons, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
@@ -48,6 +49,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     langCode: string;
     isSystemOwner = true;
     hideErrors = true;
+    icons: {
+        dir: string;
+    };
 
     private saveAccount: Process;
     private langChanged = false;
@@ -71,6 +75,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.LANG = languageService.translations;
         this.langCode = languageService.currentLang;
         this.menuService.detail = 'settings';
+        this.icons = icons;
 
         languageService.translateSubject
             .pipe(untilDestroyed(this))
@@ -83,7 +88,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                         this.langChanged = false;
                         this.toastService.notify(
                             this.LANG.account.accountSavedSuccess(),
-                            this.CONFIG.toast.success,
+                            toast.success,
                         );
                     }
                 });
@@ -145,7 +150,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             );
             this.toastService.notify(
                 this.LANG.account.accountSavedSuccess(),
-                this.CONFIG.toast.success,
+                toast.success,
             );
         }, () => {
         });

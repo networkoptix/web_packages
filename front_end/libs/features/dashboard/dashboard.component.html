@@ -13,21 +13,21 @@
             <svg-icon
                 *ngIf="activeAction.url.startsWith('/') && !activeAction.url.startsWith('/admin')"
                 nx-add-svg-src
-                [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                [src]="icons.dirTextButtons + 'copy.svg'"
                 (click)="openPage()"
                 [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '4' }"
                 [applyClass]="true"
             ></svg-icon>
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dirTextButtons + 'external.svg'"
+                [src]="icons.dirTextButtons + 'external.svg'"
                 (click)="openPage(true)"
                 [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '4' }"
                 [applyClass]="true"
             ></svg-icon>
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                [src]="icons.dirTextButtons + 'close.svg'"
                 (click)="openAction()"
                 [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '4' }"
                 [applyClass]="true"
@@ -82,7 +82,7 @@
                 <div class="settings-icon">
                     <svg-icon
                         nx-add-svg-src
-                        [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                        [src]="icons.dirTextButtons + 'close.svg'"
                         (click)="showSettings = false"
                         [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '0' }"
                         [applyClass]="true"
@@ -135,7 +135,7 @@
                 *ngIf="dragEnabled"
                 nx-add-svg-src
                 (click)="showSettings = !showSettings"
-                [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
+                [src]="icons.dirTextButtons + 'settings.svg'"
                 [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '0' }"
                 [applyClass]="true"
             ></svg-icon>
@@ -271,7 +271,7 @@
                             <div class="d-flex window-actions">
                                 <svg-icon
                                     nx-add-svg-src
-                                    [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
+                                    [src]="icons.dirTextButtons + 'settings.svg'"
                                     (click)="toggleEditMode(card)"
                                     [svgStyle]="{
                                         'width.px': '24',
@@ -282,7 +282,7 @@
                                 ></svg-icon>
                                 <svg-icon
                                     nx-add-svg-src
-                                    [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                                    [src]="icons.dirTextButtons + 'close.svg'"
                                     (click)="removeCard(i)"
                                     [svgStyle]="{
                                         'width.px': '24',

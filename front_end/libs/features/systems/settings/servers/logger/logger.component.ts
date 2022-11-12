@@ -11,10 +11,9 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { servers } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -38,7 +37,6 @@ export class NxServerLoggerComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     showLoggers: boolean = false;
@@ -50,14 +48,12 @@ export class NxServerLoggerComponent implements OnChanges {
     readonly loggerOptions: LoggerOption[];
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
         private simpleDialogService: NxSimpleDialogsService,
         private applyService: NxApplyService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
         this.loggerOptions = [
@@ -104,7 +100,7 @@ export class NxServerLoggerComponent implements OnChanges {
                             console.error(error);
                         });
                 };
-                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.simpleDialogService.refreshSession(this.system).then(res => {
                         if (res) {
                             this.saveLoggers.run();

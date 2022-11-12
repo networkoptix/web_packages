@@ -4,11 +4,10 @@ import { Observable, Subject } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, tap, catchError } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { icons } from '@lib/variables/static-variables';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmark.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -44,7 +43,6 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxBookmarksWidgetComponent extends FirstPartyWidget<
     typeof NxBookmarksWidgetComponent.BASE_CONFIG
 > {
-    CONFIG: IConfig;
     static IDENTIFIER = 'bookmarks';
     static NAME = 'Bookmarks';
     static SIZES = [
@@ -73,6 +71,8 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget<
     loading = false;
 
     mockThumbnail = 'https://c.tenor.com/6_9oJ4U37pgAAAAM/rickroll-dance.gif';
+
+    icons = icons;
 
     bookmarks$ = this.updater$.pipe(
         tap(this.toggleLoading),
@@ -128,13 +128,11 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget<
 
     constructor(
         cd: ChangeDetectorRef,
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
         NxHealthMonitorWidgetComponent.systemUpdater$.pipe(
             untilDestroyed(this)

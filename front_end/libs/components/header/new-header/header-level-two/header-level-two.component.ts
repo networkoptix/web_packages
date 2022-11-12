@@ -1,10 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { icons, images } from '@lib/variables/static-variables';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NgChanges } from '@utils/ng-changes';
@@ -22,7 +21,6 @@ export class NxHeaderLevelTwoComponent {
     @ViewChild('contextButton') contextButtonRef: ElementRef<HTMLElement>;
     @Input() subNodes: MenuNode[];
     @Output() systemNav = new EventEmitter<boolean>();
-    CONFIG: IConfig;
     logoState = logoAreaState.LOGO;
     menuItemsWidth: number;
     navArrowState = {
@@ -34,15 +32,16 @@ export class NxHeaderLevelTwoComponent {
         logoAreaWidth: 256,
         margins: 25
     };
+    icons = icons;
+    images = images;
     mainActionWidth = 0;
     optimisticSelectedSubNode: MenuNode; // The selected node is typically controlled by the headerServices currentLocation,
     // but this property is used to make the UI smooth when navigating between nodes while the currentLocation is changing
 
-    constructor(configService: NxConfigService,
+    constructor(
                 public headerService: NxHeaderService,
                 private menusService: NxMenusService,
                 private scrollMechanics: NxScrollMechanicsService) {
-        this.CONFIG = configService.getConfig();
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
             this.recalculateSizes(size.width);
         });

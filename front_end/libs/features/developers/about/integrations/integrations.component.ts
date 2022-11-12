@@ -4,8 +4,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
@@ -35,7 +33,6 @@ export class NxIntegrationsComponent implements OnInit {
 
     // @ViewChild('integrationsScroll') integrationsScroll: ElementRef
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     integrationsDetails() {
@@ -90,13 +87,11 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(WINDOW) private window: Window,
         private cloudApi: NxCloudApiService,
         private sanitizer: DomSanitizer
     ) {
-        this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         this.errorManager = new ErrorStateManager(this.window);
     }

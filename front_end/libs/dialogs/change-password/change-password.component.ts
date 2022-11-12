@@ -9,8 +9,6 @@ import type { NgForm } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -29,7 +27,6 @@ export class ChangePasswordModalContent {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     system: NxSystem;
     user: NxSystemUser;
@@ -47,11 +44,9 @@ export class ChangePasswordModalContent {
         private renderer: Renderer2,
         private language: NxLanguageProviderService,
         private processService: NxProcessService,
-        private configService: NxConfigService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
         this.newPasswordForUser = '';
         this.currentPasswordForUser = '';

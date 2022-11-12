@@ -9,8 +9,7 @@ import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@lib/variables/static-variables';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { COLLAPSE_SECOND_WIDTH } from '@styles/theme-variables-common';
@@ -48,7 +47,6 @@ export class NxPagePlaceholderComponent implements OnInit {
     @IBool() @Input() showMainButton: CoercedBoolInput = false;
     @IBool() @Input() addPadding: CoercedBoolInput = true;
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     iconName: string;
@@ -56,13 +54,12 @@ export class NxPagePlaceholderComponent implements OnInit {
     iconVisible: boolean;
 
     windowSizeSubscription: SubscriptionLike;
+    icons = icons;
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         this.iconSize = 400;

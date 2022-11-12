@@ -11,6 +11,7 @@ import {
 import { debounceTime, filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { ribbonHeight } from '@lib/variables/static-variables';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -72,6 +73,6 @@ export class NxAPIToolComponent {
     }
 
     setHeaderHeight(): void {
-        this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + this.CONFIG.ribbonHeight : this.CONFIG.headerHeight;
+        this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + ribbonHeight : this.CONFIG.headerHeight;
     }
 }

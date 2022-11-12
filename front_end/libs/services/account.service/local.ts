@@ -108,7 +108,7 @@ export class LocalAccount extends BaseAccount {
     logoutHelper(doNotRedirect = false, skipReload = false): void {
         if (!doNotRedirect) {
             this.router
-                .navigate([this.CONFIG.redirect.unauthorised])
+                .navigate([redirect.unauthorised])
                 .finally(() => {
                     this.mediaServerApi
                         .logout()
@@ -145,7 +145,7 @@ export class LocalAccount extends BaseAccount {
                 }
                 return this.get();
             }, (): any => {
-                this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                this.router.navigate([redirect.unauthorised]);
             })
             .finally(() => {
                 this.loginDialogActive = false;

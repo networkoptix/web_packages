@@ -3,8 +3,6 @@ import { Component, Inject, Input } from '@angular/core';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { IEnvironment } from '@environments/environment-config';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { pickFrom } from '@utils/general';
@@ -21,20 +19,17 @@ export class RefreshSessionModalContent {
 
     readonly environment: IEnvironment = environment;
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     needsUpdate: boolean;
     system: NxSystem;
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: {
             system: NxSystem;
         },
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {

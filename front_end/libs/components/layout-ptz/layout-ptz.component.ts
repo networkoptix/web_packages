@@ -4,8 +4,6 @@ import { clamp } from 'lodash-es';
 import { BehaviorSubject, map, NEVER, switchMap } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PtzCommands } from '@services/system-api.types';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -27,7 +25,6 @@ export class NxLayoutPtzComponent {
     action$ = new BehaviorSubject<string>(null);
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     triggerAction(event?: MouseEvent): void {
         const action = (event?.target as HTMLButtonElement)?.value;
@@ -71,9 +68,7 @@ export class NxLayoutPtzComponent {
 
     constructor(
         languageService: NxLanguageProviderService,
-        configService: NxConfigService
     ) {
-        this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         const updater$ = new BehaviorSubject(1);
         this.action$.pipe(

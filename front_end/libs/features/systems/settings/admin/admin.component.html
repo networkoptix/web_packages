@@ -302,10 +302,10 @@
         <nx-alert-block
             class="d-block mt-3"
             *ngIf="system.currentUser?.isAdmin && advanced"
-            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [iconSrc]="icons.dirNonStandard + 'error.svg'"
             [line1]="'Settings displayed below are advanced.' | translate"
             [line2]="'Changing them may cause server to work incorrectly.' | translate"
-            [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+            [btnIconSrc]="icons.dir + 'eye_closed.svg'"
             [btnCaption]="'Hide Advanced Settings' | translate"
             (onAction)="hideAdvancedSettings()"
         >

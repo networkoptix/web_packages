@@ -14,8 +14,6 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -29,8 +27,6 @@ import { Process } from '@services/process.service/process';
 export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
     @ViewChild('passwordForm', { read: NgForm }) private passwordForm: NgForm;
-
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     account: Account;
@@ -41,7 +37,6 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     private changePassword: Process;
 
     constructor(
-        configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
@@ -50,7 +45,6 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private applyService: NxApplyService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
         this.menuService.detail = 'password';

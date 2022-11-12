@@ -1,22 +1,18 @@
 import { Injectable } from '@angular/core';
 
 import type { Toast, ToastOptions } from '@components/toast/toast.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+
+import { alertTimeout, toast } from '../variables/static-variables';
 
 @Injectable({ providedIn: 'root' })
 export class NxToastService {
-    CONFIG: IConfig;
     toasts: Toast[] = [];
     defaultOpts: ToastOptions;
 
-    constructor(
-        configService: NxConfigService
-    ) {
-        this.CONFIG = configService.getConfig();
+    constructor() {
         this.defaultOpts = {
             autohide: false,
-            delay: this.CONFIG.alertTimeout,
+            delay: alertTimeout,
             showHTML: false,
         };
     }
@@ -33,7 +29,7 @@ export class NxToastService {
      */
     show(
         content: Toast['content'],
-        type: string = this.CONFIG.toast.info,
+        type: string = toast.info,
         options: ToastOptions = this.defaultOpts,
     ): void {
         options = { ...this.defaultOpts, ...options };
@@ -54,8 +50,8 @@ export class NxToastService {
     /** Display a notification toast that hides itself. */
     notify(
         message: string,
-        type: string = this.CONFIG.toast.info,
-        delay: number = this.CONFIG.alertTimeout,
+        type: string = toast.info,
+        delay: number = alertTimeout,
     ): void {
         const options = { autohide: true, delay };
 

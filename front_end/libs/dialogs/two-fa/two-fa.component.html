@@ -135,7 +135,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                    [src]="icons.dirTextButtons + 'copy.svg'"
                     [svgStyle]="{ 'width.px': '22', 'height.px': '22' }"
                     [applyClass]="true"
                 ></svg-icon>
@@ -173,7 +173,7 @@
 <!--            <div *ngFor="let system of incompatibleSystems" class="d-flex align-items-center">-->
 <!--                <svg-icon nx-add-svg-src-->
 <!--                        class="d-inline-block"-->
-<!--                        [src]="CONFIG.icons.dir + 'system.svg'"-->
+<!--                        [src]="icons.dir + 'system.svg'"-->
 <!--                        [svgStyle]="{'width.px': '32', 'height.px': '32'}"-->
 <!--                        [applyClass]="true"></svg-icon>-->
 <!--                <span class="system-name">{{system.name}}</span>-->
@@ -185,7 +185,7 @@
 <!--    <div class="modal-footer justify-end">-->
 <!--        <button id="nextWizardLogin" class="btn btn-danger btn-next" (click)="next()">-->
 <!--            <span translate>Next</span>-->
-<!--            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>-->
+<!--            <svg-icon nx-add-svg-src [src]="icons.dir + 'arrow_right.svg'"></svg-icon>-->
 <!--        </button>-->
 <!--    </div>-->
 <!--</ng-template>-->
@@ -230,7 +230,7 @@
                     [(ngModel)]="password"
                     #loginPassword="ngModel"
                     maxlength="255"
-                    [pattern]="CONFIG.credentialsValidation.passwordRequirements.requiredRegex"
+                    [pattern]="credentialsValidation.passwordRequirements.requiredRegex"
                     required
                     nxFocusMe
                     setFocus
@@ -382,7 +382,7 @@
             <span translate>Next</span>
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'arrow_right.svg'"
+                [src]="icons.dir + 'arrow_right.svg'"
             ></svg-icon>
         </button>
     </div>
@@ -478,7 +478,7 @@
         >
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                [src]="icons.dir + 'arrow_left.svg'"
             ></svg-icon>
         </button>
         <nx-process-button
@@ -541,7 +541,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                    [src]="icons.dirTextButtons + 'copy.svg'"
                     [svgStyle]="{ 'width.px': '22', 'height.px': '22' }"
                     [applyClass]="true"
                 ></svg-icon>

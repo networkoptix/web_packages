@@ -4,10 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { FirstPartyWidget } from '../helper-classes';
@@ -55,7 +54,6 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
         download: '💾'
     };
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     loading = true;
     treeControl = new NestedTreeControl<ExplorerNode>(node => node.children);
@@ -63,6 +61,8 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
     hasChild = (_: number, node: ExplorerNode): boolean => !!node.children && node.children.length > 0;
 
     updater$ = new BehaviorSubject<number>(null);
+
+    icons = icons;
 
     refreshData(): void {
         this.loading = true;
@@ -72,11 +72,9 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
     constructor(
         cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         this.dataSource$ = this.updater$.pipe(
             map(maxAge => maxAge === null ? this.card.config.maxAge : maxAge),

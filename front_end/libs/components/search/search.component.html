@@ -17,7 +17,7 @@
                         [ngModel]="localFilter.query"
                         (ngModelChange)="onSearchType($event)"
                         [ngClass]="{ 'non-empty': localFilter.query }"
-                        [maxLength]="CONFIG.search.maxLength"
+                        [maxLength]="search.maxLength"
                         (focus)="setOnFocus()"
                         (focusout)="setOnFocusOut()"
                         (keydown.arrowup)="navArrow(buttonArrowTypeUp)"
@@ -36,7 +36,7 @@
                         (click)="resetQuery()"
                     >
                         <svg-icon
-                            [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                            [src]="icons.dirTextButtons + 'close.svg'"
                             [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                         ></svg-icon>
                     </button>
@@ -67,7 +67,7 @@
                     <div class="arrow-flip">
                         <svg-icon
                             nx-add-svg-src
-                            [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
                         ></svg-icon>
                     </div>
                     <span

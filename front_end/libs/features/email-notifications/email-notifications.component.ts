@@ -5,6 +5,7 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { filter, finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { apiBase } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -103,6 +104,7 @@ export class EmailNotificationsComponent {
     sending = false;
     cachedCustom;
     notificationTypes: NotificationDropdownItem[] = getTestEvents();
+    apiBase: string = apiBase;
 
     selectedNotificationType: NotificationDropdownItem = this.notificationTypes[0];
 
@@ -221,7 +223,7 @@ export class EmailNotificationsComponent {
         private ngZone: NgZone
     ) {
         this.CONFIG = configService.config;
-        this.endpoint = `POST ${this.CONFIG.cloudHost}${this.CONFIG.apiBase}/notifications/email_notification`;
+        this.endpoint = `POST ${this.CONFIG.cloudHost}${this.apiBase}/notifications/email_notification`;
         this.account$ = from(this.accountService.requireLogin() as Promise<Account>);
         this.systems$ = this.systemsService.forceUpdateSystems().pipe(
             map(systems => systems.map(({ name, id: value, stateOfHealth: state }) => ({ name, value, state }))),

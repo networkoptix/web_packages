@@ -13,9 +13,8 @@ import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -38,18 +37,16 @@ type ssRange = { start: number, end: number };
     styleUrls: ['./timeline-selection-action-panel.component.scss']
 })
 export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewInit {
-    CONFIG: IConfig;
-
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
 
     exportLink: string;
     exportName: string;
+    icons = icons;
 
     @ViewChild('exportBtn', { static: true }) exportBtn: ElementRef<HTMLAnchorElement>;
 
     constructor(
-        configService: NxConfigService,
         private self: ElementRef,
         protected timeline: TimelineService,
         public selection: TimelineSelectionService,
@@ -59,9 +56,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         protected dialogs: NxDialogsService,
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     public ngOnInit(): void {
         this.selection.subject

@@ -4,8 +4,6 @@ import type { NgForm } from '@angular/forms';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -19,7 +17,6 @@ export class DeleteCloudUserModalContent {
     @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
 
     cloudApi: NxCloudApiService;
     deleteCloudUser: Process;
@@ -29,13 +26,11 @@ export class DeleteCloudUserModalContent {
     @ViewChild('deleteCloudUserForm') deleteForm: NgForm;
 
     constructor(
-        private configService: NxConfigService,
         private language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
     }
 

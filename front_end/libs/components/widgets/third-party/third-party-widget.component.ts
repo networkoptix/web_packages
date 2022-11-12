@@ -4,8 +4,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { NxToastService } from '@dialogs/toast.service';
 import { SharedWidgetState } from '@lib/dashboard-widget-state';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxSystemsService } from '@services/systems.service';
 
 import { FirstPartyWidget } from '../helper-classes';
@@ -19,7 +18,6 @@ import { FirstPartyWidget } from '../helper-classes';
 export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     typeof NxThirdPartyWidgetComponent.BASE_CONFIG
 > {
-    CONFIG: IConfig;
     static IDENTIFIER = 'third-party';
     static NAME = 'Third Party';
     static SIZES = [
@@ -102,7 +100,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
             if (file instanceof DataTransferItem) {
                 this.toastService.notify(
                     'Please upload a valid .wgt, .html, image, or text file.',
-                    this.CONFIG.toast.warning,
+                    toast.warning,
                 );
                 return;
             }
@@ -110,7 +108,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
             if (!file.name.endsWith('.wgt') && file.size > NxThirdPartyWidgetComponent.MAX_SIZE) {
                 this.toastService.notify(
                     'File is not a valid widget format and is to large to render',
-                    this.CONFIG.toast.warning,
+                    toast.warning,
                 );
                 return;
             }
@@ -139,14 +137,12 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     };
 
     constructor(
-        configService: NxConfigService,
         cd: ChangeDetectorRef,
         private toastService: NxToastService,
         systemsService: NxSystemsService,
         router: Router,
     ) {
         super(cd);
-        this.CONFIG = configService.config;
         NxThirdPartyWidgetComponent.sharedState$ ||= new SharedWidgetState(
             systemsService.systemsSubject.asObservable() as any,
             () => systemsService.forceUpdateSystems() as any,

@@ -897,21 +897,21 @@ angular.module('webInlineWizard')
                     var systemSettings = r.data.reply.settings;
                     $scope.systemSettings = {};
 
-                    for (var settingName in $scope.Config.settingsConfig) {
-                        if (!$scope.Config.settingsConfig.hasOwnProperty(settingName)) {
+                    for (var settingName in $scope.settingsConfig) {
+                        if (!$scope.settingsConfig.hasOwnProperty(settingName)) {
                             continue;
                         }
-                        if (!$scope.Config.settingsConfig[settingName].setupWizard) {
+                        if (!$scope.settingsConfig[settingName].setupWizard) {
                             continue;
                         }
                         $scope.systemSettings[settingName] = systemSettings[settingName];
 
-                        if ($scope.Config.settingsConfig[settingName].type === 'checkbox' &&
+                        if ($scope.settingsConfig[settingName].type === 'checkbox' &&
                         $scope.systemSettings[settingName] === Config.undefinedValue) {
                             $scope.systemSettings[settingName] = true;
                         }
 
-                        if ($scope.Config.settingsConfig[settingName].type === 'number') {
+                        if ($scope.settingsConfig[settingName].type === 'number') {
                             $scope.systemSettings[settingName] = parseInt($scope.systemSettings[settingName]);
                         }
                         if ($scope.systemSettings[settingName] === 'true') {
@@ -920,7 +920,7 @@ angular.module('webInlineWizard')
                         if ($scope.systemSettings[settingName] === 'false') {
                             $scope.systemSettings[settingName] = false;
                         }
-                        $scope.Config.settingsConfig[settingName].oldValue =  $scope.systemSettings[settingName];
+                        $scope.settingsConfig[settingName].oldValue =  $scope.systemSettings[settingName];
                     }
                 });
             }

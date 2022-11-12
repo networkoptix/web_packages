@@ -14,6 +14,7 @@ import { timer, Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -52,6 +53,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     firstUrl = '';
     highlightedTopNode: string;
     searchQuery$ = new BehaviorSubject('');
+    icons = icons;
 
     constructor(
         configService: NxConfigService,

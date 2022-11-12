@@ -235,7 +235,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                    [src]="icons.dir + 'arrow_left.svg'"
                     [applyClass]="true"
                 ></svg-icon>
             </button>
@@ -273,7 +273,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                    [src]="icons.dir + 'arrow_left.svg'"
                     [applyClass]="true"
                 ></svg-icon>
             </button>
@@ -334,7 +334,7 @@
         >
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                [src]="icons.dir + 'arrow_left.svg'"
                 [svgStyle]="{ 'margin-right': '16px' }"
                 [applyClass]="true"
             ></svg-icon>
@@ -348,7 +348,7 @@
             <ng-container>{{ 'Next' | translate }}</ng-container>
             <svg-icon
                 nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'arrow_right.svg'"
+                [src]="icons.dir + 'arrow_right.svg'"
                 class="ml-2"
                 [applyClass]="true"
             ></svg-icon>
@@ -375,9 +375,7 @@
             <div *ngIf="tooManyServers">
                 <p
                     class="error-label"
-                    [innerHTML]="
-                        'dialogs.merge.warning' | translate: { maxServers: CONFIG.maxServers }
-                    "
+                    [innerHTML]="'dialogs.merge.warning' | translate: { maxServers: maxServers }"
                 ></p>
 
                 <p
@@ -442,7 +440,7 @@
             >
                 <svg-icon
                     nx-add-svg-src
-                    [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                    [src]="icons.dir + 'arrow_left.svg'"
                     [applyClass]="true"
                 ></svg-icon>
             </button>
