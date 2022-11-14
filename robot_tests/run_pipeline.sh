@@ -52,7 +52,9 @@ if [ ! "$CLOUD_HOST" ]; then
   exit 1
 fi
 
-PATH="$GOOGLE_CHROME_DIR:$VENV_BIN_DIR:$PATH" pabot --pabotlib --processes 4 -e integrations -L trace:info \
+LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
+  PATH="$GOOGLE_CHROME_DIR:$VENV_BIN_DIR:$PATH" \
+  pabot --pabotlib --processes 4 -e integrations -L trace:info \
   -v ENV:"https://$CLOUD_HOST" \
   -v "FROM EMAIL DEFAULT":True \
   -i 'smoke' 'test-cases'
