@@ -6,7 +6,9 @@ import re
 import string
 import tempfile
 import uuid
+from contextlib import contextmanager
 from pathlib import Path
+from typing import ContextManager
 
 import certifi
 import requests
@@ -42,6 +44,18 @@ class CloudPortalAPI(object):
         self.password = password
         self.baseEmail = email
 
+    @contextmanager
+    def _session(
+            self, email, password,
+            *,
+            backup_code=None, verification_code=None, logout=True
+    ) -> ContextManager[requests.Session]:
+        with CloudSession(
+                self.env, email, password, backup_code, verification_code, logout,
+                verify_ssl_cert=_ssl_certs_path
+        ) as session:
+            yield session
+
     @keyword
     def api_log_in(self, email, password, backup_code=None, verification_code=None, env=None,):
         cloud_session = CloudSession(
@@ -67,7 +81,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def merge_cloud_systems(self, master_id, slave_id, email, password):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             logger.trace(f'The headers are {s.headers}')
             data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             r = s.post(f'{self.env}/api/systems/merge', data, verify=_ssl_certs_path)
@@ -83,7 +97,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def change_password(self, email, old_password, new_password):
-        with CloudSession(self.env, email, old_password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, old_password) as s:
             s.headers.update({"referer": f"{self.env}/account/password"})
             data = {'old_password': old_password, 'new_password': new_password}
             r = s.post(f'{self.env}/api/account/changePassword', data, verify=_ssl_certs_path)
@@ -106,25 +120,25 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_account_language(self, email, password):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             r = s.get(f'{self.env}/api/utils/language', verify=_ssl_certs_path)
             return r.json()['language']
 
     @keyword
     def get_account_data(self, email, password):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             r = s.get(f'{self.env}/api/account/', verify=_ssl_certs_path)
             return r.json()
 
     @keyword
     def get_account_systems(self, email, password):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             data = s.get(f'{self.env}/api/systems/', verify=_ssl_certs_path)
             return data.json()
 
     @keyword
     def set_account_language(self, email, password, new_language='en_US'):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             s.headers.update({"Referer":self.env})
             r = s.post(
                 f'{self.env}/api/utils/language/',
@@ -135,7 +149,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def set_user_theme(self, email, password, theme):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             s.headers.update({"Referer":self.env})
             r = s.post(
                 f'{self.env}/api/custom-properties/theme/{email}',
@@ -147,7 +161,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def set_account_name(self, email, password, first_name, last_name):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             r = s.post(
                 f'{self.env}/api/account/',
                 json={'first_name': first_name, 'last_name': last_name},
@@ -156,7 +170,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def disconnect(self, email, password, system_id):
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             r = s.post(
                 f'{self.env}/api/systems/disconnect',
                 json={'system_id': system_id, 'password': password},
@@ -166,8 +180,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def delete_account(self, email, password):
-        with CloudSession(
-                self.env, email, password, logout=False, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password, logout=False) as s:
             r = s.post(
                 f'{self.env}/api/account/delete', json={'password': password}, verify=_ssl_certs_path)
             logger.trace(r.json())
@@ -175,8 +188,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_code_from_api(self, email, message_type):
-        with CloudSession(
-                self.env, self.baseEmail, self.password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(self.baseEmail, self.password) as s:
             s.headers.update({"referer": f"{self.env}/authorize"})
             r = s.post(
                 f'{self.env}/api/robot/get_code',
@@ -189,7 +201,7 @@ class CloudPortalAPI(object):
     def disconnect_from_account(self, email, password, system_id):
         """Doesn't completely remove user from system users, but sets their role to none instead.
         Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
-        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(email, password) as s:
             r = s.post(
                 f'{self.env}/api/systems/{system_id}/users',
                 json={'user_email': email, 'role': 'none'},
@@ -406,7 +418,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def bind_system(self, auth, cloudUrl, name="API made system"):
-        with CloudSession(self.env, auth[0], auth[1], verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(auth[0], auth[1]) as s:
             logger.trace(self.customization)
             body = {
                 "name": name,
@@ -530,13 +542,9 @@ class CloudPortalAPI(object):
 
     @keyword
     def toggle_2fa_on_api(self, email, password, backup_code=None, verification_code=None):
-        with CloudSession(
-                self.env,
-                email,
-                password,
-                backup_code,
-                verification_code,
-                verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(
+                email, password,
+                backup_code=backup_code, verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
             verificationRes = s.post(
                 f'{self.env}/api/2fa/verification', data=None, verify=_ssl_certs_path)
@@ -553,13 +561,9 @@ class CloudPortalAPI(object):
 
     @keyword
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
-        with CloudSession(
-                self.env,
-                email,
-                password,
-                backup_code,
-                verification_code,
-                verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(
+                email, password,
+                backup_code=backup_code, verification_code=verification_code) as s:
             r = s.get(f'{self.env}/api/account')
             logger.trace(r.json())
             if r.json()['account2faEnabled'] == True or r.json()['totpExistsForAccount'] == True:
@@ -572,13 +576,9 @@ class CloudPortalAPI(object):
 
     @keyword
     def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
-        with CloudSession(
-                self.env,
-                email,
-                password,
-                backup_code,
-                verification_code,
-                verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(
+                email, password,
+                backup_code=backup_code, verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
             backupPostRes = s.post(
                 f'{self.env}/api/2fa/backup', data={"count": "8"}, verify=_ssl_certs_path)
@@ -590,13 +590,9 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
-        with CloudSession(
-                self.env,
-                email,
-                password,
-                backup_code,
-                verification_code,
-                verify_ssl_cert=_ssl_certs_path) as s:
+        with self._session(
+                email, password,
+                backup_code=backup_code, verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
             backupGetRes = s.get(
                 f'{self.env}/api/2fa/backup/codes', data=None, verify=_ssl_certs_path)
