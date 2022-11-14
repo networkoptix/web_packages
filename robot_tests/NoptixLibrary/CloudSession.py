@@ -18,14 +18,15 @@ class CloudSession:
             verification_code=None,
             logout=True,
             verify_ssl_cert=True):
-        self.session = requests.Session()
+        session = requests.Session()
+        session.verify = verify_ssl_cert
+        self.session = session
         self.instance = instance
         self.username = username
         self.password = password
         self.backup_code = backup_code
         self.verification_code = verification_code
         self.logout = logout
-        self._verify_ssl_cert = verify_ssl_cert
 
     def __enter__(self):
         return self.login()
@@ -47,8 +48,7 @@ class CloudSession:
         else:
             raise ValueError(f"method must be get, post, put, or delete not {method}")
 
-        res = request(
-            f"{self.instance}{url}", params=query, json=data, verify=self._verify_ssl_cert)
+        res = request(f"{self.instance}{url}", params=query, json=data)
         res.raise_for_status()
         return res.json()
 
