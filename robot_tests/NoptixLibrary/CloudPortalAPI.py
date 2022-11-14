@@ -135,9 +135,13 @@ class CloudPortalAPI(object):
 
     @keyword
     def set_user_theme(self, email, password, theme):
-        with CloudSession(self.env, email, password) as s:
+        with CloudSession(self.env, email, password, verify_ssl_cert=_ssl_certs_path) as s:
             s.headers.update({"Referer":self.env})
-            r = s.post(f'{self.env}/api/custom-properties/theme/{email}', auth=HTTPBasicAuth(email, password), data={"theme": f"{theme}"})
+            r = s.post(
+                f'{self.env}/api/custom-properties/theme/{email}',
+                auth=HTTPBasicAuth(email, password),
+                data={"theme": f"{theme}"},
+                verify=_ssl_certs_path)
             assert r.status_code==201
             return r.json()
 
