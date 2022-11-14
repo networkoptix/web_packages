@@ -1,6 +1,8 @@
 import re
 import urllib
+from uuid import uuid4
 from django.shortcuts import redirect
+from django.core.cache import cache
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes
@@ -188,7 +190,7 @@ def authenticate(request):
         # Ensure session and csrf are reset on failure
         kill_session(request)
         raise e
-
+    cache.set(email, str(uuid4()))
     data = {
         "code": res.get('code'),
         "link": build_redirect_url(redirect_uri, res.get('code'), state)
@@ -332,6 +334,10 @@ def register_client(request):
 def token(request):
     code = get_param(request, "code")
     refresh_token = get_param(request, "refresh_token")
+
+    if refresh_from_session := (refresh_token == 'session' and request.session['refresh_token']):
+        refresh_token = refresh_from_session
+
     if not code and not refresh_token:
         require_params(request, ("grant_type", "response_type",))
 
@@ -373,10 +379,7 @@ def token(request):
             return api_success(Auth.get_refresh_token(refresh_token, ip=ip, scope=scope))
 
     elif grant_type == Auth.GRANT_TYPE.refresh_token and response_type == Auth.RESPONSE_TYPE.code:
-        if refresh_from_session := (refresh_token == 'session' and request.session['refresh_token']):
-            refresh_token = refresh_from_session
-        else:
-            require_params(request, ("refresh_token",))
+        require_params(request, ("refresh_token",))
 
         return api_success(Auth.get_code(email="",
                                          password="",

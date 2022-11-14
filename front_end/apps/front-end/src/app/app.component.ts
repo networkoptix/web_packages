@@ -166,7 +166,9 @@ export class AppComponent implements OnInit {
         ) {
             this.accountService.handleCodeLogin(code);
         } else {
-            this.appStateService.ready = true;
+            this.accountService.get(true).finally(() => {
+                this.appStateService.ready = true;
+            });
         }
 
         /* No real need to update often unless some browser have major upgrade

@@ -37,7 +37,10 @@ const PROXY_CONFIG = [
         ],
         target: proxyTargetConfig[target],
         changeOrigin: true,
-        secure: false
+        secure: false,
+        bypass: function (req, res, proxyOptions) {
+            req.headers.origin = proxyTargetConfig[target];
+        }
     }, {
         context: [
             // '/static/lang_en_US',

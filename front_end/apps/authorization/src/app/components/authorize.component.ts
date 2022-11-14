@@ -633,7 +633,22 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             });
     };
 
-    redirect = (route?: string): void => {
+    redirect = async (route?: string): Promise<void> => {
+        if (route?.startsWith('/')) {
+            try {
+                const [link, search] = route.split('?');
+                const params = new URLSearchParams(search);
+                const code = params.get('code');
+                params.delete('code');
+                await this.cloudService.loginCode(code);
+                await this.cloudService.account(true).toPromise();
+                const paramString = params.toString();
+                route = `${link}?${paramString}`;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
         this.window.location.href = route || this.initialData.redirect_uri || '/';
     };
 

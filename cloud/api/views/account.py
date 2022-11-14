@@ -312,7 +312,7 @@ async def index(request):
         # Redirect if no version
         # Add indefinate cache heading
         cached = request.query_params.get('cached')
-        current_version = cache.get(request.user.email)
+        current_version = not request.query_params.get('force') and cache.get(request.user.email)
         if not cached or not current_version or cached != current_version:
             if not current_version:
                 current_version = str(uuid4())
