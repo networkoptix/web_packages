@@ -10,7 +10,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
 import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
 import { AssetExplorerWidgetModule } from '@components/widgets/asset-explorer/asset-explorer-widget.module';
-import { BookmarksWidgetModule } from '@components/widgets/bookmarks/bookmarks-widget.module';
+// import { BookmarksWidgetModule } from '@components/widgets/bookmarks/bookmarks-widget.module';
 import { EventGeneratorModule } from '@components/widgets/event-generator/event-generator.module';
 import { HealthMonitorWidgetModule } from '@components/widgets/health-monitor/health-monitor-widget.module';
 import { LiveViewWidgetModule } from '@components/widgets/live-view/live-view-widget.module';
@@ -39,7 +39,7 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         DragDropModule,
         AssetExplorerWidgetModule,
-        BookmarksWidgetModule,
+        // BookmarksWidgetModule,
         DynamicWidgetModule,
         HealthMonitorWidgetModule,
         LiveViewWidgetModule,
