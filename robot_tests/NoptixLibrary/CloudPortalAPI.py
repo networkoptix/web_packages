@@ -1,23 +1,23 @@
+import base64
+import json
+import os
+import random
+import re
+import string
 import tempfile
+import uuid
+from pathlib import Path
 
 import certifi
 import requests
-import base64
-import uuid
-import json
-import re
-import string
-import os
-import Encode
-import random
-from robot.api.deco import keyword, library
 import urllib3
-from pathlib import Path
-
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
-from CloudSession import CloudSession
+from robot.api.deco import keyword, library
+
+import Encode
 from Cloud2fa import Cloud2fa
+from CloudSession import CloudSession
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
