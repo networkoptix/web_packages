@@ -687,6 +687,8 @@ export interface DownloadsGroups {
     macos:   MAC;
     sdk:     ArmClass;
     windows: MAC;
+    universal: MAC;
+
 }
 
 export interface ArmClass {

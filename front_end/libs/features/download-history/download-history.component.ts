@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, TitleCasePipe } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -18,6 +18,7 @@ import { filter } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { BuildHistory, Build, Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -61,6 +62,7 @@ export class DownloadHistoryComponent implements OnInit {
         private router: Router,
         private pageService: NxPageService,
         private uriService: NxUriService,
+        public appStateService: NxAppStateService,
         @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.CONFIG = configService.getConfig();
@@ -165,7 +167,7 @@ export class DownloadHistoryComponent implements OnInit {
                             this.pageService.show404();
                         }
                     });
-            } else {
+            } else if (this.appStateService.ready) {
                 this.canViewRelease = true;
                 if (this.build === undefined) {
                     this.getData();
@@ -183,10 +185,12 @@ export class DownloadHistoryComponent implements OnInit {
     public switchTo(name: string): false {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
-        this.pageService.pageTitle = startCase(name);
 
         this.uriService
             .updateURI('/downloads/' + name, {})
+            .then(() => {
+                this.pageService.pageTitle = new TitleCasePipe().transform(name);
+            })
             .catch(error => {
                 console.error(error);
             });
