@@ -4,10 +4,9 @@ import {
 } from '@angular/core';
 import { clamp, isArray, uniq } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutResourceTree } from '@components/layout-grid/layout-grid.types';
 import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { TimeDetail } from '@services/system.service/camera-manager/camera-manager-types';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -31,7 +30,7 @@ export class NxLayoutTimelineComponent {
     MAX_ZOOM = 10995.1163;
     tooltipDetails: { selected: string[], position: number, x: number, xActual: number } = { selected: [], position: 0, x: 0, xActual: 0 };
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     get pixelSize(): number {
         return Math.max(Math.round(this.width / (this.timelineCanvas.nativeElement.clientWidth)) / 100 * this.scale, 1);
@@ -173,11 +172,5 @@ export class NxLayoutTimelineComponent {
         } else {
             this.#clear();
         }
-    }
-
-    constructor(
-        languageService: NxLanguageProviderService,
-    ) {
-        this.LANG = languageService.translations;
     }
 }

@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 /* Usage
  <nx-section-placeholder
@@ -25,14 +24,8 @@ export class NxSectionPlaceholderComponent implements OnInit {
     @Input() width: string;
     @Input() translatedMessage: string;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     icons = icons;
-
-    constructor(
-        languageService: NxLanguageProviderService,
-    ) {
-        this.LANG = languageService.translations;
-    }
 
     ngOnInit(): void {
         this.height = this.height || '64';

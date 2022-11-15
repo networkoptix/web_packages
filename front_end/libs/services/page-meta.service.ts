@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
@@ -23,7 +23,7 @@ interface MetaLookup {
 })
 export class NxPageMetaService {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     routerUrl: string = '';
     updater$ = new Subject<unknown>();
@@ -55,19 +55,7 @@ export class NxPageMetaService {
                     this.title.setTitle(content);
                 }
             });
-
-            // if (!this.getMetaProperties().title || this.getMetaProperties().title === this.LANG[this.defaultMetaKey].default.title() && !headerService?.currentLocation?.isSystem && headerService.currentLocation.childNode) {
-            //     this.updateLookups('title', this.LANG[headerService.currentLocation.childNode.name] + ' - ' + this.LANG.productName());
-            // }
         });
-
-        languageService.translateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(translations => {
-                setTimeout(() => {
-                    this.LANG = translations;
-                });
-            });
     }
 
     private getRoot(): string {
@@ -78,7 +66,7 @@ export class NxPageMetaService {
     private mapMeta = (metaProperties: Record<string, () => string>) => {
         return Object.entries(metaProperties || {})
             .reduce((lookup, [property, val]) => {
-                return ({ ...lookup, [property]: val() });
+                return ({ ...lookup, [property]: val });
             }, {});
     };
 

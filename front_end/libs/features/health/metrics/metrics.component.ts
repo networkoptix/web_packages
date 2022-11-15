@@ -13,10 +13,9 @@ import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -37,7 +36,7 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     account;
 
     filterModel: SearchFilter = { query: '' };
@@ -80,7 +79,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(
-        languageService: NxLanguageProviderService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
         private route: ActivatedRoute,
@@ -90,7 +88,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {

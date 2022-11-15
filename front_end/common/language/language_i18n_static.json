@@ -959,6 +959,7 @@
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
+        "All": "All",
         "Any": "Any",
         "Search": "Search",
         "analytics": "Analytics",

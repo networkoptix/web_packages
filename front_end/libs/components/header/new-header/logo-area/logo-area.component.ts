@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons, images } from '@lib/variables/static-variables';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -21,17 +20,17 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() menuOpen = false;
     @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     logoState = logoAreaState.LOGO;
     systemListText: string;
     singleSystem = false;
     icons = icons;
     images = images;
 
-    constructor(public headerService: NxHeaderService,
-        languageService: NxLanguageProviderService,
-        systemsService: NxSystemsService) {
-        this.LANG = languageService.translations;
+    constructor(
+        public headerService: NxHeaderService,
+        systemsService: NxSystemsService
+    ) {
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.checkLogoState(currentLocation);
         });
@@ -41,7 +40,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems() : this.LANG.appHeader.systemList();
+        this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemList;
     }
 
     emitClick(clickType: logoClickType): void {

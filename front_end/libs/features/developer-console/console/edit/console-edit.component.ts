@@ -4,13 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType, ConsoleSection } from '@components/console-table/console-table.component.types';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
@@ -30,7 +29,7 @@ export class NxDevConsoleEditComponent {
     @ViewChild('editForm', { static: true }) editForm: HTMLFormElement;
 
     INPUT_TYPE = ConfigType;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     saveContext: Process;
     context: ContextManifest;
     errors: Record<string, string[]> = {};
@@ -39,7 +38,6 @@ export class NxDevConsoleEditComponent {
     // watchers: {[key: string]: Watcher<any, NxDevConsoleEditComponent>} = {};
 
     constructor(
-        languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private router: Router,
         private processService: NxProcessService,
@@ -48,7 +46,6 @@ export class NxDevConsoleEditComponent {
         private consoleService: NxConsoleService,
         private location: Location
     ) {
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {

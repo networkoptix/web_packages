@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
 import { PlaybackTransport } from '@view/view.types';
 import { VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -31,7 +30,7 @@ import { PlaybackService } from '../../services/playback.service';
     styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit, AfterViewInit {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     // Coercing playback state to ArchivePlaybackState
     // Was previously being cast as any in template
@@ -57,14 +56,11 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     };
 
     constructor(
-        translateService: NxLanguageProviderService,
         public http: HttpClient,
         public playback: PlaybackService,
         protected vms: VideoManagementSystemService,
         protected self: ElementRef
     ) {
-        this.LANG = translateService.translations;
-
         this.handleClick = generateClickDubleClickPair(
             e => this.onClick(e),
             e => this.onDblClick(e)

@@ -3,7 +3,9 @@
     <h4 class="m-0 ml-3 subtitle">{{ release.productDescription }}</h4>
 </div>
 
-<h4 class="mb-3 subtitle">{{ LANG.pages.downloadHistory.published({ date: release.date }) }}</h4>
+<h4 class="mb-3 subtitle">
+    {{ LANG.pages.downloadHistory.published | translate: { date: release.date } }}
+</h4>
 
 <div *ngIf="release.releaseNotes">
     <h4 translate>Release Notes</h4>
@@ -39,7 +41,7 @@
         href
         class="ml-3"
         (click)="cardExpanded[platform.name] = !cardExpanded[platform.name]; (false)"
-        >{{ LANG.downloads.groups[platform.name].label() || platform.name }}</a
+        >{{ (LANG.downloads.groups[platform.name].label | translate) || platform.name }}</a
     >
 
     <ul *ngIf="cardExpanded[platform.name]">

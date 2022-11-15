@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
 import { processLanguageFactory } from '@utils/general';
@@ -17,7 +16,6 @@ import { WINDOW } from './window-provider';
 export class NxBootstrapProvider {
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
 
     private isLoaded: boolean;
     private isNewSystem: boolean;
@@ -138,7 +136,6 @@ export class NxBootstrapProvider {
         };
         const processLanguage = processLanguageFactory(customStrings);
         this.languageService.setTranslations(data.language, processLanguage(data));
-        this.LANG = this.languageService.translations;
 
         this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
     }

@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -26,7 +25,7 @@ import { pickFrom } from '@utils/general';
 export class ChangePasswordModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     system: NxSystem;
     user: NxSystemUser;
@@ -42,12 +41,10 @@ export class ChangePasswordModalContent {
 
     constructor(
         private renderer: Renderer2,
-        private language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.LANG = this.language.translations;
         this.newPasswordForUser = '';
         this.currentPasswordForUser = '';
         this.confirmNewPasswordForUser = '';
@@ -91,13 +88,13 @@ export class ChangePasswordModalContent {
                     .then(() => this.close(true));
             }, {
                 errorCodes: {
-                    notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                    notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch,
+                    wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch,
                     dontMatch: () => { },
                     wrongPassword: () => { }
                 },
-                successMessage: this.LANG.account.passwordChangedSuccess?.(),
-                errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
+                successMessage: this.LANG.account.passwordChangedSuccess,
+                errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
                 ignoreUnauthorized: true
             });
     }

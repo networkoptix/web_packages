@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -21,7 +20,7 @@ import { WINDOW } from '@services/window-provider';
 
 export class NxLandingComponent implements OnInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     params;
     userEmail;
@@ -34,13 +33,11 @@ export class NxLandingComponent implements OnInit {
 
     private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
     }
 
     constructor(
         private configService: NxConfigService,
         private accountService: NxAccountService,
-        private language: NxLanguageProviderService,
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
         private router: Router,

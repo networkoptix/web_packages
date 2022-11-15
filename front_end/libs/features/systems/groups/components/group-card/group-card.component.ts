@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import type { GroupItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
@@ -20,15 +19,13 @@ export class NxGroupCardComponent implements OnInit {
     @Input() group: GroupItem;
     @Input() search: string = '';
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     icons = icons;
 
     constructor(
-        language: NxLanguageProviderService,
         private router: Router,
         private groupsService: NxSystemGroupsService,
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void { }

@@ -13,7 +13,7 @@ import { of, SubscriptionLike, Subject } from 'rxjs';
 import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockSection,
     InfoBlockLine
@@ -27,7 +27,6 @@ import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { Servers } from '@services/nx-config/base-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -50,7 +49,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() selectedServer: NxSystemServer;
     @Input() isOffline: boolean;
     @Output() loaded = new EventEmitter<boolean>(false);
-    LANG: LanguageI18NStaticTypes;
+
+    LANG = staticLang;
 
     editMode = false;
 
@@ -129,7 +129,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     constructor(
-        language: NxLanguageProviderService,
         private appState: NxAppStateService,
         private accountService: NxAccountService,
         private applyService: NxApplyService,
@@ -141,7 +140,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         private toastService: NxToastService
     ) {
         this.servers = servers;
-        this.LANG = language.translations;
 
         this.setupDefaults();
     }
@@ -193,7 +191,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.parsedServerId = cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo
             ? JSON.parse(this.selectedServer.osInfo).platform
-            : this.LANG.common.unknown();
+            : this.LANG.common.unknown;
         const { isAdmin, editAdmins } = this.system.userManager.permissions;
         this.enableEdit = isAdmin;
         this.restartDisabled = !isAdmin;
@@ -203,15 +201,15 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         this.serverDetails = new InfoBlockSection([
             new InfoBlockLine(
-                this.LANG.common.ip(),
+                this.LANG.common.ip,
                 this.selectedServer.ip || '-'
             ),
             new InfoBlockLine(
-                this.LANG.common.os(),
+                this.LANG.common.os,
                 this.selectedServer.osName || '-'
             ),
             new InfoBlockLine(
-                this.LANG.common.version(),
+                this.LANG.common.version,
                 this.selectedServer.version || '-'
             )
         ]);
@@ -258,9 +256,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 }).catch(() => {
                     this.serverNameWatcher.reset();
                     this.toastService.notify(
-                        this.LANG.toastMessage.nameFail({
-                            type: this.LANG.common.server()
-                        }),
+                        {
+                            value: this.LANG.toastMessage.nameFail,
+                            params: {
+                                type: this.LANG.common.server
+                            }
+                        },
                         toast.warning,
                     );
                 });
@@ -330,7 +331,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             ? servers.status[status]
             : '';
         this.selectedServer.shownStatus = status
-            ? this.LANG.servers.status[status]?.()
+            ? this.LANG.servers.status[status]
             : '';
         this.certError = (
             servers.status.mismatchedcertificate ===
@@ -459,7 +460,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                                 this.setStatus('');
                                 this.destroyRestartTake$.next(true);
                                 this.toastService.notify(
-                                    this.LANG.servers.restartSuccessful(),
+                                    this.LANG.servers.restartSuccessful,
                                     toast.success
                                 );
                             }
@@ -521,7 +522,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.applyService.setInvalidField('port');
         } else if (this.ipPortWatcher.value < servers.port.restrictedMax) {
             this.applyService.setInvalidField('port');
-            this.applyService.setWarn(this.LANG.servers.portWarning());
+            this.applyService.setWarn(this.LANG.servers.portWarning);
         } else {
             this.applyService.setWarn('');
         }
@@ -569,7 +570,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     } else if (closeRes === 'error') {
                         this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.notify(
-                            this.LANG.servers.analyticsDataPolicyError(),
+                            this.LANG.servers.analyticsDataPolicyError,
                             toast.warning,
                         );
                     } else if (closeRes === 'cancel') {

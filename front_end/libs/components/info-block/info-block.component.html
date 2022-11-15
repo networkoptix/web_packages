@@ -5,7 +5,7 @@
     let-blockIndex="blockIndex"
 >
     <div class="block">
-        <h6 *ngIf="block.heading">{{ block.heading }}</h6>
+        <h6 *ngIf="block.heading">{{ block.heading | translate }}</h6>
         <div
             class="block-section mw-100 w-100"
             #thisSection
@@ -21,9 +21,9 @@
                     [ngClass]="infoBlockStyle === 'dark' && 'dark'"
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
                     [ngStyle]="{ display: line.show === false ? 'none' : 'flex' }"
-                    [title]="line.name"
+                    [title]="line.name | translate"
                 >
-                    {{ line.name }}
+                    {{ line.name | translate }}
                 </p>
             </div>
             <div class="block-section-values">
@@ -32,9 +32,11 @@
                     [ngClass]="line.customClass"
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
                     [ngStyle]="{ display: line.show === false ? 'none' : 'flex' }"
-                    [title]="line.tooltip || line.name + '-' + line.value"
+                    [title]="
+                        (line.tooltip ? line.tooltip : line.name + '-' + line.value) | translate
+                    "
                 >
-                    {{ line.value
+                    {{ line.value | translate
                     }}<span *ngIf="line.icon">
                         <svg-icon
                             nx-add-svg-src

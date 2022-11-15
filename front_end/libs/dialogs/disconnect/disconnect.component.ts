@@ -1,7 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { of } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -10,7 +10,6 @@ import type { IEnvironment } from '@environments/environment-config';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
@@ -29,7 +28,7 @@ export class DisconnectModalContent {
     @Input() closable: boolean = true;
 
     readonly environment: IEnvironment = environment;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     needsUpdate: boolean;
     disconnect: Process;
     disconnectInterval: number;
@@ -47,7 +46,6 @@ export class DisconnectModalContent {
     // @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private loginService: NxLoginService,
         private simpleDialogService: NxSimpleDialogsService,
@@ -61,7 +59,6 @@ export class DisconnectModalContent {
         },
         @Inject(WINDOW) private window: Window,
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -117,7 +114,7 @@ export class DisconnectModalContent {
         }, res => {
             this.close(true);
             this.toastService.notify(
-                this.LANG.toastMessage.system.disconnected.success(),
+                this.LANG.toastMessage.system.disconnected.success,
                 toast.success,
             );
         }, err => {

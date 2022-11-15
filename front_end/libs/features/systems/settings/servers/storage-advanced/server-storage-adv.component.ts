@@ -10,11 +10,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { Watcher } from '@services/apply.service/watcher';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import {
@@ -169,7 +168,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     currentStorageState: CurrentStorageState;
     loading: boolean = true;
@@ -184,12 +183,10 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     Math = Math;
 
     constructor(
-        languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
-        this.LANG = languageService.translations;
     }
 
     ngOnChanges(changes: NgChanges<NxSystemAdvancedStorageComponent>): void {
@@ -285,15 +282,15 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
                 if (response.error !== undefined && response.error !== '0') {
                     const errorToShow = response.errorString;
                     this.dialogsService
-                        .alert(errorToShow, this.LANG.dialogs.titles.error())
+                        .alert(errorToShow, this.LANG.dialogs.titles.error)
                         .catch(error => {
                             console.error(error);
                         });
                 } else {
                     this.dialogsService
                         .alert(
-                            this.LANG.dialogs.message.storageSettingsSaved(),
-                            this.LANG.dialogs.titles.success()
+                            this.LANG.dialogs.message.storageSettingsSaved,
+                            this.LANG.dialogs.titles.success
                         ).catch(error => {
                             console.error(error);
                         });
@@ -301,8 +298,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
             }, () => {
                 this.dialogsService
                     .alert(
-                        this.LANG.dialogs.message.storageSettingsNotSaved(),
-                        this.LANG.dialogs.titles.error()
+                        this.LANG.dialogs.message.storageSettingsNotSaved,
+                        this.LANG.dialogs.titles.error
                     ).catch(error => {
                         console.error(error);
                     });

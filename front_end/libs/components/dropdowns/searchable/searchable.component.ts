@@ -13,7 +13,6 @@ import { escapeRegExp } from 'lodash-es';
 
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -97,11 +96,10 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
     }
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService,
     ) {
-        super(languageService, configService);
-        this.noMatchMsg ??= this.LANG.search.noMatches?.() || '';
+        super(configService);
+        this.noMatchMsg ??= this.LANG.search.noMatches || '';
     }
 
     ngOnInit(): void {

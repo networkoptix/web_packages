@@ -7,8 +7,6 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -20,20 +18,12 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['connect-error.component.scss']
 })
 export class NxAuthorizeConnectErrorComponent implements OnInit {
-    LANG: LanguageI18NStaticTypes;
-
     @Input() viewType: string;
     @Input() smallView: boolean;
     @Input() clientType: string;
     @Input() errorType: string;
     @Input() processTryAgain: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
-
-    constructor(
-        language: NxLanguageProviderService,
-    ) {
-        this.LANG = language.translations;
-    }
 
     ngOnInit(): void {
     }

@@ -1,8 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, Inject } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
 import { WINDOW } from '@services/window-provider';
 
 import { ICamera, MediaStreamInfo } from '../../vms-client/submodules/vms/datatypes/ICamera';
@@ -26,17 +25,17 @@ export class NxCameraDetailsComponent implements OnChanges {
     @Input() camera: ICamera;
     @Output() close = new EventEmitter<void>();
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     cameraDetails: ICameraDetails[];
     cameraUrl: string;
     currentUrl: string;
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         private clipboardService: ClipboardService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.LANG = languageService.translations;
+
     }
 
     ngOnChanges(): void {
@@ -72,13 +71,13 @@ export class NxCameraDetailsComponent implements OnChanges {
 
             this.cameraDetails = [
                 {
-                    name: this.LANG.common.cameraLinks.lowStream(),
+                    name: this.LANG.common.cameraLinks.lowStream,
                     transports: calcTransportUrls(findIndexTransports(1))
                 }, {
-                    name: this.LANG.common.cameraLinks.highStream(),
+                    name: this.LANG.common.cameraLinks.highStream,
                     transports: calcTransportUrls(findIndexTransports(0))
                 }, {
-                    name: this.LANG.common.cameraLinks.transcoding(),
+                    name: this.LANG.common.cameraLinks.transcoding,
                     transports: calcTransportUrls(findIndexTransports(-1))
                 }
             ];

@@ -1,10 +1,10 @@
 import { Component, Input, HostListener, OnInit, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
 import type { AboutNode } from '../about.component.types';
@@ -32,8 +32,7 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     // @ViewChild('integrationsScroll') integrationsScroll: ElementRef
-
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     integrationsDetails() {
         const allPlugins = this.integrationsNode.nodes[1].nodes;
@@ -51,7 +50,7 @@ export class NxIntegrationsComponent implements OnInit {
         const { maxPlugins, perRow } = getPluginsToShow();
         const show = Math.min(allPlugins.length, maxPlugins);
         const translatedCount = this.sanitizer.bypassSecurityTrustHtml(
-            this.LANG.common.morePlugins({
+            this.translateService.instant(this.LANG.common.morePlugins, {
                 count: this.pluginCount - show,
                 startTag: '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
                 endTag: '</strong>'
@@ -87,12 +86,11 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     constructor(
-        languageService: NxLanguageProviderService,
         @Inject(WINDOW) private window: Window,
+        private translateService: TranslateService,
         private cloudApi: NxCloudApiService,
         private sanitizer: DomSanitizer
     ) {
-        this.LANG = languageService.translations;
         this.errorManager = new ErrorStateManager(this.window);
     }
 

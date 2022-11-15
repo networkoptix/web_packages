@@ -7,11 +7,10 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
@@ -25,7 +24,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     activateTrialKey: any;
 
@@ -52,7 +51,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                         this.haveTrialLicense = true;
 
                         this.dialogsService.notify(
-                            this.LANG.license.messages.trialActivated(),
+                            this.LANG.license.messages.trialActivated,
                             'success'
                         );
                     }
@@ -78,7 +77,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                 }, fail => {
                     if (fail.error.type === 'error') {
                         this.dialogsService
-                            .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
+                            .notify(this.LANG.errorCodes.licenseFail, 'danger');
                     }
                 });
         });
@@ -86,12 +85,11 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
 
         this.setupDefaults();
     }

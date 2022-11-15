@@ -59,10 +59,12 @@
                 <ng-template #cancelTransferText>
                     <span
                         [innerHTML]="
-                            LANG.system.transferTo({
-                                newOwnerName: newOwnerName,
-                                newOwnerEmail: transferInfo.toAccount
-                            })
+                            LANG.system.transferTo
+                                | translate
+                                    : {
+                                          newOwnerName: newOwnerName,
+                                          newOwnerEmail: transferInfo.toAccount
+                                      }
                         "
                     ></span>
                     <a
@@ -77,10 +79,12 @@
                     <div class="mb-2">
                         <span
                             [innerHTML]="
-                                LANG.system.ownerWantsToTransfer({
-                                    ownerName: system.info.ownerFullName,
-                                    ownerEmail: system.info.ownerAccountEmail
-                                })
+                                LANG.system.ownerWantsToTransfer
+                                    | translate
+                                        : {
+                                              ownerName: system.info.ownerFullName,
+                                              ownerEmail: system.info.ownerAccountEmail
+                                          }
                             "
                         ></span>
                     </div>
@@ -186,7 +190,7 @@
                     ><span>&nbsp;– </span>
                     <span
                         class="name"
-                        [innerText]="updateUserRole()"
+                        [innerText]="updateUserRole() | translate"
                     ></span>
                 </span>
                 <div
@@ -217,13 +221,13 @@
                         type="success"
                         *ngIf="CONFIG.cloudSystemId"
                     >
-                        {{ LANG.system.connected() | uppercase }}
+                        {{ LANG.system.connected | translate | uppercase }}
                     </nx-tag>
                     <nx-tag
                         locked
                         *ngIf="!CONFIG.cloudSystemId"
                     >
-                        {{ LANG.system.not_connected() | uppercase }}
+                        {{ LANG.system.not_connected | translate | uppercase }}
                     </nx-tag>
                 </div>
                 <div class="float-left">

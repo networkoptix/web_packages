@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { Auth, MenuNode } from '@services/menus.service.types';
 
@@ -19,7 +19,6 @@ import { apiBase } from '../variables/static-variables';
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService } from './session.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -29,7 +28,7 @@ import { NxSessionService } from './session.service';
 export class NxMenusService {
     private menusStructure: MenusStructure;
     private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    private LANG = staticLang;
     private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
     apiBase: string = apiBase;
@@ -44,36 +43,35 @@ export class NxMenusService {
     }> = {};
 
     constructor(
-        languageService: NxLanguageProviderService,
         public configService: NxConfigService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
         private http: HttpClient
     ) {
         this.CONFIG = configService.getConfig();
+        this.updateMenu();
 
-        languageService.translateSubject.asObservable()
+        translate.onTranslationChange
             .pipe(
                 filter(lang => lang !== null),
                 distinctUntilChanged(),
                 untilDestroyed(this)
             )
-            .subscribe(translations => {
+            .subscribe(() => {
                 setTimeout(() => {
-                    this.LANG = translations;
-                    this.updateMenu(translations);
+                    this.updateMenu();
                 });
             });
     }
 
-    updateMenu = (translations): void => {
+    updateMenu = (): void => {
         this.languageChanged$.next('changed');
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
             (newMenu, [name, { title, description, nodes }]) => {
                 newMenu[name] = {
                     title,
                     description,
-                    nodes: nodes.map(this.translateNode(translations))
+                    nodes: nodes.map(this.translateNode())
                 };
                 return newMenu;
             }, {});
@@ -174,28 +172,25 @@ export class NxMenusService {
         return nodes;
     }, []);
 
-    private translateNode = (lang?, breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
+    private translateNode = (breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
         if (!node) {
             return;
         }
         // eslint-disable-next-line camelcase
         let display_name = node.display_name || node.name;
         let name = node.name;
-
-        if (lang) {
-            let translatedRaw = '';
-            if (node.name_raw || node.name) {
-                translatedRaw = this.translate.instant(node.name_raw || node.name);
-            }
-            if (translatedRaw && translatedRaw !== node.name_raw) {
-                name = translatedRaw;
-                // eslint-disable-next-line camelcase
-                display_name = translatedRaw;
-            } else {
-                // eslint-disable-next-line camelcase
-                display_name = this.translate.instant(display_name);
-                name = this.translate.instant(node.name);
-            }
+        let translatedRaw = '';
+        if (node.name_raw || node.name) {
+            translatedRaw = this.translate.instant(node.name_raw || node.name);
+        }
+        if (translatedRaw && translatedRaw !== node.name_raw) {
+            name = translatedRaw;
+            // eslint-disable-next-line camelcase
+            display_name = translatedRaw;
+        } else {
+            // eslint-disable-next-line camelcase
+            display_name = this.translate.instant(display_name);
+            name = this.translate.instant(node.name);
         }
 
         if (node.name === 'Support') {
@@ -207,7 +202,7 @@ export class NxMenusService {
             }
         }
 
-        const nodes = node.nodes?.map(this.translateNode(lang, [...breadcrumbs, node])) || [];
+        const nodes = node.nodes?.map(this.translateNode([...breadcrumbs, node])) || [];
         return { ...node, display_name, name, nodes, breadcrumbs };
     };
 
@@ -247,23 +242,23 @@ export class NxMenusService {
 
     makeSystemMenuNode() {
         const systemLang = this.LANG.appHeader.headerMenuNodes.system;
-        const systemNode = new MenuNode(systemLang.displayName(), '/systems');
-        systemNode.nodes.push(new MenuNode(systemLang.nodes[0].displayName(), '/systems'));
+        const systemNode = new MenuNode(systemLang.displayName, '/systems');
+        systemNode.nodes.push(new MenuNode(systemLang.nodes[0].displayName, '/systems'));
         return systemNode;
     }
 
     makeAccountSettingsNode() {
         const accountSettingsLang = this.LANG.appHeader.headerMenuNodes.accountSettings;
-        const accountNode = new MenuNode(accountSettingsLang.displayName(), '/account');
+        const accountNode = new MenuNode(accountSettingsLang.displayName, '/account');
         accountNode.invisible = true;
-        accountNode.nodes.push(new MenuNode(accountSettingsLang.nodes[0].displayName(), '/account'));
+        accountNode.nodes.push(new MenuNode(accountSettingsLang.nodes[0].displayName, '/account'));
         return accountNode;
     }
 
     makeWelcomeNode() {
         const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
-        const welcomeNode = new MenuNode(welcomeLang.displayName(), 'content/about');
-        welcomeNode.nodes.push(new MenuNode(welcomeLang.nodes[0].displayName(), 'content/about'));
+        const welcomeNode = new MenuNode(welcomeLang.displayName, 'content/about');
+        welcomeNode.nodes.push(new MenuNode(welcomeLang.nodes[0].displayName, 'content/about'));
         return welcomeNode;
     }
 
@@ -288,13 +283,13 @@ export class NxMenusService {
         const viewNode = new MenuNode(
             'View',
             this.getUrl(activeSystem.id, { view: true }),
-            this.LANG?.serverTabTitles.View(),
+            this.LANG?.serverTabTitles.View,
             this.endpoint.view || false
         );
         const settingsNode = new MenuNode(
             'Settings',
             this.getUrl(activeSystem.id, { settings: true }),
-            this.LANG?.serverTabTitles.Settings(),
+            this.LANG?.serverTabTitles.Settings,
             this.endpoint.settings || false
         );
 
@@ -303,7 +298,7 @@ export class NxMenusService {
             const informationNode = new MenuNode(
                 'Information',
                 this.getUrl(activeSystem.id, { information: true }),
-                this.LANG?.serverTabTitles.Information(),
+                this.LANG?.serverTabTitles.Information,
                 this.endpoint.information || false
             );
             nodes.push(informationNode);
@@ -311,7 +306,7 @@ export class NxMenusService {
             const monitoringNode = new MenuNode(
                 'Monitoring',
                 this.getUrl(activeSystem.id, { monitoring: true }),
-                this.LANG?.serverTabTitles.Monitoring(),
+                this.LANG?.serverTabTitles.Monitoring,
                 this.endpoint.monitoring || false
             );
             nodes.push(monitoringNode);
@@ -322,7 +317,7 @@ export class NxMenusService {
             const layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),
-                this.LANG?.serverTabTitles.Layouts(),
+                this.LANG?.serverTabTitles.Layouts,
                 this.endpoint.layouts || false
             );
             nodes.push(layoutsNode);
@@ -332,7 +327,7 @@ export class NxMenusService {
             const bookmarksNode = new MenuNode(
                 'Bookmarks',
                 this.getUrl(activeSystem.id, { bookmarks: true }),
-                this.LANG?.serverTabTitles.Bookmarks(),
+                this.LANG?.serverTabTitles.Bookmarks,
                 this.endpoint.bookmarks || false
             );
             nodes.push(bookmarksNode);

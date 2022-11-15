@@ -2,12 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type {
     NxSystemWithUserInfo
@@ -22,7 +21,7 @@ import { WINDOW } from '@services/window-provider';
     templateUrl: 'debug.component.html'
 })
 export class NxDebugComponent {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     // eslint-disable-next-line no-tabs
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
@@ -70,12 +69,10 @@ export class NxDebugComponent {
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
         private dialogsService: NxDialogsService,
-        private languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private systemsService: NxSystemsService,
         private urlProtocol: NxUrlProtocolService,
     ) {
-        this.LANG = this.languageService.translations;
         this.accountService.get().then(acc => {
             this.init();
         });
@@ -129,7 +126,7 @@ export class NxDebugComponent {
                     if (this.debugProcess.success) {
                         resolve({
                             data: {
-                                resultCode: this.LANG.errorCodes.ok?.()
+                                resultCode: this.LANG.errorCodes.ok
                             }
                         });
                     } else {

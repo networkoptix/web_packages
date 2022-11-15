@@ -15,12 +15,11 @@ import { ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import type { Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -60,7 +59,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() vendors: Vendors[];
     @Input() numCameras: number;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     topXByVolume: { value: number };
@@ -72,13 +71,12 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+
         private uri: NxUriService,
         private router: Router,
         private renderer: Renderer2,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
 
         this.topXByVolume = {
@@ -87,49 +85,49 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
         this.tagFilters = [
             {
-                label: this.LANG.cameraFilters.highRes(),
+                label: this.LANG.cameraFilters.highRes,
                 select: { id: 'resolution', value: '8000000' },
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.LANG.cameraFilters.aptz(),
+                label: this.LANG.cameraFilters.aptz,
                 tagId: 'isAptzSupported',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.LANG.cameraFilters.ptz(),
+                label: this.LANG.cameraFilters.ptz,
                 tagId: 'isPtzSupported',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.LANG.cameraFilters.audio(),
+                label: this.LANG.cameraFilters.audio,
                 tagId: 'isAudioSupported',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.LANG.cameraFilters.H265(),
+                label: this.LANG.cameraFilters.H265,
                 tagId: 'isH265',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.LANG.cameraFilters.encoder(),
+                label: this.LANG.cameraFilters.encoder,
                 multiselect: { id: 'hardwareTypes', value: 'encoder' }
             },
             {
-                label: this.LANG.cameraFilters.TwWayAudio(),
+                label: this.LANG.cameraFilters.TwWayAudio,
                 tagId: 'isTwAudioSupported'
             },
             {
-                label: this.LANG.cameraFilters.multiSensor(),
+                label: this.LANG.cameraFilters.multiSensor,
                 multiselect: { id: 'hardwareTypes', value: 'multiSensorCamera' }
             },
             {
-                label: this.LANG.cameraFilters.fisheye(),
+                label: this.LANG.cameraFilters.fisheye,
                 tagId: 'isFisheye',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.LANG.cameraFilters.IO(),
+                label: this.LANG.cameraFilters.IO,
                 tagId: 'isIoSupported',
                 multiselect: { id: 'hardwareTypes', value: 'other' }
             }

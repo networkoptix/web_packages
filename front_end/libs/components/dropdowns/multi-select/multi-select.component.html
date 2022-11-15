@@ -11,7 +11,7 @@
         data-toggle="dropdown"
     >
         <span
-            [innerText]="textSelected"
+            [innerText]="textSelected | translate"
             class="ellipsis d-contents d-md-block"
         ></span>
         <div class="arrow-flip">
@@ -79,7 +79,7 @@
                     <label
                         class="ellipsis"
                         [htmlFor]="item.id"
-                        >{{ item.label }}</label
+                        >{{ item.label | translate }}</label
                     >
                 </div>
             </li>

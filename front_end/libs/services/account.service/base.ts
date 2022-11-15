@@ -2,12 +2,13 @@ import { DOCUMENT, Location } from '@angular/common';
 import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions, accountSelectors } from '@common/store/account';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
@@ -22,7 +23,6 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
@@ -40,7 +40,7 @@ import { Account } from './account';
 @Injectable()
 export abstract class BaseAccount implements OnDestroy {
     protected CONFIG: IConfig;
-    protected LANG: LanguageI18NStaticTypes;
+    protected LANG = staticLang;
     protected location: Location;
     protected requestingLogin: any;
     protected loginDialogActive: boolean;
@@ -75,7 +75,7 @@ export abstract class BaseAccount implements OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        protected translateService: TranslateService,
         locationService: Location,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
@@ -95,7 +95,6 @@ export abstract class BaseAccount implements OnDestroy {
         protected store: Store,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
         // language provider will be ready at this point
         // we don't support dynamic lang switch ... ==TT
         // languageService.translateSubject.subscribe(lang => { this.LANG = lang; });
@@ -140,9 +139,9 @@ export abstract class BaseAccount implements OnDestroy {
             filter(() => !!this.tokens)
         ).subscribe(accessToken => {
             if (this.tokens.access_token !== accessToken) {
-                return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
+                return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
             }
-            this.dialogs.notify(this.LANG.toastMessage.loggingIn(), 'success', false);
+            this.dialogs.notify(this.LANG.toastMessage.loggingIn, 'success', false);
             this.loginTokens(this.tokens).then(() => { });
         });
     }
@@ -350,16 +349,16 @@ export abstract class BaseAccount implements OnDestroy {
 
                     let cancelLabel = '';
                     if (isRegister) {
-                        cancelLabel = this.LANG.dialogs.buttons.createAccount();
+                        cancelLabel = this.LANG.dialogs.buttons.createAccount;
                     } else if (isRestore) {
-                        cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised();
+                        cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
                     } else {
-                        cancelLabel = this.LANG.dialogs.buttons.cancel();
+                        cancelLabel = this.LANG.dialogs.buttons.cancel;
                     }
                     return this.dialogs
                         .confirm('',
-                            this.LANG.dialogs.titles.changeAccount({ email: account.email }),
-                            this.LANG.dialogs.buttons.stayLoggedIn(),
+                            { value: this.LANG.dialogs.titles.changeAccount, params: { email: account.email } },
+                            this.LANG.dialogs.buttons.stayLoggedIn,
                             undefined,
                             cancelLabel,
                             ''
@@ -398,11 +397,11 @@ export abstract class BaseAccount implements OnDestroy {
         const data = e.error;
         if (data?.error === 'second_factor_required') {
             this.tokens = data;
-            this.dialogs.notify(this.LANG.toastMessage.twoFaRequired(), 'info', false);
+            this.dialogs.notify(this.LANG.toastMessage.twoFaRequired, 'info', false);
             return this.oauthService.add2fa(data.access_token || '');
         } else {
             this.clearCodeFromUri();
-            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
+            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
             await this.sleep(3000);
             return Promise.resolve(true);
         }
@@ -453,10 +452,10 @@ export abstract class BaseAccount implements OnDestroy {
             }
 
             const res = await this.dialogs.confirm('',
-                this.LANG.dialogs.titles.loggedFromOtherAccount(),
-                this.LANG.dialogs.buttons.ok(),
+                this.LANG.dialogs.titles.loggedFromOtherAccount,
+                this.LANG.dialogs.buttons.ok,
                 undefined,
-                this.LANG.dialogs.buttons.stayAs({ email: account.email }),
+                { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
                 'long-cancel-button');
             if (res === true) {
                 this.stopAccountPoll();
@@ -482,10 +481,10 @@ export abstract class BaseAccount implements OnDestroy {
             }
             const response = await this.dialogs
                 .confirm('',
-                    this.LANG.dialogs.titles.loggedFromOtherAccount(),
-                    this.LANG.dialogs.buttons.ok(),
+                    this.LANG.dialogs.titles.loggedFromOtherAccount,
+                    this.LANG.dialogs.buttons.ok,
                     undefined,
-                    this.LANG.dialogs.buttons.stayAs({ email: account.email }),
+                    { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
                     'long-cancel-button');
 
             if (response === true) {
@@ -495,7 +494,7 @@ export abstract class BaseAccount implements OnDestroy {
             }
             return this.clearAuthFromUri().then(() => this.document.location.reload());
         } catch (e) {
-            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
+            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
             return this.requireLogin();
         } finally {
             this.appStateService.ready = true;

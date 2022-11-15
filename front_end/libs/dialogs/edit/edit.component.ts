@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     ConfigType,
     ModalManifest,
@@ -19,7 +18,6 @@ import {
 } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
@@ -52,7 +50,6 @@ export class EditModalContent {
     errors: Record<string, string[]> = {};
     processDisabled = false;
     name = '';
-    LANG: LanguageI18NStaticTypes;
     createContext: Process;
     saveContext: Process;
     deleteContext: Process;
@@ -64,7 +61,6 @@ export class EditModalContent {
     } = {};
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private cloudApi: NxCloudApiService,
@@ -73,7 +69,6 @@ export class EditModalContent {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {

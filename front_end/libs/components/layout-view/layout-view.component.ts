@@ -9,7 +9,7 @@ import { uniq } from 'lodash-es';
 import { BehaviorSubject, combineLatest, concat, merge, Observable, Subject } from 'rxjs';
 import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode } from '@components/layout-grid/layout-grid.types';
 import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
@@ -17,7 +17,6 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -42,7 +41,7 @@ interface ResourceLookup<T = { id: string }> {
 })
 
 export class NxLayoutViewComponent {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
     ptzControlTarget: ICamera;
 
@@ -163,7 +162,7 @@ export class NxLayoutViewComponent {
         }) => {
             const layouts = mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts({ _keepDefault: true, parentId }).toPromise() : [];
             if (!layouts.length || this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) {
-                layouts.push(this.createNewLayout(systemId, parentId, (this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) ? this.LANG.layouts.createNew() : this.LANG.layouts.pleaseAddNew()));
+                layouts.push(this.createNewLayout(systemId, parentId, (this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) ? this.LANG.layouts.createNew : this.LANG.layouts.pleaseAddNew));
             }
 
             return layouts;
@@ -234,7 +233,6 @@ export class NxLayoutViewComponent {
             ))
         ));
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService,
         private router: Router,
         // private location: Location,
@@ -245,7 +243,6 @@ export class NxLayoutViewComponent {
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
     }
 
     changeLayout(layout: string | DropdownItem<string>): void {

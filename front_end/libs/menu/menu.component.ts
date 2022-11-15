@@ -18,11 +18,9 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
@@ -100,13 +98,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
     private origLevel3: string;
     private menuOverflowCalc: number;
 
-    LANG: LanguageI18NStaticTypes;
-
     @ViewChild('menuWrapper') menuWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('scrollArea') scrollArea: ElementRef<HTMLDivElement>;
 
     constructor(
-        languageService: NxLanguageProviderService,
         private router: Router,
         private route: ActivatedRoute,
         private renderer: Renderer2,
@@ -116,7 +111,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         public menuService: NxMenuService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {

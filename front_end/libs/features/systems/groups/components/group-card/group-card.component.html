@@ -17,10 +17,10 @@
         <div class="system-list-bottom-bar">
             <div class="group-children">
                 <span class="user-name">{{
-                    LANG.systemGroups.groupCount({ count: group.groups.length })
+                    LANG.systemGroups.groupCount | translate: { count: group.groups.length }
                 }}</span>
                 <span class="user-name">{{
-                    LANG.systemGroups.systemCount({ count: group.systemsCount })
+                    LANG.systemGroups.systemCount | translate: { count: group.systemsCount }
                 }}</span>
             </div>
         </div>

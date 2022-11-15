@@ -27,7 +27,7 @@
                     >
                         <span
                             class="tab-heading"
-                            [textContent]="LANG.downloads.releasesTypes[type]() || type"
+                            [textContent]="(LANG.downloads.releasesTypes[type] | translate) || type"
                         ></span>
                     </a>
                 </li>
@@ -40,7 +40,6 @@
                     >
                         <div *ngFor="let release of activeBuilds">
                             <nx-release
-                                [LANG]="LANG"
                                 [build]="
                                     build ||
                                     (release.backwardsCompatible

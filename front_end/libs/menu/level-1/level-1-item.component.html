@@ -25,7 +25,7 @@
         ></svg-icon>
     </div>
     <span [ngClass]="{ 'fs-mask': item.id === 'settings' }"
-        ><ng-container>{{ item.label }}</ng-container>
+        ><ng-container>{{ item.label | translate }}</ng-container>
     </span>
     <div
         *ngIf="item.alerts"

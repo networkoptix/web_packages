@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageMetaService } from '@services/page-meta.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,7 +13,7 @@ export class NxPageTitleStrategy extends TitleStrategy {
 
     constructor(
         configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
+        private translateService: TranslateService,
         private pageMetaService : NxPageMetaService,
     ) {
         super();
@@ -21,28 +22,29 @@ export class NxPageTitleStrategy extends TitleStrategy {
     }
 
     override updateTitle(routerState: RouterStateSnapshot): void {
-        const lang = this.languageService.translations;
+        const lang = staticLang;
         let title = this.buildTitle(routerState);
         let description: string;
 
         if (title) {
+            const productName = this.translateService.instant(lang.productName || '%CLOUD_NAME%');
             try {
                 const titleObj = JSON.parse(title);
                 switch (titleObj.type) {
                     case 'product':
-                        title = lang.productName();
+                        title = productName;
                         break;
                     case 'system':
                         title = titleObj.baseTitle
-                            ? `${titleObj.baseTitle} - ${lang.productName()}`
-                            : lang.productName();
+                            ? `${this.translateService.instant(titleObj.baseTitle)} - ${productName}`
+                            : productName;
                         break;
                     default:
                         const mod = titleObj.modifier
-                            ? `${lang.downloads.groups[titleObj.modifier].label()}`
-                            : ` - ${lang.productName()}`;
+                            ? `${this.translateService.instant(lang.downloads.groups[titleObj.modifier].label)}`
+                            : ` - ${productName}`;
 
-                        title = lang.pageTitles[titleObj.baseTitle]() + mod;
+                        title = this.translateService.instant(lang.pageTitles[titleObj.baseTitle]) + mod;
                         break;
                 }
 
@@ -53,13 +55,13 @@ export class NxPageTitleStrategy extends TitleStrategy {
                     }
                 }
             } catch (ex) {
-                title = `${lang.pageTitles[title]()} - ${lang.productName()}`;
+                title = `${this.translateService.instant(lang.pageTitles[title])} - ${productName}`;
             }
         } else {
-            title = lang.metaDefaults.default.title();
+            title = this.translateService.instant(lang.metaDefaults.default.title);
         }
 
-        description = description ?? lang.metaDefaults.default.description();
+        description = this.translateService.instant(description ?? lang.metaDefaults.default.description);
         this.pageMetaService.setMetaProperties(routerState.url, { title, description });
     }
 }

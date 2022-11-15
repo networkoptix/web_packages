@@ -7,12 +7,12 @@ import {
     Output,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, interval } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -25,7 +25,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 })
 
 export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     icons = icons;
 
     @Input() viewType: string;
@@ -42,25 +42,24 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     contentMessage$: Observable<string>;
 
     constructor(
-        language: NxLanguageProviderService,
+        private translateService: TranslateService,
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
         this.contentHeader$ = this.activated$.pipe(map((activated: boolean) => {
             return activated
-                ? this.LANG.authorize.activatedText()
-                : this.LANG.authorize.createdText();
+                ? this.LANG.authorize.activatedText
+                : this.LANG.authorize.createdText;
         }));
         this.contentMessage$ = combineLatest([this.activated$, this.fromEmail$]).pipe(map(([activated, fromEmail]) => {
             const params = { accountEmail: this.loginEmail || '' };
             if (activated) {
                 return fromEmail
-                    ? this.LANG.authorize.activatedAdditional(params)
+                    ? this.translateService.instant(this.LANG.authorize.activatedAdditional, params)
                     : '';
             } else {
-                return this.LANG.authorize.createdAdditional(params);
+                return this.translateService.instant(this.LANG.authorize.createdAdditional, params);
             }
         }));
 

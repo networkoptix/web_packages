@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
 
 @Component({
     selector: 'nx-bookmarks-component',
@@ -10,13 +9,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 })
 
 export class NxBookmarksComponent implements OnInit {
-    LANG: LanguageI18NStaticTypes;
-
-    constructor(
-        language: NxLanguageProviderService,
-    ) {
-        this.LANG = language.translations;
-    }
+    LANG = staticLang;
 
     ngOnInit(): void {}
 }

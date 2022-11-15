@@ -1,9 +1,8 @@
 import { Component, Inject, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -16,19 +15,17 @@ import type { NxSystem } from '@services/system.service/system';
 export class ChangeStorageModalContent {
     @Input() closable: boolean = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     system: NxSystem;
     deleteAnalyticsData: Process;
     keepAnalyticsData: Process;
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) dialogData: { system: NxSystem }
     ) {
-        this.LANG = language.translations;
         this.system = dialogData.system;
     }
 

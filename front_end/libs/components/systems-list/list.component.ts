@@ -11,13 +11,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { search } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
@@ -41,7 +40,7 @@ type Endpoint = Partial<{
 })
 
 export class NxSystemsListComponent implements OnInit {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     showSearch: boolean;
     fetchComplete: boolean;
     search: { value: string };
@@ -71,12 +70,10 @@ export class NxSystemsListComponent implements OnInit {
     show2faRequired = false;
 
     private setupDefaults(): void {
-        this.LANG = this.language.translations;
         this.search = { value: '' };
     }
 
     constructor(
-        private language: NxLanguageProviderService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
@@ -129,7 +126,7 @@ export class NxSystemsListComponent implements OnInit {
             this.fetchComplete = true;
             return this.systemsService.forceUpdateSystems().toPromise();
         }, {
-            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
+            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix,
             logoutForbidden: true
         });
 
@@ -158,7 +155,7 @@ export class NxSystemsListComponent implements OnInit {
         if (search) {
             this.filteredSystems = this.systems.filter(system => {
                 return !search ||
-                    this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
+                    this.hasMatch(this.LANG.system.mySystemSearch, search) &&
                     (system.ownerAccountEmail === this.accountService.email) ||
                     this.hasMatch(system.name, search) ||
                     this.hasMatch(system.ownerFullName, search) ||

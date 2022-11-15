@@ -10,13 +10,12 @@ import { takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -29,7 +28,7 @@ import { NxMonitoringService } from './monitoring.service';
     templateUrl: 'monitoring.component.html',
 })
 export class NxMonitoringComponent implements OnInit {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     content: Content;
     system: NxSystem;
@@ -43,7 +42,6 @@ export class NxMonitoringComponent implements OnInit {
     private destroy$ = new Subject<true>();
 
     constructor(
-        languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private menuService: NxMenuService,
         private sourceService: NxAppSourceService,
@@ -51,8 +49,6 @@ export class NxMonitoringComponent implements OnInit {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
-        this.LANG = languageService.translations;
-
         this.content = {
             base: '',
             selectedSection: 'graphs',
@@ -61,12 +57,12 @@ export class NxMonitoringComponent implements OnInit {
                 {
                     id: menus.systemMonitoring.graphs.id,
                     svg: menus.systemMonitoring.graphs.icon,
-                    label: this.LANG.menu.titles.graphs(),
+                    label: this.LANG.menu.titles.graphs,
                     path: menus.systemMonitoring.graphs.path,
                 }, {
                     id: menus.systemMonitoring.logs.id,
                     svg: menus.systemMonitoring.logs.icon,
-                    label: this.LANG.menu.titles.logs(),
+                    label: this.LANG.menu.titles.logs,
                     path: menus.systemMonitoring.logs.path,
                 }
             ]

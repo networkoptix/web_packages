@@ -6,6 +6,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { icons } from '@lib/variables/static-variables';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import { NxRibbonService } from './ribbon.service';
@@ -19,7 +20,7 @@ import type { RibbonAction } from './ribbon.types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxRibbonComponent implements OnInit {
-    message: string = '';
+    message: Translatable = '';
     actions: RibbonAction[] = [];
     visibility: boolean = false;
     type?: string;

@@ -11,11 +11,10 @@ import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'r
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -256,15 +255,14 @@ export class NxLayoutGridComponent {
         })
     );
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         private cd: ChangeDetectorRef
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.config;
     }
 

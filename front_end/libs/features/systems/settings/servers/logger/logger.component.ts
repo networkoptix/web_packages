@@ -5,7 +5,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -14,7 +14,6 @@ import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { servers } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { LogLevel, LogLevelReply } from '@services/system-api.types';
@@ -37,7 +36,7 @@ export class NxServerLoggerComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     showLoggers: boolean = false;
     saveLoggers: Process;
@@ -48,14 +47,11 @@ export class NxServerLoggerComponent implements OnChanges {
     readonly loggerOptions: LoggerOption[];
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
         private simpleDialogService: NxSimpleDialogsService,
         private applyService: NxApplyService
     ) {
-        this.LANG = language.translations;
-
         this.loggerOptions = [
             'none',
             'error',
@@ -65,8 +61,8 @@ export class NxServerLoggerComponent implements OnChanges {
             'verbose',
         ].map(level => ({
             value: level,
-            name: this.LANG.system.loggers[level].text(),
-            help: this.LANG.system.loggers[level].help()
+            name: this.LANG.system.loggers[level].text,
+            help: this.LANG.system.loggers[level].help
         }));
 
         this.saveLoggers = this.processService.createProcess(
@@ -84,8 +80,8 @@ export class NxServerLoggerComponent implements OnChanges {
                 });
                 this.dialogsService
                     .alert(
-                        this.LANG.dialogs.message.logLevelsSaved(),
-                        this.LANG.dialogs.titles.success()
+                        this.LANG.dialogs.message.logLevelsSaved,
+                        this.LANG.dialogs.titles.success
                     ).catch(error => {
                         console.error(error);
                     });
@@ -94,8 +90,8 @@ export class NxServerLoggerComponent implements OnChanges {
                 const handleError = (): void => {
                     this.dialogsService
                         .alert(
-                            this.LANG.dialogs.message.logLevelsNotSaved(),
-                            this.LANG.dialogs.titles.error()
+                            this.LANG.dialogs.message.logLevelsNotSaved,
+                            this.LANG.dialogs.titles.error
                         ).catch(error => {
                             console.error(error);
                         });
@@ -147,6 +143,7 @@ export class NxServerLoggerComponent implements OnChanges {
             value,
             originalValue: value
         }));
+        console.log(this.systemLoggers);
 
         this.loggerWatcher.reset();
         this.applyService.addWatchersAndFunctionsFromChild(

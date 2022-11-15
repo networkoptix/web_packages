@@ -3,14 +3,13 @@ import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { apiBase } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -23,7 +22,7 @@ import { WINDOW } from '@services/window-provider';
 })
 export class NxContentComponent implements OnInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     apiBase: string = apiBase;
 
     injector: Injector;
@@ -51,7 +50,7 @@ export class NxContentComponent implements OnInit {
     constructor(
         injector: Injector,
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         private route: ActivatedRoute,
         private http: HttpClient,
         private pageService: NxPageService,
@@ -63,7 +62,6 @@ export class NxContentComponent implements OnInit {
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -81,7 +79,7 @@ export class NxContentComponent implements OnInit {
                 this.agreementDetails.review_id
             );
         }, {
-            successMessage: this.LANG.account.agreementAccepted?.()
+            successMessage: this.LANG.account.agreementAccepted
         }).then(() => {
             this.showAgree = false;
             if (this.account.is_staff) {
@@ -189,7 +187,7 @@ export class NxContentComponent implements OnInit {
                 const content = parser.parseFromString(result, 'text/html');
                 this.pageService.pageTitle(
                     content.querySelector('h1')?.innerText ||
-                    this.LANG.productName()
+                    this.LANG.productName
                 );
                 this.loaded = true;
                 /* If content was successfully compiled from static files,

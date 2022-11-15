@@ -2,15 +2,15 @@
     <nx-player-placeholder
         *ngIf="errorEncryption"
         svgFileName="camera_archive_encrypted"
-        [heading]="LANG.errorCodes.archiveEncrypted()"
-        [description]="LANG.errorCodes.archiveEncryptedMessage()"
+        [heading]="LANG.errorCodes.archiveEncrypted"
+        [description]="LANG.errorCodes.archiveEncryptedMessage"
     >
     </nx-player-placeholder>
 
     <nx-player-placeholder
         *ngIf="errorPlayback"
         svgFileName="alert"
-        [heading]="LANG.common.cameraStates.error()"
+        [heading]="LANG.common.cameraStates.error"
         [description]="errorPlaybackDescription"
     >
     </nx-player-placeholder>

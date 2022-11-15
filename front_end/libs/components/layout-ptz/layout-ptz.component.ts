@@ -3,8 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { clamp } from 'lodash-es';
 import { BehaviorSubject, map, NEVER, switchMap } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
 import { PtzCommands } from '@services/system-api.types';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
@@ -24,7 +23,7 @@ export class NxLayoutPtzComponent {
 
     action$ = new BehaviorSubject<string>(null);
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     triggerAction(event?: MouseEvent): void {
         const action = (event?.target as HTMLButtonElement)?.value;
@@ -67,9 +66,7 @@ export class NxLayoutPtzComponent {
     };
 
     constructor(
-        languageService: NxLanguageProviderService,
     ) {
-        this.LANG = languageService.translations;
         const updater$ = new BehaviorSubject(1);
         this.action$.pipe(
             switchMap(action => {

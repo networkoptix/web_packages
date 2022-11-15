@@ -27,7 +27,7 @@ export class NxToast implements OnChanges {
     destroy$ = new Subject<boolean>();
 
     isTemplate(
-        content: string | TemplateRef<unknown>
+        content: string | TemplateRef<unknown> | { value: string, params?: unknown } | unknown
     ): content is TemplateRef<unknown> {
         return content instanceof TemplateRef;
     }

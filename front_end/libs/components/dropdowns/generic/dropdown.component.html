@@ -37,11 +37,11 @@
             }"
         >
             <ng-container *ngIf="_selectedItem">
-                {{ _selectedItem.name }}
+                {{ _selectedItem.name | translate }}
                 <span
                     *ngIf="_selectedItem.help && !_selectedItem.name.includes(_selectedItem.help)"
                     class="additional-help"
-                    >{{ _selectedItem.help }}</span
+                    >{{ _selectedItem.help | translate }}</span
                 >
             </ng-container>
         </span>
@@ -113,11 +113,11 @@
                     </ng-container>
                 </ng-template>
                 <ng-template #itemText>
-                    {{ item.name }}
+                    {{ item.name | translate }}
                     <span
                         *ngIf="item.help && !item.name.includes(item.help)"
                         class="additional-help"
-                        >{{ item.help }}</span
+                        >{{ item.help | translate }}</span
                     >
                 </ng-template>
                 <ng-template #enabledItem>

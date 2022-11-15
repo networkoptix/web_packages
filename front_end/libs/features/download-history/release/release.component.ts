@@ -4,7 +4,7 @@ import {
     Input
 } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 
 @Component({
@@ -15,8 +15,9 @@ import type { Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 export class ReleaseComponent implements OnInit {
     @Input() build: string;
     @Input() release: Downloads;
-    @Input() LANG: LanguageI18NStaticTypes;
     @Input() linkbase: string;
+
+    LANG = staticLang;
 
     cardExpanded: Record<string, boolean>;
 

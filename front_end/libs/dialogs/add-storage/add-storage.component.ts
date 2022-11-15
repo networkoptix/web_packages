@@ -10,10 +10,10 @@ import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { responseOk, toast } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import {
@@ -32,7 +32,7 @@ import { NxToastService } from '../toast.service';
 export class AddStorageModalContent {
     @Input() closable: boolean = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     serverId: string;
     storageManager: StorageManager;
@@ -46,20 +46,18 @@ export class AddStorageModalContent {
 
     addStorage: Process;
     url: string;
-    alreadyUsed: string;
+    alreadyUsed: Translatable;
     alreadyCheckedAndExists = false;
     urlChecked = false;
     passwordChecked = false;
     loginPasswordWrong = false;
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.LANG = language.translations;
     }
 
     checkUrlValidity(): void {
@@ -137,10 +135,10 @@ export class AddStorageModalContent {
             }, { ignoreError: true },
             (res: any) => {
                 let toastType = toast.danger;
-                let message = this.LANG.storage.failed();
+                let message = this.LANG.storage.failed;
                 if (res.id) {
                     toastType = toast.success;
-                    message = this.LANG.storage.success();
+                    message = this.LANG.storage.success;
                 }
                 this.storageForm.reset();
                 this.close(res.id && responseOk);
@@ -148,9 +146,12 @@ export class AddStorageModalContent {
             },
             err => {
                 if (err?.message === 'alreadyExists') {
-                    this.alreadyUsed = this.LANG.storage.alreadyUsed({
-                        url: this.url
-                    });
+                    this.alreadyUsed = {
+                        value: this.LANG.storage.alreadyUsed,
+                        params: {
+                            url: this.url
+                        }
+                    };
                     this.alreadyCheckedAndExists = true;
                 } else if (err?.message === 'WrongAuth') {
                     this.passwordChecked = true;
@@ -160,7 +161,7 @@ export class AddStorageModalContent {
                     if (err?.message === 'WrongPath') {
                         this.getControls('url').setErrors({ wrongPath: true });
                     } else {
-                        message = this.LANG.storage.serverOffline();
+                        message = this.LANG.storage.serverOffline;
                         this.storageForm.reset();
                     }
                     if (message) {

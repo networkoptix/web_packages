@@ -11,7 +11,7 @@
         </h2>
         <span class="fs-mask user-name">
             <nx-search-highlight
-                [text]="getSystemOwnerName()"
+                [text]="getSystemOwnerName() | translate"
                 [search]="search"
             ></nx-search-highlight
         ></span>
@@ -22,7 +22,7 @@
                 [type]="tagType"
                 *ngIf="canShowTag()"
             >
-                <ng-container>{{ systemState }}</ng-container>
+                <ng-container>{{ systemState | translate }}</ng-container>
             </nx-tag>
             <nx-client-button
                 [system]="system"

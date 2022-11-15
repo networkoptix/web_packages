@@ -13,7 +13,7 @@
     >
         <span
             class="ellipsis"
-            [innerText]="selection"
+            [innerText]="selection | translate"
         ></span>
         <div class="arrow-flip">
             <svg-icon
@@ -42,7 +42,7 @@
                     [ngClass]="{ selected: role.optionLabel === selection }"
                     (click)="changePermission($event, role)"
                 >
-                    <span>{{ role.optionLabel }}</span>
+                    <span>{{ role.optionLabel | translate }}</span>
                 </a>
             </li>
         </ul>

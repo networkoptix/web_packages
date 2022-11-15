@@ -9,7 +9,7 @@
         [style.grid-column]="gridColumnLookup[tag.label]"
         [ngClass]="{ ready: gridColumnLookup[tag.label] }"
         [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')"
-        >{{ tag.label }}</nx-tag
+        >{{ tag.label | translate }}</nx-tag
     >
 </ng-template>
 

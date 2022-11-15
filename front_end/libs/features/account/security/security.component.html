@@ -11,8 +11,7 @@
                         size="medium"
                         name="tag"
                         [clickable]="false"
-                        translate
-                        >DISABLED</nx-tag
+                        >{{ 'DISABLED' | translate }}</nx-tag
                     >
                     <nx-tag
                         *ngIf="account2faEnabled || totpExistsForAccount"
@@ -20,8 +19,7 @@
                         size="medium"
                         name="tag"
                         [clickable]="false"
-                        translate
-                        >ENABLED</nx-tag
+                        >{{ 'ENABLED' | translate }}</nx-tag
                     >
                 </div>
             </header>

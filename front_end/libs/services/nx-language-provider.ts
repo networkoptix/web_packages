@@ -5,6 +5,7 @@ import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -101,12 +102,13 @@ export class NxLanguageProviderService {
     }
 
     loadTimelineTranslations(): void {
-        const timelineTranslations = this.translations?.view?.timeline;
+        const timelineTranslations = staticLang?.view?.timeline;
         if (!timelineTranslations) {
             return;
         }
         Object.entries(i18nOriginal).forEach(([k, v]: [string, string[]]) => {
-            i18n[k] = v.map(s => timelineTranslations[k][s]());
+            const translations = this.translate.instant(v);
+            i18n[k] = v.map(s => translations[s]);
         });
     }
 

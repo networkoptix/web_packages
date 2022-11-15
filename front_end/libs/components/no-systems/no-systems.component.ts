@@ -2,8 +2,7 @@ import {
     Component, ViewEncapsulation
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
 
 @Component({
     selector: 'nx-no-systems',
@@ -13,11 +12,5 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 })
 
 export class NxNoSystemsComponent {
-    LANG: LanguageI18NStaticTypes;
-
-    constructor(
-        languageService: NxLanguageProviderService,
-    ) {
-        this.LANG = languageService.translations;
-    }
+    LANG = staticLang;
 }

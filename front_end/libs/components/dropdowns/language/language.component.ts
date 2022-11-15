@@ -54,7 +54,8 @@ class BaseLanguageDropdown extends BaseDropdown {
         @Inject(WINDOW) private window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        super(languageService, configService);
+        super(configService);
+
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.currentLang = languageService.currentLang;
     }

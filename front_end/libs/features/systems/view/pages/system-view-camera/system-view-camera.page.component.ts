@@ -15,13 +15,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, BehaviorSubject, interval, Subject, timer } from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { icons, pollingTimeout } from '@lib/variables/static-variables';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
@@ -66,7 +65,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public previewUrl = '';
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     fullscreenMode: boolean;
     showElementsInFSM: boolean;
     onShowElements: any;
@@ -95,7 +94,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         deviceService: DeviceDetectorService,
         private renderer: Renderer2,
         private location: Location,
@@ -115,7 +114,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         @Inject(WINDOW) private window: Window & typeof globalThis,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
@@ -471,7 +469,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public currentQuality(quality) {
-        return quality ? this.LANG.common.resolution[quality]?.() || quality : this.LANG.common.resolution.auto();
+        return quality ? this.LANG.common.resolution[quality] || quality : this.LANG.common.resolution.auto;
     }
 
     public qualityToVerbose(q: PlaybackQuality) {

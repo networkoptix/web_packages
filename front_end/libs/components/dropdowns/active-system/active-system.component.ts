@@ -5,7 +5,6 @@ import {
 import { Router } from '@angular/router';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
@@ -29,11 +28,11 @@ export class NxActiveSystemDropdown extends BaseDropdown {
     };
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         private router: Router
     ) {
-        super(languageService, configService);
+        super(configService);
     }
 
     updateActiveByUri(): void {

@@ -9,9 +9,10 @@ import {
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -24,7 +25,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { AccountEdit } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -43,7 +43,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     @ViewChild('accountForm', { read: NgForm }) private accountForm: NgForm;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     account: Account;
     langCode: string;
@@ -58,7 +58,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        translateService: TranslateService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,
@@ -72,22 +72,19 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) protected window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
-        this.langCode = languageService.currentLang;
         this.menuService.detail = 'settings';
         this.icons = icons;
 
-        languageService.translateSubject
+        translateService.onTranslationChange
             .pipe(untilDestroyed(this))
-            .subscribe(translations => {
+            .subscribe(() => {
                 setTimeout(() => {
-                    this.LANG = translations;
-                    this.pageService.pageTitle(this.LANG.pageTitles.account());
+                    this.pageService.pageTitle(this.LANG.pageTitles.account);
                     this.initProcess();
                     if (this.langChanged) {
                         this.langChanged = false;
                         this.toastService.notify(
-                            this.LANG.account.accountSavedSuccess(),
+                            this.LANG.account.accountSavedSuccess,
                             toast.success,
                         );
                     }
@@ -139,7 +136,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             );
             return this.cloudApiService.accountPost(this.account);
         }, {
-            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
+            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,
             logoutForbidden: true
         }, (res: AccountEdit) => {
             const { first_name, last_name } = res;
@@ -149,7 +146,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                 })
             );
             this.toastService.notify(
-                this.LANG.account.accountSavedSuccess(),
+                this.LANG.account.accountSavedSuccess,
                 toast.success,
             );
         }, () => {

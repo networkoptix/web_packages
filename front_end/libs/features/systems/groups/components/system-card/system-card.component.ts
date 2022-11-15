@@ -1,14 +1,13 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons, openClientError } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
@@ -28,7 +27,7 @@ export class NxSystemCardComponent implements OnInit {
     @Input() account: Account;
     @IBool() @Input() showOwner: CoercedBoolInput = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     openClient: Process;
@@ -41,7 +40,7 @@ export class NxSystemCardComponent implements OnInit {
     }
 
     get systemState(): string {
-        return this.LANG.systemStatuses[this.system.stateOfHealth]?.() ||
+        return this.LANG.systemStatuses[this.system.stateOfHealth] ||
             this.system.stateOfHealth;
     }
 
@@ -52,14 +51,13 @@ export class NxSystemCardComponent implements OnInit {
     }
 
     constructor(
-        language: NxLanguageProviderService,
+
         configService: NxConfigService,
         private dialogs: NxDialogsService,
         private processService: NxProcessService,
         private urlProtocol: NxUrlProtocolService,
         private router: Router,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.config;
     }
 
@@ -85,11 +83,11 @@ export class NxSystemCardComponent implements OnInit {
                 this.modalActive = true;
                 return this.dialogs
                     .confirm(
-                        this.LANG.errorCodes.cantOpenClient(),
-                        this.LANG.dialogs.titles.noClientDetected(),
-                        this.LANG.dialogs.buttons.download(),
+                        this.LANG.errorCodes.cantOpenClient,
+                        this.LANG.dialogs.titles.noClientDetected,
+                        this.LANG.dialogs.buttons.download,
                         'btn-primary',
-                        this.LANG.dialogs.buttons.cancel()
+                        this.LANG.dialogs.buttons.cancel
                     )
                     .then(result => {
                         if (result === true) {

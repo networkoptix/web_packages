@@ -7,13 +7,12 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
@@ -31,7 +30,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() textOnly;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     location;
     canceled: boolean;
@@ -43,14 +42,12 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         private processService: NxProcessService,
         private urlProtocol: NxUrlProtocolService,
-        private language: NxLanguageProviderService,
         private dialogs: NxDialogsService,
         private accountService: NxAccountService,
         private router: Router,
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
     }
 
     ngOnDestroy(): void {
@@ -87,11 +84,11 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
             this.modalActive = true;
             return this.dialogs
                 .confirm(
-                    this.LANG.errorCodes.cantOpenClient(),
-                    this.LANG.dialogs.titles.noClientDetected(),
-                    this.LANG.dialogs.buttons.download(),
+                    this.LANG.errorCodes.cantOpenClient,
+                    this.LANG.dialogs.titles.noClientDetected,
+                    this.LANG.dialogs.buttons.download,
                     'btn-primary',
-                    this.LANG.dialogs.buttons.cancel()
+                    this.LANG.dialogs.buttons.cancel
                 )
                 .then(result => {
                     if (result === true) {

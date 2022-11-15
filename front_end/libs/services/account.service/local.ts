@@ -2,6 +2,7 @@ import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
@@ -11,7 +12,6 @@ import { NxAppStateService } from '../nx-app-state.service';
 import { NxBootstrapProvider } from '../nx-bootstrap-provider';
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxConfigService } from '../nx-config/nx-config.service';
-import { NxLanguageProviderService } from '../nx-language-provider';
 import { OauthService } from '../oauth.service';
 import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
@@ -29,7 +29,7 @@ export class LocalAccount extends BaseAccount {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        protected translateService: TranslateService,
         locationService: Location,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
@@ -50,7 +50,7 @@ export class LocalAccount extends BaseAccount {
     ) {
         super(
             configService,
-            languageService,
+            translateService,
             locationService,
             document,
             window,

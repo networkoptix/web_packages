@@ -5,15 +5,15 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { ModalContent } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
@@ -38,7 +38,7 @@ interface IParams<Value = any> {
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService extends DialogBase {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
     location: Location;
     closeResult: string;
@@ -47,7 +47,6 @@ export class NxDialogsService extends DialogBase {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         location: Location,
         injector: Injector,
         overlay: Overlay,
@@ -57,11 +56,6 @@ export class NxDialogsService extends DialogBase {
         super(overlay, injector);
         this.CONFIG = configService.getConfig();
         this.location = location;
-
-        this.languageSubscription = languageService.translateSubject
-            .subscribe(() => {
-                this.LANG = languageService.translations;
-            });
     }
 
     public ngOnDestroy(): void {
@@ -72,7 +66,7 @@ export class NxDialogsService extends DialogBase {
     }
 
     public notify(
-        message: string,
+        message: Translatable,
         type: string = toast.info,
         hold?: boolean
     ): void {
@@ -84,9 +78,9 @@ export class NxDialogsService extends DialogBase {
             data: {
                 message: this.domSanitizer.bypassSecurityTrustHtml(message),
                 title,
-                actionLabel: this.LANG.dialogs.buttons.ok?.(),
+                actionLabel: this.LANG.dialogs.buttons.ok,
                 buttonType: 'default',
-                cancelLabel: this.LANG.dialogs.buttons.cancel?.(),
+                cancelLabel: this.LANG.dialogs.buttons.cancel,
                 buttonClass: 'btn-primary',
                 footerClass: footerClass || '',
                 hasFooter: true,

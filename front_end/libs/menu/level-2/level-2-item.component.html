@@ -16,14 +16,14 @@
     </div>
     <div class="ellipsis">
         <span
-            [innerText]="item.label"
+            [innerText]="item.label | translate"
             class="user"
         ></span>
         <span
             *ngIf="item.additionalLabel"
             class="menu-level-2-additional"
         >
-            <span class="ml-1 mr-1">&ndash;</span> {{ item.additionalLabel }}
+            <span class="ml-1 mr-1">&ndash;</span> {{ item.additionalLabel | translate }}
         </span>
     </div>
 </a>

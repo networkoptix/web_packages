@@ -9,12 +9,11 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { toast } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -34,7 +33,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
 
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     login: Process;
 
     isCloud: boolean;
@@ -51,12 +50,10 @@ export class UpdateWebadminSessionComponent implements OnInit {
     };
 
     constructor(
-        languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -70,7 +67,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
             if (this.isCloud && !(this.window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))) {
                 this.close();
                 this.toastService.notify(
-                    `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`,
+                    `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection}`,
                     toast.danger,
                 );
             }

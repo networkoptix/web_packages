@@ -8,7 +8,7 @@
                     *ngIf="failedToLoad"
                     svgFileName="system_settings_placeholder"
                     width="64"
-                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()"
+                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo | translate"
                 ></nx-section-placeholder>
                 <div
                     *ngIf="!failedToLoad"
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ storage.storageType }}</td>
+                            <td>{{ storage.storageType | translate }}</td>
                             <td>
                                 <nx-switch
                                     id="isUsedForWriting{{ i }}"

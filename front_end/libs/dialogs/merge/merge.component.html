@@ -7,7 +7,7 @@
         >
 
         <span *ngIf="machine.currentState === 'failedToFindAnySystem'">{{
-            LANG.dialogs.merge.failedToFindAnySystemHeader()
+            LANG.dialogs.merge.failedToFindAnySystemHeader | translate
         }}</span>
     </h1>
     <button
@@ -29,13 +29,13 @@
             merged.
         </p>
         <p>
-            <span [innerHTML]="'dialogs.merge.update' | translate | translateCut: 0"></span
+            <span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut: 0"></span
             ><a
                 routerLink="/download"
                 target="_blank"
-                [innerText]="'dialogs.merge.update' | translate | translateCut: 1"
+                [innerText]="LANG.dialogs.merge.update | translate | translateCut: 1"
             ></a
-            ><span [innerHTML]="'dialogs.merge.update' | translate | translateCut: 2"></span>
+            ><span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut: 2"></span>
         </p>
     </div>
     <div class="modal-footer">
@@ -51,7 +51,7 @@
 
 <form *ngIf="machine.currentState === 'failedToFindAnySystem'">
     <div class="modal-body">
-        <p>{{ LANG.dialogs.merge.failedToFindAnySystem() }}</p>
+        <p>{{ LANG.dialogs.merge.failedToFindAnySystem | translate }}</p>
     </div>
     <div class="modal-footer">
         <button
@@ -71,7 +71,7 @@
 >
     <div [ngStyle]="{ display: updateSession ? 'none' : 'unset' }">
         <div class="modal-body">
-            <p>{{ machine.state.template.bodyTitle }}</p>
+            <p>{{ machine.state.template.bodyTitle | translate }}</p>
             <nx-select
                 #checkMergeDropdown
                 *ngIf="machine.state.show.systemDropdown"
@@ -88,7 +88,7 @@
                 *ngIf="machine.state.show.helpText"
                 class="light-text"
             >
-                {{ machine.state.template.helpText }}
+                {{ machine.state.template.helpText | translate }}
             </p>
             <div
                 *ngIf="machine.state.show.serverUrlInput"
@@ -123,7 +123,9 @@
                 />
                 <label
                     *ngIf="machine.state.show.serverUrlInputValidationErrorText"
-                    [innerHTML]="machine.state.template.serverUrlInputValidationErrorText"
+                    [innerHTML]="
+                        machine.state.template.serverUrlInputValidationErrorText | translate
+                    "
                     class="error-label"
                     for="serverUrl"
                 >
@@ -132,7 +134,7 @@
             <p
                 *ngIf="machine.state.show.checkingErrorText"
                 [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
-                [innerHTML]="machine.state.template.checkingErrorText"
+                [innerHTML]="machine.state.template.checkingErrorText | translate"
                 class="error-label"
             ></p>
         </div>
@@ -144,7 +146,7 @@
                 actionType="primary"
                 [buttonDisabled]="!systemsLoaded"
                 [svg]="{ src: 'arrow_right' }"
-                [buttonText]="checkMergeButtonText"
+                [buttonText]="checkMergeButtonText | translate"
             ></nx-process-button>
         </div>
     </div>
@@ -165,7 +167,7 @@
         <div class="modal-body">
             <p
                 [innerHTML]="
-                    'dialogs.merge.adminPasswordTitle'
+                    LANG.dialogs.merge.adminPasswordTitle
                         | translate
                             : {
                                   secondarySystem: secondaryName
@@ -220,7 +222,9 @@
                 />
                 <label
                     *ngIf="machine.state.show.passwordError"
-                    [innerHTML]="machine.state.template.passwordErrorText | safe: 'html'"
+                    [innerHTML]="
+                        machine.state.template.passwordErrorText | translate | safe: 'html'
+                    "
                     class="error-label password-label-margin mb-0"
                     for="adminPassword"
                 >
@@ -263,7 +267,7 @@
 >
     <div [ngStyle]="{ display: updateSession ? 'none' : 'unset' }">
         <div class="modal-body">
-            <p [innerHTML]="machine.state.template.urlErrorText | safe: 'html'"></p>
+            <p [innerHTML]="machine.state.template.urlErrorText | translate | safe: 'html'"></p>
         </div>
         <div class="modal-footer next-button">
             <button
@@ -364,7 +368,7 @@
         <div class="modal-body">
             <p
                 [innerHTML]="
-                    'dialogs.merge.mergeConfirmation'
+                    LANG.dialogs.merge.mergeConfirmation
                         | translate
                             : {
                                   primarySystem: primaryName,
@@ -375,7 +379,7 @@
             <div *ngIf="tooManyServers">
                 <p
                     class="error-label"
-                    [innerHTML]="'dialogs.merge.warning' | translate: { maxServers: maxServers }"
+                    [innerHTML]="LANG.dialogs.merge.warning | translate: { maxServers: maxServers }"
                 ></p>
 
                 <p
@@ -387,13 +391,13 @@
                 </p>
 
                 <p class="mb-3">
-                    {{ 'dialogs.merge.recommendSupport' | translate | translateCut: 0 }}&nbsp;
+                    {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 0 }}&nbsp;
                     <a
                         [href]="CONFIG.company.links.support"
                         target="_blank"
-                        >{{ 'dialogs.merge.recommendSupport' | translate | translateCut: 1 }}</a
+                        >{{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 1 }}</a
                     >&nbsp;
-                    {{ 'dialogs.merge.recommendSupport' | translate | translateCut: 2 }}
+                    {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 2 }}
                 </p>
             </div>
             <div
@@ -425,7 +429,7 @@
                 />
                 <label
                     *ngIf="machine.state.show.passwordError"
-                    [innerHTML]="machine.state.template.passwordErrorText"
+                    [innerHTML]="machine.state.template.passwordErrorText | translate"
                     class="error-label error-text-margin mb-0"
                     for="cloudOwnerPassword"
                 >

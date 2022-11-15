@@ -5,13 +5,12 @@ import {
     OnInit
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 const noop = () => { };
@@ -20,7 +19,7 @@ const noop = () => { };
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     message: string;
     show: boolean;
 
@@ -33,21 +32,11 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     public onChangeCallback: (_: any) => void = noop;
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
-        this.message = this.LANG.pleaseSelect();
+        this.message = this.LANG.pleaseSelect;
         this.show = false;
-
-        languageService.translateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(translations => {
-                setTimeout(() => {
-                    this.LANG = translations;
-                });
-            });
     }
 
     ngOnInit(): void {

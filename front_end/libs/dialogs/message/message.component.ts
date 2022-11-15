@@ -6,15 +6,16 @@ import {
     ViewChild
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
@@ -30,7 +31,7 @@ type Subject = DropdownItem<string>;
 export class MessageModalContent implements OnInit {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     account: NxAccountService;
     messageType: string;
@@ -41,7 +42,7 @@ export class MessageModalContent implements OnInit {
     userEmail: string;
     message: string;
     agree: boolean;
-    title: string;
+    title: Translatable;
     subject: string;
     subjectMessage: string;
     subjects: Subject[];
@@ -50,7 +51,7 @@ export class MessageModalContent implements OnInit {
     @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
     constructor(
-        languageService: NxLanguageProviderService,
+        private translateService: TranslateService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
@@ -60,7 +61,6 @@ export class MessageModalContent implements OnInit {
         this.subject = '';
         this.subjectMessage = '';
         this.url = this.window.location.href;
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -78,7 +78,7 @@ export class MessageModalContent implements OnInit {
                 this.userEmail
             );
         }, {
-            successMessage: this.LANG.dialogs.message.sent?.()
+            successMessage: this.LANG.dialogs.message.sent
         }).then(() => {
             this.close(true);
         });
@@ -91,22 +91,25 @@ export class MessageModalContent implements OnInit {
     initForm(): void {
         this.placeholder = '';
         if (this.messageType === dialogs.message.type.ipvd_page) {
-            this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();
+            this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
         }
 
-        this.title = this.LANG.dialogs.message.title[this.messageType](
-            this.messageType !== dialogs.message.type.integration
+        this.title = {
+            value: this.LANG.dialogs.message.title[this.messageType],
+            params: this.messageType !== dialogs.message.type.integration
                 ? { asset: this.data.asset }
                 : { companyName: this.data.to }
-        );
+        };
 
         this.subjects = dialogs.message.subjects[this.messageType]
             .map(subject => {
                 return {
                     value: subject,
-                    name: this.LANG.dialogs.message.subject[subject]({
-                        asset: this.data.asset
-                    })
+                    name: this.translateService.instant(
+                        this.LANG.dialogs.message.subject[subject],
+                        {
+                            asset: this.data.asset
+                        })
                 };
             });
 

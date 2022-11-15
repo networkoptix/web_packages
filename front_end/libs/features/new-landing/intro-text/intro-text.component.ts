@@ -12,14 +12,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { environment } from '@environments/environment';
 import { images } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -39,11 +38,11 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     isLoggedIn: null | boolean = null;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     images = images;
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         scrollMechanics: NxScrollMechanicsService,
         public headerService: NxHeaderService,
@@ -51,7 +50,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) private window: Window) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+
         // real-time scroll calculation for less jittery transition of
         // the element from position:fixed to position:absolute
         this.realTimeScroll$ = scrollMechanics.windowScrollSubject.pipe(

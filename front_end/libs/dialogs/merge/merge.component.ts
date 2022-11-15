@@ -7,9 +7,10 @@ import {
     Inject,
     LOCALE_ID,
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep, escape } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem,
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -23,7 +24,6 @@ import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 // import type { NxSystem } from '@services/system.service/system';
@@ -49,7 +49,7 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class MergeModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     readonly environment = environment;
@@ -128,7 +128,7 @@ export class MergeModalContent {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private translateService: TranslateService,
         private cloudApi: NxCloudApiService,
         private cdRef: ChangeDetectorRef,
         private loginService: NxLoginService,
@@ -144,7 +144,6 @@ export class MergeModalContent {
     ) {
         this.maxServers = maxServers;
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -191,7 +190,7 @@ export class MergeModalContent {
 
             if (this.systems.length === 0 && this.peerSystems.length === 0) {
                 if (environment.isLocal) {
-                    this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
+                    this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
                     this.secondarySystem = this.targetSystem;
                     this.updateShow('noOtherSystemServerUrl');
                 } else {
@@ -212,7 +211,7 @@ export class MergeModalContent {
                     }
                     this.processedSystems.push(
                         { name: 'horizontal', value: undefined },
-                        { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() }
+                        { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem }
                     );
                 }
                 if (targetSystem) {
@@ -225,7 +224,7 @@ export class MergeModalContent {
                             updatedTargetSystem.value = updatedTargetSystem.id;
                         }
                         this.systemMergeable = this.checkMergeability(updatedTargetSystem || targetSystem);
-                        this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText?.() });
+                        this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
                         this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
                     });
                     systemsSubscription.unsubscribe();
@@ -243,7 +242,7 @@ export class MergeModalContent {
                     } else {
                         let show = this.checkMergeDefault;
                         const templateUpdates: any = {
-                            helpText: this.LANG.dialogs.merge.ownerCanMergeText?.(),
+                            helpText: this.LANG.dialogs.merge.ownerCanMergeText,
                             selectedTarget: this.targetSystemDropdown.value
                         };
                         if (this.targetSystemDropdown.peer) {
@@ -275,11 +274,11 @@ export class MergeModalContent {
             });
             if (this.machine.currentState === this.checkMerge) {
                 this.checkMergeButtonText = newShow.includes('Error')
-                    ? this.LANG.dialogs.merge.check() : this.LANG.dialogs.merge.next();
+                    ? this.LANG.dialogs.merge.check : this.LANG.dialogs.merge.next;
 
                 const newBodyTitle = newShow.includes('noOtherSystem')
-                    ? this.LANG.dialogs.merge.enterSystemAddressTitle?.()
-                    : this.LANG.dialogs.merge.mergeSystemsTitle?.();
+                    ? this.LANG.dialogs.merge.enterSystemAddressTitle
+                    : this.LANG.dialogs.merge.mergeSystemsTitle;
                 if (newBodyTitle !== template.bodyTitle) {
                     templateVariable.bodyTitle = newBodyTitle;
                 }
@@ -287,7 +286,7 @@ export class MergeModalContent {
                 if (
                     newShow.includes('checkMerge') &&
                     // skips when in "checking" state
-                    templateVariable.helpText !== this.LANG.dialogs.merge.checking?.() &&
+                    templateVariable.helpText !== this.LANG.dialogs.merge.checking &&
                     template.serverUrlInputValue
                 ) {
                     template.serverUrlInputValue = '';
@@ -322,7 +321,7 @@ export class MergeModalContent {
             let showUpdate = this.checkMergeDefault;
             const templateUpdates: any = {};
             if (targetSystem.value === this.otherSystem) {
-                this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
+                this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
                 this.targetSystem = targetSystem;
                 showUpdate = this.serverUrlState;
                 Object.assign(templateUpdates, { serverUrlInputValue, selectedTarget: this.otherSystem });
@@ -333,7 +332,7 @@ export class MergeModalContent {
                 this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
                 this.systemMergeable = this.checkMergeability(this.targetSystem);
                 Object.assign(templateUpdates, {
-                    helpText: this.LANG.dialogs.merge.ownerCanMergeText?.(),
+                    helpText: this.LANG.dialogs.merge.ownerCanMergeText,
                     selectedTarget: this.targetSystem.value
                 });
 
@@ -376,7 +375,7 @@ export class MergeModalContent {
                             ...peer,
                             id: peer.id.replace(/[{}]/g, ''),
                             url: `${ip}:${peer.port}`,
-                            systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName() : peer.systemName,
+                            systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
                             name: peer.systemName || peer.name,
                             discoveredPeer: true,
                             ip,
@@ -436,7 +435,7 @@ export class MergeModalContent {
             .then(
                 res => {
                     if (res !== 'canceled') {
-                        this.checkMergeButtonText = this.LANG.dialogs.merge.next();
+                        this.checkMergeButtonText = this.LANG.dialogs.merge.next;
                         this.checking = false;
                         // covers case where system (cloud & non-cloud) is not set up yet
                         if (res.isNew) {
@@ -467,7 +466,7 @@ export class MergeModalContent {
                         return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     }
                     if (err !== 'canceled') {
-                        this.checkMergeButtonText = this.LANG.dialogs.merge.check();
+                        this.checkMergeButtonText = this.LANG.dialogs.merge.check;
                         this.checking = false;
                         if (err.message === 'Timeout has occurred') {
                             err.message = this.noServerFound;
@@ -615,10 +614,10 @@ export class MergeModalContent {
             }, {
                 errorCodes: {
                     mergedSystemIsOffline: () => {
-                        return this.LANG.toastMessage.system.merge.failed?.();
+                        return this.LANG.toastMessage.system.merge.failed;
                     },
                     vmsRequestFailure: () => {
-                        return this.LANG.toastMessage.system.merge.failed?.();
+                        return this.LANG.toastMessage.system.merge.failed;
                     },
                     missingPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordRequired });
@@ -633,13 +632,13 @@ export class MergeModalContent {
                 ignoreError: true
             })
             .then(res => {
-                if (res.mergeInProgress || res.error === '0' || res.resultCode === this.LANG.errorCodes.ok?.()) {
+                if (res.mergeInProgress || res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.environment.isLocal) {
                         const template =
                             `<div class="my-1">
-                            <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.LANG.ribbon.beingMerged.to()}</div>
-                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake()}</div>
+                            <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.translateService.instant(this.LANG.ribbon.beingMerged.to)}</div>
+                            <div class="mt-2">${this.translateService.instant(this.LANG.ribbon.beingMerged.mayTake)}</div>
                         </div>`;
                         this.ribbonService.hide();
                         this.ribbonService.show(template, [], 'alert');
@@ -785,7 +784,7 @@ export class MergeModalContent {
                 return this.systemMergeable ? 'canceled' : { error: '0' }; // systemMergeable === '' = mergeable
             }
         } else {
-            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking?.() });
+            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
         }
 
         /**
@@ -900,28 +899,32 @@ export class MergeModalContent {
         const { errorText } = this.machine.state;
         for (const error in errorText) {
             if (Object.prototype.hasOwnProperty.call(errorText, error)) {
-                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
+                const latestBuild = this.translateService.instant(this.LANG.dialogs.merge.latestBuild);
+                let downloadHTML = `<span>${latestBuild}</span>`;
                 if (this.CONFIG.cloudHost) {
-                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
+                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${latestBuild}</a>`;
                 }
                 const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
                     ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
                     : error;
-                errorText[error] = this.LANG.dialogs.merge[parsedError]({
-                    primarySystem: this.primaryName,
-                    targetSystem: this.secondaryName,
-                    secondarySystem: this.secondaryName,
-                    downloadHTML
-                });
+                errorText[error] = {
+                    value: this.LANG.dialogs.merge[parsedError],
+                    params: {
+                        primarySystem: this.primaryName,
+                        targetSystem: this.secondaryName,
+                        secondarySystem: this.secondaryName,
+                        downloadHTML
+                    }
+                };
             }
         }
     }
 
     getStatus(system): [name: string, status: string] {
-        const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible()}`;
-        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable()}`;
-        const statusOffline = ` – ${this.LANG.systemStatuses.offline()}`;
-        const statusCloud = ` – ${this.LANG.dialogs.merge.cloud()}`;
+        const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
+        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable}`;
+        const statusOffline = ` – ${this.LANG.systemStatuses.offline}`;
+        const statusCloud = ` – ${this.LANG.dialogs.merge.cloud}`;
 
         let stateOfHealth = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.status || '';
@@ -1034,7 +1037,7 @@ export class MergeModalContent {
         // handles changing auto-discovered to Other System if url changed
         const { serverUrlInputValue } = this.machine.state.template;
         if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
-            this.setTargetSystem({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() });
+            this.setTargetSystem({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
         }
         // handles validation and check error messages
         const serverUrlError = this.processedSystems.length
@@ -1097,8 +1100,11 @@ export class MergeModalContent {
     getSecondaryName(): void {
         let name: string = this.secondarySystem.name || this.secondarySystem.systemName ||
             this.secondarySystem?.info.name || this.secondarySystem?.info.systemName;
-        if (name === this.LANG.dialogs.merge.otherSystem?.()) {
-            name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
+        if (name === this.LANG.dialogs.merge.otherSystem) {
+            name = this.translateService.instant(
+                'dialogs.merge.serverAtUrl',
+                { url: this.cleanUrl || this.serverUrl }
+            );
         }
         this.secondaryName = escape(name);
     }

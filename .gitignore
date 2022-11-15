@@ -2,8 +2,6 @@ build_scripts/language_pack
 build_scripts/stage
 build_scripts/*.ts
 
-translations/**/language_compiled.json
-
 subinclude:robot_tests/.hgignore
 
 .idea

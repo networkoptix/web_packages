@@ -4,13 +4,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -56,7 +55,7 @@ const summarizeByLevel = (
 export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
     typeof NxHealthMonitorWidgetComponent.BASE_CONFIG
 > {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     icons = icons;
     static IDENTIFIER = 'health-monitor';
     static NAME = 'Health Monitor';
@@ -264,14 +263,12 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
 
     constructor(
         cd: ChangeDetectorRef,
-        languageService: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private router: Router
     ) {
         super(cd);
-        this.LANG = languageService.translations;
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
         NxHealthMonitorWidgetComponent.systemUpdater$.pipe(
             untilDestroyed(this)

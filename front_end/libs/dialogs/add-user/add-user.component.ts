@@ -6,11 +6,10 @@ import {
 import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -25,7 +24,7 @@ export class AddUserModalContent {
     @Input() closable = true;
     @ViewChild('addUserForm') form: NgForm;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     system: NxSystem;
@@ -38,13 +37,11 @@ export class AddUserModalContent {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     get selectedPermission() {
@@ -59,9 +56,9 @@ export class AddUserModalContent {
     private getAccessDescription() {
         let description;
         if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
+            description = this.LANG.accessRoles[this.selectedPermission.name].description;
         } else {
-            description = this.LANG.accessRoles.customRole.description?.();
+            description = this.LANG.accessRoles.customRole.description;
         }
 
         return (typeof description === 'function') ? description() : description;
@@ -88,7 +85,7 @@ export class AddUserModalContent {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system'], this);
 
-        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists()
+        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists
             .replace(
                 '%systemName%',
                 this.system.info.systemName || this.system.info.name

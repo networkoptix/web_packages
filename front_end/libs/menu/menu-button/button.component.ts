@@ -21,7 +21,7 @@ import type { Level2Button } from '../menu.types';
             [disabled]="button.disabled"
             (click)="action()"
         >{{
-            button.label
+            button.label | translate
         }}</button>`
 })
 export class NxMenuButtonComponent {

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { menus } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 
 @UntilDestroy()
@@ -16,24 +16,21 @@ import { NxSessionService } from '@services/session.service';
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     content: Content;
     menuReady = false;
     userEmail: string;
 
     constructor(
-        languageService: NxLanguageProviderService,
+        private translateService: TranslateService,
         private sessionService: NxSessionService,
         private menuService: NxMenuService,
     ) {
-        this.LANG = languageService.translations;
-
-        languageService.translateSubject
+        this.translateService.onTranslationChange
             .pipe(untilDestroyed(this))
-            .subscribe(translations => {
+            .subscribe(() => {
                 setTimeout(() => {
-                    this.LANG = translations;
                     this.initMenu();
                     this.content = { ...this.content }; // trigger onChange
                 });
@@ -83,17 +80,17 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             level3: [
                 {
                     id: accountMenu.settings.id,
-                    label: this.LANG.account.accountSettings(),
+                    label: this.LANG.account.accountSettings,
                     path: accountMenu.settings.path
                 },
                 {
                     id: accountMenu.password.id,
-                    label: this.LANG.account.changePassword(),
+                    label: this.LANG.account.changePassword,
                     path: accountMenu.password.path
                 },
                 {
                     id: accountMenu.security.id,
-                    label: this.LANG.account.security(),
+                    label: this.LANG.account.security,
                     path: accountMenu.security.path
                 }
             ]

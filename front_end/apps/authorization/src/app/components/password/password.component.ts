@@ -11,10 +11,8 @@ import {
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -29,7 +27,6 @@ import { setupText, TemplateText } from '../setupText';
 })
 export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestroy {
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
     icons = icons;
 
     @Input() viewType: string;
@@ -51,14 +48,8 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     subHeaderSuffix: string | undefined;
     templateText: TemplateText;
 
-    constructor(
-        language: NxLanguageProviderService,
-    ) {
-        this.LANG = language.translations;
-    }
-
     ngOnInit(): void {
-        this.templateText = setupText(this.LANG);
+        this.templateText = setupText();
         this.setText();
         this.sendPassword = () => {
             this.loginPasswordChange.emit(this.loginPassword);

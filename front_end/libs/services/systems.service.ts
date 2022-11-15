@@ -4,7 +4,7 @@ import { isEqual } from 'lodash-es';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -19,7 +19,6 @@ import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPollService } from './poll.service';
 import { NxStorageService } from './storage.service';
 import type { NxSystem } from './system.service/system';
@@ -38,7 +37,7 @@ interface MergeInfo {
 })
 export class NxSystemsService implements OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     private activeSubscription: Subscription;
     private currentUser: string;
     mergingSystems = new Set<string>();
@@ -56,7 +55,6 @@ export class NxSystemsService implements OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         pollService: NxPollService,
         // private http: HttpClient,
         private storageService: NxStorageService,
@@ -68,7 +66,6 @@ export class NxSystemsService implements OnDestroy {
         // private store: Store,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
         // this.registerStoreConnection();
         if (!environment.isLocal) {
@@ -76,12 +73,6 @@ export class NxSystemsService implements OnDestroy {
         } else {
             this.systemsSubject.next([]);
         }
-
-        languageService.translateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this.LANG = languageService.translations;
-            });
     }
 
     get userDisconnectSystem(): boolean {
@@ -117,10 +108,13 @@ export class NxSystemsService implements OnDestroy {
             const primaryName = this.systemsMerging.primary.name;
             const secondaryName = this.systemsMerging.secondary.name;
             const message = (primaryName && secondaryName)
-                ? this.LANG.dialogs.merge.mergeSuccess({
-                    primaryName, secondaryName
-                })
-                : this.LANG.toastMessage.system.merge.success();
+                ? {
+                    value: this.LANG.dialogs.merge.mergeSuccess,
+                    params: {
+                        primaryName, secondaryName
+                    }
+                }
+                : this.LANG.toastMessage.system.merge.success;
             this.systemsMerging = {
                 primary: undefined,
                 secondary: undefined
@@ -170,7 +164,7 @@ export class NxSystemsService implements OnDestroy {
             if (forOrder) {
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
-            return this.LANG.system.yourSystem();
+            return this.LANG.system.yourSystem;
         }
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
             return system.ownerFullName;

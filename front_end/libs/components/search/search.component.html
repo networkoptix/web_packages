@@ -104,7 +104,7 @@
                     <label
                         style="text-transform: capitalize"
                         *ngIf="select.label !== ''"
-                        >{{ select.label }}</label
+                        >{{ select.label | translate }}</label
                     >
                     <nx-select
                         [id]="select.id"
@@ -124,7 +124,9 @@
                         'mb-3': layout !== 'selectors'
                     }"
                 >
-                    <label style="text-transform: capitalize">{{ multiselect.label }}</label>
+                    <label style="text-transform: capitalize">{{
+                        multiselect.label | translate
+                    }}</label>
                     <nx-multi-select
                         [id]="multiselect.id"
                         [name]="multiselect.label"
@@ -178,7 +180,7 @@
                                         (onClick)="onModelChange()"
                                         [value]="tag.value"
                                     >
-                                        <ng-container>{{ tag.label }}</ng-container>
+                                        <ng-container>{{ tag.label | translate }}</ng-container>
                                     </nx-tag>
                                 </li>
                             </ul>

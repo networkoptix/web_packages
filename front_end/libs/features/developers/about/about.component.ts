@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { developers } from '@lib/variables/static-variables';
@@ -16,7 +16,6 @@ import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
 import {
@@ -36,7 +35,7 @@ export class NxAboutComponent {
     injector: Injector;
     CONFIG: IConfig;
     account: Account;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
     aboutCases = AboutTemplates;
     baseName = '';
@@ -79,7 +78,7 @@ export class NxAboutComponent {
         private route: ActivatedRoute,
         public router: Router,
         private ribbonService: NxRibbonService,
-        languageService: NxLanguageProviderService,
+
         private menusService: NxMenusService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
@@ -87,7 +86,7 @@ export class NxAboutComponent {
         injector: Injector,
     ) {
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
+
         this.injector = injector;
 
         this.loadMenu(this.route.snapshot.paramMap.get('name'));
@@ -212,14 +211,14 @@ export class NxAboutComponent {
         const ribbonActions: RibbonAction[] = [
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText(),
+                text: this.LANG.ribbon.integration.backToEditText,
                 value: developers.landing.adminLink.replace('%ID%', id)
             }
         ];
         this.ribbonService.show(
             state
-                ? this.LANG.ribbon.integration.previewRibbon()
-                : this.LANG.ribbon.integration.publishedRibbon(),
+                ? this.LANG.ribbon.integration.previewRibbon
+                : this.LANG.ribbon.integration.publishedRibbon,
             ribbonActions
         );
     }

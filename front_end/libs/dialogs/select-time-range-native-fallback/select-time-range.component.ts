@@ -1,9 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { pickFrom } from '@utils/general';
 import {
     TimelineSelectionService
@@ -19,7 +18,7 @@ const TIME_FORMAT_STRING = 'HH:mm:ss';
     styleUrls: ['select-time-range.component.scss']
 })
 export class SelectTimeRangeModalContent {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     hideErrors = true;
     startDate: string;
     startTime: string;
@@ -31,7 +30,6 @@ export class SelectTimeRangeModalContent {
     @Input() closable = true;
 
     constructor(
-        private language: NxLanguageProviderService,
         private dialogRef: DialogRef,
         private vms: VideoManagementSystemService,
         private datepipe: DatePipe,
@@ -39,8 +37,6 @@ export class SelectTimeRangeModalContent {
             selection: TimelineSelectionService,
         },
     ) {
-        this.LANG = this.language.translations;
-
         pickFrom(this.dialogData, ['selection'], this);
     }
 

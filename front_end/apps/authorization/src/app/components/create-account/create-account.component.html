@@ -17,7 +17,12 @@
                 [applyClass]="true"
             ></svg-icon>
         </button>
-        <h3 class="authorize-header">{{ LANG.authorize.createAccountHeader() }}</h3>
+        <h3
+            class="authorize-header"
+            translate
+        >
+            Create %CLOUD_NAME% Account
+        </h3>
     </div>
     <ng-container *ngIf="existingEmail">
         <div class="authorize-subheader">
@@ -113,8 +118,10 @@
                         *ngIf="createAccountEmail.errors.portalError"
                         class="error-label mt-2 mb-0"
                         id="emailPortalError"
+                        translate
                     >
-                        {{ LANG.common.generalError }}
+                        An error occurred, please try again later. If the problem continues, please
+                        contact your support team.
                     </p>
                 </ng-container>
             </div>
@@ -250,7 +257,10 @@
                     componentId="termsAndConditions"
                     [disabled]="createAccountProcess?.processing"
                     required
-                    [ariaText]="LANG.authorize.termsAndConditionsHelpText()"
+                    [ariaText]="
+                        'Checkbox agreeing to terms and conditions and the privacy policy'
+                            | translate
+                    "
                 >
                 </nx-checkbox>
                 <label

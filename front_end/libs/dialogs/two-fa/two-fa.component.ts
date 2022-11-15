@@ -17,7 +17,7 @@ import { Store } from '@ngrx/store';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions } from '@common/store/account';
 import {
     InfoBlockLine,
@@ -30,7 +30,6 @@ import { icons, apiBase, credentialsValidation, toast } from '@lib/variables/sta
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
@@ -54,7 +53,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     // @Input() oldPassword: string;
     // @Input() num2FaSystems: number;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     type: string;
     cancellable: boolean;
@@ -143,7 +142,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .subscribe((res: IClipboardResponse) => {
                 if (res.isSuccess) {
                     this.toastService.notify(
-                        this.LANG.common.copiedToClipboard(),
+                        this.LANG.common.copiedToClipboard,
                         toast.success,
                     );
                 }
@@ -157,7 +156,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     constructor(
-        private languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private renderer: Renderer2,
         private accountService: NxAccountService,
@@ -173,7 +171,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        this.LANG = this.languageService.translations;
         this.setupDefaults();
     }
 
@@ -249,8 +246,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.valueQR = response.keyUrl;
                 this.code = response.keyUrl.slice(-16);
                 this.credentials = new InfoBlockSection([
-                    new InfoBlockLine(this.LANG.account.account(), this.account.email),
-                    new InfoBlockLine(this.LANG.account.key(), this.code)
+                    new InfoBlockLine(this.LANG.account.account, this.account.email),
+                    new InfoBlockLine(this.LANG.account.key, this.code)
                 ]);
             }
         });
@@ -325,7 +322,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 },
                 noBackupCodes: () => {
                     this.toastService.notify(
-                        this.LANG.common.generalError(),
+                        this.LANG.common.generalError,
                         toast.danger,
                     );
                 },
@@ -368,7 +365,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 },
                 noBackupCodes: () => {
                     this.toastService.notify(
-                        this.LANG.common.generalError(),
+                        this.LANG.common.generalError,
                         toast.danger
                     );
                 },
@@ -479,7 +476,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 }, () => {
                     this.close();
                     this.toastService.notify(
-                        this.LANG.common.generalError(),
+                        this.LANG.common.generalError,
                         toast.danger
                     );
                 });

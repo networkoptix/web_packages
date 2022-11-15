@@ -131,7 +131,7 @@
             [form]="mandatory2faForm"
             [actionType]="system2faEnabled ? 'primary' : 'danger'"
             [buttonText]="
-                system2faEnabled ? LANG.dialogs.buttons.enable() : LANG.dialogs.buttons.disable()
+                system2faEnabled ? LANG.dialogs.buttons.enable : LANG.dialogs.buttons.disable
             "
         ></nx-process-button>
         <nx-cancel-button

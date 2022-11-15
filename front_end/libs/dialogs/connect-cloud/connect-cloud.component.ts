@@ -6,7 +6,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { apiBase, oauthStore } from '@lib/variables/static-variables';
@@ -14,7 +14,6 @@ import { NxAccountService } from '@services/account.service';
 import * as t from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -31,7 +30,7 @@ export class ConnectCloudModalContent implements OnInit {
     @Input() closable = true;
     @ViewChild('connectForm', { static: true }) connectForm: NgForm;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
     readonly isLocal: boolean;
     readonly environment = environment;
@@ -52,7 +51,7 @@ export class ConnectCloudModalContent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         private http: HttpClient,
         private oauthService: OauthService,
         private processService: NxProcessService,
@@ -63,7 +62,6 @@ export class ConnectCloudModalContent implements OnInit {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -152,7 +150,7 @@ export class ConnectCloudModalContent implements OnInit {
                 invalidParameter: passwordError,
                 wrongPassword: passwordError
             },
-            errorPrefix: this.LANG.errorCodes.cantConnectSystemPrefix()
+            errorPrefix: this.LANG.errorCodes.cantConnectSystemPrefix
         };
         this.connectProcess = this.processService.createProcess(() => {
             this.connectForm.controls.password.setErrors(undefined);

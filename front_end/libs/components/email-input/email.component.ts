@@ -13,9 +13,8 @@ import {
     ValidationErrors
 } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { credentialsValidation } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
     selector: 'nx-email-input',
@@ -47,7 +46,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() authorize = false;
     @Input() isUsername = false;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     public value: string;
 
@@ -75,11 +74,6 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
         }
 
         return null; // valid
-    }
-
-    constructor(
-        private language: NxLanguageProviderService) {
-        this.LANG = this.language.translations;
     }
 
     setValue(newValue): void {

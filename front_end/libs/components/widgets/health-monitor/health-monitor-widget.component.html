@@ -219,7 +219,7 @@
                 *ngIf="updatingIn"
                 class="until-update"
             >
-                {{ LANG.components.widgets.updatingIn({ time: updatingIn }) }}
+                {{ LANG.components.widgets.updatingIn | translate: { time: updatingIn } }}
             </div>
         </ng-container>
     </div>

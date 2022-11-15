@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 
@@ -20,7 +19,7 @@ export class SystemCardComponent {
     @Input() account: Account;
     @Input() openSystem: (system: NxSystemInfo) => void;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
     icons = icons;
 
@@ -30,16 +29,14 @@ export class SystemCardComponent {
     }
 
     get systemState(): string {
-        return this.LANG.systemStatuses[this.system.stateOfHealth]?.() ||
+        return this.LANG.systemStatuses[this.system.stateOfHealth] ||
             this.system.stateOfHealth;
     }
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private systemsService: NxSystemsService,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.config;
     }
 

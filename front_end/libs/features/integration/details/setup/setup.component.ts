@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
 import { IntegrationService } from '../../integration.service';
@@ -18,7 +18,7 @@ import { IntegrationService } from '../../integration.service';
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     plugin: Partial<Integration> = {};
     pluginSubscription: SubscriptionLike;
@@ -28,13 +28,11 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        language: NxLanguageProviderService,
+        private translateService: TranslateService,
         private pageService: NxPageService,
         private integrationService: IntegrationService,
         private menuService: NxMenuService
     ) {
-        this.LANG = language.translations;
-
         this.setupDefaults();
     }
 
@@ -42,8 +40,9 @@ export class NxSetupComponent implements OnInit, OnDestroy {
         this.pluginSubscription = this.integrationService.pluginSubject
             .subscribe(plugin => {
                 this.plugin = plugin;
-                this.pageService.pageDescription = this.LANG.pageDescriptions
-                    .integrationSetup({
+                this.pageService.pageDescription = this.translateService.instant(
+                    this.LANG.pageDescriptions.integrationSetup,
+                    {
                         PLUGIN_NAME: this.plugin.information?.name,
                         PLUGIN_SHORT_DESCRIPTION:
                             this.plugin.information?.shortDescription

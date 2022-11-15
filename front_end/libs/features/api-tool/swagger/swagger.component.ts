@@ -15,7 +15,7 @@ import type SwaggerUI from 'swagger-ui';
 import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     MenuNodeWithParent
 } from '@components/developers-menu/developers-menu-types';
@@ -24,7 +24,6 @@ import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -56,7 +55,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     @ViewChild('swaggerDescription') swaggerDescriptionRef: ElementRef;
     @Input() activeNode: MenuNodeWithParent;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     currentAPIDoc: APIDoc;
     swagger: SwaggerUI;
     swaggerLoading$ = new BehaviorSubject(false);
@@ -72,15 +71,15 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     componentMap: componentMap = {}; // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
 
-    constructor(public APIToolSystemService: NxAPIToolSystemService,
+    constructor(
+        public APIToolSystemService: NxAPIToolSystemService,
         public openAPIJSONService: NxOpenAPIJSONService,
         private loginService: NxLoginService,
         private renderer2: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private toastService: NxToastService,
-        languageService: NxLanguageProviderService,
-        @Inject(DOCUMENT) private document: Document) {
-        this.LANG = languageService.translations;
+        @Inject(DOCUMENT) private document: Document
+    ) {
     }
 
     ngOnInit(): void {
@@ -206,7 +205,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             .then(ready => {
                 const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
                 const { success, danger } = toast;
-                const toastMessage = ready ? sessionRenewed() : failedToUpdateSession();
+                const toastMessage = ready ? sessionRenewed : failedToUpdateSession;
                 this.toastService.notify(toastMessage, ready ? success : danger);
             });
     };

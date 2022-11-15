@@ -10,10 +10,8 @@ import {
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { credentialsValidation } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
 interface IParams<Value = any> {
@@ -29,7 +27,6 @@ interface IParams<Value = any> {
 export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
     auth;
     params: IParams;
     embedUrl: string;
@@ -37,7 +34,6 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('embedForm', { static: true }) embedForm: NgForm;
 
     constructor(
-        language: NxLanguageProviderService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) dialogData: never,
         @Inject(WINDOW) private window: Window,
@@ -53,7 +49,6 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
             email: '',
             password: ''
         };
-        this.LANG = language.translations;
     }
 
     ngOnDestroy(): void {

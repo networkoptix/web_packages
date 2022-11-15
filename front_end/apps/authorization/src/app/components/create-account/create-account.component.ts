@@ -13,9 +13,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
@@ -29,7 +27,6 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['create-account.component.scss']
 })
 export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
     icons = icons;
 
     @Input() viewType: string;
@@ -72,10 +69,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @ViewChild('createAccountForm', { static: false }) createForm: NgForm;
 
     constructor(
-        language: NxLanguageProviderService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {

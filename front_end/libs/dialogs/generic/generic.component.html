@@ -16,14 +16,14 @@
         class="modal-title"
         [ngClass]="{ closable: closable }"
     >
-        <span class="ellipsis">{{ title }}</span>
+        <span class="ellipsis">{{ title | translate }}</span>
     </h1>
 </div>
 <div
     class="modal-body"
     *ngIf="message"
 >
-    <p [innerHTML]="message"></p>
+    <p [innerHTML]="message | translate"></p>
 </div>
 
 <div
@@ -48,7 +48,7 @@
         *ngIf="!cancellable"
         (click)="close(true)"
     >
-        <ng-container>{{ actionLabel }}</ng-container>
+        <ng-container>{{ actionLabel | translate }}</ng-container>
     </button>
     <button
         type="button"
@@ -56,6 +56,6 @@
         *ngIf="!cancellable && cancelLabel"
         (click)="close(cancelLabel)"
     >
-        <span class="ellipsis">{{ cancelLabel }}</span>
+        <span class="ellipsis">{{ cancelLabel | translate }}</span>
     </button>
 </div>

@@ -12,12 +12,10 @@ import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -33,7 +31,6 @@ import { setupText, TemplateText } from '../setupText';
 export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
 
     @Input() clientType: string;
     @Input() viewType: string;
@@ -55,11 +52,9 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     icons = icons;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private deviceService: DeviceDetectorService
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 
@@ -74,7 +69,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit(): void {
-        this.templateText = setupText(this.LANG, 'email');
+        this.templateText = setupText('email');
         this.setText();
         this.sendEmail = () => {
             if (this.emailAutoFilled && this.errorCode) {

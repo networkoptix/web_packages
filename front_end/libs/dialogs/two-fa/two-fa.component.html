@@ -179,7 +179,7 @@
 <!--                <span class="system-name">{{system.name}}</span>-->
 <!--            </div>-->
 <!--        </div>-->
-<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr()"></span></div>-->
+<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr"></span></div>-->
 <!--    </div>-->
 
 <!--    <div class="modal-footer justify-end">-->
@@ -271,7 +271,7 @@
                             loginPassword.errors?.pattern
                         "
                     >
-                        {{ LANG.passwordRequirements.requiredMessage() }}
+                        {{ LANG.passwordRequirements.requiredMessage }}
                     </div>
                 </ng-container>
             </div>
@@ -319,7 +319,7 @@
                 to your %CLOUD_NAME% account.
             </p>
 
-            <p [innerHTML]="LANG.dialogs.twoFa.installAuthApp()"></p>
+            <p [innerHTML]="LANG.dialogs.twoFa.installAuthApp"></p>
         </div>
 
         <div
@@ -513,7 +513,7 @@
     <div class="modal-body">
         <div
             class="line1"
-            [innerHTML]="LANG.dialogs.twoFa.nowEnabled()"
+            [innerHTML]="LANG.dialogs.twoFa.nowEnabled"
         ></div>
 
         <div class="mt-3">
@@ -702,7 +702,7 @@
                 *ngIf="num2FaSystems"
                 class="danger mb-3"
             >
-                {{ LANG.security.twoFa.disableWarning({ count: num2FaSystems }) }}
+                {{ LANG.security.twoFa.disableWarning | translate: { count: num2FaSystems } }}
             </p>
             <div class="form-group">
                 <label

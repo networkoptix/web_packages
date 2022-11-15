@@ -20,9 +20,9 @@
         [style]="{ 'grid-area': value }"
         [ngClass]="{ 'active-action': value === (action$ | async) }"
         [value]="value"
-        [nxTooltip]="buttonTooltip"
+        [nxTooltip]="buttonTooltip | translate"
     >
-        {{ LANG.layouts.ptzActionLabels[value]() }}
+        {{ LANG.layouts.ptzActionLabels[value] | translate }}
     </button>
 </ng-template>
 

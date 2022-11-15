@@ -8,7 +8,7 @@ import {
     mergeMap
 } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -17,7 +17,6 @@ import { environment } from '@environments/environment';
 import { maxNumberServerChecked, servers, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -32,7 +31,7 @@ import { pickFrom } from '@utils/general';
 export class RestartServerModalContent {
     @Input() closable: boolean = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     system: NxSystem;
     serverName: string;
@@ -42,7 +41,6 @@ export class RestartServerModalContent {
     private applyService: NxApplyService;
 
     constructor(
-        languageService: NxLanguageProviderService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
         private simpleDialogService: NxSimpleDialogsService,
@@ -57,7 +55,6 @@ export class RestartServerModalContent {
         @Inject(WINDOW) private window: Window,
         injector: Injector,
     ) {
-        this.LANG = languageService.translations;
         setTimeout(() => {
             this.applyService = injector.get(NxApplyService);
         }, 0);
@@ -74,7 +71,7 @@ export class RestartServerModalContent {
                     );
                 if (!haveOnlineServers) {
                     this.ribbonService.show(
-                        this.LANG.ribbon.systemOffline(),
+                        this.LANG.ribbon.systemOffline,
                         [],
                         'alert',
                         undefined,
@@ -156,7 +153,7 @@ export class RestartServerModalContent {
                                 .then(() => {
                                     if (!this.system.isOnline) {
                                         this.ribbonService.show(
-                                            this.LANG.ribbon.systemOffline(),
+                                            this.LANG.ribbon.systemOffline,
                                             [],
                                             'alert',
                                             undefined,
@@ -180,7 +177,7 @@ export class RestartServerModalContent {
                                         systemOfflineShown = true;
                                         serverHasGoneOfflineOnce = true;
                                         this.ribbonService.show(
-                                            this.LANG.ribbon.systemOffline?.(),
+                                            this.LANG.ribbon.systemOffline,
                                             [],
                                             'alert',
                                             undefined,
@@ -208,10 +205,10 @@ export class RestartServerModalContent {
                 this.system.currentServerNotBusy = true;
                 this.system.currentBusyServerIds.delete(this.serverId);
                 this.system.isAvailable = true;
-                let message = this.LANG.servers.restartFailed();
+                let message = this.LANG.servers.restartFailed;
 
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
-                    message = this.LANG.servers.serverOffline();
+                    message = this.LANG.servers.serverOffline;
                     this.close(servers.status.offline);
                     this.toastService.notify(message, toast.warning);
                 } else if (err.errorId === servers.errors.oldSessionErrorId) {

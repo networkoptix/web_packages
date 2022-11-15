@@ -4,7 +4,7 @@
 >
     <nx-page-placeholder
         *ngSwitchCase="0"
-        placeholderTitle="No {{ metricName }}"
+        placeholderTitle="{{ 'No ' + metricName | translate }}"
         class="section-placeholder"
     >
     </nx-page-placeholder>
@@ -46,7 +46,7 @@
                             [ngModel]="filterModel"
                             (ngModelChange)="modelChanged($event)"
                             layout="compact"
-                            [placeholder]="LANG.search.Search()"
+                            [placeholder]="LANG.search.Search | translate"
                             ngDefaultControl
                         >
                         </nx-search>

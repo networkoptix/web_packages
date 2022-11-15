@@ -30,7 +30,7 @@ import {
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockColumns,
     InfoBlockSection,
@@ -43,7 +43,6 @@ import { icons, cameraCredentialUpdateTimeout, menus, settingsConfig } from '@li
 import { NxHealthService } from '@pages/health/health.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -90,7 +89,7 @@ class Alert {
     styleUrls: ['cameras.component.scss']
 })
 export class NxCamerasComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
     public reload$ = new BehaviorSubject(0);
@@ -423,7 +422,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        language: NxLanguageProviderService,
         private router: Router,
         private menuService: NxMenuService,
         private settingsService: NxSettingsService,
@@ -437,7 +435,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef
     ) {
-        this.LANG = language.translations;
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.section = 'cameras';
@@ -608,8 +605,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     // Update menu options after language is loaded
     updateSelects(): void {
-        this.various = { name: this.LANG.common.resolution.various(), value: 'various' };
-        this.auto = { name: this.LANG.common.resolution.auto(), value: '' };
+        this.various = { name: this.LANG.common.resolution.various, value: 'various' };
+        this.auto = { name: this.LANG.common.resolution.auto, value: '' };
         this.aspectRatios = [
             this.auto,
             { name: '4:3', value: 1.33333 },
@@ -623,10 +620,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             { name: '270˚', value: 270 }
         ];
         this.streamQualities = [
-            { name: this.LANG.common.resolution.best(), value: 'highest' },
-            { name: this.LANG.common.resolution.high(), value: 'high' },
-            { name: this.LANG.common.resolution.medium(), value: 'normal' },
-            { name: this.LANG.common.resolution.low(), value: 'low' }
+            { name: this.LANG.common.resolution.best, value: 'highest' },
+            { name: this.LANG.common.resolution.high, value: 'high' },
+            { name: this.LANG.common.resolution.medium, value: 'normal' },
+            { name: this.LANG.common.resolution.low, value: 'low' }
         ];
     }
 
@@ -635,7 +632,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.saveSettings = this.processService.createProcess(() => {
             const newApi = this.system.serverManager.mediaserver instanceof NxSystemRestAPI;
             if (!this.safeToUpdateRecordingSettings) {
-                this.applyService.setWarn(this.LANG.common.recordingSettingsWarning());
+                this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
                 return Promise.reject();
             }
 
@@ -865,7 +862,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionEnabledWatcher.changed &&
             (motion.value + lowMotion.value);
         this.applyService.setWarn(
-            show ? this.LANG.common.disableMotionWarning?.() : ''
+            show ? this.LANG.common.disableMotionWarning : ''
         );
     }
 
@@ -950,14 +947,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.settingsRecordingDisabled = environment.isLocal || (deviceType !== 'Camera' || !vendor);
             const deviceColumn = [
                 new InfoBlockSection([
-                    new InfoBlockLine(this.LANG.common.vendor(), vendor),
-                    new InfoBlockLine(this.LANG.common.model(), model)
+                    new InfoBlockLine(this.LANG.common.vendor, vendor),
+                    new InfoBlockLine(this.LANG.common.model, model)
                 ])
             ];
             const otherInfoColumn = [
                 new InfoBlockSection([
-                    new InfoBlockLine(this.LANG.common.ip(), url),
-                    new InfoBlockLine(this.LANG.common.server(), parentName)
+                    new InfoBlockLine(this.LANG.common.ip, url),
+                    new InfoBlockLine(this.LANG.common.server, parentName)
                 ])
             ];
             this.cameraDetailColumns = this.selectedCamera.isStream

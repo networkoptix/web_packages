@@ -14,7 +14,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
@@ -22,7 +22,6 @@ import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -60,7 +59,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public mediaservers: MediaServer[];
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     fullscreenMode: boolean;
     fullscreenToggle: boolean;
     showElementsInFSM: boolean;
@@ -110,7 +109,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         private self: ElementRef,
         private renderer: Renderer2,
         private router: Router,
@@ -128,7 +127,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;

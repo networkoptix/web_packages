@@ -10,9 +10,7 @@ import {
 // import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -25,7 +23,6 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['reset-password.component.scss']
 })
 export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
     icons = icons;
 
     @Input() viewType: string;
@@ -40,12 +37,6 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
     weakPassword: boolean = null;
     sendPassword: () => void;
     // @ViewChild('resetForm', { static: false }) resetForm: NgForm;
-
-    constructor(
-        language: NxLanguageProviderService,
-    ) {
-        this.LANG = language.translations;
-    }
 
     ngOnInit(): void {
         this.sendPassword = () => {

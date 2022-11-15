@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { Translatable } from '@pipes/any-translate.types';
 import { pickFrom } from '@utils/general';
 
 @Component({
@@ -17,10 +18,10 @@ export class GenericModalContent implements OnInit {
     @Input() closable: boolean = true;
 
     message: string;
-    title: string;
-    actionLabel: string;
+    title: Translatable;
+    actionLabel: Translatable;
     buttonType: string;
-    cancelLabel: string;
+    cancelLabel: Translatable;
     buttonClass: string;
     footerClass: string;
     hasFooter: boolean;

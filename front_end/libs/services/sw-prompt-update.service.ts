@@ -3,7 +3,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { concat, interval, zip } from 'rxjs';
 import { first, tap, filter, take } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -14,7 +14,7 @@ import { WINDOW } from '@services/window-provider';
     providedIn: 'root'
 })
 export class NxSwPromptUpdateService {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     ribbonService: NxRibbonService;
     processService: NxProcessService;
 
@@ -26,20 +26,19 @@ export class NxSwPromptUpdateService {
         @Inject(WINDOW) private window: Window
     ) {
         const languageSet$ = languageService.translateSubject.pipe(
-            filter((translations: LanguageI18NStaticTypes) => translations !== null),
+            filter(translations => translations !== null),
             take(1),
             tap(_ => {
-                this.LANG = languageService.translations;
                 this.ribbonService = injector.get(NxRibbonService);
                 this.processService = injector.get(NxProcessService);
             }));
         if (environment.production && !environment.isLocal) {
             updates.available.subscribe(evt => {
                 console.log(`New app version available: ${evt.available.hash}`);
-                this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification(),
+                this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification,
                     [{
                         type: 'process-button',
-                        text: this.LANG.ribbon.newVersionAvailable.installButton(),
+                        text: this.LANG.ribbon.newVersionAvailable.installButton,
                         value: this.processService.createProcess(() => {
                             return updates.activateUpdate().then(() => {
                                 this.window.location.reload();

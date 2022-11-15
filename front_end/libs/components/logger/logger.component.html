@@ -20,7 +20,7 @@
             <pre
                 class="mb-3 w-100"
                 name="log-frame"
-                [innerText]="logData"
+                [innerText]="logData | translate"
             ></pre>
         </ng-template>
 
@@ -31,7 +31,7 @@
                 [style.height.px]="iframeHeight"
                 class="overflow-auto mb-3"
                 name="log-frame"
-                [innerText]="logData"
+                [innerText]="logData | translate"
             ></pre>
         </div>
     </ng-container>
@@ -62,7 +62,7 @@
     <nx-section-placeholder
         svgFileName="system_settings_placeholder"
         [wrapperHeight]="250"
-        [translatedMessage]="LANG.monitoring.unavailable()"
+        [translatedMessage]="LANG.monitoring.unavailable | translate"
     >
     </nx-section-placeholder>
 </ng-template>

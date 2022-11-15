@@ -7,7 +7,12 @@
         'd-none': (activated$ | async)
     }"
 >
-    <h3 class="authorize-header">{{ LANG.authorize.activateHeader() }}</h3>
+    <h3
+        class="authorize-header"
+        translate
+    >
+        Activate %CLOUD_NAME% Account
+    </h3>
 </header>
 <main
     [ngClass]="{

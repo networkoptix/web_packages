@@ -12,10 +12,9 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { pick } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
@@ -33,7 +32,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     @Input() store: Storage;
     @Input() cachedSizes: CachedSizes = {};
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     totalSpace: string;
     reserved: string;
@@ -62,12 +61,12 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     }
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.LANG = languageService.translations;
+
     }
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {

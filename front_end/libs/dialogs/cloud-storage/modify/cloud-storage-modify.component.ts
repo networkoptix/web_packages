@@ -11,7 +11,6 @@ import {
 } from '@dialogs/dialog-ref';
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 
 import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../action-common/BaseCloudStorageActionModalContent';
@@ -27,7 +26,6 @@ export class CloudStorageModifyModalContent extends BaseCloudStorageActionModalC
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         public renderer: Renderer2,
         private dialogRef: DialogRef,
         private processService: NxProcessService,
@@ -36,7 +34,6 @@ export class CloudStorageModifyModalContent extends BaseCloudStorageActionModalC
         super();
         this.init();
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
         this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.modify(this.license)), this.processConfig, () => this.showSuccess(true), this.showErrors);
     }
 

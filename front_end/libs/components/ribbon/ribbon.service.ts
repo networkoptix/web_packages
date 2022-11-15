@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import type { RibbonAction, RibbonContext } from './ribbon.types';
 
 @Injectable({ providedIn: 'root' })
 export class NxRibbonService {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     context: RibbonContext = {
         visibility: false,
-        message: '',
+        message: undefined,
         actions: [],
     };
 
@@ -23,20 +22,19 @@ export class NxRibbonService {
     constructor(
         private appStateService: NxAppStateService,
         private headerService: NxHeaderService,
-        languageService: NxLanguageProviderService
-    ) {
-        this.LANG = languageService.translations;
-    }
 
+    ) {
+    }
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     show(
-        message: string,
+        message: string | { value: string, params?: any },
         actions: RibbonAction[],
         type?: string,
         updateFunction?: () => void,
         systemOnly = false
     ): void {
         if (
-            message === this.LANG.ribbon.systemOffline() &&
+            message === this.LANG.ribbon.systemOffline &&
             environment.isLocal
         ) {
             return;

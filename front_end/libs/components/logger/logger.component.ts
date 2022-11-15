@@ -5,10 +5,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
@@ -26,7 +25,7 @@ type LoggerDropdownItem = DropdownItem<string>;
 export class NxLoggerComponent implements OnChanges {
     private readonly relayUrl: string;
     readonly iframeHeight = 500;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     @Input() system: NxSystem;
     @Input() selectedServerId: string;
@@ -43,12 +42,10 @@ export class NxLoggerComponent implements OnChanges {
 
     constructor(
         config: NxConfigService,
-        languageService: NxLanguageProviderService,
         private cookieService: CookieService,
         @Inject(WINDOW) private window: Window
     ) {
         this.relayUrl = config.getConfig().trafficRelayHost;
-        this.LANG = languageService.translations;
     }
 
     async getLogs(logger: LoggerDropdownItem): Promise<void> {

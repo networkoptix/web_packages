@@ -26,7 +26,7 @@
                 <tbody>
                     <tr class="table-row-spacer"></tr>
                     <tr *ngFor="let license of licenses; index as i">
-                        <td>{{ license.type }}</td>
+                        <td>{{ license.type | translate }}</td>
                         <td>{{ license.count }}</td>
                         <td>{{ license.countAvail }}</td>
                         <td>
@@ -37,7 +37,7 @@
                                 *ngIf="system.useRest && license.required > 0"
                                 class="error-label"
                                 >{{
-                                    'license.messages.required'
+                                    LANG.license.messages.required
                                         | translate: { number: license.required }
                                 }}</span
                             >

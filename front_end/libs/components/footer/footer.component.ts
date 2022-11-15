@@ -5,6 +5,7 @@ import {
     OnInit
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '@environments/environment';
 import { NxMenusService } from '@services/menus.service';
@@ -12,7 +13,6 @@ import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy()
 @Component({
@@ -38,16 +38,15 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         private appState: NxAppStateService,
         private menusService: NxMenusService,
-        languageService: NxLanguageProviderService,
+        translateService: TranslateService
     ) {
         this.CONFIG = configService.getConfig();
         this.visible = !this.CONFIG.featureFlags.newHeader;
 
-        languageService.translateSubject
+        translateService.onTranslationChange
             .pipe(untilDestroyed(this))
-            .subscribe(translations => {
+            .subscribe(() => {
                 setTimeout(() => {
-                    // this.LANG = translations;
                     this.getMenu();
                 });
             });

@@ -5,13 +5,9 @@ preserve_hierarchy: true
 
 files:
   -
-    source: '/front_end/common/language/language_i18n.json'
-    translation: '/translations/%locale_with_underscore%/language_i18n.json'
-    dest: '/language_i18n.json'
-  -
-    source: '/front_end/common/language/language_i18n_static.json'
-    translation: '/translations/%locale_with_underscore%/language_i18n_static.json'
-    dest: '/language_i18n_static.json'
+    source: '/front_end/common/language/language_compiled.json'
+    translation: '/translations/%locale_with_underscore%/language_compiled.json'
+    dest: '/language_compiled.json'
   -
     source: '/robot_tests/translations/variables_language_en_US.json'
     translation: '/robot_tests/translations/variables_language_%locale_with_underscore%.json'
@@ -24,16 +20,6 @@ files:
       - '/front_end/common/views/view.html'
       - '/front_end/common/views/static/eula.html'
       - '/front_end/common/views/components/downloadRelease.html'
-  -
-    source: '/front_end/inline-wizard/app/views/**/*.html'
-    translation: '/front_end/inline-wizard/translations/%locale_with_underscore%/views/**/%original_file_name%'
-    ignore:
-      - '/front_end/inline-wizard/app/views/components/dialog.html'
-  -
-    source: '/front_end/inline-wizard/app/language.json'
-    translation: '/front_end/inline-wizard/translations/%locale_with_underscore%/language.json'
-    ignore:
-      - '/front_end/inline-wizard/app/views/components/dialog.html'
   -
     source: '/cloud/notifications/static/templates/*.json'
     translation: '/translations/%locale_with_underscore%/templates/%original_file_name%'

@@ -16,6 +16,7 @@ import {
     RoutesRecognized
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -26,7 +27,7 @@ import {
 } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { icons, showHeaderAndFooter } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
@@ -36,7 +37,6 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -73,7 +73,7 @@ enum sizes {
 export class NxHeaderComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     userEmail: string;
     canSeeInfo: boolean;
@@ -119,7 +119,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        translateService: TranslateService,
         private renderer: Renderer2,
         private appState: NxAppStateService,
         private route: ActivatedRoute,
@@ -137,13 +137,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
-        languageService.translateSubject
+        translateService.onTranslationChange
             .pipe(untilDestroyed(this))
-            .subscribe(translations => {
+            .subscribe(() => {
                 setTimeout(() => {
-                    this.LANG = translations;
                     this.getMenu();
                 });
             });

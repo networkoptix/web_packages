@@ -11,9 +11,7 @@ import {
 import type { NgForm, NgModel } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { credentialsValidation, icons } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -26,7 +24,6 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['reset-request.component.scss']
 })
 export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
     icons = icons;
     credentialsValidation = credentialsValidation;
 
@@ -43,12 +40,6 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     sendEmail: () => void;
     @ViewChild('resetPasswordForm', { static: false }) resetPasswordForm: NgForm;
     @ViewChild('email', { static: false }) resetPasswordEmail: NgModel;
-
-    constructor(
-        language: NxLanguageProviderService,
-    ) {
-        this.LANG = language.translations;
-    }
 
     ngOnInit(): void {
         this.resetEmail = this.loginEmail;

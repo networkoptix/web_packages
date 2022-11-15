@@ -9,7 +9,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 
 import { NxProcessButtonComponent } from './process-button.component';
@@ -31,7 +30,6 @@ describe('NxProcessButtonComponent', () => {
                     NxProcessButtonComponent
                 ],
                 providers: [
-                    MockProvider(NxLanguageProviderService),
                     MockProvider(NxConfigService),
                     MockProvider(Process)
                 ]

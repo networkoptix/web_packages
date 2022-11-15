@@ -15,7 +15,7 @@ import { Subject } from 'rxjs';
 import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { FirstPartyWidget, WidgetCard, WidgetSize } from '@components/widgets/helper-classes';
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
@@ -27,7 +27,6 @@ import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -73,7 +72,7 @@ export class NxDashboardComponent implements DashboardGroup {
     readonly GRID_GAP = 0;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     readonly environment = environment;
 
@@ -272,7 +271,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl, dashboardUrl: '', dashboardId }, queryParamsHandling: 'merge' });
         this.menu = menu;
         this.dragEnabled = Boolean(widgetUrl || dragEnabled && menu.length);
-        this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems();
+        this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems;
         this.pageService.pageTitle(this.dashboardGroupName);
 
         this.updateCards(dashboardId, this.menu);
@@ -508,7 +507,7 @@ export class NxDashboardComponent implements DashboardGroup {
     }
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private sanitizer: DomSanitizer,
@@ -524,6 +523,5 @@ export class NxDashboardComponent implements DashboardGroup {
         private cookieService: CookieService
     ) {
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
     }
 }

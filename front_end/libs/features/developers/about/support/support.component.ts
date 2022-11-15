@@ -3,9 +3,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { images } from '@lib/variables/static-variables';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -21,17 +20,15 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxSupportComponent implements OnChanges {
     @Input() supportNode: AboutNode;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     cleanSupportNode: AboutNode;
     errorManager: ErrorStateManager;
     images = images;
 
     constructor(
-        languageService: NxLanguageProviderService,
         private sanitizer: DomSanitizer,
         @Inject(WINDOW) private window: Window
     ) {
-        this.LANG = languageService.translations;
         this.errorManager = new ErrorStateManager(this.window);
     }
 

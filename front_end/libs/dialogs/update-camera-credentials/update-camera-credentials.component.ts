@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type {
@@ -27,7 +26,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     @Input() closable = true;
     @ViewChild('updateForm') updateForm: NgForm;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     update: Process;
 
     camera: ICamera;
@@ -38,12 +37,10 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     cameraPasswordCredentials = '';
 
     constructor(
-        languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.LANG = languageService.translations;
     }
 
     clearPassword(): void {

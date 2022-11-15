@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     SearchableDropdownItem
 } from '@components/dropdowns/searchable/searchable.component.types';
@@ -10,7 +10,6 @@ import { icons, servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -30,7 +29,7 @@ export class TransferOwnershipModalContent implements OnInit {
 
     @ViewChild('transferOwnershipForm') form: NgForm;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     transferInfo: SystemTransferInfo;
     transferComplete: boolean = false;
@@ -43,7 +42,6 @@ export class TransferOwnershipModalContent implements OnInit {
     icons = icons;
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
         private loginService: NxLoginService,
@@ -52,8 +50,6 @@ export class TransferOwnershipModalContent implements OnInit {
             system: NxSystem,
         },
     ) {
-        this.LANG = language.translations;
-
         this.system = this.dialogData.system;
     }
 

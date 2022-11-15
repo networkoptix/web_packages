@@ -1,5 +1,7 @@
+import { Translatable } from '@pipes/any-translate.types';
+
 export interface MessageParams {
-    disclaimer: string;
+    disclaimer: Translatable;
     email?: string;
     asset: string;
     assetId?: string;

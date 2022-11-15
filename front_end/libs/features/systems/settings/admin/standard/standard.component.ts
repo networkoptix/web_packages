@@ -13,7 +13,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -25,7 +25,6 @@ import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -81,7 +80,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     selectedTimeUnit: LimitSessionTimeItem;
     sessionLimitToggle: boolean;
@@ -125,7 +124,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+
         private router: Router,
         private applyService: NxApplyService,
         private cloudApi: NxCloudApiService,
@@ -135,7 +134,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         private systemsService: NxSystemsService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     DAY_MINS = DAY_MINS; // For template access
@@ -144,20 +142,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.limitSessionTimeUnits = {
             days: {
                 value: 'days',
-                name: this.LANG.system.settings.sessionLimitDuration.days(),
+                name: this.LANG.system.settings.sessionLimitDuration.days,
                 id: 1,
                 max: 999999,
                 default: 30
             },
             hours: {
                 value: 'hours',
-                name: this.LANG.system.settings.sessionLimitDuration.hours(),
+                name: this.LANG.system.settings.sessionLimitDuration.hours,
                 id: 2,
                 max: 999999
             },
             minutes: {
                 value: 'minutes',
-                name: this.LANG.system.settings.sessionLimitDuration.minutes(),
+                name: this.LANG.system.settings.sessionLimitDuration.minutes,
                 id: 3,
                 max: 999999
             }
@@ -269,7 +267,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.setWarningMessageThroughApplyService = () => {
             if (this.systemAndSecuritySettings.videoTrafficEncryptionForced) {
                 this.applyService.setWarn(
-                    this.LANG.system.settings.warningMessages.videoEncryption?.()
+                    this.LANG.system.settings.warningMessages.videoEncryption
                 );
             } else {
                 this.applyService.setWarn('');

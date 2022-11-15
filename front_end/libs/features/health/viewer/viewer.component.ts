@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, throwError } from 'rxjs';
@@ -17,12 +18,11 @@ import { flatMap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons, healthMonitoring } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -40,7 +40,7 @@ import { NxHealthService } from '../health.service';
     encapsulation: ViewEncapsulation.None
 })
 export class NxReportViewerComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     account: Account;
     system: NxSystem;
     server: NxSystemAPI;
@@ -64,7 +64,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     @ViewChild('loadReportMain') loadReportMain;
 
     constructor(
-        languageService: NxLanguageProviderService,
+        private translateService: TranslateService,
         private appStateService: NxAppStateService,
         private router: Router,
         private uriService: NxUriService,
@@ -75,7 +75,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -494,9 +493,11 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
 
-                const systemName = this.LANG.headerLabels.healthReportForSystem({
-                    systemName: data.system || ''
-                });
+                const systemName = this.translateService.instant(
+                    this.LANG.headerLabels.healthReportForSystem,
+                    {
+                        systemName: data.system || ''
+                    });
                 this.headerService.currentLocation = {
                     isSystem: false,
                     parentNode: {

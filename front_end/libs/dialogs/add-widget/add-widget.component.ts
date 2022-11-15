@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { WidgetCard } from '@components/widgets/helper-classes';
@@ -15,7 +15,6 @@ import { icons } from '@lib/variables/static-variables';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { pickFrom, delayInitial, alphabeticalSort } from '@utils/general';
@@ -45,7 +44,7 @@ export class AddWidgetModalContent {
 
     widgetDropdownOptions: WidgetDropdownItem[];
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     downloadingThirdParty = false;
@@ -74,7 +73,6 @@ export class AddWidgetModalContent {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,
@@ -85,7 +83,6 @@ export class AddWidgetModalContent {
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
-        this.LANG = language.translations;
     }
 
     downloadWidget = async (widgetUrl, isDevServer = false): Promise<void> => {

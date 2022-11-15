@@ -1,11 +1,10 @@
 import { Component, Inject, Input } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -22,7 +21,7 @@ import { NxToastService } from '../toast.service';
 export class DetachServerModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     system: NxSystem;
     serverName: string;
@@ -32,7 +31,6 @@ export class DetachServerModalContent {
     password: string;
 
     constructor(
-        language: NxLanguageProviderService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
         private simpleDialogService: NxSimpleDialogsService,
@@ -41,7 +39,6 @@ export class DetachServerModalContent {
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -58,7 +55,7 @@ export class DetachServerModalContent {
                     this.system.currentServerNotBusy = true;
                     this.close('success');
                     this.toastService.notify(
-                        this.LANG.servers.detachSystemSuccess(),
+                        this.LANG.servers.detachSystemSuccess,
                         toast.success,
                     );
                     this.window.location.reload();
@@ -87,7 +84,7 @@ export class DetachServerModalContent {
                         this.close();
                         this.system.currentServerNotBusy = true;
                         this.toastService.notify(
-                            this.LANG.servers.detachSystemFailed(),
+                            this.LANG.servers.detachSystemFailed,
                             toast.warning,
                         );
                     }

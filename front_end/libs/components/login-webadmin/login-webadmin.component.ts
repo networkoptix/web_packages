@@ -10,7 +10,7 @@ import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { icons, redirect } from '@lib/variables/static-variables';
@@ -18,7 +18,6 @@ import type { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
@@ -64,7 +63,7 @@ export class LoginWebadminModalContent implements OnInit {
     keepPage: boolean;
     blockNavigation: boolean;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     loading: boolean = true;
@@ -95,7 +94,7 @@ export class LoginWebadminModalContent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         locationService: Location,
         private oauthService: OauthService,
         private renderer: Renderer2,
@@ -115,7 +114,7 @@ export class LoginWebadminModalContent implements OnInit {
         @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+
         this.locationService = locationService;
 
         this.setupDefaults();
@@ -145,7 +144,7 @@ export class LoginWebadminModalContent implements OnInit {
 
     private displayCloudConnectionError(): void {
         this.simpleDialogService.notify(
-            this.LANG.toastMessage.noInternet(),
+            this.LANG.toastMessage.noInternet,
             'warning',
             true
         );
@@ -233,7 +232,7 @@ export class LoginWebadminModalContent implements OnInit {
             this.renderer.selectRootElement('#login_password').focus();
         };
 
-        const cloudLogin = this.LANG.errorCodes['This authorization method is forbidden. Please contact your system administrator.']();
+        const cloudLogin = this.LANG.errorCodes['This authorization method is forbidden. Please contact your system administrator.'];
         const errorCodes = {
             notFound: showWrongCredentialsError,
             invalidParameter: showWrongCredentialsError,
@@ -241,7 +240,7 @@ export class LoginWebadminModalContent implements OnInit {
             serviceUnavailable: showAccountBlockedError,
             accountBlocked: showAccountBlockedError
         };
-        errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError();
+        errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError;
         /* FIXME: Type error for WebAdmin, LocalAccount.login()
         returns an Observable which makes the first argument () => Observable,
         but NxProcessService.createProcess() expects Observable

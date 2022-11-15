@@ -12,13 +12,12 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import {
@@ -34,7 +33,7 @@ import {
     styleUrls: ['security.component.scss']
 })
 export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     account: Account;
     account2faEnabled: boolean;
@@ -52,7 +51,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('popLegendSubV5Template') private popLegendSubV5Template: TemplateRef<unknown>;
 
     constructor(
-        language: NxLanguageProviderService,
         private accountService: NxAccountService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
@@ -60,8 +58,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
     ) {
-        this.LANG = language.translations;
-
         this.menuService.detail = 'security';
     }
 

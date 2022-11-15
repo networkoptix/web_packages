@@ -15,13 +15,12 @@ import {
 import { accountSelectors } from '@common/store/account';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
-import { icons, accountDropdown } from '@lib/variables/static-variables';
+import { icons, accountDropdown, accountDropdownStaff } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -62,15 +61,15 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     accountDropdown: AccountDropdown[];
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         headerService: NxHeaderService,
         private accountService: NxAccountService,
         private store: Store,
     ) {
-        super(languageService, configService);
+        super(configService);
         this.accountDropdown = accountDropdown;
-        this.accountDropdownStaff = accountDropdown;
+        this.accountDropdownStaff = accountDropdownStaff;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');
