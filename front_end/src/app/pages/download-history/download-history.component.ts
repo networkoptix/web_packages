@@ -17,6 +17,7 @@ import { filter } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -68,6 +69,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         private router: Router,
         private pageService: NxPageService,
         private uriService: NxUriService,
+        public appStateService: NxAppStateService,
         @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.setupDefaults();
@@ -168,7 +170,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.canViewRelease = true;
                 if (this.build === undefined) {
                     this.getData();
-                } else {
+                } else if (this.appStateService.ready) {
                     this.accountService.requireLogin().then(account => {
                         if (isAccount(account)) {
                             this.getData();
