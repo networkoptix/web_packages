@@ -110,6 +110,8 @@ export class NxBootstrapProvider {
                 // handle fail in app component
                 this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
                 resolve(true);
+            }).finally(() => {
+                this.window.document.querySelector('body').style.backgroundColor = null;
             });
         });
     }

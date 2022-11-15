@@ -13,7 +13,8 @@ import { NxSystem } from '../system';
 export enum CloudStorageUpdate {
     SYSTEM = 'system',
     USER = 'user',
-    STATISTICS = 'statistics'
+    STATISTICS = 'statistics',
+    ACTIVATE = 'activate'
 }
 
 export interface Usage {
@@ -30,7 +31,7 @@ export class CloudStorageManager extends Destroyable {
 
     static readonly TRANSLATION_KEY = 'cloudStorage.fromServer.';
 
-    #updater$ = new BehaviorSubject<CloudStorageUpdate[]>(Object.values(CloudStorageUpdate));
+    #updater$ = new BehaviorSubject<CloudStorageUpdate[]>(Object.values(CloudStorageUpdate).filter(val => val !== CloudStorageUpdate.ACTIVATE));
 
     /** State */
 
@@ -38,11 +39,20 @@ export class CloudStorageManager extends Destroyable {
      * Storages for current system.
      */
     public readonly systemStorages$ = this.#updater$.pipe(
-        filter(updates => updates.includes(CloudStorageUpdate.SYSTEM)),
-        switchMap(() => this.cloudStorageApi.getStorages(this.system.id).pipe(catchError(() => Promise.resolve([] as StorageInfo[])))),
+        filter(updates => updates.includes(CloudStorageUpdate.SYSTEM) || updates.includes(CloudStorageUpdate.ACTIVATE)),
+        switchMap(updates => this.cloudStorageApi.getStorages(this.system.id).pipe(catchError(() => new Promise<StorageInfo[]>(resolve => setTimeout(() => {
+            const retries = !updates.every(update => update === CloudStorageUpdate.SYSTEM) ? -1 : updates.findIndex(update => update === CloudStorageUpdate.SYSTEM);
+            if (retries !== -1) {
+                updates.splice(retries);
+                this.updateState(updates);
+            }
+            resolve([] as StorageInfo[]);
+        }, 2500))))),
         shareReplay({ bufferSize: 1, refCount: false }),
         this.onDestroyed
     );
+
+    public readonly activating$ = this.#updater$.pipe(map(updates => updates.includes(CloudStorageUpdate.ACTIVATE) || updates.filter(update => update === CloudStorageUpdate.SYSTEM).length > 1));
 
     /**
      * Triggers fetching updated state from cloud storage service
@@ -50,8 +60,10 @@ export class CloudStorageManager extends Destroyable {
      * @param target CloudStorageUpdate[] | CloudStorageUpdate
      */
     public updateState(target: CloudStorageUpdate[] | CloudStorageUpdate = CloudStorageUpdate.SYSTEM): void {
-        if (typeof target === 'string') {
-            target = [target];
+        if (target === CloudStorageUpdate.ACTIVATE) {
+            target = Array(10).fill(CloudStorageUpdate.SYSTEM);
+        } else if (typeof target === 'string') {
+            target = this.#updater$.value.includes(target) ? this.#updater$.value : [target];
         }
         this.#updater$.next(target);
     }
@@ -119,7 +131,7 @@ export class CloudStorageManager extends Destroyable {
      */
     #getUsagesFromCloudStorageService(totalSpace: number): Observable<Usage[]> {
         return this.systemStorages$.pipe(
-            map(storages => ({ usedSpace: storages.reduce((total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace, totalSpace), storages: storages.length })),
+            map(storages => ({ usedSpace: storages.reduce((total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace, 0), storages: storages.length })),
             map(({ usedSpace, storages }) => {
                 const usages: Usage[] = [];
                 if (storages) {

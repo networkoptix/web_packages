@@ -95,7 +95,7 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @returns Observable<StorageCredentials>
      */
     @disabledMethod
-    public getCredentials(storageId:uuid): Observable<StorageCredentials> {
+    public getCredentials(storageId: uuid): Observable<StorageCredentials> {
         return this.get(this.endpoint(storageId, 'credentials'));
     }
 

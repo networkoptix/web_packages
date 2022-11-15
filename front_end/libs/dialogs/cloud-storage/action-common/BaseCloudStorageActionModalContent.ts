@@ -5,7 +5,7 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { Process, ProcessSettings } from '@services/process.service/process';
-import { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
+import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { LicenseTagInfo } from '@services/system.service/license-manager/license-manager.types';
 import { pickFrom } from '@utils/general';
@@ -78,9 +78,13 @@ export class BaseCloudStorageActionModalContent {
         });
     }
 
-    showSuccess = () => {
+    showSuccess = (activate = false) => {
         if (!this.LANG.dialogs.cloudStorage.actions[this.actionType]?.success) {
             return this.close();
+        }
+
+        if (activate) {
+            this.cloudStorageManager.updateState(CloudStorageUpdate.ACTIVATE);
         }
 
         this.success = true;

@@ -135,7 +135,7 @@ export class LicenseManager extends Destroyable {
 
     public readonly modify = (key: string): Observable<LicenseInfo> => {
         const originalKey = this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey;
-        return this.licenseServerApi.activateLicense(this.#generateUpdateParams(key)).pipe(
+        return this.activate(key).pipe(
             switchMap(licenseInfo => this.licenseServerApi.deactivateLicense(
                 this.#generateUpdateParams(originalKey)).pipe(
                 map(() => licenseInfo)

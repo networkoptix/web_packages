@@ -38,7 +38,7 @@ export class CloudStorageActivateModalContent extends BaseCloudStorageActionModa
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
-        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.activate(this.license)), this.processConfig, this.showSuccess, this.showErrors);
+        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.activate(this.license)), this.processConfig, () => this.showSuccess(true), this.showErrors);
     }
 
     close = (): void => this.dialogRef.close();
