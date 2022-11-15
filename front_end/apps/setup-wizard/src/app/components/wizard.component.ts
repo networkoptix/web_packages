@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
@@ -65,5 +65,12 @@ export class WizardComponent implements OnInit {
     }
     retry(): void {
         this.wizardService.retry();
+    }
+
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            this.next();
+        }
     }
 }

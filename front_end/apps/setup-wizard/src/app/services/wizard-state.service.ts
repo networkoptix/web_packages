@@ -171,6 +171,7 @@ export class WizardStateService {
     };
 
     systemSettings: SystemConfigSettings = {
+        settingsPreset: SECURITY_LEVEL.STANDARD,
         cloudAccountName: '',
         cloudHost: '',
         cloudSystemID: '',
@@ -186,7 +187,7 @@ export class WizardStateService {
 
     systemAdvancedSettings: Partial<SystemAdvancedConfigSettings> = {};
 
-    securityLevel = 'standard';
+    securityLevel = SECURITY_LEVEL.STANDARD;
     formValidateSubject = new BehaviorSubject<boolean>(false);
 
     constructor(
@@ -681,7 +682,6 @@ export class WizardStateService {
 
     initSystem(): void {
         const { localPassword, systemName } = this.setupConfig;
-
         const settings: SystemAdvancedConfigSettings = {};
         // eslint-disable-next-line array-callback-return
         Object.keys(this.systemAdvancedSettings).forEach((key: string): void => {
@@ -697,7 +697,7 @@ export class WizardStateService {
             settings.exposeDeviceCredentials = false;
         }
 
-        this.server.setupLocalSystem(systemName, localPassword, settings)
+        this.server.setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
             .toPromise()
             .then(_ => {
                 return this.updateCredentials(this.setupConfig.localLogin, localPassword, false)
@@ -800,7 +800,7 @@ export class WizardStateService {
     }
 
     setSecurityLevel(level: string): void {
-        this.securityLevel = level;
+        this.securityLevel = <SECURITY_LEVEL>level;
     }
 
     initWizard = (): void => {

@@ -80,7 +80,7 @@ def generate_asset_dictionary(show_pending, show_drafts, asset, current_version,
     return asset_dict
 
 
-def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, *, customization=None, request=None, name_filter=[]):
+def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, *, customization=None, request=None, name_filter=None):
     ds_list = data_structures
     customization = customization or get_customization(request)
     if name_filter:

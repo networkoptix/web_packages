@@ -126,6 +126,11 @@ export const nxConfig: IConfig = {
     },
     licenseServer: '',
     newSystem: false,
+    serverDocumentation: {
+        windowsPath: 'HKEY_LOCAL_MACHINE\SOFTWARE\{VMS Vendor}\{VMS Vendor}',
+        defaultPath: '/opt/{vmsvendor}/mediaserver/etc/mediaserver.conf.',
+        tableHeaders: ['Name', 'Description', 'Default Value']
+    },
     headerHeight: 48,
     supportedLanguages: [],
     system: {

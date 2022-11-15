@@ -931,6 +931,16 @@
             "advanced": true
           },
           {
+            "label": "Enable themes",
+            "name": "%THEMES_ENABLED%",
+            "description": "Enables the theme switching for the cloud portal.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Features"
+          },
+          {
             "label": "Cloud Storage Size (Bytes)",
             "name": "%CLOUD_STORAGE_SIZE%",
             "description": "The cloud storage size for a system. Default storage size is 50GB. (50 * 1024 ^ 3)",

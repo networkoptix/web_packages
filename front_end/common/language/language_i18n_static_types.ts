@@ -60,6 +60,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemGroups:          LanguageI18NStaticTypesSystemGroups;
     systemStatuses:        SystemStatuses;
+    serverDocumentation:   ServerDocumentation;
     toastMessage:          ToastMessage;
     healthMonitor:         HealthMonitor;
     headerLabels:          HeaderLabels;
@@ -689,6 +690,8 @@ export interface DownloadsGroups {
     macos:   MAC;
     sdk:     ArmClass;
     windows: MAC;
+    universal: MAC;
+
 }
 
 export interface ArmClass {
@@ -1134,6 +1137,10 @@ export interface SecurityTwoFa {
     disableWarning:       (params?: Record<string, string | number>) => string;
 }
 
+export interface ServerDocumentation {
+    accessibleAt: (params?: Record<string, string | number>) => string;
+}
+
 export interface ServerTabTitles {
     View:        (params?: Record<string, string | number>) => string;
     Settings:    (params?: Record<string, string | number>) => string;
@@ -1181,7 +1188,7 @@ export interface AdvancedSettings {
     autoDiscoveryEnabled:       (params?: Record<string, string | number>) => string;
     statisticsAllowed:          (params?: Record<string, string | number>) => string;
     standard:                   (params?: Record<string, string | number>) => string;
-    safe:                       (params?: Record<string, string | number>) => string;
+    high:                       (params?: Record<string, string | number>) => string;
 }
 
 export interface SetupWizardTitle {

@@ -63,6 +63,7 @@ export interface BaseConfig {
     vmsName: string;
     accessRoles: AccessRoles;
     allowDebugMode: boolean;
+    serverDocumentation: ServerDocumentation
     defaultLanguage: string;
     supportedLanguages: string[];
     headerHeight: number;
@@ -337,6 +338,12 @@ export interface Groups {
     macos: Arm;
     arm: Arm;
     sdk: Arm;
+}
+
+export interface ServerDocumentation {
+    windowsPath: string;
+    defaultPath: string;
+    tableHeaders: string[];
 }
 
 export interface Arm {

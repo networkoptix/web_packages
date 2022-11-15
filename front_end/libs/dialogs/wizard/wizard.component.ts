@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'nx-modal-wizard',
@@ -6,6 +6,9 @@ import { Component } from '@angular/core';
     styleUrls: []
 })
 export class WizardModalContent {
-    ngOnInit(): void {
+    @ViewChild('iframe', { static: false }) iframe: ElementRef<HTMLIFrameElement>;
+
+    setFocus(): void {
+        this.iframe.nativeElement.contentWindow.focus();
     }
 }

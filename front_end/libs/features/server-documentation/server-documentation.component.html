@@ -1,0 +1,36 @@
+<div class="container">
+    <div
+        class="h1 title"
+        translate
+    >
+        Server Documentation
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th translate>These settings are accessible at:</th>
+            </tr>
+        </thead>
+        <tr>
+            <td [innerHTML]="accessibleAt"></td>
+        </tr>
+    </table>
+    <div
+        class="h2"
+        translate
+    >
+        Server Settings
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th *ngFor="let header of CONFIG.serverDocumentation.tableHeaders">{{ header }}</th>
+            </tr>
+        </thead>
+        <tr *ngFor="let setting of serverDocumentation">
+            <td>{{ setting.name }}</td>
+            <td>{{ setting.description }}</td>
+            <td>{{ setting.defaultValue }}</td>
+        </tr>
+    </table>
+</div>

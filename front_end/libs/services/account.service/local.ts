@@ -139,6 +139,9 @@ export class LocalAccount extends BaseAccount {
         this.loginDialogActive = true;
         return this.loginService.login(true, true)
             .then<string | Account | undefined, boolean>(result => {
+                if (result === 'newSystem') {
+                    return;
+                }
                 this.storageService.loginRegister = true;
                 if (result === 'register') {
                     return this.router.navigate(['/authorize/register']).then(() => result);

@@ -640,19 +640,13 @@ export class SystemConfigSettings {
     statisticReportLastVersion: string;
     systemName: string;
     mergeInfo: any;
-    videoTrafficEncryptionForced?: boolean;
-    exposeDeviceCredentials?: boolean;
+    settingsPreset: string;
 
     constructor(params: Params[]) {
         params.forEach(({ name, value }) => {
             this[name] = value;
         });
     }
-}
-
-export class SystemAdvancedConfigSettings {
-    videoTrafficEncryptionForced?: boolean;
-    exposeDeviceCredentials?: boolean;
 }
 
 enum EventState {
@@ -782,6 +776,21 @@ export interface WebPage {
     name: string;
     url: string;
     typeId: uuid;
+}
+
+export interface ServerDocumentationSettings {
+    defaultValue: boolean | string | number;
+    name: string;
+    description: string;
+}
+
+export interface ServerDocumentation {
+    error: string;
+    errorId: string;
+    errorString: string;
+    reply: {
+        settings: ServerDocumentationSettings[]
+    }
 }
 
 export type WebPages = WebPage[];

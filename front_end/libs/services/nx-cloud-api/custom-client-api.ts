@@ -19,7 +19,7 @@ export class CustomClientAPI {
         private http: HttpClient,
         private consoleService: NxConsoleService
     ) {
-        this.apiBase = apiBase + '/custom_clients/';
+        this.apiBase = apiBase + '/cms/custom_clients/';
     }
 
     create = (name: string, baseVms?, values: Record<string, string> = {}) => {

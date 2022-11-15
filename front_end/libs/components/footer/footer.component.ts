@@ -41,7 +41,6 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         translateService: TranslateService
     ) {
         this.CONFIG = configService.getConfig();
-        this.visible = !this.CONFIG.featureFlags.newHeader;
 
         translateService.onTranslationChange
             .pipe(untilDestroyed(this))
@@ -55,6 +54,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnInit(): void {
+        this.visible = this.oauth || !this.CONFIG.featureFlags.newHeader;
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;

@@ -185,16 +185,18 @@ export class DownloadComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const account = this.accountService.account;
-        this.canSeeHistory = (
-            !!this.CONFIG.cloudCapabilities.publicReleases ||
-            account && (
-                account.is_superuser ||
-                account.permissions.includes(
-                    permissions.canViewRelease
-                )
-            )
-        );
+        this.accountService.get()
+            .then(account => {
+                this.canSeeHistory = (
+                    !!this.CONFIG.cloudCapabilities.publicReleases ||
+                    account && (
+                        account.is_superuser ||
+                        account.permissions.includes(
+                            permissions.canViewRelease
+                        )
+                    )
+                );
+            });
 
         if (!this.CONFIG.cloudCapabilities.publicDownloads) {
             this.accountService

@@ -35,13 +35,14 @@
                         *ngIf="selectedSecurity.value == 'standard'; else safe"
                         translate
                     >
-                        Provides compatability and usability but general system security is lower
+                        Provides compatibility and usability but general system security is lower
                     </ng-container>
                     <ng-template
                         #safe
                         translate
                     >
-                        Highest security level but may lead to worse UX and compatability issues
+                        Highest security level but may lead to user experience and compatibility
+                        issues
                     </ng-template>
                 </div>
             </div>

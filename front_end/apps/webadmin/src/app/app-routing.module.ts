@@ -46,12 +46,17 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/api-tool/api-tool.module').then(m => m.NxApiToolModule)
     },
     {
-        path: 'bookmarks',
-        loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
+        path: 'server-documentation',
+        loadChildren: () => import('@pages/server-documentation/server-documentation.module').then(m => m.NxServerDocumentationModule),
+        pathMatch: 'full'
     },
     {
         path: 'layouts',
         loadChildren: () => import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule)
+    },
+    {
+        path: 'bookmarks',
+        loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
     },
     {
         path: 'cloud-authorize',
