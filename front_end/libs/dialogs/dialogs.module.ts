@@ -18,7 +18,6 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
-import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
@@ -53,6 +52,7 @@ import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
+import { TransferOwnershipModule } from './transfer-ownership/transfer-ownership.module';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import {
     UpdateCameraCredentialsModalContent
@@ -82,7 +82,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         DynamicWidgetModule,
         TagModule,
         ThirdsPartyWidgetModule,
-        LoginWebadminModule
+        LoginWebadminModule,
+        TransferOwnershipModule,
     ],
     declarations: [
         DisconnectModalContent,
@@ -113,7 +114,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddWidgetModalContent,
         ConnectCloudModalContent,
         SelectTimeRangeModalContent,
-        TransferOwnershipModalContent,
         Client2faWarningModalContent,
         ReserveSpaceWarningModalContent,
         CreateSystemGroupModalContent,

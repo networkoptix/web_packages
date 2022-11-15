@@ -1,5 +1,10 @@
 @use 'typography';
 
+form {
+    background-color: var(--dialog-bg);
+    // Fix for noncolored gap, might need to be generalized to other dialogs
+}
+
 .subtext {
     @include typography.regular13nocolor;
     color: var(--light-text-color); // light16

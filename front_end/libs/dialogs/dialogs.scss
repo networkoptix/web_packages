@@ -131,6 +131,7 @@ nx-modal-wizard {
     }
 
     &-header {
+        position: relative;
         background-color: var(--dialog-header-bg);
         border-top: 1px solid transparent !important;
         border-bottom: 1px solid var(--dialog-border-color) !important;

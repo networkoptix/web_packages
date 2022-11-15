@@ -118,7 +118,7 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
     }
 
     onSearchInput(_event: Event): void {
-        this.form.form.get(this.componentId).markAsUntouched();
+        this.form?.form.get(this.componentId)?.markAsUntouched();
 
         let filter = this.searchInput.nativeElement.innerText;
         this.helpText = '';
@@ -219,8 +219,8 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
             this.helpText = this._selectedItem.help;
         }
         this.show = false;
-        this.form.form.markAsTouched();
-        this.form.form.get(this.componentId).markAsTouched();
+        this.form?.form.markAsTouched();
+        this.form?.form.get(this.componentId)?.markAsTouched();
         this.onClickElsewhere.emit(this.searchInput.nativeElement.innerText);
     }
 }

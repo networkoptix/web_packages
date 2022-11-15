@@ -10,6 +10,7 @@ import { Process } from '@services/process.service/process';
 })
 export class NxProcessCancelButtonComponent {
     @Input() process: Process;
+    @Input() cancelFn?: () => void;
     @Input() discardFn: () => void;
     @Input() buttonText: string;
     @Input() customClass: string = '';
@@ -19,6 +20,7 @@ export class NxProcessCancelButtonComponent {
     handleClick(): void {
         if (this.process?.processing) {
             this.process.cancel();
+            this.cancelFn?.();
         } else {
             this.discardFn();
         }

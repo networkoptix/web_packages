@@ -1,3 +1,4 @@
+import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
@@ -93,6 +94,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             enabled: environment.production,
             registrationStrategy: 'registerImmediately'
         }),
+        DialogModule,
         CdkScrollableModule,
         HoverPreloadModule,
         PreLoaderModule,

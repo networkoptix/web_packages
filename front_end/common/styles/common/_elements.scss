@@ -175,12 +175,13 @@ span.marked {
     cursor: pointer;
 }
 
+/* TODO: Remove with old dialog service */
 .overlay-backdrop {
     z-index: 1050 !important;
     background-color: rgba($dark15, 0.2);
 }
 
-.cdk-global-overlay-wrapper {
+.overlay-backdrop + .cdk-global-overlay-wrapper {
     //position       : fixed !important;
     display: block !important;
     z-index: 1050 !important;
@@ -215,4 +216,10 @@ span.marked {
     >* {
         width: 100%;
     }
+}
+/* END */
+
+// Override default color
+.cdk-overlay-dark-backdrop {
+    background-color: var(--dialog-overlay-bg) !important;
 }

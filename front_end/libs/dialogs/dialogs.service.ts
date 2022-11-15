@@ -1,9 +1,10 @@
+import { Dialog, DialogConfig as CdkDialogConfig } from '@angular/cdk/dialog';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Injectable, Injector, TemplateRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { SubscriptionLike } from 'rxjs';
+import { SubscriptionLike, firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ModalContent } from '@components/console-table/console-table.component.types';
@@ -11,7 +12,6 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration
 import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -26,7 +26,9 @@ import { toast } from '../variables/static-variables';
 
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
+import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
+import type * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
 
 // import '@dialogs/dialogs.scss';
@@ -52,6 +54,7 @@ export class NxDialogsService extends DialogBase {
         overlay: Overlay,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
+        private cdkDialog: Dialog,
     ) {
         super(overlay, injector);
         this.CONFIG = configService.getConfig();
@@ -620,21 +623,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async transferOwnership(system: NxSystem): Promise<void | SystemTransferInfo> {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     // eslint-disable-next-line camelcase
     public async createSystemGroup(target_id?: string): Promise<void> {
         const config: Partial<DialogConfig> = {
@@ -694,4 +682,51 @@ export class NxDialogsService extends DialogBase {
     };
 
     public cloudStorageInfo = this.#newFeatureMethodFactory('cloudStorage');
+
+    /* ANGULAR CDK DIALOGS */
+    private openV2<R, D = never, T = unknown>(
+        component: ComponentType<T>,
+        customconfig?: CdkDialogConfig<D>
+    ): Promise<R> {
+        const dialogConfig: CdkDialogConfig<D> = {
+            width: DIALOG_SIZE_V2.NORMAL, // Default width
+            ...(customconfig ?? {})
+        };
+        return firstValueFrom(
+            this.cdkDialog.open<R, D>(component, dialogConfig).closed
+        );
+    }
+
+    private dialogV2Factory<DT extends Dt.DialogType, CT = unknown>(
+        componentPromise: () => Promise<ComponentType<CT>>,
+        customConfig?: CdkDialogConfig<never>,
+    ): (data: DT['data']) => Promise<DT['return']> {
+        return async data => {
+            const component = await componentPromise();
+            const configWithData: CdkDialogConfig<DT['data']> = {
+                ...(customConfig ?? {}),
+                data
+            };
+            return this.openV2(component, configWithData);
+        };
+    }
+
+    /* General use */
+
+    /* Account */
+
+    /* Systems */
+
+    /* Groups */
+
+    /* Admin */
+    transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(
+        () => import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent)
+    );
+
+    /* Cameras */
+
+    /* Users */
+
+    /* Servers */
 }

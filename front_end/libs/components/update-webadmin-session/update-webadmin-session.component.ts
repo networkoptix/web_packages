@@ -1,3 +1,4 @@
+import { DialogRef as CdkDialogRef } from '@angular/cdk/dialog';
 import {
     Component,
     EventEmitter,
@@ -28,7 +29,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
     @Input() system: NxSystem;
     @Input() processAction: string;
 
-    @Input() dialogRef: DialogRef;
+    @Input() dialogRef: DialogRef | CdkDialogRef;
     @Output() loginSuccess = new EventEmitter<any>();
 
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
