@@ -54,13 +54,15 @@
                             >
                                 <div
                                     class=""
-                                    [innerHTML]="getDescription(setting.key) | safe: 'html'"
+                                    [innerHTML]="
+                                        getDescription(setting.key) | translate | safe: 'html'
+                                    "
                                 ></div>
                                 <div
                                     class="text-muted break-long"
                                     *ngIf="LANG.settingsConfig[setting.key]"
                                 >
-                                    {{ setting.key }}
+                                    {{ setting.key | translate }}
                                 </div>
                             </div>
 

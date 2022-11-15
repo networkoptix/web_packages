@@ -54,7 +54,7 @@
                                     <div
                                         *ngIf="headerGroup.name"
                                         [ngClass]="headerGroup.colorClass"
-                                        [innerText]="headerGroup.name"
+                                        [innerText]="headerGroup.name | translate"
                                     ></div>
                                 </th>
                             </ng-container>
@@ -73,11 +73,11 @@
                                     <div
                                         class="caption d-flex align-items-end"
                                         [ngClass]="header.formatClass"
-                                        [title]="header.description || header.name"
+                                        [title]="header.description || header.name | translate"
                                     >
                                         <div
                                             class="text-container ellipsis"
-                                            [innerText]="header.name"
+                                            [innerText]="header.name | translate"
                                         ></div>
                                         <div
                                             [ngClass]="{ 'dynamic-table-show': !sortOrderASC }"
@@ -141,7 +141,7 @@
                                                     item[headerGroup.id] &&
                                                     item[headerGroup.id][header.id] &&
                                                     item[headerGroup.id][header.id].tooltip) ||
-                                                ''
+                                                    '' | translate
                                             "
                                             [svgStyle]="{ 'width.px': '20' }"
                                             [src]="
@@ -154,7 +154,10 @@
                                     <ng-template #showValue>
                                         <td
                                             class="ellipsis"
-                                            [title]="getTitle(item, headerGroup.id, header.id)"
+                                            [title]="
+                                                getTitle(item, headerGroup.id, header.id)
+                                                    | translate
+                                            "
                                             [ngClass]="
                                                 item &&
                                                 item[headerGroup.id] &&
@@ -170,7 +173,8 @@
                                                     [undefined, ''].indexOf(
                                                         item[headerGroup.id][header.id].text
                                                     ) === -1
-                                                        ? item[headerGroup.id][header.id].text
+                                                        ? (item[headerGroup.id][header.id].text
+                                                          | translate)
                                                         : '−'
                                                 "
                                                 [ngClass]="

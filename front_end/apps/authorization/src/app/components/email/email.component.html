@@ -15,12 +15,12 @@
         [svgStyle]="{ 'width.px': '280', 'height.px': '80' }"
         [applyClass]="true"
     ></svg-icon>
-    <h3 class="authorize-header">{{ header }}</h3>
+    <h3 class="authorize-header">{{ header | translate }}</h3>
     <h4
         *ngIf="subHeader"
         class="authorize-subheader"
     >
-        {{ subHeader }}
+        {{ subHeader | translate }}
     </h4>
 </header>
 <main

@@ -4,15 +4,14 @@ import {
     OnChanges,
     OnInit,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 enum mainButtonState {
@@ -36,26 +35,16 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() maxWidth = 175;
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     systemCounter: number;
     state: string;
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         public headerService: NxHeaderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
-
-        languageService.translateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(translations => {
-                setTimeout(() => {
-                    this.LANG = translations;
-                });
-            });
     }
 
     ngOnInit(): void {

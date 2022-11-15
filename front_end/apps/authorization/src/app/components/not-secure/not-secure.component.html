@@ -15,12 +15,21 @@
         [svgStyle]="{ 'width.px': '320', 'height.px': '80' }"
         [applyClass]="true"
     ></svg-icon>
-    <h3 class="authorize-header">{{ LANG.authorize.loginCloudHeader() }}</h3>
+    <h3
+        class="authorize-header"
+        translate
+    >
+        Log in to %CLOUD_NAME%
+    </h3>
     <div
         class="authorize-subheader"
         *ngIf="loginEmail"
     >
-        <span class="sub-header">{{ LANG.authorize.asAccountSubheader() }}</span>
+        <span
+            class="sub-header"
+            translate
+            >As</span
+        >
         <span
             class="fs-mask for-account"
             (click)="setCurrentState.emit('email')"

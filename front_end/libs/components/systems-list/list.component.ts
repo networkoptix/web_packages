@@ -11,14 +11,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -44,7 +43,7 @@ type Endpoint = Partial<{
 
 export class NxSystemsListComponent implements OnInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     showSearch: boolean;
     fetchComplete: boolean;
     search: { value: string };
@@ -75,15 +74,13 @@ export class NxSystemsListComponent implements OnInit {
 
     private setupDefaults(configService: NxConfigService): void {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.systems;
         this.search = { value: '' };
     }
 
     constructor(
         configService: NxConfigService,
-        private language: NxLanguageProviderService,
         private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
@@ -137,7 +134,7 @@ export class NxSystemsListComponent implements OnInit {
             this.fetchComplete = true;
             return this.systemsService.forceUpdateSystems().toPromise();
         }, {
-            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
+            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix,
             logoutForbidden: true
         });
 
@@ -166,7 +163,7 @@ export class NxSystemsListComponent implements OnInit {
         if (search) {
             this.filteredSystems = this.systems.filter(system => {
                 return !search ||
-                    this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
+                    this.hasMatch(this.LANG.system.mySystemSearch, search) &&
                     (system.ownerAccountEmail === this.accountService.email) ||
                     this.hasMatch(system.name, search) ||
                     this.hasMatch(system.ownerFullName, search) ||

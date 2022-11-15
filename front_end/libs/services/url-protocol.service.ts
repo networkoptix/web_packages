@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { protocolCheck } from '@utils/protocolcheck';
@@ -8,7 +8,6 @@ import { protocolCheck } from '@utils/protocolcheck';
 import { NxAccountService } from './account.service';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-import { NxLanguageProviderService } from './nx-language-provider';
 import type { LinkSettings } from './url-protocol.service.types';
 import { WINDOW } from './window-provider';
 
@@ -17,17 +16,15 @@ import { WINDOW } from './window-provider';
 })
 export class NxUrlProtocolService {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     constructor(
         @Inject(WINDOW) private window: Window,
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     private parseSource() {
@@ -79,7 +76,7 @@ export class NxUrlProtocolService {
         settings = { ...settings, ...linkSettings };
 
         const protocol = settings.native && this.LANG.clientProtocol
-            ? this.LANG.clientProtocol?.()
+            ? this.LANG.clientProtocol
             : this.window.location.protocol;
         const host = this.window.location.host;
 
@@ -156,7 +153,7 @@ export class NxUrlProtocolService {
         }).then(({ link }) => {
             if (!environment.production) {
                 link = link
-                    .replace(this.LANG.clientProtocol(), 'nx-vms:')
+                    .replace(this.LANG.clientProtocol, 'nx-vms:')
                     .replace(this.window.location.host, environment.cloudHost);
             }
             /* The browser opens a dialog that we cannot directly detect or get a response from.

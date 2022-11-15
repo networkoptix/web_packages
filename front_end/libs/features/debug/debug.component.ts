@@ -2,14 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import type {
@@ -25,8 +24,8 @@ import { WINDOW } from '@services/window-provider';
     templateUrl: 'debug.component.html'
 })
 export class NxDebugComponent {
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
     // eslint-disable-next-line no-tabs
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
@@ -74,16 +73,14 @@ export class NxDebugComponent {
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
         private dialogsService: NxDialogsService,
-        private languageService: NxLanguageProviderService,
         private pageService: NxPageService,
         private processService: NxProcessService,
         private systemsService: NxSystemsService,
         private urlProtocol: NxUrlProtocolService,
         private configService: NxConfigService
     ) {
-        this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
-        this.pageService.pageTitle = this.LANG.pageTitles.debug?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.debug;
         this.accountService.get().then(acc => {
             this.init();
         });
@@ -137,7 +134,7 @@ export class NxDebugComponent {
                     if (this.debugProcess.success) {
                         resolve({
                             data: {
-                                resultCode: this.LANG.errorCodes.ok?.()
+                                resultCode: this.LANG.errorCodes.ok
                             }
                         });
                     } else {

@@ -9,12 +9,11 @@ import { curveBasis } from 'd3-shape';
 import { Subject, timer } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -39,7 +38,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     @Input() refreshInterval: number = 1000;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     private destroy$ = new Subject<true>();
 
@@ -71,13 +70,11 @@ export class NxMonitoringGraphComponent implements OnChanges {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.setupDefaults();
 

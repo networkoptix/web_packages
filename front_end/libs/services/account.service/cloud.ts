@@ -1,6 +1,7 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 
 import { NxLoginService } from '@services/login.service';
@@ -10,7 +11,6 @@ import { OauthService } from '@services/oauth.service';
 
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
@@ -25,7 +25,7 @@ import { BaseAccount } from './base';
 export class CloudAccount extends BaseAccount {
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        protected translateService: TranslateService,
         locationService: Location,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
@@ -45,7 +45,7 @@ export class CloudAccount extends BaseAccount {
     ) {
         super(
             configService,
-            languageService,
+            translateService,
             locationService,
             document,
             window,

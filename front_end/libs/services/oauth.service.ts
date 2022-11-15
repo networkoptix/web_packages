@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 
 import type { IConfig } from './nx-config/config-types';
@@ -15,7 +14,6 @@ import { WINDOW } from './window-provider';
 })
 export class OauthService {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
 
     constructor(
         configService: NxConfigService,

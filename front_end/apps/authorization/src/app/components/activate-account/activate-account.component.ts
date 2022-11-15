@@ -7,13 +7,13 @@ import {
     Output,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, interval } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -27,7 +27,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 
 export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     @Input() viewType: string;
     @Input() smallView: boolean;
@@ -43,27 +43,26 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     contentMessage$: Observable<string>;
 
     constructor(
-        language: NxLanguageProviderService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        private translateService: TranslateService,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
         this.contentHeader$ = this.activated$.pipe(map((activated: boolean) => {
             return activated
-                ? this.LANG.authorize.activatedText()
-                : this.LANG.authorize.createdText();
+                ? this.LANG.authorize.activatedText
+                : this.LANG.authorize.createdText;
         }));
         this.contentMessage$ = combineLatest([this.activated$, this.fromEmail$]).pipe(map(([activated, fromEmail]) => {
             const params = { accountEmail: this.loginEmail || '' };
             if (activated) {
                 return fromEmail
-                    ? this.LANG.authorize.activatedAdditional(params)
+                    ? this.translateService.instant(this.LANG.authorize.activatedAdditional, params)
                     : '';
             } else {
-                return this.LANG.authorize.createdAdditional(params);
+                return this.translateService.instant(this.LANG.authorize.createdAdditional, params);
             }
         }));
 

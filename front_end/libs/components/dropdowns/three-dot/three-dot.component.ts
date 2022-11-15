@@ -7,7 +7,6 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -39,10 +38,9 @@ export class NxThreeDotDropdown extends BaseDropdown {
     @Input() componentId: string = 'three-dot-menu';
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService
     ) {
-        super(languageService, configService);
+        super(configService);
     }
 
     change(item: ActionItems): void {

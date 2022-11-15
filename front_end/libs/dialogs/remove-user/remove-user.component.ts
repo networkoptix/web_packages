@@ -4,12 +4,11 @@ import {
     Input
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -26,8 +25,8 @@ import { pickFrom } from '@utils/general';
 export class RemoveUserModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     system: NxSystem;
     user: NxSystemUser;
@@ -38,28 +37,26 @@ export class RemoveUserModalContent {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'user'], this);
 
         const msg = this.user.isCloud ? 'remove' : 'delete';
-        this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`]?.();
-        this.dialogButtonText = this.LANG.dialogs.buttons[msg]?.();
+        this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
+        this.dialogButtonText = this.LANG.dialogs.buttons[msg];
 
         this.removeUserProcess = this.processService.createProcess(
             () => this.system.deleteUser(this.user),
             {
                 ignoreError: true,
-                errorPrefix: this.LANG.errorCodes.cantSharePrefix?.()
+                errorPrefix: this.LANG.errorCodes.cantSharePrefix
             },
             () => this.system.getUsers(true).then(() => this.dialogRef.close(true)),
             err => {

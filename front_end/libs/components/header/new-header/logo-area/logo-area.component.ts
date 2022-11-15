@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -23,16 +22,17 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     logoState = logoAreaState.LOGO;
     systemListText: string;
     singleSystem = false;
-    constructor(public headerService: NxHeaderService,
+
+    constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
-        systemsService: NxSystemsService) {
+        systemsService: NxSystemsService,
+        public headerService: NxHeaderService,
+    ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.checkLogoState(currentLocation);
         });
@@ -42,7 +42,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems() : this.LANG.appHeader.systemList();
+        this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemList;
     }
 
     emitClick(clickType: logoClickType): void {

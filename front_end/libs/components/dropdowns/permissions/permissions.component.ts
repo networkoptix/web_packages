@@ -9,7 +9,6 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemRole, NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 import type { NgChanges } from '@utils/ng-changes';
@@ -46,11 +45,11 @@ export class NxPermissionsDropdown extends BaseDropdown {
     private selected: NxSystemRole;
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         private applyService: NxApplyService
     ) {
-        super(languageService, configService);
+        super(configService);
     }
 
     /**
@@ -59,9 +58,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
     writeValue(value: NxSystemRole | null): void {
         if (value !== null && !this.applyService.locked) {
             this.selected = value;
-            this.selection = this.LANG.accessRoles[value.name]?.label?.() ||
+            this.selection = this.LANG.accessRoles[value.name]?.label ||
                 value.name ||
-                this.LANG.pleaseSelect();
+                this.LANG.pleaseSelect;
         }
     }
 
@@ -78,7 +77,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
                 const extendedRole = {
                     ...role,
-                    optionLabel: this.LANG.accessRoles[role.name]?.label() ||
+                    optionLabel: this.LANG.accessRoles[role.name].label ||
                         role.name
                 };
                 this.accessRoles.push(extendedRole);
@@ -91,9 +90,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
             this.processAccessRoles();
             const role = this.accessRoles.find(x => x.name === this.selected?.name);
             const roleOptionLabel =
-                this.LANG.accessRoles[role?.name]?.label?.() ||
+                this.LANG.accessRoles[role?.name]?.label ||
                 role?.name ||
-                this.LANG.pleaseSelect();
+                this.LANG.pleaseSelect;
 
             if (!role || roleOptionLabel !== this.selection) {
                 this.selection = roleOptionLabel;

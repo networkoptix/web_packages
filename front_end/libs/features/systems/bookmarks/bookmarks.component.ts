@@ -5,7 +5,7 @@ import { cloneDeep } from 'lodash-es';
 import { combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, delay, filter, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     SearchTag,
     SearchFilter
@@ -14,7 +14,6 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -31,7 +30,7 @@ import type { Bookmark } from './bookmark.types';
 
 export class NxBookmarksComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     allElements: Bookmark[];
     elements: Bookmark[];
@@ -49,7 +48,6 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         private bookmarkService: BookmarkService,
-        private language: NxLanguageProviderService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
@@ -61,8 +59,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void { }
 
     ngOnInit(): void {
-        this.LANG = this.language.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.integrations;
         this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
         this.route.queryParams

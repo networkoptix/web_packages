@@ -6,10 +6,9 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,17 +18,15 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 })
 export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     @Input() viewType: string;
     @Input() clientType: string;
     @Input() confirm: (route?: string) => void;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 

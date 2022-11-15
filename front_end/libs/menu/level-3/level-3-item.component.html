@@ -35,7 +35,7 @@
             }"
         >
             <nx-search-highlight
-                [text]="item.label"
+                [text]="item.label | translate"
                 [search]="search"
             ></nx-search-highlight>
         </span>
@@ -45,7 +45,7 @@
         >
             <span class="ml-1 mr-1">&ndash;</span>
             <nx-search-highlight
-                [text]="item.additionalLabel"
+                [text]="item.additionalLabel | translate"
                 [search]="search"
             ></nx-search-highlight>
         </span>

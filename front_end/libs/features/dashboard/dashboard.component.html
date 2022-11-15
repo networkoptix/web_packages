@@ -58,7 +58,9 @@
         [ngModel]="dragEnabled"
         (ngModelChange)="toggleDragEnabled($event)"
         [label]="
-            dragEnabled ? LANG.dashboard.dashboardEditEnabled() : LANG.dashboard.dashboardLocked()
+            dragEnabled
+                ? (LANG.dashboard.dashboardEditEnabled | translate)
+                : (LANG.dashboard.dashboardLocked | translate)
         "
     >
     </nx-switch>
@@ -109,7 +111,7 @@
                     for="settings_upload"
                     class="menu-item"
                     [ngClass]="{ 'disabled-input-label': !dragEnabled }"
-                    [nxTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''"
+                    [nxTooltip]="!dragEnabled ? (LANG.dashboard.unlockToUpload | translate) : ''"
                     translate
                     >Apply existing config</label
                 >
@@ -157,7 +159,7 @@
                 cdkDragLockAxis="y"
                 [routerLink]="[]"
                 (mousedown)="showSettings = false"
-                [nxTooltip]="dragEnabled ? dashboardTooltip : ''"
+                [nxTooltip]="dragEnabled ? (dashboardTooltip | translate) : ''"
                 [queryParams]="{ dashboardId: dashboard.id }"
                 routerLinkActive="active"
                 class="menu-item"
@@ -247,7 +249,7 @@
                 <div cdkDragHandle>
                     <div
                         class="heading"
-                        [nxTooltip]="dragEnabled ? '' : LANG.dashboard.unlockToMove()"
+                        [nxTooltip]="dragEnabled ? '' : (LANG.dashboard.unlockToMove | translate)"
                         [ngClass]="{
                             'drag-heading':
                                 dragEnabled && [activeCellIndex, hoverCellIndex].includes(i)

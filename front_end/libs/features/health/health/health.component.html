@@ -97,8 +97,17 @@
                     *ngIf="importedData.imported"
                     class="importInfo pb-2"
                 >
-                    <p>{{ LANG.pages.health.importedSystem({ system: importedData.system }) }}</p>
-                    <p>{{ LANG.pages.health.importedTime({ time: importedData.time }) }}</p>
+                    <p>
+                        {{
+                            LANG.pages.health.importedSystem
+                                | translate: { system: importedData.system }
+                        }}
+                    </p>
+                    <p>
+                        {{
+                            LANG.pages.health.importedTime | translate: { time: importedData.time }
+                        }}
+                    </p>
                 </div>
             </div>
             <div class="mt-3 px-2">

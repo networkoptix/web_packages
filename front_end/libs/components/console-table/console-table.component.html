@@ -96,20 +96,20 @@
                         <td
                             cdk-cell
                             *cdkCellDef="let element"
-                            [nxTooltip]="field.meta?.tooltip"
+                            [nxTooltip]="field.meta?.tooltip | translate"
                             [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
                         >
-                            {{ element[field.name] }}
+                            {{ element[field.name] | translate }}
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.COMMENTS">
                         <td
                             cdk-cell
                             *cdkCellDef="let element"
-                            [nxTooltip]="field.meta?.tooltip"
+                            [nxTooltip]="field.meta?.tooltip | translate"
                             [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
                         >
-                            {{ element[field.name] }}
+                            {{ element[field.name] | translate }}
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_LINK">
@@ -128,7 +128,7 @@
                                         'margin.px': '8'
                                     }"
                                     [applyClass]="true"
-                                    [nxTooltip]="field.meta?.tooltip"
+                                    [nxTooltip]="field.meta?.tooltip | translate"
                                 ></svg-icon>
                             </ng-template>
                             <ng-template #externalLink>
@@ -216,7 +216,7 @@
                                         <div class="d-flex flex-column">
                                             <span class="mb-3 text-decoration-underline">{{
                                                 element[field.name].manifest.fields[0].meta.options
-                                                    .errorHeading
+                                                    .errorHeading | translate
                                             }}</span>
                                             <span
                                                 *ngFor="
@@ -224,13 +224,13 @@
                                                         element[field.name].lookupKey
                                                     ] || []
                                                 "
-                                                >{{ error.message }}</span
+                                                >{{ error.message | translate }}</span
                                             >
                                         </div>
                                     </ng-template>
                                     <ng-template #standardStatus>
                                         <span class="status-label">{{
-                                            element[field.name].manifest.fields[0].label
+                                            element[field.name].manifest.fields[0].label | translate
                                         }}</span>
                                     </ng-template>
                                     <span
@@ -238,10 +238,10 @@
                                             asyncErrors[element[field.name].lookupKey];
                                             else standardStatus
                                         "
-                                        [nxTooltip]="errorsTooltip"
+                                        [nxTooltip]="errorsTooltip | translate"
                                         >{{
                                             element[field.name].manifest.fields[0].meta.options
-                                                .error
+                                                .error | translate
                                         }}</span
                                     >
                                 </ng-template>
@@ -252,7 +252,7 @@
                                     "
                                 >
                                     <span class="status-label">{{
-                                        element[field.name].manifest.fields[1].label
+                                        element[field.name].manifest.fields[1].label | translate
                                     }}</span>
                                     <span class="status-label padded-label">{{ progress }}</span>
                                     <span
@@ -292,7 +292,7 @@
                                     }"
                                     [applyClass]="true"
                                     class="icon-modal-svg"
-                                    [nxTooltip]="field.meta?.tooltip"
+                                    [nxTooltip]="field.meta?.tooltip | translate"
                                 ></svg-icon>
                             </a>
                         </td>

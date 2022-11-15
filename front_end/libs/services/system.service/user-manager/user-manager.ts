@@ -1,6 +1,5 @@
 import { isEqual, cloneDeep } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { ChangedIdReturned } from '@services/system-api.types';
@@ -17,7 +16,6 @@ import {
 
 export class UserManager {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
 
     private mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
     private _ownerEmail: string;
@@ -32,13 +30,11 @@ export class UserManager {
 
     constructor(
         config: IConfig,
-        lang: LanguageI18NStaticTypes,
         mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
         currentUserEmail: string,
         userId: string
     ) {
         this.CONFIG = config;
-        this.LANG = lang;
         this.mediaserver = mediaserver;
         this.currentUserEmail = currentUserEmail;
 

@@ -5,7 +5,7 @@
     novalidate
 >
     <div class="modal-header">
-        <h1 class="modal-title">{{ title }}</h1>
+        <h1 class="modal-title">{{ title | translate }}</h1>
         <button
             type="button"
             class="close"
@@ -113,7 +113,7 @@
                     [(ngModel)]="message"
                     rows="5"
                     id="message"
-                    [placeholder]="placeholder"
+                    [placeholder]="placeholder | translate"
                     name="message"
                     type="text"
                     required
@@ -123,7 +123,7 @@
             <div
                 *ngIf="data.disclaimer"
                 class="form-group"
-                [innerHTML]="data.disclaimer | safe: 'html'"
+                [innerHTML]="data.disclaimer | translate | safe: 'html'"
             ></div>
         </form>
     </div>

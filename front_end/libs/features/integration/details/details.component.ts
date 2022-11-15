@@ -3,12 +3,13 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -18,7 +19,6 @@ import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -36,7 +36,7 @@ import { IntegrationService } from '../integration.service';
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     plugin;
     content: Content;
 
@@ -45,7 +45,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        private translateService: TranslateService,
         public sanitizer: DomSanitizer,
         private router: Router,
         private route: ActivatedRoute,
@@ -62,7 +62,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     setUpRouteSubscription(): void {
@@ -92,14 +91,14 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 level3: [
                                     {
                                         id: 'how-it-works',
-                                        label: this.LANG['How it works']() || 'How it works',
+                                        label: this.LANG['How it works'],
                                         // path  : 'how-it-works',
                                         path: '',
                                         query
                                     },
                                     {
                                         id: 'how-to-setup',
-                                        label: this.LANG['How to setup?']() || 'How to setup?',
+                                        label: this.LANG['How to setup?'],
                                         path: 'how-to-setup',
                                         query
                                     }
@@ -132,7 +131,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.acceptProcess = this.processService.createProcess(() => {
                                             return this.cloudApiService.acceptReview(this.plugin.review_id);
                                         }, {
-                                            successMessage: this.LANG.account.agreementAccepted?.()
+                                            successMessage: this.LANG.account.agreementAccepted
                                         }).then(() => {
                                             this.router.navigate([this.uriService.getURL()]);
                                             this.ribbonService.hide();
@@ -141,12 +140,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         ribbonActions.push(
                                             {
                                                 type: 'process-button',
-                                                text: this.LANG.ribbon.integration.accept?.(),
+                                                text: this.LANG.ribbon.integration.accept,
                                                 value: this.acceptProcess
                                             },
                                             {
                                                 type: 'link',
-                                                text: this.LANG.ribbon.integration.reject?.(),
+                                                text: this.LANG.ribbon.integration.reject,
                                                 value: `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`
                                             }
                                         );
@@ -155,23 +154,26 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     if (this.plugin.canEdit) {
                                         ribbonActions.push({
                                             type: 'link',
-                                            text: this.LANG.ribbon.integration.backToEditText(),
+                                            text: this.LANG.ribbon.integration.backToEditText,
                                             value: this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
                                         });
                                     }
 
                                     const preview = this.plugin.pending || this.plugin.draft;
                                     this.ribbonService.show(
-                                        preview ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
+                                        preview ? this.LANG.ribbon.integration.previewRibbon : this.LANG.ribbon.integration.publishedRibbon,
                                         ribbonActions
                                     );
                                 }
 
-                                this.pageService.pageTitle =
-                                    this.LANG.pageDescriptions.integrationDetails({
-                                        PLUGIN_NAME: this.plugin.information.name,
-                                        PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName
-                                    });
+                                this.pageService.pageTitle(
+                                    this.translateService.instant(
+                                        this.LANG.pageDescriptions.integrationDetails,
+                                        {
+                                            PLUGIN_NAME: this.plugin.information.name,
+                                            PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName
+                                        })
+                                );
 
                                 this.integrationService.setIntegrationPlugin(this.plugin);
                             }
@@ -211,15 +213,16 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog(): void {
-        const disclaimer = this.LANG.privacyPolicy.integration({
-            INTEGRATION_COMPANY: this.plugin.information.companyName,
-            INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
-        });
-
         const data: MessageParams = {
             to: this.plugin.information.companyName,
             email: this.plugin.support.supportEmail,
-            disclaimer,
+            disclaimer: {
+                value: this.LANG.privacyPolicy.integration,
+                params: {
+                    INTEGRATION_COMPANY: this.plugin.information.companyName,
+                    INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
+                }
+            },
             assetId: this.plugin.id,
             asset: this.plugin.information.name
         };

@@ -9,11 +9,12 @@ import {
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { auditTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -26,7 +27,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo, CloudResponse } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -51,7 +51,7 @@ interface Settings {
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     ownershipTransferEnabled: boolean = false;
 
@@ -124,14 +124,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.toastService.notify(
-                    this.LANG.toastMessage.system.cloudConnect.success(),
+                    this.LANG.toastMessage.system.cloudConnect.success,
                     'success'
                 );
                 setTimeout(() => this.window.location.reload(), 2000);
             },
             () => {
                 this.toastService.notify(
-                    this.LANG.toastMessage.system.cloudConnect.failed(),
+                    this.LANG.toastMessage.system.cloudConnect.failed,
                     'danger'
                 );
             }
@@ -192,7 +192,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private translateService: TranslateService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private pageService: NxPageService,
@@ -210,7 +210,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.ownershipTransferEnabled = configService.flagsEnabled(
             'cloudOwnershipTransfer'
@@ -329,7 +328,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             },
             () => {
                 this.toastService.notify(
-                    this.LANG.toastMessage.nameFail({ type: this.LANG.common.system() }),
+                    { value: this.LANG.toastMessage.nameFail, params: { type: this.LANG.common.system } },
                     this.CONFIG.toast.warning,
                 );
             });
@@ -381,7 +380,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             );
         } else {
             this.dialogs.notify(
-                this.LANG.toastMessage.noInternet(),
+                this.LANG.toastMessage.noInternet,
                 'warning',
                 true
             );
@@ -428,7 +427,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         buttons: { ok }
                     }
                 } = this.LANG;
-                this.dialogs.confirm(message(), title(), ok());
+                this.dialogs.confirm(message, title, ok);
                 this.getCloudStorageUsagePromise = null;
             }).catch(() => {
                 // User is the owner. Deleting system means unbinding it and disconnecting all accounts
@@ -488,25 +487,28 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     });
             }
             this.dialogs.confirm(
-                this.LANG.dialogs.removeSystem.message(),
-                this.LANG.dialogs.removeSystem.title(),
-                this.LANG.dialogs.removeSystem.action(),
+                this.LANG.dialogs.removeSystem.message,
+                this.LANG.dialogs.removeSystem.title,
+                this.LANG.dialogs.removeSystem.action,
                 'btn-danger',
-                this.LANG.dialogs.buttons.cancel()
+                this.LANG.dialogs.buttons.cancel
             ).then(result => {
                 if (result === true) {
                     return this.system.deleteFromCurrentAccount().subscribe(res => {
                         this.toastService.notify(
-                            this.LANG.toastMessage.system.deleted.success({
-                                systemName: this.system.info.systemName ||
+                            {
+                                value: this.LANG.toastMessage.system.deleted.success,
+                                params: {
+                                    systemName: this.system.info.systemName ||
                                     this.system.info.name
-                            }),
+                                }
+                            },
                             this.CONFIG.toast.success,
                         );
                     }, err => {
                         console.error(err);
                         this.toastService.show(
-                            this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
+                            this.LANG.errorCodes.cantUnshareWithMeSystemPrefix,
                             this.CONFIG.toast.danger,
                         );
                     },
@@ -542,14 +544,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (!error.primarySystemName && !error.secondarySystemName) {
                     return;
                 }
-                const commonErrorMsg = this.LANG.dialogs.merge.commonText({
+                const commonErrorMsg = this.translateService.instant('dialogs.merge.commonText', {
                     primarySystem: error.primarySystemName,
                     secondarySystem: error.secondarySystemName
                 });
 
-                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
+                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild}</span>`;
                 if (this.CONFIG.cloudHost) {
-                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
+                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild}</a>`;
                 }
 
                 const errorCodeMsg = this.LANG.errorCodes[error.errorText] ||
@@ -566,8 +568,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // Handling promise to satisfy the linter.
                 this.dialogs.confirm(
                     dialogBody,
-                    this.LANG.dialogs.merge.mergeFailedTitle(),
-                    this.LANG.dialogs.buttons.ok(),
+                    this.LANG.dialogs.merge.mergeFailedTitle,
+                    this.LANG.dialogs.buttons.ok,
                     'btn-primary',
                     undefined).then(() => { });
             }).finally(() => {
@@ -581,7 +583,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateUserRole() {
         let userRole = this.system.userManager.accessRole;
         if (userRole in this.LANG.accessRoles) {
-            userRole = this.LANG.accessRoles[userRole].label();
+            userRole = this.LANG.accessRoles[userRole].label;
         }
         return userRole;
     }

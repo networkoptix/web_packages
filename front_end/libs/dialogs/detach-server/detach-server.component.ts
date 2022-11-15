@@ -1,12 +1,11 @@
 import { Component, Inject, Input } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -23,8 +22,8 @@ import { NxToastService } from '../toast.service';
 export class DetachServerModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     system: NxSystem;
     serverName: string;
@@ -34,7 +33,6 @@ export class DetachServerModalContent {
     password: string;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
@@ -45,7 +43,6 @@ export class DetachServerModalContent {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -62,7 +59,7 @@ export class DetachServerModalContent {
                     this.system.currentServerNotBusy = true;
                     this.close('success');
                     this.toastService.notify(
-                        this.LANG.servers.detachSystemSuccess(),
+                        this.LANG.servers.detachSystemSuccess,
                         this.CONFIG.toast.success,
                     );
                     this.window.location.reload();
@@ -91,7 +88,7 @@ export class DetachServerModalContent {
                         this.close();
                         this.system.currentServerNotBusy = true;
                         this.toastService.notify(
-                            this.LANG.servers.detachSystemFailed(),
+                            this.LANG.servers.detachSystemFailed,
                             this.CONFIG.toast.warning,
                         );
                     }

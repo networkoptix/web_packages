@@ -4,12 +4,11 @@ import {
     TemplateRef
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DialogRef, DIALOG_DATA } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 
 @Component({
@@ -21,11 +20,10 @@ export class NewFeatureInformationModalContent<T> {
     templateName: string;
     dynamicTemplate: TemplateRef<T>;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
     constructor(
         config: NxConfigService,
-        language: NxLanguageProviderService,
         public dialogsService: NxDialogsService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) public dialogData: {
@@ -33,7 +31,6 @@ export class NewFeatureInformationModalContent<T> {
             licenseManager?: LicenseManager
         }
     ) {
-        this.LANG = language.translations;
         this.CONFIG = config.getConfig();
         if (dialogData.template instanceof TemplateRef) {
             this.dynamicTemplate = dialogData.template;

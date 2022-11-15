@@ -5,7 +5,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -14,7 +14,6 @@ import { NxLoginService } from '@services/login.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
@@ -30,8 +29,8 @@ import { cleanId, pickFrom } from '@utils/general';
 export class ResetServerModalContent {
     @Input() closable: boolean = true;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     system: NxSystem;
     serverName: string;
@@ -43,7 +42,6 @@ export class ResetServerModalContent {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private appState: NxAppStateService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
@@ -56,7 +54,6 @@ export class ResetServerModalContent {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 
@@ -66,14 +63,14 @@ export class ResetServerModalContent {
         const handleResetFailError = (from: string, error): void => {
             console.error(`Error in reset-server dialog from ${from}:`, error);
             this.toastService.notify(
-                this.LANG.servers.resetFailed(),
+                this.LANG.servers.resetFailed,
                 this.CONFIG.toast.warning,
             );
         };
 
         const wrongPasswordHandler = (): false => {
             this.toastService.notify(
-                this.LANG.servers.resetFailed(),
+                this.LANG.servers.resetFailed,
                 this.CONFIG.toast.warning,
             );
             return false;
@@ -101,7 +98,7 @@ export class ResetServerModalContent {
             }, {
                 ignoreError: true,
                 ignoreUnauthorized: true,
-                successMessage: this.LANG.servers.beginReset?.(),
+                successMessage: this.LANG.servers.beginReset,
                 errorCodes: {
                     invalidParameter: wrongPasswordHandler,
                     wrongPassword: wrongPasswordHandler
@@ -157,10 +154,12 @@ export class ResetServerModalContent {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     this.close();
-                                    const successMessage = this.LANG.servers
-                                        .resetSuccessful({
+                                    const successMessage = {
+                                        value: this.LANG.servers.resetSuccessful,
+                                        params: {
                                             serverName: this.serverName
-                                        });
+                                        }
+                                    };
                                     this.toastService.notify(successMessage, this.CONFIG.toast.success);
                                     serverSubscription.unsubscribe();
                                 },

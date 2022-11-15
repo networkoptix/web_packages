@@ -77,12 +77,12 @@
                     </form>
                 </div>
                 <ng-template #roleName>
-                    <h4>{{ role }}</h4>
+                    <h4>{{ role | translate }}</h4>
                 </ng-template>
                 <div>
                     <span
                         class="help-block pt-0"
-                        [innerText]="accessDescription"
+                        [innerText]="accessDescription | translate"
                     ></span>
                 </div>
             </nx-section>
@@ -221,7 +221,7 @@
                                 'pointer-events': 'none'
                             }"
                         ></svg-icon>
-                        <ng-container>{{ deleteMessage }}</ng-container>
+                        {{ deleteMessage | translate }}
                     </button>
                 </div>
             </nx-section>

@@ -6,7 +6,7 @@ import { startCase, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -14,7 +14,6 @@ import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { CLOUD_STORAGE_STATES, LicenseKeyFields, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
@@ -32,7 +31,7 @@ export class NxCloudStorageComponent implements OnInit {
     @Input() type: string;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     TRANSLATION_KEY = LicenseManager.TRANSLATION_KEY;
 
@@ -96,7 +95,6 @@ export class NxCloudStorageComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         settingsService: NxSettingsService,
         private cloudApi: NxCloudApiService,
         private viewContainerRef: ViewContainerRef,
@@ -105,7 +103,6 @@ export class NxCloudStorageComponent implements OnInit {
         private menuService: NxMenuService,
     ) {
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
         if (environment.isLocal) {
             this.serverSettings = '/settings/servers';
         } else {

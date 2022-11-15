@@ -2,12 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxUriService } from '@services/uri.service';
 
@@ -22,7 +21,7 @@ import { IntegrationService } from './integration.service';
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     allElements: any;
     elements: any;
@@ -46,7 +45,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     constructor(configService: NxConfigService,
         private uri: NxUriService,
         private integrations: IntegrationService,
-        private language: NxLanguageProviderService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
     ) {
@@ -56,8 +54,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void { }
 
     ngOnInit(): void {
-        this.LANG = this.language.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.integrations;
         this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
         // Example URI

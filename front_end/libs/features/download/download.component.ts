@@ -15,7 +15,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -23,7 +23,6 @@ import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-c
 import type { Arm, Groups } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -41,7 +40,7 @@ export class DownloadComponent implements OnInit {
     private paramPlatform: string;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     activePlatform: Platform;
 
@@ -58,7 +57,6 @@ export class DownloadComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private deviceService: DeviceDetectorService,
@@ -69,7 +67,6 @@ export class DownloadComponent implements OnInit {
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
 
         if (isPlatformBrowser(this.platformId)) {
             this.router.events
@@ -83,9 +80,9 @@ export class DownloadComponent implements OnInit {
                     if (this.paramPlatform) {
                         let title: string;
                         if (this.paramPlatform) {
-                            title = this.LANG.pageTitles.downloadPlatform() + this.paramPlatform;
+                            title = this.LANG.pageTitles.downloadPlatform + this.paramPlatform;
                         } else {
-                            title = this.LANG.pageTitles.download();
+                            title = this.LANG.pageTitles.download;
                         }
                         this.pageService.pageTitle = title;
 
@@ -130,7 +127,7 @@ export class DownloadComponent implements OnInit {
             for (const mobile in this.CONFIG.downloads.mobile) {
                 const { name, os } = this.CONFIG.downloads.mobile[mobile];
                 if (os === this.activeOs) {
-                    const link = this.LANG.downloads.mobile[name].link();
+                    const link = this.LANG.downloads.mobile[name].link;
                     if (link !== 'disabled') {
                         this.document.location.href = link;
                         return;
@@ -163,14 +160,14 @@ export class DownloadComponent implements OnInit {
                     )
                     .map(installer => {
                         if (!installer.niceName) {
-                            const translatedPlatform = this.LANG.downloads.platforms[installer.platform]();
-                            const translatedAppType = this.LANG.downloads.appTypes[installer.appType]();
+                            const translatedPlatform = this.LANG.downloads.platforms[installer.platform];
+                            const translatedAppType = this.LANG.downloads.appTypes[installer.appType];
                             if (platform.name === 'sdk' && translatedAppType) {
                                 installer.niceName = translatedAppType;
                             } else if (translatedPlatform && translatedAppType) {
                                 installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
                             } else {
-                                installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package()}`;
+                                installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package}`;
                             }
                         }
                         return installer;
@@ -225,7 +222,7 @@ export class DownloadComponent implements OnInit {
     }
 
     installerName(platformName: string): string {
-        return this.LANG.downloads.groups[platformName].shortLabel() ||
-            this.LANG.downloads.groups[platformName].label();
+        return this.LANG.downloads.groups[platformName].shortLabel ||
+            this.LANG.downloads.groups[platformName].label;
     }
 }

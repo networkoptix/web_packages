@@ -4,10 +4,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
     selector: 'nx-password-input-tag-validation',
@@ -19,7 +18,8 @@ export class NxPasswordTagValidationComponent {
     @Input() forElement;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
+
     fairPassword: boolean;
     passwordToggle: boolean;
 
@@ -27,9 +27,7 @@ export class NxPasswordTagValidationComponent {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 }

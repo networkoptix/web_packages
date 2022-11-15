@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -18,7 +18,6 @@ import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -33,7 +32,7 @@ import { NxMonitoringService } from './monitoring.service';
 })
 export class NxMonitoringComponent implements OnInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     content: Content;
     system: NxSystem;
@@ -47,7 +46,6 @@ export class NxMonitoringComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private pageService: NxPageService,
         private route: ActivatedRoute,
         private menuService: NxMenuService,
@@ -56,7 +54,6 @@ export class NxMonitoringComponent implements OnInit {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
 
         this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
@@ -69,12 +66,12 @@ export class NxMonitoringComponent implements OnInit {
                 {
                     id: this.CONFIG.menus.systemMonitoring.graphs.id,
                     svg: this.CONFIG.menus.systemMonitoring.graphs.icon,
-                    label: this.LANG.menu.titles.graphs(),
+                    label: this.LANG.menu.titles.graphs,
                     path: this.CONFIG.menus.systemMonitoring.graphs.path,
                 }, {
                     id: this.CONFIG.menus.systemMonitoring.logs.id,
                     svg: this.CONFIG.menus.systemMonitoring.logs.icon,
-                    label: this.LANG.menu.titles.logs(),
+                    label: this.LANG.menu.titles.logs,
                     path: this.CONFIG.menus.systemMonitoring.logs.path,
                 }
             ]

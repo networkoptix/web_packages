@@ -1,4 +1,3 @@
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 
 export interface DynamicLicense {
@@ -11,7 +10,7 @@ export interface DynamicLicense {
 export const getDynamicLicense = (
     instance: {
         CONFIG: IConfig,
-        LANG: LanguageI18NStaticTypes
+        licenseTypeTitles: { [key: string]: string }
     }
 ): DynamicLicense => instance.CONFIG.licenseTypes.reduce((
     licenses,
@@ -20,6 +19,6 @@ export const getDynamicLicense = (
     ...licenses,
     [name]: {
         deactivationsAllowed,
-        title: instance.LANG.license.licenseTypeTitles[title] || title
+        title: instance.licenseTypeTitles[title] || title
     }
 }), {} as DynamicLicense);

@@ -10,7 +10,6 @@ import {
     DialogRef
 } from '@dialogs/dialog-ref';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 
 import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../action-common/BaseCloudStorageActionModalContent';
@@ -25,7 +24,7 @@ export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalCon
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         public renderer: Renderer2,
         private dialogRef: DialogRef,
         private processService: NxProcessService,
@@ -34,7 +33,6 @@ export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalCon
         super();
         this.init();
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.actionProcess = this.processService.createProcess(
             defer(() => this.cloudStorageManager.move(this.targetSystem.value)).pipe(

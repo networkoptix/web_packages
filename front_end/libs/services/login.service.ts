@@ -7,7 +7,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import {
     LoginWebadminModalContent
 } from '@components/login-webadmin/login-webadmin.component';
@@ -17,7 +17,6 @@ import { defaultConfig, DIALOG_SIZE } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import type { NxAccountService } from '@services/account.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import type { IConfig } from './nx-config/config-types';
@@ -30,7 +29,7 @@ import { WINDOW } from './window-provider';
 })
 export class NxLoginService extends DialogBase {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     closeResult: string;
     done$: Subject<boolean> = new Subject<boolean>();
@@ -40,7 +39,6 @@ export class NxLoginService extends DialogBase {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         overlay: Overlay,
         injector: Injector,
         private http: HttpClient,
@@ -53,7 +51,6 @@ export class NxLoginService extends DialogBase {
     ) {
         super(overlay, injector);
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     set accountService(accountService) {
@@ -145,7 +142,7 @@ export class NxLoginService extends DialogBase {
         if (['disconnect', 'transfer'].includes(state) && !environment.isLocal ||
         this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
-                this.simpleDialogService.notify(this.LANG.toastMessage.noInternet(), 'warning', true);
+                this.simpleDialogService.notify(this.LANG.toastMessage.noInternet, 'warning', true);
                 // Close dialog if any
                 this.dismissDialog();
 

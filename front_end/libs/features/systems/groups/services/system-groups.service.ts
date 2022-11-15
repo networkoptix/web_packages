@@ -7,11 +7,10 @@ import { Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
 
@@ -28,8 +27,8 @@ import {
     providedIn: 'root'
 })
 export class NxSystemGroupsService {
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
     private WEBSOCKET_URL: string;
 
     private reconnectInterval: number;
@@ -39,7 +38,6 @@ export class NxSystemGroupsService {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private store: Store,
         private http: HttpClient,
         private router: Router,
@@ -47,7 +45,6 @@ export class NxSystemGroupsService {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
         this.WEBSOCKET_URL = `wss://${this.window.location.host}/system_groups/ws`;
     }
 
@@ -90,7 +87,7 @@ export class NxSystemGroupsService {
         }
         this.disconnect();
         this.toastService.show(
-            this.LANG.systemGroups.connectionLost(),
+            this.LANG.systemGroups.connectionLost,
             this.CONFIG.toast.danger,
         );
         let retries = 5;
@@ -101,7 +98,7 @@ export class NxSystemGroupsService {
             } else {
                 this.resetReconnect();
                 this.toastService.show(
-                    this.LANG.systemGroups.couldNotReconnect(),
+                    this.LANG.systemGroups.couldNotReconnect,
                     this.CONFIG.toast.danger,
                 );
             }
@@ -122,7 +119,7 @@ export class NxSystemGroupsService {
         if (!this.connection$) {
             console.error('No WebSocket connection');
             this.toastService.notify(
-                this.LANG.systemGroups.noConnection(),
+                this.LANG.systemGroups.noConnection,
                 this.CONFIG.toast.danger,
             );
             return;
@@ -136,7 +133,7 @@ export class NxSystemGroupsService {
                 this.resetReconnect();
                 this.toastService.remove();
                 this.toastService.notify(
-                    this.LANG.systemGroups.connectionRestored(),
+                    this.LANG.systemGroups.connectionRestored,
                     this.CONFIG.toast.success,
                 );
             }
@@ -144,7 +141,7 @@ export class NxSystemGroupsService {
         }
         if (isObject(data) && 'error' in data) {
             this.toastService.notify(
-                this.LANG.systemGroups.errorMsg[data.msg]?.() ?? data.msg,
+                this.LANG.systemGroups.errorMsg[data.msg] ?? data.msg,
                 this.CONFIG.toast.danger,
             );
             return;
@@ -170,17 +167,17 @@ export class NxSystemGroupsService {
     onDrop(src: GroupsItem, dest: GroupsItem | null): void {
         if (src.id === dest?.id) {
             this.toastService.notify(
-                this.LANG.systemGroups.addGroupToSelf(),
+                this.LANG.systemGroups.addGroupToSelf,
                 this.CONFIG.toast.danger
             );
         }
 
         const parent = src.type === 'group' ? src.parent_group_id : src.group_id;
         if ((!parent && !dest) || parent === dest?.id) {
-            const destName = dest ? dest.name : this.LANG.systemGroups.root();
+            const destName = dest ? dest.name : this.LANG.systemGroups.root;
             const msg = src.type === 'group'
-                ? this.LANG.systemGroups.groupAlreadyIn({ srcName: src.name, destName })
-                : this.LANG.systemGroups.systemAlreadyIn({ srcName: src.name, destName });
+                ? { value: this.LANG.systemGroups.groupAlreadyIn, params: { srcName: src.name, destName } }
+                : { value: this.LANG.systemGroups.systemAlreadyIn, params: { srcName: src.name, destName } };
             this.toastService.notify(msg, this.CONFIG.toast.info);
             return;
         }

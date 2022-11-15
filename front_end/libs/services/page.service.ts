@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 
 import type { IConfig } from './nx-config/config-types';
@@ -24,7 +24,7 @@ interface MetaLookup {
 })
 export class NxPageService {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     updater$ = new Subject();
     metaLookup: MetaLookup = {};
@@ -39,7 +39,7 @@ export class NxPageService {
         private meta: Meta,
         private router: Router,
         headerService: NxHeaderService,
-        translate: TranslateService,
+        private translate: TranslateService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
@@ -54,7 +54,7 @@ export class NxPageService {
                             name === 'title' &&
                             !this.router.url.startsWith('/authorize')
                         ) {
-                            this.title.setTitle(content);
+                            this.title.setTitle(this.translate.instant(content));
                         }
                     },
                 );
@@ -62,7 +62,7 @@ export class NxPageService {
                 if (
                     !this.metaProperties.title ||
                     (this.metaProperties.title ===
-                        this.LANG[this.defaultMetaKey].default.title() &&
+                        this.LANG[this.defaultMetaKey].default.title &&
                         !headerService?.currentLocation?.isSystem &&
                         headerService.currentLocation.childNode)
                 ) {
@@ -72,7 +72,7 @@ export class NxPageService {
                             headerService.currentLocation.childNode.name,
                         ) +
                         ' - ' +
-                        this.LANG.productName(),
+                        this.LANG.productName,
                     );
                 }
             });
@@ -92,7 +92,7 @@ export class NxPageService {
 
     mapMeta = (metaProperties: Record<string, any>) =>
         Object.entries(metaProperties || {}).reduce(
-            (lookup, [property, val]) => ({ ...lookup, [property]: val() }),
+            (lookup, [property, val]) => ({ ...lookup, [property]: val }),
             {},
         );
 
@@ -150,22 +150,6 @@ export class NxPageService {
         return this.metaLookup[url] || this.generateDefaultMeta(url);
     }
 
-    /**
-     * Updates a pages metadata from an object. If only partial metadata is provided fallbacks are used for the others.
-     */
-    set metaProperties(properties) {
-        Object.entries(properties).forEach(args => this.updateLookups(...args));
-    }
-
-    // called from app component
-    public get newLanguage() {
-        return this.LANG;
-    }
-
-    public set newLanguage(language: LanguageI18NStaticTypes) {
-        this.LANG = language;
-    }
-
     public get pageTitle() {
         return this.title.getTitle();
     }
@@ -178,11 +162,11 @@ export class NxPageService {
         if (
             this.LANG &&
             this.LANG.pageTitles &&
-            txt !== this.LANG.productName()
+            txt !== this.LANG.productName
         ) {
             this.updateLookups(
                 'title',
-                this.LANG.pageTitles[this.templateKey]({ title: txt }),
+                this.translate.instant(this.LANG.pageTitles[this.templateKey], { title: txt })
             );
             return;
         }
@@ -197,16 +181,12 @@ export class NxPageService {
         this.updateLookups('description', content);
     }
 
-    public get pageTitleRemoveHyphen() {
-        return this.title.getTitle().replace('- ', '');
-    }
-
     public set pageTitleRemoveHyphen(title: any) {
-        if (this.LANG && title !== this.LANG.productName()) {
+        if (this.LANG && title !== this.LANG.productName) {
             const txt = typeof title === 'function' ? title() : title;
             this.updateLookups(
                 'title',
-                this.LANG.pageTitles[this.templateKey]({ title: txt }).replace(
+                this.translate.instant(this.LANG.pageTitles[this.templateKey], { title: txt }).replace(
                     '- ',
                     '',
                 ),

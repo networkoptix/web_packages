@@ -30,6 +30,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     show: boolean;
     direction: string;
     langCode: string;
+    newHeader = false;
     activeLanguage: ILanguage = {
         language: '',
         name: ''
@@ -46,8 +47,9 @@ class BaseLanguageDropdown extends BaseDropdown {
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
     ) {
-        super(languageService, configService);
+        super(configService);
 
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.currentLang = languageService.currentLang;
     }
 
@@ -101,6 +103,10 @@ class BaseLanguageDropdown extends BaseDropdown {
             this.languages.sort(paramSortFunc(lang => lang.language));
 
             this.splitLanguages();
+
+            if (!this.currentLang) {
+                this.currentLang = this.sessionService.language ?? this.CONFIG.defaultLanguage;
+            }
 
             this.activeLanguage = this.languages.find(lang => {
                 return (lang.language === this.currentLang);

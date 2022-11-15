@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -12,7 +11,6 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxPollService } from '../poll.service';
 import { NxSystemAPIService } from '../system-api.service';
 import { NxSystemsService } from '../systems.service';
@@ -24,13 +22,11 @@ import { NxSystem } from './system';
 })
 export class NxSystemService {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
     private system: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem };
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
@@ -41,7 +37,6 @@ export class NxSystemService {
         private translateService: TranslateService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
         this.systemsCache = {};
     }
 
@@ -65,7 +60,6 @@ export class NxSystemService {
         } else {
             system = new NxSystem(
                 this.CONFIG,
-                this.LANG,
                 this.cloudApi,
                 this.systemApiService,
                 this.pollService,
@@ -113,7 +107,6 @@ export class NxSystemService {
         if (this.system === undefined) {
             this.system = new NxSystem(
                 this.CONFIG,
-                this.LANG,
                 this.cloudApi,
                 this.systemApiService,
                 this.pollService,

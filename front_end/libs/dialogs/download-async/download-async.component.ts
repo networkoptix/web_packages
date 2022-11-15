@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     ConsoleSection,
     ModalContent,
@@ -13,7 +12,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomClientAPI } from '@services/nx-cloud-api/custom-client-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import { pickFrom } from '@utils/general';
 
@@ -35,12 +33,10 @@ export class DownloadAsyncModalContent implements ModalContent {
     PACKAGE_PROGRESS = PackageProgress;
     packageHandler: PackageHandler;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,

@@ -1,12 +1,11 @@
 import { Component, Inject, Input, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
@@ -18,8 +17,8 @@ import { pickFrom } from '@utils/general';
 export class DeleteCloudUserModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     cloudApi: NxCloudApiService;
     deleteCloudUser: Process;
@@ -30,13 +29,11 @@ export class DeleteCloudUserModalContent {
 
     constructor(
         private configService: NxConfigService,
-        private language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.translations;
     }
 
     ngOnInit(): void {
@@ -46,14 +43,14 @@ export class DeleteCloudUserModalContent {
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
                     errorCodes: {
-                        forbidden: this.LANG.errorCodes.cantDeleteAccountOwningSystems(),
+                        forbidden: this.LANG.errorCodes.cantDeleteAccountOwningSystems,
                         wrongParameters: () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordMissing: true });
-                            this.passwordError = this.LANG.passwordRequirements.missingMessage();
+                            this.passwordError = this.LANG.passwordRequirements.missingMessage;
                         },
                         wrongPassword: () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordWrong: true });
-                            this.passwordError = this.LANG.errorCodes.notAuthorized();
+                            this.passwordError = this.LANG.errorCodes.notAuthorized;
                         }
                     },
                     ignoreError: false
@@ -75,7 +72,7 @@ export class DeleteCloudUserModalContent {
 
     setPassword(input): void {
         this.passwordError = input.touched && input.errors?.required
-            ? this.LANG.passwordRequirements.missingMessage()
+            ? this.LANG.passwordRequirements.missingMessage
             : '';
         this.passwordForUser = input.value;
     }

@@ -3,7 +3,12 @@
         class="clearfix ribbon"
         *ngIf="!type"
     >
-        <div class="message">{{ message }}</div>
+        <div
+            class="message"
+            id="ribbonMessage"
+        >
+            {{ message | translate }}
+        </div>
         <div class="action">
             <ng-container *ngFor="let action of actions">
                 <ng-container *ngIf="action.type === 'link'">
@@ -11,18 +16,18 @@
                         *ngIf="!action.external"
                         [routerLink]="action.value"
                         target="_blank"
-                        >{{ action.text }}</a
+                        >{{ action.text | translate }}</a
                     >
                     <a
                         *ngIf="action.external"
                         [href]="action.value"
                         target="_blank"
-                        >{{ action.text }}</a
+                        >{{ action.text | translate }}</a
                     >
                 </ng-container>
                 <nx-process-button
                     *ngIf="action.type === 'process-button'"
-                    [buttonText]="action.text"
+                    [buttonText]="action.text | translate"
                     [actionType]="'default'"
                     [customClass]="'small-button'"
                     [process]="action.value"
@@ -38,7 +43,10 @@
         <div class="message">
             <div class="message-content">
                 <div class="message-content-wrapper">
-                    <div [innerHTML]="message"></div>
+                    <div
+                        [innerHTML]="message | translate"
+                        id="systemMessage"
+                    ></div>
                     <a
                         *ngIf="updateFunction"
                         (click)="updateFunction()"
@@ -52,7 +60,7 @@
                             [svgStyle]="{ 'height.px': '20' }"
                             title="Reload"
                         ></svg-icon>
-                        <span>{{ actions[0].text }}</span>
+                        <span>{{ actions[0].text | translate }}</span>
                     </a>
                 </div>
             </div>
@@ -61,7 +69,7 @@
                 [href]="actions[0].value"
                 target="_blank"
                 class="ml-2"
-                >{{ actions[0].text }}</a
+                >{{ actions[0].text | translate }}</a
             >
         </div>
     </div>

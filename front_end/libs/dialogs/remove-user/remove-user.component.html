@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h1 class="modal-title">{{ dialogTitle }}</h1>
+    <h1 class="modal-title">{{ dialogTitle | translate }}</h1>
     <button
         type="button"
         class="close"
@@ -16,14 +16,15 @@
         <nx-process-button
             [process]="removeUserProcess"
             [actionType]="'danger'"
-            [buttonText]="dialogButtonText"
+            [buttonText]="dialogButtonText | translate"
         ></nx-process-button>
         <button
             type="button"
             class="btn btn-default"
             (click)="close()"
+            translate
         >
-            {{ LANG.dialogs.buttons.cancel() }}
+            Cancel
         </button>
     </div>
 </div>

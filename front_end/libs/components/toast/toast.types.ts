@@ -1,4 +1,4 @@
-import type { TemplateRef } from '@angular/core';
+import { Translatable } from '@pipes/any-translate.types';
 
 export interface ToastOptions {
     autohide?: boolean;
@@ -7,6 +7,6 @@ export interface ToastOptions {
 }
 
 export interface Toast extends ToastOptions {
-    content: string | TemplateRef<unknown>;
+    content: Translatable
     type: string;
 }

@@ -20,7 +20,6 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountService } from '@services/account.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
 import { ErrorStateManager } from '../error-state/error-state-manager';

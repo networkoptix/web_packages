@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -21,7 +21,6 @@ import { environment } from '@environments/environment';
 import { NxApplyService } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -45,7 +44,7 @@ import { NxSettingsService } from '../settings.service';
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     readonly environment = environment;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     private paramUser: string;
     private editUser: Process;
@@ -76,7 +75,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private applyService: NxApplyService,
         private pageService: NxPageService,
@@ -89,7 +87,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.menuService.section = 'users';
     }
@@ -197,7 +194,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     this.toastService.notify(
-                        this.LANG.toastMessage.userChangesFail(),
+                        this.LANG.toastMessage.userChangesFail,
                         this.CONFIG.toast.warning,
                     );
                 }
@@ -283,8 +280,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.localUserName = this.selectedUser.name;
 
             this.deleteMessage = this.selectedUser.isCloud
-                ? this.LANG.system.users.cloudDelete()
-                : this.LANG.system.users.localDelete();
+                ? this.LANG.system.users.cloudDelete
+                : this.LANG.system.users.localDelete;
 
             this.menuService.detail = cleanId(this.selectedUser.id);
 
@@ -333,8 +330,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     public setPermission(role: NxSystemRole): void {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
-            ? this.LANG.accessRoles[userRole].description()
-            : this.LANG.accessRoles.customRole.description();
+            ? this.LANG.accessRoles[userRole].description
+            : this.LANG.accessRoles.customRole.description;
         this.selectedUser.role = { ...role };
         this.role = role.name;
     }

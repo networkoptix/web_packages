@@ -11,13 +11,13 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -32,7 +32,7 @@ import { setupText, TemplateText } from '../setupText';
 })
 export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     @Input() viewType: string;
     @Input() clientType: string;
@@ -58,10 +58,9 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     templateText: TemplateText;
 
     constructor(
-        language: NxLanguageProviderService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        private translateService: TranslateService,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 
@@ -71,13 +70,15 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         };
 
         this.restore = this.action === 'restore_password';
-        this.templateText = setupText(this.LANG);
+        this.templateText = setupText();
         this.setText();
-        this.suffixText = this.LANG.authorize.authCode.message({
-            suffix: this.restore
-                ? this.LANG.authorize.authCode.newPass()
-                : this.LANG.authorize.authCode.login()
-        });
+        this.suffixText = this.translateService.instant(
+            this.LANG.authorize.authCode.message,
+            {
+                suffix: this.restore
+                    ? this.translateService.instant(this.LANG.authorize.authCode.newPass)
+                    : this.translateService.instant(this.LANG.authorize.authCode.login)
+            });
 
         fromEvent<Event>(this.window, 'resize')
             .pipe(debounceTime(100))

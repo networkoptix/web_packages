@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -56,7 +56,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() setFocus = false;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     fairPassword: boolean;
     passwordToggle: boolean;
     clicked: boolean = false;

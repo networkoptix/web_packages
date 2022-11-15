@@ -14,10 +14,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -32,7 +30,6 @@ import { setupText, TemplateText } from '../setupText';
 })
 export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
     @Input() clientType: string;
@@ -55,15 +52,13 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     templateText: TemplateText;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
-        this.templateText = setupText(this.LANG);
+        this.templateText = setupText();
         this.setText();
 
         this.sendCode = () => {

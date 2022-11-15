@@ -1,10 +1,10 @@
 <nx-pre-loader
     type="page"
-    *ngIf="!(plugin && LANG)"
+    *ngIf="!plugin"
 ></nx-pre-loader>
 
 <div
-    *ngIf="plugin && LANG"
+    *ngIf="plugin"
     class="integration-details"
 >
     <div
@@ -89,8 +89,7 @@
                         size="large"
                         name="tag"
                         [clickable]="false"
-                        translate
-                        >In Review</nx-tag
+                        >{{ 'In Review' | translate }}</nx-tag
                     >
                 </h3>
                 <h3
@@ -103,8 +102,7 @@
                         size="large"
                         name="tag"
                         [clickable]="false"
-                        translate
-                        >Draft</nx-tag
+                        >{{ 'Draft' | translate }}</nx-tag
                     >
                 </h3>
                 <h3
@@ -117,7 +115,7 @@
                         name="tag"
                         [clickable]="false"
                         *ngIf="type.id !== 'mine'"
-                        >{{ type.label }}</nx-tag
+                        >{{ type.label | translate }}</nx-tag
                     >
                 </h3>
                 <h3
@@ -130,8 +128,7 @@
                         size="large"
                         name="tag"
                         [clickable]="false"
-                        translate
-                        >Mine</nx-tag
+                        >{{ 'Mine' | translate }}</nx-tag
                     >
                 </h3>
             </div>
@@ -309,7 +306,7 @@
                         >
                             <header class="add-ellipsis">
                                 {{
-                                    'integration.requirements'
+                                    LANG.integration.requirements
                                         | translate: { name: plugin.information.name }
                                 }}
                             </header>
@@ -360,7 +357,7 @@
                                             "
                                         >
                                             <label class="group-label">{{
-                                                'integration.testedVersionLabel'
+                                                LANG.integration.testedVersionLabel
                                                     | translate: { vmsName: CONFIG.vmsName }
                                             }}</label>
                                         </div>

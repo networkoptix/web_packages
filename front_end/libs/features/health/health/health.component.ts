@@ -16,7 +16,7 @@ import { flatMap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -25,7 +25,6 @@ import { NxAppSourceService } from '@services/nx-app-source.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystemAPIService } from '@services/system-api.service';
@@ -46,7 +45,7 @@ import { NxHealthService } from '../health.service';
     encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
     account: Account;
     system: NxSystem;
@@ -68,7 +67,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         pageService: NxPageService,
         private accountService: NxAccountService,
         private appStateService: NxAppStateService,
@@ -85,7 +83,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
 
         pageService.pageTitle = this.LANG.pageTitles.information;
@@ -123,7 +120,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             level1: [
                 {
                     id: this.CONFIG.menus.systemHealth.alerts.id,
-                    label: this.LANG.menu.titles.alerts(),
+                    label: this.LANG.menu.titles.alerts,
                     path: this.CONFIG.menus.systemHealth.alerts.path,
                     svg: this.CONFIG.menus.systemHealth.alerts.icon
                 }
@@ -263,7 +260,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     : asset === 'systems' ? 'system' : asset;
                 menu.level1.push({
                     id: asset,
-                    label: this.LANG.menu.titles[asset](),
+                    label: this.LANG.menu.titles[asset],
                     path: asset,
                     svg: svgName
                 });

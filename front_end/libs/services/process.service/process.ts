@@ -6,7 +6,7 @@ import {
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 
 import type { IConfig } from '../nx-config/config-types';
@@ -38,7 +38,7 @@ export const logError = (...args) => console.error(args);
 export const formatError = (
     error,
     errorCodes,
-    lang: LanguageI18NStaticTypes
+    lang
 ): string | false => {
     if (error.error && typeof error.error === 'object') {
         error = error.error;
@@ -58,14 +58,14 @@ export const formatError = (
         error?.errorId ||
         error;
     if (!errorCode) {
-        return lang.errorCodes.unknownError();
+        return lang.errorCodes.unknownError;
     }
 
     if (
         error.errorText === 'second_factor_required' &&
         lang.dialogs?.message?.twoFactor
     ) {
-        return lang.dialogs.message.twoFactor.required();
+        return lang.dialogs.message.twoFactor.required;
     }
 
     if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
@@ -78,13 +78,13 @@ export const formatError = (
             return errorCodes[errorCode];
         }
     }
-    const errorText = lang.errorCodes[errorCode]?.();
-    return errorText ?? lang.errorCodes.unknownError();
+    const errorText = lang.errorCodes[errorCode];
+    return errorText ?? lang.errorCodes.unknownError;
 };
 
 export class Process {
     private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    private LANG = staticLang;
     public settings: ProcessSettings = {
         errorCodes: {},
         errorMessage: '',
@@ -122,7 +122,6 @@ export class Process {
         private _catchHandler: Handler = logError
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
         this.settings.errorPrefix = settings?.errorPrefix || '';
         this.settings = { ...this.settings, ...settings };
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));

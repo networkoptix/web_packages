@@ -37,7 +37,7 @@
                             "
                         >
                             <span class="tab-heading">{{
-                                LANG.downloads.groups[platform.name].label()
+                                LANG.downloads.groups[platform.name].label | translate
                             }}</span>
                         </a>
                     </li>
@@ -147,10 +147,10 @@
                     *ngFor="let platform of CONFIG.downloads.mobile"
                 >
                     <a
-                        *ngIf="LANG.downloads.mobile[platform.name].link() !== 'disabled'"
+                        *ngIf="LANG.downloads.mobile[platform.name].link !== 'disabled'"
                         class="mobile-link"
                         [ngClass]="platform.os"
-                        [href]="LANG.downloads.mobile[platform.name].link()"
+                        [href]="LANG.downloads.mobile[platform.name].link"
                     >
                     </a>
                 </div>

@@ -4,13 +4,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
@@ -58,7 +57,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
     typeof NxHealthMonitorWidgetComponent.BASE_CONFIG
 > {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     static IDENTIFIER = 'health-monitor';
     static NAME = 'Health Monitor';
     static SIZES = [
@@ -266,7 +265,6 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
     constructor(
         cd: ChangeDetectorRef,
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
@@ -274,7 +272,6 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
     ) {
         super(cd);
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
         NxHealthMonitorWidgetComponent.systemUpdater$.pipe(
             untilDestroyed(this)

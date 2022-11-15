@@ -4,11 +4,10 @@ import {
     OnInit,
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { Account } from '@services/account.service/account';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxThemeService } from '@services/theme.service';
 
 @Component({
@@ -21,17 +20,15 @@ export class NxThemeSwitcherComponent implements OnInit {
     @Input() account: Account;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     selectedTheme: string;
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         public themeService: NxThemeService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {

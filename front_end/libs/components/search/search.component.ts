@@ -17,15 +17,15 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
@@ -88,7 +88,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     CONFIG: IConfig;
     Direction: Direction;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     private debounceShortTime: number;
     private debounceTime: number;
@@ -102,7 +102,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        private translateSerice: TranslateService,
         private _route: ActivatedRoute,
         // private location: Location,
         private uri: NxUriService,
@@ -111,7 +111,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -197,7 +196,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 );
             } else {
                 if (!select.selected) {
-                    select.selected = { value: '0', name: 'All' };
+                    select.selected = { value: '0', name: this.translateSerice.instant('All') };
                 }
             }
         });
@@ -255,7 +254,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
 
-        this.placeholder = this.placeholder || this.LANG.search.Search(); // optional param
+        this.placeholder = this.placeholder || this.LANG.search.Search; // optional param
         this.numberFilters = 0;
         this.filtersSelected = '';
 
@@ -268,9 +267,11 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             if (filter.value) {
                 this.numberFilters += 1;
                 if (this.numberFilters > 1) {
-                    selectsSelected = this.LANG.search.appliedFilters({
-                        count: this.numberFilters
-                    });
+                    selectsSelected = this.translateSerice.instant(
+                        this.LANG.search.appliedFilters,
+                        {
+                            count: this.numberFilters
+                        });
                 } else {
                     tagsSelected = filter.label;
                 }
@@ -282,9 +283,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             if (select.selected && select.selected.value !== '0') { // not default value
                 this.numberFilters += 1;
                 if (this.numberFilters > 1) {
-                    selectsSelected = this.LANG.search.appliedFilters({
-                        count: this.numberFilters
-                    });
+                    selectsSelected = this.translateSerice.instant(
+                        this.LANG.search.appliedFilters, {
+                            count: this.numberFilters
+                        });
                 } else {
                     selectsSelected = `${select.label}&nbsp;&ndash;&nbsp;${select.selected.name}`;
                 }
@@ -329,9 +331,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 selectsSelected ||
                 multiSelectsSelected;
         } else {
-            this.filtersSelected = this.LANG.search.appliedFilters({
-                count: this.numberFilters
-            });
+            this.filtersSelected = this.translateSerice.instant(
+                this.LANG.search.appliedFilters, {
+                    count: this.numberFilters
+                });
         }
     }
 

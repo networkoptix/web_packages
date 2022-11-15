@@ -8,7 +8,7 @@ import {
 import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -16,7 +16,6 @@ import { NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -32,7 +31,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     @ViewChild('passwordForm', { read: NgForm }) passwordForm;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     account: Account;
     pass: any = {};
@@ -53,7 +52,6 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
@@ -63,7 +61,6 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
 
         this.setupDefaults();
     }
@@ -89,11 +86,11 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
                 );
         }, {
             errorCodes: {
-                notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                badRequest: this.LANG.errorCodes.oldPasswordMistmatch(),
+                notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch,
+                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch,
+                badRequest: this.LANG.errorCodes.oldPasswordMistmatch,
             },
-            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
+            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
             ignoreUnauthorized: true
         }).then(() => {
             this.hideErrors = true;

@@ -18,7 +18,6 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -58,12 +57,11 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     };
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService,
         headerService: NxHeaderService,
         private accountService: NxAccountService
     ) {
-        super(languageService, configService);
+        super(configService);
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');

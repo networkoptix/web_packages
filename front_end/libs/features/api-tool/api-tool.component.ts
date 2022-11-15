@@ -10,11 +10,10 @@ import {
 } from '@ngneat/until-destroy';
 import { debounceTime, filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
@@ -34,22 +33,20 @@ import { NxReadonlyAPIService } from './services/readonly-api.service';
 export class NxAPIToolComponent {
     @ViewChild('developersMenu') developersMenuRef: ElementRef<HTMLElement>;
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     headerHeight: number;
     menuOffset: number = 0;
 
     constructor(
         private configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
         private pageService: NxPageService,
         private appStateService: NxAppStateService,
         private scrollMechanicsService: NxScrollMechanicsService,
         public APIToolService: NxAPIToolSystemService,
         public APIJSONService: NxOpenAPIJSONService,
     ) {
-        this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
-        this.pageService.pageTitle = this.LANG.pageTitles.apiTool();
+        this.pageService.pageTitle = this.LANG.pageTitles.apiTool;
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this), debounceTime(25)).subscribe(({ width }) => {

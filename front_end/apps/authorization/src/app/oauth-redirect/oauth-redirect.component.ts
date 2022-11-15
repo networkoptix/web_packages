@@ -5,10 +5,9 @@ import { cloneDeep } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -24,28 +23,27 @@ import { AuthorizeParams, ClientType } from '../components/authorize.component.t
 
 export class NxOAuthRedirectComponent implements OnInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     initialData: AuthorizeParams;
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
     state: 'readyToLogin' | 'noNativeClient' | undefined;
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         private route: ActivatedRoute,
         private pageService: NxPageService,
-        private language: NxLanguageProviderService,
         private router: Router,
         private localStorageService: LocalStorageService,
         private deviceService: DeviceDetectorService,
         @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.default;
 
         if (this.window.nativeClient) {
             this.route.queryParams.subscribe(async (params: AuthorizeParams) => {

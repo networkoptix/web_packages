@@ -6,14 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode } from '@components/layout-grid/layout-grid.types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Layouts, Layout, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
@@ -37,8 +34,7 @@ interface ResourceLookup<T = { id: string }> {
 })
 
 export class NxLayoutViewComponent {
-    LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
+    LANG = staticLang;
 
     refreshLayouts$ = new BehaviorSubject('trigger update');
 
@@ -212,8 +208,6 @@ export class NxLayoutViewComponent {
         })
     );
     constructor(
-        languageService: NxLanguageProviderService,
-        configService: NxConfigService,
         private router: Router,
         // private location: Location,
         private systemService: NxSystemService,

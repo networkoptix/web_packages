@@ -10,13 +10,12 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
@@ -33,7 +32,7 @@ import { setServerIpAndPort } from '@utils/nx';
 export class NxOverlayModalComponent implements OnInit {
     system: NxSystem;
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     servers: NxSystemServer[] = [];
 
     currentRoute: string = '';
@@ -54,7 +53,7 @@ export class NxOverlayModalComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+
         public appState: NxAppStateService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
@@ -63,7 +62,6 @@ export class NxOverlayModalComponent implements OnInit {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -88,7 +86,7 @@ export class NxOverlayModalComponent implements OnInit {
         this.checking$
             .pipe(untilDestroyed(this))
             .subscribe(state => {
-                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
+                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh'];
             });
 
         this.accountService.get().then(account => {

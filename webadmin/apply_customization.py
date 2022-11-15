@@ -147,8 +147,6 @@ def replace_static(static_dir, customization_dir, description):
                         with open(static_dir / folder / file, 'r+', encoding="utf8") as file:
                             lang = json.load(file)
                             apply_replacements(
-                                lang['pageTitles'], {"%CLOUD_NAME%": "webadmin"})
-                            apply_replacements(
                                 lang, main_replacements, file)
 
 

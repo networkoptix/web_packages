@@ -5,11 +5,10 @@ import {
     Output
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -23,7 +22,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 
 export class NxAuthorizeNotSecureComponent {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     readonly environment = environment;
 
     @Input() viewType: string;

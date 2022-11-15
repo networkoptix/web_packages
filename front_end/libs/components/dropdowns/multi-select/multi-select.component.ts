@@ -7,8 +7,8 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
@@ -51,15 +51,14 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
     public items: MultiSelectItem[] = [];
     public filter: string = '';
-    public textSelected: string;
+    public textSelected: Translatable = '';
 
     private innerValue: MultiSelectItem['id'][] = [];
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService
     ) {
-        super(languageService, configService);
+        super(configService);
     }
 
     ngOnInit(): void {}
@@ -129,14 +128,16 @@ export class NxMultiSelectDropdown extends BaseDropdown {
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.LANG.search.Any();
+                this.textSelected = this.LANG.search.Any;
                 break;
             }
             default: {
-                this.textSelected = this.LANG.search.selected({
-                    count: this.innerValue.length
-                });
-                break;
+                this.textSelected = {
+                    value: this.LANG.search.selected,
+                    params: {
+                        count: this.innerValue.length
+                    }
+                };
             }
         }
     }

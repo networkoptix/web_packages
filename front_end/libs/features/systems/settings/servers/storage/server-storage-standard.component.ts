@@ -33,7 +33,7 @@ import {
     skip,
 } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -43,7 +43,6 @@ import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type {
@@ -89,8 +88,8 @@ export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
     viewContainerRef: ViewContainerRef;
     storageTypes = STORAGE_TYPES;
     storageModes = MODE;
@@ -137,7 +136,6 @@ export class NxSystemStorageComponent implements OnInit {
     cleanSmbUrl = cleanSmbUrl;
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService,
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
         private dialogs: NxDialogsService,
@@ -148,16 +146,15 @@ export class NxSystemStorageComponent implements OnInit {
         private uriService: NxUriService,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
         this.viewContainerRef = viewContainerRef;
         this.loading = true;
 
         this.modes = [
-            { name: this.LANG.storage.modes.main(), value: 'modeMain' },
-            { name: this.LANG.storage.modes.backup(), value: 'modeBackup' },
+            { name: this.LANG.storage.modes.main, value: 'modeMain' },
+            { name: this.LANG.storage.modes.backup, value: 'modeBackup' },
             { name: 'horizontal', value: '' },
-            { name: this.LANG.storage.modes.notInUse(), value: 'modeNotUsed' }
+            { name: this.LANG.storage.modes.notInUse, value: 'modeNotUsed' }
         ];
     }
 
@@ -651,7 +648,7 @@ export class NxSystemStorageComponent implements OnInit {
                 value === 'modeNotUsed' && changed && hasArchive(id)
             );
         this.applyService.setWarn(
-            showWarn ? this.LANG.storage.stillHasArchivesPreWarning() : ''
+            showWarn ? this.LANG.storage.stillHasArchivesPreWarning : ''
         );
     }
 
@@ -690,7 +687,7 @@ export class NxSystemStorageComponent implements OnInit {
 
     calcDDWidth(): void {
         const modes: Record<string, string> = Object.entries(this.LANG.storage.modes).reduce(
-            (accum, [key, value]) => ({ ...accum, [key]: value() }),
+            (accum, [key, value]) => ({ ...accum, [key]: value }),
             {}
         );
         // Add max additional width here for each key of this.LANG.storage.modes
@@ -722,10 +719,10 @@ export class NxSystemStorageComponent implements OnInit {
     deleteStorage(storage: Storage): void {
         this.dialogs.confirm(
             cleanSmbUrl(storage.url),
-            this.LANG.storage.deleteExternalStorage(),
-            this.LANG.dialogs.buttons.delete(),
+            this.LANG.storage.deleteExternalStorage,
+            this.LANG.dialogs.buttons.delete,
             'btn-danger',
-            this.LANG.dialogs.buttons.cancel()
+            this.LANG.dialogs.buttons.cancel
         ).then(response => {
             if (response === true) {
                 this.system
@@ -742,9 +739,12 @@ export class NxSystemStorageComponent implements OnInit {
                                 .pipe(skip(1), take(1))
                                 .toPromise();
                             this.toastService.notify(
-                                this.LANG.storage.storageDeleted({
-                                    url: cleanSmbUrl(storage.url)
-                                }),
+                                {
+                                    value: this.LANG.storage.storageDeleted,
+                                    params: {
+                                        url: cleanSmbUrl(storage.url)
+                                    }
+                                },
                                 'success'
                             );
                         } else {
@@ -752,9 +752,12 @@ export class NxSystemStorageComponent implements OnInit {
                         }
                     }).catch(_ => {
                         this.toastService.notify(
-                            this.LANG.storage.failedRemove({
-                                url: cleanSmbUrl(storage.url)
-                            }),
+                            {
+                                value: this.LANG.storage.failedRemove,
+                                params: {
+                                    url: cleanSmbUrl(storage.url)
+                                }
+                            },
                             'danger'
                         );
                     });
@@ -864,12 +867,12 @@ export class NxSystemStorageComponent implements OnInit {
                 const reply = res.reply || res.main || res.backup;
                 if (['RebuildState_None', 'none'].includes(reply.state)) {
                     this[`percent${type ? 'Main' : 'Backup'}Done`] = 0;
-                    message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`]();
+                    message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`];
                 }
             },
             err => {
                 console.error(err);
-                message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`]();
+                message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`];
                 toastType = this.CONFIG.toast.warning;
             }
         ).add(() => {
@@ -891,10 +894,10 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     getStorageTypeTooltip(storageType: string): string {
-        return storageType ? this.LANG.system.storageToolTips[storageType.toLowerCase()]() : '';
+        return storageType ? this.LANG.system.storageToolTips[storageType.toLowerCase()] : '';
     }
 
     getStatusTooltip(status: string): string {
-        return this.LANG.storage[status]();
+        return this.LANG.storage[status];
     }
 }

@@ -22,9 +22,9 @@
                 *ngIf="CONFIG.allowDebugMode"
                 class="transport"
             >
-                {{ selectedTransport$ | async | uppercase }},&nbsp;
+                {{ selectedTransport$ | async | translate | uppercase }},&nbsp;
             </span>
-            <span class="quality">{{ currentQuality(selectedQuality$ | async) }}</span>
+            <span class="quality">{{ currentQuality(selectedQuality$ | async) | translate }}</span>
         </span>
 
         <div class="buttons">
@@ -90,7 +90,7 @@
                     [ngClass]="{ selected: (selectedTransport$ | async) === st }"
                     (click)="selectedTransport = st"
                 >
-                    <div>{{ st }}</div>
+                    <div>{{ st | translate }}</div>
                 </div>
             </div>
             <ng-template #noTransportsAvailable>
@@ -124,7 +124,7 @@
                     <div>
                         {{
                             LANG.common.resolution[q.toLowerCase()]
-                                ? LANG.common.resolution[q.toLowerCase()]()
+                                ? (LANG.common.resolution[q.toLowerCase()] | translate)
                                 : q.toLowerCase()
                         }}
                     </div>
@@ -166,32 +166,32 @@
                     <nx-player-placeholder
                         *ngIf="cameraError; else unreachable"
                         svgFileName="placeholder_camera_alert"
-                        [heading]="LANG.common.cameraStates.error()"
+                        [heading]="LANG.common.cameraStates.error | translate"
                         [description]="cameraError"
                     ></nx-player-placeholder>
                     <ng-template #unreachable>
                         <nx-player-placeholder
                             *ngIf="!camera.isOffline && !camera.isUnauthorized && camera.isVirtual"
                             svgFileName="placeholder_camera_alert"
-                            [heading]="LANG.common.cameraStates.noData()"
+                            [heading]="LANG.common.cameraStates.noData | translate"
                             [description]="''"
                         ></nx-player-placeholder>
                         <nx-player-placeholder
                             *ngIf="!camera.isOffline && !camera.isUnauthorized && !camera.isVirtual"
                             svgFileName="placeholder_camera_alert"
-                            [heading]="LANG.common.cameraStates.error()"
-                            [description]="LANG.common.cameraStates.noFormat()"
+                            [heading]="LANG.common.cameraStates.error | translate"
+                            [description]="LANG.common.cameraStates.noFormat | translate"
                         ></nx-player-placeholder>
                         <nx-player-placeholder
                             *ngIf="camera.isOffline && !camera.isUnauthorized"
                             svgFileName="placeholder_camera_offline"
-                            [heading]="LANG.common.cameraStates.offline()"
+                            [heading]="LANG.common.cameraStates.offline | translate"
                             description=""
                         ></nx-player-placeholder>
                         <nx-player-placeholder
                             *ngIf="!camera.isOffline && camera.isUnauthorized"
                             svgFileName="placeholder_camera_unauthorized"
-                            [heading]="LANG.common.cameraStates.unauthorized()"
+                            [heading]="LANG.common.cameraStates.unauthorized | translate"
                             [showSettingsLink]="system.userManager.permissions.editCameras"
                             [camera]="camera"
                             [system]="system"

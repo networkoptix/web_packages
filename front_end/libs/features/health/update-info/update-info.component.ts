@@ -9,11 +9,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxHealthService } from '../health.service';
 
@@ -27,18 +26,16 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter<boolean>();
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     lastUpdate: string;
     timerSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private healthService: NxHealthService,
         private ribbonService: NxRibbonService
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 
@@ -72,7 +69,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
             .subscribe(minutes => {
                 if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
                     this.ribbonService.show(
-                        this.LANG.common.viewingOutdatedReport(),
+                        this.LANG.common.viewingOutdatedReport,
                         [{ type: 'link', text: 'Refresh', value: '' }],
                         'alert',
                         this.refreshHealth

@@ -1,7 +1,7 @@
 /**
  * A helper function to setup text within the OAuth app
  */
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 
 export interface TemplateText {
     [clientType: string]: {
@@ -12,28 +12,27 @@ export interface TemplateText {
 }
 
 export function setupText(
-    lang: LanguageI18NStaticTypes,
     type?: string
 ): TemplateText {
-    const auth = lang.authorize;
-    const subHeader = auth.asAccountSubheader();
+    const auth = staticLang.authorize;
+    const subHeader = auth.asAccountSubheader;
 
     const connect = {
-        header: auth.connectHeader(),
-        subHeader: auth.toAccountSubheader()
+        header: auth.connectHeader,
+        subHeader: auth.toAccountSubheader
     };
     const renew = {
-        header: auth.expiredHeader(),
-        subHeader: auth.expiredAccountSubheader()
+        header: auth.expiredHeader,
+        subHeader: auth.expiredAccountSubheader
     };
     const login = {
-        header: auth.loginCloudHeader(),
+        header: auth.loginCloudHeader,
         subHeader
     };
 
     if (type === 'email') {
-        connect.subHeader = auth.connectSubheader();
-        renew.subHeader = auth.expiredSubheader();
+        connect.subHeader = auth.connectSubheader;
+        renew.subHeader = auth.expiredSubheader;
         delete login.subHeader;
     }
 
@@ -42,44 +41,44 @@ export function setupText(
         loginToWebadmin: login,
         system2faAuth: login,
         confirmPasswordDisconnect: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordDisconnect()
+            subHeaderSuffix: auth.passwordDisconnect
         },
         confirmPasswordMerge: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordMerge()
+            subHeaderSuffix: auth.passwordMerge
         },
         confirmPasswordCreateBackup: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordBackup()
+            subHeaderSuffix: auth.passwordBackup
         },
         confirmPasswordRestoreBackup: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordRestore()
+            subHeaderSuffix: auth.passwordRestore
         },
         confirmPasswordResetServer: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordReset()
+            subHeaderSuffix: auth.passwordReset
         },
         confirmPasswordRestartServer: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordRestart()
+            subHeaderSuffix: auth.passwordRestart
         },
         confirmPasswordDetachServer: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordDetach()
+            subHeaderSuffix: auth.passwordDetach
         },
         confirmPasswordTransfer: {
-            header: auth.loginCloudHeader(),
+            header: auth.loginCloudHeader,
             subHeader,
-            subHeaderSuffix: auth.passwordTransfer()
+            subHeaderSuffix: auth.passwordTransfer
         },
         connectSystemToCloud: connect,
         setupWizard: connect,

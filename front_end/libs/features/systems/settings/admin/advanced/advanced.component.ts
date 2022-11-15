@@ -9,13 +9,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { map, delay, retryWhen, take } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -32,11 +31,11 @@ interface SystemSetting {
 })
 
 export class NxSystemAdvancedAdminComponent implements OnDestroy {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-
     @Input() system: NxSystem;
     @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
+
+    CONFIG: IConfig;
+    LANG = staticLang;
 
     haveAdvSettings: boolean;
 
@@ -49,13 +48,11 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -93,7 +90,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                     ) {
                         const errorToShow = response.errorString;
                         this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error?.())
+                            .alert(errorToShow, this.LANG.dialogs.titles.error)
                             .catch(error => {
                                 console.error(error);
                             });
@@ -101,8 +98,8 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                         this.settingsToBeDisplayedOrUpdated(this.changedFields);
                         this.dialogsService
                             .alert(
-                                this.LANG.dialogs.message.settingsSaved?.(),
-                                this.LANG.dialogs.titles.success?.()
+                                this.LANG.dialogs.message.settingsSaved,
+                                this.LANG.dialogs.titles.success
                             ).catch(error => {
                                 console.error(error);
                             });
@@ -110,8 +107,8 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 }, () => {
                     this.dialogsService
                         .alert(
-                            this.LANG.dialogs.message.settingsNotSaved?.(),
-                            this.LANG.dialogs.titles.error?.()
+                            this.LANG.dialogs.message.settingsNotSaved,
+                            this.LANG.dialogs.titles.error
                         ).catch(error => {
                             console.error(error);
                         });
@@ -165,7 +162,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
     getDescription(key) {
         return this.LANG.settingsConfig[key]
-            ? this.LANG.settingsConfig[key]()
+            ? this.LANG.settingsConfig[key]
             : key;
     }
 

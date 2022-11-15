@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import {
     ConfigType,
     ModalManifest,
@@ -20,7 +19,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
@@ -53,7 +51,6 @@ export class EditModalContent {
     errors: Record<string, string[]> = {};
     processDisabled = false;
     name = '';
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     createContext: Process;
     saveContext: Process;
@@ -67,7 +64,6 @@ export class EditModalContent {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private cloudApi: NxCloudApiService,
@@ -77,7 +73,6 @@ export class EditModalContent {
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.config;
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {

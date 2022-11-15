@@ -1,13 +1,12 @@
 import { Component, Inject, Input, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -23,8 +22,8 @@ import { NxToastService } from '../toast.service';
 export class Mandatory2faModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     system: NxSystem;
     system2faEnabled: boolean;
@@ -40,7 +39,6 @@ export class Mandatory2faModalContent {
     usersWithout2fa = 0;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
@@ -51,7 +49,6 @@ export class Mandatory2faModalContent {
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -82,8 +79,8 @@ export class Mandatory2faModalContent {
                 this.system.currentServerNotBusy = true;
                 this.close('success');
                 const successMessage = this.system2faEnabled
-                    ? this.LANG.dialogs.message.system2faEnabled()
-                    : this.LANG.dialogs.message.system2faDisabled();
+                    ? this.LANG.dialogs.message.system2faEnabled
+                    : this.LANG.dialogs.message.system2faDisabled;
                 this.toastService.notify(
                     successMessage,
                     this.CONFIG.toast.success,

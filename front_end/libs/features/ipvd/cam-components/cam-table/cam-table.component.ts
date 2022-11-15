@@ -20,11 +20,10 @@ import { isEqual } from 'lodash-es';
 import { Subject, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
@@ -82,7 +81,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     pagedItems: FilteredCamera[] = [];
     pagerMaxSize: number;
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     showAnalytics: boolean;
     readonly serviceParams: string[] = ['count', 'resolutionArea'];
     serviceHeaders: string[];
@@ -139,36 +138,35 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+
         private route: ActivatedRoute,
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private renderer: Renderer2,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
 
         this.serviceHeaders = [
-            this.LANG.ipvd.count(),
-            this.LANG.ipvd.resolutionArea()
+            this.LANG.ipvd.count,
+            this.LANG.ipvd.resolutionArea
         ];
 
         this.cameraHeaders = [
-            this.LANG.ipvd.vendor(),
-            this.LANG.ipvd.model(),
-            this.LANG.ipvd.hardwareType(),
-            this.LANG.ipvd.maxResolution(),
-            this.LANG.ipvd.maxFps(),
-            this.LANG.ipvd.primaryCodec(),
-            this.LANG.ipvd.isAudioSupported(),
-            this.LANG.ipvd.isPtzSupported(),
-            this.LANG.ipvd.isFisheye(),
-            this.LANG.ipvd.isMdSupported(),
-            this.LANG.ipvd.isIoSupported(),
-            this.LANG.ipvd.isAnalyticsSupported(),
-            this.LANG.ipvd.count(),
-            this.LANG.ipvd.resolutionArea()
+            this.LANG.ipvd.vendor,
+            this.LANG.ipvd.model,
+            this.LANG.ipvd.hardwareType,
+            this.LANG.ipvd.maxResolution,
+            this.LANG.ipvd.maxFps,
+            this.LANG.ipvd.primaryCodec,
+            this.LANG.ipvd.isAudioSupported,
+            this.LANG.ipvd.isPtzSupported,
+            this.LANG.ipvd.isFisheye,
+            this.LANG.ipvd.isMdSupported,
+            this.LANG.ipvd.isIoSupported,
+            this.LANG.ipvd.isAnalyticsSupported,
+            this.LANG.ipvd.count,
+            this.LANG.ipvd.resolutionArea
         ];
 
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
@@ -196,7 +194,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             this.beta;
         if (!this.showAnalytics) {
             this.filterAllowedParams(
-                [this.LANG.ipvd.isAnalyticsSupported()],
+                [this.LANG.ipvd.isAnalyticsSupported],
                 ['isAnalyticsSupported']
             );
         } else {
@@ -223,7 +221,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     const sortBy = this.params.sortBy.split(',');
                     const direction = (sortBy[1] === 'ASC');
                     const column = this.cameraHeaders.find(x =>
-                        x === this.LANG.ipvd[sortBy[0]]()
+                        x === this.LANG.ipvd[sortBy[0]]
                     );
 
                     // do not sort if sorted
@@ -344,10 +342,10 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     toggleHeaderSort(param: string): void {
         const filter = Object.keys(this.LANG.ipvd).find(key =>
-            this.LANG.ipvd[key]() === param
+            this.LANG.ipvd[key] === param
         );
 
-        this.sortOrderASC = (this.LANG.ipvd[filter]() === this.selectedHeader)
+        this.sortOrderASC = (this.LANG.ipvd[filter] === this.selectedHeader)
             ? !this.sortOrderASC
             : true;
         this.toggleSort(filter, false);
@@ -425,7 +423,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         }
 
         this.selectedHeader = this.cameraHeaders.find(x =>
-            x === this.LANG.ipvd[param]()
+            x === this.LANG.ipvd[param]
         );
     }
 

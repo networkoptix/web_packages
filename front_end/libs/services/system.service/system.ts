@@ -8,7 +8,7 @@ import {
 import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -109,7 +109,7 @@ export class NxSystem {
     mediaservers: NxMediaServer[] = null;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     userManager: UserManager;
     serverManager: ServerManager;
@@ -187,7 +187,6 @@ export class NxSystem {
 
     constructor(
         CONFIG: IConfig,
-        LANG: LanguageI18NStaticTypes,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
@@ -203,7 +202,6 @@ export class NxSystem {
         version?: number,
     ) {
         this.CONFIG = CONFIG;
-        this.LANG = LANG;
         // Sometimes newly connected systems don't report version correctly
         this.version = version || this.LATEST;
         this.useRest = Math.floor(this.version) > 4;
@@ -214,10 +212,10 @@ export class NxSystem {
     private updateSystemState(): void {
         this.stateMessage = '';
         if (!this.isAvailable) {
-            this.stateMessage = this.LANG.system.status.unavailable?.();
+            this.stateMessage = this.LANG.system.status.unavailable;
         }
         if (!this.isOnline) {
-            this.stateMessage = this.LANG.system.status.offline?.();
+            this.stateMessage = this.LANG.system.status.offline;
         }
     }
 
@@ -247,7 +245,7 @@ export class NxSystem {
             unauthorizedCallback(true).then(() => { });
         }
 
-        this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
+        this.userManager = new UserManager(this.CONFIG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
@@ -477,7 +475,7 @@ export class NxSystem {
 
     isSomewhereInTime(really = false) {
         really && this.toastService.show(
-            this.LANG.system.status.outOfTimeSync?.(),
+            this.LANG.system.status.outOfTimeSync,
             this.CONFIG.toast.danger,
             { autohide: true }
         );
@@ -493,7 +491,7 @@ export class NxSystem {
                     if (error?.offline) {
                         this.isOnline = false;
                         this.ribbonService.show(
-                            this.LANG.ribbon.systemOffline(),
+                            this.LANG.ribbon.systemOffline,
                             [],
                             'alert',
                             undefined,

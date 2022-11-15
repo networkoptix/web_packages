@@ -94,7 +94,7 @@
                 (click)="refreshData()"
             >
                 <span>
-                    {{ LANG.components.widgets.lastUpdated({ date: dataSource.last }) }}
+                    {{ LANG.components.widgets.lastUpdated | translate: { date: dataSource.last } }}
                 </span>
                 <svg-icon
                     nx-add-svg-src
@@ -134,8 +134,8 @@
                                     params: action.params || {}
                                 })
                             "
-                            [nxTooltip]="action.name"
-                            >{{ ACTION_ICONS[action.type] || action.name }}</a
+                            [nxTooltip]="action.name | translate"
+                            >{{ ACTION_ICONS[action.type] || action.name | translate }}</a
                         >
                     </div>
                 </cdk-nested-tree-node>
@@ -151,7 +151,7 @@
                             {{ treeControl.isExpanded(node) ? '📂' : '📁' }}
                         </span>
                         <span>
-                            {{ node.name }}
+                            {{ node.name | translate }}
                         </span>
                     </div>
                     <div [ngClass]="{ 'd-none': !treeControl.isExpanded(node) }">

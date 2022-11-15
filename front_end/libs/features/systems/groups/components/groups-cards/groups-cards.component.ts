@@ -1,12 +1,11 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
@@ -20,8 +19,8 @@ export class NxGroupsCardsComponent implements OnInit {
     @Input() groups: GroupItem[];
     @Input() systems: SystemItem[];
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     account: Account;
 
@@ -30,12 +29,10 @@ export class NxGroupsCardsComponent implements OnInit {
     }
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private accountService: NxAccountService,
         private groupsService: NxSystemGroupsService,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.config;
     }
 

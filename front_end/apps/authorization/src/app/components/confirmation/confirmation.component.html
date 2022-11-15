@@ -21,9 +21,10 @@
         ></svg-icon>
         <h3 class="authorize-header mt-3">
             {{
-                clientType === 'setupWizard'
-                    ? LANG.authorize.setupConnectedText()
-                    : LANG.authorize.connectedText()
+                (clientType === 'setupWizard'
+                    ? LANG.authorize.setupConnectedText
+                    : LANG.authorize.connectedText
+                ) | translate
             }}
         </h3>
     </form>

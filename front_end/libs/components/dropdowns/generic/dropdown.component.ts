@@ -12,7 +12,6 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -79,12 +78,12 @@ export class NxGenericDropdown<
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService,
         public ref: ElementRef<HTMLElement>
     ) {
-        super(languageService, configService);
-        this.noMatchMsg ??= this.LANG.search.noMatches?.() || 'No matches';
+        super(configService);
+        this.noMatchMsg ??= this.LANG.search.noMatches || 'No matches';
     }
 
     ngOnInit(): void {

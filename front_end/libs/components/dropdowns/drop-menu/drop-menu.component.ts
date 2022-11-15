@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -13,7 +14,6 @@ import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -47,7 +47,7 @@ export class NxDropMenu extends BaseDropdown {
     params: any;
 
     constructor(
-        languageService: NxLanguageProviderService,
+        translateService: TranslateService,
         configService: NxConfigService,
         private router: Router,
         private uriService: NxUriService,
@@ -55,7 +55,7 @@ export class NxDropMenu extends BaseDropdown {
         private menusService: NxMenusService,
         private accountService: NxAccountService,
     ) {
-        super(languageService, configService);
+        super(configService);
         this.menusService.currentSystemNode$
             .pipe(
                 untilDestroyed(this)
@@ -76,11 +76,10 @@ export class NxDropMenu extends BaseDropdown {
                 this.headerService.show$ = false;
             });
 
-        languageService.translateSubject
+        translateService.onTranslationChange
             .pipe(untilDestroyed(this))
-            .subscribe(translations => {
+            .subscribe(() => {
                 setTimeout(() => {
-                    this.LANG = translations;
                     this.getMenu();
                     if (environment.isLocal) {
                         return;

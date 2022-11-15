@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -15,10 +14,10 @@ export class NxNavLocationDropdown extends BaseDropdown {
     @Input() location: any = {};
 
     constructor(
-        languageService: NxLanguageProviderService,
+
         configService: NxConfigService
     ) {
-        super(languageService, configService);
+        super(configService);
     }
 
     hide() {

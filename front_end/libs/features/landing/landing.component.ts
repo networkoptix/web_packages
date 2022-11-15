@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
@@ -22,7 +21,7 @@ import { WINDOW } from '@services/window-provider';
 
 export class NxLandingComponent implements OnInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     params;
     userEmail;
@@ -35,14 +34,12 @@ export class NxLandingComponent implements OnInit {
 
     private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
     }
 
     constructor(
         private configService: NxConfigService,
         private accountService: NxAccountService,
         private pageService: NxPageService,
-        private language: NxLanguageProviderService,
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
         private router: Router,
@@ -64,13 +61,13 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.productName();
+        this.pageService.pageTitle = this.LANG.productName;
         this.pageService.pageDescription = this.CONFIG.landing.description;
         if (this.startUrl === '/logout') {
             this.accountService.logout();
         } else if (this.startUrl.includes('/content/about')) {
             this.loaded = true;
-            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about;
         } else {
             this.sessionService.loginStateSubject
                 .pipe(untilDestroyed(this))

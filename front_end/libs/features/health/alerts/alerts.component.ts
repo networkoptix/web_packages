@@ -15,12 +15,11 @@ import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
@@ -43,7 +42,7 @@ interface Params {
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     filterModel: SearchFilter = { query: '', selects: [] };
     params: any = {};
     numFilters: number;
@@ -84,7 +83,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         pageService: NxPageService,
         public healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
@@ -96,7 +94,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         pageService.pageTitle = this.LANG.pageTitles.information;
     }
@@ -276,9 +273,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     addFilterAlarms(): void {
         const alertItems = [
-            { value: '0', name: this.LANG.alertFilters.all() },
-            { value: 'warning', name: this.LANG.alertFilters.warning() },
-            { value: 'error', name: this.LANG.alertFilters.error() }
+            { value: '0', name: this.LANG.alertFilters.all },
+            { value: 'warning', name: this.LANG.alertFilters.warning },
+            { value: 'error', name: this.LANG.alertFilters.error }
         ];
 
         const selected = alertItems.filter(item => {
@@ -302,7 +299,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         for (const [key, value] of Object.entries(this.healthService.manifest)) {
             const val: any = value;
             if (val.resource !== '' && key in this.healthService.values) {
-                const item = { value: val.resource, name: this.LANG.deviceTypes[val.id]?.() || val.resource };
+                const item = { value: val.resource, name: this.LANG.deviceTypes[val.id] || val.resource };
                 typesItems.push(item);
 
                 if (this.params.deviceType === val.resource) {
@@ -311,7 +308,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         }
 
-        typesItems.unshift({ value: '0', name: this.LANG.deviceTypes['All Device Types']() });
+        typesItems.unshift({ value: '0', name: this.LANG.deviceTypes['All Device Types'] });
 
         this.filterModel.selects.push(
             {
@@ -337,7 +334,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         }
 
-        serverItems.unshift({ value: '0', name: this.LANG['All Servers']() });
+        serverItems.unshift({ value: '0', name: this.LANG['All Servers'] });
 
         this.filterModel.selects.push(
             {
@@ -397,12 +394,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 alerts: Object.entries(alarmType.alarms).map(([level, count]) => {
                     // If level is error and type is server convert to offline. Otherwise, return level.
                     const name = level === 'error' && alarmType.name === 'Servers'
-                        ? this.LANG.alarmLevels.offline()
-                        : this.LANG.alarmLevels[level]?.() || `${level}s`;
+                        ? this.LANG.alarmLevels.offline
+                        : this.LANG.alarmLevels[level] || `${level}s`;
 
                     return { count, level, name };
                 }).sort((a: any, b: any) => a.level < b.level ? -1 : 1),
-                name: this.LANG.alarmTypes[alarmType.name]?.() || alarmType.name
+                name: this.LANG.alarmTypes[alarmType.name] || alarmType.name
             };
         });
         this.alertCardCount = Object.keys(this.alertCards).length;
@@ -422,19 +419,19 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     },
                     {
                         display: 'table',
-                        name: this.LANG.tableHeaders.type(),
+                        name: this.LANG.tableHeaders.type,
                         id: 'type',
                         formatClass: 'text'
                     },
                     {
                         display: 'table',
-                        name: this.LANG.tableHeaders.server(),
+                        name: this.LANG.tableHeaders.server,
                         id: 'server',
                         formatClass: 'long-text'
                     },
                     {
                         display: 'table',
-                        name: this.LANG.tableHeaders.alert(),
+                        name: this.LANG.tableHeaders.alert,
                         id: 'message'
                     }
                 ]

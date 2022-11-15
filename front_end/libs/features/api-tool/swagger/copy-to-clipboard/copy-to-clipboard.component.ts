@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy()
 @Component({
@@ -16,21 +15,21 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 })
 export class NxCopyToClipboardComponent {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
-    constructor(private configService: NxConfigService,
+    constructor(
+        private configService: NxConfigService,
         private clipboardService: ClipboardService,
-        private toastService: NxToastService,
-        private languageService: NxLanguageProviderService) {
+        private toastService: NxToastService
+    ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.translations;
 
         this.clipboardService.copyResponse$
             .pipe(untilDestroyed(this))
             .subscribe((res: IClipboardResponse) => {
                 if (res.isSuccess) {
                     this.toastService.notify(
-                        this.LANG.common.copiedToClipboard(),
+                        this.LANG.common.copiedToClipboard,
                         this.CONFIG.toast.success,
                     );
                 }

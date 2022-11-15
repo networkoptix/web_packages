@@ -8,14 +8,13 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
@@ -33,7 +32,7 @@ interface ServerOption extends DropdownItem<string> {
 })
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     serverOptions: ServerOption[] = [];
     activateKey: any;
@@ -83,7 +82,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             this.licenseForm.controls.licenseKey.markAsUntouched();
 
                             this.dialogsService
-                                .notify(this.LANG.license.messages.activated?.(), 'success');
+                                .notify(this.LANG.license.messages.activated, 'success');
 
                             return;
                         }
@@ -97,7 +96,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         } else {
                             if (fail.name === 'TimeoutError') {
                                 this.dialogsService
-                                    .notify(this.LANG.errorCodes.licenseTimeout?.(), 'danger');
+                                    .notify(this.LANG.errorCodes.licenseTimeout, 'danger');
                             }
                             console.error(fail);
                         }
@@ -113,12 +112,10 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -176,7 +173,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             // Network/Http error has occurred during license activation. Error code: -1
                 if (matchError('error has occurred during license activation')) {
                     this.dialogsService
-                        .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
+                        .notify(this.LANG.errorCodes.licenseServerError, 'danger');
                     break;
                 }
                 if (matchError('license is expired')) {
@@ -215,7 +212,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
             default:
                 this.dialogsService
-                    .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
+                    .notify(this.LANG.errorCodes.licenseFail, 'danger');
         }
     }
 

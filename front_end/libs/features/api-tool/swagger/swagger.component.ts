@@ -15,7 +15,7 @@ import type SwaggerUI from 'swagger-ui';
 import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     MenuNodeWithParent
 } from '@components/developers-menu/developers-menu-types';
@@ -25,7 +25,6 @@ import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { highlightAll, isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -58,7 +57,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     @Input() activeNode: MenuNodeWithParent;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     currentAPIDoc: APIDoc;
     swagger: SwaggerUI;
     swaggerLoading$ = new BehaviorSubject(false);
@@ -75,16 +74,16 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
     resetButtonListener$: Subscription;
 
-    constructor(public APIToolSystemService: NxAPIToolSystemService,
+    constructor(
+        public APIToolSystemService: NxAPIToolSystemService,
         public openAPIJSONService: NxOpenAPIJSONService,
         private loginService: NxLoginService,
         private configService: NxConfigService,
         private renderer2: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private toastService: NxToastService,
-        languageService: NxLanguageProviderService,
-        @Inject(DOCUMENT) private document: Document) {
-        this.LANG = languageService.translations;
+        @Inject(DOCUMENT) private document: Document
+    ) {
         this.CONFIG = this.configService.getConfig();
     }
 
@@ -211,7 +210,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             .then(ready => {
                 const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
                 const { success, danger } = this.CONFIG.toast;
-                const toastMessage = ready ? sessionRenewed() : failedToUpdateSession();
+                const toastMessage = ready ? sessionRenewed : failedToUpdateSession;
                 this.toastService.notify(toastMessage, ready ? success : danger);
             });
     };

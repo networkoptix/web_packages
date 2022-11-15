@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockLine,
     InfoBlockSection,
@@ -17,7 +17,6 @@ import {
 } from '@components/info-block/info-block.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -32,7 +31,7 @@ import { getDynamicLicense } from '../dynamic-license';
 
 export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     orderedLicense: any = [];
     newlyAddedLicense: any;
@@ -49,11 +48,10 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+
         private datePipe: DatePipe
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
 
         this.setupDefaults();
     }
@@ -93,7 +91,10 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     };
 
     private orderedDetails(info): void {
-        const dynamicLicense = getDynamicLicense(this);
+        const dynamicLicense = getDynamicLicense({
+            CONFIG: this.CONFIG,
+            licenseTypeTitles: this.LANG.license.licenseTypeTitles
+        });
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
 
@@ -109,7 +110,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
             : false;
 
         let deactivationsRemaining;
-        if (info.status === this.LANG.license.info.error()) {
+        if (info.status === this.LANG.license.info.error) {
             deactivationsRemaining = 0;
         } else {
             deactivationsRemaining =
@@ -120,27 +121,27 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const block = new InfoBlockSection(
             [
                 new InfoBlockLine(
-                    this.LANG.license.info.type(),
+                    this.LANG.license.info.type,
                     typeof info.type === 'function' ? info.type() : info.type
                 ),
-                new InfoBlockLine(this.LANG.license.info.channels(), info.count),
+                new InfoBlockLine(this.LANG.license.info.channels, info.count),
                 new InfoBlockLine(
-                    this.LANG.license.info.server(),
-                    info.serverName || this.LANG.common.unknown(),
+                    this.LANG.license.info.server,
+                    info.serverName || this.LANG.common.unknown,
                     !info.serverStatus
                         ? InfoDetailClass.ERROR
                         : undefined
                 ),
-                new InfoBlockLine(this.LANG.license.info.hwid(), info.hwid),
+                new InfoBlockLine(this.LANG.license.info.hwid, info.hwid),
                 new InfoBlockLine(
-                    this.LANG.license.info.status(),
+                    this.LANG.license.info.status,
                     info.status,
                     info.expired ||
-                        info.status === this.LANG.license.info.error() ||
+                        info.status === this.LANG.license.info.error ||
                         !info.serverStatus ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
-                    this.LANG.license.info.expires(),
+                    this.LANG.license.info.expires,
                     info.expiration
                         ? this.datePipe.transform(
                             info.expiration,
@@ -150,7 +151,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                     warning ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
-                    this.LANG.license.info.deactivations(),
+                    this.LANG.license.info.deactivations,
                     deactivationsRemaining,
                     deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
                     null,

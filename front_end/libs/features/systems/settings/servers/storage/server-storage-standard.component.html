@@ -7,7 +7,7 @@
         *ngIf="!waitingForStorages"
         svgFileName="system_settings_placeholder"
         [wrapperHeight]="144"
-        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()"
+        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo | translate"
     >
     </nx-section-placeholder>
 </ng-template>
@@ -83,7 +83,9 @@
                                     [ngClass]="{
                                         'animate-rotation': updatingModes.includes(store.storageId)
                                     }"
-                                    [nxTooltip]="getStorageTypeTooltip(store.storageType)"
+                                    [nxTooltip]="
+                                        getStorageTypeTooltip(store.storageType) | translate
+                                    "
                                     [src]="getIconSrc(store)"
                                 ></svg-icon>
                                 <span class="ellipsis">{{ cleanSmbUrl(store.url) }}</span>
@@ -107,7 +109,10 @@
                                             <svg-icon
                                                 nx-add-svg-src
                                                 class="ml-1"
-                                                [nxTooltip]="getStatusTooltip(store.statusTooltip)"
+                                                [nxTooltip]="
+                                                    getStatusTooltip(store.statusTooltip)
+                                                        | translate
+                                                "
                                                 [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
                                             ></svg-icon>
                                         </div>
@@ -135,7 +140,9 @@
                                                 [style.left.px]="
                                                     (dropdownOffsetCalc$ | async) + ddWidth - 20
                                                 "
-                                                [nxTooltip]="LANG.storage.stillHasArchives()"
+                                                [nxTooltip]="
+                                                    LANG.storage.stillHasArchives | translate
+                                                "
                                                 [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
                                             ></svg-icon>
                                         </div>
@@ -333,7 +340,7 @@
                 *ngIf="!reindexingMain; else reindexMainProgress"
                 [disabled]="modeReindexDisabled(storageModes.MAIN)"
                 type="button"
-                [nxTooltip]="tooltipContent"
+                [nxTooltip]="tooltipContent | translate"
                 (click)="reindexingMain = true; reindexStorage(storageModes.MAIN)"
                 translate
             >
@@ -378,7 +385,7 @@
                     class="btn btn-default mt-2"
                     type="button"
                     [disabled]="modeReindexDisabled(storageModes.BACKUP)"
-                    [nxTooltip]="tooltipContent"
+                    [nxTooltip]="tooltipContent | translate"
                     (click)="reindexingBackup = true; reindexStorage(storageModes.BACKUP)"
                     translate
                 >

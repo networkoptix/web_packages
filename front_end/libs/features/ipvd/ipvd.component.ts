@@ -16,7 +16,7 @@ import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
@@ -31,7 +31,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
@@ -55,7 +54,7 @@ import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
 })
 
 export class NxIpvdComponent implements OnInit, AfterViewInit {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
 
     targets: PseudoAnchorTarget[] = [];
@@ -137,7 +136,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private cameraSearchService: IpvdSearchService,
         private dialogs: NxDialogsService,
@@ -153,7 +151,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
 
         this.setupDefaults();
 
@@ -210,11 +207,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.debug ||
             this.beta;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices();
+        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices;
 
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;
-        this.placeholder = this.LANG.search.Search();
+        this.placeholder = this.LANG.search.Search;
 
         // add hardware types and tags
         this.addFilterTags();
@@ -307,7 +304,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     item.value === this.params[select.id]
                 );
             } else if (!select.selected) {
-                select.selected = { value: '0', name: 'All' };
+                select.selected = { value: '0', name: this.LANG.search.All };
             }
         });
 
@@ -350,7 +347,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.filterModel.selects.push({
             id: 'resolution',
-            label: this.LANG.search.minResolution(),
+            label: this.LANG.search.minResolution,
             items: this.resolutions,
             selected: this.resolutions[0]
         });
@@ -360,8 +357,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         if (this.showAnalytics && this.analytics) {
             this.filterModel.multiselects.push({
                 id: 'analytics',
-                label: this.LANG.search.analytics(),
-                searchLabel: this.LANG.search.analyticsSelected(),
+                label: this.LANG.search.analytics,
+                searchLabel: this.LANG.search.analyticsSelected,
                 searchLabelSingular: '',
                 items: this.analytics.map(v => ({ id: v, label: v })),
                 selected: []
@@ -389,21 +386,21 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
 
         this.filterModel.tags.forEach(tag => {
-            tag.label = this.LANG.ipvd[tag.id]();
+            tag.label = this.LANG.ipvd[tag.id];
         });
     }
 
     addFilterTypes(): void {
         this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
-            type.label = this.LANG.ipvd[type.id]();
+            type.label = this.LANG.ipvd[type.id];
         });
 
         this.filterModel.multiselects = [
             {
                 id: 'hardwareTypes',
-                label: this.LANG.search.hardwareTypes(),
-                singular: this.LANG.search.hardwareType(),
+                label: this.LANG.search.hardwareTypes,
+                singular: this.LANG.search.hardwareType,
                 items: this.hardwareTypes,
                 selected: []
             }
@@ -450,8 +447,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 // reformat vendors to fit the multiselect component
                 this.filterModel.multiselects.unshift({
                     id: 'vendors',
-                    label: this.LANG.search.vendors(),
-                    singular: this.LANG.search.vendor(),
+                    label: this.LANG.search.vendors,
+                    singular: this.LANG.search.vendor,
                     items: this.vendors.map(v => ({ id: v.name, label: v.name })),
                     selected: []
                 });
@@ -596,7 +593,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             ? this.activeCamera.model
             : '';
         const data: MessageParams = {
-            disclaimer: this.LANG.privacyPolicy.ipvd(),
+            disclaimer: this.LANG.privacyPolicy.ipvd,
             asset: device
         };
         this.dialogs

@@ -15,7 +15,7 @@ import { startCase } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -23,7 +23,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { BuildHistory, Build, Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxUriService } from '@services/uri.service';
 
@@ -39,7 +38,7 @@ export class DownloadHistoryComponent implements OnInit {
     readonly releases = 'releases';
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     build: string;
     canViewRelease: boolean = false;
@@ -55,7 +54,7 @@ export class DownloadHistoryComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
         private route: ActivatedRoute,
@@ -66,7 +65,6 @@ export class DownloadHistoryComponent implements OnInit {
         @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
 
         if (isPlatformBrowser(this.platformId)) {
             this.router.events

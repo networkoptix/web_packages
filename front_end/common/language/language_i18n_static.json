@@ -439,6 +439,7 @@
             "adminPasswordWrong": "Password for admin user is wrong",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "check": "Check",
             "checking": "Checking...",
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
@@ -453,6 +454,7 @@
             "mergeFailedTitle": "System merge failed",
             "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
             "mergeSystemsTitle": "Merge current system with",
+            "next": "Next",
             "noServerFound": "No server found",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
@@ -943,6 +945,7 @@
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
+        "All": "All",
         "Any": "Any",
         "Search": "Search",
         "analytics": "Analytics",

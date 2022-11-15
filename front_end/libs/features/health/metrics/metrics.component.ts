@@ -13,11 +13,10 @@ import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -40,7 +39,7 @@ interface Params {
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     account;
 
     filterModel: SearchFilter = { query: '' };
@@ -83,7 +82,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private pageService: NxPageService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
@@ -95,7 +93,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
         this.pageService.pageTitle = this.LANG.pageTitles.information;
     }
 

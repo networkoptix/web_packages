@@ -23,7 +23,7 @@
                 [ngClass]="{ 'no-link': node.url === '' }"
                 [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined"
             >
-                {{ node.display_name || node.name }}
+                {{ node.display_name || node.name | translate }}
             </h5>
         </div>
     </div>
@@ -47,7 +47,7 @@
                         [ngClass]="{ 'has-icon': link.new_window || link.icon }"
                         [attr.id]="link['htmlID']"
                     >
-                        {{ link.display_name || link.name }}
+                        {{ link.display_name || link.name | translate }}
                     </a>
                 </ng-template>
                 <a
@@ -57,7 +57,7 @@
                     [ngClass]="{ 'has-icon': link.new_window || link.icon }"
                     [attr.id]="link['htmlID']"
                 >
-                    {{ link.display_name || link.name }}
+                    {{ link.display_name || link.name | translate }}
                 </a>
                 <svg-icon
                     style="width: 24px; height: 24px"

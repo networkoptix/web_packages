@@ -7,10 +7,9 @@ import {
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
@@ -26,7 +25,7 @@ export class NxPasswordValidationComponent implements OnChanges {
     @Output() updateWeakPassword = new EventEmitter<boolean>();
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     fairPassword: boolean;
     passwordToggle: boolean;
 
@@ -34,10 +33,8 @@ export class NxPasswordValidationComponent implements OnChanges {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnChanges(changes: NgChanges<NxPasswordValidationComponent>): void {

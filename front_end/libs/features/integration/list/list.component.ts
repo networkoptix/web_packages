@@ -6,11 +6,10 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
@@ -23,18 +22,16 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     @Input() list;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     gridColumnLookup: { [key: string]: string } = {};
     ready = new BehaviorSubject(false);
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
     }
 
     ngOnDestroy(): void {
@@ -64,10 +61,10 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     private showRibbon(): void {
         this.ribbonService.show(
-            this.LANG.ribbon.integration.previewRibbon(),
+            this.LANG.ribbon.integration.previewRibbon,
             [{
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText(),
+                text: this.LANG.ribbon.integration.backToEditText,
                 value: this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
             }]
         );

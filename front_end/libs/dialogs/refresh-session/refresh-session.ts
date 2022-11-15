@@ -1,12 +1,11 @@
 import { Component, Inject, Input } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { IEnvironment } from '@environments/environment-config';
 import { NxLoginService } from '@services/login.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { pickFrom } from '@utils/general';
 
@@ -21,12 +20,12 @@ export class RefreshSessionModalContent {
     @Input() closable: boolean = true;
 
     readonly environment: IEnvironment = environment;
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
+    needsUpdate: boolean;
     system: NxSystem;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private loginService: NxLoginService,
         public dialogRef: DialogRef,
@@ -34,7 +33,6 @@ export class RefreshSessionModalContent {
             system: NxSystem;
         },
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 

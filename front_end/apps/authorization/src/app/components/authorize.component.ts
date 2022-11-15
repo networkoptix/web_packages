@@ -17,13 +17,12 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
@@ -51,7 +50,7 @@ const AUTH_BREAKPOINT = 355;
 })
 export class NxAuthorizeComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     AuthorizeState = AuthorizeState;
 
     // content = {};
@@ -140,7 +139,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private httpClient: HttpClient,
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
@@ -153,7 +151,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private themeService: NxThemeService,
         @Inject(WINDOW) public window: Window
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 
@@ -197,7 +194,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         setTimeout(() => {
-            this.title.setTitle(`${this.LANG.pageTitles.auth()} - ${this.CONFIG.cloudName}`);
+            this.title.setTitle(`${this.LANG.pageTitles.auth} - ${this.CONFIG.cloudName}`);
         });
         this.footerItems = this.CONFIG.dynamicMenus?.footer?.nodes || [];
         this.companyLink = this.CONFIG.company.links.website;
@@ -591,7 +588,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 } else if (['unauthorized', 'badUsername'].includes(err.errorText)) {
                     // loginCode is either invalid or already used
                     this.toastService.notify(
-                        this.LANG.authorize.newPassInvalidCode(),
+                        this.LANG.authorize.newPassInvalidCode,
                         'danger'
                     );
                 } else {
@@ -634,7 +631,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         return this.cloudService.reactivate(this.loginEmail)
             .then(() => {
                 this.toastService.notify(
-                    this.LANG.authorize.emailSent(),
+                    this.LANG.authorize.emailSent,
                     'success'
                 );
             }).finally(() => {

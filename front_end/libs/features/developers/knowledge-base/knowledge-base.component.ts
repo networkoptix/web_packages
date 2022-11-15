@@ -26,7 +26,7 @@ import {
     catchError
 } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type {
     ClickEvent,
     MenuNodeWithParent,
@@ -43,7 +43,6 @@ import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -145,7 +144,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     currentSearchResultPage = 0;
     totalSearchResultPages = 0;
     totalResults = 0;
@@ -271,7 +270,6 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
@@ -286,7 +284,6 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         public kbService: NxKnowledgebaseService
     ) {
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
     }
 
     prefetchDocument({ assetId, state = null, version = 0 }): void {
@@ -353,7 +350,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         const draftActions: RibbonAction[] = [
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText(),
+                text: this.LANG.ribbon.integration.backToEditText,
                 value: this.CONFIG.integration.adminLink.replace('%ID%', id) +
                     this.router.url.split('?')[0] +
                     encodeURIComponent('?state=draft'),
@@ -361,8 +358,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             }
         ];
         const message = state
-            ? this.LANG.ribbon.integration.previewRibbon()
-            : this.LANG.ribbon.integration.publishedRibbon();
+            ? this.LANG.ribbon.integration.previewRibbon
+            : this.LANG.ribbon.integration.publishedRibbon;
         const ribbonActions = reviewId
             ? this.addReviewActions(reviewId, draftActions)
             : draftActions;
@@ -386,7 +383,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         const process = this.processService.createProcess(() => {
             return this.cloudApi.acceptReview(reviewId);
         }, {
-            successMessage: this.LANG.toastMessage.reviewAccepted?.()
+            successMessage: this.LANG.toastMessage.reviewAccepted
         },
         this.acceptedReviewRedirect
         );
@@ -401,12 +398,12 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         return [
             {
                 type: 'process-button',
-                text: this.LANG.ribbon.integration.accept(),
+                text: this.LANG.ribbon.integration.accept,
                 value: process
             },
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.reject(),
+                text: this.LANG.ribbon.integration.reject,
                 value: `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
                 external: true
             }

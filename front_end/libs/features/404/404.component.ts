@@ -3,14 +3,12 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { RouteCheckTuple } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -19,15 +17,13 @@ import { WINDOW } from '@services/window-provider';
     templateUrl: '404.component.html'
 })
 export class Nx404Component {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     CONFIG: IConfig;
     environment = environment;
     redirecting = true;
     message = '';
 
     constructor(
-        languageService: NxLanguageProviderService,
-        pageService: NxPageService,
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
@@ -36,7 +32,6 @@ export class Nx404Component {
         @Inject(WINDOW) private window: Window,
         configService: NxConfigService
     ) {
-        this.LANG = languageService.translations;
         this.CONFIG = configService.config;
 
         if (this.environment.isLocal && !this.route.snapshot.queryParams.redirected) {
@@ -44,7 +39,6 @@ export class Nx404Component {
         } else {
             this.message = this.route.snapshot.queryParams.message || '';
             this.redirecting = false;
-            pageService.pageTitle = this.LANG.pageTitles.pageNotFound?.();
         }
     }
 

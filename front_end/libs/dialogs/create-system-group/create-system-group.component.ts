@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -16,7 +15,7 @@ import { Process } from '@services/process.service/process';
     styleUrls: []
 })
 export class CreateSystemGroupModalContent implements OnInit {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     @ViewChild('createSystemGroupForm') form: NgForm;
 
@@ -30,7 +29,6 @@ export class CreateSystemGroupModalContent implements OnInit {
     createSystemGroupProcess: Process;
 
     constructor(
-        language: NxLanguageProviderService,
         private processService: NxProcessService,
         public dialogRef: DialogRef,
         // private store: Store,
@@ -39,7 +37,6 @@ export class CreateSystemGroupModalContent implements OnInit {
         },
         private groupsService: NxSystemGroupsService,
     ) {
-        this.LANG = language.translations;
         this.target_id = dialogData.target_id;
     }
 

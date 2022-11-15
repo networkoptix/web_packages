@@ -61,7 +61,7 @@
             [process]="deleteCloudUser"
             [form]="deleteCloudUserForm"
             actionType="danger"
-            [buttonText]="LANG.dialogs.buttons.delete()"
+            [buttonText]="LANG.dialogs.buttons.delete | translate"
         ></nx-process-button>
         <button
             type="button"
@@ -69,7 +69,7 @@
             (click)="close()"
             (mousedown)="clearErrors()"
         >
-            {{ LANG.dialogs.buttons.cancel() }}
+            {{ LANG.dialogs.buttons.cancel | translate }}
         </button>
     </div>
 </form>

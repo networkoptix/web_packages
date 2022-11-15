@@ -9,13 +9,12 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -36,7 +35,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     login: Process;
 
     // This variable is used in three states: undefined, true, false.
@@ -57,13 +56,11 @@ export class UpdateWebadminSessionComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -77,7 +74,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
             if (this.isCloud && !(this.window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))) {
                 this.close();
                 this.toastService.notify(
-                    `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`,
+                    `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection}`,
                     this.CONFIG.toast.danger,
                 );
             }

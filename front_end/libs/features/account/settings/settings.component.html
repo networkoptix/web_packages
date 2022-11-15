@@ -102,7 +102,7 @@
                         class="d-inline-block"
                         [nxTooltip]="
                             isSystemOwner || account.account2faEnabled
-                                ? LANG.dialogs.tooltips.deleteAccount()
+                                ? (LANG.dialogs.tooltips.deleteAccount | translate)
                                 : ''
                         "
                     >
@@ -117,7 +117,7 @@
                                 [src]="CONFIG.icons.dir + 'delete.svg'"
                                 [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                             ></svg-icon>
-                            <ng-container>{{ LANG.dialogs.buttons.deleteAccount() }}</ng-container>
+                            {{ 'Delete Account' | translate }}
                         </button>
                     </div>
                 </div>

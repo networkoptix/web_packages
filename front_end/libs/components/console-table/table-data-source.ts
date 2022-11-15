@@ -50,7 +50,7 @@ export class TableDataSource extends DataSource<any> {
             let noSearchMatches = false;
             if (search && displayedColumns.length) {
                 const filteredData = data.filter(data => {
-                    return displayedColumns.some(key => (data[key]?.toLowerCase?.() || '').includes(search.toLowerCase()));
+                    return displayedColumns.some(key => (data[key]?.toLowerCase || '').includes(search.toLowerCase()));
                 });
                 noSearchMatches = !filteredData.length;
                 if (!noSearchMatches) {

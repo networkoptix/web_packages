@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 
 @Component({
@@ -16,13 +15,12 @@ import { NxProcessService } from '@services/process.service';
 })
 export class ToasterComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     autohide: boolean;
     ribbonType: string;
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
@@ -30,7 +28,6 @@ export class ToasterComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -46,7 +43,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
         if (this.ribbonType) {
             this.ribbonService.show(
-                this.LANG.common.viewingOutdatedReport(),
+                this.LANG.common.viewingOutdatedReport,
                 [{ type: 'link', text: 'Refresh', value: '' }],
                 this.ribbonType,
                 this.refreshHealth
@@ -58,10 +55,10 @@ export class ToasterComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
         if (this.ribbonType) {
             this.ribbonService.show(
-                this.LANG.ribbon.newVersionAvailable.notification(),
+                this.LANG.ribbon.newVersionAvailable.notification,
                 [{
                     type: 'process-button',
-                    text: this.LANG.ribbon.newVersionAvailable.installButton(),
+                    text: this.LANG.ribbon.newVersionAvailable.installButton,
                     value: this.processService.createProcess(() => {
                         return Promise.resolve();
                     })

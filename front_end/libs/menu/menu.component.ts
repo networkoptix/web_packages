@@ -18,13 +18,11 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
@@ -101,14 +99,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
     private menuOverflowCalc: number;
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
 
     @ViewChild('menuWrapper') menuWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('scrollArea') scrollArea: ElementRef<HTMLDivElement>;
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         private router: Router,
         private route: ActivatedRoute,
         private renderer: Renderer2,
@@ -119,7 +115,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { AnyTranslatePipe } from './any-translate.pipe';
 import { AsPipe } from './as';
 import { NxHealthDatePipe } from './health-date';
 import { NxSafePipe } from './nx-safe';
@@ -10,6 +11,7 @@ import { NxUnsafePipe } from './nx-unsafe';
     imports: [
     ],
     declarations: [
+        AnyTranslatePipe,
         NxHealthDatePipe,
         NxSafePipe,
         NxUnsafePipe,
@@ -17,6 +19,7 @@ import { NxUnsafePipe } from './nx-unsafe';
         AsPipe
     ],
     exports: [
+        AnyTranslatePipe,
         NxHealthDatePipe,
         NxSafePipe,
         NxUnsafePipe,

@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { ErrorStateStructure } from '../error-state/error-state-manager';
 
@@ -15,14 +14,13 @@ import { ErrorStateStructure } from '../error-state/error-state-manager';
 export class NxErrorStateComponent {
     @Input() errors: ErrorStateStructure;
 
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
 
     constructor(
         public accountService: NxAccountService,
         public route: ActivatedRoute,
-        languageService: NxLanguageProviderService,
     ) {
-        this.LANG = languageService.translations;
+
     }
 
     get errorsToDisplay() {

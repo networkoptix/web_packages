@@ -9,7 +9,7 @@
         *ngIf="(autoSaveHandler$ | async) > 0"
         class="auto-save-overlay"
     >
-        {{ LANG.layoutAutosave({ time: autoSaveHandler$ | async }) }}
+        {{ LANG.layoutAutosave | translate: { time: autoSaveHandler$ | async } }}
     </h2>
     <div
         class="resources-sidebar"

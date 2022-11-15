@@ -32,7 +32,6 @@ import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';

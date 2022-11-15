@@ -7,13 +7,12 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
@@ -28,8 +27,8 @@ import { pickFrom } from '@utils/general';
 export class RemoveSystemModalContent {
     @Input() closable = true;
 
-    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    LANG = staticLang;
 
     disconnectFromAccount: Process;
     system: NxSystem;
@@ -47,7 +46,6 @@ export class RemoveSystemModalContent {
     @ViewChild('disconnectAccountForm', { static: true }) disconnectAccountForm: NgForm;
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService,
         private processService: NxProcessService,
         private renderer: Renderer2,
@@ -55,7 +53,6 @@ export class RemoveSystemModalContent {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
-        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
         this.isLocal = environment.isLocal;
     }
@@ -84,12 +81,15 @@ export class RemoveSystemModalContent {
                 accountBlocked: this.credentialErrorHandler,
                 notAuthorized: this.credentialErrorHandler
             },
-            errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
+            errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
         }, () => {
             this.close(true);
-            const msg = this.LANG.toastMessage.system.deleted.success({
-                systemName: this.system.info.systemName || this.system.info.name
-            });
+            const msg = {
+                value: this.LANG.toastMessage.system.deleted.success,
+                params: {
+                    systemName: this.system.info.systemName || this.system.info.name
+                }
+            };
             this.toastService.notify(msg, this.CONFIG.toast.success);
         }, err => console.error(err));
     }

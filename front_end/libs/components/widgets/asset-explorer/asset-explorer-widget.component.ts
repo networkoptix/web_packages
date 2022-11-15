@@ -3,12 +3,11 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -56,7 +55,7 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
     };
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     loading = true;
     treeControl = new NestedTreeControl<ExplorerNode>(node => node.children);
     dataSource$: Observable<{ last: string, data: ExplorerNode[] }>;
@@ -73,11 +72,9 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
         cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
     ) {
         super(cd);
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
         this.dataSource$ = this.updater$.pipe(
             map(maxAge => maxAge === null ? this.card.config.maxAge : maxAge),
             switchMap(maxAge => {

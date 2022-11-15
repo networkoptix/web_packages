@@ -44,13 +44,14 @@
                     *ngIf="placeholderTitle"
                     [attr.name]="type"
                     class="placeholder-title"
-                    [innerText]="placeholderTitle"
+                    id="placeholderTitle"
+                    [innerText]="placeholderTitle | translate"
                 ></h2>
                 <div
                     *ngIf="message"
                     [attr.name]="type"
                     class="placeholder-message"
-                    [innerHTML]="message | safe: 'html'"
+                    [innerHTML]="message | translate | safe: 'html'"
                 ></div>
                 <button
                     *ngIf="showMainButton"

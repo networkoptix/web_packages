@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
@@ -23,7 +23,7 @@ export class NxKnowledgebaseService {
     prefetchedDocuments: { assetId: number, version?: number, state?: string }[] = [];
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     account: Account;
 
     basePath = '';

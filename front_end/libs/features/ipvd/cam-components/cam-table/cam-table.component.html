@@ -28,7 +28,7 @@
                                 <div class="caption d-flex">
                                     <div
                                         class="ellipsis"
-                                        [innerText]="header"
+                                        [innerText]="header | translate"
                                     ></div>
                                     <div
                                         [ngClass]="{ 'cam-table-show': !sortOrderASC }"
@@ -111,10 +111,10 @@
                     *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd"
                     dir="auto"
                 >
-                    <span>{{ 'ipvdDisclaimer' | translate: disclaimerParams }} </span>
+                    <span>{{ LANG.ipvdDisclaimer | translate: disclaimerParams }} </span>
                     <span
                         #ipvdRequest
-                        [innerHTML]="LANG.ipvdFeedback.request() | safe: 'html'"
+                        [innerHTML]="LANG.ipvdFeedback.request | translate | safe: 'html'"
                     ></span>
                 </p>
                 <button

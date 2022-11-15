@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxAccountService } from '@services/account.service';
@@ -15,7 +15,6 @@ import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
 import {
@@ -32,9 +31,10 @@ import {
     styleUrls: ['about.component.scss']
 })
 export class NxAboutComponent {
+    injector: Injector;
     CONFIG: IConfig;
     account: Account;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
     aboutCases = AboutTemplates;
     baseName = '';
@@ -77,14 +77,17 @@ export class NxAboutComponent {
         private route: ActivatedRoute,
         public router: Router,
         private ribbonService: NxRibbonService,
-        languageService: NxLanguageProviderService,
+
         private menusService: NxMenusService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        injector: Injector,
     ) {
         this.CONFIG = configService.config;
-        this.LANG = languageService.translations;
+
+        this.injector = injector;
+
         this.loadMenu(this.route.snapshot.paramMap.get('name'));
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
@@ -102,7 +105,9 @@ export class NxAboutComponent {
         this.baseName = baseName;
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
-            setTimeout(this.pageService.show404);
+            setTimeout(() => {
+                this.injector.get(NxPageService).redirect404();
+            });
             return;
         }
         return true;
@@ -111,8 +116,7 @@ export class NxAboutComponent {
     private updatePageMeta = (): void => {
         this.menusService.getMenu(this.menuName).pipe(
             tap(menu => {
-                this.pageService.pageTitle = menu.title;
-                this.pageService.pageDescription = menu.description;
+                this.pageService.pageTitle(menu.title, menu.description);
             }),
             untilDestroyed(this)
         ).toPromise();
@@ -206,14 +210,14 @@ export class NxAboutComponent {
         const ribbonActions: RibbonAction[] = [
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText(),
-                value: this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
+                text: this.LANG.ribbon.integration.backToEditText,
+                value: developers.landing.adminLink.replace('%ID%', id)
             }
         ];
         this.ribbonService.show(
             state
-                ? this.LANG.ribbon.integration.previewRibbon()
-                : this.LANG.ribbon.integration.publishedRibbon(),
+                ? this.LANG.ribbon.integration.previewRibbon
+                : this.LANG.ribbon.integration.publishedRibbon,
             ribbonActions
         );
     }

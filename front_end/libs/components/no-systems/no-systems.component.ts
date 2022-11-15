@@ -1,9 +1,8 @@
 import {
-    Component, OnInit, ViewEncapsulation
+    Component, ViewEncapsulation
 } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxPageService } from '@services/page.service';
 
 @Component({
@@ -13,21 +12,12 @@ import { NxPageService } from '@services/page.service';
     encapsulation: ViewEncapsulation.None
 })
 
-export class NxNoSystemsComponent implements OnInit {
-    LANG: LanguageI18NStaticTypes;
-
-    private setupDefaults(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.systems;
-    }
+export class NxNoSystemsComponent {
+    LANG = staticLang;
 
     constructor(
-        languageService: NxLanguageProviderService,
         private pageService: NxPageService
     ) {
-        this.LANG = languageService.translations;
-        this.setupDefaults();
-    }
-
-    ngOnInit(): void {
+        this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 }
