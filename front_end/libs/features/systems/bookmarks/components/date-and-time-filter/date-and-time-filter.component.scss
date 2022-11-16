@@ -1,0 +1,128 @@
+@use '@angular/material';
+@use 'mat';
+
+.dtf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 2.5rem;
+    padding: 0.75rem 1rem;
+
+    background-color: var(--bookmarks-filter-header-bg);
+
+    span {
+        font-size: 1rem;
+    }
+
+    button {
+        padding: 0 !important;
+        width: 1.25rem;
+        height: 1.25rem !important;
+
+        svg-icon {
+            display: flex;
+        }
+    }
+}
+
+.dtf-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: var(--bookmarks-filter-body-bg);
+
+    .quick-selects {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+
+        button {
+            height: 1.25rem !important;
+            font-size: 0.8rem !important;
+            max-width: none !important;
+            background-color: var(--bookmarks-filter-quick-select-bg);
+
+            &:hover {
+                background-color: var(--bookmarks-text-highlight-bg);
+            }
+
+            &.selected {
+                background-color: var(--brand-core);
+                color: var(--bookmarks-filter-filled-text);
+            }
+        }
+    }
+
+    @include material.button-theme(mat.$mat-test-theme);
+    @include material.datepicker-theme(mat.$mat-test-theme);
+
+    mat-calendar {
+        button {
+            &.mat-calendar-period-button {
+                height: initial !important;
+            }
+            &.mat-icon-button {
+                height: 40px !important;
+                border-radius: 50% !important;
+            }
+            &.mat-calendar-body-cell {
+                height: 100% !important;
+            }
+        }
+        thead th:first-child {
+            padding-left: 0 !important;
+        }
+        thead tr th {
+            color: initial;
+        }
+        // Resets for global button style
+
+        button.mat-icon-button {
+            border-radius: 2px !important;
+        }
+        .mat-calendar-table-header-divider::after {
+            left: 0;
+            right: 0;
+        }
+        .mat-calendar-content {
+            padding: 0;
+        }
+
+        .mat-calendar-body-cell-content {
+            border-radius: 2px;
+        }
+
+        .mat-calendar-body-selected {
+            background-color: var(--brand-core);
+        }
+        .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical),
+        .cdk-keyboard-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical),
+        .cdk-program-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+            background-color: var(--bookmarks-text-highlight-bg);
+            color: initial;
+        }
+        .mat-calendar-body-in-range {
+            .mat-calendar-body-cell-content {
+                color: var(--bookmarks-filter-filled-text);
+            }
+            &::before {
+                background-color: var(--brand-d1);
+            }
+        }
+    }
+
+    .time-inputs {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 1rem;
+        gap: 1rem;
+        & > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+    }
+}

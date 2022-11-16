@@ -1108,6 +1108,7 @@ export interface NewVersionAvailable {
 }
 
 export interface Search {
+    All:               (params?: Record<string, string | number>) => string;
     Any:               (params?: Record<string, string | number>) => string;
     Search:            (params?: Record<string, string | number>) => string;
     analytics:         (params?: Record<string, string | number>) => string;

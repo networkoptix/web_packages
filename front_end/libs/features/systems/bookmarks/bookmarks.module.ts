@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
+import { NxDateAndTimeFilterModule } from './components/date-and-time-filter/date-and-time-filter.module';
 
 const appRoutes: Routes = [
     {
@@ -26,6 +27,8 @@ const appRoutes: Routes = [
         CommonModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
+
+        NxDateAndTimeFilterModule,
     ],
     providers: [],
     declarations: [

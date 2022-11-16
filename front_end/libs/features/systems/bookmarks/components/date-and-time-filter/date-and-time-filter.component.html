@@ -1,0 +1,67 @@
+<div class="dtf-header">
+    <span translate>Date and Time</span>
+    <button
+        *ngIf="selected"
+        class="clear"
+        (click)="selected = null"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'close.svg'"
+            [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
+        ></svg-icon>
+    </button>
+</div>
+<div class="dtf-body">
+    <div class="quick-selects">
+        <button
+            translate
+            [ngClass]="{ selected: quickSelectMatch(lastDay) }"
+            (click)="selected = lastDay"
+            (mouseover)="preview = lastDay"
+            (mouseout)="preview = null"
+            (focus)="preview = lastDay"
+            (blur)="preview = null"
+        >
+            Last Day
+        </button>
+        <button
+            translate
+            [ngClass]="{ selected: quickSelectMatch(last7Days) }"
+            (click)="selected = last7Days"
+            (mouseover)="preview = last7Days"
+            (mouseout)="preview = null"
+            (focus)="preview = last7Days"
+            (blur)="preview = null"
+        >
+            Last 7 Days
+        </button>
+        <button
+            translate
+            [ngClass]="{ selected: quickSelectMatch(last30Days) }"
+            (click)="selected = last30Days"
+            (mouseover)="preview = last30Days"
+            (mouseout)="preview = null"
+            (focus)="preview = last30Days"
+            (blur)="preview = null"
+        >
+            Last 30 Days
+        </button>
+    </div>
+    <mat-calendar
+        [selected]="selected || preview"
+        (selectedChange)="selectedChange($event)"
+    ></mat-calendar>
+    <div class="time-inputs">
+        <div>
+            <span translate>From</span>
+            <!-- eslint-disable-next-line nx/template/no-untranslated -->
+            <div>TODO</div>
+        </div>
+        <div>
+            <span translate>To</span>
+            <!-- eslint-disable-next-line nx/template/no-untranslated -->
+            <div>TODO</div>
+        </div>
+    </div>
+</div>
