@@ -18,8 +18,8 @@ import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 
-import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
+import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';

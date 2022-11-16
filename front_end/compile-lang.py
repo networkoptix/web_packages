@@ -46,9 +46,15 @@ def merge_i18ns(path_to_translations):
         static_language = json.load(static_language)
         if not static_file_keys:
             static_file_keys = static_language
+        if 'language' in static_language:
+            del static_language['language']
+        if 'language' in static_file_keys:
+            del static_language['language']
         static_file = extract_static_values(static_language, static_file_keys)
 
     i18n_section = merge_json(base_file, static_file)
+    if path_to_translations == DEFAULT_PATH:
+        i18n_section['language'] = "en_US"
 
     with open(f"{path_to_translations}/language_compiled.json", "w") as outfile:
         json.dump(i18n_section, outfile, indent=4,

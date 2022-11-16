@@ -7,6 +7,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
+import { redirect } from '@app/variables/static-variables';
+
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxBootstrapProvider } from '../nx-bootstrap-provider';

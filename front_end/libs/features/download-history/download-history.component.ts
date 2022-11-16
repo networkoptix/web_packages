@@ -1,4 +1,4 @@
-import { isPlatformBrowser, TitleCasePipe } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -196,9 +196,6 @@ export class DownloadHistoryComponent implements OnInit {
 
         this.uriService
             .updateURI('/downloads/' + name, {})
-            .then(() => {
-                this.pageService.pageTitle = new TitleCasePipe().transform(name);
-            })
             .catch(error => {
                 console.error(error);
             });
