@@ -182,7 +182,7 @@
             "size": "校正範圍",
             "state": "狀態",
             "system": "系統",
-            "expires": "過期",
+            "expires": "到期日",
             "key": "Key"
         },
         "fromServer": {
@@ -370,7 +370,7 @@
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "移動雲端儲存裝置",
+                    "heading": "移動雲端儲存",
                     "action": "移動",
                     "success": "Cloud Storage upgraded successfully!"
                 },

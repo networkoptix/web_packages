@@ -182,7 +182,7 @@
             "size": "Tamaño",
             "state": "Estado",
             "system": "Sistema",
-            "expires": "Caduca",
+            "expires": "Expira",
             "key": "Llave"
         },
         "fromServer": {

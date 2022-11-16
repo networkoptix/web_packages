@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "共通"
             }
         },
         "mobile": {

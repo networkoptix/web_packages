@@ -376,7 +376,7 @@
                 },
                 "delete": {
                     "heading": "Cloudopslag verwijderen?",
-                    "action": "Verwijderen",
+                    "action": "Verwijder",
                     "success": "Cloudopslag succesvol verwijderd!"
                 }
             },
@@ -398,7 +398,7 @@
                     "body": "Cloud Storage met alle opgenomen gegevens kan eenvoudig worden overgedragen naar uw andere systeem zonder actieve Cloud Storage."
                 },
                 "delete": {
-                    "title": "Verwijderen",
+                    "title": "Verwijder",
                     "body": "U kunt Cloud Storage op elk moment van het systeem verwijderen. U kunt deze sleutel later gebruiken om opnieuw te activeren, als u dat wilt."
                 }
             },
