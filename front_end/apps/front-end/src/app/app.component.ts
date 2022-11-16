@@ -65,8 +65,8 @@ require('what-input');
                 >
                     <ng-template #cookieBanner></ng-template>
                     <router-outlet></router-outlet>
-                    <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
                 </div>
+                <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
             </div>
             <ng-container *ngIf="!reauthorizing">
                 <nx-pre-loader
