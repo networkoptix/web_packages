@@ -1,2 +1,2 @@
 call current_branch.bat
-crowdin download -b %CURRENT_BRANCH% --config crowdin-cloud.yaml %*
+crowdin download -b cloud-%CURRENT_BRANCH% --config cloud.yaml %*
