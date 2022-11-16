@@ -98,6 +98,9 @@ def replace_static(static_dir, customization_dir, description):
         config = json.load(file)
         apply_replacements(config, main_replacements, file)
 
+    with open(static_dir / 'language_i18n_static.json', 'r') as file:
+        titles = json.load(file).get('pageTitles', {})
+
     for _, folders, _ in os.walk(static_dir):
         for folder in folders:
             for _, _, files in os.walk(static_dir / folder):
@@ -105,10 +108,17 @@ def replace_static(static_dir, customization_dir, description):
                     if file == language_compiled:
                         with open(static_dir / folder / file, 'r+', encoding="utf8") as file:
                             lang = json.load(file)
-                            apply_replacements(
-                                lang['pageTitles'], {"%CLOUD_NAME%": "webadmin"})
+                            replace_page_titles(
+                                lang, {"%CLOUD_NAME%": "webadmin"}, titles)
                             apply_replacements(
                                 lang, main_replacements, file)
+
+
+def replace_page_titles(content, replacements, titles):
+    for title in titles.values():
+        for key, value in replacements.items():
+            if key in title and title in content:
+                content[title] = content[title].replace(key, value)
 
 
 def apply_replacements(content, main_replacements, file=None):
