@@ -1,5 +1,5 @@
 {
-    "language": "ro_RO",
+    "language": "en_US",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Administration": "Administration",
     "All Servers": "All Servers",
@@ -60,10 +60,10 @@
         },
         "Viewer": {
             "description": "Can view live video and browse the archive",
-            "label": "Telespectator"
+            "label": "Viewer"
         },
         "advancedViewer": {
-            "description": "Poate vizualiza video live, navighează în arhivă, configurează camerele, controlează PTZ etc",
+            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
             "label": "Advanced Viewer"
         },
         "cloudAdmin": {
@@ -92,7 +92,7 @@
         },
         "viewer": {
             "description": "Can view live video and browse the archive",
-            "label": "Telespectator"
+            "label": "Viewer"
         }
     },
     "account": {
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

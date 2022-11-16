@@ -1,5 +1,5 @@
 {
-    "language": "id_ID",
+    "language": "en_US",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Administration": "Administration",
     "All Servers": "All Servers",
@@ -457,7 +457,7 @@
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner",
-            "passwordRequired": "Katakunci dibutuhkan",
+            "passwordRequired": "Password is required",
             "passwordWrong": "Wrong password",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
@@ -523,7 +523,7 @@
         },
         "removeSystem": {
             "action": "Disconnect",
-            "message": "Anda akan memutuskan Sistem ini dari akun Anda. Anda tidak akan dapat mengakses Sistem ini lagi. Apakah kamu yakin?",
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
             "title": "Disconnect System?"
         },
         "renewAuth": {
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

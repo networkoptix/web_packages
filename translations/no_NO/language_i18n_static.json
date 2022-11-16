@@ -1,265 +1,265 @@
 {
     "language": "en_US",
-    "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
-    "Administration": "Administrasjon",
-    "All Servers": "Alle servere",
-    "Download %VMS_NAME%": "Last ned %VMS_NAME%",
-    "For developers": "For utviklere",
-    "Integrations (β)": "Integrasjoner (β)",
-    "Privacy": "Personvern",
-    "Support": "Brukerstøtte",
-    "Terms": "Vilkår",
-    "Developers Console": "Utviklerkonsoll",
+    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "Administration": "Administration",
+    "All Servers": "All Servers",
+    "Download %VMS_NAME%": "Download %VMS_NAME%",
+    "For developers": "For developers",
+    "Integrations (β)": "Integrations (β)",
+    "Privacy": "Privacy",
+    "Support": "Support",
+    "Terms": "Terms",
+    "Developers Console": "Developers Console",
     "productName": "",
     "monitoring": {
-        "unavailable": "Kontroller at den angitte serveren er online, og prøv igjen."
+        "unavailable": "Make sure the specified server is online and try again."
     },
     "alarmTypes": {
-        "Servers": "Servere",
-        "Cameras": "Kameraer",
-        "Storage Locations": "Lagringssteder",
-        "Network Interfaces": "Nettverksgrensesnitt"
+        "Servers": "Servers",
+        "Cameras": "Cameras",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
         "offline": "Offline",
-        "error": "Feil",
-        "warning": "Advarsler"
+        "error": "Errors",
+        "warning": "Warnings"
     },
     "alertFilters": {
-        "all": "Alle varslinger",
-        "warning": "Kun advarsler",
-        "error": "Kun feil"
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
     },
     "deviceTypes": {
-        "All Device Types": "Alle enhetstyper",
+        "All Device Types": "All Device Types",
         "servers": "Server",
-        "cameras": "Kameraer",
-        "storages": "Lagring",
-        "networkInterfaces": "Grensesnitt"
+        "cameras": "Cameras",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
     },
     "accessRoles": {
         "Administrator": {
-            "description": "Ubegrenset tilgang, inkludert evnen til å dele",
+            "description": "Unrestricted access including the ability to share",
             "label": "Administrator"
         },
         "Advanced Viewer": {
-            "description": "Kan se live video, bla gjennom arkivet, kontrollere PTZ osv",
-            "label": "Avansert Bruker"
+            "description": "Can view live video, browse the archive, control PTZ etc",
+            "label": "Advanced Viewer"
         },
         "Custom": {
-            "description": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser",
-            "label": "Egendefinert"
+            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
+            "label": "Custom"
         },
         "Live Viewer": {
-            "description": "Kan bare vise live video",
-            "label": "Live Bruker"
+            "description": "Can only view live video",
+            "label": "Live Viewer"
         },
         "Owner": {
-            "description": "Ubegrenset tilgang, inkludert muligheten til å dele og koble til / koble systemet fra skyen",
-            "label": "Eier"
+            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+            "label": "Owner"
         },
         "Viewer": {
-            "description": "Kan se live video og bla gjennom arkivet",
-            "label": "Bruker"
+            "description": "Can view live video and browse the archive",
+            "label": "Viewer"
         },
         "advancedViewer": {
-            "description": "Kan se live video, bla gjennom arkivet, konfigurere kameraer, styre PTZ osv",
-            "label": "Avansert Bruker"
+            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
+            "label": "Advanced Viewer"
         },
         "cloudAdmin": {
-            "description": "Kan konfigurere System og dele det",
+            "description": "Can configure System and share it",
             "label": "Administrator"
         },
         "custom": {
-            "description": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser",
-            "label": "Egendefinert"
+            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
+            "label": "Custom"
         },
         "customRole": {
-            "description": "Tilpasset brukerrolle spesifisert i System",
-            "label": "Egendefinerte roller"
+            "description": "Custom user role specified in System",
+            "label": "Custom role"
         },
         "disabled": {
-            "description": "Brukeren er deaktivert og kan ikke logge på System",
-            "label": "Deaktivert"
+            "description": "User is disabled and cannot log in to System",
+            "label": "Disabled"
         },
         "liveViewer": {
-            "description": "Kan bare vise live video",
-            "label": "Live Bruker"
+            "description": "Can only view live video",
+            "label": "Live Viewer"
         },
         "owner": {
-            "description": "Ubegrenset tilgang, inkludert muligheten til å dele og koble til / koble systemet fra skyen",
-            "label": "Eier"
+            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+            "label": "Owner"
         },
         "viewer": {
-            "description": "Kan se live video og bla gjennom arkivet",
-            "label": "Bruker"
+            "description": "Can view live video and browse the archive",
+            "label": "Viewer"
         }
     },
     "account": {
-        "account": "Konto",
-        "key": "Nøkkel",
-        "accountSavedSuccess": "Din konto er lagret",
-        "accountSettings": "Kontoinnstillinger",
-        "activationLinkSent": "Aktiveringslink sendt",
-        "agreementAccepted": "Avtalen er akseptert",
-        "changePassword": "Bytt passord",
-        "security": "Sikkerhet",
-        "newPasswordLabel": "Nytt passord",
-        "passwordChangedSuccess": "Passordet ble lagret",
-        "saveChanges": "Lagre"
+        "account": "Account",
+        "key": "Key",
+        "accountSavedSuccess": "Your account is successfully saved",
+        "accountSettings": "Account Settings",
+        "activationLinkSent": "Activation Link Sent",
+        "agreementAccepted": "Agreement has been accepted",
+        "changePassword": "Change Password",
+        "security": "Security",
+        "newPasswordLabel": "New password",
+        "passwordChangedSuccess": "Password successfully saved",
+        "saveChanges": "Save"
     },
     "activeActions": {
-        "resetPassword": "Tilbakestille passord",
-        "sendConfirm": "Send aktiveringslink igjen",
-        "setNewPassword": "Lagre passord",
-        "setNewPasswordLabel": "Nytt passord"
+        "resetPassword": "Reset Password",
+        "sendConfirm": "Resend activation link",
+        "setNewPassword": "Save password",
+        "setNewPasswordLabel": "New password"
     },
     "authorize": {
-        "loginCloudHeader": "Logg inn på %CLOUD_NAME%",
-        "connectHeader": "Koble systemet til %CLOUD_NAME%",
-        "expiredHeader": "Økten din har utløpt",
-        "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
-        "connectSubheader": "For å få tilgang til den fra hvor som helst og aktivere tilleggsfunksjoner",
-        "expiredSubheader": "Vennligst logg inn igjen 🔐",
-        "connectAdditional": "Denne kontoen får eiertilgangsnivå",
-        "createText": "Opprett konto",
-        "setupText": "Sett opp Ikke-cloud system",
-        "asAccountSubheader": "Som",
-        "toAccountSubheader": "Til",
+        "loginCloudHeader": "Log in to %CLOUD_NAME%",
+        "connectHeader": "Connect System to %CLOUD_NAME%",
+        "expiredHeader": "Your session has expired",
+        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
+        "connectSubheader": "To access it from anywhere and enable additional features",
+        "expiredSubheader": "Please, log in again",
+        "connectAdditional": "This account will get owner access level",
+        "createText": "Create Account",
+        "setupText": "Setup Non-cloud System",
+        "asAccountSubheader": "As",
+        "toAccountSubheader": "To",
         "forAccountSubheader": "For {accountEmail}",
-        "passwordDisconnect": "å koble fra systemet fra %CLOUD_NAME%",
-        "passwordMerge": "å slå sammen systemer",
-        "passwordBackup": "å lage sikkerhetskopi",
-        "passwordRestore": "å gjenopprette systemet fra sikkerhetskopi",
-        "passwordReset": "å tilbakestille serveren",
-        "passwordRestart": "å restarte serveren",
-        "passwordDetach": "å koble fra serveren",
-        "passwordTransfer": "å overføre systemet",
-        "expiredAccountSubheader": "Vennligst logg inn igjen 🔐",
-        "createAccountHeader": "Opprett %CLOUD_NAME% konto",
-        "activateHeader": "Aktiver %CLOUD_NAME% -konto",
-        "createdText": "Konto opprettet!",
-        "activatedText": "Konto aktivert!",
-        "createdAdditional": "<p class=\"mb-2\">Bekreftelsesmelding med aktiviseringslenken blir sendt til {accountEmail}.</p><p>Vennligst aktiver kontoen og gå tilbake her for å fullføre prosessen.</p>",
-        "activatedAdditional": "Nå kan du fortsette å logge på %CLOUD_NAME% her eller andre steder",
-        "passResetHeader": "Tilbakestille passord",
-        "newPassHeader": "Angi et nytt passord",
-        "newPassConfirmText": "Passord er angitt!",
-        "newPassInvalidCode": "Kan ikke lagre passord: Bekreftelseskoden er allerede brukt eller feil",
-        "notSecureText": "Hvis du fortsetter vil du gi<br><span class='error-label'>{ redirectUrl }</span><br>tilgang til %CLOUD_NAME% -kontoen din.",
-        "confirmHeader": "System koblet til %CLOUD_NAME%!",
-        "loginError": "Kan ikke koble til %CLOUD_NAME%",
-        "loginErrorAdditional": "Vennligst prøv igjen eller logg på systemet direkte med din lokale konto.",
-        "connectErrorAdditional": "Vennligst prøv igjen senere.",
-        "setupErrorAdditional": "<p class=\"mb-2\">Vennligst prøv igjen eller sett opp et ikke-skysystem.</p><p>Du vil kunne koble den til %CLOUD_NAME% når som helst etterpå.</p>",
-        "connectedText": "System koblet til %CLOUD_NAME%",
-        "setupConnectedText": "System koblet til",
-        "stayLoggedInHelpText": "Avmerkingsboks for å forbli pålogget",
-        "termsAndConditionsHelpText": "Avmerkingsboks godtar vilkårene og personvernreglene",
-        "copiedToClipboard": "Kopiert til utklippstavlen",
+        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
+        "passwordMerge": "to merge systems",
+        "passwordBackup": "to create backup",
+        "passwordRestore": "to restore system from backup",
+        "passwordReset": "to reset server",
+        "passwordRestart": "to restart server",
+        "passwordDetach": "to detach server",
+        "passwordTransfer": "to transfer system",
+        "expiredAccountSubheader": "Please, log in again as",
+        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "activateHeader": "Activate %CLOUD_NAME% Account",
+        "createdText": "Account Created!",
+        "activatedText": "Account Activated!",
+        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
+        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "passResetHeader": "Reset Password",
+        "newPassHeader": "Set New Password",
+        "newPassConfirmText": "Password is set!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "confirmHeader": "System connected to %CLOUD_NAME%!",
+        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "connectErrorAdditional": "Please try again later.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "connectedText": "System connected to %CLOUD_NAME%",
+        "setupConnectedText": "System connected",
+        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
+        "copiedToClipboard": "Copied to clipboard",
         "authCode": {
-            "message": "Skriv inn en kode fra autentiseringsappen din for å bekrefte at det virkelig er du som prøver å {suffix}",
-            "newPass": "angi et nytt passord",
-            "login": "logg Inn"
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
+            "newPass": "set a new password",
+            "login": "log in"
         },
-        "emailSent": "E-post er sendt!"
+        "emailSent": "Email sent!"
     },
     "cameraFilters": {
-        "H265": "H.265 kameraer",
-        "IO": "I/O-moduler",
-        "TwWayAudio": "2-veis lydenheter",
-        "aptz": "Kameraer med avansert PTZ",
-        "audio": "Kameraer med -veis lyd",
-        "encoder": "Enkoder",
-        "fisheye": "Fisheye-kameraer",
-        "highRes": "Ekstra høyoppløselige kameraer",
-        "multiSensor": "Multisensor kameraer",
-        "ptz": "PTZ kameraer"
+        "H265": "H.265 Cameras",
+        "IO": "I / O modules",
+        "TwWayAudio": "2-way audio devices",
+        "aptz": "Cameras with advanced PTZ",
+        "audio": "Cameras with audio",
+        "encoder": "Encoders",
+        "fisheye": "Fisheye cameras",
+        "highRes": "Extra high resolution cameras",
+        "multiSensor": "Multi-sensor cameras",
+        "ptz": "PTZ cameras"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Størrelse",
-            "state": "Tilstand",
+            "size": "Size",
+            "state": "State",
             "system": "System",
-            "expires": "Utløper",
-            "key": "Nøkkel"
+            "expires": "Expires",
+            "key": "Key"
         },
         "fromServer": {
-            "ACTIVE": "Aktiv",
+            "ACTIVE": "Active",
             "INACTIVE": "Inactive",
-            "Unassigned": "Ikke tilordnet",
-            "until": "{size} til {expires}",
-            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Denne lisensen ble deaktivert mer enn én gang OG ble reaktivert for mindre enn 24 timer siden",
-            "License key is already activated": "Lisensnøkkel er allerede aktivert",
-            "Maximum number of items is 10000": "Maksimalt antall produkter er 10000",
-            "This Cloud license does not exist": "Denne Cloud lisensen finnes ikke",
-            "This license is already activated": "Denne lisensen er allerede aktivert",
-            "This license is not activated": "Denne lisensen er ikke aktivert",
-            "This license has already expired": "Denne lisensen har allerede utløpt",
-            "Already has a cloud storage license active": "Har allerede en aktiv skylagringslisens",
-            "Cloud System ID does not match credentials used": "Cloud system ID samsvarer ikke med legitimasjonen som er brukt",
-            "Not Authorized for cloud system": "Ikke autorisert for skysystem",
-            "This license is not currently activated": "Denne lisensen er ikke aktivert for øyeblikket",
-            "This license has no deactivations remaining": "Denne lisensen har ingen deaktiveringer igjen",
-            "Cloud system Id does not match license activation": "Skysystem-ID samsvarer ikke med lisensaktivering",
-            "used": "{used} av {total} ({percent}%) er brukt",
-            "available": "Tilgjengelig",
+            "Unassigned": "Unassigned",
+            "until": "{size} until {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "License key is already activated": "License key is already activated",
+            "Maximum number of items is 10000": "Maximum number of items is 10000",
+            "This Cloud license does not exist": "This Cloud license does not exist",
+            "This license is already activated": "This license is already activated",
+            "This license is not activated": "This license is not activated",
+            "This license has already expired": "This license has already expired",
+            "Already has a cloud storage license active": "Already has a cloud storage license active",
+            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Not Authorized for cloud system": "Not Authorized for cloud system",
+            "This license is not currently activated": "This license is not currently activated",
+            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "used": "{used} of {total} ({percent}%) is used",
+            "available": "Available",
             "usedSpace": "{usageSpace} ({percentage}%)"
         },
-        "notUsedWarning": "Skylagringen brukes ikke til opptak. Gå til <a href=\"{serverSettings}\">Serverinnstillinger</a> for å konfigurere den."
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {
             "created": {
-                "title": "Konto opprettet",
-                "message": "Bekreftelsesmelding med aktiveringslenken er sendt til {email}"
+                "title": "Account Created",
+                "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
-                "title": "Kontoen er aktivert"
+                "title": "Account successfully activated"
             }
         },
         "cameraLinks": {
-            "copyActiveText": "kopiert til utklippstavlen",
-            "copyDefaultText": "kopier",
-            "copyToClipboard": "kopier til utklippstavle",
-            "highStream": "Høy kvalitet",
-            "lowStream": "Lav kvalitet",
-            "transcoding": "Transkoding",
-            "unknown": "Ukjent"
+            "copyActiveText": "copied to clipboard",
+            "copyDefaultText": "copy",
+            "copyToClipboard": "copy to clipboard",
+            "highStream": "High stream",
+            "lowStream": "Low stream",
+            "transcoding": "Transcoding",
+            "unknown": "Unknown"
         },
         "cameraStates": {
-            "error": "Feil",
-            "errorLoading": "En feil oppstod under lasting av videoen.",
-            "flashOrWebmRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for å spille av video i Internet Explorer.",
-            "flashRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> for å spille av videoer.",
-            "iOSVideoTooLarge": "iOS støtter ikke video som er større enn fullHD (2MP: 1920x1080).",
-            "ieNoWebm": "Vennligst installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
-            "ieWin10": "Vennligst bruk Microsoft Edge- eller Google Chrome-nettlesere.",
-            "noArmSupport": "Denne nettleseren eller enheten støtter ikke videoavspilling fra ARM-baserte servere.",
-            "noData": "Ingen opptak",
-            "noFormat": "Denne nettleseren støtter ikke videoavspilling fra dette kameraet.",
-            "offline": "Frakoblet",
-            "ubuntuNX": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chromium-nettleseren i stedet.",
-            "unauthorized": "Autentisering kreves"
+            "error": "Error",
+            "errorLoading": "An error occurred while loading this video.",
+            "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
+            "flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
+            "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
+            "ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
+            "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
+            "noData": "No data",
+            "noFormat": "This browser does not support video playback from this camera.",
+            "offline": "Offline",
+            "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
+            "unauthorized": "Authentication required"
         },
-        "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
-        "copiedToClipboard": "Kopiert til utklippstavlen",
-        "login": "innlogging",
-        "recordingSettingsWarning": "Oppdater manglende innspillingsinnstillinger.",
-        "disableMotionWarning": "Opptaksmodus endres til \"Ta opp alltid\"",
+        "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+        "copiedToClipboard": "Copied to clipboard",
+        "login": "login",
+        "recordingSettingsWarning": "Please update missing recording settings.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
-            "always": "Alltid opptak",
-            "motion": "Spill inn bare bevegelse",
-            "motionLowRes": "Bevegelse + lavoppløselig"
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
         },
         "resolution": {
-            "various": "Ulike verdier –",
+            "various": "– Different Values –",
             "auto": "Auto",
             "best": "Best",
-            "high": "Høy",
+            "high": "High",
             "medium": "Medium",
-            "low": "Lav"
+            "low": "Low"
         },
         "intervals": {
             "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
@@ -269,211 +269,211 @@
             "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
             "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
-        "general": "Generell",
-        "generalError": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
-        "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
+        "general": "General",
+        "generalError": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
-        "searchCamPlaceholder": "Søk",
+        "searchCamPlaceholder": "Search",
         "system": "system",
-        "systemHasNoCameras": "Ingen kameraer",
-        "systemHasNoCamerasMessage": "Det er ingen tilgjengelige kameraer for deg i systemet. <br><br>Koble noen få kameraer til serverens lokale nettverk for å gjøre dem synlige, eller be systemadministratoren om å endre tilgangsnivået ditt.",
-        "systemNewVersion": "Oppdater systemet ditt",
-        "systemNewVersionMessage": "Din gjeldende versjon er ikke kompatibel med denne funksjonen. Vennligst oppdater dine servere til den siste versjonen for å bruke denne funksjonen.",
-        "systemNoAlerts": "Ingen varsler",
-        "systemNoAlertsMessage": "Systemet ditt må ha det bra!",
-        "systemOffline": "System frakoblet",
-        "systemOfflineMessage": "Dette systemet er offline og kan ikke nås akkurat nå.",
-        "systemServerError": "Intern server feil",
-        "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
-        "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
-        "systemUnresponsive": "Systemet ser ut til å ikke reagere. Last inn siden på nytt.",
-        "unknown": "Ukjent",
-        "vendor": "Leverandør",
-        "model": "Modell",
-        "ip": "IP adresse",
+        "systemHasNoCameras": "No Cameras",
+        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "System Offline",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Internal server error",
+        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "unknown": "Unknown",
+        "vendor": "Vendor",
+        "model": "Model",
+        "ip": "IP Address",
         "server": "Server",
         "os": "OS",
-        "version": "Versjon",
+        "version": "Version",
         "voiceCommands": {
-            "clear search": "nullstill søk",
-            "collapse all servers": "kollapse alle servere",
-            "collapse server": "utvider server + [servernavn]",
-            "expand all servers": "utvide alle servere",
-            "expand server": "utvider server + [servernavn]",
-            "help": "hjelp | vis kommandoer",
-            "live": "gå til live | vis meg live",
+            "clear search": "clear search",
+            "collapse all servers": "collapse all servers",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "expand all servers",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
             "pause": "pause",
-            "play": "spill av",
-            "search": "finn + [tekst for søkefelt]",
-            "stop listening": "slutt å lytte",
-            "view": "se + [kamera navn]"
+            "play": "play",
+            "search": "find + [text for searchbar]",
+            "stop listening": "stop listening",
+            "view": "view + [camera name]"
         },
-        "viewingOutdatedReport": "Du ser på en utdatert rapport."
+        "viewingOutdatedReport": "You are viewing an outdated report."
     },
     "components": {
         "widgets": {
-            "lastUpdated": "Sist oppdatert { date }",
-            "updatingIn": "Oppdaterer om { time } sekunder"
+            "lastUpdated": "Last Updated { date }",
+            "updatingIn": "Updating in { time } seconds"
         }
     },
-    "cookieWarning": "Vi brukte informasjonskapsler for å forbedre opplevelsen din på nettstedet vårt. De hjelper oss også å forstå hvordan nettstedet vårt brukes. Finn ut mer og angi dine cookies-preferanser&nbsp; | her | . Ved å fortsette å bruke nettstedet vårt samtykker du til å bruke informasjonskapslene våre.",
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard-redigering er aktivert",
-        "dashboardLocked": "Dashbordet er låst",
-        "unlockToUpload": "Lås opp dashbordet for å laste opp konfigurasjon fra json",
-        "unlockToMove": "Lås opp dashbordet for å flytte widgets"
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
     },
     "devConsole": {
-        "create": "Opprett"
+        "create": "Create"
     },
     "dialogs": {
         "twoFa": {
-            "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
-            "wizardWarningDescr": "Tidligere versjoner av %VMS_NAME% klient støtter ikke tofaktorautentisering.",
-            "installAuthApp": "Installer en autentiseringsapp på mobilenheten din hvis du ikke allerede har en. %CLOUD_NAME% støtter <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> eller <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Tofaktorautentisering er nå <strong>aktivert</strong> for %CLOUD_NAME% -kontoen din!"
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
         },
         "addUser": {
-            "alreadyExists": "Denne e-posten er allerede registrert i %systemName% -systemet"
+            "alreadyExists": "This email has already been registered in the %systemName% system"
         },
         "buttons": {
-            "cancel": "Avbryt",
-            "createAccount": "Opprette ny konto",
-            "delete": "Slett",
-            "deleteAccount": "Slett konto",
-            "disable": "Deaktiver",
-            "enable": "Aktiver",
-            "download": "Last ned %VMS_NAME%",
-            "logoutAuthorised": "Logg ut",
+            "cancel": "Cancel",
+            "createAccount": "Create New Account",
+            "delete": "Delete",
+            "deleteAccount": "Delete Account",
+            "disable": "Disable",
+            "enable": "Enable",
+            "download": "Download %VMS_NAME%",
+            "logoutAuthorised": "Log Out",
             "ok": "OK",
-            "remove": "Fjern",
-            "stayAs": "Forbli logget som {email} ",
-            "stayLoggedIn": "Forbli innlogget"
+            "remove": "Remove",
+            "stayAs": "Stay logged as {email} ",
+            "stayLoggedIn": "Stay Logged In"
         },
         "cloudStorage": {
-            "title": "Cloud-lagring",
-            "enableStorage": "Aktiver skylagring",
-            "otherSystem": "Annet system...",
-            "initial": "Vi tilbyr {compCapacity} gratis skylagring per system for å komme i gang.",
-            "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {vmsName} klienten.",
-            "camera": "kamera",
-            "cameras": "kameraer",
+            "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "camera": "camera",
+            "cameras": "cameras",
             "actions": {
                 "activate": {
-                    "heading": "Aktiver Sky-lagring",
-                    "action": "Aktiver",
-                    "success": "Sky-lagring er aktivert!"
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
                 },
                 "modify": {
-                    "heading": "Endre Sky-lagring",
-                    "action": "Endre",
-                    "success": "Sky-lagring ble oppgradert!"
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "Flytt skylagring",
-                    "action": "Flytt",
-                    "success": "Sky-lagring ble oppgradert!"
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
-                    "heading": "Slett Sky-lagring?",
-                    "action": "Slett",
-                    "success": "Sky-lagring ble slettet!"
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
                 }
             },
             "usageLabels": {
-                "currentRecordings": "Aktuelle opptak",
-                "whenFullyUsed": "Ved full bruk",
-                "amountUsed": "Benyttet",
-                "archiveFrom": "Arkiv fra",
-                "recordingBitrate": "Opptak Bitrate",
-                "delayFromLive": "Forsinkelse fra live"
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
             },
             "information": {
                 "update": {
-                    "title": "Endre",
-                    "body": "Du kan endre gjeldende Cloud Storage-størrelse i systemet ved å bruke den nye nøkkelen. Alle registrerte data vil bli lagret."
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Flytt",
-                    "body": "Cloud Storage med alle registrerte data kan enkelt overføres til ditt andre system uten aktiv Cloud Storage."
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Slett",
-                    "body": "Du kan fjerne Cloud Storage fra systemet når som helst. Du kan bruke denne nøkkelen senere for reaktivering, hvis du vil."
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
             "remove": {
-                "success": "Skylagring ble fjernet fra systemet",
-                "errorPrefix": "Feil ved fjerning av skylagring"
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
             },
             "activationError": {
-                "title": "Kan ikke aktivere skylagring",
-                "message": "Du har allerede totalt <volume> skylagring lagt til systemene dine, og kan ikke legge til mer. <br/><br/>Du kan slette lagring fra et annet system i stedet eller flytte det til dette. "
+                "title": "Cannot Enable Cloud Storage",
+                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
             },
             "systemDisconnectError": {
-                "title": "Kan ikke koble fra systemet fra %CLOUD_NAME%",
-                "message": "Dette systemet har skylagring med noen arkiver på. <br/><br/>Skylagring må slettes manuelt før systemet kobles fra %CLOUD_NAME%."
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Flytt skylagring",
-                "success": "Lagringsplass flyttet",
-                "errorPrefix": "Feil ved flytting av skylagring",
-                "notFound": "Lagring ikke funnet. Lagring kan ha blitt flyttet eller slettet av en annen bruker",
+                "title": "Move Cloud Storage",
+                "success": "Storage successfully moved",
+                "errorPrefix": "Error moving cloud storage",
+                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
                 "status": {
-                    "offline": "Skylagring kan ikke flyttes til offline-systemer."
+                    "offline": "Cloud storage cannot be moved to offline systems."
                 }
             },
             "enableCloudStorage": {
-                "success": "Skylagring aktivert",
-                "errorPrefix": "Feil ved aktivering av skylagring"
+                "success": "Cloud Storage Enabled",
+                "errorPrefix": "Error Enabling Cloud Storage"
             },
             "noOtherSystemsError": {
-                "message": "Du kan bare flytte skylagring mellom systemer du er eier av. <br/><br/>Koble et system til %CLOUD_NAME% ved hjelp av skykontoen din for å kunne flytte skylagring til den."
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
             }
         },
         "changeStorage": {
-            "support": "Hvis du har tenkt å flytte analysedata til et annet lagringssted, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> før du fortsetter."
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
         },
         "merge": {
-            "adminPasswordTitle": "Skriv inn passord til eierens konto i <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Passordet for admin-brukeren er feil",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} er koblet til %CLOUD_NAME%. Skysystemer kan bare slås sammen fra %CLOUD_NAME%.",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
-            "checking": "Kontrollerer...",
+            "checking": "Checking...",
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Koble til systemet du ønsker å slå sammen med dette til <strong>%CLOUD_NAME%</strong> eller slå sammen lokalt med <strong>%VMS_NAME%</strong>-klienten.",
-            "failedToFindAnySystemHeader": "Kunne ikke finne noe system å slå sammen med",
-            "failedToFindAnySystem": "Sørg for at du har eierrollen i Clouden du vil slå sammen med. Eller at systemet du ønsker å slå sammen med er tilgjengelig over det lokale nettverket til gjeldende system.",
-            "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
-            "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
+            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "siste versjon",
+            "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeFailedTitle": "Systemsammenslåing mislyktes",
+            "mergeFailedTitle": "System merge failed",
             "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
-            "mergeSystemsTitle": "Slå sammen nåværende system med",
-            "noServerFound": "Ingen server funnet",
-            "newSystemDisplayName": "Nytt system",
-            "otherSystem": "Annet system...",
-            "ownerCanMergeText": "Du kan bare slå sammen systemer der du er eieren",
-            "passwordRequired": "Passord er påkrevd",
-            "passwordWrong": "Feil passord",
+            "mergeSystemsTitle": "Merge current system with",
+            "noServerFound": "No server found",
+            "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "Password is required",
+            "passwordWrong": "Wrong password",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": "Vi anbefaler deg å rådføre deg med teknisk support, før du fortsetter.",
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
-                "useCloudMerge": "Kan ikke slå sammen systemer som er bundet til skyen",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
                 "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
             },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
-            "serverVersionOld": "Denne serveren har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det til det nyeste versjon å slå sammen med den nåværende.",
+            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
@@ -482,98 +482,98 @@
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
-            "urlEmpty": "Skriv inn serveradressen",
-            "urlNotValid": "Angi gyldig URL",
-            "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
-            "update": "Oppdater dem til&nbsp; den nyeste versjonen °"
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
             "system2faDisabled": "Two-factor authentication is not required for this system.",
-            "storageSettingsSaved": "Innstillinger for lagring lagret.",
-            "storageSettingsNotSaved": "Kunne ikke lagre lagringsinnstillingene.",
-            "settingsSaved": "Innstillinger lagret.",
-            "settingsNotSaved": "Kunne ikke lagre innstillingene.",
-            "logLevelsSaved": "Logg nivå(er) lagret.",
-            "logLevelsNotSaved": "Kunne ikke lagre loggnivå (er).",
-            "failedToSend": "Meldingen ble ikke sendt.",
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "failedToSend": "Message has failed to send.",
             "placeholders": {
-                "feedback": "Pass på at du inkluderer din kameramodell og produsent..."
+                "feedback": "Make sure you include your camera model and manufacturer..."
             },
-            "sent": "Meldingen er sendt.",
+            "sent": "Message has been sent.",
             "subject": {
                 "integration_feedback": "Feedback for integration {asset}",
                 "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
+                "ipvd_feedback_page": "Feedback for cameras page",
                 "sales_inquiry": "Sales inquiry for {asset}",
                 "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
                 "integration": "Get in touch with {companyName}",
                 "ipvd_feedback_device": "Feedback about {asset}",
-                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
+                "ipvd_feedback_page": "Feedback for cameras page"
             },
             "twoFactor": {
-                "required": "Tofaktorautentisering er nødvendig.",
+                "required": "Two-factor authentication is required.",
                 "configure": "You can configure it in your",
-                "accountLink": "kontoinnstillinger",
-                "codeRequired": "Kode kreves"
+                "accountLink": "account settings",
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
-            "action": "Koble fra",
-            "message": "Du er i ferd med å koble fra dette systemet fra kontoen din. Du vil ikke kunne få tilgang til dette systemet lenger. Er du sikker?",
-            "title": "Koble fra systemet?"
+            "action": "Disconnect",
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
         },
         "renewAuth": {
-            "action": "Innlogging",
+            "action": "Login",
             "message": "Please log in again.",
-            "title": "Økten din har utløpt"
+            "title": "Your session has expired"
         },
         "systemGroups": {
-            "createdInRoot": "Ny gruppe vil bli opprettet i toppnivå",
-            "createdInCurrentGroup": "Ny gruppe vil bli opprettet i gjeldende gruppe"
+            "createdInRoot": "New group will be created in root",
+            "createdInCurrentGroup": "New group will be created in current group"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
-            "error": "Feil",
-            "success": "Suksess",
-            "changeAccount": "Du er allerede logget inn som {email}",
+            "error": "Error",
+            "success": "Success",
+            "changeAccount": "You are already logged in as {email}",
             "changePasswordFor": "Change Password for User \"{username}\"",
-            "deleteUser": "Slett bruker?",
-            "failedLoginTo": "Kunne ikke logge inn på {systemName}",
-            "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
-            "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
-            "removeUser": "Vil du fjerne brukeren",
-            "serversDetach": "Koble server&nbsp;<strong>{ title }</strong>&nbsp;fra gjeldende system?",
-            "serversReset": "Tilbakestille server&nbsp;<strong>{ title }</strong>&nbsp;til standardinnstillingene?",
-            "serversRestart": "Start server på nytt&nbsp;<strong>{ title }</strong>?"
+            "deleteUser": "Delete user?",
+            "failedLoginTo": "Failed to login to {systemName}",
+            "loggedFromOtherAccount": "You will be logged in with a different account",
+            "noClientDetected": "Install %VMS_NAME% to view your System",
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% -portalen og deaktiver tofaktorautentisering for å slette kontoen din."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
-            "action": "Innlogging",
+            "action": "Login",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
         "appTypes": {
-            "bundle": "Klient og server",
-            "camera_sdk": "Videokilde SDK",
-            "client": "Kun klient",
+            "bundle": "Client and Server",
+            "camera_sdk": "Video Source SDK",
+            "client": "Client only",
             "metadata_sdk": "Metadata SDK",
-            "package": "Pakke",
-            "server": "Kun Server",
-            "servertool": "Konfigurasjonsverktøy",
-            "storage_sdk": "Lagrings SDK",
-            "video_source_sdk": "Videokilde SDK"
+            "package": "Package",
+            "server": "Server only",
+            "servertool": "Configuration tool",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Video Source SDK"
         },
         "groups": {
             "android": {
@@ -603,7 +603,10 @@
                 "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Vindu"
+                "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {
@@ -627,79 +630,79 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betaer",
-            "patch": "Fiks",
-            "patches": "Fikser",
-            "rc": "Utsendelseskandidater",
-            "release": "Utgivelse",
-            "releases": "Utgivelser"
+            "betas": "Betas",
+            "patch": "Patch",
+            "patches": "Patches",
+            "rc": "Release Candidate",
+            "release": "Release",
+            "releases": "Releases"
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
-        "DUPLICATE_MEDIASERVER_FOUND": "Noen server lister som eksisterende i begge systemene - i den valgte og i den nåværende.<br>Fjern offline og inkompatible servere fra hvert system, og prøv igjen.",
-        "EmailAlreadyExists": "Denne e-posten er allerede registrert",
-        "FAIL": "System <strong>{failedSystem}</strong> er frakoblet.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> er frakoblet.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Some server lists as existing in both Systems – in the selected and in the current one.<br>Remove offline and incompatible servers from each System and try again.",
+        "EmailAlreadyExists": "This Email is already registered",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This authorization method is forbidden. Please contact your system administrator.": "Denne autorisasjonsmetoden er forbudt. Ta kontakt med systemadministratoren din.",
-        "This user does not exist.": "Denne brukeren eksisterer ikke.",
+        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
+        "This user does not exist.": "This user does not exist.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
-        "This user has been disabled by a system administrator.": "Denne brukeren har blitt deaktivert av en systemadministrator.",
-        "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
+        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
         "fail": "{failedSystem} is inaccessible.",
-        "incompatible": "Denne serveren har en inkompatibel programvareversjon. Oppdater begge systemene til samme versjon for å slå dem sammen.",
-        "unknown_error": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "accountAlreadyActivated": "Denne kontoen er allerede aktivert",
-        "accountBlocked": "Denne kontoen er midlertidig blokkert. Vennligst prøv igjen om noen minutter.",
-        "accountNotActivated": "Denne kontoen er ikke aktivert enda. <a href=\"/activate\">Send aktiveringslenke igjen</a>",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "accountAlreadyActivated": "This account is already activated",
+        "accountBlocked": "This account is temporarily blocked. Please try again in a few minutes.",
+        "accountNotActivated": "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>",
         "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
-        "alreadyExists": "Denne kontoen finnes allerede",
-        "brokenAccount": "Uventet problem med kontoen. <a href=\"/restore_password\">Gjenopprett konto</a>",
-        "cantActivatePrefix": "Kan ikke aktivere kontoen din",
-        "cantAddYourOwnEmail": "Å legge til din egen e-post er ikke tillatt",
-        "cantChangeAccountPrefix": "Kan ikke lagre endringer",
-        "cantChangePasswordPrefix": "Kan ikke lagre passord",
+        "alreadyExists": "This account already exists",
+        "brokenAccount": "Unexpected problem with account. <a href=\"/restore_password\">Restore account</a>",
+        "cantActivatePrefix": "Cannot activate your account",
+        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantChangeAccountPrefix": "Cannot save changes",
+        "cantChangePasswordPrefix": "Cannot save password",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantConnectSystemPrefix": "Cannot connect System",
-        "cantDisconnectSystemPrefix": "Kan ikke slette system",
-        "cantEditAdmin": "Denne brukeren har administratorrettigheter",
-        "cantEditYourself": "Endring av egne tillatelser er ikke tillatt",
-        "cantGetSystemInfoPrefix": "Systeminformasjon er utilgjengelig",
-        "cantGetSystemsListPrefix": "Systemlisten er utilgjengelig",
-        "cantGetUsersListPrefix": "Brukerlisten er utilgjengelig",
-        "cantOpenClient": "%VMS_NAME% applikasjon blir ikke oppdaget.",
-        "cantRegisterPrefix": "En feil oppstod",
-        "cantSendActivationPrefix": "Kan ikke sende bekreftelse via e-post",
-        "cantSendConfirmationPrefix": "Kan ikke sende bekreftelse via e-post",
-        "cantSharePrefix": "Kan ikke dele System",
-        "cantUnshareWithMeSystemPrefix": "Kan ikke slette system",
-        "emailNotFound": "Kontoen eksisterer ikke.",
+        "cantDisconnectSystemPrefix": "Cannot delete System",
+        "cantEditAdmin": "This user has administrator permissions",
+        "cantEditYourself": "Changing own permissions is not allowed",
+        "cantGetSystemInfoPrefix": "System info is unavailable",
+        "cantGetSystemsListPrefix": "System list is unavailable",
+        "cantGetUsersListPrefix": "Users list is unavailable",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantRegisterPrefix": "Error occurred",
+        "cantSendActivationPrefix": "Cannot send confirmation Email",
+        "cantSendConfirmationPrefix": "Cannot send confirmation Email",
+        "cantSharePrefix": "Cannot share System",
+        "cantUnshareWithMeSystemPrefix": "Cannot delete System",
+        "emailNotFound": "Account does not exist.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Ingen system kan nås via denne lenken. Dette kan skje når et system har blitt koblet fra %CLOUD_NAME%, tilgang til dette systemet er tilbakekalt, systemet i lenken ikke eksisterer, eller hvis du er logget inn på feil konto.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
-        "forbidden": "Du har ikke tillatelser til å utføre denne handlingen",
-        "lostConnection": "Tilkoblingen til {systemName} er tapt",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> er frakoblet.",
-        "notAuthorized": "Feil passord",
-        "badUsername": "Konto ikke funnet",
-        "notFound": "Ikke funnet",
+        "forbidden": "You do not have permissions to perform this action",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "notAuthorized": "Wrong password",
+        "badUsername": "Account not found",
+        "notFound": "Not found",
         "ok": "ok",
-        "oldPasswordMistmatch": "Nåværende passord er feil.",
-        "oldSafariNotSupported": "Versjoner av Safari eldre enn 10 støttes ikke",
-        "passwordMismatch": "Feil passord",
+        "oldPasswordMistmatch": "Current password is incorrect.",
+        "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
+        "passwordMismatch": "Wrong password",
         "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "thisSystem": "systemet",
-        "unknownError": "En ukjent feil oppstod",
-        "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
-        "wrongAuthCode": "Koden er utløpt eller feil",
-        "wrongCode": "Kontoen er allerede aktivert eller bekreftelseskoden er feil",
-        "wrongCodeRestore": "Bekreftelseskoden er allerede brukt eller feil",
-        "wrongParameters": "Noen parametere på skjemaet er feil",
+        "thisSystem": "the system",
+        "unknownError": "Unexpected error occurred",
+        "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "wrongAuthCode": "Code is expired or incorrect",
+        "wrongCode": "Account is already activated or confirmation code is incorrect",
+        "wrongCodeRestore": "Confirmation code is already used or incorrect",
+        "wrongParameters": "Some parameters on the form are incorrect",
         "licenseFail": "Failed to activate license. Please try again or contact support.",
-        "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
@@ -707,100 +710,100 @@
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "appHeader": {
-        "mySystems": "Mine systemer",
-        "systemList": "Systemliste"
+        "mySystems": "My Systems",
+        "systemList": "System List"
     },
     "integration": {
-        "Access Control": "Adgangskontroll",
-        "Connector": "Tilkobler",
+        "Access Control": "Access Control",
+        "Connector": "Connector",
         "Data Analytics": "Data Analytics",
         "Drone": "Drone",
-        "Health Monitor": "Helse Monitor",
-        "Storage": "Lagring",
-        "myIntegrationsLabel": "Utvinn",
+        "Health Monitor": "Health Monitor",
+        "Storage": "Storage",
+        "myIntegrationsLabel": "Mine",
         "requirements": "{name} Requirements",
         "testedVersionLabel": "Tested by the developer with {vmsName} version:",
         "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
-        "Advanced PTZ cameras": "Avanserte PTZ kameraer",
-        "Cameras supporting H.265": "Kameraer som støtter H.265",
-        "Cameras with 2-way audio": "Kameraer med 2-veis lyd",
-        "Extra high resolution cameras": "Ekstra høyoppløselige kameraer",
-        "Fisheye Cameras": "Fisheye-kameraer",
-        "I / O modules": "I/O-moduler",
-        "Multisensor Cameras": "Multisensor kameraer",
-        "PTZ cameras": "PTZ kameraer",
-        "camera": "Kamera",
-        "count": "Antall",
+        "Advanced PTZ cameras": "Advanced PTZ cameras",
+        "Cameras supporting H.265": "Cameras supporting H.265",
+        "Cameras with 2-way audio": "Cameras with 2-way audio",
+        "Extra high resolution cameras": "Extra high resolution cameras",
+        "Fisheye Cameras": "Fisheye Cameras",
+        "I / O modules": "I / O modules",
+        "Multisensor Cameras": "Multisensor Cameras",
+        "PTZ cameras": "PTZ cameras",
+        "camera": "Camera",
+        "count": "Count",
         "dvr": "DVR",
-        "encoder": "Enkoder",
-        "hardwareType": "Skriv",
-        "isAnalyticsSupported": "Analyser",
-        "isAptzSupported": "Avansert PTZ",
-        "isAptzSupportedShort": "Avs. PTZ",
-        "isAudioSupported": "Lyd",
+        "encoder": "Encoder",
+        "hardwareType": "Type",
+        "isAnalyticsSupported": "Analytics",
+        "isAptzSupported": "Advanced PTZ",
+        "isAptzSupportedShort": "Adv. PTZ",
+        "isAudioSupported": "Audio",
         "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Bevegelses deteksjon",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-veis lyd",
-        "maxFps": "FPS (maks)",
-        "maxResolution": "Oppløsning (maks)",
-        "model": "Modell",
-        "multiSensorCamera": "Multisensor kameraer",
-        "other": "Andre",
-        "primaryCodec": "Kodek",
-        "resolutionArea": "Område",
-        "sndResolution": "Sekundær strøm",
-        "vendor": "Produsent",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
+        "model": "Model",
+        "multiSensorCamera": "Multi-Sensor Camera",
+        "other": "Other",
+        "primaryCodec": "Codec",
+        "resolutionArea": "Area",
+        "sndResolution": "Secondary Stream",
+        "vendor": "Manufacturer",
         "sortKey": ""
     },
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
-    "layoutAutosave": "Lagrer automatisk om { time } sekunder...",
-    "systemsCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}} funnet",
-    "alertsCount": "{count, plural, =0{# varsler} one{# varsling} other{# varsler}}",
+    "layoutAutosave": "Auto saving in { time } seconds...",
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
-            "cameras": "Kameraer",
-            "systemAdministration": "Systemadministrasjon",
-            "general": "Generell",
-            "licenses": "Lisenser",
-            "users": "Brukere",
-            "servers": "Servere",
-            "alerts": "Varsler",
+            "cameras": "Cameras",
+            "systemAdministration": "System Administration",
+            "general": "General",
+            "licenses": "Licenses",
+            "users": "Users",
+            "servers": "Servers",
+            "alerts": "Alerts",
             "systems": "System",
-            "storages": "Lagringssteder",
-            "networkInterfaces": "Nettverksgrensesnitt",
-            "graphs": "Grafer",
-            "logs": "Logger"
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
     },
     "tableHeaders": {
-        "type": "Skriv",
+        "type": "Type",
         "server": "Server",
-        "alert": "Alarm"
+        "alert": "Alert"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. Alle rettigheter reservert"
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
     },
     "pages": {
         "developers": {
-            "menuNodeContainsErrors": "Menynode <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> inneholder feil"
+            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
         },
         "downloadHistory": {
-            "published": "PUBLISERT { date }"
+            "published": "PUBLISHED { date }"
         },
         "health": {
             "importedSystem": "System: { system }",
-            "importedTime": "Generert: { time }"
+            "importedTime": "Generated: { time }"
         }
     },
     "pageTitles": {
@@ -810,31 +813,31 @@
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
-        "auth": "Autorisasjon",
-        "changePassword": "Bytt passord",
+        "auth": "Authorization",
+        "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
-        "download": "Last ned %VMS_NAME%",
-        "downloadPlatform": "Last ned %VMS_NAME% for ",
+        "download": "Download %VMS_NAME%",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
-        "failedToAccessSystem": "Kunne ikke få tilgang til systemet",
+        "failedToAccessSystem": "Failed to access system",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
-        "login": "Logg Inn",
-        "pageNotFound": "Siden ble ikke funnet",
-        "register": "Opprett konto i",
-        "registerSuccess": "Velkommen til",
+        "login": "Log in",
+        "pageNotFound": "Page not found",
+        "register": "Create account in",
+        "registerSuccess": "Welcome to",
         "restorePassword": "Reset password",
         "restorePasswordSuccess": "Password saved",
-        "supportedDevices": "Støttede enheter",
+        "supportedDevices": "Supported Devices",
         "system": "System",
         "systemShare": "Share System",
-        "systems": "Systemer",
+        "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "View cameras",
         "apiTool": "API testing tool",
-        "security": "Sikkerhet",
+        "security": "Security",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -843,36 +846,36 @@
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
-        "common": "for vanlig",
-        "commonMessage": "Dette passordet er blant de mest brukte passordene i verden",
-        "fair": "tilfredstillende",
-        "fairMessage": "Bruk tall, store og små bokstaver og spesialtegn for å gjøre passordet ditt sterkere. Unngå æøå",
-        "good": "sterkt",
-        "minLength": "for kort",
-        "minLengthMessage": "Passordet må inneholde minst 8 tegn",
-        "missingMessage": "Påkrevd",
-        "required": "stemmer ikke",
-        "requiredMessage": "Bruk bare latinske bokstaver, tall og tastatur symboler, unngå ledende og etterfølgende mellomrom",
-        "strongMessage": "Sterkt passord!",
-        "weak": "svakt",
-        "weakMessage": "Bruk tall, store og små bokstaver og spesialtegn for å gjøre passordet ditt sterkere. Unngå æøå"
+        "common": "too common",
+        "commonMessage": "This password is in top most popular passwords in the world",
+        "fair": "fair",
+        "fairMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger",
+        "good": "good",
+        "minLength": "too short",
+        "minLengthMessage": "Password must contain at least 8 characters",
+        "missingMessage": "Required",
+        "required": "incorrect",
+        "requiredMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
+        "strongMessage": "Strong password!",
+        "weak": "weak",
+        "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "Denne siden kan ikke lastes",
-            "message": "Forsikre deg om at serverne dine er online og prøv igjen."
+            "title": "This page cannot be loaded",
+            "message": "Please make sure that your servers are online and try again."
         },
         "merge": {
             "title": "This system is being merged to {systemName}.",
             "message": {
-                "dependingOnSize": "Avhengig av størrelsen på databasen, kan dette ta opptil flere timer.",
-                "untilFinished": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
+                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
+                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
             }
         },
         "server": {
-            "title": "Serveren er ikke tilgjengelig",
-            "message": "Systemet er offline og servere er derfor ikke tilgjengelige."
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         },
         "noSystemApiTool": {
             "title": "No Valid System Found",
@@ -883,204 +886,204 @@
             "message": ""
         }
     },
-    "pleaseSelect": "Vennligst velg...",
+    "pleaseSelect": "Please select...",
     "privacyPolicy": {
         "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av %COMPANY_NAME%.\nDu finner %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
-        "agreement": "Jeg godtar <a href=\"/content/eula\" target=\"_blank\">Vilkår &\nBetingelser</a> og <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Personvernregler</a>"
+        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "blir slått sammen til dette systemet",
-            "mayTake": "Avhengig av størrelsen på databasen, kan det ta opptil flere timer."
+            "to": "is being merged to this system",
+            "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
-        "finishingMerge": "Ferdigstiller systemsammenslåing",
+        "finishingMerge": "Finishing systems merge",
         "integration": {
-            "accept": "Godta",
-            "reject": "Avvis",
-            "backToEditText": "Tilbake til redigeringsgrensesnittene",
-            "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den samsvarer ikke med offentlig tilgjengelig versjon.",
+            "accept": "Accept",
+            "reject": "Reject",
+            "backToEditText": "Back to the editing interfaces",
+            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
-            "notification": "Ny versjon av %CLOUD_NAME% er tilgjengelig",
+            "notification": "New version of %CLOUD_NAME% is available",
             "installButton": "Refresh to Update"
         },
-        "systemOffline": "Systemet er frakoblet. Noen innstillinger er kanskje ikke tilgjengelige.",
-        "systemsMerging": "Dette systemet er for tiden involvert i en sammenslåingsoperasjon."
+        "systemOffline": "System is offline. Some settings may not be available.",
+        "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
-        "Any": "Enhver",
-        "Search": "Søk",
-        "analytics": "Analyser",
-        "analyticsSelected": "analysehendelser",
+        "Any": "Any",
+        "Search": "Search",
+        "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
-        "hardwareType": "Skriv",
-        "hardwareTypes": "Typer",
-        "minResolution": "Minimum oppløsning",
-        "search_ipvd": "Søk etter modell eller produsent",
+        "hardwareType": "Type",
+        "hardwareTypes": "Types",
+        "minResolution": "Minimum Resolution",
+        "search_ipvd": "Search by model or manufacturer",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
-        "vendor": "Produsent",
-        "vendors": "Produsenter",
+        "vendor": "Manufacturer",
+        "vendors": "Manufacturers",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
-        "noMatches": "Ingen treff",
+        "noMatches": "No matches",
         "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
         "autoRefresh": "auto refresh in {time}s...",
-        "beginDetach": "Serveren kobles fra nå",
+        "beginDetach": "Server is now detaching",
         "beginReset": "Server is now resetting.",
-        "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
-        "detachSystemSuccess": "Serveren ble koblet fra systemet.",
+        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
+        "detachSystemSuccess": "Server was successfully detached from the system.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Oppdater",
-        "refreshing": "Oppdaterer...",
-        "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",
-        "resetFailed": "Kunne ikke tilbakestille serveren. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
+        "removeMediaserverFailed": "Failed to remove the server from system.",
+        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
-        "restartFailed": "Det oppstod et problem med å starte serveren på nytt.",
-        "restartSuccessful": "Serveren har startet på nytt.",
-        "serverOffline": "Serveren er frakoblet.",
-        "servers": "Servere",
+        "restartFailed": "There was a problem restarting the server.",
+        "restartSuccessful": "Server has successfully restarted.",
+        "serverOffline": "Server is offline.",
+        "servers": "Servers",
         "status": {
-            "checking": "kontrollerer...",
+            "checking": "checking...",
             "offline": "offline",
             "resetting": "resetting...",
-            "restarting": "restarter..."
+            "restarting": "restarting..."
         },
-        "successRename": "Servernavn lagret."
+        "successRename": "Server name saved."
     },
     "serverTabTitles": {
-        "View": "Visning",
-        "Settings": "Innstillingar",
-        "Information": "Informasjon",
-        "Bookmarks": "Bokmerker",
-        "Layouts": "Visninger",
-        "Monitoring": "Overvåking"
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information",
+        "Bookmarks": "Bookmarks",
+        "Layouts": "Layouts",
+        "Monitoring": "Monitoring"
     },
     "system": {
-        "connected": "Tilkoblet",
+        "connected": "Connected",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
-        "mergeUnknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
+        "mergeUnknownName": "Unknown Name for System (Caused by cloud merge)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadStorageInfo": "Kan ikke laste lagringsinformasjon.",
-            "notAbleToLoadSecurity": "Kan ikke laste sikkerhetsinnstillinger.",
-            "notAbleToLoadSystem": "Kunne ikke laste systeminnstillinger.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadSecurity": "Not able to load security settings.",
+            "notAbleToLoadSystem": "Not able to load system settings.",
             "sessionLimitDuration": {
-                "hours": "timer",
-                "minutes": "minutter",
-                "days": "dager"
+                "hours": "hours",
+                "minutes": "minutes",
+                "days": "days"
             },
             "warningMessages": {
-                "videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
+                "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
             }
         },
         "status": {
-            "offline": "Systemet er offline",
-            "unavailable": "Systemet er ikke tilgjengelig"
+            "offline": "System is offline",
+            "unavailable": "System is unreachable"
         },
         "users": {
-            "cloudDelete": "Fjern bruker",
-            "localDelete": "Slett bruker"
+            "cloudDelete": "Remove User",
+            "localDelete": "Delete User"
         },
-        "yourSystem": "Ditt system",
+        "yourSystem": "Your System",
         "loggers": {
             "none": {
-                "text": "Ingen",
-                "help": "(logg deaktivert)"
+                "text": "None",
+                "help": "(log disabled)"
             },
             "error": {
-                "text": "Feil",
-                "help": "(bare loggfeil)"
+                "text": "Error",
+                "help": "(log errors only)"
             },
             "warning": {
-                "text": "Advarsel",
-                "help": "(loggadvarsler og feil)"
+                "text": "Warning",
+                "help": "(log warnings and errors)"
             },
             "info": {
                 "text": "Info",
-                "help": "(loggadvarsler, feil og alle meldinger)"
+                "help": "(log warnings, errors and all messages)"
             },
             "debug": {
                 "text": "Debug",
-                "help": "(logg alle systemmeldinger og feilsøkingsinformasjon)"
+                "help": "(log every System message and debug information)"
             },
             "verbose": {
-                "text": "Detaljert",
-                "help": "(logg all tilgjengelig informasjon)"
+                "text": "Verbose",
+                "help": "(log all information available)"
             }
         },
         "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
-            "local": "Lokal",
+            "local": "Local",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> ønsker å overføre eierskapet til dette systemet til deg",
-        "transferTo": "Overfører eierskap til – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
-        "root": "toppnivå",
-        "groupCount": "{count, plural, =0{# grupper} one{# Gruppe} other{# grupper}}",
-        "systemCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}}",
-        "connectionLost": "Tilkoblingen mistet, kobler til på nytt...",
-        "connectionRestored": "Forbindelse gjenopprettet",
-        "couldNotReconnect": "Kunne ikke gjenopprette tilkoblingen",
-        "noConnection": "Ingen tilkobling",
-        "groupAlreadyIn": "Gruppen { srcName } er allerede i { destName }",
-        "systemAlreadyIn": "System { srcName } er allerede i { destName }",
-        "addGroupToSelf": "Du kan ikke legge til en gruppe i seg selv",
+        "root": "root",
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "connectionLost": "Connection lost, reconnecting...",
+        "connectionRestored": "Connection restored",
+        "couldNotReconnect": "Could not restore connection",
+        "noConnection": "No connection",
+        "groupAlreadyIn": "Group { srcName } is already in { destName }",
+        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "addGroupToSelf": "You cannot add a group to itself",
         "errorMsg": {
-            "You can only delete groups that you own": "Du kan bare slette grupper du eier",
-            "You can only move systems that you own.": "Du kan bare flytte systemer du eier.",
-            "You can only move systems into groups that you own.": "Du kan bare flytte systemer inn i grupper du eier.",
-            "You cannot add a group to itself": "Du kan ikke legge til en gruppe i seg selv",
-            "You cannot add a parent group to its child.": "Du kan ikke legge til en overordnet gruppe til dens underordnede gruppe.",
-            "You can only move groups that you own.": "Du kan bare flytte grupper du eier.",
-            "Adding src group to dst group would create a cycle in tree.": "Å legge til src-gruppen til dst-gruppen ville opprette en syklus i treet.",
-            "User does not exist in group": "Bruker eksisterer ikke i gruppen"
+            "You can only delete groups that you own": "You can only delete groups that you own",
+            "You can only move systems that you own.": "You can only move systems that you own.",
+            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
+            "You cannot add a group to itself": "You cannot add a group to itself",
+            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
+            "You can only move groups that you own.": "You can only move groups that you own.",
+            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "User does not exist in group": "User does not exist in group"
         }
     },
     "systemStatuses": {
-        "activated": "aktivert",
-        "incompatible": "uforenlig",
-        "merging": "slår sammen",
-        "notActivated": "ikke aktivert",
+        "activated": "activated",
+        "incompatible": "incompatible",
+        "merging": "merging",
+        "notActivated": "not activated",
         "offline": "offline",
         "online": "online",
-        "unavailable": "utilgjengelig"
+        "unavailable": "unavailable"
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
-        "noConnection": "Gjenopprett tilkoblingen til %CLOUD_NAME% og prøv igjen.",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Kunne ikke bruke endringene",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
-                "success": "Systemet er frakoblet fra %CLOUD_NAME%"
+                "success": "System is successfully disconnected from %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System koblet til %CLOUD_NAME%",
+                "success": "System connected to %CLOUD_NAME%",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
-                "failed": "Systemsammenslåing mislyktes",
-                "success": "Systemsammenslåing fullført"
+                "failed": "System merge failed",
+                "success": "System merge completed"
             },
             "rename": {
-                "success": "Systemnavn lagret"
+                "success": "System name saved"
             }
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
@@ -1092,92 +1095,92 @@
     "healthMonitor": {
         "groups": {
             "info": "Info",
-            "availability": "Tilgjengelighet",
-            "load": "Last inn",
-            "activity": "Aktivitet"
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
         },
         "keys": {
-            "name": "Navn",
-            "servers": "Servere",
-            "cameras": "Kamerakanaler",
-            "storages": "Lagringssteder",
-            "users": "Brukere",
-            "version": "Systemversjon",
-            "cloudSystemId": "Skysystem-ID",
+            "name": "Name",
+            "servers": "Servers",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Users",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
             "status": "Status",
-            "offlineEvents": "Hendelser: Server frakoblet (24 timer)",
-            "uptimeS": "Oppetid",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS-server) %",
-            "ramUsageB": "RAM bruk",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS-server)",
-            "serverRamUsageP": "RAM (VMS-server) %",
-            "threads": "Servertråder",
-            "decodingThreads": "Decoding av tråder",
-            "decodingSpeed3s": "Decoding hastighet",
-            "encodingThreads": "Koding av tråder",
-            "encodingSpeed3s": "Kodingshastighet",
-            "primaryStreams": "Utgående primærstrømmer",
-            "secondaryStreams": "Utgående sekundære strømmer",
-            "incomingConnections": "Innkommende tilkoblinger",
-            "outgoingConnections": "Utgående forbindelser",
-            "logLevel": "Loggføringsnivå",
-            "publicIp": "Offentlig IP",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
             "os": "OS",
-            "osTime": "OS-tid",
-            "vmsTime": "VMS-tid",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
             "cpu": "CPU",
-            "cpuCores": "Kjerner",
+            "cpuCores": "Cores",
             "ramB": "RAM",
-            "guidConflict": "Server GUID-konflikt",
-            "vmsTimeChanged24h": "Hendelser: Tid endret (24 timer)",
-            "transactionsPerSecond1m": "Transaksjoner/s",
-            "actionsTriggered1m": "Regler Aktiveringer/s",
-            "apiCalls1m": "API-kall/s",
-            "thumbnails1m": "Miniatyrbilder/s",
-            "activePlugins": "Liste over aktive plugins"
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Helserapport for system {systemName}"
+        "healthReportForSystem": "Health Report For System {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
-            "Time": "Tid",
-            "Trial": "Prøve",
-            "Professional": "Profesjonell",
+            "Time": "Time",
+            "Trial": "Trial",
+            "Professional": "Professional",
             "Analog": "Analog",
             "Edge": "Edge",
             "VMAX": "VMAX",
-            "Video Wall": "Videovegg",
+            "Video Wall": "Video Wall",
             "Analog Encoder": "Analog Encoder",
             "Starter": "Starter",
             "IO Module": "IO Module",
-            "Bridge": "Bro",
+            "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Ugyldig"
+            "Invalid": "Invalid"
         },
         "info": {
-            "type": "Skriv",
-            "channels": "Kanaler",
+            "type": "Type",
+            "channels": "Channels",
             "server": "Server",
-            "hwid": "Maskinvare ID",
+            "hwid": "Hardware ID",
             "status": "Status",
-            "expires": "Utløper",
-            "deactivations": "Deaktivering igjen",
+            "expires": "Expires",
+            "deactivations": "Deactivation left",
             "online": "Online",
-            "error": "Feil",
-            "expired": "Utløpt",
+            "error": "Error",
+            "expired": "Expired",
             "ok": "OK",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server ikke funnet"
+            "serverNotFound": "Server not found"
         },
         "messages": {
-            "required": "{number} mer kreves",
-            "activated": "Lisensnøkkel aktivert",
+            "required": "{number} more required",
+            "activated": "License key activated",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Prøvelisens aktivert. Fra og med i dag kan du ta opp opptil 4 kameraer i 30 dager."
+            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {
@@ -1188,106 +1191,106 @@
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Ytterligere lokale FS-typer",
-        "autoDiscoveryResponseEnabled": "Automatisk oppdagelsesrespons",
-        "crossdomainEnabled": "På tvers av domener",
-        "defaultExportVideoCodec": "Standard videokodek for eksport",
-        "defaultVideoCodec": "Standard videokodek",
-        "downloaderPeers": "Nedlasting peers",
-        "lastMergeMasterId": "MasterId for forrige sammenslåing",
-        "lastMergeSlaveId": "Slaveid for forrige sammenslåing",
-        "ldapSearchTimeoutS": "Tidsavbrudd for LDAP-søk (sek)",
-        "licenseServer": "Lisensserver",
-        "lowQualityScreenVideoCodec": "Skjermvideokodek i lav kvalitet",
-        "maxP2pAllClientsSizeBytes": "Maks P2P alle klienter størrelse byte",
-        "maxRtpRetryCount": "Maks antall gjentatte RTP forsøk",
-        "metadataStorageChangePolicy": "Retningslinjer for endring av metadata-lagring",
-        "pushNotificationsLanguage": "Trykk på varslingsspråk",
-        "resourceFileUri": "Ressursfil URI",
-        "sessionLimitMinutes": "Øktgrense (minutter)",
-        "specificFeatures": "Spesifikke funksjoner",
-        "systemName": "Systemnavn",
-        "webSocketEnabled": "Nettstikkontakter",
-        "arecontRtspEnabled": "Arecont RTSP aktivert",
-        "auditTrailEnabled": "Brukerlogg aktivert",
-        "auditTrailPeriodDays": "Brukerlogg periode i dager",
-        "autoDiscoveryEnabled": "Legg til kamera på nettverket automatisk",
-        "autoUpdateThumbnails": "Automatisk oppdater miniaturer",
-        "backupNewCamerasByDefault": "Sikkerhetskopier nye kameraer som standard",
-        "backupQualities": "Backup kvaliteter",
-        "cameraSettingsOptimization": "Tillat optimalisering av kamerainnstillinger",
-        "clientStatisticsSettingsUrl": "Klientstatistikk relativ url",
-        "cloudAccountName": "Cloud eierkonto",
-        "cloudConnectRelayingEnabled": "Aktiver relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Aktiver UDP-hole punching for cloud-tilkobling",
-        "cloudHost": "Cloud vert",
-        "cloudSystemID": "Cloud system id",
-        "disabledVendors": "Blokkerte leverandører",
-        "ec2AliveUpdateIntervalSec": "System i live oppdateringsintervall (sekunder)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Tilkoblingen holdes i live-timeout (sekunder)",
-        "ec2KeepAliveProbeCount": "Tilkobling holde levende probes (sekunder)",
-        "emailFrom": "E-post fra",
-        "emailSignature": "E-post signatur",
-        "emailSupportEmail": "Kundestøtte E-mail",
-        "enableEdgeRecording": "Aktiver edge-opptak",
-        "eventLogPeriodDays": "Hendelsesloggperiode (dager)",
+        "additionalLocalFsTypes": "Additional local FS types",
+        "autoDiscoveryResponseEnabled": "Auto discovery response",
+        "crossdomainEnabled": "Cross domain",
+        "defaultExportVideoCodec": "Default export video codec",
+        "defaultVideoCodec": "Default video codec",
+        "downloaderPeers": "Downloader peers",
+        "lastMergeMasterId": "Last merge masterId",
+        "lastMergeSlaveId": "Last merge slaveId",
+        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
+        "licenseServer": "License server",
+        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
+        "maxRtpRetryCount": "Max RTP retry count",
+        "metadataStorageChangePolicy": "Meta data storage change policy",
+        "pushNotificationsLanguage": "Push notification language",
+        "resourceFileUri": "Resource file URI",
+        "sessionLimitMinutes": "Session limit (minutes)",
+        "specificFeatures": "Specific features",
+        "systemName": "System name",
+        "webSocketEnabled": "Web sockets",
+        "arecontRtspEnabled": "Arecont RTSP Enabled",
+        "auditTrailEnabled": "Audit trail enabled",
+        "auditTrailPeriodDays": "Audit trail period days",
+        "autoDiscoveryEnabled": "Enable device auto discovery",
+        "autoUpdateThumbnails": "Auto-update thumbnails",
+        "backupNewCamerasByDefault": "Backup new cameras by default",
+        "backupQualities": "Backup qualities",
+        "cameraSettingsOptimization": "Allow device setting optimization",
+        "clientStatisticsSettingsUrl": "Client statistics relative url",
+        "cloudAccountName": "Cloud owner account",
+        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
+        "cloudHost": "Cloud host",
+        "cloudSystemID": "Cloud System id",
+        "disabledVendors": "Disabled vendors",
+        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
+        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
+        "emailFrom": "Email from",
+        "emailSignature": "Email signature",
+        "emailSupportEmail": "Support Email",
+        "enableEdgeRecording": "Enable edge recording",
+        "eventLogPeriodDays": "Event log period (days)",
         "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP-søkebase",
-        "ldapSearchFilter": "LDAP-søkefilter",
+        "ldapSearchBase": "LDAP search base",
+        "ldapSearchFilter": "LDAP search filter",
         "ldapUri": "LDAP URI",
-        "localSystemId": "Lokal System-ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Maksimal forskjell mellom synkronisert og Internett-tid (millisekunder)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Maksimal forskjell mellom synkronisert og lokal tid (millisekunder)",
-        "maxP2pQueueSizeBytes": "Maksimal P2P køstørrelse (bytes)",
-        "maxRecordQueueSizeBytes": "Maksimal opptakskø størrelse (bytes)",
-        "maxRecordQueueSizeElements": "Maksimal opptakskøstørrelse (elementer)",
-        "maxRemoteArchiveSynchronizationThreads": "Maksimalt antall arkiver synkronisering tråder",
-        "maxRtspConnectDurationSeconds": "Maks Rtsp kobliong varighet sekunder",
-        "maxSceneItems": "Maks sceneelementer (0 betyr standard)",
-        "proxyConnectTimeoutSec": "Proxy-tilkoblingstidsavbrudd (sekunder)",
-        "rtpTimeoutMs": "RTP timeout (millisekunder)",
-        "sequentialFlirOnvifSearcherEnabled": "Bruk sekvensiell Flir Onvif søkemotor",
-        "serverDiscoveryPingTimeoutSec": "Server søk timeout",
-        "smtpConnectionType": "SMTP-tilkoblingstype",
-        "smtpHost": "SMTP-vert",
-        "smtpPort": "SMTP-port",
-        "smtpSimple": "SMTP enkelt",
+        "localSystemId": "Local System ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
+        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
+        "maxRecordQueueSizeElements": "Max record queue size (elements)",
+        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
+        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
+        "maxSceneItems": "Max scene items (0 means default)",
+        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
+        "rtpTimeoutMs": "RTP timeout (milliseconds)",
+        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
+        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
+        "smtpConnectionType": "SMTP connection type",
+        "smtpHost": "SMTP host",
+        "smtpPort": "SMTP port",
+        "smtpSimple": "SMTP simple",
         "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP-bruker",
-        "statisticsAllowed": "Send anonym brukstatistikk og krasjrapporter",
-        "statisticsReportLastNumber": "Statistikkrapport - siste nummer",
-        "statisticsReportLastTime": "Statistikk rapport - siste gang",
-        "statisticsReportLastVersion": "Statistikkrapport - siste versjon",
-        "statisticsReportServerApi": "Statistikk server api",
-        "statisticsReportTimeCycle": "Statistikk rapportintervall",
-        "statisticsReportUpdateDelay": "Statistikkrapport - oppdateringsforsinkelse",
-        "synchronizeTimeWithInternet": "Synkroniser tid med Internett",
-        "SystemName": "Systemnavn",
-        "takeCameraOwnershipWithoutLock": "Ta kameraets eierskap uten lås",
-        "timeSynchronizationEnabled": "Tidssynkronisering aktivert",
-        "primaryTimeServer": "Primær tidssynkroniseringsserver",
-        "osTimeChangeCheckPeriodMs": "OS-tidsendring, sjekk periode",
-        "syncTimeExchangePeriod": "Synkroniser tidssynkroniseringsintervall for nettverksforespørsler",
-        "syncTimeEpsilon": "Synkroniser epsilon. Ny verdi blir ikke brukt hvis tidsavgrensningen er mindre enn epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Maks synkroniseringstråder for virtuelt kameraarkiv",
-        "updateNotificationsEnabled": "Oppdateringsvarsler aktivert",
-        "upnpPortMappingEnabled": "UPNP port kartlegging aktivert",
-        "useTextEmailFormat": "Send e-post med vanlig tekst",
-        "useWindowsEmailLineFeed": "Bruk Windows-linjeinnmatning i e-post",
-        "trafficEncryptionForced": "Påtvunget kryptering av datatrafikk",
-        "videoTrafficEncryptionForced": "Påtvunget kryptering av vidostrøm",
-        "updateStatus": "Oppdater status",
-        "watermarkSettings": "Vannmerkeinnstillinger",
-        "maxHttpTranscodingSessions": "Maks antall HTTP-tilkoblinger som bruker transkoding for serveren. Chrome åpner 2 tilkoblinger samtidig, og lukker deretter den første. Så det anbefales å sette verdi >=2 til denne parameteren.",
-        "maxEventLogRecords": "Maksimal hendelsesloggoppføringer for å oppbevare i databasen. Den reelle mengden ubemerkede poster kan være opptil 20% høyere enn den spesifiserte verdien.",
-        "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
+        "smtpUser": "SMTP user",
+        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+        "statisticsReportLastNumber": "Statistics report - last number",
+        "statisticsReportLastTime": "Statistics report - last time",
+        "statisticsReportLastVersion": "Statistics report - last version",
+        "statisticsReportServerApi": "Statistics server api",
+        "statisticsReportTimeCycle": "Statistics report interval",
+        "statisticsReportUpdateDelay": "Statistics report - update delay",
+        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "SystemName": "System name",
+        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
+        "timeSynchronizationEnabled": "Time synchronization enabled",
+        "primaryTimeServer": "Primary time synchronization server",
+        "osTimeChangeCheckPeriodMs": "OS time change check period",
+        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "updateNotificationsEnabled": "Update notifications enabled",
+        "upnpPortMappingEnabled": "UPNP port mapping enabled",
+        "useTextEmailFormat": "Send plain-text emails",
+        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
+        "trafficEncryptionForced": "Force traffic encryption",
+        "videoTrafficEncryptionForced": "Force video traffic encryption",
+        "updateStatus": "Update status",
+        "watermarkSettings": "Watermark settings",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
     "security": {
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "og {count} mer...",
+            "systemsRemainder": "and {count} more...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
@@ -1301,25 +1304,25 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Hoved",
-            "backup": "Sikkerhetskopi",
-            "notInUse": "Ikke i bruk",
-            "reserved": "Reservert",
-            "inaccessible": "Utilgjengelig",
-            "changing": "Endrer modus...",
-            "disabled": "Deaktivert"
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "invalidPath": "Ugyldig lagringsbane.",
+        "invalidPath": "Invalid storage path.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",
         "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "Denne lagringsplassen kan ikke brukes til opptak fordi den er for liten, og det finnes andre større lagringsplasser tilgjengelig for opptak.",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Kunne ikke legge til ekstern lagring - serveren svarer ikke",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
         "success": "External storage added",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     },
@@ -1348,16 +1351,16 @@
             "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Innstillinger - webadmin - %VMS_NAME%"
+            "title": "Settings - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "Vis - webadmin - %VMS_NAME%"
+            "title": "View - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Informasjon - webadmin - %VMS_NAME%"
+            "title": "Information - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Serverovervåking - webadmin - %VMS_NAME%"
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {
