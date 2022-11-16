@@ -1,5 +1,5 @@
 {
-    "language": "en_US",
+    "language": "hr_HR",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Administration": "Administration",
     "All Servers": "All Servers",
@@ -457,7 +457,7 @@
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner",
-            "passwordRequired": "Password is required",
+            "passwordRequired": "Potrebna je lozinka",
             "passwordWrong": "Wrong password",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",

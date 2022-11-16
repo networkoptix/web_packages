@@ -1,13 +1,13 @@
 {
-    "language": "en_US",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "language": "ar_SA",
+    "About %CLOUD_NAME%": "عن %CLOUD_NAME%",
     "Administration": "Administration",
     "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "Privacy",
-    "Support": "Support",
+    "Support": "الدعم",
     "Terms": "Terms",
     "Developers Console": "Developers Console",
     "productName": "",
@@ -21,7 +21,7 @@
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
-        "offline": "Offline",
+        "offline": "غير مُتصل",
         "error": "Errors",
         "warning": "Warnings"
     },
@@ -103,14 +103,14 @@
         "activationLinkSent": "Activation Link Sent",
         "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
-        "security": "Security",
+        "security": "الأمن",
         "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "تم حفظ كلمة المرور بنجاح",
         "saveChanges": "Save"
     },
     "activeActions": {
         "resetPassword": "Reset Password",
-        "sendConfirm": "Resend activation link",
+        "sendConfirm": "إعادة إرسال رابط التنشيط",
         "setNewPassword": "Save password",
         "setNewPasswordLabel": "New password"
     },
@@ -143,7 +143,7 @@
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "Reset Password",
-        "newPassHeader": "Set New Password",
+        "newPassHeader": "تعيين كلمة مرور جديدة",
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
@@ -220,30 +220,30 @@
             }
         },
         "cameraLinks": {
-            "copyActiveText": "copied to clipboard",
+            "copyActiveText": "نُسخ إلى الحافظة",
             "copyDefaultText": "copy",
-            "copyToClipboard": "copy to clipboard",
-            "highStream": "High stream",
-            "lowStream": "Low stream",
-            "transcoding": "Transcoding",
+            "copyToClipboard": "نسخ إلى الحافظة",
+            "highStream": "التدفق الاعلى",
+            "lowStream": "التدفق المنخفض",
+            "transcoding": "التشفير",
             "unknown": "Unknown"
         },
         "cameraStates": {
             "error": "Error",
-            "errorLoading": "An error occurred while loading this video.",
+            "errorLoading": "حدث خطأ أثناء تحميل الفيديو.",
             "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
-            "flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
-            "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
-            "ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
-            "ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
-            "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
-            "noData": "No data",
-            "noFormat": "This browser does not support video playback from this camera.",
-            "offline": "Offline",
-            "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
-            "unauthorized": "Authentication required"
+            "flashRequired": "يرجى <a href='https://get.adobe.com/flashplayer/' target='_blank'>تحميل برنامج ادوبي فلاش</a> لتشغيل الفيديو.",
+            "iOSVideoTooLarge": "لا يدعم نظام التشغيل iOS الفيديو الذي يزيد حجمه عن حجم الوضوح الكامل (2MP: 1920 × 1080).",
+            "ieNoWebm": "من فضلك ، قم بتثبيت <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> لبرنامج Internet Explorer.",
+            "ieWin10": "من فضلك ، استخدم متصفحات Microsoft Edge أو Google Chrome.",
+            "noArmSupport": "لا يدعم هذا المستعرض أو الجهاز تشغيل الفيديو من الخوادم المستندة إلى ARM.",
+            "noData": "لا يوجد بيانات",
+            "noFormat": "هذا المتصفح لا يدعم تشغيل الفيديو من هذه الكاميرا.",
+            "offline": "غير متصل",
+            "ubuntuNX": "لا يدعم هذا المستعرض الفيديو من الخوادم المستندة إلى ARM. يرجى استخدام متصفح Chromium بدلاً من ذلك.",
+            "unauthorized": "يستلزم التوثيق"
         },
-        "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+        "chromeCastWarning": "يستهلك Chromecast الموارد وقد يتسبب في حدوث مشكلات على الخادم لديك.",
         "copiedToClipboard": "Copied to clipboard",
         "login": "login",
         "recordingSettingsWarning": "Please update missing recording settings.",
@@ -277,15 +277,15 @@
         "system": "system",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "System Offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "Internal server error",
+        "systemNewVersion": "تحديث النظام الخاص بك",
+        "systemNewVersionMessage": "الإصدار الحالي الخاص بك لا يتوافق مع هذه الميزة. يرجى تحديث الخوادم الخاصة بك إلى أحدث إصدار لاستخدام هذه الميزة.",
+        "systemNoAlerts": "لا تنبيهات",
+        "systemNoAlertsMessage": "يجب أن يكون نظامك جيدًا!",
+        "systemOffline": "النظام غير متصل",
+        "systemOfflineMessage": "هذا النظام غير متصل ولا يمكن الوصول إليه الآن.",
+        "systemServerError": "خطأ داخلي بالخادم",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-        "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "systemUnreachable": "النظام غير قابل للوصول",
         "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Unknown",
         "vendor": "Vendor",
@@ -295,12 +295,12 @@
         "os": "OS",
         "version": "Version",
         "voiceCommands": {
-            "clear search": "clear search",
-            "collapse all servers": "collapse all servers",
-            "collapse server": "collapse server + [server name]",
-            "expand all servers": "expand all servers",
-            "expand server": "expand server + [server name]",
-            "help": "help | show commands",
+            "clear search": "مسح البحث",
+            "collapse all servers": "طي جميع الخوادم",
+            "collapse server": "طي الخادم + [اسم الخادم]",
+            "expand all servers": "توسيع جميع الخوادم",
+            "expand server": "توسيع الخادم + [اسم الخادم]",
+            "help": "مساعدة | عرض الأوامر",
             "live": "go to live | show me live",
             "pause": "pause",
             "play": "play",
@@ -339,7 +339,7 @@
         "buttons": {
             "cancel": "Cancel",
             "createAccount": "Create New Account",
-            "delete": "Delete",
+            "delete": "حذف",
             "deleteAccount": "Delete Account",
             "disable": "Disable",
             "enable": "Enable",
@@ -347,8 +347,8 @@
             "logoutAuthorised": "Log Out",
             "ok": "OK",
             "remove": "Remove",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "ابقى مسجلاً كـ {email} ",
+            "stayLoggedIn": "ابقى متصلاً"
         },
         "cloudStorage": {
             "title": "Cloud Storage",
@@ -376,7 +376,7 @@
                 },
                 "delete": {
                     "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "action": "حذف",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -398,7 +398,7 @@
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "حذف",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -458,7 +458,7 @@
             "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner",
             "passwordRequired": "Password is required",
-            "passwordWrong": "Wrong password",
+            "passwordWrong": "كلمة مرور خاطئة",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -482,7 +482,7 @@
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
-            "urlEmpty": "Enter server address",
+            "urlEmpty": "أدخل عنوان الخادم",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
@@ -640,8 +640,8 @@
     },
     "errorCodes": {
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "DUPLICATE_MEDIASERVER_FOUND": "Some server lists as existing in both Systems – in the selected and in the current one.<br>Remove offline and incompatible servers from each System and try again.",
-        "EmailAlreadyExists": "This Email is already registered",
+        "DUPLICATE_MEDIASERVER_FOUND": "بعض قوائم الخادم موجودة في كلا النظامين - في النظام المحدد وفي النظام الحالي.<br>قم بإزالة الخوادم غير المتصلة وغير المتوافقة من كل نظام وحاول مرة أخرى.",
+        "EmailAlreadyExists": "هذا البريد الإلكتروني مسجل مسبقاً",
         "FAIL": "System <strong>{failedSystem}</strong> is offline.",
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -655,9 +655,9 @@
         "fail": "{failedSystem} is inaccessible.",
         "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
         "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "accountAlreadyActivated": "This account is already activated",
-        "accountBlocked": "This account is temporarily blocked. Please try again in a few minutes.",
-        "accountNotActivated": "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>",
+        "accountAlreadyActivated": "تم مسبقاً تنشيط هذا الحساب",
+        "accountBlocked": "تم حظر هذا الحساب مؤقتًا. يرجى المحاولة مرة أخرى في بضع دقائق.",
+        "accountNotActivated": "لم يتم تفعيل هذا الحساب بعد. <a href=\"/activate\">أرسل رابط التفعيل مرة أخرى</a>",
         "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
         "alreadyExists": "This account already exists",
         "brokenAccount": "Unexpected problem with account. <a href=\"/restore_password\">Restore account</a>",
@@ -686,19 +686,19 @@
         "forbidden": "You do not have permissions to perform this action",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
-        "notAuthorized": "Wrong password",
-        "badUsername": "Account not found",
+        "notAuthorized": "كلمة مرور خاطئة",
+        "badUsername": "تعذر العثور على الحساب",
         "notFound": "Not found",
         "ok": "ok",
         "oldPasswordMistmatch": "Current password is incorrect.",
         "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
-        "passwordMismatch": "Wrong password",
+        "passwordMismatch": "كلمة مرور خاطئة",
         "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "the system",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "wrongAuthCode": "Code is expired or incorrect",
-        "wrongCode": "Account is already activated or confirmation code is incorrect",
+        "wrongCode": "الحساب مفعل بالفعل أو رمز التأكيد غير صحيح",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
         "wrongParameters": "Some parameters on the form are incorrect",
         "licenseFail": "Failed to activate license. Please try again or contact support.",
@@ -720,7 +720,7 @@
         "Drone": "Drone",
         "Health Monitor": "Health Monitor",
         "Storage": "Storage",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "الخاص بي",
         "requirements": "{name} Requirements",
         "testedVersionLabel": "Tested by the developer with {vmsName} version:",
         "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
@@ -757,7 +757,7 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
         "primaryCodec": "Codec",
-        "resolutionArea": "Area",
+        "resolutionArea": "منطقة",
         "sndResolution": "Secondary Stream",
         "vendor": "Manufacturer",
         "sortKey": ""
@@ -807,7 +807,7 @@
         }
     },
     "pageTitles": {
-        "about": "About",
+        "about": "نبذة",
         "account": "Account settings",
         "activate": "Activate account",
         "activateCode": "Activate account",
@@ -824,7 +824,7 @@
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
-        "pageNotFound": "Page not found",
+        "pageNotFound": "الصفحة غير موجودة",
         "register": "Create account in",
         "registerSuccess": "Welcome to",
         "restorePassword": "Reset password",
@@ -837,7 +837,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "View cameras",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "الأمن",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -899,7 +899,7 @@
             "to": "is being merged to this system",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "انتهاء دمج الأنظمة",
         "integration": {
             "accept": "Accept",
             "reject": "Reject",
@@ -950,7 +950,7 @@
         "servers": "Servers",
         "status": {
             "checking": "checking...",
-            "offline": "offline",
+            "offline": "غير مُتصل",
             "resetting": "resetting...",
             "restarting": "restarting..."
         },
@@ -965,7 +965,7 @@
         "Monitoring": "Monitoring"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "متصل",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Unknown Name for System (Caused by cloud merge)",
@@ -975,9 +975,9 @@
             "notAbleToLoadSecurity": "Not able to load security settings.",
             "notAbleToLoadSystem": "Not able to load system settings.",
             "sessionLimitDuration": {
-                "hours": "hours",
-                "minutes": "minutes",
-                "days": "days"
+                "hours": "ساعات",
+                "minutes": "دقائق",
+                "days": "أيام"
             },
             "warningMessages": {
                 "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
@@ -988,10 +988,10 @@
             "unavailable": "System is unreachable"
         },
         "users": {
-            "cloudDelete": "Remove User",
+            "cloudDelete": "حذف المستخدم",
             "localDelete": "Delete User"
         },
-        "yourSystem": "Your System",
+        "yourSystem": "النظام الخاص بك",
         "loggers": {
             "none": {
                 "text": "None",
@@ -1056,7 +1056,7 @@
         "incompatible": "incompatible",
         "merging": "merging",
         "notActivated": "not activated",
-        "offline": "offline",
+        "offline": "غير مُتصل",
         "online": "online",
         "unavailable": "unavailable"
     },
@@ -1129,7 +1129,7 @@
             "publicIp": "Public IP",
             "os": "OS",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "وقت ال VMS",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1241,7 +1241,7 @@
         "localSystemId": "Local System ID",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "حجم قائمة انتظار P2P الأقصى (بايت)",
         "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
         "maxRecordQueueSizeElements": "Max record queue size (elements)",
         "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
@@ -1270,7 +1270,7 @@
         "timeSynchronizationEnabled": "Time synchronization enabled",
         "primaryTimeServer": "Primary time synchronization server",
         "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeExchangePeriod": "مزامنة الفاصل الزمني لمزامنة الوقت لطلبات الشبكة",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
         "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Update notifications enabled",
