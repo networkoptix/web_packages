@@ -23,3 +23,4 @@ Resource     front-end-variables/downloads-variables.robot
 Resource     front-end-variables/cloud-merge-variables.robot
 Resource     front-end-variables/history-variables.robot
 Resource     front-end-variables/integrations-getintouch-form-validation-variables.robot
+Resource     front-end-variables/system-owner-transfer-variables.robot

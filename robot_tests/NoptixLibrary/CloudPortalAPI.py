@@ -458,6 +458,7 @@ class CloudPortalAPI(object):
             "customPermissions": customPermissions
         }
         r = requests.post(f'{self.env}/cdb/system/share', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        assert r.status_code == 200, r.json()
         return r.json()
 
     @keyword

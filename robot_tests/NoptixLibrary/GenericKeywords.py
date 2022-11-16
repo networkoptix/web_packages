@@ -41,7 +41,7 @@ class GenericKeywords(object):
             "viewer":"GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
             "liveViewer":"GlobalAccessAllMediaPermission",
             "advancedViewer":"GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
-            "custom":"NoGlobalPermissions",
+            "custom":"NoGlobalPermissions"
             }
 
     @keyword
@@ -772,15 +772,12 @@ class GenericKeywords(object):
     def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth):
         isThere = self.User_Is_In_Cloud_System(email, systemId, auth)
         if isThere:
-            CloudPortalAPI.share(auth, systemId, accessRole, email, self.permissions[accessRole])
-
-
-    @keyword
-    def Get_Key_From_Value(self, dict, value):
-        return list(dict.keys())[list(dict.values()).index(value)]
+            logger.info(email + " already in system")
+        else:
+            r = self.cloud.share(auth, systemId, accessRole, email, self.permissions[accessRole])
+            logger.info(r)
 
     @keyword
     def Add_Cloud_Users(self, auth, users, systemId):
-        for user in users:
-            permission = self.Get_Key_From_Value(users, users[user])
-            self.Add_user_to_cloud_system_if_not_there(systemId, permission, user, auth)
+        for permission in users:
+            self.Add_user_to_cloud_system_if_not_there(systemId, permission, users[permission], auth)
