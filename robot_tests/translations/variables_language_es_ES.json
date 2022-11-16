@@ -546,8 +546,8 @@
     "VIEW PAGE HLS TEXT": "hls",
     "VIEW PAGE CAMERA OFFLINE TEXT": "Desconectado",
     "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Autenticación necesaria",
-    "ENABLE 2FA TEXT": "Enable 2FA",
-    "DISABLE 2FA TEXT": "Disable",
-    "DISABLED TEXT": "DISABLED",
-    "ENABLED TEXT": "ENABLED"
+    "ENABLE 2FA TEXT": "Activar la autenticación de dos factores",
+    "DISABLE 2FA TEXT": "Deshabilitar",
+    "DISABLED TEXT": "DESACTIVADO",
+    "ENABLED TEXT": "HABILITADO"
 }
