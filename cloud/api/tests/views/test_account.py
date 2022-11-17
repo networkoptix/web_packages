@@ -46,6 +46,9 @@ def test_login_helper(arf, mocker, django_user_model, mock_session):
     mocker.patch.object(Account, 'get', return_value={
                         'account2faEnabled': False})
 
+    req.session = SessionStore()
+    req.session.update({'has2fa' : False })
+
     login_helper(req, token, user)
     assert req.session['has2fa'] is False
 

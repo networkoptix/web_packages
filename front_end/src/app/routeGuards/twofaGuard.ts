@@ -16,7 +16,6 @@ import { OauthService } from '@services/oauth.service';
 import type {
     NxSystemWithUserInfo
 } from '@services/system.service/system-types';
-import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -27,7 +26,6 @@ export class TwofaGuard implements CanActivate {
     constructor(
         private router: Router,
         private accountService: NxAccountService,
-        private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private oauthService: OauthService,
         @Inject(WINDOW) private window: Window,
@@ -60,22 +58,14 @@ export class TwofaGuard implements CanActivate {
                             canActivateSubject.complete();
                         }
                     } else {
-                        const system = this.systemService.createSystem(
-                            account.email,
-                            systemId,
-                            undefined,
-                            true
-                        );
                         canActivateSubject.complete();
-                        system.updateToken(true).then(token => {
-                            this.oauthService.redirectOauth(
-                                'system2faAuth',
-                                account.email,
-                                undefined,
-                                token,
-                                Location.joinWithSlash(this.window.location.origin, state.url)
-                            );
-                        });
+                        this.oauthService.redirectOauth(
+                            'system2faAuth',
+                            account.email,
+                            undefined,
+                            account.accessToken,
+                            Location.joinWithSlash(this.window.location.origin, state.url)
+                        );
                     }
                 } else {
                     canActivateSubject.next(true);

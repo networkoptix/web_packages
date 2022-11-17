@@ -1,14 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {
-    Component,
-    ElementRef,
-    HostListener,
-    Inject,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -30,12 +22,7 @@ import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
-import {
-    AuthorizeParams,
-    AuthenticateResp,
-    AuthorizeState,
-    ClientType
-} from './authorize.component.types';
+import { AuthenticateResp, AuthorizeParams, AuthorizeState, ClientType } from './authorize.component.types';
 
 require('what-input');
 
@@ -450,6 +437,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkAuthCodeProcess = this.processService.createProcess(
             () => {
                 this.authCodeErrorCode = '';
+                if (this.clientType === ClientType.system2faAuth) {
+                    return this.cloudService.updateSessionWith2fa(this.authCode);
+                }
                 return this.action === 'restore_password'
                     ? this.cloudService.restorePassword(this.loginCode, this.resetPassword, this.authCode)
                     : this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
