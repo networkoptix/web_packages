@@ -3,7 +3,12 @@
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
-html {
+html[data-theme="light"] {
+    body {
+        background-color: #F0F2F4;
+        color : #2B383F;
+    }
+    
     --body-bg    : #{$additional_light2};
     --alt-body-bg : #{$light1};
     --body-text-color : #{$dark9};

@@ -27,6 +27,12 @@ interface OauthStoreFlags {
     verify2fa: string;
 }
 
+export interface ThemeConfig {
+    default: string;
+    dark: string;
+    light: string;
+}
+
 export interface BaseConfig {
     staticBase: string;
     commonPasswordsList?: { [key: string]: number; };
@@ -122,6 +128,7 @@ export interface BaseConfig {
     metaDefaults: Record<string, Record<string, string>>;
     webadminRoutesLookup: RouteCheckTuple[];
     cloudMonitoring: CloudMonitoring;
+    themeConfig: ThemeConfig;
 }
 
 export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string];

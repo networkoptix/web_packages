@@ -892,5 +892,10 @@ export const nxConfig: IConfig = {
         [/^help/g, 'supportLink'],
         [/^info/g, '/health']
         // [/^another/g, '/another-redirect', 'redirects.customMessage'] Example with custom translated message
-    ]
+    ],
+    themeConfig: {
+        default: 'auto',
+        dark: 'dark',
+        light: 'light',
+    }
 };

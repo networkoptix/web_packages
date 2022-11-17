@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { IConfig } from '@services/nx-config/config-types';
 import { WINDOW } from '@services/window-provider';
 
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -10,20 +11,37 @@ import { NxConfigService } from './nx-config/nx-config.service';
     providedIn: 'root'
 })
 export class NxThemeService {
+    CONFIG: IConfig;
     darkThemeMq: MediaQueryList;
     themeSelected: string;
     userTheme: string;
 
+    availThemes = {
+        light: 'light',
+        dark: 'dark',
+    };
+
     constructor(
+        configService: NxConfigService,
         private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
         @Inject(WINDOW) private window: Window,
     ) {
+        this.CONFIG = configService.getConfig();
     }
 
     async initTheme(): Promise<void> {
+        if (this.CONFIG.themeConfig) {
+            // set availThemes
+            this.availThemes = {
+                light: this.CONFIG.themeConfig.light,
+                dark: this.CONFIG.themeConfig.dark,
+            };
+        }
+
         const loginState = this.localStorageService.retrieve('loginstate');
         this.themeSelected = this.localStorageService.retrieve('theme');
+        NxConfigService.isDarkTheme = this.themeSelected === this.availThemes.dark;
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -34,9 +52,9 @@ export class NxThemeService {
             }
             NxConfigService.isDarkTheme = e.matches;
             if (e.matches) {
-                this.window.document.documentElement.setAttribute('data-theme', 'dark');
+                this.window.document.documentElement.setAttribute('data-theme', this.availThemes.dark);
             } else {
-                this.window.document.documentElement.setAttribute('data-theme', 'light');
+                this.window.document.documentElement.setAttribute('data-theme', this.availThemes.light);
             }
         });
 
@@ -50,7 +68,7 @@ export class NxThemeService {
                     console.error('Feature not available', err);
                 });
         } else {
-            this.themeSelected = 'dark';
+            this.themeSelected = this.CONFIG.themeConfig.default;
         }
 
         this.setTheme(this.themeSelected, loginState);
@@ -65,21 +83,21 @@ export class NxThemeService {
 
         if (
             themeSelected === 'auto' ||
-            !themeSelected ||
+            !themeSelected &&
             !username
         ) {
             this.localStorageService.store('theme', 'auto');
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
             this.window.document.documentElement.setAttribute(
                 'data-theme',
-                NxConfigService.isDarkTheme ? 'dark' : 'light'
+                NxConfigService.isDarkTheme ? this.availThemes.dark : this.availThemes.light
             );
         } else {
             if (docTheme === this.userTheme) {
                 return; // avoid reloading if same theme is set
             }
             this.localStorageService.store('theme', themeSelected);
-            NxConfigService.isDarkTheme = themeSelected === 'dark';
+            NxConfigService.isDarkTheme = themeSelected === this.availThemes.dark;
             this.window.document.documentElement.setAttribute(
                 'data-theme',
                 themeSelected

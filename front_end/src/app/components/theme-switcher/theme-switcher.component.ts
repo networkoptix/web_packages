@@ -28,7 +28,7 @@ export class NxThemeSwitcherComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private themeService: NxThemeService,
+        public themeService: NxThemeService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
