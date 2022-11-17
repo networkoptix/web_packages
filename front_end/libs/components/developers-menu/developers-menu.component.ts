@@ -20,6 +20,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { highlight } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-menu-types';
 
@@ -38,10 +39,12 @@ export class NxDevelopersMenuComponent implements OnInit {
     }>();
     // eslint-disable-next-line lines-between-class-members
     @Output() relatedLinks = new EventEmitter<RelatedLinks>();
+    @Output() searchQueryEmitter = new EventEmitter<string>();
     @Input() queryParamsOnInternalRoute: QueryParamsHandling = undefined;
     @Input() searchEnabled = true;
     @Input() service;
     @Input() offsetHeight = 0;
+    @Input() additionalSearchNodes: MenuNodeWithParent[] = [];
 
     CONFIG: IConfig;
     displayedMenuNodes: MenuNodeWithParent[] = [];
@@ -214,7 +217,7 @@ export class NxDevelopersMenuComponent implements OnInit {
                 }
                 inQuery = true;
             }
-            if (pathMatchesQuery || isSeperator) {
+            if (pathMatchesQuery || isSeperator || this.additionalSearchNodes.find(node => node.name === menuNode.name)) {
                 inQuery = true;
             }
             for (const node of menuNode.nodes) {
@@ -260,7 +263,7 @@ export class NxDevelopersMenuComponent implements OnInit {
                 this.displayedMenuNodes = menu.nodes;
                 this.menuNodes = menu.nodes;
                 if (this.searchEnabled && this.uriService.queryParams.search) {
-                    this.filterMenuItems(this.uriService.queryParams.search);
+                    this.searchQuery$.next(this.uriService.queryParams.search);
                 }
                 if (this.service.activeNode) {
                     this.openNodeAndParents(this.service.activeNode);
@@ -278,6 +281,8 @@ export class NxDevelopersMenuComponent implements OnInit {
         });
 
         this.searchQuery$.pipe(untilDestroyed(this)).subscribe(query => {
+            this.additionalSearchNodes = [];
+            this.searchQueryEmitter.emit(query);
             if (query !== '') {
                 this.filterMenuItems(query);
             } else {
@@ -288,5 +293,11 @@ export class NxDevelopersMenuComponent implements OnInit {
                 }
             }
         });
+    }
+
+    ngOnChanges(changes: NgChanges<NxDevelopersMenuComponent>): void {
+        if (changes.additionalSearchNodes?.currentValue) {
+            this.filterMenuItems(this.searchQuery$.value);
+        }
     }
 }

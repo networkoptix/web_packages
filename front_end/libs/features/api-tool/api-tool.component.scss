@@ -96,3 +96,21 @@
         padding: 0 0 !important;
     }
 }
+
+.more-results {
+    margin: 20px auto auto 120px;
+    width: 50%;
+    &:hover {
+        cursor: pointer;
+    }
+    .more-results-stroke {
+        stroke: var(--light-text-color);
+    }
+    .more-results-fill {
+        fill: var(--light-text-color)
+    }
+    span {
+        @include typography.regular13nocolor;
+        color: var(--light-text-color);
+    }
+}

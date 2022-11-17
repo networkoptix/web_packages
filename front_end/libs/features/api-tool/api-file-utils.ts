@@ -3,7 +3,7 @@ import type { MenuNodeWithParent } from '@components/developers-menu/developers-
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 
-import type { APIDoc, method } from './api-tool-types';
+import type { APIDoc, method, MethodInfo } from './api-tool-types';
 
 // This file contains functions that modify API files
 
@@ -225,4 +225,26 @@ export const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent
             menuNodes.unshift(new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'));
         }
     }
+};
+
+export const queryInDescription = (path: MethodInfo, query: string) => {
+    if (path.description?.includes(query)) {
+        return true;
+    }
+    if (path.parameters) {
+        for (const parameter of path.parameters) {
+            if (parameter.name?.includes(query) || parameter.description?.includes(query)) {
+                return true;
+            }
+        }
+    }
+    const schemaProperties = path.requestBody?.content['application/json']?.schema?.properties;
+    if (schemaProperties) {
+        for (const property of Object.keys(schemaProperties)) {
+            if (schemaProperties[property].description?.includes(query)) {
+                return true;
+            }
+        }
+    }
+    return false;
 };

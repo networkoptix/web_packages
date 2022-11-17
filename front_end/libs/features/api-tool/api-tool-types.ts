@@ -1,14 +1,36 @@
 export interface MethodInfo {
     description: string,
-    parameters: Array<object>,
+    parameters?: Array<Parameter>,
     responses: {
         default: {
             description: string
         }
     },
+    requestBody?: RequestBody
     summary: string,
     tags: string[]
     deprecated?: boolean;
+}
+
+interface Parameter {
+    name: string;
+    description: string;
+}
+
+interface RequestBody {
+    content: {
+        'application/json': {
+            schema: {
+                properties: {
+                    [key: string]: {
+                        description: string;
+                        type: string;
+                        readOnly: boolean;
+                    }
+                }
+            }
+        }
+    }
 }
 
 export type method = [string, MethodInfo];
