@@ -510,8 +510,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     // errorText: 'User is not in portal'
                     this.createErrorCode = ['email', 'portalError'];
                 } else {
-                    // if we support code in the future, so that account can be activated upon registration
-                    // then res.activated === true
+                    // in the case when code is passed with registration (ie when user gets invited to system)
+                    if (res.activated) {
+                        this.activated$.next(true);
+                    }
                     this.loginEmail = this.accountInfo.email;
                     this.currentState = AuthorizeState.activate;
                 }
