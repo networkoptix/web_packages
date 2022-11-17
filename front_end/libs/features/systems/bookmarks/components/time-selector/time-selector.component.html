@@ -1,0 +1,26 @@
+<input
+    [(ngModel)]="time"
+    [pattern]="timeRegex"
+    [placeholder]="placeholder"
+    maxlength="5"
+    class="form-control"
+    [ngClass]="{ 'not-empty': time }"
+/>
+<button
+    class="period"
+    *ngIf="hour12 && time"
+    (click)="period = this.period === AM ? PM : AM"
+>
+    {{ period }}
+</button>
+<button
+    *ngIf="time"
+    class="clear-btn"
+    (click)="time = ''"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dirTextButtons + 'close.svg'"
+        [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
+    ></svg-icon>
+</button>
