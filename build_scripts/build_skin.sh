@@ -23,7 +23,6 @@ echo "Building templates - for each language"
 echo
 
 mkdir -p $TARGET_DIR/$SKIN/templates/
-cp -rf $dir/templates/* $TARGET_DIR/$SKIN/templates || true
 
 for lang_dir in ../translations/*/
 do
@@ -79,12 +78,6 @@ do
 
     echo "Overwrite them with localized sources"
     cp -rf $lang_dir/views $TARGET_DIR/$SKIN/static/lang_$LANG || true
-
-
-#        mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
-
-#        echo "Copy web_common default views - untranslatable"
-#        cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
     if [ "$SKIN" = "blue" ] ; then
         echo "********* Generate (skin) language file *********"
