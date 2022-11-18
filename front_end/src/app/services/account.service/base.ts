@@ -385,7 +385,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.window.history.pushState({ url: url.toString() }, '', url.toString());
     }
 
-    private sleep(time) {
+    protected sleep(time) {
         return new Promise((resolve, reject) => {
             setTimeout(() => resolve(true), time);
         });

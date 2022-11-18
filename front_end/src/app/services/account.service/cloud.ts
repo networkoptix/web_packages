@@ -189,7 +189,8 @@ export class CloudAccount extends BaseAccount {
         this.oauthService.redirectOauth();
     }
 
-    requireLogin(): Promise<void | Account> {
+    async requireLogin(): Promise<void | Account> {
+        await this.sleep(1000);
         return this.get(false)
             .then(account => {
                 if (account === null) {
