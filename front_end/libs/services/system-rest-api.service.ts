@@ -324,6 +324,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return headers;
     }
 
+    #getHeaders = (customHttpHeaders: Record<string, string>, url = '') => from(this.accessToken ? Promise.resolve(this.accessToken) : this.unauthorizedCallback(true)).pipe(map(() => this.buildHeader(customHttpHeaders, this.requiresToken(url))));
+
     protected delete<ResponseType = any>(
         url: string,
         params?: any,
@@ -332,12 +334,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         params = params || {};
 
-        const headers = this.buildHeader(customHttpHeaders);
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.delete<ResponseType>(fullUrl, { headers, params }).pipe(
+        return this.#getHeaders(customHttpHeaders, url).pipe(
+            switchMap(headers => this.http.delete<ResponseType>(fullUrl, { headers, params })),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {
@@ -356,13 +358,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         params = params || {};
 
-        const headers = this.buildHeader(customHttpHeaders, this.requiresToken(url));
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
         const fullUrl = `${this.urlBase}${url}`;
         const responseType = <any>(customHttpHeaders?.responseType || 'json');
-        return this.http.get<ResponseType>(fullUrl, { headers, params, responseType }).pipe(
+        return this.#getHeaders(customHttpHeaders, url).pipe(
+            switchMap(headers => this.http.get<ResponseType>(fullUrl, { headers, params, responseType })),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {
@@ -381,21 +383,16 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         data = data || {};
 
-        const headers = this.buildHeader({}, this.requiresToken(url));
-        if (this.requiresWeb(url)) {
-            url = `/web${url}`;
-        }
-
         let params = new HttpParams();
         Object.keys(paramsToAdd).forEach(key => {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        const fullUrl = `${this.urlBase}${url}`;
+        url = `${this.urlBase}${url}`;
 
-        return this.http
-            .post<ResponseType>(fullUrl, data, { params, headers })
+        return this.#getHeaders({}, url)
             .pipe(
+                switchMap(headers => this.http.post<ResponseType>(url, data, { params, headers })),
                 retryWhen(request => this.retryHandler(request)),
                 timeout(customTimeout)
             );
@@ -409,7 +406,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         data = data || {};
 
-        const headers = this.buildHeader();
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
@@ -419,11 +415,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        const fullUrl = `${this.urlBase}${url}`;
+        url = `${this.urlBase}${url}`;
 
-        return this.http
-            .put<ResponseType>(fullUrl, data, { params, headers })
+        return this.#getHeaders({}, url)
             .pipe(
+                switchMap(headers => this.http.put<ResponseType>(url, data, { params, headers })),
                 retryWhen(request => this.retryHandler(request)),
                 timeout(customTimeout)
             );
@@ -437,7 +433,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         data = data || {};
 
-        const headers = this.buildHeader();
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
@@ -447,11 +442,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        const fullUrl = `${this.urlBase}${url}`;
+        url = `${this.urlBase}${url}`;
 
-        return this.http
-            .patch<ResponseType>(fullUrl, data, { params, headers })
+        return this.#getHeaders({}, url)
             .pipe(
+                switchMap(headers => this.http.patch<ResponseType>(url, data, { params, headers })),
                 retryWhen(request => this.retryHandler(request)),
                 timeout(customTimeout)
             );

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { icons } from '@src/app/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 

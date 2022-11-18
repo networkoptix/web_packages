@@ -295,7 +295,7 @@ export class NxSystem {
                 .then(() => tokens.access_token)
                 .catch(() => tokens.access_token);
         }).catch(() => {
-            this.lostConnection = true;
+            this.lostConnection ||= this.isOnline;
             return '';
         });
     }
