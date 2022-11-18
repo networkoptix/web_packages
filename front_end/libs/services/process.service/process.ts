@@ -39,11 +39,11 @@ export const formatError = (
     errorCodes,
     lang
 ): string | false => {
-    if (error.error && typeof error.error === 'object') {
+    if (error?.error && typeof error.error === 'object') {
         error = error.error;
         // Unpack nested error
     }
-    if (error.error !== '4' && errorCodes && error?.errorString &&
+    if (error?.error !== '4' && errorCodes && error?.errorString &&
         (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
     ) {
         delete error.errorString;
@@ -61,7 +61,7 @@ export const formatError = (
     }
 
     if (
-        error.errorText === 'second_factor_required' &&
+        error?.errorText === 'second_factor_required' &&
         lang.dialogs?.message?.twoFactor
     ) {
         return lang.dialogs.message.twoFactor.required;

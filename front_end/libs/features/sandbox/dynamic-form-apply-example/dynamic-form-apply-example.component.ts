@@ -48,7 +48,11 @@ export class DynamicFormApplyExampleComponent {
         this.formWatcher = this.applyService.createFormWatcher(
             'form3',
             this.form3,
-            this.saveForm3);
+            this.saveForm3,
+            null,
+            undefined,
+            true,
+            true);
     }
 
     addField(): void {

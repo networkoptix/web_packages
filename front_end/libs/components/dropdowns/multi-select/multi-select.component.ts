@@ -22,6 +22,7 @@ import type { MultiSelectItem } from './multi-select.component.types';
      [name]="permissions"
      canSelectAll?
      canSearch?
+     moreLeftPadding?
      description="Roles"
      [items]="[{label: 'a', id: 1}, {label: 'b', id:3}]"
      [ngModel]="[1, 3]"       <- selected items id's
@@ -49,6 +50,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     @Input('items') itemsOrig: MultiSelectItem[];
     @IBool() @Input() canSelectAll: CoercedBoolInput;
     @IBool() @Input() canSearch: CoercedBoolInput;
+    @IBool() @Input() moreLeftPadding: CoercedBoolInput;
 
     icons = icons;
     public items: MultiSelectItem[] = [];
@@ -130,16 +132,31 @@ export class NxMultiSelectDropdown extends BaseDropdown {
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.LANG.search.Any;
+                this.textSelected = this.id === 'user-groups'
+                    ? {
+                        value: this.LANG.userGroups.multiple,
+                        params: {
+                            number: this.innerValue.length
+                        }
+                    }
+                    : this.LANG.search.Any;
                 break;
             }
             default: {
-                this.textSelected = {
-                    value: this.LANG.search.selected,
-                    params: {
-                        count: this.innerValue.length
+                this.textSelected = this.id === 'user-groups'
+                    ? {
+                        value: this.LANG.userGroups.multiple,
+                        params: {
+                            number: this.innerValue.length
+                        }
                     }
-                };
+                    : {
+                        value: this.LANG.search.selected,
+                        params: {
+                            number: this.innerValue.length
+                        }
+                    };
+                break;
             }
         }
     }

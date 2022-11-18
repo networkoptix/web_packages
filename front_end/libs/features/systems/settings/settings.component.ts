@@ -24,6 +24,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { alertTimeout, clientMode, menus, redirect, ribbonHeight } from '@lib/variables/static-variables';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
@@ -40,6 +41,7 @@ import type {
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
@@ -673,21 +675,40 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (this.system && this.system.users?.length > 0) {
                 const cloudUsers: Level3Item[] = [];
                 const localUsers: Level3Item[] = [];
-                this.system.userManager.users.forEach(user => {
+                this.system.userManager.users.forEach((user: NxSystemUser) => {
                     const id = cleanId(user.id);
+                    let additionalLabel: Translatable;
+                    if (this.system.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
+                        switch (user.userGroupIds.length) {
+                            case 0:
+                                additionalLabel = this.LANG.accessRoles?.Owner?.label || 'Owner';
+                                break;
+                            case 1:
+                                const { name } = this.system.userManager.userGroups.find(
+                                    group => group.id === user.userGroupIds[0]
+                                );
+                                additionalLabel = this.LANG.accessRoles[name]?.label || name;
+                                break;
+                            default:
+                                additionalLabel = {
+                                    value: this.LANG.userGroups.multiple,
+                                    params: { number: user.userGroupIds.length }
+                                };
+                                break;
+                        }
+                    } else {
+                        additionalLabel = !user.isCloud && user.name === 'admin'
+                            ? this.LANG.accessRoles?.Owner?.label || 'Owner'
+                            : this.LANG.accessRoles[user?.role.name]?.label || user?.role.name;
+                    }
                     const node: Level3Item = {
                         id,
-                        additionalLabel:
-                            this.LANG.accessRoles[user.role.name]?.label ||
-                            user.role.name,
+                        additionalLabel,
                         disabled: !user.isEnabled,
                         label: user.name || user.email,
                         path: 'users/' + id,
                         svgIcon: 'user'
                     };
-                    if (!user.isCloud && user.name === 'admin') {
-                        node.additionalLabel = 'Owner';
-                    }
                     if (user.isCloud) {
                         node.svgIcon = 'user_cloud';
                         node.icon = '';

@@ -19,6 +19,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { of } from 'rxjs';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import staticLang from '@common/language/language_i18n_static.json';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
@@ -27,7 +28,6 @@ import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
@@ -53,51 +53,49 @@ describe('NxAuthorizeComponent', () => {
     let component: NxAuthorizeComponent;
     let fixture: ComponentFixture<NxAuthorizeComponent>;
     let el: DebugElement;
-    const translateMock = {
-        translations: {
-            authorize: {
-                loginCloudHeader: () => 'Log in to %CLOUD_NAME%',
-                activateHeader: () => 'Activate %CLOUD_NAME% Account',
-                createdText: () => 'Account Created!',
-                createdAdditional: () => '<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>',
-                activatedText: () => 'Account Activated!',
-                activatedAdditional: () => '<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>',
-                connectedText: () => 'System connected to %CLOUD_NAME%',
-                connectHeader: () => 'Connect System to %CLOUD_NAME%',
-                connectSubheader: () => 'To access it from anywhere and enable additional features',
-                expiredHeader: () => 'Your session has expired',
-                expiredAccountSubheader: () => 'Please, log in again as {accountEmail}',
-                expiredSubheader: () => 'Please, log in again',
-                loginSystemHeader: () => 'Log in to {systemName}',
-                loginSystemSubheader: () => 'With your %CLOUD_NAME% Account',
-                toAccountSubheader: () => 'To {accountEmail}',
-                asAccountSubheader: () => 'As {accountEmail}',
-                passwordDisconnect: () => 'to disconnect system from %CLOUD_NAME%',
-                passwordMerge: () => 'to merge systems',
-                passwordBackup: () => 'to create backup',
-                passwordRestore: () => 'to restore system from backup',
-                passwordReset: () => 'to reset server',
-                passwordRestart: () => 'to restart server',
-                passwordDetach: () => 'to detach server',
-                passwordTransfer: () => 'to transfer system',
-                createAccountHeader: () => 'Create %CLOUD_NAME% Account',
-                loginErrorAdditional: () => 'Please try again or login to the system directly with your local account.',
-                connectErrorAdditional: () => 'Please try again later.',
-                setupErrorAdditional: () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
-                passResetHeader: () => 'Reset Password',
-                newPassHeader: () => 'Set New Password',
-                termsAndConditionsHelpText: () => 'Checkbox agreeing to terms and conditions and the privacy policy',
-                authCode: {
-                    message: () => 'Enter a code from your authentication app to confirm it\'s really you trying to {suffix}',
-                    newPass: () => 'set a new password',
-                    login: () => 'log in'
-                }
-            },
-            pageTitles: {
-                auth: () => 'Authorization'
-            }
-        }
-    };
+    // const LANG = {
+    //     authorize: {
+    //         loginCloudHeader: 'Log in to %CLOUD_NAME%',
+    //         activateHeader: 'Activate %CLOUD_NAME% Account',
+    //         createdText: 'Account Created!',
+    //         createdAdditional: '<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>',
+    //         activatedText: 'Account Activated!',
+    //         activatedAdditional: '<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>',
+    //         connectedText: 'System connected to %CLOUD_NAME%',
+    //         connectHeader: 'Connect System to %CLOUD_NAME%',
+    //         connectSubheader: 'To access it from anywhere and enable additional features',
+    //         expiredHeader: 'Your session has expired',
+    //         expiredAccountSubheader: 'Please, log in again as {accountEmail}',
+    //         expiredSubheader: 'Please, log in again',
+    //         loginSystemHeader: 'Log in to {systemName}',
+    //         loginSystemSubheader: 'With your %CLOUD_NAME% Account',
+    //         toAccountSubheader: 'To {accountEmail}',
+    //         asAccountSubheader: 'As {accountEmail}',
+    //         passwordDisconnect: 'to disconnect system from %CLOUD_NAME%',
+    //         passwordMerge: 'to merge systems',
+    //         passwordBackup: 'to create backup',
+    //         passwordRestore: 'to restore system from backup',
+    //         passwordReset: 'to reset server',
+    //         passwordRestart: 'to restart server',
+    //         passwordDetach: 'to detach server',
+    //         passwordTransfer: 'to transfer system',
+    //         createAccountHeader: 'Create %CLOUD_NAME% Account',
+    //         loginErrorAdditional: 'Please try again or login to the system directly with your local account.',
+    //         connectErrorAdditional: 'Please try again later.',
+    //         setupErrorAdditional: '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
+    //         passResetHeader: 'Reset Password',
+    //         newPassHeader: 'Set New Password',
+    //         termsAndConditionsHelpText: 'Checkbox agreeing to terms and conditions and the privacy policy',
+    //         authCode: {
+    //             message: 'Enter a code from your authentication app to confirm it\'s really you trying to {suffix}',
+    //             newPass: 'set a new password',
+    //             login: 'log in'
+    //         }
+    //     },
+    //     pageTitles: {
+    //         auth: 'Authorization'
+    //     }
+    // };
     nxConfig.dynamicMenus.footer = {
         title: 'Demo',
         description: 'demo',
@@ -239,7 +237,6 @@ describe('NxAuthorizeComponent', () => {
             ],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
-                { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: ActivatedRoute, useValue: routeMock },
                 { provide: NxCloudApiService, useValue: cloudMock },
                 { provide: NxProcessService, useValue: processMock },
@@ -257,6 +254,7 @@ describe('NxAuthorizeComponent', () => {
                 fixture = TestBed.createComponent(NxAuthorizeComponent);
                 component = fixture.componentInstance;
                 el = fixture.debugElement;
+                component.LANG = staticLang;
                 Object.defineProperty(environment, 'isLocal', { value: false });
                 fixture.detectChanges();
                 component.windowLargeEnough = false;
@@ -308,7 +306,7 @@ describe('NxAuthorizeComponent', () => {
         const emailLabel = el.nativeElement.querySelectorAll('label');
         expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 4 because of theme test component
         // UNCOMMENT after tests!!!
@@ -330,9 +328,9 @@ describe('NxAuthorizeComponent', () => {
         const emailLabel = el.nativeElement.querySelectorAll('label');
         expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectHeader);
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.connectSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.connectSubheader);
         const inputMessage = el.nativeElement.querySelector('p');
         expect(inputMessage.innerText).toBe('This account will get owner access level');
         const buttons = el.nativeElement.querySelectorAll('button');
@@ -350,9 +348,9 @@ describe('NxAuthorizeComponent', () => {
         const emailLabel = el.nativeElement.querySelectorAll('label');
         expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectHeader);
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.connectSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.connectSubheader);
         const inputMessage = el.nativeElement.querySelector('p');
         expect(inputMessage.innerText).toBe('This account will get owner access level');
         const buttons = el.nativeElement.querySelectorAll('button');
@@ -370,9 +368,9 @@ describe('NxAuthorizeComponent', () => {
         const emailLabel = el.nativeElement.querySelectorAll('label');
         expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.expiredHeader);
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.expiredSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.expiredSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('Next');
@@ -387,9 +385,9 @@ describe('NxAuthorizeComponent', () => {
         const emailLabel = el.nativeElement.querySelectorAll('label');
         expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.expiredHeader);
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.expiredSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.expiredSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Create Account');
@@ -405,12 +403,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -429,12 +427,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 6 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(3);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader);
         const disconnectMessage = el.nativeElement.querySelectorAll('p');
         expect(disconnectMessage.length).toBe(1);
         expect(disconnectMessage[0].innerText).toBe('to disconnect system from %CLOUD_NAME%');
@@ -454,12 +452,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 6 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(3);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader);
         const disconnectMessage = el.nativeElement.querySelectorAll('p');
         expect(disconnectMessage.length).toBe(1);
         expect(disconnectMessage[0].innerText).toBe('to merge systems');
@@ -533,12 +531,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.connectHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.connectHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.toAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.toAccountSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -556,12 +554,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.connectHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.connectHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.toAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.toAccountSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -579,12 +577,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.expiredHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 7 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(4);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.expiredAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.expiredAccountSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -601,12 +599,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.expiredHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 7 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(4);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.expiredAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.expiredAccountSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -623,12 +621,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 7 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(4);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('No access to authentication app?');
@@ -645,7 +643,7 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         // const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 5 because of theme test component
         // UNCOMMENT after tests!!!
@@ -666,12 +664,12 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Backup code');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader);
         expect(spans[2].innerText).toBe('Need help?');
         const links = el.nativeElement.querySelectorAll('a');
         expect(links.length).toBe(1);
@@ -698,17 +696,17 @@ describe('NxAuthorizeComponent', () => {
         expect(labels[2].innerText).toBe('Last Name');
         expect(labels[3].innerText).toBe('Password');
         const createHeader = el.nativeElement.querySelector('h3');
-        expect(createHeader.innerText).toBe(component.LANG.authorize.createAccountHeader());
+        expect(createHeader.innerText).toBe(component.LANG.authorize.createAccountHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 9 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(7);
-        expect(spans[3].innerText).toBe('I agree to the');
-        expect(spans[4].innerText).toBe('and');
+        expect(spans[4].innerText).toBe('I agree to the');
+        expect(spans[5].innerText).toBe('and');
         const links = el.nativeElement.querySelectorAll('a');
-        expect(links.length).toBe(2);
-        expect(links[0].innerText).toBe('Terms and Conditions');
-        expect(links[1].innerText).toBe('Privacy policy');
+        expect(links.length).toBe(3);
+        expect(links[1].innerText).toBe('Terms and Conditions');
+        expect(links[2].innerText).toBe('Privacy policy');
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Log In');
@@ -735,11 +733,11 @@ describe('NxAuthorizeComponent', () => {
         tick();
         let activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
-        expect(activateHeaders[0].innerText).toBe(component.LANG.authorize.activateHeader());
-        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.createdText());
+        expect(activateHeaders[0].innerText).toBe(component.LANG.authorize.activateHeader);
+        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.createdText);
         let contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
-        expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.createdAdditional());
+        expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.createdAdditional);
         let buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Log In');
@@ -750,7 +748,7 @@ describe('NxAuthorizeComponent', () => {
         fixture.detectChanges();
         activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
-        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.activatedText());
+        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.activatedText);
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
         expect(contentMessage[0].nativeElement.innerText).toBeFalsy();
@@ -763,10 +761,10 @@ describe('NxAuthorizeComponent', () => {
         fixture.detectChanges();
         activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
-        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.activatedText());
+        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.activatedText);
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
-        expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.activatedAdditional());
+        expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.activatedAdditional);
         buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         icons = el.nativeElement.querySelectorAll('svg-icon');
@@ -780,7 +778,7 @@ describe('NxAuthorizeComponent', () => {
         const emailLabel = el.nativeElement.querySelectorAll('label');
         expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.passResetHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.passResetHeader);
         // const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 4 because of theme test component
         // UNCOMMENT after tests!!!
@@ -800,7 +798,7 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerText).toBe(component.LANG.authorize.newPassHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.newPassHeader);
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 6 because of theme test component
         // UNCOMMENT after tests!!!
@@ -820,7 +818,7 @@ describe('NxAuthorizeComponent', () => {
         const labels = el.nativeElement.querySelectorAll('button');
         expect(labels[0].innerText).toBe('OK');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectedText());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectedText);
     });
 
     it('should load loginCloud cloud connect error component', () => {

@@ -17,10 +17,10 @@ import {
 export class UserManager {
     CONFIG: IConfig;
 
-    private mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
-    private _ownerEmail: string;
-    private _accessRole: string = '';
-    private _userId: string;
+    protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
+    protected _ownerEmail: string;
+    protected _accessRole: string = '';
+    protected _userId: string;
     accessRoles: NxSystemRole[];
     currentUser: NxSystemUser;
     currentUserEmail: string;
@@ -33,7 +33,7 @@ export class UserManager {
         mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
         currentUserEmail: string,
         userId: string,
-        private locale: string,
+        protected locale: string,
     ) {
         this.CONFIG = config;
         this.mediaserver = mediaserver;
@@ -86,8 +86,7 @@ export class UserManager {
     }
 
     isAdmin(user: NxSystemRole) {
-        return user.permissions &&
-            user.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
+        return user?.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
     }
 
     isEmptyGuid(guid?: string) {
@@ -270,7 +269,7 @@ export class UserManager {
         return isNotMeOrOwner && (this.isMine || !user.isAdmin);
     }
 
-    saveUser(user: NxSystemUser, role: NxSystemRole) {
+    saveUser(user: NxSystemUser, role?: NxSystemRole): Promise<NxSystemUser> {
         let userCreated = false;
         const isSelf = user.id === this.currentUser.id;
         if (isSelf && user.isCloud) {
@@ -301,7 +300,7 @@ export class UserManager {
             delete user.permissions;
         }
 
-        return this.mediaserver.saveUser(user).toPromise().then(result => {
+        return this.mediaserver.saveUser(user).toPromise().then((result: NxSystemUser) => {
             user.id = result.id;
             user.role = role;
             user.accessRole = role.name || role.label;

@@ -62,6 +62,7 @@ export interface LanguageI18NStaticTypes {
     systemStatuses:        SystemStatuses;
     serverDocumentation:   ServerDocumentation;
     toastMessage:          ToastMessage;
+    userGroups:            UserGroups;
     healthMonitor:         HealthMonitor;
     headerLabels:          HeaderLabels;
     license:               License;
@@ -636,6 +637,8 @@ export interface DialogsTitles {
     serversDetach:          (params?: Record<string, string | number>) => string;
     serversReset:           (params?: Record<string, string | number>) => string;
     serversRestart:         (params?: Record<string, string | number>) => string;
+    defaultUserGroupText:   (params?: Record<string, string | number>) => string;
+    customUserGroupText:    (params?: Record<string, string | number>) => string;
 }
 
 export interface Tooltips {
@@ -1378,6 +1381,10 @@ export interface CloudConnect {
 
 export interface Deleted {
     success: (params?: Record<string, string | number>) => string;
+}
+
+export interface UserGroups {
+    multiple: (params?: Record<string, string | number>) => string;
 }
 
 export interface View {

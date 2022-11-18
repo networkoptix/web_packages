@@ -143,6 +143,7 @@ const FeatureFlagKeys = [
     'cloudOwnershipTransfer',
     'viewCameraDetails',
     'themesEnabled',
+    'usersWithGroups',
     'paginatorExperimental',
     'newHeader',
     'cloudStorage',

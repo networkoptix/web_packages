@@ -11,4 +11,5 @@ export type extNgForm = {
     hasChange: boolean,
     changedFields: Set<string>,
     reset$: Subject<boolean>,
+    isDynamicForm: boolean,
 };

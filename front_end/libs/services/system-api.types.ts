@@ -254,28 +254,83 @@ export interface User {
     name: string;
     fullName: string;
     username?: string;
+    type?: string;
+    isOwner?: boolean,
+    isHttpDigestEnabled?: boolean,
+    userGroupIds?: string[],
+    resourceAccessRights?: {
+        additionalProp1?: string,
+        additionalProp2?: string,
+        additionalProp3?: string
+    }, // up to here, for only User with Groups
 }
 
 interface Users {
-    cryptSha512Hash: string,
-    digest: string,
+    id: string,
+    name: string,
     email: string,
     fullName: string,
-    hash: string,
-    id: string,
-    isAdmin: boolean,
-    isCloud: boolean,
-    isEnabled: boolean,
-    isLdap: boolean,
-    name: string,
-    parentId: string,
     permissions: string,
-    realm: string,
-    typeId: string,
-    url: string,
-    userRoleId: string
+    isEnabled: boolean,
+    externalId: string, // up to here, shared between User with Roles & Groups
+    cryptSha512Hash?: string,
+    digest?: string,
+    hash?: string,
+    isAdmin?: boolean,
+    isCloud?: boolean,
+    isLdap?: boolean,
+    parentId?: string,
+    realm?: string,
+    typeId?: string,
+    url?: string,
+    userRoleId?: string, // up to here, for only User with Roles
+    type?: string,
+    isOwner?: boolean,
+    isHttpDigestEnabled?: boolean,
+    userGroupIds?: string[],
+    resourceAccessRights?: {
+        additionalProp1?: string,
+        additionalProp2?: string,
+        additionalProp3?: string
+    }, // up to here, for only User with Groups
 }
 interface ec2GetUsers extends Array<Users> {}
+
+export interface UserGroups {
+    id: string,
+    name: string,
+    description: string,
+    type: string,
+    externalId: string,
+    permissions: string,
+    parentGroupIds: string[],
+    resourceAccessRights: {
+        additionalProp1: string,
+        additionalProp2: string,
+        additionalProp3: string
+    },
+    isPredefined: boolean
+}
+
+// export interface UsersWithGroups {
+//     id: string,
+//     name: string,
+//     email: string,
+//     fullName: string,
+//     type: string,
+//     isOwner: boolean,
+//     permissions: string,
+//     isEnabled: boolean,
+//     isHttpDigestEnabled: boolean,
+//     userGroupIds: string[],
+//     externalId: string,
+//     resourceAccessRights: {
+//         additionalProp1?: string,
+//         additionalProp2?: string,
+//         additionalProp3?: string
+//     },
+//     password?: string
+// }
 
 export interface UserSession {
   username: string,

@@ -565,7 +565,9 @@
             "removeUser": "Remove user",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?",
+            "defaultUserGroupText": "Default",
+            "customUserGroupText": "Custom"
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
@@ -1164,6 +1166,9 @@
         "loggingIn": "Logging in. Please wait.",
         "sessionRenewed": "Session has been renewed.",
         "failedToUpdateSession": "Updating the session failed."
+    },
+    "userGroups": {
+        "multiple": "Multiple ({number})"
     },
     "healthMonitor": {
         "groups": {

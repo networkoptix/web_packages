@@ -11,6 +11,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSystemAPI } from './system-legacy-api.service';
+import { NxSystemRestAPI3 } from './system-rest-api-v3.service';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { NxUriCacheService } from './uri-cache.service';
 
@@ -36,7 +37,7 @@ export class NxSystemAPIService {
         // this.systemConnections = {};
     }
 
-    createConnection<S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 = NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2>(
+    createConnection<S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 = NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3>(
         user: string,
         systemId: string,
         serverId: string,
@@ -62,7 +63,22 @@ export class NxSystemAPIService {
         const useRest = Math.floor(version) > 4;
         if (useRest || environment.isLocal) {
             let serverApi;
-            if (version > 5.0) {
+            if (version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
+                serverApi = new NxSystemRestAPI3(
+                    this.http,
+                    this.CONFIG,
+                    this.location,
+                    user,
+                    systemId,
+                    serverId,
+                    unauthorizedCallback,
+                    this.cacheService,
+                    this.cookieService,
+                    this.healthService,
+                    this.appState,
+                    this.injector
+                ) as S;
+            } else if (version > 5.0) {
                 serverApi = new NxSystemRestAPI2(
                     this.http,
                     this.CONFIG,

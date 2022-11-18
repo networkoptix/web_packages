@@ -67,20 +67,37 @@
         <ul class="dropdown-menu--list">
             <li
                 class="dropdown-item-container"
-                *ngFor="let item of items; trackBy: trackItem"
+                *ngFor="let item of items; trackBy: trackItem; last as isLast"
             >
-                <div class="dropdown-item inset">
-                    <nx-checkbox
-                        [componentId]="item.id"
-                        [checked]="item.selected"
-                        (click)="change(item)"
-                    ></nx-checkbox>
-
-                    <label
-                        class="ellipsis"
-                        [htmlFor]="item.id"
-                        >{{ item.label | translate }}</label
+                <div
+                    class="dropdown-item inset"
+                    [nxTooltip]="item.tooltip"
+                    [ngClass]="{
+                        'default-cursor': ['horizontal', 'title'].includes(item.id),
+                        'mb-1': isLast
+                    }"
+                    [ngSwitch]="item.id"
+                >
+                    <hr *ngSwitchCase="'horizontal'" />
+                    <h4
+                        class="pl-3"
+                        *ngSwitchCase="'title'"
                     >
+                        {{ item.label | translate }}
+                    </h4>
+                    <ng-container *ngSwitchDefault>
+                        <nx-checkbox
+                            [componentId]="item.id"
+                            [checked]="item.selected"
+                            (click)="change(item)"
+                        ></nx-checkbox>
+                        <label
+                            class="ellipsis"
+                            [ngClass]="{ 'more-left-padding': moreLeftPadding }"
+                            [htmlFor]="item.id"
+                            >{{ item.label | translate }}</label
+                        >
+                    </ng-container>
                 </div>
             </li>
         </ul>

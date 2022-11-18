@@ -907,7 +907,7 @@ export class NxSystemAPI {
         return this.getRequestAggregator<t.AggregatedUsers>(routes);
     }
 
-    saveUser(user: NxSystemUser) {
+    saveUser(user: NxSystemUser): Observable<NxSystemUser | t.User | t.ChangedIdReturned> {
         return this.post<t.ChangedIdReturned>(
             '/ec2/saveUser',
             this.cleanUserObject(user)

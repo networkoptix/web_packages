@@ -1,0 +1,125 @@
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as theme_vars;
+
+
+.user-name {
+    @include mixins.ellipsis;
+    @include typography.regular13nocolor;
+    color: var(--card-header-text);
+}
+
+.header-users {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    h2 {
+        color: var(--card-header-text) !important;
+    }
+
+    .header-username {
+        display: flex;
+        align-items: center;
+
+        .heading-style {
+            font-family: theme_vars.$font-family-medium;
+            line-height: 40px;
+            height: 40px;
+            font-size: 24px;
+            display: block;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-status-switch-wrapper {
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+
+            span {
+                white-space: nowrap;
+            }
+        }
+    }
+}
+
+.header-title {
+    text-align: left !important;
+    position: relative;
+
+    h2 {
+        @extend .heading-style;
+    }
+}
+
+.edit-button {
+    width: 40px;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-role {
+    @include mixins.ellipsis;
+    max-width: 120px;
+}
+
+.button-cell {
+    padding-right: 6px !important;
+    padding-left: 6px !important;
+    text-align: center;
+}
+
+.help-block {
+    display: block;
+    background-color: transparent;
+    color: var(--light16);
+    padding: .5rem 0 0;
+}
+
+.user-settings-form {
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+    padding: 6px 0 6px 8px;
+
+    .user-form-labels {
+        color: var(--dark9);
+    }
+
+    input:disabled {
+        background-color: var(--light2);
+        border: 1px solid var(--light6);
+    }
+}
+
+.edit-padding {
+    padding-left: 6px !important;
+}
+
+.password-change-required {
+    line-height: 2rem;
+}
+
+.control-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    width: 33px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: start;
+        margin: 0 0.5rem 0.5rem 0;
+    }
+}
+
+.form-group {
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+}

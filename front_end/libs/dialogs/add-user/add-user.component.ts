@@ -75,11 +75,14 @@ export class AddUserModalContent {
 
     saveUser() {
         this.user.email = this.user.email.toLowerCase();
-        return this.system.saveUser(this.user, this.user.role)
-            .then(user => {
-                return this.system.getUsers(true)
-                    .then(() => user);
-            });
+        // this.user.userGroupIds.push(this.userGroupIds);
+        // return this.system.saveUser(this.user, this.user.role)
+        // return this.system.saveUser(this.user)
+        //     .then(user => {
+        //         return this.system.getUsers(true)
+        //             .then(() => user);
+        //     });
+        return Promise.resolve();
     }
 
     ngOnInit(): void {

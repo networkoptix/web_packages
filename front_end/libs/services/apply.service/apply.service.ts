@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual, cloneDeep } from 'lodash-es';
+import { isEqual, cloneDeep, isArray } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest as combineLatestFrom,
@@ -258,7 +258,8 @@ export class NxApplyService extends DialogBase {
         saveFunction: Process,
         discardFunction?: () => void,
         owner = undefined,
-        nonSystem = true
+        nonSystem: boolean = true,
+        isDynamicForm: boolean = false,
     ) {
         const updateOriginalForm = () => {
             const forms = this.applyComponentInstance.forms;
@@ -337,7 +338,11 @@ export class NxApplyService extends DialogBase {
             const formatInitial = () => {
                 const formatted = {};
                 for (const ctrl in form.form.controls) {
-                    formatted[ctrl] = form.form.controls[ctrl].value;
+                    if (Array.isArray(form.form.controls[ctrl].value)) {
+                        formatted[ctrl] = [...form.form.controls[ctrl].value];
+                    } else {
+                        formatted[ctrl] = form.form.controls[ctrl].value;
+                    }
                 }
 
                 return formatted;
@@ -356,6 +361,7 @@ export class NxApplyService extends DialogBase {
                 hasChange: false,
                 changedFields: new Set(),
                 reset$: new Subject(),
+                isDynamicForm,
             };
 
             extNgForm.form.valueChanges
@@ -373,24 +379,25 @@ export class NxApplyService extends DialogBase {
                         // cover a case with dynamic fields in form represented as array
                         // filter out ddMultiSelect as selected items are represented as
                         // an array (same as dynamic form fields)
-                        // I don't want to overcomplicate the logic -> so if we ever have a need
-                        // to use ddMultiSelect in dynamic form we'll need to refactor this -- TT
-                        Object.keys(change)
-                            .filter(key => key !== 'ddMultiSelect')
-                            .forEach(key => {
-                                if (Array.isArray(change[key])) {
-                                    if (change[key].length !== extNgForm.originalForm[key].length) {
-                                        extNgForm.originalForm[key] = cloneDeep(change[key]);
+                        if (extNgForm.isDynamicForm) {
+                            Object.keys(change)
+                                .forEach(key => {
+                                    if (Array.isArray(change[key])) {
+                                        if (change[key].length !== extNgForm.originalForm[key].length) {
+                                            extNgForm.originalForm[key] = cloneDeep(change[key]);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                        }
                     }
 
                     extNgForm.changedFields.clear();
                     Object.keys(extNgForm.originalForm).forEach(key => {
-                        if (
-                            (isObject(extNgForm.originalForm[key]) && !isEqual(extNgForm.originalForm[key], change[key])) ||
-                            (!isObject(extNgForm.originalForm[key]) && extNgForm.originalForm[key] !== change[key])) {
+                        const isNotPrimitive = isObject(extNgForm.originalForm[key]) || isArray(extNgForm.originalForm[key]);
+
+                        if (isNotPrimitive && !isEqual(extNgForm.originalForm[key], change[key])) {
+                            extNgForm.changedFields.add(key);
+                        } else if (!isNotPrimitive && extNgForm.originalForm[key] !== change[key]) {
                             extNgForm.changedFields.add(key);
                         }
                     });

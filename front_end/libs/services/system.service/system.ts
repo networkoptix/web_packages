@@ -15,6 +15,7 @@ import { apiRequestAttempts, updateInterval } from '@lib/variables/static-variab
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -42,6 +43,7 @@ import type {
     NxSystemUser,
     NxSystemRole
 } from './user-manager/user-manager-types';
+import { UserWithGroupsManager } from './user-manager/user-with-groups-manager';
 
 /* Api response cleaners */
 export function trimId(id) {
@@ -112,7 +114,7 @@ export class NxSystem {
     CONFIG: IConfig;
     LANG = staticLang;
 
-    userManager: UserManager;
+    userManager: Partial<UserManager & UserWithGroupsManager>;
     serverManager: ServerManager;
     cameraManager: CameraManager;
     storageManager: StorageManager;
@@ -124,7 +126,7 @@ export class NxSystem {
     activeSubscription: Subscription;
     show404 = false;
     currentUserEmail: string;
-    mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
+    mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
     currentServerNotBusy: boolean = true;
     currentBusyServerIds = new Set();
     systemIdInit: string;
@@ -246,7 +248,9 @@ export class NxSystem {
             unauthorizedCallback(true).then(() => { });
         }
 
-        this.userManager = new UserManager(this.CONFIG, this.mediaserver, currentUserEmail, userId, this.locale);
+        this.userManager = (this.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups)
+            ? new UserWithGroupsManager(this.CONFIG, this.mediaserver as NxSystemRestAPI3, currentUserEmail, userId, this.locale)
+            : new UserManager(this.CONFIG, this.mediaserver, currentUserEmail, userId, this.locale);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
@@ -397,9 +401,7 @@ export class NxSystem {
                 try {
                     directCapabilities = (await this.getSystemCapabilities()) || {};
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
-                } catch (e) {
-                }
-
+                } catch (e) {}
                 if (this.info) {
                     Object.assign(this.info, response); // Update
                 } else {
@@ -407,7 +409,6 @@ export class NxSystem {
                 }
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
-
                 const capabilities = this.info?.capabilities || {}; // Make capabilities defined so that its easier to check feature flags.
                 this.canMerge = this.userManager.isMine && 'cloudMerge' in capabilities;
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
@@ -979,21 +980,21 @@ export class NxSystem {
     // Start of deprecated userManger methods
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     getUsersDataFromTheSystem() {
         return this.userManager.getUsersDataFromTheSystem();
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         return this.userManager.saveUser(user, role);
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     deleteUser(removedUser: NxSystemUser) {
         return this.userManager.deleteUser(removedUser);
@@ -1012,28 +1013,28 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     get accessRole() {
         return this.userManager.accessRole || '';
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     get accessRoles() {
         return this.userManager.accessRoles;
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     get currentUser() {
         return this.userManager.currentUser;
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      * Note: userManager.isAdmin() is a function with one required argument, not a getter
      */
     get isAdmin() {
@@ -1041,7 +1042,7 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      * Note: userManager.isOwner() is a function with one required argument, not a getter
      */
     get isOwner() {
@@ -1049,14 +1050,14 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     get isMine() {
         return this.userManager.isMine;
     }
 
     /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * @deprecated Method should be referenced from userManager instead of directly from system.
      */
     get users() {
         return this.userManager.users;
@@ -1065,7 +1066,7 @@ export class NxSystem {
     // Start of deprecated cameraManager methods
 
     /**
-     * @deprecated Property should be refrenced from cameraManager instead of directly for system.
+     * @deprecated Property should be referenced from cameraManager instead of directly for system.
      */
     get cameras() {
         return this.cameraManager.cameras;
@@ -1076,21 +1077,21 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
+     * @deprecated Method should be referenced from cameraManager instead of directly from system.
      */
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
         return this.cameraManager.updateRecordingSettings(updatedTask, cameraSettings);
     }
 
     /**
-     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
+     * @deprecated Method should be referenced from cameraManager instead of directly from system.
      */
     getCameras() {
         return this.cameraManager.getCameras();
     }
 
     /**
-     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
+     * @deprecated Method should be referenced from cameraManager instead of directly from system.
      */
     updateSystemServersCameras() {
         return this.cameraManager.updateSystemServersCameras();
@@ -1099,14 +1100,14 @@ export class NxSystem {
     // Start of deprecated serverManager methods
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     getPreviewUrl(cameraId: string, time: number, width = 640, height = 480, rotate = 0) {
         return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     renameServer(serverId: string, serverName: string) {
         return this.serverManager.renameServer(serverId, serverName)
@@ -1115,7 +1116,7 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     restartServer(serverId: string) {
         this.currentServerNotBusy = false;
@@ -1127,7 +1128,7 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      * TODO: Need to update this method once better license information is available from server with details on license types.
      */
     getLicenseChannels(): Promise<{ total: number; used: number; available: number; }> {
@@ -1135,21 +1136,21 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     get servers() {
         return this.serverManager.servers;
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     get moduleInfo() {
         return this.serverManager.moduleInfo;
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     getServerApiDoc() {
         return this.serverManager
@@ -1158,7 +1159,7 @@ export class NxSystem {
     }
 
     /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * @deprecated Method should be referenced from serverManager instead of directly from system.
      */
     activateLicense(serverId, key) {
         return this.serverManager.activateLicense(serverId, key);
