@@ -455,6 +455,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkAuthCodeProcess = this.processService.createProcess(
             () => {
                 this.authCodeErrorCode = '';
+                if (this.clientType === ClientType.system2faAuth) {
+                    return this.cloudService.updateSessionWith2fa(this.authCode);
+                }
+
                 return this.action === 'restore_password'
                     ? this.cloudService.restorePassword(this.loginCode, this.resetPassword, this.authCode)
                     : this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
@@ -525,8 +529,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     // errorText: 'User is not in portal'
                     this.createErrorCode = ['email', 'portalError'];
                 } else {
-                    // if we support code in the future, so that account can be activated upon registration
-                    // then res.activated === true
+                    // in the case when code is passed with registration (ie when user gets invited to system)
+                    if (res.activated) {
+                        this.activated$.next(true);
+                    }
+
                     this.loginEmail = this.accountInfo.email;
                     this.currentState = AuthorizeState.activate;
                 }

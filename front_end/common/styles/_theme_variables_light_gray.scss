@@ -1,0 +1,573 @@
+@use "utils" as *;
+@import "~@vime/core/themes/light.css";
+@import "./native-theme/theme_palette";
+@import "_theme_palette";
+
+html[data-theme="light-gray"] {
+    body {
+        background-color: #F4F4F4;
+        color : #404040;
+    }
+
+    --body-bg    : #{$additional_gray_light2};
+    --alt-body-bg : #{$light_gray_1};
+    --body-text-color : #{$dark_gray_9};
+
+    --header-bg                  : #{$light_gray_1};
+    --header-border-color        : #{$light_gray_4};
+    --header-webadm-bg           : #{$dark_gray_14};
+    --header-webadm-border-color : transparent;
+
+    --ribbon-bg     : var(--bluez-light);
+    --ribbon-border : var(--bluez-light);
+    --ribbon-color  : #{$dark_gray_9};
+
+    --ribbon-alert-bg : #{$yellow_l2};
+    --ribbon-alert-border : #{$yellow_l1};
+    --ribbon-alert-color : #{$dark_gray_9};
+
+    --image-box-border-color : #{$light_gray_6};
+    --image-box-selected-border-color : var(--brand-l1);
+
+    --storage-size-available : #{$additional_gray_light1};
+    --storage-size-reserved : repeating-linear-gradient(
+                -45deg,
+                #{$light_gray_3},
+                #{$light_gray_3} 4.25px,
+                #{$light_gray_4} 4.25px,
+                #{$light_gray_4} 9px
+    );
+    --storage-size-reserved-border : #{$light_gray_5};
+
+    --search-link-color               : #{$dark_gray_9};
+    --search-link-hover-color         : #{$dark_gray_15};
+    --search-link-visited-color       : #{$dark19};
+    --search-link-visited-hover-color : #{$light_gray_14};
+    --search-highlight-color          : rgba(var(--yellow_main--rgb), 0.5);
+
+    --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
+
+    --spot-gradient : radial-gradient(
+            ellipse farthest-corner at center center,
+            #A5B7C0 0,
+            #AFBFC7 3%,
+            #B9C7CE 5%,
+            #C3CFD5 10%,
+            #CDD7DC 15%,
+            #D7DFE3 20%,
+            #E1E7EA 23%,
+            #EBEFF1 25%,
+            #F5F7F8 30%,
+            #FFFFFF 40%
+    );
+
+    --h1 : #{$dark_gray_9};
+    --h2 : #{$dark_gray_9};
+    --h3 : #{$dark_gray_9};
+    --h4 : #{$dark_gray_9};
+    --h5 : #{$dark_gray_9};
+    --h6 : #{$dark_gray_9};
+    --h7 : #{$dark_gray_9};
+
+    --elements-disabled : #{$light_gray_10};
+
+    --svg-std-icon-fill : #{$light_gray_16};
+    --svg-path-light-color: #{$light_gray_4};
+    --svg-path-dark-color: #{$dark_gray_9};
+
+    --svg-placeholder-elm1-color : #2B383F; // $dark_gray_9
+    --svg-placeholder-elm2-color : #A5B7C0; //$light_gray_10;
+
+    --text-placeholder-color : #{$light_gray_16};
+
+    --scrollbar-color                   : var(--light16);
+    --scrollbar-thumb-bg                : var(--light10);
+    --scrollbar-thumb-border-color      : var(--additional_light1);
+    --menu-scrollbar-thumb-border-color : var(--light6);
+
+    --tooltip-shadow-color : #{$dark_gray_15};
+    --tooltip-bg : #{$dark_gray_1};
+    --tooltip-color : #{$light_gray_1};
+
+    --popover-shadow-color : 0 1rem 2rem 0 #{$light_gray_15};
+    --popover-bg           : #{$light_gray_1};
+    --popover-color        : #{$dark_gray_9};
+
+    --radio-color              : #{$dark_gray_11};
+    --radio-check-color        : var(--brand-core);
+    --radio-hover-color        : #{$dark_gray_3};
+    --radio-hover-check-color  : var(--brand-core);
+    --radio-active-color       : #{$dark_gray_11};
+    --radio-active-check-color : var(--brand-core);
+    --radio-active-hover-color : #{$dark_gray_3};
+
+    --checkbox-color              : #{$dark_gray_9};
+    --checkbox-check-color        : var(--brand-core);
+    --checkbox-hover-color        : #{$dark_gray_1};
+    --checkbox-hover-check-color  : var(--brand-core);
+    --checkbox-active-color       : #{$dark_gray_9};
+    --checkbox-active-check-color : var(--brand-core);
+    --checkbox-active-hover-color : #{$dark_gray_1};
+
+    --auth-header-bg       : #{$additional_gray_light1};
+    --auth-header-color    : #{$dark_gray_9};
+    --auth-subheader-color : #{$dark_gray_9};
+    --auth-body-bg         : #{$light_gray_1};
+    --auth-pill-bg         : #{$light_gray_3};
+
+    --border-color         : #{$light_gray_4};
+    --border-hover-color   : #{$light_gray_8};
+    --border-active-color  : #{$light_gray_10};
+    --horizontal-sep-color : #{$light_gray_6};
+    --label-color          : #{$dark_gray_9};
+
+    --placehoder-cloud-color   : var(--brand-core);
+    --placehoder-cloud-opacity : .1;
+    --placeholder-accent-color : #{$dark_gray_7};
+    --placeholder-light-color : #{$light_gray_1};
+    --placeholder-light2-color : #{$light_gray_2};
+    --placeholder-accent2-color : #{$dark_gray_7};
+    --placehoder-title-color : #{$dark_gray_9};
+    --placehoder-body-color : #{$dark_gray_9};
+
+    --progress-bar-color                  : #{$light_gray_4};
+    --progress-bar-border-color           : #{$light_gray_6};
+    --progress-bar-reindex-color          : var(--brand-core);
+    --progress-bar-heder-title-color      : var(--brand-core);
+    --progress-bar-heder-persentage-color : #{$dark_gray_9};
+
+    --switch-slider-bg            : #{$light_gray_8};
+    --switch-slider-hover-bg      : #{$light_gray_7};
+    --switch-disabled-color       : #{$light_gray_8};
+    --switch-disabled-hover-color : #{$light_gray_7};
+    --switch-selected-color       : #{$green_main};
+    --switch-selected-hover-color : #{$green_l1};
+    --switch-button-color         : #{$light_gray_1};
+    --switch-bar-color            : #{$green_l2};
+    --switch-bar-hover-color      : #{$green_l2};
+    --switch-bar-disable-color    : #{$light_gray_12};
+    --switch-warning-color        : #{$red_l1};
+    --switch-warning-hover-color  : #{$red_l2};
+    --switch-warning-circle-color : #{$red_d2};
+    --switch-circle-color         : #{$light_gray_12};
+    --switch-circle-hover-color   : #{$light_gray_12};
+    --switch-circle-disable-color : #{$light_gray_12};
+
+    --developer-menu-bg : #{$additional_gray_light2};
+    --developer-menu-base-color : #{$dark_gray_10};
+
+    // *** arch svg ***********************
+    --arch-svg-dash-stroke              : var(--brand-l4);
+    --arch-svg-solid-path-arrow-fill    : #{$dark_gray_1};
+    --arch-svg-level1-fill              : #{$light_gray_10};
+    --arch-svg-level1-color             : #{$dark_gray_9};
+    --arch-svg-level2-fill              : #{$light_gray_6};
+    --arch-svg-level3-fill              : #{$light_gray_1};
+    --arch-svg-spacer-fill              : #{$light_gray_1};
+    --arch-svg-cloud-fill               : rgba(var(--brand_l4--rgb), 0.3);
+    --arch-svg-cloud-color              : #{$dark_gray_9};
+    --arch-svg-cloud-relay-fill         : rgba(var(--brand_l2--rgb), 0.3);
+    --arch-svg-cloud-relay-color        : #{$dark_gray_9};
+    --arch-svg-third-party-fill         : #{$light_gray_4};
+    --arch-svg-built-in-fill            : #{$light_gray_1};
+    --arch-svg-built-in-color           : #{$dark_gray_9};
+    --arch-svg-rest-streaming-api-fill  : #{$light_gray_1};
+    --arch-svg-rest-streaming-api-color : #{$dark_gray_9};
+    --arch-svg-server-fill              : #{$light_gray_4};
+    --arch-svg-server-hover-fill        : #{$light_gray_4};
+    --arch-svg-transparent-tile-stroke  : #{$light18};
+    // ***************************************
+
+    --left-menu-border-color                    : transparent;
+    --left-menu-l1-bg                           : transparent;
+    --left-menu-l1-bg-hover                     : #{$additional_gray_light3};
+    --left-menu-l1-bg-active                    : #{$light_gray_5};
+    --left-menu-l1-color                        : #{$dark_gray_9};
+    --left-menu-l1-selected-bg                  : #{$light_gray_5};
+    --left-menu-l1-selected-hover-bg            : #{$light_gray_6};
+    --left-menu-l3-scroll                       : #{$light_gray_5};
+    --left-menu-l3-shadow                       : transparent;
+    --left-menu-l3-bg                           : #{$light_gray_5};
+    --left-menu-l3-color                        : #{$dark_gray_9};
+    --left-menu-l3-additional-color             : #{$light_gray_16};
+    --left-menu-l3-hover-bg                     : #{$light_gray_6};
+    --left-menu-l3-hover-color                  : #{$dark_gray_9};
+    --left-menu-l3-opacity                      : 1;
+    --left-menu-l3-selected-bg                  : #{$light_gray_16};
+    --left-menu-l3-selected-color               : #{$light_gray_1};
+    --left-menu-disabled-item-color             : #{$light_gray_13};
+    --left-menu-disabled-item-addtitional-color : #{$light_gray_10};
+
+    // New header ******************************
+    --header-level-one-color              : #{$light_gray_13};
+    --header-level-one-bg                 : #{$dark_gray_4};
+    --header-level-one-active-bg          : #{$dark_gray_5};
+    --header-level-one-active-color       : #{$light_gray_4};
+    --header-level-one-hover-color        : #{$light_gray_10};
+    --header-level-two-bg                 : #{$dark_gray_6};
+    --header-item-disabled                : #{$dark_gray_13};
+    --header-level-two-hover-border-color : #{$dark_gray_11};
+    --header-arrow-hover                  : #{$dark_gray_8};
+    --header-nav-arrow-bg                 : #{$dark_gray_7};
+    --header-logout-action-color          : #{$light_gray_16};
+
+    // Mobile header
+    --mobile-header-bg                    : #{$dark_gray_4};
+    --mobile-level-one-color              : #{$dark_gray_15};
+    --mobile-level-two-color              : #{$light_gray_6};
+    --mobile-header-svg-color             : #{$light_gray_1};
+    --mobile-header-border-one            : #{$dark_gray_2};
+    --mobile-header-border-two            : #{$dark_gray_5};
+    --mobile-header-border-three          : #{$dark_gray_3};
+    --mobile-header-item-nav-arrow        : #{$dark_gray_13};
+    --mobile-header-logout-btn-bg         : #{$dark_gray_12};
+    --mobile-header-logout-btn-color      : #{$light_gray_2};
+
+    // Header profile dropdown
+    --header-profile-bg                   : #{$dark_gray_7};
+    --header-profile-color                : #{$light_gray_13};
+    --header-profile-hover-bg             : #{$dark_gray_9};
+    --header-profile-hover-color          : #{$light_gray_10};
+    --header-profile-active-color         : #{$light_gray_4};
+    --header-profile-active-bg            : #{$dark_gray_9};
+
+    // Footer
+    --footer-bg                           : #{$dark_gray_4};
+    --footer-text-color                   : #{$dark_gray_9};
+    --footer-link-color                   : #{$dark_gray_15};
+
+    // View tab ********************************
+    --view-bg                    : #{$additional_gray_light2};
+    --view-search-bg             : #{$additional_gray_light2};
+    --view-search-color          : #{$dark_gray_9};
+    --view-search-hover-bg       : #{$light_gray_2};
+    --view-search-hover-color    : #{$dark_gray_9};
+    --view-search-active-bg      : #{$light_gray_1};
+    --view-search-active-color   : #{$dark_gray_9};
+
+    --control-color              : #{$light_gray_4};
+    --control-enabled-color      : #{$light_gray_16};
+    --control-hoved-bg           : #{$additional_gray_light3};
+    --control-active-bg          : #{$light_gray_5};
+
+    --left-menu-view-hover-bg    : #{$additional_gray_light3};
+    --left-menu-view-selected-bg : #{$light_gray_5};
+    // end View tab ****************************
+
+    --sidebar-toggling-ear-color : #{$light_gray_16};
+
+    --time-under-mouse-bg               : rgba(var(--light6--rgb), 0.9);
+    --time-under-mouse-color            : #{$dark_gray_9};
+    --timeline-bg                       : #{$light_gray_1};
+    --timeline-scrollbar-bg             : #{$light_gray_16};
+    --timeline-scrollbar-hover-bg       : #{$light_gray_14};
+    --timeline-scrollbar-stripe-bg      : #{$dark_gray_12};
+    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.5);
+    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.9);
+    --timeline-playback-indicator-bg    : rgba(var(--dark9--rgb), 0.9);
+    --timeline-playback-indicator-color : #{$light_gray_1};
+    --timeline-selection-panel-bg       : var(--brand-core);
+    --timeline-selection-panel-hover-bg       : var(--brand-l1);
+    --timeline-selection-panel-active-bg      : var(--brand-d1);
+    --timeline-selection-panel-color    : #{$light_gray_1};
+    --timeline-selection-picker         : light;
+    --timeline-selection-panel-delimiter-color : rgba(var(--light4--rgb), 0.25);
+    --timeline-selection-panel-close-bg        : var(--brand-d2);
+    --timeline-selection-panel-close-hover-bg        : var(--brand-d1);
+    --timeline-selection-panel-close-active-bg        : var(--brand-d4);
+    --timeline-control-color            : #{$dark_gray_9};
+
+    --paginator-bg    : #{$light_gray_4};
+    --paginator-color : #{$light_gray_16};
+    --paginator-hover-bg : #{$light_gray_5};
+    --paginator-hover-color : #{$light_gray_16};
+    --paginator-active-bg : #{$light_gray_16};
+    --paginator-active-color : #{$light_gray_1};
+
+    --btn-download-hover-bg : #{$light_gray_5};
+
+    --btn-close-hover-bg  : #{$additional_gray_light2};
+    --btn-close-hover-color : #{$light_gray_10};
+    --btn-close-active-bg : #{$additional_gray_light3};
+    --btn-close-active-color : #{$light_gray_17};
+
+    --btn-text-color        : #{$light_gray_16};
+    --btn-text-hover-color  : #{$dark_gray_15};
+    --btn-text-active-color : #{$light_gray_16};
+
+    --btn-clear-bg    : transparent;
+    --btn-clear-color : #{$dark_gray_9};
+    --btn-clear-hover-bg  : transparent;
+    --btn-clear-hover-color  : #{$dark_gray_9};
+    --btn-clear-active-bg : transparent;
+    --btn-clear-active-color : #{$dark_gray_9};
+
+    --btn-dropdown-toggle-bg             : #{$light_gray_4};
+    --btn-dropdown-toggle-color          : #{$dark_gray_9};
+    --btn-dropdown-toggle-selected-color : #{$light_gray_1};
+    --btn-dropdown-toggle-shadow-color   : inset 0px -1px 0px #{$light_gray_7};
+    --btn-dropdown-toggle-hover-bg       : #{$light_gray_5};
+    --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #{$light_gray_8};
+    --btn-dropdown-toggle-active-bg      : #{$light_gray_6};
+    --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #{$light_gray_8};
+
+    --btn-tag-bg                         : #{$light_gray_4};
+    --btn-tag-color                      : #{$light_gray_16};
+    --btn-tag-selected-bg                : #{$light_gray_16};
+    --btn-tag-selected-hover-bg          : #{$light_gray_17};
+    --btn-tag-selected-active-bg         : #{$light18};
+    --btn-tag-selected-color             : #{$light_gray_1};
+
+    --btn-arrow-bg             : #{$light_gray_4};
+    --btn-arrow-color          : #{$light_gray_16};
+    --btn-arrow-hover-bg       : #{$light_gray_5};
+    --btn-arrow-hover-color    : #{$light_gray_16};
+    --btn-arrow-selected-bg    : #{$light_gray_6};
+    --btn-arrow-selected-color : #{$light_gray_16};
+
+    --btn-default-bg                : #{$light_gray_4};
+    --btn-default-color             : #{$dark_gray_9};
+    --btn-default-shadow            : inset 0 -1px 0 0 #{$light_gray_7};
+    --btn-default-hover-bg          : #{$light_gray_5};
+    --btn-default-hover-color       : #{$dark_gray_9};
+    --btn-default-hover-shadow      : inset 0 -1px 0 0 #{$light_gray_8};
+    --btn-default-active-bg         : #{$light_gray_6};
+    --btn-default-active-color      : #{$dark_gray_9};
+    --btn-default-active-shadow     : inset 0 1px 0 0 #{$light_gray_9};
+    --btn-default-focus-shadow      : #{$light_gray_14};
+    --btn-default-focus-outline-rgb : 125, 151, 164; //$light_gray_14;
+
+    --btn-primary-bg                : var(--brand-core);
+    --btn-primary-color             : #{$light_gray_1};
+    --btn-primary-shadow            : inset 0 -1px 0 0 var(--brand-d2);
+    --btn-primary-hover-bg          : var(--brand-d1);
+    --btn-primary-hover-color       : #{$light_gray_1};
+    --btn-primary-hover-shadow      : inset 0 -1px 0 0 var(--brand-d3);
+    --btn-primary-active-bg         : var(--brand-d2);
+    --btn-primary-active-color      : #{$light_gray_1};
+    --btn-primary-active-shadow     : inset 0 1px 0 0 var(--brand-d4);
+    --btn-primary-focus-shadow      : var(--brand-d1);
+    --btn-primary-focus-outline-rgb : var(--brand_d1--rgb);
+
+    --btn-danger-bg                : #{$red_main};
+    --btn-danger-color             : #{$light_gray_1};
+    --btn-danger-shadow            : #{$red_d2};
+    --btn-danger-hover-bg          : #{$red_d1};
+    --btn-danger-hover-color       : #{$light_gray_1};
+    --btn-danger-hover-shadow      : #{$red_d3};
+    --btn-danger-active-bg         : #{$red_d2};
+    --btn-danger-active-color      : #{$light_gray_1};
+    --btn-danger-active-shadow     : #{$red_d4};
+    --btn-danger-focus-shadow      : #{$red_d1};
+    --btn-danger-focus-outline-rgb : 170, 30, 30; //$red_d1;
+
+    --btn-header-saparator-color : #{$light_gray_4};
+    --btn-header-main-bg         : #{$light_gray_4};
+    --btn-header-main-color      : #{$dark_gray_9};
+    --btn-header-main-hover-bg   : #{$light_gray_2};
+
+    --btn-header-webadm-main-bg         : #{$dark_gray_14};
+    --btn-header-webadm-main-color      : #{$additional_gray_light1};
+    --btn-header-webadm-main-hover-bg   : #{$dark_gray_15};
+    --btn-header-webadm-main-active-bg  : #{$dark_gray_13};
+
+    --dialog-bg : #{$light_gray_1};
+    --dialog-border-color : #{$additional_light8};
+    --dialog-header-bg : #{$additional_gray_light1};
+
+    --svg-legend-bg : #{$additional_gray_light1};
+    --svg-legend-border-color : #{$additional_light8};
+
+    --light-text-color : #{$light_gray_16};
+    --light-text-opacity : 1;
+
+    --tab-link-hover-bg            : #{$light_gray_3};
+    --tab-link-hover-bottom-color  : #{$light_gray_6};
+    --tab-link-active-bg           : #{$light_gray_3};
+    --tab-link-active-bottom-color : #{$light_gray_6};
+    --tab-link-selected-color      : var(--brand-core);
+
+    --tab-link-webadm-color               : #{$additional_gray_light1};
+    --tab-link-webadm-hover-bg            : #{$dark_gray_15};
+    --tab-link-webadm-active-bg           : #{$dark_gray_13};
+
+    --dropdown-menu-arrow-color : #{$light_gray_4};
+    --dropdown-menu-arrow-fill-color : #{$additional_gray_light1};
+
+    --dropdown-menu-border : none;
+    --dropdown-menu-top-border : none;
+    --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light_gray_15};
+    --dropdown-menu-bg : #{$additional_gray_light1};
+    --drop-menu-systems-bg : #{$additional_gray_light1};
+    --drop-menu-navigation-bg : #{$light_gray_1};
+
+    --dropdown-item-color: #{$dark_gray_9};
+    --dropdown-item-active-bg : #{$light_gray_4};
+    --dropdown-item-active-color : #{$dark_gray_9};
+    --dropdown-item-hover-bg    : #{$light_gray_3};
+    --dropdown-item-hover-color : #{$dark_gray_9};
+    --dropdown-item-selected-bg : #{$light_gray_16};
+    --dropdown-item-selected-color : #{$light_gray_1};
+    --dropdown-item-error-color : #{$red_l2};
+
+    // part of drop-menu
+    --system-tile-icon-offline-color : #{$red_l2};
+    --system-tile-name-color : #{$dark_gray_9};
+    --system-tile-owner-color : #{$dark_gray_9};
+    --system-tile-hover-bg : #{$light_gray_3};
+    --system-tile-active-bg : #{$light_gray_4};
+    --system-tile-selected-bg : #{$light_gray_5};
+    --system-tile-nav-link-color : #{$dark_gray_9};
+    --system-tile-nav-link-icon-color : #{$light_gray_13};
+    --system-tile-nav-link-hover-bg : #{$light_gray_3};
+    --system-tile-nav-link-hover-color : #{$dark_gray_9};
+    --system-tile-nav-link-active-bg : #{$light_gray_5};
+    --system-tile-nav-link-active-border-color : #{$light_gray_6};
+    // *****************
+
+    --swagger-get-bg    : #{$blue9};
+    --swagger-put-bg    : #{$orange_l1};
+    --swagger-delete-bg : #{$red_l1};
+    --swagger-patch-bg  : #{$cyan400};
+    --swagger-post-bg   : #{$green_l1};
+    --swagger-btn-execute-bg : #{$blue1};
+    --swagger-btn-execute-color : #{$light_gray_1};
+    --swagger-btn-value-text-color : #{$dark_gray_9};
+    --swagger-btn-key-text-color : #{$purple500};
+    --swagger-btn-value-number-color : #{$green_main};
+    --swagger-textarea-color : #{$light_gray_12};
+    --swagger-required-color : rgba(var(--red_main--rgb), .6);
+    --swagger-input-disabled: #{$light_gray_2};
+    --swagger-input-disabled-border: #{$light_gray_6};
+    --swagger-table-header-color: #{$dark_gray_1};
+    --api-tool-section-header: #{$light_gray_1};
+    --media-type-bg: #{$light_gray_2};
+    --media-type-border: #{$light_gray_4};
+
+    --tabset-bg : #{$light_gray_1};
+    --tabset-hover-bg : #{$light_gray_3};
+    --tabset-color : #{$dark_gray_12};
+
+    --footer-color : #{$light_gray_16};
+
+    --table-alt-row-bg : #{$additional_gray_light1};
+    --table-row-hover-bg : rgba(var(--brand_core--rgb), .1);
+
+    --promo-tile-bg : #{$light_gray_3};
+    --promo-tile-h4-color : #{$dark_gray_9};
+    --promo-tile-img-1-path : url("/static/images/promo/landing_promo_1.svg");
+    --promo-tile-img-2-path : url("/static/images/promo/landing_promo_2.svg");
+    --promo-tile-img-3-path : url("/static/images/promo/landing_promo_3.svg");
+
+    --toast-danger-bg : #f8d7da;
+    --toast-danger-color : #721c24;
+    --toast-danger-border-color : #f5c6cb;
+    --toast-success-bg : #d4edda;
+    --toast-success-color : #155724;
+    --toast-success-border-color : #c3e6cb;
+    --toast-warning-bg : #fff3cd;
+    --toast-warning-color : #856404;
+    --toast-warning-border-color : #ffeeba;
+    --toast-info-bg : #d1ecf1;
+    --toast-info-color : #0c5460;
+    --toast-info-border-color : #bee5eb;
+
+    --card-shadow: 0 2px 5px 0 #{$light_gray_4};
+    --card-active-shadow: 0 2px 5px 0 #{$light_gray_10};
+    --card-header-bg : #{$additional_gray_light1};
+    --card-header-text : #{$dark_gray_9};
+    --card-body-bg : #{$light_gray_1};
+    --card-hover-bg : #{$light_gray_1};
+
+    --card-simple-info-bg           : rgba(var(--bluez-light--rgb), .3);
+    --card-simple-info-border-color : rgba(var(--bluez-light--rgb), .1);
+    --card-simple-info-color        : #{$dark_gray_9};
+    --card-simple-info-svg-color    : var(--bluez-light);
+
+    --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
+    --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
+    --card-simple-warning-color        : #{$dark_gray_9};
+
+    --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
+    --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
+    --card-simple-error-color : #{$dark_gray_9};
+    --card-simple-error-svg-color    : #{$red-main};
+    --card-simple-error-svg-ornament-color    : #{$light_gray_1};
+
+    --card-simple-default-bg : #{$red2};
+    --card-simple-default-color : #{$dark_gray_9};
+    --card-simple-default-border-color : #{$red1};
+
+    --card-support-bg : #{$light_gray_1};
+    --card-support-color : #{$dark_gray_9};
+    --card-support-svg-elem-bg : #{$light_gray_1};
+
+    --card-capability-header-bg : #{$dark_gray_11};
+    --card-capability-intro-color : #{$light_gray_10};
+    --card-capability-icon : var(--brand-core);
+
+    --support-lang-wrapper-bg : #{$light_gray_4};
+    --support-lang-wrapper-color : #{$light_gray_16};
+    --support-tech-apple-color : #{$dark_gray_1};
+
+    --error-label : #{$red-l2};
+    --error : #{$red-l2};
+
+    --input-bg                 : #{$light_gray_1};
+    --input-hover-bg           : #{$additional_gray_light2};
+    --input-color              : #{$dark_gray_9};
+    --input-border-color       : #{$light_gray_6};
+    --input-error-color        : #{$red_l2};
+    --input-error-border-color : #{$red_l2};
+    --input-hover-color        : #{$dark_gray_9};
+    --input-hover-border-color : #{$light_gray_8};
+    --input-focus-color        : #{$dark_gray_9};
+    --input-focus-border-color : var(--brand-core);
+    --input-focus-shadow-color : var(--brand_l1--rgb);
+    --input-active-bg           : #{$light_gray_1};
+    --input-active-color        : #{$dark_gray_9};
+    --input-active-border-color : #{$light_gray_6};
+
+    --input-numeric-arrow-bg : #{$light_gray_1};
+    --input-numeric-arrow-color : #{$dark_gray_9};
+
+    --badge-opacity : 1;
+    --badge-base-bg : #{$light_gray_4};
+    --badge-base-hover-bg : #{$light_gray_5};
+    --badge-base-color : #{$light_gray_16};
+    --badge-base-selected-bg : #{$light_gray_16};
+    --badge-base-selected-hover-bg : #{$light_gray_17};
+    --badge-base-selected-active-bg : #{$light18};
+
+    --badge-default-bg : #{$light_gray_8};
+    --badge-color : #{$light_gray_1};
+    --badge-selected-color : #{$light_gray_1};
+    --badge-danger-bg    : #{$red_main};
+    --badge-danger-bright-bg    : #{$red_l2};
+    --badge-danger-bright-color : #{$light_gray_1};
+    --badge-warning-bg        : #{$yellow_d1};
+    --badge-warning-bright-bg : #{$yellow_main};
+    --badge-warning-bright-color : #{$light_gray_1};
+    --badge-success-bg        : #{$green_main};
+    --badge-success-bright-bg : #{$green_l2};
+    --badge-brand-bg : var(--brand-d2);
+    --badge-info-bg  : var(--brand-core);
+    --badge-integration-bg : #{$light_gray_4};
+    --badge-integration-color : #{$light_gray_16};
+
+    --grey-section-bg: var(--light4);
+    --grey-section-sep-color: var(--light6);
+
+    --dashboard-add-widget-color : var(--brand-core);
+    --dashboard-widget-hover-color : var(--brand-l4);
+    --dashboard-settings-menu-bg : #{$light_gray_4};
+    --dashboard-settings-menu-shadow : 6px 0 6px -6px #{$light_gray_7};
+
+    --active-license-text: var(--green_main);
+    --inactive-license-text: var(--yellow_d2);
+
+    // System groups
+    --folder-svg: #{$dark_gray_12};
+    --opened-triangle-svg: #{$dark_gray_12};
+    --closed-triangle-svg: #{$dark_gray_12};
+}

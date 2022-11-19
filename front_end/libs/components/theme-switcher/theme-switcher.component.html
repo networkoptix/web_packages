@@ -8,8 +8,8 @@
             <div>
                 <button
                     class="tile"
-                    (click)="setTheme('dark')"
-                    [ngClass]="{ selected: selectedTheme === 'dark' }"
+                    (click)="setTheme(themeService.availThemes.dark)"
+                    [ngClass]="{ selected: selectedTheme === themeService.availThemes.dark }"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -19,7 +19,7 @@
                 </button>
                 <div class="label">
                     <svg-icon
-                        *ngIf="selectedTheme === 'dark'"
+                        *ngIf="selectedTheme === themeService.availThemes.dark"
                         nx-add-svg-src
                         [src]="CONFIG.images.dirTheme + 'check.svg'"
                         [applyClass]="true"
@@ -31,8 +31,8 @@
             <div>
                 <button
                     class="tile"
-                    (click)="setTheme('light')"
-                    [ngClass]="{ selected: selectedTheme === 'light' }"
+                    (click)="setTheme(themeService.availThemes.light)"
+                    [ngClass]="{ selected: selectedTheme === themeService.availThemes.light }"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -42,7 +42,7 @@
                 </button>
                 <div class="label">
                     <svg-icon
-                        *ngIf="selectedTheme === 'light'"
+                        *ngIf="selectedTheme === themeService.availThemes.light"
                         nx-add-svg-src
                         [src]="CONFIG.images.dirTheme + 'check.svg'"
                         [applyClass]="true"
@@ -83,7 +83,7 @@
         <nx-radio
             componentId="blah1"
             name="theme"
-            value="light"
+            [value]="themeService.availThemes.light"
             label="light"
             [(ngModel)]="selectedTheme"
             (click)="setTheme('light')"
@@ -103,7 +103,7 @@
         <nx-radio
             componentId="blah3"
             name="theme"
-            value="dark"
+            [value]="themeService.availThemes.dark"
             label="dark"
             [(ngModel)]="selectedTheme"
             (click)="setTheme('dark')"

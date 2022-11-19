@@ -17,6 +17,11 @@ export class NxThemeService {
     themeSelected: string;
     userTheme: string;
 
+    availThemes = {
+        light: 'light',
+        dark: 'dark',
+    };
+
     constructor(
         configService: NxConfigService,
         private localStorageService: LocalStorageService,
@@ -38,13 +43,22 @@ export class NxThemeService {
     }
 
     async initTheme(): Promise<void> {
+        if (this.CONFIG.themeConfig) {
+            // set availThemes
+            this.availThemes = {
+                light: this.CONFIG.themeConfig.light,
+                dark: this.CONFIG.themeConfig.dark,
+            };
+        }
+
         const loginState = this.localStorageService.retrieve('loginstate');
         this.themeSelected = this.localStorageService.retrieve('theme');
+        NxConfigService.isDarkTheme = this.themeSelected === this.availThemes.dark;
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
 
         if (!this.CONFIG.featureFlags.themesEnabled) {
-            this.themeSelected = 'light';
+            this.themeSelected = this.availThemes.light;
             await this.setTheme(this.themeSelected, loginState);
             return;
         }
@@ -56,9 +70,9 @@ export class NxThemeService {
             }
             NxConfigService.isDarkTheme = e.matches;
             if (e.matches) {
-                this.window.document.documentElement.setAttribute('data-theme', 'dark');
+                this.window.document.documentElement.setAttribute('data-theme', this.availThemes.dark);
             } else {
-                this.window.document.documentElement.setAttribute('data-theme', 'light');
+                this.window.document.documentElement.setAttribute('data-theme', this.availThemes.light);
             }
         });
 
@@ -72,7 +86,7 @@ export class NxThemeService {
                     console.error('Feature not available', err);
                 });
         } else {
-            this.themeSelected = 'dark';
+            this.themeSelected = this.CONFIG.themeConfig.default;
         }
 
         await this.setTheme(this.themeSelected, loginState);
@@ -89,24 +103,24 @@ export class NxThemeService {
             themesEnabled = true;
         }
 
-        themeSelected = themesEnabled ? themeSelected || 'auto' : 'light';
+        themeSelected = themesEnabled ? themeSelected || 'auto' : this.availThemes.light;
         if (
             themeSelected === 'auto' ||
-            !themeSelected ||
+            !themeSelected &&
             !username
         ) {
             this.localStorageService.store('theme', themeSelected);
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
             this.window.document.documentElement.setAttribute(
                 'data-theme',
-                NxConfigService.isDarkTheme && themesEnabled ? 'dark' : 'light'
+                NxConfigService.isDarkTheme && themesEnabled ? this.availThemes.dark : this.availThemes.light
             );
         } else {
             if (docTheme === this.userTheme) {
                 return; // avoid reloading if same theme is set
             }
             this.localStorageService.store('theme', themeSelected);
-            NxConfigService.isDarkTheme = themeSelected === 'dark';
+            NxConfigService.isDarkTheme = themeSelected === this.availThemes.dark;
             this.window.document.documentElement.setAttribute(
                 'data-theme',
                 themeSelected

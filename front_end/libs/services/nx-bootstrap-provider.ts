@@ -261,6 +261,7 @@ export class NxBootstrapProvider {
             this.CONFIG.trafficRelayHost = data.trafficRelayHost;
             this.CONFIG.trialLicenseKey = data.trialLicenseKey;
             this.CONFIG.vmsName = data.vmsName;
+            this.CONFIG.themeConfig = data.themeConfig;
 
             this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription;
             this.CONFIG.landing.description = data.landingDescription;
