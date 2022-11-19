@@ -977,7 +977,7 @@
             "label": "Light Theme",
             "name": "%LIGHT_THEME%",
             "description": "Sets the light theme options for the cloud portal.",
-            "type": "multiselect",
+            "type": "select",
             "value": "light",
             "optional": false,
             "advanced": true,
