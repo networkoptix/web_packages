@@ -69,6 +69,10 @@ export class NxAPIToolComponent {
         }
     }
 
+    clickMoreResults(): void {
+        this.APIJSONService.searchAPIDoc();
+    }
+
     setHeaderHeight(): void {
         this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + ribbonHeight : this.CONFIG.headerHeight;
     }

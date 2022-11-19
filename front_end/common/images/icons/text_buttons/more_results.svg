@@ -1,0 +1,7 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path class="more-results-fill" d="M5 3H15V8.47117C15.3578 8.65407 15.6929 8.87499 16 9.12862V3C16 2.44772 15.5523 2 15 2H5C4.44772 2 4 2.44772 4 3V16C4 16.5523 4.44772 17 5 17H8.36666C8.09846 16.6947 7.86355 16.3595 7.66758 16H5L5 3Z" fill="#698796"/>
+<circle class="more-results-stroke" cx="12.4999" cy="13.3715" r="3.77778" stroke="#698796"/>
+<path  class="more-results-stroke" d="M15.03 16.53L17.5049 19.0049" stroke="#698796" stroke-linecap="round"/>
+<line  class="more-results-stroke" x1="7.5" y1="5.5" x2="11.5" y2="5.5" stroke="#698796" stroke-linecap="round"/>
+<line  class="more-results-stroke" x1="7.5" y1="7.5" x2="9.5" y2="7.5" stroke="#698796" stroke-linecap="round"/>
+</svg>

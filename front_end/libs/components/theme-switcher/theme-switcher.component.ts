@@ -24,7 +24,7 @@ export class NxThemeSwitcherComponent implements OnInit {
     selectedTheme: string;
 
     constructor(
-        private themeService: NxThemeService,
+        public themeService: NxThemeService,
     ) {
     }
 

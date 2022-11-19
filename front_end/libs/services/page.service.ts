@@ -35,7 +35,7 @@ export class NxPageService {
     public redirect404 = (message = ''): void => {
         const queryParams: Record<string, string> = {};
 
-        if (message) {
+        if (message && typeof message === 'string') {
             queryParams.message = message;
         }
 

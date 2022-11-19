@@ -10,7 +10,7 @@ import type { MenuNode } from '@services/menus.service.types';
 import { MenuManifest, MenuStructure } from '@services/nx-config/base-config';
 import { findMenuNode } from '@utils/nx';
 
-import { addAPIInfoNodesToMenu, addSeperator, generateMenu, getFirstNode, mergeAPIDocs, prepareSwaggerAPIDoc } from '../api-file-utils';
+import { addAPIInfoNodesToMenu, addSeperator, generateAPIRouteName, generateMenu, getFirstNode, mergeAPIDocs, prepareSwaggerAPIDoc, queryInDescription } from '../api-file-utils';
 import type { APIDoc, APIInfo } from '../api-tool-types';
 
 import { APIData, Store, EmitInfo, APIType, ServerInfo, ReadOnlyAPIStore, MarkdownObj, FetchedJSONs } from './api-tool-service-types';
@@ -29,12 +29,21 @@ export class NxOpenAPIJSONService {
     isInfoNode = false; // info nodes don't display swagger routes
     isMarkdownNode = false;
     isReadOnly = false;
+    _searchQuery: string = '';
+    searchMoreNodes$ = new BehaviorSubject<MenuNodeWithParent[]>([]);
+    searchMoreShowing$ = new BehaviorSubject<boolean>(true);
 
     APITypeEmitter = new Subject<EmitInfo<APIType>>();
     emitAPIType(type: APIType, disabled = false, error = ''): void {
         this.APITypeEmitter.next({ info: type, disabled, error });
     }
     defaultTypeValue = 1;
+
+    get searchQuery() { return this._searchQuery; }
+    set searchQuery(query: string) {
+        this._searchQuery = query;
+        this.searchMoreShowing$.next(true);
+    }
 
     get currentAPIDoc() { return this.currentAPIDoc$.value; }
     set currentAPIDoc(api: APIDoc) { this.currentAPIDoc$.next(api); }
@@ -270,4 +279,22 @@ export class NxOpenAPIJSONService {
             }
         }
     };
+
+    searchAPIDoc() {
+        const searchMoreNodes: MenuNodeWithParent[] = [];
+        for (const path of Object.keys(this.currentAPIDoc.paths)) {
+            const route = this.currentAPIDoc.paths[path];
+            for (const requestType of Object.keys(route)) {
+                if (queryInDescription(route[requestType], this.searchQuery)) {
+                    const tag = generateAPIRouteName(path, requestType);
+                    const node = findMenuNode(this.menuSubject.value.nodes, node => node.name === tag);
+                    if (node) {
+                        searchMoreNodes.push(node);
+                    }
+                }
+            }
+        }
+        this.searchMoreShowing$.next(false);
+        this.searchMoreNodes$.next(searchMoreNodes);
+    }
 }

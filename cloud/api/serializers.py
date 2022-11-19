@@ -85,6 +85,12 @@ class TransferSystemSerializer(serializers.Serializer):
     status = serializers.CharField(required=True)
 
 
+class ThemeConfigSerializer(serializers.Serializer):
+    default = serializers.CharField(required=True)
+    dark = serializers.CharField(required=True)
+    light = serializers.CharField(required=True)
+
+
 class CustomizationCacheSerializer(serializers.Serializer):
     appTypesForPlatform = serializers.DictField(default=lambda: {})
     availableDownloadsPlatform = serializers.ListField(
@@ -130,6 +136,7 @@ class CustomizationCacheSerializer(serializers.Serializer):
     logRocket = serializers.CharField(default='')
     fullStory = serializers.CharField(default='')
     trialLicenseKey = serializers.CharField(default='')
+    themeConfig = ThemeConfigSerializer()
 
     def __init__(self, *args, **kwargs):
         if data := kwargs.pop('data', False):

@@ -24,7 +24,7 @@ import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
-import { isUUID } from '@utils/general';
+import { highlightAll, isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
@@ -266,6 +266,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.moveExampleResponse();
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
+            if (this.openAPIJSONService.searchQuery && !this.openAPIJSONService.searchMoreShowing$.getValue()) {
+                this.highlightSearchMoreQuery();
+            }
             this.customComponentsRendering = false;
             this.swaggerLoading$.next(false);
         }, 0);
@@ -491,6 +494,17 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             select.insertAdjacentElement('beforebegin', element);
         }
     };
+
+    highlightSearchMoreQuery() {
+        const description = this.document.querySelector('.swagger-description')?.querySelector('.mt-3');
+        if (description) {
+            description.innerHTML = highlightAll(description.innerHTML, this.openAPIJSONService.searchQuery);
+        }
+        const paramsDescriptions = this.document.querySelectorAll('.parameters-col_description > .renderedMarkdown > p');
+        for (const paramDescription of paramsDescriptions) {
+            paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, this.openAPIJSONService.searchQuery);
+        }
+    }
 
     ngOnChanges(changes: NgChanges<NxSwaggerComponent>): void {
         if (changes.activeNode.currentValue) {

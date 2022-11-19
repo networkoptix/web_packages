@@ -475,20 +475,23 @@ RESULT_STATES = Choices(('open', 'Open'),
 
 URL_REGEX = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 
-def check_urls(known_urls, sub_val=''):
+def check_urls(known_urls, sub_val='{redacted_url}'):
     def _check_urls(match_obj):
         original = match_obj.group()
-        domain = '.'.join(original.split('//')[-1].split('/')[0].split('.')[-2:])
-        return original if domain in known_urls else sub_val
+        domain = original.split('//')[-1].split('/')[0]
+        parent_domain = '.'.join(domain.split('.')[-2:])
+        matched = domain in known_urls or parent_domain in known_urls
+        return original if matched else original.replace(domain, sub_val)
 
     return _check_urls
 
 
 
-def clean_content_factory():
+def clean_content_factory(known_urls=None):
     from cms.forms import get_branding_shortcuts
     _branding, hidden_branding = get_branding_shortcuts()
-    known_urls = [val.split('//')[-1] for _, val in _branding + hidden_branding if re.search(URL_REGEX, val)]
+    known_urls = [url] if isinstance(url := known_urls or [], str) else url
+    known_urls += [val.split('//')[-1] for _, val in _branding + hidden_branding if re.search(URL_REGEX, val)]
 
     def _clean_content(to_clean):
         return re.sub(URL_REGEX, check_urls(known_urls), to_clean)
@@ -532,10 +535,10 @@ class SystemEmail(models.Model):
 
     def clean_email(self):
         def clean(content):
-            content_cleaners = [clean_content_factory(), sub_system_id_factory(self.system_id)]
+            content_cleaners = [clean_content_factory, sub_system_id_factory]
 
             for cleaner in content_cleaners:
-                content = cleaner(content)
+                content = cleaner(self.system_id)(content)
 
             return content
 
@@ -570,8 +573,9 @@ class SystemEmail(models.Model):
         self.save()
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
-            kwargs['queue'] = settings.NOTIFICATIONS_CONFIG[SystemEmail.MSG_TYPE].get('queue', '')
+            queue = settings.NOTIFICATIONS_CONFIG[SystemEmail.MSG_TYPE].get('queue', '')
+            kwargs['queue'] = queue
             send_email.apply_async(
-                args=[self.id], kwargs=kwargs)
+                args=[self.id], queue=queue, kwargs=kwargs)
         else:
             send_email(self.id, **kwargs)

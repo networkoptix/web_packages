@@ -23,11 +23,28 @@
                         *ngIf="!(APIToolService.outDatedSystem$ | async)"
                         [service]="APIJSONService"
                         [offsetHeight]="menuOffset"
+                        [additionalSearchNodes]="APIJSONService.searchMoreNodes$ | async"
+                        (searchQueryEmitter)="APIJSONService.searchQuery = $event"
                         [queryParamsOnInternalRoute]="'merge'"
                         (onClick)="APIJSONService.activeNode = $event.node"
                         #developersMenu
                     >
                     </nx-developers-menu>
+                    <div
+                        *ngIf="
+                            APIJSONService.searchQuery &&
+                            (APIJSONService.searchMoreShowing$ | async)
+                        "
+                        class="more-results"
+                        (click)="clickMoreResults()"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'more_results.svg'"
+                            [svgStyle]="{ 'width.px': '32', 'height.px': '32' }"
+                        ></svg-icon>
+                        <span translate>More Results</span>
+                    </div>
                 </div>
                 <div
                     class="swagger-container col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3"

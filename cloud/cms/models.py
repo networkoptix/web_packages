@@ -244,7 +244,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                   '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
                   '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
                   '%TESTED_OPERATING_SYSTEMS%', '%VENDORS_SHOWN%', '%GOOGLE_TAG_MANAGER_ID%', '%LOGROCKET_PROJECT%',
-                  '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%']
+                  '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%', '%DEFAULT_THEME%', '%DARK_THEME%', '%LIGHT_THEME%']
         cloud_capabilities = ['%REVIEWS_ENABLED%', '%SMTP_DISABLED%']
         ds_data = asset.read_all_global_values(global_vars + email + config + cloud_capabilities)
 
@@ -317,7 +317,12 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'google_tag_manager_id': ds_data.get('%GOOGLE_TAG_MANAGER_ID%'),
                 'log_rocket': ds_data.get("%LOGROCKET_PROJECT%"),
                 'full_story': ds_data.get("%FULLSTORY_ID%"),
-                'trial_license_key': ds_data.get('%TRIAL_LICENSE_KEY%')
+                'trial_license_key': ds_data.get('%TRIAL_LICENSE_KEY%'),
+                'theme_config': {
+                    'default': ds_data.get("%DEFAULT_THEME%"),
+                    'dark': ds_data.get("%DARK_THEME%"),
+                    'light': ds_data.get("%LIGHT_THEME%")
+                }
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled,
