@@ -1,7 +1,7 @@
 {
     "language": "hu_HU",
     "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
-    "Administration": "Administration",
+    "Administration": "Adminisztráció",
     "All Servers": "Minden szerver",
     "Download %VMS_NAME%": "%VMS_NAME% letöltése",
     "For developers": "For developers",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

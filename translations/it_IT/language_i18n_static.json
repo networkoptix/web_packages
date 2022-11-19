@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Amministrazione",
     "All Servers": "Tutti i server",
     "Download %VMS_NAME%": "Scarica %VMS_NAME%",
     "For developers": "Per gli sviluppatori",
@@ -182,7 +182,7 @@
             "size": "Dimensione",
             "state": "Stato",
             "system": "Sistema",
-            "expires": "Scadenza",
+            "expires": "Scade il",
             "key": "Chiave"
         },
         "fromServer": {
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

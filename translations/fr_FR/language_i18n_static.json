@@ -370,7 +370,7 @@
                     "success": "Stockage Cloud amélioré avec succès !"
                 },
                 "move": {
-                    "heading": "Déplacer le stockage dans le Cloud",
+                    "heading": "Déplacer le stockage cloud",
                     "action": "Déplacer",
                     "success": "Stockage Cloud amélioré avec succès !"
                 },
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

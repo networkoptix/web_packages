@@ -182,7 +182,7 @@
             "size": "Tamaño",
             "state": "Estado",
             "system": "Sistema",
-            "expires": "Caduca",
+            "expires": "Expira",
             "key": "Llave"
         },
         "fromServer": {
@@ -283,7 +283,7 @@
         "systemNoAlertsMessage": "¡Su sistema debe estar funcionando bien!",
         "systemOffline": "Sistema está desconectado",
         "systemOfflineMessage": "Este sistema está fuera de línea y no se puede acceder en este momento.",
-        "systemServerError": "Error de servidor interno",
+        "systemServerError": "Error interno del servidor",
         "systemServerErrorMessage": "Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
         "systemUnreachable": "SISTEMA ILOCALIZABLE",
         "systemUnresponsive": "El sistema parece no responder. Por favor recarga la página.",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

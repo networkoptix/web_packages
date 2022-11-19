@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Administrering",
     "All Servers": "Alla servrar",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "For developers": "För utvecklare",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

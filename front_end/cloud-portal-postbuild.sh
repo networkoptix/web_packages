@@ -33,7 +33,7 @@ if [ $IS_WEBADMIN ]; then
 #    cp ./common/customization/webadmin_logo.png ./dist/images/logo.png
 else
     cp ./dist/index.html ./dist/index.mustache.html
-    sed -i -d 's/<title><\/title>/<title>{{title}}<\/title>/' ./dist/index.mustache.html
+    sed -i -e 's/<title><\/title>/<title>{{title}}<\/title>/' ./dist/index.mustache.html
     sed -i -e 's/<meta name="description" content="">/{% for property, value in meta %}<meta name="{{property}}" content="{{value}}" property="og:{{property}}">{% endfor %}/' ./dist/index.mustache.html
 fi
 

@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Administração",
     "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
@@ -182,7 +182,7 @@
             "size": "Tamanho",
             "state": "Estado",
             "system": "Sistema",
-            "expires": "Expira",
+            "expires": "Expirado",
             "key": "Chave"
         },
         "fromServer": {
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {
@@ -799,10 +802,10 @@
             "systemAdministration": "Administração do Sistema",
             "general": "Geral",
             "licenses": "Licenças",
-            "users": "Usuários",
+            "users": "Utilizadores",
             "servers": "Servidores",
             "alerts": "Alertas",
-            "systems": "System",
+            "systems": "Sistema",
             "storages": "Locais de armazenamento",
             "networkInterfaces": "Interfaces de rede",
             "graphs": "Gráficos",
@@ -1149,7 +1152,7 @@
             "servers": "Servidores",
             "cameras": "Canais da câmera",
             "storages": "Locais de armazenamento",
-            "users": "Utilizadores",
+            "users": "Usuários",
             "version": "Versão do sistema",
             "cloudSystemId": "Código do sistema em nuvem",
             "status": "Estado",

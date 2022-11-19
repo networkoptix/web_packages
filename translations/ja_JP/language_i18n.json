@@ -663,5 +663,5 @@
     "reset": "リセット",
     "result": "結果",
     "you": "あなた",
-    "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "このシステムの {numUsers} ユーザーは二要素認証が無効なアカウントを持っています。これらのアカウントでシステムにログインすることはできなくなります。"
+    "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "このシステムの {numUsers} ユーザーのアカウントでは二要素認証が無効です。これらのアカウントでシステムにログインすることはできなくなります。"
 }

@@ -85,5 +85,9 @@
   "51159": {
     "name": "cryptography",
     "note": "Cryptography 39.0.0 drops support for C library \"LibreSSL\" < 3.4, as these versions are not receiving security support anymore."
+  },
+  "51457": {
+    "name": "py",
+    "note": "Py throughout 1.11.0 allows remote attackers to conduct a ReDoS (Regular expression Denial of Service) attack via a Subversion repository with crafted info data, because the InfoSvnCommand argument is mishandled.https://github.com/pytest-dev/py/issues/287 CVE-2022-42969"
   }
 }

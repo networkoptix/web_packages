@@ -1,7 +1,7 @@
 {
     "language": "ko_KR",
     "About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
-    "Administration": "Administration",
+    "Administration": "관리",
     "All Servers": "모든 서버",
     "Download %VMS_NAME%": "%VMS_NAME% 다운로드",
     "For developers": "개발자용",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "윈도우즈"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

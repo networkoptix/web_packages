@@ -1,7 +1,7 @@
 {
     "language": "fi_FI",
     "About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Ylläpito",
     "All Servers": "Kaikki palvelimet",
     "Download %VMS_NAME%": "Lataa %VMS_NAME%",
     "For developers": "For developers",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Về %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Quản Trị",
     "All Servers": "Tất cả máy chủ",
     "Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
     "For developers": "Dành cho nhà phát triển",
@@ -183,7 +183,7 @@
             "state": "Trạng thái",
             "system": "Hệ thống",
             "expires": "Hết hạn",
-            "key": "Khóa"
+            "key": "Mã khóa"
         },
         "fromServer": {
             "ACTIVE": "Hoạt động",
@@ -370,13 +370,13 @@
                     "success": "Đã nâng cấp bộ nhớ đám mây thành công!"
                 },
                 "move": {
-                    "heading": "Di chuyển bộ nhớ đám mây",
+                    "heading": "Di chuyển lưu trữ đám mây",
                     "action": "Di chuyển",
                     "success": "Đã nâng cấp bộ nhớ đám mây thành công!"
                 },
                 "delete": {
                     "heading": "Xóa bộ nhớ đám mây?",
-                    "action": "Xóa",
+                    "action": "Xóa bỏ",
                     "success": "Đã xóa bộ nhớ đám mây thành công!"
                 }
             },
@@ -398,7 +398,7 @@
                     "body": "Lưu trữ đám mây với tất cả dữ liệu đã ghi có thể dễ dàng chuyển sang Hệ thống khác của bạn mà không cần Bộ nhớ đám mây đang hoạt động."
                 },
                 "delete": {
-                    "title": "Xóa",
+                    "title": "Xóa bỏ",
                     "body": "Bạn có thể xóa Bộ nhớ Đám mây khỏi Hệ thống bất kỳ lúc nào. Nếu muốn, bạn có thể sử dụng khóa này để kích hoạt lại."
                 }
             },
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {
@@ -811,7 +814,7 @@
     },
     "tableHeaders": {
         "type": "Kiểu",
-        "server": "máy chủ",
+        "server": "Máy chủ",
         "alert": "Cảnh báo"
     },
     "appFooter": {

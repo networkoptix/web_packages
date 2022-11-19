@@ -1,7 +1,7 @@
 {
     "language": "tr_TR",
     "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
-    "Administration": "Administration",
+    "Administration": "Yönetim",
     "All Servers": "Tüm sunucular",
     "Download %VMS_NAME%": "İndir %VMS_NAME%",
     "For developers": "Geliştiriciler İçin",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

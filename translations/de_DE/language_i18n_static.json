@@ -370,7 +370,7 @@
                     "success": "Der Cloud-Speicher wurde erfolgreich aktualisiert!"
                 },
                 "move": {
-                    "heading": "Cloud-Speicher verschieben",
+                    "heading": "Cloudspeicher verschieben",
                     "action": "Verschieben",
                     "success": "Der Cloud-Speicher wurde erfolgreich aktualisiert!"
                 },
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

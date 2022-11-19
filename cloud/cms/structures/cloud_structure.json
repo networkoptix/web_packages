@@ -938,7 +938,56 @@
             "value": false,
             "optional": true,
             "advanced": true,
-            "fieldset": "Features"
+            "fieldset": "Themes"
+          },
+          {
+            "label": "Default themes",
+            "name": "%DEFAULT_THEME%",
+            "description": "Sets the default theme for the cloud portal.",
+            "type": "select",
+            "value": "auto",
+            "optional": false,
+            "advanced": true,
+            "meta": {
+              "options": [
+                "auto",
+                "dark",
+                "light"
+              ]
+            },
+            "fieldset": "Themes"
+          },
+          {
+            "label": "Dark Theme",
+            "name": "%DARK_THEME%",
+            "description": "Sets the dark theme options for the cloud portal.",
+            "type": "select",
+            "value": "dark",
+            "optional": false,
+            "advanced": true,
+            "meta": {
+              "options": [
+                "dark",
+                "dark-gray"
+              ]
+            },
+            "fieldset": "Themes"
+          },
+          {
+            "label": "Light Theme",
+            "name": "%LIGHT_THEME%",
+            "description": "Sets the light theme options for the cloud portal.",
+            "type": "select",
+            "value": "light",
+            "optional": false,
+            "advanced": true,
+            "meta": {
+              "options": [
+                "light",
+                "light-gray"
+              ]
+            },
+            "fieldset": "Themes"
           },
           {
             "label": "Cloud Storage Size (Bytes)",

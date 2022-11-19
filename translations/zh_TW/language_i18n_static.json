@@ -1,7 +1,7 @@
 {
     "language": "zh_TW",
     "About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "系統管理",
     "All Servers": "所有伺服器",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
     "For developers": "開發人員使用",
@@ -179,10 +179,10 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "大小",
+            "size": "校正範圍",
             "state": "狀態",
             "system": "系統",
-            "expires": "過期",
+            "expires": "到期日",
             "key": "Key"
         },
         "fromServer": {
@@ -370,7 +370,7 @@
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "移動雲端儲存裝置",
+                    "heading": "移動雲端儲存",
                     "action": "移動",
                     "success": "Cloud Storage upgraded successfully!"
                 },
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

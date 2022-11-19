@@ -43,11 +43,11 @@
             "label": "アドミニストレーター"
         },
         "Advanced Viewer": {
-            "description": "ライブ表示、アーカイブ表示、PTZコントロール 等ができます",
+            "description": "ライブ映像表示、録画映像の参照、カメラ設定、PTZコントロール等が可能",
             "label": "拡張ビューアー"
         },
         "Custom": {
-            "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
+            "description": "カスタム権限の調整を行うには、 %VMS_NAME% クライアントアプリケーションを使用してください",
             "label": "カスタム"
         },
         "Live Viewer": {
@@ -63,7 +63,7 @@
             "label": "ビューアー"
         },
         "advancedViewer": {
-            "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等ができます",
+            "description": "ライブ映像表示、録画映像の参照、カメラ設定、PTZコントロール等が可能",
             "label": "上位ビューアー"
         },
         "cloudAdmin": {
@@ -71,7 +71,7 @@
             "label": "アドミニストレーター"
         },
         "custom": {
-            "description": "%VMS_NAME% クライアントアプリケーションを使用してカスタム権限を設定してください",
+            "description": "カスタム権限の調整を行うには、 %VMS_NAME% クライアントアプリケーションを使用してください",
             "label": "カスタム"
         },
         "customRole": {
@@ -83,15 +83,15 @@
             "label": "無効"
         },
         "liveViewer": {
-            "description": "ライブ映像のみ閲覧可能",
+            "description": "ライブ映像表示のみ可能",
             "label": "ライブビューアー"
         },
         "owner": {
-            "description": "共有する機能およびシステムとクラウドの接続/切断を含む無制限のアクセス",
+            "description": "共有機能およびシステムのクラウド接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "viewer": {
-            "description": "ライブおよび録画映像を参照できます",
+            "description": "ライブ映像表示および録画映像の参照が可能",
             "label": "ビューアー"
         }
     },
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "共通"
             }
         },
         "mobile": {

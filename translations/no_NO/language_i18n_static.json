@@ -120,7 +120,7 @@
         "expiredHeader": "Økten din har utløpt",
         "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
         "connectSubheader": "For å få tilgang til den fra hvor som helst og aktivere tilleggsfunksjoner",
-        "expiredSubheader": "Vennligst logg inn igjen 🔐",
+        "expiredSubheader": "Vennligst logg inn igjen",
         "connectAdditional": "Denne kontoen får eiertilgangsnivå",
         "createText": "Opprett konto",
         "setupText": "Sett opp Ikke-cloud system",
@@ -262,12 +262,12 @@
             "low": "Lav"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{{count, plural, =0{# years} one{# year} other{# years}}}",
+            "monthS": "{{count, plural, =0{# months} one{# month} other{# months}}}",
+            "weekS": "{{count, plural, =0{# weeks} one{# week} other{# weeks}}}",
+            "dayS": "{{count, plural, =0{# days} one{# day} other{# days}}}",
+            "hourS": "{{count, plural, =0{# hours} one{# hour} other{# hours}}}",
+            "minuteS": "{{count, plural, =0{# minutes} one{# minute} other{# minutes}}}"
         },
         "general": "Generell",
         "generalError": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
@@ -438,20 +438,20 @@
             "adminPasswordTitle": "Skriv inn passord til eierens konto i <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Passordet for admin-brukeren er feil",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} er koblet til %CLOUD_NAME%. Skysystemer kan bare slås sammen fra %CLOUD_NAME%.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "unknownBothSystemsConnectedToCloud": "Kan ikke slå sammen to systemer koblet til skyen. Gå til %CLOUD_NAME% for å slå sammen disse systemene.",
             "checking": "Kontrollerer...",
             "cloud": "Cloud",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble til systemet du ønsker å slå sammen med dette til <strong>%CLOUD_NAME%</strong> eller slå sammen lokalt med <strong>%VMS_NAME%</strong>-klienten.",
             "failedToFindAnySystemHeader": "Kunne ikke finne noe system å slå sammen med",
             "failedToFindAnySystem": "Sørg for at du har eierrollen i Clouden du vil slå sammen med. Eller at systemet du ønsker å slå sammen med er tilgjengelig over det lokale nettverket til gjeldende system.",
             "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Skriv inn adressen til en hvilken som helst server i systemet du vil slå sammen med denne.",
             "latestBuild": "siste versjon",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.</p>",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Sammenslåing av system {primaryName} og {secondaryName} fullført",
             "mergeSystemsTitle": "Slå sammen nåværende system med",
             "noServerFound": "Ingen server funnet",
             "newSystemDisplayName": "Nytt system",
@@ -459,38 +459,38 @@
             "ownerCanMergeText": "Du kan bare slå sammen systemer der du er eieren",
             "passwordRequired": "Passord er påkrevd",
             "passwordWrong": "Feil passord",
-            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
-            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
-            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primaryCannotMerge": "System {targetSystem} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater gjeldende system til {downloadHTML} for å slå sammen med {targetSystem} systemet.",
+            "primarySystemOffline": "System {primarySystem} er frakoblet og kan ikke slås sammen med System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} er for øyeblikket ikke tilgjengelig. Prøv igjen om noen minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
             "recommendSupport": "Vi anbefaler deg å rådføre deg med teknisk support, før du fortsetter.",
             "restError": {
-                "duplicateServer": "Merge error. Both systems have same server",
+                "duplicateServer": "Sammenslåingen feilet. Begge systemene har samme server",
                 "useCloudMerge": "Kan ikke slå sammen systemer som er bundet til skyen",
-                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+                "differentCloudOwners": "Kan ikke slå sammen to skysystemer med forskjellige eiere"
             },
-            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
-            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {url}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "secondaryCannotMerge": "System {targetSystem} har en eldre programvareversjon som er inkompatibel med det gjeldende systemet. Oppdater {targetSystem} til {downloadHTML} for å slå det sammen med det nåværende.",
+            "secondarySystemUnavailable": "System {targetSystem} kan for øyeblikket ikke nåes. Prøv igjen om noen minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
+            "serverAtUrl": "server med {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Får ikke tilgang til {targetSystem} -systemet.</p><p>Kontroller at den angitte serveren er online, og prøv igjen.</p>",
             "serverNotYours": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
             "serverVersionOld": "Denne serveren har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det til det nyeste versjon å slå sammen med den nåværende.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-            "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
+            "serverVersionNew": "Denne serveren har nyere programvareversjon enn nåværende system. Oppdater begge systemer til den samme versjonen for å slå dem sammen.",
+            "systemOffline": "System {targetSystem} er frakoblet og kan ikke slås sammen med det gjeldende",
+            "systemOfflineUrl": "{targetSystem} er utilgjengelig",
+            "systemsIncompatible": "Denne serveren har en inkompatibel programvareversjon. Vennligst oppdater begge systemene til {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} har en eldre programvareversjon som er inkompatibel med det gjeldende systemet. Oppdater %targetSystem% til {downloadHTML} for å slå den sammen med det nåværende.",
+            "systemVersionNew": "System {targetSystem} har en nyere programvareversjon som er inkompatibel med det gjeldende systemet. Oppdater det nåværende systemet til {downloadHTML} for å slå det sammen med {targetSystem} -systemet.",
+            "systemVersionsNotMatch": "Systemene har ulike programvareversjoner. Vennligst oppdater begge til {downloadHTML}.",
+            "targetSystemBoundToCloud": "Dette systemet er ikke koblet til skyen. Kan ikke slås sammen med systemer som er bundet til skyen.",
             "urlEmpty": "Skriv inn serveradressen",
             "urlNotValid": "Angi gyldig URL",
             "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "warning": "Det vil være mer enn <strong>{maxServers}</strong> servere i det sammenslåtte systemet.",
             "update": "Oppdater dem til&nbsp; den nyeste versjonen °"
         },
         "message": {
-            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
+            "system2faEnabled": "Tofaktor autentisering vil nå bli tvunget slått på for dette systemet.",
+            "system2faDisabled": "Tofaktorautentisering er ikke nødvendig for dette systemet.",
             "storageSettingsSaved": "Innstillinger for lagring lagret.",
             "storageSettingsNotSaved": "Kunne ikke lagre lagringsinnstillingene.",
             "settingsSaved": "Innstillinger lagret.",
@@ -503,20 +503,20 @@
             },
             "sent": "Meldingen er sendt.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration_feedback": "Tilbakemelding for integrering {asset}",
+                "ipvd_feedback_device": "Tilbakemelding for {asset}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "sales_inquiry": "Salgsforespørsel for {asset}",
+                "technical_inquiry": "Teknisk forespørsel for {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration": "Ta kontakt med {companyName}",
+                "ipvd_feedback_device": "Tilbakemelding om {asset}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             },
             "twoFactor": {
                 "required": "Tofaktorautentisering er nødvendig.",
-                "configure": "You can configure it in your",
+                "configure": "Du kan konfigurere det i din",
                 "accountLink": "kontoinnstillinger",
                 "codeRequired": "Kode kreves"
             }
@@ -528,7 +528,7 @@
         },
         "renewAuth": {
             "action": "Innlogging",
-            "message": "Please log in again.",
+            "message": "Vennligst logg inn igjen.",
             "title": "Økten din har utløpt"
         },
         "systemGroups": {
@@ -536,13 +536,13 @@
             "createdInCurrentGroup": "Ny gruppe vil bli opprettet i gjeldende gruppe"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } er ikke en bruker i systemet"
         },
         "titles": {
             "error": "Feil",
             "success": "Suksess",
             "changeAccount": "Du er allerede logget inn som {email}",
-            "changePasswordFor": "Change Password for User \"{username}\"",
+            "changePasswordFor": "Endre passord for bruker \"{username}\"",
             "deleteUser": "Slett bruker?",
             "failedLoginTo": "Kunne ikke logge inn på {systemName}",
             "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
@@ -557,10 +557,10 @@
         },
         "twoFactor": {
             "action": "Innlogging",
-            "message": "Two factor authentication is enabled for this account. Please login.",
-            "title": "Two factor is required!",
+            "message": "Tofaktorautentisering er aktivert for denne kontoen. Vennligst Logg inn.",
+            "title": "To-faktor er påkrevd!",
             "wizardWarning": "Etter at du har aktivert tofaktorautentisering vil du ikke kunne logge på {count, plural, =0{# systemer} one{# system} other{# systemer}} fra %VMS_NAME% klienter og nettadministratorer:",
-            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+            "unsupportedSystem": "For å logge på dette systemet, deaktiver \"Be om bekreftelseskode ved hver pålogging med %CLOUD_NAME% konto\" i <a href=\"/account/security\">kontoinnstillingene</a>."
         }
     },
     "downloads": {
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Vindu"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {
@@ -641,29 +644,29 @@
         "EmailAlreadyExists": "Denne e-posten er allerede registrert",
         "FAIL": "System <strong>{failedSystem}</strong> er frakoblet.",
         "Connection timed out": "System <strong>{failedSystem}</strong> er frakoblet.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> er for øyeblikket ikke tilgjengelig.<br>Prøv igjen om noen minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">kundestøtte</a>.",
+        "INCOMPATIBLE": "Systemene har ulike programvareversjoner. Vennligst oppdater begge til {downloadHTML}.",
         "This authorization method is forbidden. Please contact your system administrator.": "Denne autorisasjonsmetoden er forbudt. Ta kontakt med systemadministratoren din.",
         "This user does not exist.": "Denne brukeren eksisterer ikke.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "The user is disabled. Please contact your system administrator.": "Denne brukeren er merket som inaktiv. Vennligst kontakt systemansvarlig.",
         "This user has been disabled by a system administrator.": "Denne brukeren har blitt deaktivert av en systemadministrator.",
         "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
-        "fail": "{failedSystem} is inaccessible.",
+        "fail": "{failedSystem} er utilgjengelig.",
         "incompatible": "Denne serveren har en inkompatibel programvareversjon. Oppdater begge systemene til samme versjon for å slå dem sammen.",
         "unknown_error": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Denne kontoen er allerede aktivert",
         "accountBlocked": "Denne kontoen er midlertidig blokkert. Vennligst prøv igjen om noen minutter.",
         "accountNotActivated": "Denne kontoen er ikke aktivert enda. <a href=\"/activate\">Send aktiveringslenke igjen</a>",
-        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "accountNotActivatedAlternate": "Kontoen er ikke aktivert. Logg på <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> og følg angitte instruksjoner.",
         "alreadyExists": "Denne kontoen finnes allerede",
         "brokenAccount": "Uventet problem med kontoen. <a href=\"/restore_password\">Gjenopprett konto</a>",
         "cantActivatePrefix": "Kan ikke aktivere kontoen din",
         "cantAddYourOwnEmail": "Å legge til din egen e-post er ikke tillatt",
         "cantChangeAccountPrefix": "Kan ikke lagre endringer",
         "cantChangePasswordPrefix": "Kan ikke lagre passord",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantDeleteAccountOwningSystems": "Kan ikke slette konto som eier systemer",
+        "cantConnectSystemPrefix": "Kan ikke koble til systemet",
         "cantDisconnectSystemPrefix": "Kan ikke slette system",
         "cantEditAdmin": "Denne brukeren har administratorrettigheter",
         "cantEditYourself": "Endring av egne tillatelser er ikke tillatt",
@@ -677,9 +680,9 @@
         "cantSharePrefix": "Kan ikke dele System",
         "cantUnshareWithMeSystemPrefix": "Kan ikke slette system",
         "emailNotFound": "Kontoen eksisterer ikke.",
-        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccess2FA": "<p class=\"mb-0\">Tofaktorautentisering kreves for å få tilgang til dette systemet.</p><p>Du kan aktivere tofaktorautentisering i dine <a href=\"/account/security\">kontoinnstillinger</a>.</p>",
         "failedToAccessSystem": "Ingen system kan nås via denne lenken. Dette kan skje når et system har blitt koblet fra %CLOUD_NAME%, tilgang til dette systemet er tilbakekalt, systemet i lenken ikke eksisterer, eller hvis du er logget inn på feil konto.",
-        "failedToAccessCamera": "No camera can be accessed by this link.",
+        "failedToAccessCamera": "Ingen kamera kan nås via denne lenken.",
         "forbidden": "Du har ikke tillatelser til å utføre denne handlingen",
         "lostConnection": "Tilkoblingen til {systemName} er tapt",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> er frakoblet.",
@@ -690,7 +693,7 @@
         "oldPasswordMistmatch": "Nåværende passord er feil.",
         "oldSafariNotSupported": "Versjoner av Safari eldre enn 10 støttes ikke",
         "passwordMismatch": "Feil passord",
-        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} er for øyeblikket ikke tilgjengelig. Prøv igjen om noen minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
         "thisSystem": "systemet",
         "unknownError": "En ukjent feil oppstod",
         "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
@@ -698,13 +701,13 @@
         "wrongCode": "Kontoen er allerede aktivert eller bekreftelseskoden er feil",
         "wrongCodeRestore": "Bekreftelseskoden er allerede brukt eller feil",
         "wrongParameters": "Noen parametere på skjemaet er feil",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Kunne ikke aktivere lisensen. Prøv igjen eller kontakt brukerstøtten.",
         "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
-        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+        "licenseServerError": "Kunne ikke aktivere lisensen. Lisensserveren svarte ikke. Prøv igjen eller kontakt brukerstøtten.",
+        "networkConnection": "Kan ikke koble til %CLOUD_NAME%, sjekk nettverkstilkoblingen din.",
+        "archiveEncrypted": "ARKIV\nKRYPTERT",
+        "archiveEncryptedMessage": "Be systemadministratoren om å angi krypteringspassordet\nfor å dekryptere dette arkivet.",
+        "webadmin2faRequired": "Tofaktorautentisering kreves for å få tilgang til dette systemet. Du kan aktivere tofaktorautentisering i <a href=\"{ cloudHost }/account/security\">-kontoinnstillingene</a>."
     },
     "appHeader": {
         "mySystems": "Mine systemer",
@@ -744,9 +747,9 @@
         "Health Monitor": "Helse Monitor",
         "Storage": "Lagring",
         "myIntegrationsLabel": "Utvinn",
-        "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
-        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+        "requirements": "{name} Krav",
+        "testedVersionLabel": "Testet av utvikleren med {vmsName} -versjon:",
+        "testedVersionsLabel": "Testet av utvikleren med {vmsName} versjoner:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avanserte PTZ kameraer",
@@ -786,13 +789,13 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
+        "request": "Vennligst <span id=\"request\">send inn en forespørsel</span> for ytterligere spørsmål/bekymringer angående støttede enheter."
     },
     "layoutAutosave": "Lagrer automatisk om { time } sekunder...",
     "systemsCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}} funnet",
     "alertsCount": "{count, plural, =0{# varsler} one{# varsling} other{# varsler}}",
-    "ipvdTopXByVolume": "Top {value} by volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "ipvdTopXByVolume": "Topp {value} etter volum:",
+    "ipvdDisclaimer": "Denne listen er begrenset til enheter funnet på {vmsName} der brukere har tillatt automatisk rapportering av enhetsspesifikasjoner til {companyName}. Ingen personlig informasjon samles inn og hver bruker forblir helt anonym.",
     "menu": {
         "titles": {
             "cameras": "Kameraer",
@@ -831,7 +834,7 @@
     },
     "pageTitles": {
         "about": "About",
-        "account": "Account settings",
+        "account": "Kontoinnstillinger",
         "activate": "Activate account",
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
@@ -893,7 +896,7 @@
             "message": {
                 "dependingOnSize": "Avhengig av størrelsen på databasen, kan dette ta opptil flere timer.",
                 "untilFinished": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "Når sammenslåingen er fullført, vil alle brukere og kameraer fra dette systemet bli tilgjengelig i {systemName} -systemet, og dette systemet vil bli slettet."
             }
         },
         "server": {
@@ -961,7 +964,7 @@
         "beginReset": "Server is now resetting.",
         "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "detachSystemSuccess": "Serveren ble koblet fra systemet.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portWarning": "Portnummere mindre enn 1024 er begrenset. Serveren kan bli utilgjengelig.",
         "refresh": "Oppdater",
         "refreshing": "Oppdaterer...",
         "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",
@@ -1068,7 +1071,7 @@
             "local": "Lokal",
             "usb": "USB",
             "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "smb": "Nettverk (smb), lagt til via VMS",
             "cloud": "Cloud"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> ønsker å overføre eierskapet til dette systemet til deg",
@@ -1114,14 +1117,14 @@
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "Systemet {systemName} er slettet fra kontoen din"
             },
             "disconnected": {
                 "success": "Systemet er frakoblet fra %CLOUD_NAME%"
             },
             "cloudConnect": {
                 "success": "System koblet til %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "failed": "Kunne ikke koble systemet til %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "Systemsammenslåing mislyktes",
@@ -1131,11 +1134,11 @@
                 "success": "Systemnavn lagret"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait.",
-        "sessionRenewed": "Session has been renewed.",
-        "failedToUpdateSession": "Updating the session failed."
+        "webAdminCloudCredentialError": "Logg på med %CLOUD_NAME% for å få tilgang til dette systemet som skybruker",
+        "twoFaRequired": "Tofaktorautentisering er aktivert for denne kontoen. Vennligst skriv inn bekreftelseskoden i popup-vinduet.",
+        "loggingIn": "Logger inn. Vennligst vent.",
+        "sessionRenewed": "Økten er fornyet.",
+        "failedToUpdateSession": "Oppdatering av økten mislyktes."
     },
     "healthMonitor": {
         "groups": {
@@ -1218,19 +1221,19 @@
             "error": "Feil",
             "expired": "Utløpt",
             "ok": "OK",
-            "nvrError": "NVR Error",
+            "nvrError": "NVR feil",
             "serverNotFound": "Server ikke funnet"
         },
         "messages": {
             "required": "{number} mer kreves",
             "activated": "Lisensnøkkel aktivert",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "Lisensnøkkel er allerede aktivert og bundet til server med maskinvare-ID {hwid} i et annet system",
             "trialActivated": "Prøvelisens aktivert. Fra og med i dag kan du ta opp opptil 4 kameraer i 30 dager."
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "message": "Ruten \"{url}\" har blitt flyttet til \"{redirectUrl}\".",
+        "defaultMessage": "Vennligst oppdater alle linker for å referere til den nye ruten.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }
@@ -1331,10 +1334,10 @@
         "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "additionalSystems": "{{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}}",
     "security": {
         "twoFa": {
-            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
+            "twoFADescription": "For øyeblikket har du <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
             "systemsRemainder": "og {count} mer...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
@@ -1343,10 +1346,10 @@
     },
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Reindeksering av hovedlagring fullført",
+            "backupSuccess": "Reindeksering av sikkerhetskopiering er fullført",
+            "mainFailed": "Reindeksering av hovedlagring mislyktes",
+            "backupFailed": "Reindeksering av sikkerhetskopiering mislyktes"
         },
         "modes": {
             "main": "Hoved",
@@ -1357,18 +1360,18 @@
             "changing": "Endrer modus...",
             "disabled": "Deaktivert"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
+        "alreadyUsed": "Lagringssti {url} brukes allerede av en annen server.",
+        "deleteExternalStorage": "Slette ekstern lagring?",
+        "failed": "Kunne ikke legge til ekstern lagring",
         "invalidPath": "Ugyldig lagringsbane.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
+        "stillHasArchivesPreWarning": "Opptaket til dette lagringsstedet stopper. Utdaterte opptak fra den vil imidlertid fortsette å bli slettet.",
+        "stillHasArchives": "Opptaket til denne lagringsplassen er stoppet. Utdaterte opptak fra den blir imidlertid fortsatt slettet.",
+        "storageDeleted": "Lagring {url} slettet",
+        "failedRemove": "Kunne ikke slette ekstern lagring {url}",
         "reservedTooSmallTooltip": "Denne lagringsplassen kan ikke brukes til opptak fordi den er for liten, og det finnes andre større lagringsplasser tilgjengelig for opptak.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
         "serverOffline": "Kunne ikke legge til ekstern lagring - serveren svarer ikke",
-        "success": "External storage added",
+        "success": "Ekstern lagring lagt til",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     },
     "metaDefaults": {

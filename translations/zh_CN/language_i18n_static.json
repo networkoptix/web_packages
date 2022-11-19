@@ -1,7 +1,7 @@
 {
     "language": "英语_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "管理员",
     "All Servers": "所有服务器",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
     "For developers": "适用开发人员",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

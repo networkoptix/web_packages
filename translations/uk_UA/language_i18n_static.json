@@ -1,7 +1,7 @@
 {
     "language": "uk_UA",
     "About %CLOUD_NAME%": "Про %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Панель керування",
     "All Servers": "Всі Сервери",
     "Download %VMS_NAME%": "Завантажити %VMS_NAME%",
     "For developers": "Розробникам",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {

@@ -1,7 +1,7 @@
 {
     "language": "cs_CZ",
     "About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
-    "Administration": "Administration",
+    "Administration": "Správa",
     "All Servers": "Všechny servery",
     "Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
     "For developers": "For developers",
@@ -604,6 +604,9 @@
             },
             "windows": {
                 "label": "Windows"
+            },
+            "universal": {
+                "label": "Universal"
             }
         },
         "mobile": {
