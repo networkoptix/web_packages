@@ -11,7 +11,7 @@ import {
 import { debounceTime, filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { ribbonHeight } from '@lib/variables/static-variables';
+import { icons, ribbonHeight } from '@lib/variables/static-variables';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -34,6 +34,7 @@ export class NxAPIToolComponent {
     @ViewChild('developersMenu') developersMenuRef: ElementRef<HTMLElement>;
     CONFIG: IConfig;
     LANG = staticLang;
+    icons = icons;
     headerHeight: number;
     menuOffset: number = 0;
 
