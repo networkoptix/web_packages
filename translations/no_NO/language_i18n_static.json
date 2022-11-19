@@ -120,7 +120,7 @@
         "expiredHeader": "Økten din har utløpt",
         "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
         "connectSubheader": "For å få tilgang til den fra hvor som helst og aktivere tilleggsfunksjoner",
-        "expiredSubheader": "Vennligst logg inn igjen 🔐",
+        "expiredSubheader": "Vennligst logg inn igjen",
         "connectAdditional": "Denne kontoen får eiertilgangsnivå",
         "createText": "Opprett konto",
         "setupText": "Sett opp Ikke-cloud system",
