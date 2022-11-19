@@ -1,0 +1,50 @@
+@use '../filter.scss';
+
+@mixin tags {
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .tag {
+            height: 1.25rem !important;
+            line-height: 1.25rem !important;
+            padding: 0 0.5rem !important;
+            border-radius: 2px !important;
+            background-color: var(--bookmarks-filter-button-bg);
+
+            &:hover {
+                background-color: var(--bookmarks-text-highlight-bg);
+            }
+
+            &.selected {
+                background-color: var(--brand-core);
+                color: var(--bookmarks-filter-filled-text);
+            }
+        }
+    }
+}
+
+:host {
+    width: 16rem;
+
+    .header {
+        @include filter.header();
+    }
+
+    .body {
+        @include filter.body();
+        @include tags();
+
+        .tags {
+            margin-bottom: 0.5rem;
+        }
+
+        button {
+            background: none;
+            padding: 0 !important;
+            height: initial !important;
+            color: var(--bookmarks-secondary-text)
+        }
+    }
+}

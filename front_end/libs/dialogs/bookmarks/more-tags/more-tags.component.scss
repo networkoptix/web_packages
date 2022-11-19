@@ -1,0 +1,13 @@
+@use '../../../features/systems/bookmarks/components/tag-filter/tag-filter.component.scss' as tag;
+
+nx-simple-search {
+    margin-bottom: 1rem;
+}
+
+@include tag.tags();
+
+.tags {
+    height: 10rem;
+    overflow-y: auto;
+    align-content: flex-start;
+}

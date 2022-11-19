@@ -1,0 +1,37 @@
+<div class="header">
+    <span translate>Device</span>
+    <button
+        *ngIf="selectionModel.hasValue()"
+        class="clear"
+        (click)="selectionModel.clear()"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'close.svg'"
+            [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
+        ></svg-icon>
+    </button>
+</div>
+<div class="body">
+    <nx-simple-search [(ngModel)]="search"></nx-simple-search>
+    <div class="devices">
+        <label
+            *ngFor="let device of searchMatches | slice: 0:7"
+            [ngClass]="{ selected: selectionModel.isSelected(device) }"
+        >
+            <nx-checkbox
+                [ngModel]="selectionModel.isSelected(device)"
+                (ngModelChange)="selectionChange(device, $event)"
+            ></nx-checkbox>
+            {{ device }}
+        </label>
+    </div>
+    <div>
+        <button
+            translate
+            (click)="moreDevicesDialog()"
+        >
+            More devices
+        </button>
+    </div>
+</div>

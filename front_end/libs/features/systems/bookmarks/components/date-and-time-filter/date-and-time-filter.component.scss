@@ -1,35 +1,15 @@
 @use '@angular/material';
 @use 'mat';
+@use '../filter.scss';
 
 .dtf-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 2.5rem;
-    padding: 0.75rem 1rem;
-
-    background-color: var(--bookmarks-filter-header-bg);
-
-    span {
-        font-size: 1rem;
-    }
-
-    button {
-        padding: 0 !important;
-        width: 1.25rem;
-        height: 1.25rem !important;
-
-        svg-icon {
-            display: flex;
-        }
-    }
+    @include filter.header();
 }
 
 .dtf-body {
+    @include filter.body();
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    background-color: var(--bookmarks-filter-body-bg);
 
     .quick-selects {
         display: flex;
@@ -41,7 +21,7 @@
             height: 1.25rem !important;
             font-size: 0.8rem !important;
             max-width: none !important;
-            background-color: var(--bookmarks-filter-quick-select-bg);
+            background-color: var(--bookmarks-filter-button-bg);
 
             &:hover {
                 background-color: var(--bookmarks-text-highlight-bg);
@@ -54,10 +34,10 @@
         }
     }
 
-    @include material.button-theme(mat.$mat-test-theme);
-    @include material.datepicker-theme(mat.$mat-test-theme);
-
     mat-calendar {
+        @include material.button-theme(mat.$mat-test-theme);
+        @include material.datepicker-theme(mat.$mat-test-theme);
+
         button {
             &.mat-calendar-period-button {
                 height: initial !important;

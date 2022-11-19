@@ -1,0 +1,21 @@
+<input
+    [ngModel]="search"
+    (ngModelChange)="writeValue($event)"
+    (keyup.enter)="$event.preventDefault()"
+    type="text"
+    class="form-control"
+    name="query"
+    autocomplete="off"
+    [placeholder]="placeholder"
+/>
+<span class="glyphicon web-icon-search icon-search"></span>
+<button
+    class="clear-btn"
+    *ngIf="search"
+    (click)="writeValue('')"
+>
+    <svg-icon
+        [src]="icons.dirTextButtons + 'close.svg'"
+        [svgStyle]="{ 'width.rem': '1.25', 'height.rem': '1.25' }"
+    ></svg-icon>
+</button>

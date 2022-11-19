@@ -1,9 +1,15 @@
 :host {
     display: flex;
 
-    nx-date-and-time-filter {
+    .sidebar {
         display: flex;
         flex-direction: column;
-        width: 16rem;
+        gap: 1rem;
+
+        nx-date-and-time-filter {
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+        }
     }
 }

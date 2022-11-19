@@ -7,3 +7,6 @@ export interface DialogType<D = unknown, R = unknown> {
 }
 
 export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
+
+export type MoreDevices = DialogType<string[], void>;
+export type MoreTags = DialogType<string[], void>;

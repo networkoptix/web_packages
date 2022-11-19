@@ -1,0 +1,34 @@
+<div class="header">
+    <span translate>Tags</span>
+    <button
+        *ngIf="selectionModel.hasValue()"
+        class="clear"
+        (click)="selectionModel.clear()"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'close.svg'"
+            [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
+        ></svg-icon>
+    </button>
+</div>
+<div class="body">
+    <div class="tags">
+        <button
+            class="tag"
+            *ngFor="let tag of tags"
+            [ngClass]="{ selected: selectionModel.isSelected(tag) }"
+            (click)="selectionModel.toggle(tag)"
+        >
+            {{ tag }}
+        </button>
+    </div>
+    <div>
+        <button
+            translate
+            (click)="moreTagsDialog()"
+        >
+            More tags
+        </button>
+    </div>
+</div>

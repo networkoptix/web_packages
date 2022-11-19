@@ -1,0 +1,18 @@
+<div>
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <ng-content select="[header]"></ng-content>
+        </h1>
+        <button
+            *ngIf="!dialogRef.disableClose"
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="body"><ng-content select="[body]"></ng-content></div>
+</div>

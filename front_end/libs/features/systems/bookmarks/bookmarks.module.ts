@@ -12,6 +12,8 @@ import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
 import { NxDateAndTimeFilterModule } from './components/date-and-time-filter/date-and-time-filter.module';
+import { NxDeviceFilterModule } from './components/device-filter/device-filter.module';
+import { NxTagFilterModule } from './components/tag-filter/tag-filter.module';
 
 const appRoutes: Routes = [
     {
@@ -29,6 +31,8 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
 
         NxDateAndTimeFilterModule,
+        NxDeviceFilterModule,
+        NxTagFilterModule,
     ],
     providers: [],
     declarations: [

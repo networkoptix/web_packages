@@ -1,0 +1,8 @@
+@use '../../../features/systems/bookmarks/components/device-filter/device-filter.component.scss' as device;
+
+@include device.search-and-list();
+
+.devices {
+    height: device.$label-height * 10;
+    overflow-y: auto;
+}

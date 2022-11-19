@@ -1,0 +1,14 @@
+<nx-more-filters-base>
+    <ng-container header>{{ 'More Tags' | translate }}</ng-container>
+    <ng-container body>
+        <nx-simple-search [(ngModel)]="search"></nx-simple-search>
+        <div class="tags">
+            <button
+                class="tag"
+                *ngFor="let tag of searchMatches"
+            >
+                {{ tag }}
+            </button>
+        </div>
+    </ng-container>
+</nx-more-filters-base>

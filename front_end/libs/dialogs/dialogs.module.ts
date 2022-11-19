@@ -24,6 +24,8 @@ import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ApplyModalContent } from './apply/apply.component';
+import { NxMoreDevicesModule } from './bookmarks/more-devices/more-devices.module';
+import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
@@ -82,8 +84,11 @@ import { WizardModalContent } from './wizard/wizard.component';
         DynamicWidgetModule,
         TagModule,
         ThirdsPartyWidgetModule,
+
         LoginWebadminModule,
         TransferOwnershipModule,
+        NxMoreDevicesModule,
+        NxMoreTagsModule,
     ],
     declarations: [
         DisconnectModalContent,

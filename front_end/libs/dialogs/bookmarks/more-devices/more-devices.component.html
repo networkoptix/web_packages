@@ -1,0 +1,12 @@
+<nx-more-filters-base>
+    <ng-container header>{{ 'More Devices' | translate }}</ng-container>
+    <ng-container body>
+        <nx-simple-search [(ngModel)]="search"></nx-simple-search>
+        <div class="devices">
+            <label *ngFor="let device of searchMatches">
+                <nx-checkbox></nx-checkbox>
+                {{ device }}
+            </label>
+        </div>
+    </ng-container>
+</nx-more-filters-base>
