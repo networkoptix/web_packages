@@ -135,7 +135,7 @@
         "passwordRestart": "å restarte serveren",
         "passwordDetach": "å koble fra serveren",
         "passwordTransfer": "å overføre systemet",
-        "expiredAccountSubheader": "Vennligst logg inn igjen 🔐",
+        "expiredAccountSubheader": "Vennligst logg inn igjen",
         "createAccountHeader": "Opprett %CLOUD_NAME% konto",
         "activateHeader": "Aktiver %CLOUD_NAME% -konto",
         "createdText": "Konto opprettet!",
