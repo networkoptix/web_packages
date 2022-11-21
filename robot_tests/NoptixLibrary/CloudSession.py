@@ -31,8 +31,8 @@ class CloudSession:
     def __enter__(self):
         return self.login()
 
-    def __exit__(self, logout, *args, **kwargs):
-        if logout:
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.logout:
             self.logout_session()
         pass
 
