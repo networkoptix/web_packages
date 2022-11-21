@@ -57,7 +57,7 @@ class CloudPortalAPI(object):
             yield session
 
     @keyword
-    def api_log_in(self, email, password, backup_code=None, verification_code=None, env=None,):
+    def api_log_in(self, email, password, backup_code=None, verification_code=None):
         cloud_session = CloudSession(
             self.env,
             email,
