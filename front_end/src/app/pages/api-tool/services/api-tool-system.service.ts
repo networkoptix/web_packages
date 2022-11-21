@@ -442,6 +442,7 @@ export class NxAPIToolSystemService {
     }
 
     useBrandingVariables(data: any) {
+        if (!data) return;
         const customStrings = {
             '%CLOUD_NAME%': this.CONFIG.cloudName,
             '%VMS_NAME%': this.CONFIG.vmsName,

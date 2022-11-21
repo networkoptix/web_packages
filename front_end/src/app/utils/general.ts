@@ -226,14 +226,16 @@ interface Language {
 }
 
 export const processLanguageFactory = (customStrings: { [key: string]: string }) => function processLanguage(language: Language) {
-    Object.entries(language).forEach(([key, phrase]) => {
-        if (typeof phrase === 'string') {
-            language[key] = Object.entries(customStrings)
-                .reduce((text: string, [rKey, rValue]) => text.replace(new RegExp(rKey, 'g'), rValue), phrase);
-        } else if (typeof phrase !== 'number') {
-            language[key] = processLanguage(phrase);
-        }
-    });
+    if (language) {
+        Object.entries(language).forEach(([key, phrase]) => {
+            if (typeof phrase === 'string') {
+                language[key] = Object.entries(customStrings)
+                    .reduce((text: string, [rKey, rValue]) => text.replace(new RegExp(rKey, 'g'), rValue), phrase);
+            } else if (typeof phrase !== 'number') {
+                language[key] = processLanguage(phrase);
+            }
+        });
+    }
     return language;
 };
 
