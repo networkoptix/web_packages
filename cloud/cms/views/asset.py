@@ -340,7 +340,7 @@ def publish_review(request, target_review, target_customization='', message=True
             if flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser:
                 from cms.tasks import async_zendesk_push_article
                 async_zendesk_push_article.apply_async(
-                    args=[asset.id, target_customization])
+                    args=[asset.id, target_customization], queue='broadcast-notifications')
         if message:
             return 'success', f"Version {target_review.version.id} has been accepted"
     return None, None
@@ -641,7 +641,7 @@ def handle_settings_from_json(request, is_loaded, form, file, asset):
         json_cache_id = uuid.uuid4()
         PACKAGE_CACHE[json_cache_id] = loaded_json
         task = tasks.async_import_assets_from_json.apply_async(
-            args=[json_cache_id, request.user.id, import_assets_from_json_publish])
+            args=[json_cache_id, request.user.id, import_assets_from_json_publish], queue='broadcast-notifications')
         messages.info(request, 'Starting assets import')
         return [task, None, conflicts]
     elif update_structure:
@@ -795,7 +795,7 @@ def download_current_structure(request, asset_id):
         use_actual_values = "get_values" in request.query_params
         task = tasks.make_structure.apply_async(kwargs={'asset_id': asset_id,
                                                         'output_format': output_format, 'use_actual_values': use_actual_values,
-                                                        'user_id': request.user.id})
+                                                        'user_id': request.user.id}, queue='broadcast-notifications')
         PACKAGES_CACHE[cache_key] = {"file": None,
                                      "is_ready": False, "task_id": str(task)}
         return api_success({"msg": f"Building the {asset} structure", "is_ready": False, "task_id": str(task)})
@@ -869,7 +869,7 @@ def download_all_asset_structures(request, asset_type):
     structure_info = PACKAGES_CACHE.get(cache_key)
     if not structure_info:
         task = tasks.make_structure.apply_async(kwargs={
-            'asset_type': asset_type, 'user_id': request.user.id})
+            'asset_type': asset_type, 'user_id': request.user.id}, queue='broadcast-notifications')
         PACKAGES_CACHE[cache_key] = {"file": None,
                                      "is_ready": False, "task_id": str(task)}
         return api_success({"msg": f"Building the All {asset_type_name} structures", "is_ready": False, "task_id": str(task)})
@@ -950,7 +950,7 @@ def handle_cloud_portal_and_vms_package(asset, preview, version_id):
     package_info = PACKAGES_CACHE.get(cache_key)
     if not package_info:
         task = tasks.make_package.apply_async(
-            args=[asset.id, preview, version_id])
+            args=[asset.id, preview, version_id], queue='broadcast-notifications')
         PACKAGES_CACHE[cache_key] = {
             "file": None, "is_ready": False, "task_id": str(task)}
         return {"msg": "Building the package", "is_ready": False, "task_id": str(task)}
@@ -1311,7 +1311,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         custom_client = self.get_object()
         download_id = uuid.uuid4()
         task_id = tasks.make_custom_client.apply_async(
-            args=[custom_client.pk, download_id])
+            args=[custom_client.pk, download_id], queue='broadcast-notifications')
         cache_key = tasks.get_custom_client_package_key(
             custom_client.pk, download_id)
         PACKAGES_CACHE[cache_key] = {"file": None,

@@ -726,7 +726,7 @@ def test_handle_settings_from_json(mocker, arf, account_factory, db):
     mock_info_message.assert_called_once_with(
         request, 'Starting assets import')
     mock_async_import.assert_called_once_with(
-        args=[json_cache_id, user.id, True])
+        args=[json_cache_id, user.id, True], queue='broadcast-notifications')
     assert PackagesCache()[json_cache_id] == settings_file
 
     # Test handles update_structure
@@ -1035,7 +1035,7 @@ def test_download_all_asset_structures(arf, mocker, account_factory, db):
     assert PACKAGES_CACHE[cache_key] == {
         "file": None, "is_ready": False, "task_id": task_id}
     mock_make_structure.assert_called_once_with(
-        kwargs={'asset_type': asset_type, 'user_id': mock_request.user.id})
+        kwargs={'asset_type': asset_type, 'user_id': mock_request.user.id}, queue='broadcast-notifications')
 
     # Test not ready
     res = download_all_asset_structures(mock_request, asset_type)
@@ -1447,7 +1447,7 @@ class TestCustomClientViewSet:
         assert PACKAGES_CACHE[mock_cache_key] == {
             "file": None, "is_ready": False, "task_id": mock_task_id}
         expected_args = [mock_custom_client.pk, mock_download_id]
-        mock_make_custom_client.assert_called_once_with(args=expected_args)
+        mock_make_custom_client.assert_called_once_with(args=expected_args, queue='broadcast-notifications')
         mock_get_custom_client_package_key.assert_called_once_with(
             *expected_args)
 

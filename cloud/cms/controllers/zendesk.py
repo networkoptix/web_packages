@@ -1286,5 +1286,5 @@ def sync_menu(menu: Menu, customizations: List[Customization] = None, force_upda
                              zendesk_category=zd_category)
         log.save()
         task = async_zendesk_sync.apply_async(
-            args=[menu.id, customization.name, log.id, force_update])
+            args=[menu.id, customization.name, log.id, force_update], queue='broadcast-notifications')
         yield task.task_id
