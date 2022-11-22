@@ -99,7 +99,7 @@ ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-se
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
 ${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]//h1[@id="welcomeCaption"]
 ${CREATE ACCOUNT HEADER}              //header//a[@href='/authorize?client_type=create']
-${CREATE ACCOUNT BODY}                //landing-component//a[@href='/authorize?client_type=create']
+${CREATE ACCOUNT BODY}                //nx-landing-component//a[@href='/authorize?client_type=create']
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
