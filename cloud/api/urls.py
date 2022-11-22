@@ -86,5 +86,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        path('long_request', common.long_request)
+        path('long_request', common.long_request),
+        path('robot/set_flags', robot.set_flags)
     ]
