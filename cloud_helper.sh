@@ -517,9 +517,10 @@ do
             build_mediaserver_image $VERSION.deb $VERSION
 
             echo "Running the mediaserver on $WEBADMIN_HOST:$PORTS connected to https://$CLOUD_HOST"
-            for PORT in $PORTS; do
-                run_mediaserver $VERSION "$PORT" $CLOUD_HOST
-                open $WEBADMIN_HOST:$PORT
+            run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
+            for PORT in $PORTS
+            do
+                open "$WEBADMIN_HOST:$PORT"
             done
 
             sleep 30s
