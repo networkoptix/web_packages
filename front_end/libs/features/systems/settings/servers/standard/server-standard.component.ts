@@ -164,6 +164,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             }
 
             if (!isEqual(currentValue, previousValue)) {
+                this.serverOffline = false;
                 if (!this.applyService.locked && currentValue?.id !== previousValue?.id) {
                     setTimeout(() => {
                         this.setServer(true);
