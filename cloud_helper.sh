@@ -484,7 +484,7 @@ do
             ;;
         download_and_run)
             VERSION=$2
-            PORTS={$3:"7001"}
+            PORTS=${3:-"7001"}
             CLOUD_HOST="stage.nxvms.com"
             WEBADMIN_HOST="https://localhost"
             LOCAL_PASSWORD="qweasd1234"
@@ -497,9 +497,10 @@ do
             build_mediaserver_image $VERSION.deb $VERSION
 
             echo "Running the mediaserver on $WEBADMIN_HOST:$PORTS connected to https://$CLOUD_HOST"
-            run_mediaserver $VERSION "$PORT" $CLOUD_HOST
-            for $PORT in $PORTS; do
-                open $WEBADMIN_HOST:$PORT
+            run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
+            for PORT in $PORTS
+            do
+                open "$WEBADMIN_HOST:$PORT"
             done
 
             sleep 30s
