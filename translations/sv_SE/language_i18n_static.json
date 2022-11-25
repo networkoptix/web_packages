@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Universell"
             }
         },
         "mobile": {
@@ -826,7 +826,7 @@
         "login": "Logga in",
         "pageNotFound": "Det gick inte att hitta sidan",
         "register": "Skapa konto i",
-        "registerSuccess": "Welcome to",
+        "registerSuccess": "Välkommen till",
         "restorePassword": "Återställ lösenord",
         "restorePasswordSuccess": "Lösenordet sparat",
         "supportedDevices": "Enheter som stöds",
