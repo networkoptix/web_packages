@@ -3,7 +3,6 @@ import { Observable, defer } from 'rxjs';
 
 import { NxToastService } from '@dialogs/toast.service';
 
-import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxSessionService } from '../session.service';
 
 import { ProcessSettings, Handler, logError, Process } from './process';
@@ -13,7 +12,6 @@ import { ProcessSettings, Handler, logError, Process } from './process';
 })
 export class NxProcessService {
     constructor(
-        private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
         private toastService: NxToastService
     ) { }
@@ -38,7 +36,6 @@ export class NxProcessService {
     ) {
         const _caller = typeof caller === 'function' ? defer(caller) : caller;
         return new Process(
-            this.languageService,
             this.sessionService,
             this.toastService,
             _caller,

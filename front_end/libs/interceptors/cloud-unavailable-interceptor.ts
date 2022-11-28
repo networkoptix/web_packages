@@ -8,15 +8,14 @@ import { Injectable, Injector } from '@angular/core';
 import { throwError, timer, Observable } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { interceptor } from '../variables/static-variables';
 
 @Injectable()
 export class CloudUnavailableInterceptor implements HttpInterceptor {
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     dialogService: NxDialogsService;
     error: string;
     retryTimeout: number;
@@ -27,7 +26,6 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
         this.error = interceptor.cloudUnavailable.error;
         this.retryTimeout = interceptor.cloudUnavailable.timeout;
         setTimeout(() => {
-            this.LANG = injector.get(NxLanguageProviderService).translations;
             this.dialogService = injector.get(NxDialogsService);
         });
     }
@@ -43,7 +41,7 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
                         flatMap(() => next.handle(req)
                             .pipe(catchError(response => {
                                 this.dialogService.notify(
-                                    this.LANG.toastMessage.cloudUnavailable(),
+                                    this.LANG.toastMessage.cloudUnavailable,
                                     'danger'
                                 );
                                 return throwError(response);

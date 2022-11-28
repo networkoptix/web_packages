@@ -10,7 +10,6 @@ const include = [
     '**/*.component.html',
     './common/language/language_*.json',
     './common/customization/menus.json',
-    './common/language/language_i18n_static_types.ts',
     '../cloud/cms/menus.json'
 ];
 

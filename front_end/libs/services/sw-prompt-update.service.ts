@@ -1,12 +1,12 @@
 import { ApplicationRef, Inject, Injectable, Injector } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
+import { TranslateService } from '@ngx-translate/core';
 import { concat, interval, zip } from 'rxjs';
 import { first, tap, filter, take } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -19,13 +19,13 @@ export class NxSwPromptUpdateService {
     processService: NxProcessService;
 
     constructor(
-        languageService: NxLanguageProviderService,
+        translateService: TranslateService,
         updates: SwUpdate,
         appRef: ApplicationRef,
         injector: Injector,
         @Inject(WINDOW) private window: Window
     ) {
-        const languageSet$ = languageService.translateSubject.pipe(
+        const languageSet$ = translateService.onTranslationChange.pipe(
             filter(translations => translations !== null),
             take(1),
             tap(_ => {

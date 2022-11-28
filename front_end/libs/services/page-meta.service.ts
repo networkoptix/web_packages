@@ -6,7 +6,6 @@ import { debounceTime } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -33,7 +32,6 @@ export class NxPageMetaService {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
         protected readonly title: Title,
         protected readonly meta: Meta,
         // headerService: NxHeaderService,

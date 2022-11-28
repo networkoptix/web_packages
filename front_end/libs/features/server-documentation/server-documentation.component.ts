@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import type { Content } from '@app/menu/menu.types';
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
+import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ServerDocumentationSettings } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -21,22 +21,26 @@ import { NxSystemService } from '@services/system.service/system.service';
 
 export class NxServerDocumentationComponent {
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     content: Content;
     serverDocumentation: ServerDocumentationSettings[];
-    accessibleAt: string;
+    accessibleAt: Translatable;
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
         settingsService: NxSettingsService,
         accountService: NxAccountService,
         systemService: NxSystemService,
         router: Router
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
-        this.accessibleAt = this.LANG.serverDocumentation.accessibleAt({ windowsPath: this.CONFIG.serverDocumentation.windowsPath, defaultPath: this.CONFIG.serverDocumentation.defaultPath });
+        this.accessibleAt = {
+            value: this.LANG.serverDocumentation.accessibleAt,
+            params: {
+                windowsPath: this.CONFIG.serverDocumentation.windowsPath,
+                defaultPath: this.CONFIG.serverDocumentation.defaultPath
+            }
+        };
         if (!settingsService.system?.mediaserver) {
             accountService.get().then(async account => {
                 if (!account) {

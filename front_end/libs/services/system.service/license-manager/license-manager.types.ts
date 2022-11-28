@@ -1,10 +1,17 @@
-import { KeyTableFields } from '@common/language/language_i18n_static_types';
 import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 
 export enum CLOUD_STORAGE_STATES {
     LOADING = 'loading',
     DEFAULT = 'default',
     ACTIVATED = 'activated'
+}
+
+export interface KeyTableFields {
+    size: (params?: Record<string, string | number>) => string;
+    state: (params?: Record<string, string | number>) => string;
+    system: (params?: Record<string, string | number>) => string;
+    expires: (params?: Record<string, string | number>) => string;
+    key: (params?: Record<string, string | number>) => string;
 }
 
 export type LicenseKeyFields = keyof KeyTableFields;

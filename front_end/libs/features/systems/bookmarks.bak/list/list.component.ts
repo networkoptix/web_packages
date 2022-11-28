@@ -1,7 +1,5 @@
 import { Component, OnDestroy, Input, Inject } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
 import type { Bookmark } from '../bookmark.types';
@@ -15,15 +13,11 @@ export class NxBookmarksListComponent implements OnDestroy {
     @Input() list: Bookmark[];
     @Input() restError: boolean;
 
-    LANG: LanguageI18NStaticTypes;
-
     gridColumnLookup: { [key: string]: string } = {};
 
     constructor(
-        language: NxLanguageProviderService,
         @Inject(WINDOW) public window: Window
     ) {
-        this.LANG = language.translations;
     }
 
     ngOnDestroy(): void { }

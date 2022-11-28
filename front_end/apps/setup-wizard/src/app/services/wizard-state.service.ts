@@ -5,13 +5,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@lib/variables/static-variables';
 import { Setting } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { ModuleInformationReply, NormalResponse, SystemConfigSettings, UserSession } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -117,7 +116,7 @@ export class WizardStateService {
     }
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     server: NxSystemRestAPI | NxSystemRestAPI2;
 
     private readonly defaultUser = 'admin';
@@ -193,7 +192,6 @@ export class WizardStateService {
 
     constructor(
         config: NxConfigService,
-        language: NxLanguageProviderService,
         private http: HttpClient,
         private nxSystemAPIService: NxSystemAPIService,
         private router: Router,
@@ -202,7 +200,6 @@ export class WizardStateService {
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = config.getConfig();
-        this.LANG = language.translations;
 
         const [host, port] = this.window.location.host.split(':');
         this.networkInfo = {
@@ -221,7 +218,7 @@ export class WizardStateService {
 
         this.wizardFSM = {
             start: {
-                title: this.LANG.setupWizard.title.start(),
+                title: this.LANG.setupWizard.title.start,
                 next: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -230,7 +227,7 @@ export class WizardStateService {
                 }
             },
             systemName: {
-                title: this.LANG.setupWizard.title.systemName(),
+                title: this.LANG.setupWizard.title.systemName,
                 jump: () => {
                     this.currentState = WIZARD_STATE.Advanced;
                 },
@@ -246,7 +243,7 @@ export class WizardStateService {
                 validate: () => this.setupConfig.systemName.length > 0
             },
             advanced: {
-                title: this.LANG.setupWizard.title.advanced(),
+                title: this.LANG.setupWizard.title.advanced,
                 back: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -352,7 +349,7 @@ export class WizardStateService {
             /**/
 
             merge: {
-                title: this.LANG.setupWizard.title.merge(),
+                title: this.LANG.setupWizard.title.merge,
                 back: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },
@@ -362,10 +359,10 @@ export class WizardStateService {
                 validate: () => this.setupConfig.mergeDataState === FORM_STATE.VALID
             },
             mergeProcess: {
-                title: this.LANG.setupWizard.title.mergeProcess()
+                title: this.LANG.setupWizard.title.mergeProcess
             },
             mergeFailure: {
-                title: this.LANG.setupWizard.title.mergeFailure(),
+                title: this.LANG.setupWizard.title.mergeFailure,
                 back: () => {
                     this.currentState = WIZARD_STATE.Merge;
                 },
@@ -378,7 +375,7 @@ export class WizardStateService {
             },
 
             localLogin: {
-                title: this.LANG.setupWizard.title.localLogin(),
+                title: this.LANG.setupWizard.title.localLogin,
                 back: () => {
                     // Reset Credentials
                     this.currentState = WIZARD_STATE.SystemName;
@@ -389,11 +386,11 @@ export class WizardStateService {
                 validate: () => this.setupConfig.localLoginDataState === FORM_STATE.VALID,
             },
             localSuccess: {
-                title: this.LANG.setupWizard.title.localSuccess(),
+                title: this.LANG.setupWizard.title.localSuccess,
                 finish: true
             },
             localFailure: {
-                title: this.LANG.setupWizard.title.localFailure(),
+                title: this.LANG.setupWizard.title.localFailure,
                 back: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -404,13 +401,13 @@ export class WizardStateService {
             },
 
             initFailure: {
-                title: this.LANG.setupWizard.title.initFailure(),
+                title: this.LANG.setupWizard.title.initFailure,
                 retry: () => {
                     this.initWizard();
                 }
             },
             brokenSystem: {
-                title: this.LANG.setupWizard.title.brokenSystem(),
+                title: this.LANG.setupWizard.title.brokenSystem,
                 retry: () => {
                     this.initWizard();
                 }

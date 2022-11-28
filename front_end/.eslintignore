@@ -7,9 +7,6 @@ dist
 # don't lint nyc coverage output
 coverage
 
-# Don't lint the auto generated static language types file
-common/language/language_i18n_static_types.ts
-
 # Don't lint tsconfig
 tsconfig.json
 

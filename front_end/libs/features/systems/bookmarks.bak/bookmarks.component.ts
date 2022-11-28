@@ -5,7 +5,6 @@ import { cloneDeep } from 'lodash-es';
 import { combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, delay, filter, switchMap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import type {
     SearchTag,
     SearchFilter
@@ -13,7 +12,6 @@ import type {
 import { redirect } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -28,35 +26,26 @@ import type { Bookmark } from './bookmark.types';
 })
 
 export class NxBookmarksComponent implements OnInit, OnDestroy {
-    LANG: LanguageI18NStaticTypes;
-
-    allElements: Bookmark[];
+    allElements: Bookmark[] = [];
     elements: Bookmark[];
     filterModel: SearchFilter = { query: '', tags: [] };
     system: NxSystem;
     account: Account;
     restEndpointUsed = true;
 
-    private setupDefaults(): void {
-        this.allElements = [];
-    }
-
     constructor(
         private bookmarkService: BookmarkService,
-        private language: NxLanguageProviderService,
         // private pageService: NxPageService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private route: ActivatedRoute,
         private router: Router,
     ) {
-        this.setupDefaults();
     }
 
     ngOnDestroy(): void { }
 
     ngOnInit(): void {
-        this.LANG = this.language.translations;
 
         this.route.queryParams
             .pipe(untilDestroyed(this))

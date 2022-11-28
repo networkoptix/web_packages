@@ -10,7 +10,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 import { responseOk, toast } from '@lib/variables/static-variables';
 
-import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxSessionService } from '../session.service';
 
 export interface IErrorCodes {
@@ -107,7 +106,6 @@ export class Process {
     public caller$: Observable<any>;
 
     constructor(
-        languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
         private toastService: NxToastService,
         caller$: Observable<any>,

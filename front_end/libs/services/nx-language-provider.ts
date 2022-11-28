@@ -3,10 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
@@ -17,17 +15,10 @@ import { WINDOW } from './window-provider';
 
 const i18nOriginal = { ...i18n };
 
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
 @Injectable({
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
-    translations: LanguageI18NStaticTypes;
-    translateSubject = new BehaviorSubject<LanguageI18NStaticTypes>(null);
-
     constructor(
         configService: NxConfigService,
         private translate: TranslateService,
@@ -67,32 +58,6 @@ export class NxLanguageProviderService {
         */
     }
 
-    /**
-     * Use to incrementally add params to a string to be translated.
-     *
-     * The method accepts the string to be translated as a param.
-     *
-     * Returns an translationObject with addParams and toString methods.
-     *
-     * The addParams method adds an object with params to be added and returns the translationObject
-     * so that it can be chained.
-     *
-     * The getString method returns the translated string with the params.
-     *
-     * @param toTranslate - Language string to translate
-     */
-    static incrementalTranslate(toTranslate) {
-        const params = {};
-        const translationObject = {
-            addParams: (paramsToAdd: IParams) => {
-                Object.assign(params, paramsToAdd);
-                return translationObject;
-            },
-            getString: () => toTranslate(params)
-        };
-        return translationObject;
-    }
-
     loadLanguage() {
         const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
 
@@ -115,12 +80,8 @@ export class NxLanguageProviderService {
     setTranslations(lang: string, translation): void {
         this.translate.setTranslation(lang, translation);
         this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
-
-        this.translations = this.translate.translations[this.translate.currentLang];
-        this.translations.productName = () => this.translations[
-            environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults'
-        ]?.default?.site_name?.() || '';
-        this.translateSubject.next(this.translations);
+        const productName = staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default?.site_name || '';
+        this.translate.set('productName', productName);
     }
 
     public get defaultLanguage() {
