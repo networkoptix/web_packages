@@ -29,7 +29,7 @@ Force Tags        system    cloud
 #    Wait Until Element Is Visible    ${JUMBOTRON}
 
 10. Should open System page by link to not authorized user and show it, after owner logs in
-    [tags]    smoke
+    [tags]    smokef
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]   ${base password}    button=None
     Verify In System    ${system}[name]
@@ -426,7 +426,7 @@ Force Tags        system    cloud
     #Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
 26. Cloud Owner can disconnect System from Cloud
-    [Tags]    C41883   C47020    webadmin    smoke
+    [Tags]    C41883   C47020    webadmin    smokef
     ${local auth}=   Create List    admin    ${base password}
 
     Log    Step 1

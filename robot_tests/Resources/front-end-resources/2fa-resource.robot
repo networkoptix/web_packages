@@ -93,7 +93,7 @@ Login with one time backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
     Log In    ${email}    ${password}    2fa=${True}    2fa backup code=${random one time backup code}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
-    Click Element    ${ACCOUNT DROPDOWN}
+    Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
     Click Link    ${SECURITY DROPDOWN}
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}

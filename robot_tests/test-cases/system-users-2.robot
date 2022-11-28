@@ -595,9 +595,11 @@ Force Tags        system    Threaded    users
     #Log Out
     #Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${ACCOUNT CREATION EMAIL SUCCESS}
+    Capture Page Screenshot
     ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
+
     Sleep    5
-    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
+    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}
 ##  Commented out steps below are to check email that is no longer being sent out. Leaving it commented out in order to have an easy way to revert if this behavior changes again.
 #    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
 #    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN

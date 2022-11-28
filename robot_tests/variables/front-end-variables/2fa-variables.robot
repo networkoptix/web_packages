@@ -28,7 +28,7 @@ ${2FA BACKUP CODE BTN}                      //nx-authorize-auth-code-component//
 ${2FA BACKUP CODE FIELD}                    //nx-authorize-backup-code-component//input[@id="backupCode"]
 ${2FA BACKUP CODE LOG IN BTN}               //nx-authorize-backup-code-component//nx-process-button//button[@type="submit"]
 ${2FA CLOUD ILLUSTRATION}                   //nx-authorize-component//nx-authorize-auth-code-component//svg-icon[contains(@data-src,"/images/placeholders/section/cloud_header.svg")]
-${2FA LOG IN CLOUD}                         //nx-authorize-component//nx-authorize-auth-code-component//h3[text()="${2FA LOG IN CLOUD TEXT}"]
+${2FA LOG IN CLOUD}                         //nx-authorize-component//nx-authorize-auth-code-component//h3[contains(text(),"${2FA LOG IN CLOUD TEXT}")]
 ${2FA CODE INSTRUCTIONS}                    //nx-authorize-component//nx-authorize-auth-code-component//p[text()="${2FA CODE INSTRUCTIONS TEXT}"]
 ${2FA BACK BTN}                             //nx-authorize-component//nx-authorize-auth-code-component//span[text()="${BACK TEXT}"]
 ${2FA LOG IN BTN}                           //nx-authorize-auth-code-component//nx-process-button//button[text()="${LOG IN BUTTON TEXT}"]
