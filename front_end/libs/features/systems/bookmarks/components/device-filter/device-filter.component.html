@@ -1,9 +1,9 @@
 <div class="header">
     <span translate>Device</span>
     <button
-        *ngIf="selectionModel.hasValue()"
+        *ngIf="selection.hasValue()"
         class="clear"
-        (click)="selectionModel.clear()"
+        (click)="selection.clear()"
     >
         <svg-icon
             nx-add-svg-src
@@ -17,10 +17,10 @@
     <div class="devices">
         <label
             *ngFor="let device of searchMatches | slice: 0:7"
-            [ngClass]="{ selected: selectionModel.isSelected(device) }"
+            [ngClass]="{ selected: selection.isSelected(device) }"
         >
             <nx-checkbox
-                [ngModel]="selectionModel.isSelected(device)"
+                [ngModel]="selection.isSelected(device)"
                 (ngModelChange)="selectionChange(device, $event)"
             ></nx-checkbox>
             {{ device }}

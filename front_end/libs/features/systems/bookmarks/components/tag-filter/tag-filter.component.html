@@ -1,9 +1,9 @@
 <div class="header">
     <span translate>Tags</span>
     <button
-        *ngIf="selectionModel.hasValue()"
+        *ngIf="selection.hasValue()"
         class="clear"
-        (click)="selectionModel.clear()"
+        (click)="selection.clear()"
     >
         <svg-icon
             nx-add-svg-src
@@ -17,8 +17,8 @@
         <button
             class="tag"
             *ngFor="let tag of tags"
-            [ngClass]="{ selected: selectionModel.isSelected(tag) }"
-            (click)="selectionModel.toggle(tag)"
+            [ngClass]="{ selected: selection.isSelected(tag) }"
+            (click)="selection.toggle(tag)"
         >
             {{ tag }}
         </button>

@@ -1,6 +1,10 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
+import { DateRange } from '@angular/material/datepicker';
 
 import staticLang from '@common/language/language_i18n_static.json';
+
+import type { TimeRange } from './bookmarks.types';
 
 @Component({
     selector: 'nx-bookmarks-component',
@@ -34,6 +38,11 @@ export class NxBookmarksComponent implements OnInit {
         'green',
         'low',
     ];
+
+    dateFilter: DateRange<Date> = null;
+    timeFilter: TimeRange = { start: '', end: '' };
+    deviceFilter = new SelectionModel<string>(true, []);
+    tagFilter = new SelectionModel<string>(true, []);
 
     ngOnInit(): void {}
 }

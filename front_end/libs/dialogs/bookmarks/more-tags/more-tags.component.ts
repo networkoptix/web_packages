@@ -12,10 +12,9 @@ import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters
 export class NxMoreTagsModalContent extends NxMoreFiltersBaseModalContent<DT> {
     constructor(
         public dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) public tags: DT['data'],
+        @Inject(DIALOG_DATA) public dialogData: DT['data'],
     ) {
         super(dialogRef);
-        this.items = tags;
+        this.items = dialogData.tags;
     }
-    // TODO: Use store for state
 }

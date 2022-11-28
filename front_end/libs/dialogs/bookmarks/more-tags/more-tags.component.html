@@ -5,7 +5,9 @@
         <div class="tags">
             <button
                 class="tag"
+                [ngClass]="{ selected: dialogData.selection.isSelected(tag) }"
                 *ngFor="let tag of searchMatches"
+                (click)="dialogData.selection.toggle(tag)"
             >
                 {{ tag }}
             </button>

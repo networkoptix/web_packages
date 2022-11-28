@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@src/app/variables/static-variables';
@@ -9,8 +9,9 @@ import { icons } from '@src/app/variables/static-variables';
     templateUrl: 'tag-filter.component.html',
     styleUrls: ['tag-filter.component.scss'],
 })
-export class NxTagFilterComponent implements OnInit {
+export class NxTagFilterComponent {
     @Input() tags: string[];
+    @Input() selection: SelectionModel<string>;
 
     icons = icons;
 
@@ -18,9 +19,7 @@ export class NxTagFilterComponent implements OnInit {
 
     constructor(private dialogs: NxDialogsService) {}
 
-    ngOnInit(): void {}
-
     moreTagsDialog(): void {
-        this.dialogs.moreTags(this.tags);
+        this.dialogs.moreTags({ tags: this.tags, selection: this.selection });
     }
 }

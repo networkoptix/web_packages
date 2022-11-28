@@ -12,10 +12,17 @@ import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters
 export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT> {
     constructor(
         public dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) public devices: DT['data'],
+        @Inject(DIALOG_DATA) public dialogData: DT['data'],
     ) {
         super(dialogRef);
-        this.items = devices;
+        this.items = dialogData.devices;
     }
-    // TODO: Use store for state
+
+    selectionChange(device: string, state: boolean): void {
+        if (state) {
+            this.dialogData.selection.select(device);
+        } else {
+            this.dialogData.selection.deselect(device);
+        }
+    }
 }

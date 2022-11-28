@@ -1,22 +1,23 @@
 <input
-    [(ngModel)]="time"
+    [(ngModel)]="value"
+    (ngModelChange)="emitValue($event)"
     [pattern]="timeRegex"
     [placeholder]="placeholder"
     maxlength="5"
     class="form-control"
-    [ngClass]="{ 'not-empty': time }"
+    [ngClass]="{ 'not-empty': value }"
 />
 <button
     class="period"
-    *ngIf="hour12 && time"
-    (click)="period = this.period === AM ? PM : AM"
+    *ngIf="hour12 && value"
+    (click)="period = this.period === AM ? PM : AM; emitValue()"
 >
     {{ period }}
 </button>
 <button
-    *ngIf="time"
+    *ngIf="value"
     class="clear-btn"
-    (click)="time = ''"
+    (click)="value = ''; emitValue('')"
 >
     <svg-icon
         nx-add-svg-src

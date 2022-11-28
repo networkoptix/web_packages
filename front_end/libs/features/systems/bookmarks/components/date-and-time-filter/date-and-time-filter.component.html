@@ -1,9 +1,9 @@
 <div class="dtf-header">
     <span translate>Date and Time</span>
     <button
-        *ngIf="selected"
+        *ngIf="dateRange"
         class="clear"
-        (click)="selected = null"
+        (click)="clear()"
     >
         <svg-icon
             nx-add-svg-src
@@ -17,7 +17,7 @@
         <button
             translate
             [ngClass]="{ selected: quickSelectMatch(lastDay) }"
-            (click)="selected = lastDay"
+            (click)="quickSelect(lastDay)"
             (mouseover)="preview = lastDay"
             (mouseout)="preview = null"
             (focus)="preview = lastDay"
@@ -28,7 +28,7 @@
         <button
             translate
             [ngClass]="{ selected: quickSelectMatch(last7Days) }"
-            (click)="selected = last7Days"
+            (click)="quickSelect(last7Days)"
             (mouseover)="preview = last7Days"
             (mouseout)="preview = null"
             (focus)="preview = last7Days"
@@ -39,7 +39,7 @@
         <button
             translate
             [ngClass]="{ selected: quickSelectMatch(last30Days) }"
-            (click)="selected = last30Days"
+            (click)="quickSelect(last30Days)"
             (mouseover)="preview = last30Days"
             (mouseout)="preview = null"
             (focus)="preview = last30Days"
@@ -49,17 +49,23 @@
         </button>
     </div>
     <mat-calendar
-        [selected]="selected || preview"
+        [selected]="dateRange || preview"
         (selectedChange)="selectedChange($event)"
     ></mat-calendar>
     <div class="time-inputs">
         <div>
             <span translate>From</span>
-            <nx-time-selector></nx-time-selector>
+            <nx-time-selector
+                [time]="timeRange.start"
+                (timeChange)="setStartTime($event)"
+            ></nx-time-selector>
         </div>
         <div>
             <span translate>To</span>
-            <nx-time-selector></nx-time-selector>
+            <nx-time-selector
+                [time]="timeRange.end"
+                (timeChange)="setEndTime($event)"
+            ></nx-time-selector>
         </div>
     </div>
 </div>

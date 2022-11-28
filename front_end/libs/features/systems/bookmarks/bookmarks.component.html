@@ -1,6 +1,15 @@
 <div class="sidebar">
-    <nx-date-and-time-filter></nx-date-and-time-filter>
-    <nx-device-filter [items]="devices"></nx-device-filter>
-    <nx-tag-filter [tags]="tags"></nx-tag-filter>
+    <nx-date-and-time-filter
+        [(dateRange)]="dateFilter"
+        [(timeRange)]="timeFilter"
+    ></nx-date-and-time-filter>
+    <nx-device-filter
+        [items]="devices"
+        [selection]="deviceFilter"
+    ></nx-device-filter>
+    <nx-tag-filter
+        [tags]="tags"
+        [selection]="tagFilter"
+    ></nx-tag-filter>
 </div>
 <div class="body"></div>
