@@ -7,12 +7,12 @@ import {
     Output,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, interval } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
+import { Translatable } from '@pipes/any-translate.types';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -39,12 +39,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     @Input() fromEmail$: Observable<boolean>;
 
     contentHeader$: Observable<string>;
-    contentMessage$: Observable<string>;
-
-    constructor(
-        private translateService: TranslateService,
-    ) {
-    }
+    contentMessage$: Observable<Translatable>;
 
     ngOnInit(): void {
         this.contentHeader$ = this.activated$.pipe(map((activated: boolean) => {
@@ -56,10 +51,16 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
             const params = { accountEmail: this.loginEmail || '' };
             if (activated) {
                 return fromEmail
-                    ? this.translateService.instant(this.LANG.authorize.activatedAdditional, params)
+                    ? {
+                        value: this.LANG.authorize.activatedAdditional,
+                        params
+                    }
                     : '';
             } else {
-                return this.translateService.instant(this.LANG.authorize.createdAdditional, params);
+                return {
+                    value: this.LANG.authorize.createdAdditional,
+                    params
+                };
             }
         }));
 

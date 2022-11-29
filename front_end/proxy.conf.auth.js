@@ -10,6 +10,7 @@ const target = process.env.CLOUD_TARGET || 'cloud-test';
 const PROXY_CONFIG = [
     {
         context: [
+            '/cdb',
             '/api',
             '/oauth',
             // mediaserver specific apis

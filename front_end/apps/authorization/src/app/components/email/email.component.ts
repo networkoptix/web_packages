@@ -14,8 +14,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons } from '@lib/variables/static-variables';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -29,7 +27,6 @@ import { setupText, TemplateText } from '../setupText';
     styleUrls: ['email.component.scss']
 })
 export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
-    CONFIG: IConfig;
     readonly environment = environment;
 
     @Input() clientType: string;
@@ -52,10 +49,8 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     icons = icons;
 
     constructor(
-        configService: NxConfigService,
         private deviceService: DeviceDetectorService
     ) {
-        this.CONFIG = configService.getConfig();
     }
 
     private handleErrors(changes: NgChanges<NxAuthorizeEmailComponent>): void {

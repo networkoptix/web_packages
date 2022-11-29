@@ -1,0 +1,147 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { iif, mergeMap, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+import { WINDOW } from '@services/window-provider';
+
+type ApiData = { [key: string]: string | boolean | number };
+
+const endpoints = {
+    check: (email: string) => `account/${email}/status`,
+    getAccount: 'account/get',
+    activate: 'account/activate',
+    reactivate: 'account/reactivate',
+    register: 'account/register',
+    resetPassword: 'account/resetPassword',
+    restorePassword: 'account/self',
+    token: 'oauth2/token',
+    update: 'account/update',
+    verifyBackupCode: 'account/self/2fa/backup-code',
+    verifyTotp: 'account/self/2fa/totp/key'
+};
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthService {
+    readonly apiBase = '/cdb';
+
+    constructor(
+        @Inject(WINDOW) private window: Window,
+        private httpClient: HttpClient
+    ) {
+    }
+
+    private get(route: string, params?: ApiData, headers?: HttpHeaders): Observable<ApiData> {
+        return this.httpClient.get<ApiData>(`${this.apiBase}/${route}`, { headers, params });
+    }
+
+    private post(route: string, data?: ApiData, headers?: HttpHeaders): Observable<ApiData> {
+        return this.httpClient.post<ApiData>(`${this.apiBase}/${route}`, data, { headers });
+    }
+
+    private put(route: string, data?: ApiData, headers?: HttpHeaders): Observable<ApiData> {
+        return this.httpClient.put<ApiData>(`${this.apiBase}/${route}`, data, { headers });
+    }
+
+    account(): Observable<ApiData> {
+        return this.get(endpoints.getAccount);
+    }
+
+    activate(code: string): Observable<ApiData> {
+        return this.post(endpoints.activate, { code });
+    }
+
+    authenticate(email: string, password: string, clientId: string, redirectUrl?: string, scope?: string, state?: string): Observable<ApiData> {
+        const data: ApiData = {
+            password,
+            username: email,
+            grant_type: 'password',
+            response_type: 'code'
+        };
+
+        if (clientId) {
+            data.client_id = clientId;
+        }
+
+        if (scope) {
+            data.scope = scope;
+        }
+        // TODO: Once client registration is supported verify clientId + redirectUrl before trying to get an access code.
+        return this.post(endpoints.token, data)
+            .pipe(map(({ code }) => {
+                const link = new URL(redirectUrl || this.window.location.origin);
+                const params = new URLSearchParams(link.search);
+                if (code) {
+                    params.set('code', <string>code);
+                }
+                if (state) {
+                    params.set('state', state);
+                }
+                link.search = params.toString();
+                return {
+                    code,
+                    link: link.toString()
+                };
+            }));
+    }
+
+    checkIfEmailExistsInCloud(email: string): Observable<ApiData> {
+        return this.get(endpoints.check(email)).pipe(
+            map(({ statusCode }) => ({
+                active: statusCode === 'activated',
+                emailExists: !!statusCode
+            })),
+            catchError(() => of({
+                active: false,
+                emailExists: false
+            })));
+    }
+
+    reactivate(email: string): Observable<ApiData> {
+        return this.post(endpoints.activate, { email });
+    }
+
+    register(email: string, password: string, firstName: string, lastName: string, code?: string): Observable<ApiData> {
+        let headers = new HttpHeaders();
+        if (code) {
+            const [token] = atob(code).split(':');
+            headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+        }
+        const data = {
+            email,
+            password,
+            fullName: `${firstName} ${lastName}`
+        };
+        return this.post(`${code ? endpoints.update : endpoints.register}`, data, headers);
+    }
+
+    restorePassword(code: string, password: string, verificationCode?: string, isBackup?: boolean): Observable<ApiData> {
+        const [token] = atob(code).split(':');
+        const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+        const data = {
+            currentPassword: token,
+            password
+        };
+        return iif(
+            () => !verificationCode,
+            of({}),
+            isBackup ? this.verifyBackupCode(verificationCode, token) : this.verifyTotp(verificationCode, token)
+        ).pipe(
+            mergeMap(() => this.put(endpoints.restorePassword, data, headers))
+        );
+    }
+
+    resetPassword(email: string): Observable<ApiData> {
+        return this.post(endpoints.resetPassword, { email });
+    }
+
+    verifyBackupCode(backupCode: string, token: string): Observable<ApiData> {
+        return this.get(`${endpoints.verifyBackupCode}/${backupCode}`, { token });
+    }
+
+    verifyTotp(totp: string, token: string): Observable<ApiData> {
+        return this.get(`${endpoints.verifyTotp}/${totp}`, { token });
+    }
+}

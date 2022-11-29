@@ -15,9 +15,10 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
+import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
+import { AuthService } from '@authorization/src/app/auth.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -143,6 +144,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         private httpClient: HttpClient,
         private route: ActivatedRoute,
+        private authService: AuthService,
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
         private router: Router,
@@ -267,7 +269,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else if (this.action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (this.action === 'activate') {
-                await this.cloudService.activate(this.loginCode).catch(err => console.error(err));
+                await lastValueFrom(this.authService.activate(this.loginCode)).catch(err => console.error(err));
                 this.fromEmail$.next(true);
                 this.activated$.next(true);
                 this.currentState = AuthorizeState.activate;
@@ -388,8 +390,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkEmailProcess = this.processService.createProcess(
             async () => {
                 this.emailErrorCode = '';
-                const res = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
-                if (this.currentState === AuthorizeState.activate && res.active) {
+                const res = await lastValueFrom(this.authService.checkIfEmailExistsInCloud(this.loginEmail));
+                if (this.currentState === AuthorizeState.activate && res.statusCode === 'activated') {
                     return this.login();
                 }
                 return Promise.resolve(res);
@@ -460,9 +462,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     return this.cloudService.updateSessionWith2fa(this.authCode);
                 }
 
-                return this.action === 'restore_password'
-                    ? this.cloudService.restorePassword(this.loginCode, this.resetPassword, this.authCode)
-                    : this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
+                return lastValueFrom(this.action === 'restore_password'
+                    ? this.authService.restorePassword(this.loginCode, this.resetPassword, this.authCode)
+                    : this.authService.verifyTotp(this.authCode, this.loginCode)
+                );
             },
             {
                 ignoreUnauthorized: true,
@@ -491,8 +494,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             async () => {
                 this.backupCodeErrorCode = '';
                 return this.action === 'restore_password'
-                    ? this.cloudService.restorePassword(this.loginCode, this.resetPassword, this.backupCode, true)
-                    : this.cloudService.verifyBackupCode(this.backupCode, this.loginCode).toPromise();
+                    ? this.authService.restorePassword(this.loginCode, this.resetPassword, this.backupCode, true)
+                    : this.authService.verifyBackupCode(this.backupCode, this.loginCode).toPromise();
             },
             { ignoreError: true, timeoutMs },
             res => {
@@ -515,12 +518,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         // use factory if account properties are not needed outside of the create component
         // this.createProcessFactory = (props) => this.processService.createProcess(() => {
         this.createProcess = this.processService.createProcess(
-            () => this.cloudService.registerUser(
+            () => lastValueFrom(this.authService.register(
                 this.accountInfo.email,
                 this.accountInfo.password,
                 this.accountInfo.firstName,
                 this.accountInfo.lastName,
-                this.loginCode)
+                this.loginCode))
             , { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
@@ -551,9 +554,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.resetRequestProcess = this.processService.createProcess(
             () => {
                 this.resetRequestErrorCode = '';
-                return this.cloudService.restorePasswordRequest(
+                return lastValueFrom(this.authService.resetPassword(
                     this.resetPasswordEmail
-                );
+                ));
             },
             { ignoreError: true, timeoutMs },
             () => {
@@ -571,7 +574,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.resetPasswordProcess = this.processService.createProcess(
-            () => this.cloudService.restorePassword(this.loginCode, this.resetPassword),
+            () => lastValueFrom(this.authService.restorePassword(this.loginCode, this.resetPassword)),
             { ignoreError: true, timeoutMs, ignoreUnauthorized: true },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
@@ -601,19 +604,18 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     login = (): Promise<AuthenticateResp> => {
-        return this.cloudService.authenticate(
+        return lastValueFrom(this.authService.authenticate(
             this.loginEmail,
             this.loginPassword,
             this.initialData.client_id, // use for testing || 'cloud',
             this.initialData.redirect_uri, // || 'http://localhost:9000/',
-            this.initialData.response_type, // || 'code',
             this.initialData.state,
             this.initialData.scope
-        );
+        ));
     };
 
     checkIfActivated = async (): Promise<void> => {
-        const { active } = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
+        const { active } = await lastValueFrom(this.authService.checkIfEmailExistsInCloud(this.loginEmail));
         if (active) {
             this.activated$.next(true);
         }
@@ -624,7 +626,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             return;
         }
         this.blockResendingActivation = true;
-        return this.cloudService.reactivate(this.loginEmail)
+        return lastValueFrom(this.authService.reactivate(this.loginEmail))
             .then(() => {
                 this.toastService.notify(
                     this.LANG.authorize.emailSent,
@@ -645,7 +647,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 const code = params.get('code');
                 params.delete('code');
                 await this.cloudService.loginCode(code);
-                await this.cloudService.account(true).toPromise();
+                await lastValueFrom(this.authService.account());
                 const paramString = params.toString();
                 route = `${link}?${paramString}`;
             } catch (err) {

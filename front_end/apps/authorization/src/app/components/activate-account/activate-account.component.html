@@ -46,7 +46,7 @@
         <div
             class="content-message"
             [ngClass]="{ 'fs-mask': !!loginEmail }"
-            [innerHTML]="contentMessage$ | async"
+            [innerHTML]="contentMessage$ | async | translate"
         ></div>
     </form>
     <footer
