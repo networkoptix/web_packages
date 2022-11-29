@@ -505,7 +505,7 @@ do
         download_and_run)
             VERSION=$2
             PORTS=${3:-"7001"}
-            CLOUD_HOST="stage.nxvms.com"
+            CLOUD_HOST="cloud-test.hdw.mx"
             WEBADMIN_HOST="https://localhost"
             LOCAL_PASSWORD="qweasd1234"
 
