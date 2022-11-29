@@ -138,8 +138,6 @@ const typeLintBlacklist = [
     '**/landing/landing.component.ts',
     '**/push-notifications/push-notifications.component.ts',
     '**/push-notifications/push-notifications.module.ts',
-    '**/bookmarks/bookmark.service.ts',
-    '**/bookmarks/bookmarks.component.ts',
     '**/admin/admin.component.ts',
     '**/advanced/advanced.component.ts',
     '**/standard/standard.component.ts',
