@@ -114,11 +114,6 @@ do
             python manage.py filldata
             python manage.py filldata --preview=True &
 
-            echo "Customization is $CUSTOMIZATION. Instance name is $INSTANCE_NAME"
-            if [ "$CUSTOMIZATION" == "default" ]; then
-                wget -O- http://depcon.hdw.mx/api/updateInstanceStatus --post-data="instance=$INSTANCE_NAME"
-            fi
-
             find /app/app/static | xargs touch
             exec gunicorn cloud.wsgi --capture-output --workers ${PORTAL_WORKERS} --bind :5000 --log-level=debug --timeout 300
             ;;
