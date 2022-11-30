@@ -12,4 +12,24 @@
         [selection]="tagFilter"
     ></nx-tag-filter>
 </div>
-<div class="body"></div>
+<div class="body">
+    <div
+        class="no-bookmarks"
+        *ngIf="bookmarks && !bookmarks.length"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="cloudSrc"
+        >
+        </svg-icon>
+        <h2
+            class="no-bookmarks-text"
+            [ngClass]="{
+                'no-bookmarks-text-dark': this.CONFIG.isDarkTheme
+            }"
+            translate
+        >
+            You don't have any Bookmarks yet.
+        </h2>
+    </div>
+</div>

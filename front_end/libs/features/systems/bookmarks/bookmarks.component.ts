@@ -3,8 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@src/app/variables/static-variables';
 
-import type { TimeRange } from './bookmarks.types';
+import type { TimeRange, Bookmark } from './bookmarks.types';
 
 @Component({
     selector: 'nx-bookmarks-component',
@@ -14,6 +17,11 @@ import type { TimeRange } from './bookmarks.types';
 
 export class NxBookmarksComponent implements OnInit {
     LANG = staticLang;
+    bookmarks: Bookmark[];
+    icons = icons;
+
+    CONFIG: IConfig;
+    cloudSrc: string;
 
     // Placeholder
     devices = [
@@ -44,5 +52,18 @@ export class NxBookmarksComponent implements OnInit {
     deviceFilter = new SelectionModel<string>(true, []);
     tagFilter = new SelectionModel<string>(true, []);
 
-    ngOnInit(): void {}
+    constructor(
+        configService: NxConfigService,
+    ) {
+        this.CONFIG = configService.getConfig();
+    }
+
+    ngOnInit(): void {
+        this.getBookmarks();
+        this.cloudSrc = `${icons.dirSectionPlaceholder}empty-bookmarks${this.CONFIG.isDarkTheme ? '' : '-cloud'}.svg`;
+    }
+
+    getBookmarks(): void {
+        this.bookmarks = [];
+    }
 }

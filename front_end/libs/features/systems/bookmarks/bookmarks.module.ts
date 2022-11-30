@@ -3,11 +3,12 @@ import { NgModule } from '@angular/core';
 // import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-
 // import { PipesModule } from '@app/pipes/pipes.module';
 // import { ComponentsModule } from '@components/components.module';
 // import { SearchModule } from '@components/search/search.module';
 // import { DirectivesModule } from '@directives/directives.module';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
@@ -26,6 +27,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
+        AngularSvgIconModule.forRoot(),
         CommonModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
