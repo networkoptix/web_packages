@@ -5,7 +5,10 @@
     [ngClass]="{ 'hide-errors': flags.hideErrors }"
     (submit)="flags.hideErrors = false"
 >
-    <div class="modal-body">
+    <div
+        class="modal-body"
+        *ngIf="isCloud !== undefined"
+    >
         <ng-container *ngIf="isCloud; else local">
             <p translate>To continue log in to %CLOUD_NAME% in the tab that popped up.</p>
         </ng-container>

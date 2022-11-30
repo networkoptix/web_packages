@@ -186,6 +186,10 @@
 
     &>.menu-link {
         padding-left: 84px;
+
+        & > a {
+            color: var(--developer-menu-base-color);
+        }
     }
 
     &>.left-menu-arrow {
