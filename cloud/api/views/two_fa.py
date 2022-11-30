@@ -101,36 +101,15 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         Generates and save a new backup code for the user.
         """
         count = CreateBackupCodeSerializer(request.data).data.get("count")
-        old_codes = ",".join(
-            map(lambda x: x["backup_code"], Auth.get_active_backup_codes(request)))
-        Auth.delete_backup_codes(request, codes=old_codes)
+        Auth.delete_backup_codes(request)
 
         return api_success(Auth.generate_backup_code(request, count))
 
     @method_decorator(swagger_auto_schema(request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            "backup_codes": openapi.Schema(type=openapi.TYPE_STRING)
-        },
-        required=["backup_codes"]
+        type=openapi.TYPE_OBJECT
     )))
     def delete(self, request, *args, **kwargs):
-        """
-        Codes should be separated by “,“. If no codes specified, all codes will be deleted for the user.
-        """
-        backupCodeSerializer = DeleteBackupCodeSerializer(data=request.data)
-        backupCodeSerializer.is_valid()
-        data = backupCodeSerializer.validated_data
-        return api_success(Auth.delete_backup_codes(request, data["backup_codes"]))
-
-
-@decorators.api_view(["GET"])
-@decorators.permission_classes((IsAuthenticated,))
-def get_active_backup_codes(request):
-    """
-    Returns a list of all of the users backup codes.
-    """
-    return api_success(Auth.get_active_backup_codes(request))
+        return api_success(Auth.delete_backup_codes(request))
 
 
 @swagger_auto_schema(method="POST",

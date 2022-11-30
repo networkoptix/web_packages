@@ -161,7 +161,7 @@ do
             rm -f /tmp/*.pid
 
             echo $'\n'Push Notifications started: Version $VERSION$'\n'
-            exec celery -A notifications worker -Q push-notification -A notifications -l info --pidfile=/tmp/celery-push-w1.pid
+            exec celery -A notifications worker -Q push-notification -l info --pidfile=/tmp/celery-push-w1.pid
             ;;
         *)
             echo Usage: cloud_portal '[web|broadcast_notifications|system_notifications|push_notifications|celery|celery_beat|config|copystatic|migratedb]'
