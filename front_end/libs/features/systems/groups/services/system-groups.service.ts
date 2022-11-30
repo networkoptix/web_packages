@@ -28,8 +28,8 @@ import {
 export class NxSystemGroupsService {
     LANG = staticLang;
     private WEBSOCKET_URL: string;
-
-    private reconnectInterval: number;
+    private readonly MAX_RECONNECT_ATTEMPTS = 8; // Total time is 510 seconds. Which is the sum  of series 2 * 2 ** x from 1 to 8.
+    private attempt = 0;
 
     /** Signal for opening/collapsing all groups */
     sidebarOpenSubject = new Subject<boolean>();
@@ -63,47 +63,38 @@ export class NxSystemGroupsService {
                 next: value => this.receive(value as WebSocketIncoming),
                 error: err => {
                     console.error('WebSocket error:', err);
-                    this.reconnect();
+                    this.progressiveDelayReconnect();
                 },
                 complete: () => {
                     // Assuming that we never want to deliberately close the
                     // socket while in the component so if it does close we
                     // try to reconnect
                     console.log('WebSocket connection closed');
-                    if (this.router.url.startsWith('/systems/groups')) {
-                        this.reconnect();
+                    if (this.router.url.startsWith('/groups')) {
+                        this.progressiveDelayReconnect();
                     }
                 }
             });
     }
 
-    private reconnect(): void {
-        if (this.reconnectInterval) {
-            this.resetReconnect();
+    private progressiveDelayReconnect(): void {
+        if (this.attempt >= this.MAX_RECONNECT_ATTEMPTS) {
+            this.toastService.remove();
+            this.toastService.show(
+                this.LANG.systemGroups.couldNotReconnect,
+                toast.danger,
+            );
+            return;
         }
         this.disconnect();
         this.toastService.show(
             this.LANG.systemGroups.connectionLost,
             toast.danger,
         );
-        let retries = 5;
-        this.reconnectInterval = this.window.setInterval(() => {
-            if (retries) {
-                retries -= 1;
-                this.connect();
-            } else {
-                this.resetReconnect();
-                this.toastService.show(
-                    this.LANG.systemGroups.couldNotReconnect,
-                    toast.danger,
-                );
-            }
-        }, 2000);
-    }
-
-    private resetReconnect(): void {
-        clearInterval(this.reconnectInterval);
-        this.reconnectInterval = undefined;
+        this.attempt += 1;
+        setTimeout(() => {
+            this.connect();
+        }, 2000 * 2 ** (this.attempt));
     }
 
     disconnect(): void {
@@ -125,8 +116,8 @@ export class NxSystemGroupsService {
 
     private receive({ action, data }: WebSocketIncoming): void {
         if (action === 'connected') {
-            if (this.reconnectInterval) {
-                this.resetReconnect();
+            if (this.attempt > 0) {
+                this.attempt = 0;
                 this.toastService.remove();
                 this.toastService.notify(
                     this.LANG.systemGroups.connectionRestored,

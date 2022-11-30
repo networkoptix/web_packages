@@ -61,7 +61,7 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
     {
-        path: 'systems/groups',
+        path: 'groups',
         loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
         canLoad: [FeatureGuard],
         data: {

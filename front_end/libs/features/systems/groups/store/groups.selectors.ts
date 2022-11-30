@@ -125,7 +125,7 @@ export const selectCurrentIndexes = createSelector(
     (groupId, rootGroups) => {
         if (!rootGroups) {
             return null; // Still loading data
-        } else if (groupId === 'root') {
+        } else if (!groupId) {
             return [];
         } else {
             return findTargetAddress(groupId, rootGroups);

@@ -31,7 +31,7 @@ export class NxGroupCardComponent implements OnInit {
     ngOnInit(): void { }
 
     openGroup(): void {
-        this.router.navigate(['systems', 'groups', this.group.id]);
+        this.router.navigate(['groups', this.group.id]);
     }
 
     deleteGroup(): void {

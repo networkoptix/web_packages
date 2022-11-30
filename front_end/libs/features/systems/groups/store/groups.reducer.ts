@@ -6,7 +6,7 @@ import type { GroupsState } from './groups.state';
 const initialState: GroupsState = {
     items: null,
     systemInfo: null,
-    currentGroupId: 'root',
+    currentGroupId: undefined,
 };
 
 export const groupsReducer = createReducer(

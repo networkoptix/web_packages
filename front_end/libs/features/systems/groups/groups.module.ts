@@ -26,8 +26,8 @@ import { groupsReducer } from './store/groups.reducer';
         RouterModule.forChild([
             {
                 path: '',
-                redirectTo: 'root',
-                pathMatch: 'full',
+                component: NxSystemGroupsComponent,
+                canActivate: [AuthGuard],
             },
             {
                 path: ':groupId',
