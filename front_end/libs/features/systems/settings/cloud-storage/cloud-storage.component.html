@@ -55,10 +55,10 @@
                     >
                     </svg-icon>
                     <span>{{
-                        'dialogs.cloudStorage.information.' + actionId + '.title' | translate
+                        LANG.dialogs.cloudStorage.information[actionId].title | translate
                     }}</span>
                 </h4>
-                <p>{{ 'dialogs.cloudStorage.information.' + actionId + '.body' | translate }}</p>
+                <p>{{ LANG.dialogs.cloudStorage.information[actionId].body | translate }}</p>
             </div>
         </ng-container>
     </div>
@@ -148,7 +148,7 @@
     (onAction)="cloudStorageNotUsed = false"
     type="warning"
     id="cloud-storage-not-used"
-    [line1]="'cloudStorage.notUsedWarning' | translate: { serverSettings: serverSettings }"
+    [line1]="LANG.cloudStorage.notUsedWarning | translate: { serverSettings: serverSettings }"
     [iconSrc]="icons.dirTextButtons + 'info.svg'"
     [btnIconSrc]="icons.dirTextButtons + 'close.svg'"
 >
@@ -267,7 +267,7 @@
                     [ngClass]="{ sorted: field === sortBy }"
                 >
                     <div class="header-cell-content">
-                        <span>{{ 'cloudStorage.keyTableFields.' + field | translate }}</span>
+                        <span>{{ LANG.cloudStorage.keyTableFields[field] | translate }}</span>
                         <div
                             class="toggle"
                             [ngClass]="field === sortBy && !asc && 'opened'"

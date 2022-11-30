@@ -33,7 +33,7 @@
                                     node.url === 'content/about')))
                 }"
             >
-                {{ node.display_name }}
+                {{ node.display_name | translate }}
                 <svg-icon
                     *ngIf="node.new_window"
                     [src]="images.dirHeader + 'external_link.svg'"

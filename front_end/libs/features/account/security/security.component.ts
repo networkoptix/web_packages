@@ -23,7 +23,8 @@ import type { NxSystemInfo } from '@services/systems.service.types';
 import {
     addPseudoAnchor,
     clearPseudoAnchors,
-    PseudoAnchorTarget
+    PseudoAnchorTarget,
+    sleep
 } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
@@ -101,8 +102,9 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.popoverService.close();
     }
 
-    private setPopoverTargets(): void {
+    private async setPopoverTargets(): Promise<void> {
         if (this.subV5Systems.length && this.v5WarningSpan) {
+            await sleep();
             const targetV5 = this.v5WarningSpan.nativeElement
                 .querySelector<HTMLSpanElement>('span#targetV5');
             addPseudoAnchor(
@@ -115,6 +117,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         }
 
         if (this.twoFaSystems.length && this.twoFaSystemsSpan) {
+            await sleep();
             const target2FaSystems = this.twoFaSystemsSpan.nativeElement
                 .querySelector<HTMLSpanElement>('span#target2FaSystems');
             addPseudoAnchor(

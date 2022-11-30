@@ -2,6 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import * as staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { WINDOW } from '@services/window-provider';
 
@@ -16,6 +17,7 @@ import type {
     styleUrls: ['form-elements.component.scss']
 })
 export class FormElementsComponent {
+    LANG = staticLang;
     submitted = false;
     show: boolean;
     toggleDisabled: boolean;

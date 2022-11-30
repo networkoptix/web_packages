@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import * as staticLang from '@common/language/language_i18n_static.json';
 import { DialogRef } from '@dialogs/dialog-ref';
 
 @Component({
@@ -8,6 +9,7 @@ import { DialogRef } from '@dialogs/dialog-ref';
     styleUrls: []
 })
 export class Client2faWarningModalContent {
+    LANG = staticLang;
     constructor(
         private dialogRef: DialogRef,
         // @Inject(DIALOG_DATA) private dialogData: never,

@@ -56,14 +56,11 @@
                             >
                             </svg-icon>
                             <span>{{
-                                'dialogs.cloudStorage.information.' + actionId + '.title'
-                                    | translate
+                                LANG.dialogs.cloudStorage.information[actionId].title | translate
                             }}</span>
                         </h4>
                         <p>
-                            {{
-                                'dialogs.cloudStorage.information.' + actionId + '.body' | translate
-                            }}
+                            {{ LANG.dialogs.cloudStorage.information[actionId].body | translate }}
                         </p>
                     </div>
                 </ng-container>

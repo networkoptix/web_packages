@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import * as staticLang from '@common/language/language_i18n_static.json';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -18,6 +19,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
     styleUrls: ['connect-error.component.scss']
 })
 export class NxAuthorizeConnectErrorComponent implements OnInit {
+    LANG = staticLang;
     @Input() viewType: string;
     @Input() smallView: boolean;
     @Input() clientType: string;

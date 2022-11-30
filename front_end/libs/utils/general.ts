@@ -303,3 +303,5 @@ export type Exactly<T, U> = { [K in keyof U]: K extends keyof T ? T[K] : never }
 export function staticImplements<T>() {
     return <U extends T>(constructor: U) => constructor;
 }
+
+export const sleep = (time?: number): Promise<void> => new Promise(resolve => setTimeout(resolve, time));

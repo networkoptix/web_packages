@@ -133,7 +133,7 @@
                 </ng-template>
                 <span
                     *ngIf="totalResults; else searchResults"
-                    [innerText]="'result' | translate: { count: totalResults }"
+                    [innerText]="LANG.result | translate: { count: totalResults }"
                 ></span>
             </ng-container>
         </ng-template>

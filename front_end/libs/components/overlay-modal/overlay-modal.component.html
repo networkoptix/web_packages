@@ -220,7 +220,7 @@
             class="btn-helper mt-2 mb-0"
             [ngClass]="{ invisible: !(timeoutUntilRefresh$ | async) }"
         >
-            {{ 'servers.autoRefresh' | translate: { time: (timeoutUntilRefresh$ | async) } }}
+            {{ LANG.servers.autoRefresh | translate: { time: (timeoutUntilRefresh$ | async) } }}
         </p>
     </div>
     <div

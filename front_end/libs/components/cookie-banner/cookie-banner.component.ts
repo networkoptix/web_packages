@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'ngx-webstorage';
 import { first } from 'rxjs/operators';
 
+import * as staticLang from '@common/language/language_i18n_static.json';
 import { accountSelectors } from '@common/store/account';
 import { icons } from '@lib/variables/static-variables';
 
@@ -14,6 +15,7 @@ import { icons } from '@lib/variables/static-variables';
     styleUrls: ['./cookie-banner.component.scss']
 })
 export class NxCookieBannerComponent implements OnInit {
+    LANG = staticLang;
     cookieBannerReviewed: boolean;
     icons = icons;
 

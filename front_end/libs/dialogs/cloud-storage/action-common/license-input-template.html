@@ -4,7 +4,7 @@
             'width.px': '104',
             'height.px': '74'
         }" [applyClass]="true" class="success-icon"></svg-icon>
-        <h2 translate>{{'dialogs.cloudStorage.actions.' + actionType + '.success'}}</h2>
+        <h2>{{LANG.dialogs.cloudStorage.actions[actionType].success | translate}}</h2>
     </div>
 </ng-template>
 
@@ -12,8 +12,7 @@
     <ng-template #placeholderHeading>
         <h1 class="modal-title"></h1>
     </ng-template>
-    <h1 *ngIf="!success; else placeholderHeading" class="modal-title" translate>{{'dialogs.cloudStorage.actions.' +
-        actionType + '.heading'}}</h1>
+    <h1 *ngIf="!success; else placeholderHeading" class="modal-title" translate>{{LANG.dialogs.cloudStorage.actions[actionType].heading}}</h1>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
         <div class="close-content"></div>
     </button>
@@ -125,7 +124,7 @@
         </div>
         <nx-process-button [buttonDisabled]="showSystemsDropdown && !targetSystem" [process]="actionProcess"
             [form]="actionForm" [actionType]="actionType === ACTION_TYPES.DELETE ? 'danger' : 'primary'"
-            [buttonText]="('dialogs.cloudStorage.actions.' + actionType + '.action') | translate"></nx-process-button>
+            [buttonText]="(LANG.dialogs.cloudStorage.actions[actionType].action) | translate"></nx-process-button>
         <nx-cancel-button [process]="actionProcess" [discardFn]="close" [buttonText]="'close' | translate">
         </nx-cancel-button>
     </div>

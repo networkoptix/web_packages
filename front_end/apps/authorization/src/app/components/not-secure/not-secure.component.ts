@@ -5,6 +5,7 @@ import {
     Output
 } from '@angular/core';
 
+import * as staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 
@@ -17,6 +18,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 })
 
 export class NxAuthorizeNotSecureComponent {
+    LANG = staticLang;
     icons = icons;
     readonly environment = environment;
 
