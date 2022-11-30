@@ -109,10 +109,6 @@ class TestTwoFAViews:
 
 
     def test_backup_code_post_and_delete(self, create_user, arf, mocker):
-        backup_code_one, backup_code_two, backup_code_three = self.make_uuids(
-            3)
-        mock_get_active_backup_codes = mocker.patch(self.auth_mock_path + 'get_active_backup_codes', return_value=[
-                                                    {'backup_code': backup_code_one}, {'backup_code': backup_code_two}])
         mock_delete_backup_codes = mocker.patch(
             self.auth_mock_path + 'delete_backup_codes', return_value=True)
         mock_generate_backup_code = mocker.patch(
@@ -126,38 +122,20 @@ class TestTwoFAViews:
         # POST
         assert view(request).status_code == 200
 
-        args, kwargs = mock_get_active_backup_codes.call_args_list[0]
-        assert isinstance(args[0], Request)
-
         args, kwargs = mock_delete_backup_codes.call_args_list[0]
         assert isinstance(args[0], Request)
-        assert kwargs['codes'] == f'{backup_code_one},{backup_code_two}'
 
         args, kwargs = mock_generate_backup_code.call_args_list[0]
         assert isinstance(args[0], Request)
         assert count in args
 
         # DELETE
-        delete_backup_codes_string = backup_code_one + \
-            ',' + backup_code_two + ',' + backup_code_three
         request = arf.delete(
-            '/2fa/backup', {'backup_codes': delete_backup_codes_string})
+            '/2fa/backup')
         request.user = self.user
 
         assert view(request).status_code == 200
         args, kwargs = mock_delete_backup_codes.call_args_list[1]
-        assert isinstance(args[0], Request)
-        assert delete_backup_codes_string in args
-
-    def test_get_active_backup_codes(self, create_user, arf, mocker):
-        mock_get_active_backup_codes = mocker.patch(
-            self.auth_mock_path + 'get_active_backup_codes')
-        req = arf.get('/')
-        req.user = self.user
-        response = get_active_backup_codes(req)
-        args, kwargs = mock_get_active_backup_codes.call_args_list[0]
-
-        assert response.status_code == 200
         assert isinstance(args[0], Request)
 
     def test_add_2fa_to_session(self, create_user, arf, mocker):

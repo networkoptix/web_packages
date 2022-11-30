@@ -45,7 +45,6 @@ urlpatterns = [
 
     re_path(r'^2fa/verification$', two_fa.TwoFactorVerification.as_view()),
     re_path(r'^2fa/backup$',       two_fa.BackupCode.as_view()),
-    re_path(r'^2fa/backup/codes$', two_fa.get_active_backup_codes),
     re_path(r'^2fa/updateSession$', two_fa.add_2fa_to_session),
 
     re_path(r'^storage/create',     storage.create),

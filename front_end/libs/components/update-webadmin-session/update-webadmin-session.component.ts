@@ -37,6 +37,9 @@ export class UpdateWebadminSessionComponent implements OnInit {
     LANG = staticLang;
     login: Process;
 
+    // This variable is used in three states: undefined, true, false.
+    // As variable is resolved async, "undefined" is used to prevent
+    // showing wrong dialog content.
     isCloud: boolean;
 
     auth = {
