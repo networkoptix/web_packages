@@ -1,6 +1,6 @@
 from asgiref.sync import sync_to_async
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -22,7 +22,7 @@ type__body = openapi.Schema(type=openapi.TYPE_STRING,
                                            "to wait on emails to appear in the inbox. Only the noptixautoqa account "
                                            "can use this endpoint to get info on other noptixautoqa accounts")
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 async def get_code(request):
     NOPTIX_AUTOQA_EMAIL = 'noptixautoqa'
     require_params(request, ('email', 'type'))
