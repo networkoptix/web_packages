@@ -1,0 +1,29 @@
+<div class="bookmarks-image-wrapper">
+    <span class="bookmarks-duration">
+        {{ durationMsToTime(bookmark.durationMs) }}
+    </span>
+    <div class="bookmarks-image">
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dir + 'play.svg'"
+            [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
+            class="bookmarks-image-playIcon"
+        ></svg-icon>
+        <img
+            [src]="bookmark.thumbnail"
+            [alt]="'thumbnail of ' + bookmark.name"
+        />
+    </div>
+</div>
+<div class="bookmarks-info">
+    <span class="bookmarks-info-timestamp">
+        {{ timeMsToDate(bookmark.durationMs) }}
+    </span>
+    <h2
+        class="bookmarks-info-title"
+        translate
+    >
+        Title
+    </h2>
+    <p class="bookmarks-info-name">{{ bookmark.name }}</p>
+</div>

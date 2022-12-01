@@ -6,12 +6,13 @@ import { TranslateModule } from '@ngx-translate/core';
 // import { PipesModule } from '@app/pipes/pipes.module';
 // import { ComponentsModule } from '@components/components.module';
 // import { SearchModule } from '@components/search/search.module';
-// import { DirectivesModule } from '@directives/directives.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { DirectivesModule } from '@directives/directives.module';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
+import { NxBookmarksCardModule } from './components/card/bookmarks-card.module';
 import { NxDateAndTimeFilterModule } from './components/date-and-time-filter/date-and-time-filter.module';
 import { NxDeviceFilterModule } from './components/device-filter/device-filter.module';
 import { NxTagFilterModule } from './components/tag-filter/tag-filter.module';
@@ -31,10 +32,11 @@ const appRoutes: Routes = [
         CommonModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
-
+        DirectivesModule,
         NxDateAndTimeFilterModule,
         NxDeviceFilterModule,
         NxTagFilterModule,
+        NxBookmarksCardModule,
     ],
     providers: [],
     declarations: [

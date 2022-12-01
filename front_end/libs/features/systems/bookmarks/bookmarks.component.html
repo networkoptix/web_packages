@@ -32,4 +32,16 @@
             You don't have any Bookmarks yet.
         </h2>
     </div>
+    <div
+        class="bookmarks"
+        *ngIf="bookmarks?.length"
+    >
+        <div
+            *ngFor="let bookmark of bookmarks; index as i"
+            class="bookmarks-container"
+            [nxTooltip]="bookmark.description"
+        >
+            <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
+        </div>
+    </div>
 </div>

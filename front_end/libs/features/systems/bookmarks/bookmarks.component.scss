@@ -25,6 +25,29 @@
         width: 100%;
     }
 
+	.bookmarks {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 15px;
+        max-width: 992px;
+        margin-left: 20px;
+
+        @media (min-width: 950px) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media (min-width: 1280px) {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        &-container {
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 5px;
+            justify-self: center;
+        }
+    }
+
     .no-bookmarks {
         display: flex;
         flex-direction: column;

@@ -1,0 +1,50 @@
+.bookmarks {
+
+    &-image {
+        position: relative;
+
+        &-wrapper {
+            position: relative;
+        }
+
+        &-playIcon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+    }
+
+    &-duration {
+        position: absolute;
+        top: 17px;
+        left: 17px;
+        z-index: 1;
+        color: white;
+        background-color: var(--dark-opaque-background);
+        padding: 2px 4px;
+    }
+
+    &-info {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        height: 140px;
+        border: 1px solid var(--border-color);
+        border-top: none;
+
+        &-timestamp {
+            font-size: 14px;
+            margin: 5px 0 10px;
+        }
+
+        &-title {
+            font-size: 18px !important; 
+        }
+
+        &-name {
+            font-size: 14px;
+            margin-top: auto;
+        }
+    }
+}

@@ -570,4 +570,6 @@ html[data-theme="light-gray"] {
     --folder-svg: #{$dark_gray_12};
     --opened-triangle-svg: #{$dark_gray_12};
     --closed-triangle-svg: #{$dark_gray_12};
+
+    --dark-opaque-background: rgba(0, 0, 0, .5);
 }
