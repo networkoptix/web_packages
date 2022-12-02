@@ -89,5 +89,9 @@
   "51457": {
     "name": "py",
     "note": "Py throughout 1.11.0 allows remote attackers to conduct a ReDoS (Regular expression Denial of Service) attack via a Subversion repository with crafted info data, because the InfoSvnCommand argument is mishandled.https://github.com/pytest-dev/py/issues/287 CVE-2022-42969"
+  },
+  "51499": {
+    "name": "wheel",
+    "Note": "Wheel 0.38.1 fixes a potential DoS attack via the 'WHEEL_INFO_RE' regular expression. PVE-2022-51499"
   }
 }
