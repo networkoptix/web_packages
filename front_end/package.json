@@ -104,7 +104,7 @@
     "@angular/core": "14.1.1",
     "@angular/fire": "^7.4.1",
     "@angular/forms": "14.1.1",
-    "@angular/material": "^14.2.6",
+    "@angular/material": "14.1.1",
     "@angular/platform-browser": "14.1.1",
     "@angular/platform-browser-dynamic": "14.1.1",
     "@angular/platform-server": "14.1.1",

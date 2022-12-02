@@ -1778,7 +1778,7 @@
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/language-service"
         },
-        "@angular/material@14.2.6": {
+        "@angular/material@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/components",
             "path": "cloud_portal/front_end/node_modules/@angular/material",
