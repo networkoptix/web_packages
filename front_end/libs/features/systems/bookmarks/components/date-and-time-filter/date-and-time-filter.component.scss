@@ -73,14 +73,18 @@
             border-radius: 2px;
         }
 
+        // https://github.com/angular/components/blob/main/src/material/datepicker/_datepicker-theme.scss
         .mat-calendar-body-selected {
             background-color: var(--brand-core);
         }
-        .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical),
-        .cdk-keyboard-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical),
-        .cdk-program-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-            background-color: var(--bookmarks-text-highlight-bg);
-            color: initial;
+        .cdk-keyboard-focused .mat-calendar-body-active,
+        .cdk-program-focused .mat-calendar-body-active,
+        .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
+            // @mixin _highlighted-cell
+            & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+                background-color: var(--bookmarks-text-highlight-bg);
+                color: initial;
+            }
         }
         .mat-calendar-body-in-range {
             .mat-calendar-body-cell-content {
