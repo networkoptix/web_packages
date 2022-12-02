@@ -26,7 +26,13 @@
     </button>
 </ng-template>
 
-<h3 translate>Show PTZ Controls</h3>
+<h3
+    (mouseenter)="showPtz = true"
+    class="show-ptz-title"
+    translate
+>
+    Show PTZ Controls
+</h3>
 <div
     (mouseleave)="showPtz = false"
     class="control-wrapper"

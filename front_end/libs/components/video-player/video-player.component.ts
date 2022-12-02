@@ -7,7 +7,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { WebRTCStreamManager } from './WebRTCStreamManager';
+import { ConnectionError, WebRTCStreamManager } from './WebRTCStreamManager';
 import { filter, map } from 'rxjs';
 
 @UntilDestroy()
@@ -23,6 +23,7 @@ export class NxVideoPlayerComponent {
     @IBool() @Input() autopause: CoercedBoolInput = false;
 
     @Output() showPtz = new EventEmitter<ICamera>();
+    @Output() showError = new EventEmitter<ConnectionError>();
 
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
 
@@ -35,6 +36,7 @@ export class NxVideoPlayerComponent {
     poster$ = WebRTCStreamManager.sync$.pipe(untilDestroyed(this), filter((val) => val % NxVideoPlayerComponent.POSTER_INTERVAL && this.webRtcPlayerRef?.nativeElement.paused && this.posterFailures < NxVideoPlayerComponent.POSTER_RETRIES), map(() => `${this.camera.previewUrl}&hash=${uuid()}`))
     posterFailures = 0
     error = '';
+    loading = true;
     streamManager = WebRTCStreamManager;
 
     enterFullscreen(): void {
@@ -67,8 +69,10 @@ export class NxVideoPlayerComponent {
             }
 
             if (error) {
-                this.error = error;
+                // this.error = error;
+                this.showError.emit(error);
             }
+            this.loading = false;
         });
     }
 }

@@ -41,6 +41,9 @@
             "in": "ZOOM IN",
             "out": "ZOOM OUT",
             "exit": "Exit PTZ"
+        },
+        "errors": {
+            "webpage": "Error loading webpage"
         }
     },
     "deviceTypes": {
@@ -254,7 +257,8 @@
             "noFormat": "This browser does not support video playback from this camera.",
             "offline": "Offline",
             "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
-            "unauthorized": "Authentication required"
+            "unauthorized": "Authentication required",
+            "websocket": "Error establishing peer connection"
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
         "copiedToClipboard": "Copied to clipboard",

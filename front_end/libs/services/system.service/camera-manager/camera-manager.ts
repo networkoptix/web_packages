@@ -119,6 +119,7 @@ export class CameraManager {
             const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(id, 'hls');
             const webRtcUrl = this.system.version >= 5.1 ? ({ position } = { position: null }): string => this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc', 'low', position) : null;
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+            const online = ['Online', 'Recording', 'Unauthorized'].includes(camera.status);
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = ![MotionType.noMotion, MotionType.none].includes(camera.motionType);
@@ -154,7 +155,7 @@ export class CameraManager {
                 ]
             };
             const deviceType = camerasHealth[id.replace(/{|}/g, '')]?.info?.type || 'Camera';
-            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, liveUrl, webRtcUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
+            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, liveUrl, webRtcUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType, online };
         });
         this.cameras = mappedCameras;
         return mappedCameras;

@@ -5,7 +5,9 @@ import {
     ChangeDetectorRef,
     Component, EventEmitter, Input, Output
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { SvgIconComponent } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime } from 'rxjs/operators';
@@ -19,6 +21,7 @@ import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
+import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { BaseResourceNode, LayoutRenderConfig, LayoutResourceTree, NewPosition, ParsedLayout, ParsedLayoutItem, ParsedLayoutItems, Point, Position, ResourceNode, Setting, Size } from './layout-grid.types';
@@ -85,11 +88,15 @@ export class NxLayoutGridComponent {
     treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
     dataSource: ArrayDataSource<BaseResourceNode>;
 
-    openMenu: false | HTMLElement = false;
-    previousOpenMenu: HTMLElement = null;
+    openMenu: false | HTMLElement | SvgIconComponent = false;
+    previousOpenMenu: HTMLElement | SvgIconComponent = null;
     unsaved: Layout | false = false;
     addingItem = false;
+    changingLayout: string | boolean = true;
+    errors: Record<string, string> = {};
+    additionalErrorMessages: Record<string, string> = {};
     icons = icons;
+    readonly RESOURCE_TYPE = ResourceType;
     readonly EDGE_GAP = 60;
     readonly INITIAL_DRAG_STATE = { move: { x: 0, y: 0 }, resize: { x: 0, y: 0 }, id: '', transformOrigin: 'top left' };
     readonly SETTINGS_CONFIG = SETTINGS_CONFIG;
@@ -259,17 +266,19 @@ export class NxLayoutGridComponent {
     CONFIG: IConfig;
 
     constructor(
-
         configService: NxConfigService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {
         this.CONFIG = configService.config;
     }
 
     async ngOnChanges({ layout, layoutItemLookup }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
-            this.openMenu = false;
+            // this.openMenu = false;
             this.#initialLayout$.next(layout.currentValue);
+            this.changingLayout = false;
             if (this.unsaved) {
                 await this.saveLayout();
             }
@@ -277,6 +286,19 @@ export class NxLayoutGridComponent {
 
         if (layoutItemLookup?.currentValue && !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)) {
             this.dataSource = new ArrayDataSource(layoutItemLookup.currentValue.tree);
+        }
+
+        const layoutId = this.layout?.id;
+        const layoutItems = this.layoutItemLookup?.tree;
+
+        // if (layout?.firstChange) {
+        //     this.treeControl.collapseAll();
+        // }
+
+        if (layoutId && layoutItems) {
+            const openNodes = this.getOpenNodes();
+
+            this.expandNodes(layoutItems, [layoutId, ...openNodes]);
         }
     }
 
@@ -300,12 +322,57 @@ export class NxLayoutGridComponent {
         }
     }
 
-    toggleMenu(target: HTMLElement = this.previousOpenMenu, force = false): void {
+    checkIframeContent(id: string, frame: HTMLIFrameElement): void {
+        const loaded = frame.contentWindow.window.length;
+        try {
+            if (frame.contentWindow.location.href) {
+                return;
+            }
+        } catch ({ message }) {
+            this.additionalErrorMessages[id] = message;
+        }
+        if (!loaded) {
+            this.errors[id] = ResourceType.WEB_PAGE;
+        } else if (id in this.additionalErrorMessages) {
+            delete this.additionalErrorMessages[id];
+        }
+
+        if (loaded) {
+            frame.style.opacity = '1';
+            frame.style.zIndex = '100';
+        }
+    }
+
+    getOpenNodes = (): string[] => {
+        const openNodes = this.activatedRoute.snapshot.queryParams.openNodes || [];
+
+        if (typeof openNodes === 'string') {
+            return [openNodes];
+        }
+
+        return openNodes.filter(nodeId => Object.keys(this.layoutItemLookup).map(cleanId).includes(nodeId));
+    };
+
+    expandNodes = (nodes: BaseResourceNode[], nodeIds: string[], parents: ResourceNode[] = []): void => (nodes as ResourceNode[]).forEach(node => {
+        const nodeId = cleanId(node.details?.id);
+        nodeIds = nodeIds.map(cleanId);
+        if (nodeId && nodeIds.includes(nodeId)) {
+            [...parents, node].forEach(node => this.treeControl.expand(node));
+        }
+
+        if (node.children) {
+            this.expandNodes(node.children, nodeIds, [...parents, node]);
+        }
+    });
+
+    cleanId = cleanId;
+
+    toggleMenu(target: HTMLElement | SvgIconComponent = this.previousOpenMenu, force = false): void {
         if (!this.openMenu || force) {
             if (this.openMenu) {
                 this.previousOpenMenu = this.openMenu;
             }
-            this.openMenu = target;
+            this.openMenu = this.openMenu === target ? false : target;
         }
     }
 
@@ -501,6 +568,35 @@ export class NxLayoutGridComponent {
         }
     };
 
+    async changeView(node: ResourceNode | LayoutItem): Promise<void> {
+        const isLayoutItem = 'id' in node;
+        const id = isLayoutItem ? node.id : node.details?.id;
+        if (!isLayoutItem) {
+            const targetIds = (id ? [id] : (node?.children || []).map(child => child.details?.id).filter(id => !!id)).map(cleanId);
+            const open = this.treeControl.isExpanded(node);
+            const openNodes = this.getOpenNodes().filter(id => !targetIds.includes(id));
+            if (open && targetIds) {
+                openNodes.push(...targetIds);
+            }
+            const queryParams = { ...this.activatedRoute.snapshot.queryParams, openNodes };
+            await this.router.navigate(
+                [],
+                {
+                    relativeTo: this.activatedRoute,
+                    replaceUrl: true,
+                    queryParams
+                }
+            );
+        }
+
+        if (id && cleanId(id) !== cleanId(this.layout.id)) {
+            this.changingLayout = cleanId(id);
+            this.errors = {};
+            this.additionalErrorMessages = {};
+            this.layoutChanged.emit(id);
+        }
+    }
+
     generateLayoutItem = ({ details: { id: resourceId } }: ResourceNode, { x, y }: Point): LayoutItem => {
         const left = x === Infinity ? 0 : x;
         const top = y === Infinity ? 0 : y;
@@ -612,5 +708,5 @@ export class NxLayoutGridComponent {
         this.autoSave();
     };
 
-    hasChild = (_: number, node: ResourceNode): boolean => !!node.children && node.children.length > 0;
+    hasChild = (_: number, node: ResourceNode): boolean => [ResourceType.CAMERAS, ResourceType.WEB_PAGES, ResourceType.SERVERS, ResourceType.LAYOUTS].includes(node.type) ? !!node.children : !!node.children?.length;
 }

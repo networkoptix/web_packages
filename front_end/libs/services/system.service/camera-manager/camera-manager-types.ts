@@ -56,6 +56,7 @@ export interface ICamera {
     liveUrl: string;
     recordingSettings: IRecordingSettings;
     isStream: boolean;
+    online: boolean;
 }
 
 export enum MotionType {

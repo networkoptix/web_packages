@@ -63,20 +63,26 @@ export interface NewPosition extends Position {
 }
 
 export enum ResourceType {
+    LAYOUT = 'layout',
+    LAYOUTS = 'layouts',
     CAMERA = 'camera',
+    CAMERAS = 'cameras',
     SERVER = 'server',
-    WEB_PAGE = 'webPage'
+    SERVERS = 'servers',
+    WEB_PAGE = 'webpage',
+    WEB_PAGES = 'webpages'
 }
 
 export interface BaseResourceNode {
     name: string;
+    type: ResourceType;
     children?: BaseResourceNode[]
 }
 
 export interface ResourceNode<T = { id: string }> {
     name: string;
     aspectRatio?: number;
-    type?: ResourceType;
+    type: ResourceType;
     children?: ResourceNode[]
     details: T;
 }

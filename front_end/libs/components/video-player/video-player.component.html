@@ -3,6 +3,7 @@
     autoplay
     muted
 ></video>
+<nx-pre-loader *ngIf="loading"></nx-pre-loader>
 
 <ng-container *ngIf="webRtcPlayer.paused && error">
     <div class="connection-error">

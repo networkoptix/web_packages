@@ -1,119 +1,155 @@
 <div
-    *ngIf="CONFIG.featureFlags.layoutsLeftMenu || CONFIG.featureFlags.layoutsDemo"
+    *ngIf="layout && (CONFIG.featureFlags.layoutsLeftMenu || CONFIG.featureFlags.layoutsDemo)"
     class="sidebar-wrapper left"
-    [ngClass]="{ 'adding-item': addingItem }"
-    (mouseleave)="closeMenu()"
+    [ngClass]="{ 'open-menu': openMenu === resources }"
 >
-    <header class="menu-tabs">
-        <h3
-            #settings
-            (click)="toggleMenu(settings, true)"
-            (mouseover)="toggleMenu(settings)"
-            [ngClass]="{ 'active-menu': openMenu === settings }"
-            translate
-        >
-            Settings
-        </h3>
-        <h3
+    <div
+        class="tab"
+        [ngClass]="{ 'active-menu': openMenu === resources }"
+    >
+        <svg-icon
             #resources
             (click)="toggleMenu(resources, true)"
-            (mouseover)="toggleMenu(resources)"
-            [ngClass]="{ 'active-menu': openMenu === resources }"
-            translate
+            nx-add-svg-src
+            [svgStyle]="{ 'width.px': '32', 'height.px': '14' }"
+            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
         >
-            Resources
-        </h3>
-    </header>
-    <div
-        class="resources-sidebar"
-        (mouseover)="toggleMenu()"
-    >
-        <ng-container *ngIf="layout$ | async as layout">
-            <div
-                *ngIf="openMenu === settings"
-                class="settings-menu"
-            >
-                <ng-container *ngFor="let setting of layout.settings">
-                    <ng-container [ngSwitch]="setting.type">
-                        <div *ngSwitchCase="'number'">
-                            <label>{{ setting.label }}</label>
-                            <nx-numeric
-                                [step]="setting.step"
-                                [min]="setting.min"
-                                [max]="setting.max"
-                                [disabled]="layout.locked"
-                                [ngModel]="layout[setting.name]"
-                                (ngModelChange)="autoSave(setting.name, $event)"
-                            ></nx-numeric>
-                        </div>
-                        <div *ngSwitchCase="'boolean'">
-                            <label [for]="setting.name">{{ setting.label }}</label>
-                            <nx-checkbox
-                                [componentId]="setting.name"
-                                [disabled]="layout.locked && setting.name !== 'locked'"
-                                [ngModel]="layout[setting.name]"
-                                (ngModelChange)="autoSave(setting.name, $event)"
-                            ></nx-checkbox>
-                        </div>
-                        <h4
-                            *ngSwitchCase="'heading'"
-                            class="settings-heading"
-                        >
-                            {{ setting.label }}
-                        </h4>
-                        <div *ngSwitchDefault>
-                            <label>{{ setting.label }}</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                [disabled]="setting.type === 'readonly' || layout.locked"
-                                [ngModel]="layout[setting.name]"
-                                (ngModelChange)="autoSave(setting.name, $event)"
-                            />
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </div>
-        </ng-container>
-        <cdk-tree
-            *ngIf="openMenu === resources"
-            cdkDropList
-            [cdkDropListDisabled]="layout.locked"
-            [dataSource]="dataSource"
-            [treeControl]="treeControl"
-        >
-            <!-- This is the tree node template for leaf nodes -->
-            <cdk-nested-tree-node
-                *cdkTreeNodeDef="let node"
-                class="tree-node"
-            >
-                <span
-                    cdkDrag
-                    [cdkDragDisabled]="!node.details || layout.locked"
-                    (cdkDragMoved)="moveAddedItem($event)"
-                    (cdkDragReleased)="addItem(node)"
-                    >{{ node.name }}</span
-                >
-            </cdk-nested-tree-node>
-            <!-- This is the tree node template for expandable nodes -->
-            <cdk-nested-tree-node
-                *cdkTreeNodeDef="let node; when: hasChild"
-                class="tree-node"
-            >
-                <span
-                    cdkTreeNodeToggle
-                    cdkDrag
-                    [cdkDragDisabled]="!node.details || layout.locked"
-                    (cdkDragMoved)="moveAddedItem($event)"
-                    (cdkDragReleased)="addItem(node)"
-                    >{{ node.name }}</span
-                >
-                <div [class.tree-invisible]="!treeControl.isExpanded(node)">
-                    <ng-container cdkTreeNodeOutlet></ng-container>
-                </div>
-            </cdk-nested-tree-node>
-        </cdk-tree>
+        </svg-icon>
     </div>
+    <cdk-tree
+        *ngIf="openMenu === resources"
+        cdkDropList
+        [cdkDropListDisabled]="layout.locked"
+        [dataSource]="dataSource"
+        [treeControl]="treeControl"
+    >
+        <ng-template
+            #nodeInfo
+            let-node="node"
+            let-expandable="expandable"
+            let-expanded="expanded"
+        >
+            <ng-template #recordingIcon>
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '20',
+                        'height.px': '20',
+                        'margin-left.px': '-4',
+                        'margin-right.px': '8',
+                        opacity: ['recording', 'scheduled', 'archive'].includes(node.details.status)
+                            ? '1'
+                            : '0'
+                    }"
+                    [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
+                >
+                </svg-icon>
+            </ng-template>
+            <svg-icon
+                *ngIf="node.type !== 'camera'; else recordingIcon"
+                nx-add-svg-src
+                [svgStyle]="{
+                    'width.px': '24',
+                    'height.px': '24',
+                    'margin-right.px': expandable ? '8' : '0',
+                    fill: 'none !important',
+                    opacity: expandable ? '1' : '0',
+                    transform: expanded ? 'rotate(-90deg)' : 'rotate(0deg)'
+                }"
+                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+            >
+            </svg-icon>
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{
+                    'width.px': '20',
+                    'height.px': '20',
+                    'margin-right.px': '8'
+                }"
+                [src]="
+                    icons.dirLayouts +
+                    node.type +
+                    (node.details?.status
+                        ? '_' +
+                          (node.type !== 'camera'
+                              ? node.details.status
+                              : node.details.online
+                              ? 'online'
+                              : 'offline')
+                        : '') +
+                    '.svg'
+                "
+            >
+            </svg-icon>
+            <span>{{ node.name }}</span>
+        </ng-template>
+        <!-- This is the tree node template for leaf nodes -->
+        <cdk-nested-tree-node
+            *cdkTreeNodeDef="let node"
+            class="tree-node"
+        >
+            <div
+                cdkDrag
+                [cdkDragDisabled]="!node.details || layout.locked"
+                (click)="changeView(node)"
+                (cdkDragMoved)="moveAddedItem($event)"
+                (cdkDragReleased)="addItem(node)"
+                [class]="{
+                    selected:
+                        layout?.id &&
+                        cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
+                }"
+            >
+                <ng-container
+                    *ngTemplateOutlet="
+                        nodeInfo;
+                        context: {
+                            node: node,
+                            expandable: false,
+                            expanded: !treeControl.isExpanded(node)
+                        }
+                    "
+                ></ng-container>
+            </div>
+        </cdk-nested-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <cdk-nested-tree-node
+            *cdkTreeNodeDef="let node; when: hasChild"
+            class="tree-node"
+        >
+            <div
+                cdkTreeNodeToggle
+                cdkDrag
+                (click)="changeView(node)"
+                [cdkDragDisabled]="!node.details || layout.locked"
+                (cdkDragMoved)="moveAddedItem($event)"
+                (cdkDragReleased)="addItem(node)"
+            >
+                <ng-container
+                    *ngTemplateOutlet="
+                        nodeInfo;
+                        context: {
+                            node: node,
+                            expandable: true,
+                            expanded: !treeControl.isExpanded(node)
+                        }
+                    "
+                ></ng-container>
+            </div>
+            <div
+                [class.tree-invisible]="!treeControl.isExpanded(node)"
+                class="expanded-tree"
+            >
+                <span
+                    *ngIf="!node.children.length"
+                    class="no-children"
+                    translate
+                    >No Items</span
+                >
+                <ng-container cdkTreeNodeOutlet></ng-container>
+            </div>
+        </cdk-nested-tree-node>
+    </cdk-tree>
 </div>
 
 <div
@@ -135,7 +171,7 @@
             class="layout-item-wrapper highlight-adding"
         ></div>
 
-        <ng-container *ngFor="let item of layout.items; trackBy: itemId">
+        <ng-container *ngFor="let item of changingLayout ? [] : layout.items; trackBy: itemId">
             <div
                 *ngIf="layoutItemLookup"
                 cdkDropList
@@ -190,31 +226,105 @@
                     ></div>
                     <ng-container
                         *ngIf="layoutItemLookup[item.resourceId] as itemDetail; else notSupported"
-                        [ngSwitch]="itemDetail.type"
                     >
-                        <ng-container *ngSwitchCase="'camera'">
-                            <nx-video-player
-                                cdkDragHandle
-                                [cdkDragHandleDisabled]="layout.locked"
-                                [camera]="itemDetail.details"
-                                (showPtz)="showPtz.emit($event)"
+                        <ng-template
+                            #showError
+                            let-status="status"
+                        >
+                            <div
+                                *ngIf="
+                                    status ||
+                                    errors[itemDetail.details.id] ||
+                                    (itemDetail.details.status !== 'archive'
+                                        ? itemDetail.details.status
+                                        : 'offline') as status
+                                "
+                                class="item-error"
                             >
-                            </nx-video-player>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'server'">
-                            <nx-monitoring-graph
-                                [systemId]="layout.systemId"
-                                [noFrame]="true"
-                                [selectedServerId]="itemDetail.details.id"
-                            ></nx-monitoring-graph>
-                        </ng-container>
-                        <iframe
-                            *ngSwitchCase="'webPage'"
-                            [src]="itemDetail.details.url | safe: 'resourceUrl'"
-                            frameBorder="0"
-                        ></iframe>
-                        <ng-container *ngSwitchCaseDefault>
-                            <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
+                                <div class="item-error">
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [svgStyle]="{
+                                            'max-width.px': '64',
+                                            'max-height.px': '64',
+                                            'margin.px': '16',
+                                            width: '100%',
+                                            height: '100%'
+                                        }"
+                                        [src]="
+                                            icons.dirLayouts +
+                                            itemDetail.type +
+                                            (status !== RESOURCE_TYPE.WEB_PAGE ? '_' : '') +
+                                            (['online', 'offline', 'unauthorized'].includes(status)
+                                                ? status
+                                                : status !== RESOURCE_TYPE.WEB_PAGE
+                                                ? 'offline'
+                                                : '') +
+                                            '.svg'
+                                        "
+                                    >
+                                    </svg-icon>
+                                    <h3>
+                                        {{
+                                            LANG.common.cameraStates[status] ||
+                                                LANG.layouts.errors[status] ||
+                                                status | translate
+                                        }}
+                                    </h3>
+                                </div>
+                                <h4
+                                    *ngIf="
+                                        additionalErrorMessages[
+                                            itemDetail.details.id
+                                        ] as additionalMessage
+                                    "
+                                >
+                                    {{ additionalMessage }}
+                                </h4>
+                            </div>
+                        </ng-template>
+                        <ng-container
+                            *ngIf="
+                                !errors[itemDetail.details.id] &&
+                                    (itemDetail.details.online ||
+                                        !itemDetail.details.status ||
+                                        itemDetail.details.status === 'online');
+                                else showError
+                            "
+                            [ngSwitch]="itemDetail.type"
+                        >
+                            <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
+                                <nx-video-player
+                                    cdkDragHandle
+                                    [cdkDragHandleDisabled]="layout.locked"
+                                    [camera]="itemDetail.details"
+                                    (showError)="
+                                        itemDetail.details.online = false;
+                                        errors[itemDetail.details.id] = $event
+                                    "
+                                    (showPtz)="showPtz.emit($event)"
+                                >
+                                </nx-video-player>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
+                                <nx-monitoring-graph
+                                    [systemId]="layout.systemId"
+                                    [noFrame]="true"
+                                    [selectedServerId]="itemDetail.details.id"
+                                ></nx-monitoring-graph>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
+                                <nx-pre-loader></nx-pre-loader>
+                                <iframe
+                                    #webpage
+                                    (load)="checkIframeContent(itemDetail.details.id, webpage)"
+                                    [src]="itemDetail.details.url | safe: 'resourceUrl'"
+                                    frameBorder="0"
+                                ></iframe>
+                            </ng-container>
+                            <ng-container *ngSwitchCaseDefault>
+                                <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
+                            </ng-container>
                         </ng-container>
                     </ng-container>
                     <div
@@ -241,13 +351,11 @@
     *ngIf="CONFIG.featureFlags.layoutsRightMenu || CONFIG.featureFlags.layoutsDemo"
     class="sidebar-wrapper right"
     [ngClass]="{ 'adding-item': addingItem }"
-    (mouseleave)="closeMenu()"
 >
     <header class="menu-tabs">
         <h3
             #analytics
             (click)="toggleMenu(analytics, true)"
-            (mouseover)="toggleMenu(analytics)"
             [ngClass]="{ 'active-menu': openMenu === analytics }"
             translate
         >
@@ -256,17 +364,13 @@
         <h3
             #bookmarks
             (click)="toggleMenu(bookmarks, true)"
-            (mouseover)="toggleMenu(bookmarks)"
             [ngClass]="{ 'active-menu': openMenu === bookmarks }"
             translate
         >
             Bookmarks
         </h3>
     </header>
-    <div
-        class="resources-sidebar"
-        (mouseover)="toggleMenu()"
-    >
+    <div class="resources-sidebar">
         <div
             *ngIf="openMenu === analytics"
             class="placeholder-menu"
