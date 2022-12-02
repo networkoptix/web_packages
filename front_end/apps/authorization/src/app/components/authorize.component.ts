@@ -523,6 +523,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.accountInfo.password,
                 this.accountInfo.firstName,
                 this.accountInfo.lastName,
+                this.CONFIG.customization,
                 this.loginCode))
             , { ignoreError: true, timeoutMs },
             res => {

@@ -53,7 +53,7 @@ export class AuthService {
         return this.post(endpoints.activate, { code });
     }
 
-    authenticate(email: string, password: string, clientId: string, redirectUrl?: string, scope?: string, state?: string): Observable<ApiData> {
+    authenticate(email: string, password: string, clientId: string, redirectUrl?: string, state?: string, scope?: string): Observable<ApiData> {
         const data: ApiData = {
             password,
             username: email,
@@ -100,16 +100,17 @@ export class AuthService {
     }
 
     reactivate(email: string): Observable<ApiData> {
-        return this.post(endpoints.activate, { email });
+        return this.post(endpoints.reactivate, { email });
     }
 
-    register(email: string, password: string, firstName: string, lastName: string, code?: string): Observable<ApiData> {
+    register(email: string, password: string, firstName: string, lastName: string, customization: string, code?: string): Observable<ApiData> {
         let headers = new HttpHeaders();
         if (code) {
             const [token] = atob(code).split(':');
             headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
         }
         const data = {
+            customization,
             email,
             password,
             fullName: `${firstName} ${lastName}`
