@@ -1605,6 +1605,7 @@
     "{number} more required": "{number} more required",
     "{size} until {expires}": "{size} until {expires}",
     "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+    "{start}{end}": "{start}{end}",
     "{targetSystem} is inaccessible": "{targetSystem} is inaccessible",
     "{title} - %CLOUD_NAME%": "{title} - %CLOUD_NAME%",
     "{title} - webadmin - %VMS_NAME%": "{title} - webadmin - %VMS_NAME%",

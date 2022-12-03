@@ -3,9 +3,12 @@
 for a particular part of the codebase. No in-house specific types/structures. */
 
 import type { TemplateRef } from '@angular/core';
-import { last } from 'lodash-es';
+import { last, zip } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import staticLang from '@common/language/language_i18n_static.json';
+import { TranslatableObject, TranslatableStrict } from '@pipes/any-translate.types';
 
 /* String */
 export function cleanId(id: unknown): string | undefined {
@@ -305,3 +308,35 @@ export function staticImplements<T>() {
 }
 
 export const sleep = (time?: number): Promise<void> => new Promise(resolve => setTimeout(resolve, time));
+
+export const toTranslatable = (value: unknown): TranslatableObject => typeof value === 'string' ? { value } : value as TranslatableObject;
+
+const flattenTranslatables = ([start, ...end]: TranslatableStrict[]): TranslatableObject => ({
+    value: staticLang.exclude.nested,
+    params: {
+        start,
+        end: end.length > 1 ? flattenTranslatables(end) : end.pop()
+    }
+});
+
+/**
+ * Tagged template literal for using markup within templates.
+ *
+ * Example:
+ * import { nestedTranslation as nt } from '@unils/general'
+ *
+ * const translatable = nt`
+ * <div class="some-class">
+ *     ${translatableObjectOrString}
+ * </div>
+ * ${nt`
+ *     <span>
+ *         ${anotherTranlatable}
+ *     </span>`
+ * }`
+ * @param strings
+ * @param translatableExpressions
+ * @returns
+ */
+export const nestedTranslation = (strings: TemplateStringsArray, ...translatableExpressions: TranslatableStrict[]): TranslatableObject => flattenTranslatables(
+    zip(strings, translatableExpressions.map(toTranslatable)).reduce((vals, val) => [...vals, ...val], []).filter(val => val));

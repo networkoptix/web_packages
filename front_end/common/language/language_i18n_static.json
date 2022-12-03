@@ -11,6 +11,9 @@
     "Terms": "Terms",
     "Developers Console": "Developers Console",
     "productName": "",
+    "exclude": {
+        "nested": "{start}{end}"
+    },
     "monitoring": {
         "unavailable": "Make sure the specified server is online and try again."
     },
