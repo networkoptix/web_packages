@@ -237,7 +237,7 @@ async def login_with_code(request):
             user.customization = customization
             await sync_to_async(user.save)()
     except models.Account.DoesNotExist:
-        first_name, last_name = account_info.get('fullname').split(' ')
+        first_name, last_name = account_info.get('fullName', '').split(' ')
         user = await create_user(
             account_info['email'],
             first_name=first_name,
@@ -259,7 +259,7 @@ async def login_with_tokens(request):
     }
     validate_token = await sync_to_async(Auth.validate_token)(tokens["access_token"])
     try:
-        user = await models.Account.objects.aget(email=validate_token['username'])
+        user = models.Account.objects.get(email=validate_token['username'])
     except models.Account.DoesNotExist:
         raise APINotFoundException("User not in cloud")
     await sync_to_async(kill_tokens)(request, Auth.delete_token)
