@@ -825,6 +825,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/layouts/', data);
     }
 
+    deleteLayout(layoutId: string): Observable<unknown> {
+        return this.delete(`/rest/v1/layouts/${layoutId}`);
+    }
+
     getLicenseSummaries(): Observable<any> {
         const params = {
             _keepDefault: true

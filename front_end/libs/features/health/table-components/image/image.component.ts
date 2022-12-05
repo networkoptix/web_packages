@@ -64,12 +64,12 @@ export class NxImageComponent implements OnChanges, OnDestroy {
             }
         }
         if (
-            this.state === 'Unauthorized' ||
+            this.state.toLowerCase() === 'Unauthorized'.toLowerCase() ||
             changes.state && ![
                 'Online',
                 'Recording',
                 'Scheduled'
-            ].includes(changes.state.currentValue)
+            ].map(state => state.toLowerCase()).includes(changes.state.currentValue.toLowerCase())
         ) {
             this.url = '';
             this.loaded.emit(true);

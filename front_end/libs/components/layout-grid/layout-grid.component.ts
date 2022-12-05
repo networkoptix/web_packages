@@ -9,8 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SvgIconComponent } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
-import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, interval, Observable, Subject, timer } from 'rxjs';
+import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime, takeUntil, startWith } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -82,6 +82,9 @@ export class NxLayoutGridComponent {
 
     @Output() layoutChanged = new EventEmitter<string>();
     @Output() showPtz = new EventEmitter<ICamera>();
+    @Output() addResource = new EventEmitter<ResourceType>();
+    @Output() removeResource = new EventEmitter<{ resourceType: ResourceType, details: Record<string, unknown> }>();
+    @Output() editResource = new EventEmitter<{ resourceType: ResourceType, details: Record<string, unknown> }>();
 
     SAVE_DELAY = 0;
 
@@ -104,6 +107,7 @@ export class NxLayoutGridComponent {
     #initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
     #countdownTimer$ = new Subject<number>();
+    unsubTooltip$ = new Subject<string>();
 
     layout$ = this.#initialLayout$.pipe(
         filter(layout => !!layout),
@@ -508,6 +512,40 @@ export class NxLayoutGridComponent {
         this.cd.markForCheck();
     };
 
+    addNewResource = (resourceType: ResourceType): void => {
+        this.addResource.emit(resourceType);
+    };
+
+    removeExistingResource = (resourceType: ResourceType, details: Record<string, unknown>): void => {
+        this.removeResource.emit({ resourceType, details });
+    };
+
+    editExistingResource = (resourceType: ResourceType, details: Record<string, unknown>): void => {
+        this.editResource.emit({ resourceType, details });
+    };
+
+    hasActions: Partial<Record<ResourceType, { action: string, icon: string, handler: unknown }[]>> = {
+        [ResourceType.LAYOUTS]: [
+            {
+                action: 'create',
+                icon: 'plus',
+                handler: this.addNewResource
+            }
+        ],
+        [ResourceType.LAYOUT]: [
+            {
+                action: 'edit',
+                icon: 'edit',
+                handler: this.editExistingResource
+            },
+            {
+                action: 'delete',
+                icon: 'delete',
+                handler: this.removeExistingResource
+            }
+        ]
+    };
+
     moveItem = ({ id }: LayoutItem): void => {
         combineLatest([
             this.highlightState$,
@@ -709,4 +747,24 @@ export class NxLayoutGridComponent {
     };
 
     hasChild = (_: number, node: ResourceNode): boolean => [ResourceType.CAMERAS, ResourceType.WEB_PAGES, ResourceType.SERVERS, ResourceType.LAYOUTS].includes(node.type) ? !!node.children : !!node.children?.length;
+
+    unsubTooltips = (): void => this.unsubTooltip$.next('unsub');
+
+    tooltipTarget$ = new BehaviorSubject<string>('');
+
+    updateTooltipTarget = (id: string): void => this.tooltipTarget$.next(id);
+
+    serverStats$ = this.tooltipTarget$.pipe(
+        filter(id => !!id),
+        distinctUntilChanged(),
+        switchMap(serverId => timer(0, 1000)
+            .pipe(
+                switchMap(() => this.system.serverManager.initSystemMediaServers()),
+                switchMap(() => this.system.serverManager.getStatistics(serverId)),
+                map(({ reply, errorString: error }) => ({ error, statistics: reply.statistics?.map(({ description, value }) => ({ description, value: `${(value * 100).toFixed(2)}%` })) })),
+                startWith(null),
+                untilDestroyed(this),
+                takeUntil(this.unsubTooltip$)
+            ))
+    );
 }

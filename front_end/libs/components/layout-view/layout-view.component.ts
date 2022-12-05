@@ -7,15 +7,18 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { uniq } from 'lodash-es';
-import { BehaviorSubject, combineLatest, concat, defer, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, defer, firstValueFrom, merge, Observable, Subject } from 'rxjs';
 import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ConfigType } from '@components/console-table/console-table.component.types';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { LayoutResourceTree, ResourceNode, ResourceType } from '@components/layout-grid/layout-grid.types';
 import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layouts, Layout, WebPages } from '@services/system-api.types';
@@ -25,7 +28,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphabeticalSort, cleanId } from '@utils/general';
+import { alphabeticalSort, cleanId, pickFrom } from '@utils/general';
 
 interface Resource {
     name: string;
@@ -35,6 +38,39 @@ interface Resource {
 interface ResourceLookup<T = { id: string }> {
     [id: string]: ResourceNode<T>
 }
+/**
+ * Find better abstraction once we add more action types and resources.
+ *
+ * Probably a factory generateManifestAndHandler(resourceType, actionType, system).
+ *
+ * This would generate the manifest from staticlang. Need to fine some generic type to work with all handlers.
+*/
+const createManifests: Partial<Record<ResourceType, ContextManifest>> = {
+    [ResourceType.LAYOUTS]: {
+        ...pickFrom(staticLang.layouts.actions.create, ['label']),
+        fields: [
+            {
+                ...staticLang.layouts.actions.create.fields.name,
+                type: ConfigType.TEXT,
+                name: 'name',
+                meta: {
+                    options: {
+                        required: true
+                    }
+                }
+            }
+        ]
+    }
+};
+
+const editManifests: Partial<Record<ResourceType, ContextManifest>> = {
+    [ResourceType.LAYOUT]: {
+        ...pickFrom(staticLang.layouts.actions.edit, ['label']),
+        fields: [
+            ...createManifests[ResourceType.LAYOUTS].fields
+        ]
+    }
+};
 
 @UntilDestroy()
 @Component({
@@ -95,7 +131,7 @@ export class NxLayoutViewComponent {
                 [camera.id]: {
                     type: ResourceType.CAMERA,
                     name: camera.name,
-                    details: { ...camera, status: camera.status.toLowerCase() },
+                    details: { ...camera, status: camera.status.toLowerCase(), resourceType: this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA] },
                     aspectRatio: +camera.overrideAr || camera.defaultRatio || aspectRatio
                 }
             }), {} as ResourceLookup<typeof cameras[0]>);
@@ -105,7 +141,7 @@ export class NxLayoutViewComponent {
                 [server.id]: {
                     type: ResourceType.SERVER,
                     name: server.name,
-                    details: { ...server, status: server.status.toLowerCase() },
+                    details: { ...server, status: server.status.toLowerCase(), resourceType: this.LANG.layouts.titles.resourceTypes[ResourceType.SERVER] },
                     aspectRatio
                 }
             }), {} as ResourceLookup<typeof servers[0]>);
@@ -120,11 +156,11 @@ export class NxLayoutViewComponent {
                 }
             }), {} as ResourceLookup<typeof webPages[0]>);
             const byName = alphabeticalSort<Pick<Resource, 'name'>>(this.locale, r => r.name || '');
-            const layoutsForTree = layouts.filter(({ id }) => id && id !== 'new').map(({ name, id }) => ({
-                name,
-                id,
+            const layoutsForTree = layouts.filter(layout => layout.id && layout.id !== 'new').map(details => ({
+                name: details.name,
+                id: details.id,
                 type: ResourceType.LAYOUT,
-                details: { id }
+                details
             }));
             const parsedResources = {
                 ...parsedServers,
@@ -208,7 +244,7 @@ export class NxLayoutViewComponent {
         this.activatedRoute.params,
         this.availableLayouts$
     ]).pipe(
-        map(([system, { layoutId }, layouts]) => {
+        map(([system, { layoutId }, layouts]): Layout => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
                 if (existingLayout) {
@@ -271,6 +307,7 @@ export class NxLayoutViewComponent {
         private activatedRoute: ActivatedRoute,
         private accountService: NxAccountService,
         private systemsService: NxSystemsService,
+        private dialogsService: NxDialogsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
@@ -298,7 +335,7 @@ export class NxLayoutViewComponent {
         cellSpacing: 0.01,
         fixedHeight: 0,
         fixedWidth: 0,
-        id: 'new',
+        id: null,
         items: [],
         locked: false,
         logicalId: 0,
@@ -357,8 +394,62 @@ export class NxLayoutViewComponent {
         parentId: this.accountService.account.id
     });
 
-    updateLayout = (layoutId: string): void => {
+    updateLayout = (layoutId: string): Promise<string> => {
         this.changeLayout(layoutId);
         this.refreshLayouts$.next(layoutId);
+        return firstValueFrom(
+            this.#selectedLayout$.pipe(
+                map(({ id }) => id),
+                filter(id => id === layoutId)
+            ));
     };
+
+    handleRemovingResource = async ({ details: { id } }: { resourceType: ResourceType, details: Record<string, unknown> }): Promise<unknown> => firstValueFrom(
+        this.layoutItemLookup$.pipe(
+            switchMap(items => this.dialogsService.confirm({
+                ...this.LANG.layouts.actions.delete,
+                actionType: 'btn-primary',
+                message: { value: this.LANG.layouts.actions.delete.message, params: items[id as string] }
+            })),
+            switchMap(res => res === true && this.selectedSystem$),
+            switchMap(system => {
+                if (system) {
+                    return (system.mediaserver as NxSystemRestAPI).deleteLayout(id as string).pipe(
+                        tap(() => this.refreshLayouts$.next(this.refreshLayouts$.value))
+                    );
+                }
+            })
+        ));
+
+    handleEditingResource = async ({ resourceType, details }: { resourceType: ResourceType, details: Record<string, unknown> }): Promise<boolean> => this.dialogsService.edit({
+        contextManifest: editManifests[resourceType],
+        values: details,
+        deleteProcess: (details: Record<string, unknown>) => this.handleRemovingResource({ resourceType, details }).catch(() => this.handleEditingResource({ resourceType, details })),
+        handlerProcess: ({ type: _, ...values }: Layout & { type: ResourceType }) => values.name
+            ? firstValueFrom(
+                this.selectedSystem$.pipe(
+                    // Find better abstraction if/when we allow adding other resource types
+                    switchMap(({ mediaserver }) => (mediaserver as NxSystemRestAPI).putLayout(values.id, values)),
+                    map(({ id }) => id),
+                    switchMap(this.updateLayout),
+                    catchError(err => Promise.reject({ errors: { unhandled: [err.error.errorString] } }))
+                )
+            ) : Promise.reject({ errors: { name: [this.LANG.layouts.actions.errors.required] } })
+    });
+
+    handleAddingResource = async (resourceType: ResourceType): Promise<boolean> => this.dialogsService.edit({
+        contextManifest: createManifests[resourceType],
+        handlerProcess: ({
+            name
+        }: Record<string, unknown>) => name
+            ? firstValueFrom(
+                this.selectedSystem$.pipe(
+                    // Find better abstraction if/when we allow adding other resource types
+                    switchMap(({ id, mediaserver }) => (mediaserver as NxSystemRestAPI).createLayout(this.createNewLayout(id, this.accountService.account.id, name as string))),
+                    map(({ id }) => id),
+                    switchMap(this.updateLayout),
+                    catchError(err => Promise.reject({ errors: { unhandled: [err.error.errorString] } }))
+                )
+            ) : Promise.reject({ errors: { name: [this.LANG.layouts.actions.errors.required] } })
+    });
 }

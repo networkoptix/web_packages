@@ -90,14 +90,27 @@ export enum ModalType {
     CLIENT_DOWNLOAD = 'client-download'
 }
 
-export interface ModalContent {
-    id?: number,
-    modal: ModalType,
-    heading?: string,
-    values?: Record<string, any>,
-    manifest?: ModalManifest,
-    settings?: ContentSettings,
-    contextList?: ContextManifest[]
+export class ModalContent {
+    constructor(
+        readonly modal: ModalType,
+        readonly id?: number,
+        readonly heading?: string,
+        readonly values?: Record<string, any>,
+        readonly manifest?: ModalManifest,
+        readonly settings?: ContentSettings,
+        readonly contextList?: ContextManifest[]
+    ) {}
+}
+
+export class GenericEditModalContent {
+    constructor(
+        readonly contextManifest: ContextManifest,
+        readonly handlerProcess: ((values: unknown) => PromiseLike<unknown>),
+        readonly deleteProcess?: ((values: unknown) => PromiseLike<unknown>),
+        readonly id?: string,
+        readonly heading?: string,
+        readonly values?: Record<string, unknown>
+    ) {}
 }
 
 export enum ConsoleSection {

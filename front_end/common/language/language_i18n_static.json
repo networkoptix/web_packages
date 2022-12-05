@@ -36,6 +36,13 @@
     "layouts": {
         "createNew": "Create New Layout",
         "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "statistics": "{resourceType} \"{name}\" Statistics",
+        "titles": {
+            "resourceTypes": {
+                "server": "Server",
+                "camera": "Camera"
+            }
+        },
         "ptzActionLabels": {
             "up": "UP",
             "down": "DOWN",
@@ -44,6 +51,35 @@
             "in": "ZOOM IN",
             "out": "ZOOM OUT",
             "exit": "Exit PTZ"
+        },
+        "actions": {
+            "create": {
+                "label": "Create Layout",
+                "fields": {
+                    "name": {
+                        "label": "Name",
+                        "placeholder": "Choose name for layout"
+                    }
+                }
+            },
+            "edit": {
+                "label": "Edit Layout",
+                "fields": {
+                    "name": {
+                        "label": "Name",
+                        "placeholder": "Choose name for layout"
+                    }
+                }
+            },
+            "delete": {
+                "message": "Are you sure that you want to delete the \"{name}\" layout?",
+                "title": "Delete layout",
+                "actionLabel": "Delete",
+                "cancelLabel": "Cancel"
+            },
+            "errors": {
+                "required": "'This field is required'"
+            }
         },
         "errors": {
             "webpage": "Error loading webpage"

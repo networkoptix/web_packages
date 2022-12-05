@@ -19,17 +19,20 @@ import {
 })
 export class NxTooltipComponent extends BasePortalOutlet {
     _text = '';
+    alternate = false;
 
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 
     template: Portal<unknown>;
 
-    attachTemplate(portal: TemplatePortal): void {
+    attachTemplate(portal: TemplatePortal, alternateStyle = false): void {
         this.template = portal;
+        this.alternate = alternateStyle;
     }
 
-    attachText(text: string): void {
+    attachText(text: string, alternateStyle = false): void {
         this._text = text;
+        this.alternate = alternateStyle;
     }
 
     attachComponentPortal<T>(componentPortal: ComponentPortal<T>): ComponentRef<T> {

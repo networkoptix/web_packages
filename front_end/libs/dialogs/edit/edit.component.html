@@ -62,6 +62,16 @@
                 </div>
             </section>
         </ng-container>
+        <div
+            *ngIf="errors.unhandled as errors"
+            class="d-flex flex-column"
+        >
+            <span
+                *ngFor="let error of errors"
+                class="input-error"
+                >{{ error }}</span
+            >
+        </div>
     </div>
     <div class="modal-footer border-top-0">
         <ng-template #createButton>

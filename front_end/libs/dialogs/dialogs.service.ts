@@ -7,9 +7,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike, firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { ModalContent } from '@components/console-table/console-table.component.types';
+import { GenericEditModalContent, ModalContent } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable, TranslatableStrict } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -20,6 +20,7 @@ import { LicenseManager } from '@services/system.service/license-manager/licence
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import { pickFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { toast } from '../variables/static-variables';
@@ -35,6 +36,16 @@ import { NxToastService } from './toast.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
+}
+
+interface ConfirmConfig {
+    message: TranslatableStrict,
+    title: string,
+    actionLabel: string,
+    actionType?: string,
+    cancelLabel?: string,
+    footerClass?: string,
+    requireInput?: boolean
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -99,23 +110,44 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
+    public async confirm(config: ConfirmConfig);
     public async confirm(
-        message: string,
+        messageOrConfig: TranslatableStrict,
         title: string,
         actionLabel: string,
         actionType?: string,
         cancelLabel?: string,
-        footerClass?: string
-    ) {
+        footerClass?: string,
+        requireInput?: boolean
+    );
+    public async confirm(
+        messageOrConfig: TranslatableStrict | ConfirmConfig,
+        title?: string,
+        actionLabel?: string,
+        actionType?: string,
+        cancelLabel?: string,
+        footerClass?: string,
+        requireInput = false
+    ): Promise<unknown> {
+        const usingConfig = typeof messageOrConfig !== 'string' && !('value' in messageOrConfig);
+        const message = usingConfig ? messageOrConfig.message : messageOrConfig;
+        const configParams = usingConfig ? messageOrConfig : {
+            message,
+            title,
+            actionLabel,
+            actionType,
+            cancelLabel,
+            footerClass,
+            requireInput
+        };
+
         const config: Partial<DialogConfig> = {
             data: {
-                message: message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '',
-                title,
-                actionLabel,
-                buttonType: actionType || 'default',
-                cancelLabel,
-                buttonClass: actionType || 'btn-primary',
-                footerClass: footerClass || '',
+                ...configParams,
+                message: typeof configParams.message === 'string' ? this.domSanitizer.bypassSecurityTrustHtml(configParams.message) : configParams.message || '',
+                buttonType: configParams.actionType || 'default',
+                buttonClass: configParams.actionType || 'btn-primary',
+                footerClass: configParams.footerClass || '',
                 hasFooter: true,
                 cancellable: false,
             }
@@ -171,17 +203,33 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async edit(modalContent: ModalContent) {
+    public async edit(genericEditModalContent: GenericEditModalContent);
+    public async edit(genericEditModalContent: GenericEditModalContent, values: Record<string, unknown>);
+    public async edit(contextModalContent: ModalContent);
+    public async edit(modalContent: ModalContent | GenericEditModalContent, values = {}): Promise<unknown> {
+        const isGeneric = 'contextManifest' in modalContent;
         const config: Partial<DialogConfig> = {
-            data: {
-                heading: modalContent.heading,
-                modal: modalContent.modal,
-                values: modalContent.values,
-                manifest: modalContent.manifest,
-                settings: modalContent.settings,
-                contextList: modalContent.contextList,
-            }
+            data: {}
         };
+
+        if (isGeneric) {
+            pickFrom(
+                modalContent,
+                Object.keys(new GenericEditModalContent(null, null)) as (keyof GenericEditModalContent)[],
+                config.data
+            );
+
+            config.data.contextList = [modalContent.contextManifest];
+            config.data.values ||= values;
+            config.data.manifest = modalContent.contextManifest;
+            config.data.heading = modalContent.contextManifest?.name || modalContent.contextManifest.label;
+        } else {
+            pickFrom(
+                modalContent,
+                Object.keys(new ModalContent(null)) as (keyof ModalContent)[],
+                config.data
+            );
+        }
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
         await this.preloadDialogsModule();

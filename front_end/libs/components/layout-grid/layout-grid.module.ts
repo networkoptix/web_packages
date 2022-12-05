@@ -5,6 +5,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCommonModule } from '@components/components-common.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
+import { ComponentsModule } from '@components/components.module';
 import { MonitoringGraphModule } from '@components/graph/graph.module';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
 
@@ -16,6 +17,7 @@ import { NxLayoutGridComponent } from './layout-grid.component';
         VideoPlayerModule,
         ComponentsCommonModule,
         DragDropModule,
+        ComponentsModule,
         CdkTreeModule,
         MonitoringGraphModule,
         AngularSvgIconModule.forRoot(),

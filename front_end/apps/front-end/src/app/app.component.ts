@@ -15,6 +15,7 @@ import {
     GuardsCheckEnd,
     GuardsCheckStart,
     Router,
+    NavigationEnd
 } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -58,7 +59,7 @@ require('what-input');
                 <div
                     class="mainContainer"
                     id="mainContainer"
-                    [ngClass]="{ altMainBackground: appStateService.altBackground }"
+                    [ngClass]="{ altMainBackground: appStateService.altBackground, withFooter: appStateService.footerVisibility }"
                     nxScrollHelper
                     cdkScrollable
                     #mainContainer
@@ -228,7 +229,6 @@ export class AppComponent implements OnInit {
                     });
             }
             this.appStateService.headerVisibility = false;
-            this.appStateService.footerVisibility = false;
             return;
         } else if (bootstrapProvider.newSystem) {
             // Cleanup any leftovers. Hard clear() cause page reload loop
@@ -243,6 +243,12 @@ export class AppComponent implements OnInit {
             this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
             return;
+        } else {
+            router.events.subscribe(event => {
+                if (event instanceof NavigationEnd) {
+                    this.appStateService.footerVisibility = event.url.split('/').filter(segment => !!segment)?.[0] !== 'systems';
+                }
+            });
         }
 
         // in case user switches to a different system before setting up reset system again

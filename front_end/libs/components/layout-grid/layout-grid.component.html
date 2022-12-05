@@ -82,18 +82,91 @@
             >
             </svg-icon>
             <span>{{ node.name }}</span>
+            <ng-container *ngIf="hasActions[node.type] as nodeActions">
+                <button
+                    *ngFor="let action of nodeActions"
+                    (click)="action.handler(node.type, node.details); $event.stopPropagation()"
+                    class="action-button"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '20',
+                            'height.px': '20'
+                        }"
+                        [src]="icons.dir + action.icon + '.svg'"
+                    >
+                    </svg-icon>
+                </button>
+            </ng-container>
         </ng-template>
         <!-- This is the tree node template for leaf nodes -->
         <cdk-nested-tree-node
             *cdkTreeNodeDef="let node"
             class="tree-node"
         >
+            <ng-template #cameraTooltip>
+                <div class="camera-tooltip-wrapper">
+                    <nx-health-image
+                        [isPrimary]="true"
+                        aspect="override"
+                        [preloader]="true"
+                        [state]="node.details.status"
+                        [url]="node?.details?.previewUrl"
+                        class="generic"
+                    ></nx-health-image>
+                </div>
+            </ng-template>
+            <ng-template #serverTooltip>
+                <ng-template #tooltipLoading>
+                    <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+                </ng-template>
+                <div class="server-tooltip-wrapper">
+                    <h4>
+                        {{ { value: LANG.layouts.statistics, params: node.details } | translate }}
+                    </h4>
+                    <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
+                        <div
+                            *ngIf="res.statistics as stats"
+                            class="stats-grid"
+                        >
+                            <div translate>Description</div>
+                            <div translate>Usage</div>
+                            <ng-container *ngFor="let type of stats">
+                                <div>
+                                    {{ type.description }}
+                                </div>
+                                <div>
+                                    {{ type.value }}
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div
+                            *ngIf="res.error as error"
+                            class="error-label"
+                        >
+                            {{ error | translate }}
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-template>
             <div
                 cdkDrag
                 [cdkDragDisabled]="!node.details || layout.locked"
                 (click)="changeView(node)"
                 (cdkDragMoved)="moveAddedItem($event)"
                 (cdkDragReleased)="addItem(node)"
+                [nxTooltip]="
+                    node.type === RESOURCE_TYPE.CAMERA
+                        ? cameraTooltip
+                        : node.type === RESOURCE_TYPE.SERVER
+                        ? serverTooltip
+                        : ''
+                "
+                (mouseenter)="updateTooltipTarget(node.details.id)"
+                (mouseleave)="unsubTooltips()"
+                horizontal
+                alternateStyle
                 [class]="{
                     selected:
                         layout?.id &&

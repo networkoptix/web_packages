@@ -39,7 +39,10 @@
         class="fs-exclude"
         alt="{{ state }}"
         *ngIf="
-            (state === 'Online' || state === 'Recording' || state === 'Scheduled') && url;
+            (state.toLowerCase() === 'online' ||
+                state.toLowerCase() === 'recording' ||
+                state.toLowerCase() === 'scheduled') &&
+                url;
             else noLivePreview
         "
         [src]="url"

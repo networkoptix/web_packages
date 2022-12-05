@@ -3,15 +3,21 @@
 :host {
     display: block;
 
-
     .tooltip-body {
-        max-width: 200px;
         padding: 0.25rem 0.5rem;
         color: var(--tooltip-color);
         background-color: var(--tooltip-bg);
         border-radius: 0.25rem;
         position: relative;
         text-align: left;
+        :not(.alternate) {
+            max-width: 200px;
+        }
+
+        &.alternate {
+            color: var(--popover-color) !important;
+            background: var(--popover-bg) !important;
+        }
     }
 
     .tooltip-arrow {
@@ -28,8 +34,14 @@
 
         &::before {
             left: 0;
-            border-width: 4px 4px 4px 0;
+            border-width: 16px 4px px 0;
             border-right-color: var(--tooltip-bg);
+        }
+
+        &.alternate::before {
+            border-right-color: var(--popover-bg) !important;
+            border-width: 8px 4px 8px 0 !important;
+            margin-top: -4px;
         }
     }
 }
@@ -44,4 +56,16 @@
     top: -4px;
     left: 50%;
     transform: rotate(90deg) translateX(-50%);
+}
+
+:host-context(.right.center) .tooltip-arrow {
+    top: 50%;
+    left: -4px;
+    transform: rotate(0deg) translateY(-4px);
+}
+
+:host-context(.left.center) .tooltip-arrow {
+    top: 50%;
+    right: -4px;
+    transform: rotate(180deg) translateY(-4px);
 }

@@ -284,21 +284,22 @@ export interface CustomClient {
 }
 
 export interface FieldManifest {
-    name: string;
+    name?: string;
     label: string;
-    description: string;
     type: ConfigType;
-    metaOnly: boolean;
-    optional: boolean;
+    description?: string;
+    metaOnly?: boolean;
+    meta?: Record<string, unknown>,
+    optional?: boolean;
     placeholder?: string;
 }
 
 export interface ContextManifest {
-    name: string;
+    name?: string;
     label: string;
     icon?: string;
     fields: FieldManifest[];
-    global: boolean;
+    global?: boolean;
 }
 
 export interface ContentSettings {

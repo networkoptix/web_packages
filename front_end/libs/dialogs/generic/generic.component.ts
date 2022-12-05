@@ -17,7 +17,7 @@ import { pickFrom } from '@utils/general';
 export class GenericModalContent implements OnInit {
     @Input() closable: boolean = true;
 
-    message: string;
+    message: Translatable;
     title: Translatable;
     actionLabel: Translatable;
     buttonType: string;

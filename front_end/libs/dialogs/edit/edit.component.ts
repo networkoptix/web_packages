@@ -50,6 +50,9 @@ export class EditModalContent {
     errors: Record<string, string[]> = {};
     processDisabled = false;
     name = '';
+    deleteProcess: (values: typeof this.values) => PromiseLike<unknown>;
+    handlerProcess: (values: typeof this.values) => PromiseLike<unknown>;
+    handlerProcessFactory: (action: string) => Process = () => null;
     createContext: Process;
     saveContext: Process;
     deleteContext: Process;
@@ -81,6 +84,11 @@ export class EditModalContent {
                 'manifest',
                 'settings',
                 'contextList',
+                'handlerProcess',
+                'deleteProcess',
+                'createContext',
+                'saveContext',
+                'deleteContext',
             ],
             this
         );
@@ -150,7 +158,19 @@ export class EditModalContent {
             return getMethod('create')(this.values.name, this.values.base_vms);
         };
 
-        this.createContext = this.processService.createProcess(createHandler,
+        const handleClose = (values: Record<string, unknown>) => {
+            this.close();
+            return this.deleteProcess(values as Record<string, string>);
+        };
+
+        this.handlerProcessFactory = action => this.handlerProcess && this.processService.createProcess(() => ((action === 'delete' && this.deleteProcess) ? handleClose : this.handlerProcess)(this.values), { ignoreError: true },
+            _ => this.close({ id: this.values.id, action }),
+            ({ errors }) => {
+                this.errors = errors;
+                this.processDisabled = true;
+            });
+
+        this.createContext ||= this.handlerProcessFactory('create') || this.processService.createProcess(createHandler,
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
@@ -182,7 +202,7 @@ export class EditModalContent {
             return getMethod('save')(this.values.id, this.values.name, this.values);
         };
 
-        this.saveContext = this.processService.createProcess(updateHandler,
+        this.saveContext ||= this.handlerProcessFactory('save') || this.processService.createProcess(updateHandler,
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
@@ -197,7 +217,7 @@ export class EditModalContent {
                 this.processDisabled = true;
             });
 
-        this.deleteContext = this.processService.createProcess(
+        this.deleteContext ||= this.handlerProcessFactory('delete') || this.processService.createProcess(
             () => getMethod('delete')(this.values.id),
             {},
             _ => {

@@ -1,14 +1,17 @@
 <div
-    class="tooltip-arrow"
     *ngIf="_text || template"
+    [ngClass]="{ alternate: alternate }"
+    class="tooltip-arrow"
 ></div>
 <div
     class="tooltip-body"
+    [ngClass]="{ alternate: alternate }"
     *ngIf="_text"
     [innerHTML]="_text"
 ></div>
 <div
     class="tooltip-body"
+    [ngClass]="{ alternate: alternate }"
     *ngIf="template"
 >
     <ng-container [cdkPortalHost]="template"></ng-container>

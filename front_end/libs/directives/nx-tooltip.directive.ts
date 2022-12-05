@@ -23,6 +23,7 @@ import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
@@ -34,6 +35,10 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     @Input('nxTooltip') content: string | TemplateRef<unknown>;
 
+    @IBool() @Input() horizontal: CoercedBoolInput;
+
+    @IBool() @Input() alternateStyle: CoercedBoolInput;
+
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
         private elementRef: ElementRef,
@@ -43,22 +48,41 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit(): void {
-        const positions: ConnectedPosition[] = [{
-            originX: 'center',
-            originY: 'top',
-            overlayX: 'center',
-            overlayY: 'bottom',
-            offsetY: -6,
-            panelClass: ['top', 'center'],
-        },
-        {
-            originX: 'center',
-            originY: 'bottom',
-            overlayX: 'center',
-            overlayY: 'top',
-            offsetY: 6,
-            panelClass: ['bottom', 'center'],
-        }];
+        const positions: ConnectedPosition[] = this.horizontal ? [
+            {
+                originX: 'end',
+                originY: 'center',
+                overlayX: 'start',
+                overlayY: 'center',
+                offsetX: 6,
+                panelClass: ['center', 'right'],
+            },
+            {
+                originX: 'start',
+                originY: 'center',
+                overlayX: 'end',
+                overlayY: 'center',
+                offsetX: -6,
+                panelClass: ['center', 'left'],
+            }
+        ] : [
+            {
+                originX: 'center',
+                originY: 'top',
+                overlayX: 'center',
+                overlayY: 'bottom',
+                offsetY: -6,
+                panelClass: ['top', 'center'],
+            },
+            {
+                originX: 'center',
+                originY: 'bottom',
+                overlayX: 'center',
+                overlayY: 'top',
+                offsetY: 6,
+                panelClass: ['bottom', 'center'],
+            }
+        ];
         this.positionStrategy = this.overlayPositionBuilder
             .flexibleConnectedTo(this.elementRef)
             .withPositions(positions);
@@ -72,7 +96,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(changes: NgChanges<NxTooltipDirective>): void {
         if (changes.content) {
             if (this.overlayRef?.hasAttached()) {
-                this.hide();
+                this.close();
                 changes.content.currentValue && this.show();
             }
         }
@@ -83,10 +107,11 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         this.overlayRef = undefined;
     }
 
-    private close(): void {
+    @HostListener('mouseleave')
+    private close = (): void => {
         this.destroy$.next(true);
         this.overlayRef?.detach();
-    }
+    };
 
     @HostListener('mouseenter')
     show(): void {
@@ -104,16 +129,12 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                     new TemplatePortal(
                         this.content,
                         this._viewContainerRef
-                    )
+                    ),
+                    !!this.alternateStyle
                 );
             } else {
-                tooltipRef.attachText(this.content);
+                tooltipRef.attachText(this.content, !!this.alternateStyle);
             }
         });
-    }
-
-    @HostListener('mouseleave')
-    hide(): void {
-        this.close();
     }
 }

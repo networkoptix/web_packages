@@ -4,7 +4,7 @@ export interface TranslatableObject {
     params?: Record<string, TranslatableStrict>
 }
 
-export type TranslatableStrict = string | TranslatableObject | TranslatableObject[];
+export type TranslatableStrict = string | TranslatableObject;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type Translatable = string | TranslatableObject | any;
+export type Translatable = TranslatableStrict | any;

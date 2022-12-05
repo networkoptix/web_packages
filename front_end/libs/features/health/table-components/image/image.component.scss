@@ -108,3 +108,9 @@ img {
     justify-content: center;
     align-items: center;
 }
+
+:host-context(.generic) .image-unavailable-border, .motion-preview, .light-thumbnail-preview, .thumbnail-preview {
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+}
+
