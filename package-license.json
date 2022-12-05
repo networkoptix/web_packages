@@ -1959,7 +1959,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-split-export-declaration",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-split-export-declaration/LICENSE"
         },
-        "@babel/helper-string-parser@7.18.10": {
+        "@babel/helper-string-parser@7.19.4": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -1967,7 +1967,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-string-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-string-parser/LICENSE"
         },
-        "@babel/helper-validator-identifier@7.18.6": {
+        "@babel/helper-validator-identifier@7.19.1": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2559,7 +2559,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/traverse",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/traverse/LICENSE"
         },
-        "@babel/types@7.18.10": {
+        "@babel/types@7.20.5": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -3180,7 +3180,7 @@
             "path": "cloud_portal/front_end/node_modules/@jridgewell/sourcemap-codec",
             "licenseFile": "cloud_portal/front_end/node_modules/@jridgewell/sourcemap-codec/LICENSE"
         },
-        "@jridgewell/trace-mapping@0.3.14": {
+        "@jridgewell/trace-mapping@0.3.9": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/trace-mapping",
             "publisher": "Justin Ridgewell",
@@ -4093,7 +4093,7 @@
             "path": "cloud_portal/front_end/node_modules/acorn-walk",
             "licenseFile": "cloud_portal/front_end/node_modules/acorn-walk/LICENSE"
         },
-        "acorn@8.7.1": {
+        "acorn@8.8.1": {
             "licenses": "MIT",
             "repository": "https://github.com/acornjs/acorn",
             "path": "cloud_portal/front_end/node_modules/acorn",
@@ -5417,7 +5417,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-delaunay",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-delaunay/LICENSE"
         },
-        "d3-dispatch@2.0.0": {
+        "d3-dispatch@1.0.6": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-dispatch",
             "publisher": "Mike Bostock",
@@ -5441,7 +5441,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-dsv",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-dsv/LICENSE"
         },
-        "d3-ease@2.0.0": {
+        "d3-ease@1.0.7": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-ease",
             "publisher": "Mike Bostock",
@@ -5497,7 +5497,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-interpolate",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-interpolate/LICENSE"
         },
-        "d3-path@2.0.0": {
+        "d3-path@1.0.9": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-path",
             "publisher": "Mike Bostock",
@@ -5577,7 +5577,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-time",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-time/LICENSE"
         },
-        "d3-timer@2.0.0": {
+        "d3-timer@1.0.10": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-timer",
             "publisher": "Mike Bostock",
@@ -5642,7 +5642,7 @@
             "path": "cloud_portal/front_end/node_modules/dashdash",
             "licenseFile": "cloud_portal/front_end/node_modules/dashdash/LICENSE.txt"
         },
-        "date-format@4.0.11": {
+        "date-format@4.0.14": {
             "licenses": "MIT",
             "repository": "https://github.com/nomiddlename/date-format",
             "publisher": "Gareth Jones",
@@ -6529,7 +6529,7 @@
             "path": "cloud_portal/front_end/node_modules/fast-diff",
             "licenseFile": "cloud_portal/front_end/node_modules/fast-diff/README.md"
         },
-        "fast-glob@3.2.11": {
+        "fast-glob@3.2.12": {
             "licenses": "MIT",
             "repository": "https://github.com/mrmlnc/fast-glob",
             "publisher": "Denis Malinochkin",
@@ -6712,7 +6712,7 @@
             "path": "cloud_portal/front_end/node_modules/flat",
             "licenseFile": "cloud_portal/front_end/node_modules/flat/LICENSE"
         },
-        "flatted@3.2.6": {
+        "flatted@3.2.7": {
             "licenses": "ISC",
             "repository": "https://github.com/WebReflection/flatted",
             "publisher": "Andrea Giammarchi",
@@ -8444,7 +8444,7 @@
             "path": "cloud_portal/front_end/node_modules/log-symbols",
             "licenseFile": "cloud_portal/front_end/node_modules/log-symbols/license"
         },
-        "log4js@6.5.2": {
+        "log4js@6.7.1": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/log4js-node/log4js-node",
             "path": "cloud_portal/front_end/node_modules/log4js",
@@ -8491,7 +8491,7 @@
             "path": "cloud_portal/front_end/node_modules/lowlight",
             "licenseFile": "cloud_portal/front_end/node_modules/lowlight/license"
         },
-        "lru-cache@7.13.2": {
+        "lru-cache@7.14.1": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/node-lru-cache",
             "publisher": "Isaac Z. Schlueter",
@@ -10031,7 +10031,7 @@
             "path": "cloud_portal/front_end/node_modules/pretty-bytes",
             "licenseFile": "cloud_portal/front_end/node_modules/pretty-bytes/license"
         },
-        "prismjs@1.28.0": {
+        "prismjs@1.29.0": {
             "licenses": "MIT",
             "repository": "https://github.com/PrismJS/prism",
             "publisher": "Lea Verou",
@@ -11103,7 +11103,7 @@
             "path": "cloud_portal/front_end/node_modules/source-map-support",
             "licenseFile": "cloud_portal/front_end/node_modules/source-map-support/LICENSE.md"
         },
-        "source-map@0.7.3": {
+        "source-map@0.7.4": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/mozilla/source-map",
             "publisher": "Nick Fitzgerald",
@@ -11257,7 +11257,7 @@
             "path": "cloud_portal/front_end/node_modules/stream-json",
             "licenseFile": "cloud_portal/front_end/node_modules/stream-json/LICENSE"
         },
-        "streamroller@3.1.1": {
+        "streamroller@3.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/nomiddlename/streamroller",
             "publisher": "Gareth Jones",
@@ -11299,7 +11299,7 @@
             "path": "cloud_portal/front_end/node_modules/string.prototype.trimstart",
             "licenseFile": "cloud_portal/front_end/node_modules/string.prototype.trimstart/LICENSE"
         },
-        "string_decoder@1.3.0": {
+        "string_decoder@1.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/nodejs/string_decoder",
             "path": "cloud_portal/front_end/node_modules/string_decoder",
@@ -11749,7 +11749,7 @@
             "path": "cloud_portal/front_end/node_modules/type-check",
             "licenseFile": "cloud_portal/front_end/node_modules/type-check/LICENSE"
         },
-        "type-fest@2.15.1": {
+        "type-fest@2.19.0": {
             "licenses": "(MIT OR CC0-1.0)",
             "repository": "https://github.com/sindresorhus/type-fest",
             "publisher": "Sindre Sorhus",
@@ -12320,7 +12320,7 @@
             "path": "cloud_portal/front_end/node_modules/wrappy",
             "licenseFile": "cloud_portal/front_end/node_modules/wrappy/LICENSE"
         },
-        "ws@7.5.8": {
+        "ws@7.5.9": {
             "licenses": "MIT",
             "repository": "https://github.com/websockets/ws",
             "publisher": "Einar Otto Stangvik",

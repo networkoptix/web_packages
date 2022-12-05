@@ -334,8 +334,8 @@ html[data-theme="light"] {
     --btn-default-active-bg         : #{$light6};
     --btn-default-active-color      : #{$dark9};
     --btn-default-active-shadow     : inset 0 1px 0 0 #{$light9};
-    --btn-default-focus-shadow      : #{$light14};
-    --btn-default-focus-outline-rgb : 125, 151, 164; //$light14;
+    --btn-default-focus-shadow      : var(--brand_d1);
+    --btn-default-focus-outline-rgb : var(--brand_d1--rgb);
 
     --btn-primary-bg                : var(--brand-core);
     --btn-primary-color             : #{$light1};
@@ -358,8 +358,8 @@ html[data-theme="light"] {
     --btn-danger-active-bg         : #{$red_d2};
     --btn-danger-active-color      : #{$light1};
     --btn-danger-active-shadow     : #{$red_d4};
-    --btn-danger-focus-shadow      : #{$red_d1};
-    --btn-danger-focus-outline-rgb : 170, 30, 30; //$red_d1;
+    --btn-danger-focus-shadow      : var(--brand_d1);
+    --btn-danger-focus-outline-rgb : var(--brand_d1--rgb);
 
     --btn-header-saparator-color : #{$light4};
     --btn-header-main-bg         : #{$light4};
