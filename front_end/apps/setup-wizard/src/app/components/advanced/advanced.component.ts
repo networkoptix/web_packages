@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -31,4 +32,9 @@ export class AdvancedComponent {
         this.selectedSecurity = { ...result };
         this.wizardService.setSecurityLevel(this.selectedSecurity.value);
     }
+
+    // Preserve original property order
+    originalOrder = (a: KeyValue<string, boolean>, b: KeyValue<string, boolean>): number => {
+        return 0;
+    };
 }
