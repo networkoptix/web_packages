@@ -1,4 +1,5 @@
 import base64
+import codecs
 import json
 import os
 import random
@@ -596,3 +597,10 @@ class CloudPortalAPI(object):
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")
             return backupCode
+
+    @keyword
+    def set_feature_flags(self):
+        with codecs.open("NoptixLibrary/features.json", encoding="utf-8") as featuresJson:
+            featuresDict = json.load(featuresJson)
+            res = requests.post(f'{self.env}/api/robot/set_flags', data=featuresDict, verify=False)
+            assert res.status_code == 200
