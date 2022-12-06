@@ -119,11 +119,12 @@ class ServerAPI5(ServerAPI):
         email,
         fullName,
         password,
+        # cloudAuth=None,
         userId=None,
         userRoleId=None,
         isEnabled=True,
         isCloud=True,
-        patch=False
+        patch=False,
         ):
         body= {
             "email":email,
@@ -131,8 +132,8 @@ class ServerAPI5(ServerAPI):
             "fullName":fullName,
             "permissions":permissions,
             "isCloud":isCloud,
-            "isEnabled":isEnabled,
-            "password":password
+            # "isEnabled":isEnabled
+            # "password":password
         }
         if userId:
             body["id"]=userId
@@ -525,3 +526,19 @@ class ServerAPI5(ServerAPI):
                               headers={'Content-Type': 'application/json'}, json=body, verify=False)
             assert r.status_code == 200, f'Endpoint /ec2/setResourceParams/ is {r.status_code}'
         return p.text
+
+    @keyword
+    def save_user_existing_legacy(self, auth, serverUrl, name, permissions, email, userRoleId, userId, isEnabled=True):
+        body = {
+            "email": email,
+            "name": name,
+            "permissions": permissions,
+            "isCloud": True,
+            "isEnabled": isEnabled,
+            "id": userId,
+            "userRoleId": userRoleId
+        }
+        credentials = {"username": auth[0], "password": auth[1], "setCookie": False}
+        t = requests.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+        r = requests.post(f'{serverUrl}/ec2/saveUser', headers={"x-runtime-guid": t.json()['token']}, json=body, verify=False)
+        return r.json()

@@ -1458,3 +1458,26 @@ QA Video Recording Stop
         Run Keyword If Test Failed      Stop Video Recording   alias=${TEST_NAME}
         Run Keyword And Ignore Error    Stop Video Recording   alias=${TEST_NAME}    save_to_disk=${False}
     END
+
+Enable Cloud User via API
+    [Arguments]    ${status}    ${accessRole}   ${server}
+    ${users} =   Get Cloud System Users    ${server}[cloud auth]    ${server}[cloud id]
+    FOR    ${user}    IN    @{users}
+        IF    '${user}[accessRole]' == '${accessRole}'
+            ${locals} =     Get Users    ${server}[local auth]    https://${QA BURBANK IP}:${server}[port]
+            FOR     ${local}    IN    @{locals}
+                IF    '${local}[email]' == '${user}[accountEmail]'
+                    Set Test Variable    ${name}   ${local}[email]
+                    ${response} =   Save User Existing Legacy
+                    ...    auth=${server 1}[local auth]
+                    ...    serverUrl=https://${QA BURBANK IP}:${server}[port]
+                    ...    name=${local}[name]
+                    ...    permissions=${local}[permissions]
+                    ...    email=${local}[email]
+                    ...    userRoleId=${local}[userRoleId]
+                    ...    userId=${local}[id]
+                    ...    isEnabled=${status}
+                END
+            END
+        END
+    END

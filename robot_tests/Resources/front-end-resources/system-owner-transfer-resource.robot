@@ -2,6 +2,7 @@
 Resource          ../../resource.robot
 Resource          system-user-resource.robot
 Resource          system-admin-resource.robot
+Resource    system-owner-transfer-resource.robot
 
 *** Keywords ***
 Owner Transfer Suite Setup
@@ -9,10 +10,14 @@ Owner Transfer Suite Setup
     ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
     ${owner} =    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
+    ${owner2} =    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    ${TEST FIRST NAME}    ${TEST LAST NAME}     ${owner}    ${BASE PASSWORD}    reg=api    from email=${False}
-    Go to    ${url}
+    Register And Activate Account    ${TEST FIRST NAME}    ${TEST LAST NAME}     ${owner2}   ${BASE PASSWORD}    reg=api    from email=${False}
+#    Go to    ${url}
     ${server 1} =    Create Base System    owntran0-${random}    owner=${owner}
     Set Suite Variable    ${server 1}    ${server 1}
+    ${server 2} =    Create Base System    owntran1-${random}    owner=${owner2}    add users=${False}
+    Set Suite Variable    ${server 2}    ${server 2}
 
     IF    '''${mode}'''=='''cloud'''
         system-user-resource.Cloud Suite Setup
@@ -34,11 +39,13 @@ Cloud Suite Setup
 
 Owner Transfer Teardown
     Delete Base System    ${server 1}
+    Delete Base System    ${server 2}
     Close All Browsers
 
 Validate Ownership Transfer Modal
     [Arguments]    ${server}
-    Wait Until Elements Are Visible    ${OWNERSHIP TRANSFER FORM}   ${OWNERSHIP TRANSFER INPUT}   ${OWNERSHIP TRANSFER DROPDOWN}    ${OWNERSHIP TRANSFER WARNING}    ${OWNERSHIP TRANSFER SEND REQUEST}    ${OWNERSHIP TRANSFER CANCEL}
+    Wait Until Elements Are Visible    ${OWNERSHIP TRANSFER FORM}   ${OWNERSHIP TRANSFER INPUT}   ${OWNERSHIP TRANSFER DROPDOWN}
+    ...     ${OWNERSHIP TRANSFER WARNING}    ${OWNERSHIP TRANSFER SEND REQUEST}    ${OWNERSHIP TRANSFER CANCEL}   ${OWNERSHIP TRANSFER CLOSE}
     Element Should Be Disabled    ${OWNERSHIP TRANSFER SEND REQUEST}
     Click Button    ${OWNERSHIP TRANSFER DROPDOWN}
     ${users} =   Get Cloud System Users    ${server}[cloud auth]    ${server}[cloud id]
@@ -85,8 +92,7 @@ Receive Ownership Transfer Request
     ...     ${OWNERSHIP TRANSFER ACCEPT}
     ...     ${OWNERSHIP TRANSFER REJECT}
     ${accessLevel} =    Get Text    ${ACCESS LEVEL}
-    ${accessLevel} =    Convert To Lower Case    ${accessLevel}
-    Should Be Equal     ${accessLevel}   ${new owner access level}
+    Should Be Equal     ${accessLevel}   ${ACCESS LEVELS}[${new owner access level}]
     [Teardown]   Set Suite Variable   ${cascade}    ${KEYWORD STATUS}
 
 Reject Ownership Transfer Request
@@ -98,10 +104,11 @@ Reject Ownership Transfer Request
     Wait Until Element Is Visible    ${CHANGE OWNERSHIP LINK}
     Click Link      ${CHANGE OWNERSHIP LINK}
     Validate Ownership Transfer Modal   ${server}
+    Check OT Email    ${server}[owner]        Ownership transfer for ${server}[name] - rejected
     [Teardown]   Set Suite Variable   ${cascade}    ${KEYWORD STATUS}
 
 Accept Ownership Transfer Request
-    [Arguments]     ${server}    ${new owner access level}
+    [Arguments]     ${server}    ${new owner access level}   ${checkEmail}=${True}
     Click Button    ${OWNERSHIP TRANSFER ACCEPT}
     Wait Until Element Is Visible    ${SYSTEM OWNER}//span[contains(text(), "${YOU TEXT}")]
     Sleep   5
@@ -109,6 +116,7 @@ Accept Ownership Transfer Request
     Log in to user and system    ${server}[owner]    ${server}[cloud id]
     Go To   ${url}/systems
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
+    Run Keyword If   ${checkEmail}   Check OT Email    ${server}[owner]        Ownership transfer for ${server}[name] - accepted
     Set To Dictionary    ${server 1}    owner   ${server}[cloud users][${new owner access level}]
     @{new cloud auth} =     Create List     ${server}[cloud users][${new owner access level}]    ${BASE PASSWORD}
     Set To Dictionary    ${server 1}    cloud auth   ${new cloud auth}
@@ -138,3 +146,34 @@ Cancel Ownership Transfer Request
     ...     ${OWNERSHIP TRANSFER ACCEPT}
     ...     ${OWNERSHIP TRANSFER REJECT}
     [Teardown]   Set Suite Variable   ${cascade}    ${KEYWORD STATUS}
+
+Enable User OT
+    Enable Cloud User via API   ${True}   liveViewer    ${server 1}
+
+Disable User OT
+    Enable Cloud User via API   ${False}   liveViewer    ${server 1}
+    
+Take Server Offline
+    Stop Docker Server    ${server 1}[name]
+
+Bring Server Online
+    Start Docker Server    ${server 1}[name]
+
+Check OT Email
+    [Arguments]    ${recipient}   ${subject}
+     Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+    ${email}    Wait For Email    recipient=${recipient}    timeout=120    status=UNSEEN
+    Check Email Subject
+    ...    ${email}
+    ...    ${subject}
+    ...    ${BASE EMAIL}
+    ...    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
+    Delete Email    ${email}
+    Close Mailbox

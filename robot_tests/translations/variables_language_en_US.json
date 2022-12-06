@@ -587,5 +587,6 @@
     "TRANSFERRING OWNERSHIP TO TEXT"       :    "Transferring ownership to",
     "WANTS TO TRANSFER TEXT"               :    "wants to transfer ownership of this system to you",
     "ACCEPT TEXT"                          :    "Accept",
-    "REJECT TEXT"                          :    "Reject"
+    "REJECT TEXT"                          :    "Reject",
+    "USER NOT FOUND TEXT"                  :    "User not found"
 }

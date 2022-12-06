@@ -5,7 +5,9 @@ import re
 
 # default english and default customization
 def get_variables(cust="default", env="cloud-test"):
-    if cust == "dw" or cust == "hanwha":
+    if cust == "dw":
+        env = f'https://digitalwatchdog.{env}.hdw.mx'
+    elif cust == "hanwha":
         env = f'https://{cust}.{env}.hdw.mx'
     elif cust == "localhost":
         env = 'https://localhost:9000'
