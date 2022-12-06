@@ -493,39 +493,39 @@
         {{cloudError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Thử lại</button>
+        <button class="btn btn-default" ng-click="skip()">Thiết lập Hệ thống cục bộ</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot setup System</h2>
-    <p class="master-description">Something went totally wrong. <br>
-        Error description: {{settings.localError}}
+    <h2>Không thể thiết lập Hệ thống</h2>
+    <p class="master-description">Đã xảy ra lỗi. <br>
+        Mô tả lỗi: {{settings.localError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
+        <button class="btn btn-default" ng-click="retry()">Thử lại</button>
     </p>
 </div>
 
 
 <div class="panel-footer lite-client-instruction" ng-if="settings.liteClient && stepIs('start')">
     <p>
-        It is possible to set it up from another computer by connecting<br>
-        to this device by one of the following ways:
+        Có thể thiết lập từ một máy tính khác bằng cách kết nối<br>
+        với thiết bị này bằng một trong các cách sau:
     </p>
     <div class="row">
         <div class="col-xs-6">
-            <div class="text-center"><b>Using web browser</b></div>
-            <div class="col-xs-4 text-right">Address</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
+            <div class="text-center"><b>Sử dụng trình duyệt web</b></div>
+            <div class="col-xs-4 text-right">Địa chỉ</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
-            <div class="text-center"><b>Using {{Config.productName}} application</b></div>
+            <div class="text-center"><b>Sử dụng ứng dụng {{Config.productName}}</b></div>
             <div class="col-xs-6 text-right">Host</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
-            <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
-            <div class="col-xs-6 text-right">Login</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
-            <div class="col-xs-6 text-right">Password</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
+            <div class="col-xs-6 text-right">Cổng</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
+            <div class="col-xs-6 text-right">Đăng nhập</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
+            <div class="col-xs-6 text-right">Mật khẩu</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
         </div>
     </div>
 </div>
@@ -535,17 +535,17 @@
             ng-if="activeStep.next"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
+ ng-click="next()">Tiếp theo <span class="glyphicon glyphicon-arrow-right"></span></button>
     <button class="btn btn-primary pull-right"
             ng-if="activeStep.finish"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="finish()">Finish
+ ng-click="finish()">Kết thúc
     </button>
     <button class="btn btn-default pull-left"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
-            ng-click="cancel()">Cancel</button>
+            ng-click="cancel()">Hủy bỏ</button>
     <button class="btn btn-default pull-left"
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"
