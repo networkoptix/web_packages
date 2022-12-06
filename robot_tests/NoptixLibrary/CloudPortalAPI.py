@@ -121,6 +121,7 @@ class CloudPortalAPI(object):
     @keyword
     def get_account_language(self, email, password):
         with self._session(email, password) as s:
+            s.headers.update({"Referer": self.env})
             r = s.get(f'{self.env}/api/utils/language')
             return r.json()['language']
 
@@ -133,6 +134,7 @@ class CloudPortalAPI(object):
     @keyword
     def get_account_systems(self, email, password):
         with self._session(email, password) as s:
+            s.headers.update({"Referer": self.env})
             data = s.get(f'{self.env}/api/systems/')
             return data.json()
 
