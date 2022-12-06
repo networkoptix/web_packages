@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { uniq } from 'lodash-es';
+import { omit, uniq } from 'lodash-es';
 import { BehaviorSubject, combineLatest, concat, defer, firstValueFrom, merge, Observable, Subject } from 'rxjs';
-import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
@@ -21,7 +21,7 @@ import { NxAccountService } from '@services/account.service';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { Layouts, Layout, WebPages } from '@services/system-api.types';
+import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { ICamera, TimeDetail } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
@@ -67,7 +67,12 @@ const editManifests: Partial<Record<ResourceType, ContextManifest>> = {
     [ResourceType.LAYOUT]: {
         ...pickFrom(staticLang.layouts.actions.edit, ['label']),
         fields: [
-            ...createManifests[ResourceType.LAYOUTS].fields
+            ...createManifests[ResourceType.LAYOUTS].fields,
+            {
+                ...staticLang.layouts.actions.edit.fields.locked,
+                type: ConfigType.BOOLEAN,
+                name: 'locked',
+            }
         ]
     }
 };
@@ -220,7 +225,7 @@ export class NxLayoutViewComponent {
                 }
             }
         }) => {
-            const layouts = mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts({ _keepDefault: true, parentId }).toPromise() : [];
+            const layouts = mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : [];
             if (!layouts.length || this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) {
                 layouts.push(this.createNewLayout(systemId, parentId, 'New Layout'));
             }
@@ -326,7 +331,7 @@ export class NxLayoutViewComponent {
         return { name, value: cleanId(id) };
     }
 
-    createNewLayout = (systemId: string, parentId: string, name: string): Layout => ({
+    createNewLayout = (systemId: string, parentId: string, name: string, items: LayoutItem[] = []): Layout => ({
         backgroundHeight: -1,
         backgroundImageFilename: '',
         backgroundOpacity: 0.699999988079071,
@@ -336,12 +341,12 @@ export class NxLayoutViewComponent {
         fixedHeight: 0,
         fixedWidth: 0,
         id: null,
-        items: [],
+        items,
         locked: false,
         logicalId: 0,
         name,
         systemId,
-        parentId
+        parentId: parentId || this.accountService.account.id
     });
 
     createFocusLayout = (systemId: string, id: string): Layout => ({
@@ -443,9 +448,18 @@ export class NxLayoutViewComponent {
             name
         }: Record<string, unknown>) => name
             ? firstValueFrom(
-                this.selectedSystem$.pipe(
+                combineLatest([this.selectedSystem$, this.selectedLayout$]).pipe(
+                    filter(vals => vals.every(val => !!val)),
+                    take(1),
                     // Find better abstraction if/when we allow adding other resource types
-                    switchMap(({ id, mediaserver }) => (mediaserver as NxSystemRestAPI).createLayout(this.createNewLayout(id, this.accountService.account.id, name as string))),
+                    switchMap(([{ id, mediaserver }, layout]) => (mediaserver as NxSystemRestAPI).createLayout(
+                        omit(this.createNewLayout(
+                            id,
+                            '',
+                            name as string,
+                            layout.items
+                        ), ['id', 'systemId'])
+                    )),
                     map(({ id }) => id),
                     switchMap(this.updateLayout),
                     catchError(err => Promise.reject({ errors: { unhandled: [err.error.errorString] } }))

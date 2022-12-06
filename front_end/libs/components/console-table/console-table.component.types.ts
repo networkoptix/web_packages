@@ -20,7 +20,8 @@ export enum ConfigType {
     ICON_LINK = 'icon_link',
     ICON_MODAL = 'icon_modal',
     ASYNC_HANDLER = 'async_handler',
-    DROPDOWN = 'dropdown'
+    DROPDOWN = 'dropdown',
+    BOOLEAN = 'boolean'
 }
 
 export interface ColumnConfig {

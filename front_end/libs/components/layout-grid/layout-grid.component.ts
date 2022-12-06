@@ -14,7 +14,9 @@ import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, s
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
+import { TranslatableStrict } from '@pipes/any-translate.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
@@ -273,7 +275,8 @@ export class NxLayoutGridComponent {
         configService: NxConfigService,
         private cd: ChangeDetectorRef,
         private router: Router,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.config;
     }
@@ -741,9 +744,17 @@ export class NxLayoutGridComponent {
         return dragId === targetId;
     };
 
-    removeItem = ({ id }: LayoutItem): void => {
-        this.layout.items = this.layout.items.filter(item => item.id !== id);
-        this.autoSave();
+    removeItem = async ({ id, resourceId }: LayoutItem): Promise<void> => {
+        const item = this.layoutItemLookup[resourceId];
+        let update = true;
+        if (item) {
+            update = await this.dialogsService.confirm({ ...this.LANG.layouts.removeItem, message: { value: this.LANG.layouts.removeItem.message, params: { name: item.name, layoutName: this.layout.name } } as TranslatableStrict });
+        }
+
+        if (update === true) {
+            this.layout.items = this.layout.items.filter(item => item.id !== id);
+            this.autoSave();
+        }
     };
 
     hasChild = (_: number, node: ResourceNode): boolean => [ResourceType.CAMERAS, ResourceType.WEB_PAGES, ResourceType.SERVERS, ResourceType.LAYOUTS].includes(node.type) ? !!node.children : !!node.children?.length;

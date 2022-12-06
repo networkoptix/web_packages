@@ -43,6 +43,26 @@
                 "camera": "Camera"
             }
         },
+        "helpMessages": {
+            "unsaved": {
+                "title": "Unsaved Layout",
+                "help": "Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view and to allow adding additional items."
+            },
+            "empty": {
+                "title": "Empty Layout",
+                "help": "Drag resources from the resource list to add them to the grid."
+            },
+            "focus": {
+                "title": "Focus Mode",
+                "help": "Currently showing resource focus mode. Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view and to allow adding additional items."
+            }
+        },
+        "removeItem": {
+            "title": "Remove item from layout",
+            "message": "Are you sure that you want to remove \"{name}\" from \"{layoutName}\" layout?",
+            "actionLabel": "Remove Item",
+            "cancelLabel": "Cancel"
+        },
         "ptzActionLabels": {
             "up": "UP",
             "down": "DOWN",
@@ -65,9 +85,13 @@
             "edit": {
                 "label": "Edit Layout",
                 "fields": {
-                    "name": {
-                        "label": "Name",
-                        "placeholder": "Choose name for layout"
+                    "locked": {
+                        "label": "Locked",
+                        "meta": {
+                            "options": {
+                                "labelText": "Disable moving layout items"
+                            }
+                        }
                     }
                 }
             },

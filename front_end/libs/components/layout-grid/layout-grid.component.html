@@ -4,6 +4,49 @@
     [ngClass]="{ 'open-menu': openMenu === resources }"
 >
     <div
+        *ngIf="
+            !layout || !layoutItemLookup
+                ? ''
+                : !layout.id
+                ? 'unsaved'
+                : !layout.items.length
+                ? 'empty'
+                : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
+                ? 'focus'
+                : layout.name as message
+        "
+        class="help-text"
+    >
+        <ng-template #showName>
+            <div class="name-message">
+                <h4>{{ message }}</h4>
+            </div>
+        </ng-template>
+        <div
+            *ngIf="LANG.layouts.helpMessages[message] as helpMessage; else showName"
+            class="help-message"
+        >
+            <h4 *ngIf="helpMessage.title as title">
+                <span>{{ title | translate }}</span>
+                <svg-icon
+                    *ngIf="helpMessage.help"
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20', 'margin.px': '4' }"
+                    [src]="icons.dirTextButtons + 'info.svg'"
+                ></svg-icon>
+            </h4>
+            <p *ngIf="helpMessage.help as help">{{ help | translate }}</p>
+            <button
+                *ngIf="layout.items.length"
+                (click)="addNewResource(RESOURCE_TYPE.LAYOUTS)"
+                class="btn btn-primary"
+                translate
+            >
+                Add Layout
+            </button>
+        </div>
+    </div>
+    <div
         class="tab"
         [ngClass]="{ 'active-menu': openMenu === resources }"
     >
@@ -16,213 +59,221 @@
         >
         </svg-icon>
     </div>
-    <cdk-tree
-        *ngIf="openMenu === resources"
-        cdkDropList
-        [cdkDropListDisabled]="layout.locked"
-        [dataSource]="dataSource"
-        [treeControl]="treeControl"
-    >
-        <ng-template
-            #nodeInfo
-            let-node="node"
-            let-expandable="expandable"
-            let-expanded="expanded"
+    <div class="resource-tree-wrapper">
+        <cdk-tree
+            *ngIf="openMenu === resources"
+            cdkDropList
+            [cdkDropListDisabled]="layout.locked"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
         >
-            <ng-template #recordingIcon>
+            <ng-template
+                #nodeInfo
+                let-node="node"
+                let-expandable="expandable"
+                let-expanded="expanded"
+            >
+                <ng-template #recordingIcon>
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '20',
+                            'height.px': '20',
+                            'margin-left.px': '-4',
+                            'margin-right.px': '8',
+                            opacity: ['recording', 'scheduled', 'archive'].includes(
+                                node.details.status
+                            )
+                                ? '1'
+                                : '0'
+                        }"
+                        [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
+                    >
+                    </svg-icon>
+                </ng-template>
+                <svg-icon
+                    *ngIf="node.type !== 'camera'; else recordingIcon"
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '24',
+                        'height.px': '24',
+                        'margin-right.px': expandable ? '8' : '0',
+                        fill: 'none !important',
+                        opacity: expandable ? '1' : '0',
+                        transform: expanded ? 'rotate(-90deg)' : 'rotate(0deg)'
+                    }"
+                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                >
+                </svg-icon>
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{
                         'width.px': '20',
                         'height.px': '20',
-                        'margin-left.px': '-4',
-                        'margin-right.px': '8',
-                        opacity: ['recording', 'scheduled', 'archive'].includes(node.details.status)
-                            ? '1'
-                            : '0'
+                        'margin-right.px': '8'
                     }"
-                    [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
+                    [src]="
+                        icons.dirLayouts +
+                        node.type +
+                        (node.details?.status
+                            ? '_' +
+                              (node.type !== 'camera'
+                                  ? node.details.status
+                                  : node.details.online
+                                  ? 'online'
+                                  : 'offline')
+                            : '') +
+                        '.svg'
+                    "
                 >
                 </svg-icon>
-            </ng-template>
-            <svg-icon
-                *ngIf="node.type !== 'camera'; else recordingIcon"
-                nx-add-svg-src
-                [svgStyle]="{
-                    'width.px': '24',
-                    'height.px': '24',
-                    'margin-right.px': expandable ? '8' : '0',
-                    fill: 'none !important',
-                    opacity: expandable ? '1' : '0',
-                    transform: expanded ? 'rotate(-90deg)' : 'rotate(0deg)'
-                }"
-                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-            >
-            </svg-icon>
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{
-                    'width.px': '20',
-                    'height.px': '20',
-                    'margin-right.px': '8'
-                }"
-                [src]="
-                    icons.dirLayouts +
-                    node.type +
-                    (node.details?.status
-                        ? '_' +
-                          (node.type !== 'camera'
-                              ? node.details.status
-                              : node.details.online
-                              ? 'online'
-                              : 'offline')
-                        : '') +
-                    '.svg'
-                "
-            >
-            </svg-icon>
-            <span>{{ node.name }}</span>
-            <ng-container *ngIf="hasActions[node.type] as nodeActions">
-                <button
-                    *ngFor="let action of nodeActions"
-                    (click)="action.handler(node.type, node.details); $event.stopPropagation()"
-                    class="action-button"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="{
-                            'width.px': '20',
-                            'height.px': '20'
-                        }"
-                        [src]="icons.dir + action.icon + '.svg'"
+                <span>{{ node.name }}</span>
+                <ng-container *ngIf="hasActions[node.type] as nodeActions">
+                    <button
+                        *ngFor="let action of nodeActions"
+                        (click)="action.handler(node.type, node.details); $event.stopPropagation()"
+                        class="action-button"
                     >
-                    </svg-icon>
-                </button>
-            </ng-container>
-        </ng-template>
-        <!-- This is the tree node template for leaf nodes -->
-        <cdk-nested-tree-node
-            *cdkTreeNodeDef="let node"
-            class="tree-node"
-        >
-            <ng-template #cameraTooltip>
-                <div class="camera-tooltip-wrapper">
-                    <nx-health-image
-                        [isPrimary]="true"
-                        aspect="override"
-                        [preloader]="true"
-                        [state]="node.details.status"
-                        [url]="node?.details?.previewUrl"
-                        class="generic"
-                    ></nx-health-image>
-                </div>
+                        <svg-icon
+                            nx-add-svg-src
+                            [svgStyle]="{
+                                'width.px': '20',
+                                'height.px': '20'
+                            }"
+                            [src]="icons.dir + action.icon + '.svg'"
+                        >
+                        </svg-icon>
+                    </button>
+                </ng-container>
             </ng-template>
-            <ng-template #serverTooltip>
-                <ng-template #tooltipLoading>
-                    <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+            <!-- This is the tree node template for leaf nodes -->
+            <cdk-nested-tree-node
+                *cdkTreeNodeDef="let node"
+                class="tree-node"
+            >
+                <ng-template #cameraTooltip>
+                    <div class="camera-tooltip-wrapper">
+                        <nx-health-image
+                            [isPrimary]="true"
+                            aspect="override"
+                            [preloader]="true"
+                            [state]="node.details.status"
+                            [url]="node?.details?.previewUrl"
+                            class="generic"
+                        ></nx-health-image>
+                    </div>
                 </ng-template>
-                <div class="server-tooltip-wrapper">
-                    <h4>
-                        {{ { value: LANG.layouts.statistics, params: node.details } | translate }}
-                    </h4>
-                    <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
-                        <div
-                            *ngIf="res.statistics as stats"
-                            class="stats-grid"
-                        >
-                            <div translate>Description</div>
-                            <div translate>Usage</div>
-                            <ng-container *ngFor="let type of stats">
-                                <div>
-                                    {{ type.description }}
-                                </div>
-                                <div>
-                                    {{ type.value }}
-                                </div>
-                            </ng-container>
-                        </div>
-                        <div
-                            *ngIf="res.error as error"
-                            class="error-label"
-                        >
-                            {{ error | translate }}
-                        </div>
-                    </ng-container>
-                </div>
-            </ng-template>
-            <div
-                cdkDrag
-                [cdkDragDisabled]="!node.details || layout.locked"
-                (click)="changeView(node)"
-                (cdkDragMoved)="moveAddedItem($event)"
-                (cdkDragReleased)="addItem(node)"
-                [nxTooltip]="
-                    node.type === RESOURCE_TYPE.CAMERA
-                        ? cameraTooltip
-                        : node.type === RESOURCE_TYPE.SERVER
-                        ? serverTooltip
-                        : ''
-                "
-                (mouseenter)="updateTooltipTarget(node.details.id)"
-                (mouseleave)="unsubTooltips()"
-                horizontal
-                alternateStyle
-                [class]="{
-                    selected:
-                        layout?.id &&
-                        cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
-                }"
-            >
-                <ng-container
-                    *ngTemplateOutlet="
-                        nodeInfo;
-                        context: {
-                            node: node,
-                            expandable: false,
-                            expanded: !treeControl.isExpanded(node)
-                        }
+                <ng-template #serverTooltip>
+                    <ng-template #tooltipLoading>
+                        <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+                    </ng-template>
+                    <div class="server-tooltip-wrapper">
+                        <h4>
+                            {{
+                                { value: LANG.layouts.statistics, params: node.details } | translate
+                            }}
+                        </h4>
+                        <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
+                            <div
+                                *ngIf="res.statistics as stats"
+                                class="stats-grid"
+                            >
+                                <div translate>Description</div>
+                                <div translate>Usage</div>
+                                <ng-container *ngFor="let type of stats">
+                                    <div>
+                                        {{ type.description }}
+                                    </div>
+                                    <div>
+                                        {{ type.value }}
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div
+                                *ngIf="res.error as error"
+                                class="error-label"
+                            >
+                                {{ error | translate }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-template>
+                <div
+                    cdkDrag
+                    [cdkDragDisabled]="
+                        !node.details || layout.locked || node.type === RESOURCE_TYPE.LAYOUT
                     "
-                ></ng-container>
-            </div>
-        </cdk-nested-tree-node>
-        <!-- This is the tree node template for expandable nodes -->
-        <cdk-nested-tree-node
-            *cdkTreeNodeDef="let node; when: hasChild"
-            class="tree-node"
-        >
-            <div
-                cdkTreeNodeToggle
-                cdkDrag
-                (click)="changeView(node)"
-                [cdkDragDisabled]="!node.details || layout.locked"
-                (cdkDragMoved)="moveAddedItem($event)"
-                (cdkDragReleased)="addItem(node)"
-            >
-                <ng-container
-                    *ngTemplateOutlet="
-                        nodeInfo;
-                        context: {
-                            node: node,
-                            expandable: true,
-                            expanded: !treeControl.isExpanded(node)
-                        }
+                    (click)="changeView(node)"
+                    (cdkDragMoved)="moveAddedItem($event)"
+                    (cdkDragReleased)="addItem(node)"
+                    [nxTooltip]="
+                        node.type === RESOURCE_TYPE.CAMERA
+                            ? cameraTooltip
+                            : node.type === RESOURCE_TYPE.SERVER
+                            ? serverTooltip
+                            : ''
                     "
-                ></ng-container>
-            </div>
-            <div
-                [class.tree-invisible]="!treeControl.isExpanded(node)"
-                class="expanded-tree"
-            >
-                <span
-                    *ngIf="!node.children.length"
-                    class="no-children"
-                    translate
-                    >No Items</span
+                    (mouseenter)="updateTooltipTarget(node.details.id)"
+                    (mouseleave)="unsubTooltips()"
+                    horizontal
+                    alternateStyle
+                    [class]="{
+                        selected:
+                            layout?.id &&
+                            cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
+                    }"
                 >
-                <ng-container cdkTreeNodeOutlet></ng-container>
-            </div>
-        </cdk-nested-tree-node>
-    </cdk-tree>
+                    <ng-container
+                        *ngTemplateOutlet="
+                            nodeInfo;
+                            context: {
+                                node: node,
+                                expandable: false,
+                                expanded: !treeControl.isExpanded(node)
+                            }
+                        "
+                    ></ng-container>
+                </div>
+            </cdk-nested-tree-node>
+            <!-- This is the tree node template for expandable nodes -->
+            <cdk-nested-tree-node
+                *cdkTreeNodeDef="let node; when: hasChild"
+                class="tree-node"
+            >
+                <div
+                    cdkTreeNodeToggle
+                    cdkDrag
+                    (click)="changeView(node)"
+                    [cdkDragDisabled]="!node.details || layout.locked"
+                    (cdkDragMoved)="moveAddedItem($event)"
+                    (cdkDragReleased)="addItem(node)"
+                >
+                    <ng-container
+                        *ngTemplateOutlet="
+                            nodeInfo;
+                            context: {
+                                node: node,
+                                expandable: true,
+                                expanded: !treeControl.isExpanded(node)
+                            }
+                        "
+                    ></ng-container>
+                </div>
+                <div
+                    [class.tree-invisible]="!treeControl.isExpanded(node)"
+                    class="expanded-tree"
+                >
+                    <span
+                        *ngIf="!node.children.length"
+                        class="no-children"
+                        translate
+                        >No Items</span
+                    >
+                    <ng-container cdkTreeNodeOutlet></ng-container>
+                </div>
+            </cdk-nested-tree-node>
+        </cdk-tree>
+    </div>
 </div>
 
 <div
@@ -243,179 +294,203 @@
             [style.transform-origin]="added.transformOrigin || 'top left'"
             class="layout-item-wrapper highlight-adding"
         ></div>
-
-        <ng-container *ngFor="let item of changingLayout ? [] : layout.items; trackBy: itemId">
+        <ng-container *ngIf="!changingLayout">
             <div
-                *ngIf="layoutItemLookup"
-                cdkDropList
-                [cdkDropListDisabled]="layout.locked"
-                [cdkDropListEnterPredicate]="preventDrop"
-                [cdkDropListData]="item"
-                [ngStyle]="item.renderConfig"
-                [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
-                [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
-                class="layout-item-wrapper"
-                (resize)="calculateItemSize($event, item, layoutItemLookup[item.resourceId])"
+                *ngIf="!layout.items?.length"
+                class="no-camera-placeholder"
             >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '64',
+                        'height.px': '64'
+                    }"
+                    [src]="icons.dirLayouts + 'snapshot.svg'"
+                ></svg-icon>
+                <h3 translate>No Cameras</h3>
+                <p translate>
+                    Drag and drop a camera or other items from the resource tree to add it to the
+                    layout
+                </p>
+            </div>
+            <ng-container *ngFor="let item of layout.items; trackBy: itemId">
                 <div
-                    cdkDrag
-                    [cdkDragDisabled]="layout.locked"
-                    [cdkDragData]="item"
-                    (cdkDragReleased)="moveItem(item)"
-                    (cdkDragMoved)="updateBackground($event, item, 'move')"
-                    class="layout-item"
-                    [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
+                    *ngIf="layoutItemLookup"
+                    cdkDropList
+                    [cdkDropListDisabled]="layout.locked"
+                    [cdkDropListEnterPredicate]="preventDrop"
+                    [cdkDropListData]="item"
+                    [ngStyle]="item.renderConfig"
+                    [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
+                    [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
+                    class="layout-item-wrapper"
+                    (resize)="calculateItemSize($event, item, layoutItemLookup[item.resourceId])"
                 >
-                    <header
-                        cdkDragHandle
-                        [cdkDragHandleDisabled]="layout.locked"
-                    >
-                        <span>{{
-                            layoutItemLookup[item.resourceId]?.name || 'Not Supported'
-                        }}</span>
-                        <div *ngIf="!layout.locked">
-                            <svg-icon
-                                nx-add-svg-src
-                                (click)="removeItem(item)"
-                                [src]="icons.dirTextButtons + 'close.svg'"
-                                [svgStyle]="{ 'width.px': '18', 'height.px': '18' }"
-                                class="close-svg"
-                                [applyClass]="true"
-                            ></svg-icon>
-                        </div>
-                    </header>
-                    <ng-template #notSupported>
-                        <div
-                            class="not-supported"
-                            translate
-                        >
-                            Not supported
-                        </div>
-                    </ng-template>
                     <div
-                        cdkDragHandle
-                        [cdkDragHandleDisabled]="layout.locked"
-                        class="drag-overlay"
-                    ></div>
-                    <ng-container
-                        *ngIf="layoutItemLookup[item.resourceId] as itemDetail; else notSupported"
+                        cdkDrag
+                        [cdkDragDisabled]="layout.locked"
+                        [cdkDragData]="item"
+                        (cdkDragReleased)="moveItem(item)"
+                        (cdkDragMoved)="updateBackground($event, item, 'move')"
+                        class="layout-item"
+                        [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
                     >
-                        <ng-template
-                            #showError
-                            let-status="status"
+                        <header
+                            cdkDragHandle
+                            [cdkDragHandleDisabled]="layout.locked"
                         >
+                            <span>{{
+                                layoutItemLookup[item.resourceId]?.name || 'Not Supported'
+                            }}</span>
+                            <div *ngIf="!layout.locked">
+                                <svg-icon
+                                    nx-add-svg-src
+                                    (click)="removeItem(item)"
+                                    [src]="icons.dirTextButtons + 'close.svg'"
+                                    [svgStyle]="{ 'width.px': '18', 'height.px': '18' }"
+                                    class="close-svg"
+                                    [applyClass]="true"
+                                ></svg-icon>
+                            </div>
+                        </header>
+                        <ng-template #notSupported>
                             <div
-                                *ngIf="
-                                    status ||
-                                    errors[itemDetail.details.id] ||
-                                    (itemDetail.details.status !== 'archive'
-                                        ? itemDetail.details.status
-                                        : 'offline') as status
-                                "
-                                class="item-error"
+                                class="not-supported"
+                                translate
                             >
-                                <div class="item-error">
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [svgStyle]="{
-                                            'max-width.px': '64',
-                                            'max-height.px': '64',
-                                            'margin.px': '16',
-                                            width: '100%',
-                                            height: '100%'
-                                        }"
-                                        [src]="
-                                            icons.dirLayouts +
-                                            itemDetail.type +
-                                            (status !== RESOURCE_TYPE.WEB_PAGE ? '_' : '') +
-                                            (['online', 'offline', 'unauthorized'].includes(status)
-                                                ? status
-                                                : status !== RESOURCE_TYPE.WEB_PAGE
-                                                ? 'offline'
-                                                : '') +
-                                            '.svg'
-                                        "
-                                    >
-                                    </svg-icon>
-                                    <h3>
-                                        {{
-                                            LANG.common.cameraStates[status] ||
-                                                LANG.layouts.errors[status] ||
-                                                status | translate
-                                        }}
-                                    </h3>
-                                </div>
-                                <h4
-                                    *ngIf="
-                                        additionalErrorMessages[
-                                            itemDetail.details.id
-                                        ] as additionalMessage
-                                    "
-                                >
-                                    {{ additionalMessage }}
-                                </h4>
+                                Not supported
                             </div>
                         </ng-template>
+                        <div
+                            cdkDragHandle
+                            [cdkDragHandleDisabled]="layout.locked"
+                            class="drag-overlay"
+                        ></div>
                         <ng-container
                             *ngIf="
-                                !errors[itemDetail.details.id] &&
-                                    (itemDetail.details.online ||
-                                        !itemDetail.details.status ||
-                                        itemDetail.details.status === 'online');
-                                else showError
+                                layoutItemLookup[item.resourceId] as itemDetail;
+                                else notSupported
                             "
-                            [ngSwitch]="itemDetail.type"
                         >
-                            <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
-                                <nx-video-player
-                                    cdkDragHandle
-                                    [cdkDragHandleDisabled]="layout.locked"
-                                    [camera]="itemDetail.details"
-                                    (showError)="
-                                        itemDetail.details.online = false;
-                                        errors[itemDetail.details.id] = $event
+                            <ng-template
+                                #showError
+                                let-status="status"
+                            >
+                                <div
+                                    *ngIf="
+                                        status ||
+                                        errors[itemDetail.details.id] ||
+                                        (itemDetail.details.status !== 'archive'
+                                            ? itemDetail.details.status
+                                            : 'offline') as status
                                     "
-                                    (showPtz)="showPtz.emit($event)"
+                                    class="item-error"
                                 >
-                                </nx-video-player>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
-                                <nx-monitoring-graph
-                                    [systemId]="layout.systemId"
-                                    [noFrame]="true"
-                                    [selectedServerId]="itemDetail.details.id"
-                                ></nx-monitoring-graph>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
-                                <nx-pre-loader></nx-pre-loader>
-                                <iframe
-                                    #webpage
-                                    (load)="checkIframeContent(itemDetail.details.id, webpage)"
-                                    [src]="itemDetail.details.url | safe: 'resourceUrl'"
-                                    frameBorder="0"
-                                ></iframe>
-                            </ng-container>
-                            <ng-container *ngSwitchCaseDefault>
-                                <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
+                                    <div class="item-error">
+                                        <svg-icon
+                                            nx-add-svg-src
+                                            [svgStyle]="{
+                                                'max-width.px': '64',
+                                                'max-height.px': '64',
+                                                'margin.px': '16',
+                                                width: '100%',
+                                                height: '100%'
+                                            }"
+                                            [src]="
+                                                icons.dirLayouts +
+                                                itemDetail.type +
+                                                (status !== RESOURCE_TYPE.WEB_PAGE ? '_' : '') +
+                                                (['online', 'offline', 'unauthorized'].includes(
+                                                    status
+                                                )
+                                                    ? status
+                                                    : status !== RESOURCE_TYPE.WEB_PAGE
+                                                    ? 'offline'
+                                                    : '') +
+                                                '.svg'
+                                            "
+                                        >
+                                        </svg-icon>
+                                        <h3>
+                                            {{
+                                                LANG.common.cameraStates[status] ||
+                                                    LANG.layouts.errors[status] ||
+                                                    status | translate
+                                            }}
+                                        </h3>
+                                    </div>
+                                    <h4
+                                        *ngIf="
+                                            additionalErrorMessages[
+                                                itemDetail.details.id
+                                            ] as additionalMessage
+                                        "
+                                    >
+                                        {{ additionalMessage }}
+                                    </h4>
+                                </div>
+                            </ng-template>
+                            <ng-container
+                                *ngIf="
+                                    !errors[itemDetail.details.id] &&
+                                        (itemDetail.details.online ||
+                                            !itemDetail.details.status ||
+                                            itemDetail.details.status === 'online');
+                                    else showError
+                                "
+                                [ngSwitch]="itemDetail.type"
+                            >
+                                <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
+                                    <nx-video-player
+                                        cdkDragHandle
+                                        [cdkDragHandleDisabled]="layout.locked"
+                                        [camera]="itemDetail.details"
+                                        (showError)="
+                                            itemDetail.details.online = false;
+                                            errors[itemDetail.details.id] = $event
+                                        "
+                                        (showPtz)="showPtz.emit($event)"
+                                    >
+                                    </nx-video-player>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
+                                    <nx-monitoring-graph
+                                        [systemId]="layout.systemId"
+                                        [noFrame]="true"
+                                        [selectedServerId]="itemDetail.details.id"
+                                    ></nx-monitoring-graph>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
+                                    <nx-pre-loader></nx-pre-loader>
+                                    <iframe
+                                        #webpage
+                                        (load)="checkIframeContent(itemDetail.details.id, webpage)"
+                                        [src]="itemDetail.details.url | safe: 'resourceUrl'"
+                                        frameBorder="0"
+                                    ></iframe>
+                                </ng-container>
+                                <ng-container *ngSwitchCaseDefault>
+                                    <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
-                    </ng-container>
-                    <div
-                        cdkDropList
-                        [cdkDropListDisabled]="layout.locked"
-                        [cdkDropListConnectedTo]="[]"
-                    >
                         <div
-                            cdkDrag
-                            [cdkDragDisabled]="layout.locked"
-                            [cdkDragData]="item"
-                            (cdkDragMoved)="updateBackground($event, item, 'resize')"
-                            (cdkDragReleased)="moveItem(item)"
-                            class="resize-handle"
-                        ></div>
+                            cdkDropList
+                            [cdkDropListDisabled]="layout.locked"
+                            [cdkDropListConnectedTo]="[]"
+                        >
+                            <div
+                                cdkDrag
+                                [cdkDragDisabled]="layout.locked"
+                                [cdkDragData]="item"
+                                (cdkDragMoved)="updateBackground($event, item, 'resize')"
+                                (cdkDragReleased)="moveItem(item)"
+                                class="resize-handle"
+                            ></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
         </ng-container>
     </div>
 </div>

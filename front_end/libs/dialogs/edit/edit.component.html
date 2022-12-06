@@ -36,6 +36,13 @@
                         [name]="structure.name"
                         [(ngModel)]="values[structure.name]"
                     ></nx-html>
+                    <nx-checkbox
+                        *ngSwitchCase="STRUCTURE_TYPE.BOOLEAN"
+                        [name]="structure.name"
+                        [labelText]="structure.meta?.options?.labelText"
+                        [(ngModel)]="values[structure.name]"
+                    >
+                    </nx-checkbox>
                     <input
                         *ngSwitchDefault
                         [type]="structure.type"
@@ -63,7 +70,7 @@
             </section>
         </ng-container>
         <div
-            *ngIf="errors.unhandled as errors"
+            *ngIf="errors?.unhandled as errors"
             class="d-flex flex-column"
         >
             <span
