@@ -1331,7 +1331,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                 form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
                 if form_export.is_valid():
                     menu_name = form_export.cleaned_data['menu'].name
-                    task = async_menu_export.apply_async(args=[menu_name])
+                    task = async_menu_export.apply_async(args=[menu_name], queue='broadcast-notifications')
                     file_name = f'menu-{menu_name}.json'
                     return render(request, 'cms/menu_porting.html',
                                   {'formExport': form_export,
@@ -1367,7 +1367,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     conflicts = structure.check_asset_conflicts(file.get('assets', []))
                     if not conflicts or force:
                         conflicts = []
-                        task = async_menu_import.apply_async(args=[cache_key, menu.name, request.user.email, accept_reviews])
+                        task = async_menu_import.apply_async(args=[cache_key, menu.name, request.user.email, accept_reviews], queue='broadcast-notifications')
                     else:
                         messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',
