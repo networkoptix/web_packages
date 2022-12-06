@@ -357,6 +357,7 @@ $border-color: var(--light6);
 
     .player-wrapper {
       display          : flex;
+      justify-content  : center;
       flex-grow        : 1;
       flex-shrink      : 0;
       background-color : $player-background;
