@@ -272,12 +272,17 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 this.headerService.setLocation(this.window.location.pathname);
-                if (this.newHeader && this.loginState) {
-                    const systemNode = this.menusService.makeSystemMenuNode();
-                    const accountNode = this.menusService.makeAccountSettingsNode();
-                    nodes.unshift(systemNode);
-                    nodes.push(accountNode);
+                if (this.newHeader) {
+                    if (this.loginState) {
+                        const systemNode = this.menusService.makeSystemMenuNode();
+                        const accountNode = this.menusService.makeAccountSettingsNode();
+                        nodes.unshift(systemNode);
+                        nodes.push(accountNode);
+                    } else {
+                        nodes.unshift(this.menusService.makeWelcomeNode());
+                    }
                 }
+
                 this.headerService.nodes = nodes;
 
                 this.headerService.setLocation(this.window.location.pathname);
@@ -374,7 +379,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.sessionService.loginStateSubject
             .pipe(untilDestroyed(this))
             .subscribe((loginState: string) => {
-                console.log('loginstate', loginState);
                 if (loginState) {
                     this.userEmail = loginState;
                     this.dropdownsVisible = true;
@@ -393,9 +397,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.loginState = false;
                     this.renderer.removeClass(this.document.body, 'authorized');
                     this.renderer.addClass(this.document.body, 'anonymous');
-                    if (this.newHeader) {
-                        this.headerService.nodes.unshift(this.menusService.makeWelcomeNode());
-                    }
                 }
                 setTimeout(() => this.renderer.removeClass(this.document.body, 'loading'));
             });
