@@ -957,3 +957,51 @@ export interface PtzMoveCommand extends BasePtzCommand<PtzCommands.RELATIVE_MOVE
 export interface PtzFocusCommand extends BasePtzCommand<PtzCommands.RELATIVE_FOCUS>, Focus {}
 
 export type PtzCommand = PtzMoveCommand | PtzFocusCommand;
+
+export interface Bookmark {
+    creationTimeMs: number;
+    creatorUserId: string;
+    description: string;
+    deviceId: string;
+    durationMs: number;
+    id: string;
+    name: string;
+    startTimeMs: number;
+    tags: string[];
+}
+
+export interface BookmarkTags { [tagName: string]: number }
+
+export interface Device {
+    capabilities?: string;
+    credentials?: { user: string; password: string };
+    deviceType: string;
+    id: string;
+    isLicenseUsed?: boolean;
+    isManuallyAdded?: boolean;
+    mac?: string;
+    model?: string;
+    motion?: { mask: string; type: string };
+    name: string;
+    options?: Record<string, string>;
+    parameters?: Record<string, unknown>;
+    physicalId: string;
+    schedule?: {
+        isEnabled?: boolean;
+        maxArchiveDays: number;
+        maxArchivePeriodS: number;
+        minArchiveDays: number;
+        minArchivePeriodS: number;
+        tasks?: {
+            dayOfWeek?: number;
+            endTime: number;
+            fps: number;
+            streamQuality: string;
+        }[];
+    };
+    serverId: string;
+    status?: string;
+    typeId: string;
+    url: string;
+    vendor: string;
+}

@@ -1,16 +1,9 @@
-export interface Bookmark {
-    id: string;
-    deviceId: string;
-    name: string;
-    description: string;
-    startTimeMs: string;
-    durationMs: number;
-    tags: string[];
-    creatorUserId: string;
-    creationTimeMs: string;
-    src?: string;
-    thumbnail?: string;
-    tagsFormatted?: { type: string, label: string }[];
+import type { Bookmark as BookmarkResp } from '@services/system-api.types';
+
+export interface Bookmark extends BookmarkResp {
+    src: string;
+    thumbnail: string;
+    tagsFormatted: { type: string, label: string }[];
     isVisible: boolean;
 }
 

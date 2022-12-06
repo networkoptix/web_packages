@@ -15,12 +15,6 @@
 		}
 	}
 
-	nx-date-and-time-filter {
-        display: flex;
-        flex-direction: column;
-        width: 16rem;
-	}
-
     .body {
         width: 100%;
     }
@@ -60,7 +54,7 @@
             font-size: 13px !important;
             font-weight: 400;
             margin-top: -35px;
-            
+
             &-dark {
                 margin-top: 10px;
             }
