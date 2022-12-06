@@ -29,7 +29,7 @@ COPY stage /app
 
 WORKDIR /app
 
-CMD ["hypercorn", "--bind", "0.0.0.0:8001", "--websocket-ping-interval 30", "server:app"]
+CMD ["hypercorn", "--bind", "0.0.0.0:8001", "--websocket-ping-interval", "30", "server:app"]
 
 
 ARG VERSION
