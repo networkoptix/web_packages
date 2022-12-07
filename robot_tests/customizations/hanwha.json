@@ -1,4 +1,6 @@
 {
+    "CUSTOMIZATION"            :    "hanwha",
+    "TEST EMAIL"               :    "noptixautoqa",
     "PRODUCT_NAME"             :    "WAVE Sync",
     "VMS_NAME"                 :    "Wisenet WAVE",
     "PRIVACY POLICY URL HREF"  :    "https://wavevms.com/privacy-policy/",

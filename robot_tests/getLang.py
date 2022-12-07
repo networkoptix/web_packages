@@ -3,9 +3,10 @@ import json
 import re
 from googletrans import Translator
 from deepdiff import DeepDiff
+from robot.libraries.BuiltIn import BuiltIn
 
 # default english and default customization
-def get_variables(cust="default", lang="en_US"):
+def get_variables(cust=BuiltIn().get_variable_value('${CUST}'), lang=BuiltIn().get_variable_value('${LANG}')):
     if lang != "en_US":
         # open the QA tran and replace with dev translations that match
         translation_variables = replaceMatches(lang)

@@ -1,10 +1,9 @@
 import codecs
 import json
-import re
-
+from robot.libraries.BuiltIn import BuiltIn
 
 # default english and default customization
-def get_variables(cust="default", env="cloud-test"):
+def get_variables(cust=BuiltIn().get_variable_value('${CUST}'), env=BuiltIn().get_variable_value('${ENVIRONMENT}')):
     if cust == "dw":
         env = f'https://digitalwatchdog.{env}.hdw.mx'
     elif cust == "hanwha":

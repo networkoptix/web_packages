@@ -1,6 +1,8 @@
 {
+    "CUSTOMIZATION"            :    "dw",
     "PRODUCT_NAME"             :    "DW Spectrum Web Portal",
     "VMS_NAME"                 :    "DW Spectrum",
+    "TEST EMAIL"               :    "noptixautoqa",
     "PRIVACY POLICY URL HREF"  :    "https://digital-watchdog.com/page/statement-of-privacy/",
     "PRIVACY POLICY URL FULL"  :    "https://digital-watchdog.com/page/statement-of-privacy/",
     "SUPPORT URL"              :    "https://digital-watchdog.com/contact-tech-support",

@@ -1,4 +1,5 @@
 *** Settings ***
+Resource     variables-init.robot
 Variables    getCust.py
 Variables    getLang.py
 Resource     variables/front-end-variables.robot
