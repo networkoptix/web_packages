@@ -1,18 +1,26 @@
 <div class="sidebar">
     <nx-date-and-time-filter
         [(dateRange)]="dateFilter"
-        [(timeRange)]="timeFilter"
+        (dateRangeChange)="updateParam('date')"
+        [timeRange]="timeFilter"
+        (timeRangeChange)="updateParam('time')"
     ></nx-date-and-time-filter>
     <nx-device-filter
         [items]="devices"
         [selection]="deviceFilter"
+        (selectionChange)="updateParam('devices')"
     ></nx-device-filter>
     <nx-tag-filter
         [tags]="tags"
         [selection]="tagFilter"
+        (selectionChange)="updateParam('tags')"
     ></nx-tag-filter>
 </div>
 <div class="body">
+    <nx-simple-search
+        [(ngModel)]="search"
+        (ngModelChange)="updateParam('search')"
+    ></nx-simple-search>
     <div
         class="no-bookmarks"
         *ngIf="bookmarks && !bookmarks.length"

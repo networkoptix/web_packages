@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-// import { PipesModule } from '@app/pipes/pipes.module';
-// import { ComponentsModule } from '@components/components.module';
-// import { SearchModule } from '@components/search/search.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
@@ -30,6 +28,7 @@ const appRoutes: Routes = [
     imports: [
         AngularSvgIconModule.forRoot(),
         CommonModule,
+        FormsModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
         DirectivesModule,
@@ -37,6 +36,7 @@ const appRoutes: Routes = [
         NxDeviceFilterModule,
         NxTagFilterModule,
         NxBookmarksCardModule,
+        NxSimpleSearchModule,
     ],
     providers: [],
     declarations: [

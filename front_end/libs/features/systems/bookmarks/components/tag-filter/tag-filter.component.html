@@ -3,7 +3,7 @@
     <button
         *ngIf="selection.hasValue()"
         class="clear"
-        (click)="selection.clear()"
+        (click)="selection.clear(); selectionChange.emit()"
     >
         <svg-icon
             nx-add-svg-src
@@ -18,7 +18,7 @@
             class="tag"
             *ngFor="let tag of tags"
             [ngClass]="{ selected: selection.isSelected(tag) }"
-            (click)="selection.toggle(tag)"
+            (click)="selection.toggle(tag); selectionChange.emit()"
         >
             {{ tag }}
         </button>

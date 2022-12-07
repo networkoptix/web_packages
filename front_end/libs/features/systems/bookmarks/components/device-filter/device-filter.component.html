@@ -3,7 +3,7 @@
     <button
         *ngIf="selection.hasValue()"
         class="clear"
-        (click)="selection.clear()"
+        (click)="selection.clear(); selectionChange.emit()"
     >
         <svg-icon
             nx-add-svg-src
@@ -21,7 +21,7 @@
         >
             <nx-checkbox
                 [ngModel]="selection.isSelected(device)"
-                (ngModelChange)="selectionChange(device, $event)"
+                (ngModelChange)="updateSelection(device, $event)"
             ></nx-checkbox>
             {{ device }}
         </label>

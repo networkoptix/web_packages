@@ -1,4 +1,5 @@
 import type { SelectionModel } from '@angular/cdk/collections';
+import { EventEmitter } from '@angular/core';
 
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { NxSystem } from '@services/system.service/system';
@@ -11,10 +12,18 @@ export interface DialogType<D = unknown, R = unknown> {
 export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
 
 export type MoreDevices = DialogType<
-    { devices: string[]; selection: SelectionModel<string> },
+    {
+        devices: string[];
+        selection: SelectionModel<string>;
+        emitter: EventEmitter<void>;
+    },
     void
 >;
 export type MoreTags = DialogType<
-    { tags: string[]; selection: SelectionModel<string> },
+    {
+        tags: string[];
+        selection: SelectionModel<string>;
+        emitter: EventEmitter<void>;
+    },
     void
 >;

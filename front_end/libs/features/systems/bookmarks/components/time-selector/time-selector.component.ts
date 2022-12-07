@@ -22,14 +22,49 @@ const hour24Regex = new RegExp(
     `^\\s*(${zeroToTwentyfour}):${zerozeroToFiftynine}\\s*$`
 );
 
+const MIN_MS = 1000 * 60;
+const HR_MS = MIN_MS * 60;
+
+function msToHour24(ms: number): string {
+    const hours = Math.floor(ms / HR_MS);
+    const minutes = ((ms - hours * HR_MS) / MIN_MS)
+        .toString()
+        .padStart(2, '0');
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
+
+function msToHour12(ms: number): [time: string, PM: boolean] {
+    const hours = Math.floor(ms / HR_MS);
+    const minutes = ((ms - hours * HR_MS) / MIN_MS)
+        .toString()
+        .padStart(2, '0');
+    if (hours === 0) {
+        return [`12:${minutes}`, false]; // 00:00 => 12 AM
+    } else if (hours > 0 && hours < 12) {
+        return [`${hours}:${minutes}`, false];
+    } else if (hours === 12) {
+        return [`${hours}:${minutes}`, true]; // 12:00 = 12 PM
+    } else if (hours > 12) {
+        return [`${hours - 12}:${minutes}`, true];
+    }
+}
+
+function timeStrToMs(time: string, PM = false): number {
+    let [hours, minutes] = time.split(':').map(Number);
+    if (PM) {
+        hours += 12;
+    }
+    return HR_MS * hours + MIN_MS * minutes;
+}
+
 @Component({
     selector: 'nx-time-selector',
     templateUrl: 'time-selector.component.html',
     styleUrls: ['time-selector.component.scss'],
 })
 export class NxTimeSelectorComponent implements OnInit {
-    @Input() time: string;
-    @Output() timeChange = new EventEmitter<string>();
+    @Input() time: number | null;
+    @Output() timeChange = new EventEmitter<number | null>();
 
     icons = icons;
     AM = staticLang.view.timeline.timeNames.AM;
@@ -50,33 +85,27 @@ export class NxTimeSelectorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.value = this.time;
+        // Time is sent up as ms for easier calculations
+        if (this.time) {
+            if (this.hour12) {
+                const [time, PM] = msToHour12(this.time);
+                this.value = time;
+                this.period = PM ? this.PM : this.AM;
+            } else {
+                this.value = msToHour24(this.time);
+            }
+        }
     }
 
     emitValue(value: string = this.value): void {
         const trimmed = value.trim();
         const validValue = this.timeRegex.test(trimmed);
         if (validValue) {
-            if (this.hour12) {
-                const [hours, minutes] = trimmed.split(':');
-                if (this.period === this.AM) {
-                    if (hours === '12') {
-                        this.timeChange.emit(`00:${minutes}`); // 12 AM => 00:00
-                    } else {
-                        this.timeChange.emit(trimmed);
-                    }
-                } else {
-                    if (hours === '12') {
-                        this.timeChange.emit(trimmed); // 12 PM = 12:00
-                    } else {
-                        this.timeChange.emit(`${Number(hours) + 12}:${minutes}`);
-                    }
-                }
-            } else {
-                this.timeChange.emit(trimmed);
-            }
+            this.timeChange.emit(
+                timeStrToMs(trimmed, this.hour12 && this.period === this.PM)
+            );
         } else {
-            this.timeChange.emit('');
+            this.timeChange.emit(null);
         }
     }
 }

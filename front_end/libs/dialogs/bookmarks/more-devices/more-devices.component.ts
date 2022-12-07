@@ -24,5 +24,6 @@ export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT>
         } else {
             this.dialogData.selection.deselect(device);
         }
+        this.dialogData.emitter.emit();
     }
 }

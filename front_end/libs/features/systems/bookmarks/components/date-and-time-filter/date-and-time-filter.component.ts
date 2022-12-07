@@ -66,11 +66,13 @@ export class NxDateAndTimeFilterComponent {
         this.dateRangeChange.emit(null);
     }
 
-    setStartTime(time: string): void {
+    setStartTime(time: number | null): void {
         this.timeRange.start = time;
+        this.timeRangeChange.emit(this.timeRange);
     }
 
-    setEndTime(time: string): void {
+    setEndTime(time: number | null): void {
         this.timeRange.end = time;
+        this.timeRangeChange.emit(this.timeRange);
     }
 }

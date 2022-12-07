@@ -8,6 +8,6 @@ export interface Bookmark extends BookmarkResp {
 }
 
 export interface TimeRange {
-    start: string;
-    end: string;
+    start: number | null;
+    end: number | null;
 }

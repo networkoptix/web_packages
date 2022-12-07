@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@src/app/variables/static-variables';
@@ -12,14 +12,17 @@ import { icons } from '@src/app/variables/static-variables';
 export class NxTagFilterComponent {
     @Input() tags: string[];
     @Input() selection: SelectionModel<string>;
+    @Output() selectionChange = new EventEmitter<void>();
 
     icons = icons;
-
-    selectionModel = new SelectionModel<string>(true, []);
 
     constructor(private dialogs: NxDialogsService) {}
 
     moreTagsDialog(): void {
-        this.dialogs.moreTags({ tags: this.tags, selection: this.selection });
+        this.dialogs.moreTags({
+            tags: this.tags,
+            selection: this.selection,
+            emitter: this.selectionChange,
+        });
     }
 }
