@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
@@ -18,6 +19,7 @@ export class NxUrlProtocolService {
     LANG = staticLang;
 
     constructor(
+        private translateService: TranslateService,
         @Inject(WINDOW) private window: Window,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService
@@ -73,7 +75,7 @@ export class NxUrlProtocolService {
         settings = { ...settings, ...linkSettings };
 
         const protocol = settings.native && this.LANG.clientProtocol
-            ? this.LANG.clientProtocol
+            ? this.translateService.instant(this.LANG.clientProtocol)
             : this.window.location.protocol;
         const host = this.window.location.host;
 
