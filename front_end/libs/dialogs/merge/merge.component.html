@@ -399,7 +399,7 @@
                 </p>
             </div>
             <div
-                *ngIf="!system.mediaserver.isSessionOauth"
+                *ngIf="!environment.isLocal && !system.mediaserver.isSessionOauth"
                 class="form-group"
                 [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }"
             >
