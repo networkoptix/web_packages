@@ -319,6 +319,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         if (!this.selectionMode && e.currentTarget !== this.document) {
             this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
             // short click
+            this.selection.reset();
             const offsetX = calcOffsetX(e);
             this.play(offsetX);
             return;
