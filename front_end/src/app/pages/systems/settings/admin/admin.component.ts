@@ -91,8 +91,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         return this.ownershipTransferEnabled &&
             this.system.userManager.isMine &&
             this.system.useRest &&
-            !this.transferInfo &&
-            !!this.system.userManager.nonOwners({ cloud: true }).length;
+            !this.transferInfo;
     }
 
     /** System ownership is offered to the current user */
