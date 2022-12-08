@@ -121,8 +121,5 @@
 
 ::ng-deep .hint-popover {
     pointer-events: none;
-  
-    nx-popover {
-      transform: translateY(-8px);
-    }
+    transform: none !important;
 }
