@@ -5,6 +5,8 @@ import { WINDOW } from '@services/window-provider';
 
 import { WizardStateService } from './services/wizard-state.service';
 
+require('what-input');
+
 @Component({
     selector: 'nx-setupwizard-app-root',
     templateUrl: './app.component.html',

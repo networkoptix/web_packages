@@ -18,7 +18,7 @@ export class NxThemeService {
     themeSelected: string;
     userTheme: string;
 
-    availThemes = {
+    public availThemes = {
         light: 'light',
         dark: 'dark',
     };
@@ -46,7 +46,7 @@ export class NxThemeService {
 
     async initTheme(): Promise<void> {
         if (this.CONFIG.themeConfig) {
-            // set availThemes
+            // set availThemes //
             this.availThemes = {
                 light: this.CONFIG.themeConfig.light,
                 dark: this.CONFIG.themeConfig.dark,
@@ -80,8 +80,8 @@ export class NxThemeService {
             await this.cloudApi.getCustomAccountProperty('theme', loginState)
                 .toPromise()
                 .then(result => {
-                    this.userTheme = result.name;
-                    this.themeSelected = result.theme;
+                    this.userTheme = this.getThemeRealName(result.theme);
+                    this.themeSelected = this.getThemeRealName(result.theme);
                 }, err => {
                     console.error('Feature not available', err);
                 });
@@ -94,6 +94,12 @@ export class NxThemeService {
 
     getTheme(): string {
         return this.themeSelected;
+    }
+
+    getThemeRealName(name: string): string {
+        // theme name should have pattern "dark-*" etc
+        const targetTheme = name.split('-')[0];
+        return this.availThemes[targetTheme];
     }
 
     async setTheme(themeSelected: string, username: string): Promise<void> {
@@ -118,7 +124,10 @@ export class NxThemeService {
             );
             this.cookieService.set('theme', theme);
         } else {
-            if (docTheme === this.userTheme) {
+            if (
+                docTheme === this.userTheme &&
+                docTheme === themeSelected
+            ) {
                 return; // avoid reloading if same theme is set
             }
             this.localStorageService.store('theme', themeSelected);
@@ -131,17 +140,17 @@ export class NxThemeService {
         }
 
         username &&
-            username !== 'setup' &&
-            this.userTheme !== themeSelected &&
-            await this.cloudApi.saveCustomAccountProperty(
-                { theme: themeSelected },
-                'theme',
-                username
-            ).toPromise()
-                .then(result => {
-                    this.themeSelected = result.theme;
-                }, err => {
-                    console.warn('Cannot save theme: ', err);
-                });
+        username !== 'setup' &&
+        this.userTheme !== themeSelected &&
+        await this.cloudApi.saveCustomAccountProperty(
+            { theme: themeSelected },
+            'theme',
+            username
+        ).toPromise()
+            .then(result => {
+                this.themeSelected = this.getThemeRealName(result.theme);
+            }, err => {
+                console.warn('Cannot save theme: ', err);
+            });
     }
 }

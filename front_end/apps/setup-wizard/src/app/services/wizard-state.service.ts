@@ -512,16 +512,25 @@ export class WizardStateService {
     private getServerInfoWithFlags(): Promise<ModuleInformationReply> {
         return this.server.getServerInfo('this').toPromise()
             .then(data => {
-                const ips = data?.remoteAddresses.filter(address => address !== '127.0.0.1');
+                let wrongNetwork: boolean = false;
+                let noNetwork: boolean = false;
+                // systems set with HIGH security doesn't expose remote addresses
+                if (data?.remoteAddresses) {
+                    const ips = data.remoteAddresses.filter(address => address !== '127.0.0.1');
+                    wrongNetwork = ips.every(address => address.includes('169.254'));
+                    noNetwork = !ips.length;
+                }
+
                 data.flags = {
                     noHDD: data?.ecDbReadOnly,
-                    noNetwork: !ips.length,
-                    wrongNetwork: !ips.some(address => !address.includes('169.254')),
+                    noNetwork,
+                    wrongNetwork,
                     hasInternet: data.serverFlags.includes(this.flags.publicIpFlag),
                     cleanSystem: data.serverFlags.includes(this.flags.newServerFlag),
                     canSetupNetwork: data.serverFlags.includes(this.flags.ifListFlag),
                     canSetupTime: data.serverFlags.includes(this.flags.timeCtrlFlag)
                 };
+
                 data.flags.brokenSystem = data.flags.noHDD || data.flags.noNetwork || (data.flags.wrongNetwork && !data.flags.canSetupNetwork);
                 data.flags.newSystem = data.flags.cleanSystem && !data.flags.brokenSystem;
                 return data;
@@ -651,9 +660,8 @@ export class WizardStateService {
         if (!this.hasNativeClient) {
             return;
         }
-        const refreshToken = nativeClient.refreshToken();
         // Use the refresh token to set an access token.
-        const accessToken = refreshToken; // Change later to the actual accessToken
+        const accessToken = nativeClient.refreshToken(); // Change later to the actual accessToken
         // Then use the access token to get the users email.
         const email = '';
         this.connect(this.setupConfig.systemName, email, accessToken)
