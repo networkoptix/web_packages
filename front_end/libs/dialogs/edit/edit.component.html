@@ -43,15 +43,17 @@
                         [(ngModel)]="values[structure.name]"
                     >
                     </nx-checkbox>
-                    <input
-                        *ngSwitchDefault
-                        [type]="structure.type"
-                        [name]="structure.name"
-                        (input)="clearError(structure.name)"
-                        [placeholder]="structure?.placeholder || ''"
-                        [(ngModel)]="values[structure.name]"
-                        class="form-control"
-                    />
+                    <ng-container *ngSwitchDefault>
+                        <input
+                            *ngIf="structure.type"
+                            [type]="structure.type"
+                            [name]="structure.name"
+                            (input)="clearError(structure.name)"
+                            [placeholder]="structure?.placeholder || ''"
+                            [(ngModel)]="values[structure.name]"
+                            class="form-control"
+                        />
+                    </ng-container>
                 </ng-container>
                 <div
                     *ngIf="structure.description"

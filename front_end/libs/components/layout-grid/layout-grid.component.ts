@@ -8,12 +8,13 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SvgIconComponent } from 'angular-svg-icon';
-import { cloneDeep, isEqual } from 'lodash-es';
-import { BehaviorSubject, combineLatest, interval, Observable, Subject, timer } from 'rxjs';
+import { cloneDeep, isEqual, omit } from 'lodash-es';
+import { BehaviorSubject, combineLatest, interval, Observable, Subject, timer, firstValueFrom } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime, takeUntil, startWith } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { TranslatableStrict } from '@pipes/any-translate.types';
@@ -23,7 +24,7 @@ import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
-import { cleanId } from '@utils/general';
+import { cleanId, pickFrom } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { BaseResourceNode, LayoutRenderConfig, LayoutResourceTree, NewPosition, ParsedLayout, ParsedLayoutItem, ParsedLayoutItems, Point, Position, ResourceNode, Setting, Size } from './layout-grid.types';
@@ -96,6 +97,7 @@ export class NxLayoutGridComponent {
     openMenu: false | HTMLElement | SvgIconComponent = false;
     previousOpenMenu: HTMLElement | SvgIconComponent = null;
     unsaved: Layout | false = false;
+    dragging = false;
     addingItem = false;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
@@ -161,6 +163,15 @@ export class NxLayoutGridComponent {
             bufferSize: 1,
             refCount: true
         })
+    );
+
+    previewSize$ = this.aspectHandler$.pipe(
+        map(({ cellSize: { width, height } }) => ({ 'width.px': width, 'height.px': height })),
+        shareReplay({
+            bufferSize: 1,
+            refCount: false
+        }),
+        untilDestroyed(this)
     );
 
     #draggingPosition$ = new BehaviorSubject(this.INITIAL_DRAG_STATE as { move?: { x: number, y: number }, id: string, resize?: { x: number, y: number }, transformOrigin?: string });
@@ -284,11 +295,11 @@ export class NxLayoutGridComponent {
     async ngOnChanges({ layout, layoutItemLookup }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
             // this.openMenu = false;
+            if (this.unsaved) {
+                await this.saveLayout(layout.currentValue.id);
+            }
             this.#initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
-            if (this.unsaved) {
-                await this.saveLayout();
-            }
         }
 
         if (layoutItemLookup?.currentValue && !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)) {
@@ -504,8 +515,12 @@ export class NxLayoutGridComponent {
         this.#draggingPosition$.next({ [action]: distance, id });
     };
 
-    moveAddedItem = ({ pointerPosition: move }: { pointerPosition: Point }): void => {
+    moveAddedItem = ({ pointerPosition: move }: { pointerPosition: Point }, itemParent?: HTMLElement): void => {
         this.addingItem = true;
+        if (itemParent) {
+            move.x -= itemParent.offsetLeft + itemParent.offsetWidth;
+            move.y += itemParent.offsetHeight;
+        }
         this.#draggingPosition$.next({ move, id: 'added' });
     };
 
@@ -527,11 +542,12 @@ export class NxLayoutGridComponent {
         this.editResource.emit({ resourceType, details });
     };
 
-    hasActions: Partial<Record<ResourceType, { action: string, icon: string, handler: unknown }[]>> = {
+    hasActions: Partial<Record<ResourceType, { action: string, icon: string, handler: unknown, tooltip?: string }[]>> = {
         [ResourceType.LAYOUTS]: [
             {
                 action: 'create',
                 icon: 'plus',
+                tooltip: this.LANG.layouts.createNew,
                 handler: this.addNewResource
             }
         ],
@@ -539,11 +555,13 @@ export class NxLayoutGridComponent {
             {
                 action: 'edit',
                 icon: 'edit',
+                tooltip: this.LANG.layouts.edit,
                 handler: this.editExistingResource
             },
             {
                 action: 'delete',
                 icon: 'delete',
+                tooltip: this.LANG.layouts.delete,
                 handler: this.removeExistingResource
             }
         ]
@@ -585,25 +603,52 @@ export class NxLayoutGridComponent {
         if (settingName) {
             this.layout[settingName] = value;
         }
+
         this.updateLayout();
         this.unsaved = cloneDeep(this.layout);
-        this.#countdownTimer$.next(this.SAVE_DELAY);
+
+        if (this.layout.id) {
+            this.#countdownTimer$.next(this.SAVE_DELAY);
+        }
     }
 
-    saveLayout = async (): Promise<void> => {
+    saveLayout = async (nextLayoutId?: string): Promise<void> => {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
         const { systemId: _, ..._layout } = this.unsaved || this.layout;
         this.unsaved = false;
-        if (_layout.id === 'new') {
-            const { id: __, ...layout } = _layout;
-            if (!layout.items.length && layout.name === 'Create New Layout') {
-                return;
-            }
-            _layout.id = (await mediaserver.createLayout(layout).toPromise()).id;
-        } else {
+        if (!_layout.id) {
+            const layoutToSave = omit(_layout, ['name', 'id']);
+            await this.dialogsService.edit({
+                heading: staticLang.layouts.actions.unsaved.label,
+                contextManifest: {
+                    ...pickFrom(staticLang.layouts.actions.unsaved, ['label']),
+                    fields: [
+                        {
+                            ...staticLang.layouts.actions.unsaved.fields.info,
+                            type: null,
+                            name: 'info'
+                        },
+                        {
+                            ...staticLang.layouts.actions.unsaved.fields.name,
+                            type: ConfigType.TEXT,
+                            name: 'name',
+                            meta: {
+                                options: {
+                                    required: true
+                                }
+                            }
+                        }
+                    ]
+                },
+                handlerProcess: ({ name }) => firstValueFrom(mediaserver.createLayout({ ...layoutToSave, name }).pipe(tap(_ => {
+                    this.unsaved = false;
+                    this.layoutChanged.emit(nextLayoutId || this.layout.id);
+                })))
+            }, layoutToSave);
+        } else if (_layout.id) {
             await mediaserver.putLayout(_layout.id, _layout).toPromise();
         }
-        if (_layout.id === this.layout.id) {
+        if (_layout.id && _layout.id === this.layout.id) {
             this.layoutChanged.emit(_layout.id);
             this.showPtz.emit();
         }
@@ -694,6 +739,10 @@ export class NxLayoutGridComponent {
             }
 
             this.layout.items.push(this.generateLayoutItem(node, { x, y }));
+            if (this.layoutItemLookup[`{${this.layout.id}}`]) {
+                this.layout.id = '';
+                this.showPtz.emit();
+            }
 
             this.autoSave();
         });

@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { omit, uniq } from 'lodash-es';
 import { BehaviorSubject, combineLatest, concat, defer, firstValueFrom, merge, Observable, Subject } from 'rxjs';
-import { catchError, filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
@@ -89,7 +89,7 @@ export class NxLayoutViewComponent {
     CONFIG: IConfig;
     ptzControlTarget: ICamera;
 
-    refreshLayouts$ = new BehaviorSubject('trigger update');
+    refreshLayouts$ = new BehaviorSubject('');
 
     selectedSystem$ = this.activatedRoute.params.pipe(
         switchMap(async ({ systemId }) => {
@@ -112,6 +112,7 @@ export class NxLayoutViewComponent {
             bufferSize: 1,
             refCount: false
         }),
+        distinctUntilChanged((prev, cur) => prev.id === cur.id),
         untilDestroyed(this)
     );
 
@@ -207,6 +208,7 @@ export class NxLayoutViewComponent {
                 ...parsedResources
             };
         }),
+        filter(lookup => !!lookup),
         shareReplay({
             bufferSize: 1,
             refCount: false
@@ -216,7 +218,7 @@ export class NxLayoutViewComponent {
 
     availableLayouts$: Observable<Layouts> = this.refreshLayouts$.pipe(
         switchMap(_ => this.selectedSystem$),
-        switchMap(async ({
+        switchMap(({
             mediaserver,
             id: systemId,
             userManager: {
@@ -224,14 +226,7 @@ export class NxLayoutViewComponent {
                     id: parentId
                 }
             }
-        }) => {
-            const layouts = mediaserver instanceof NxSystemRestAPI ? await mediaserver.getLayouts().toPromise() : [];
-            if (!layouts.length || this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) {
-                layouts.push(this.createNewLayout(systemId, parentId, 'New Layout'));
-            }
-
-            return layouts;
-        }),
+        }) => (mediaserver as NxSystemRestAPI).getLayouts()),
         shareReplay({
             bufferSize: 1,
             refCount: false
@@ -250,21 +245,14 @@ export class NxLayoutViewComponent {
         this.availableLayouts$
     ]).pipe(
         map(([system, { layoutId }, layouts]): Layout => {
+            layoutId = layoutId.replace('new', '');
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
                 if (existingLayout) {
                     return { systemId: system.id, ...existingLayout };
                 }
             }
-            return layoutId && this.createFocusLayout(system.id, layoutId);
-        }),
-        switchMap(layout => layout ? Promise.resolve([layout]) : this.availableLayouts$),
-        map(layouts => layouts.pop()),
-        tap(({ id }) => {
-            const selectedLayoutId = cleanId(id);
-            if (selectedLayoutId && selectedLayoutId !== this.activatedRoute.snapshot.params.layoutId) {
-                this.changeLayout(selectedLayoutId);
-            }
+            return layoutId ? this.createFocusLayout(system.id, layoutId) : this.createNewLayout(system.id);
         }),
         shareReplay({
             bufferSize: 1,
@@ -279,6 +267,10 @@ export class NxLayoutViewComponent {
     ).pipe(
         map(current => current === 'fetching' ? null : current),
         filter(layout => !!layout),
+        shareReplay({
+            bufferSize: 1,
+            refCount: false
+        }),
         untilDestroyed(this)
     );
     selectedLayoutDropdown$ = this.#selectedLayout$.pipe(
@@ -318,20 +310,26 @@ export class NxLayoutViewComponent {
         this.CONFIG = configService.config;
     }
 
+    ngOnInit(): void {
+        this.dialogsService.cloudLayoutsInfo();
+    }
+
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;
         const queryParams = this.activatedRoute.snapshot.queryParams;
         this.router.navigate([`${this.router.url.split('layouts')[0]}layouts/${layoutId}`], { queryParams });
-        this.#fetchingLayout$.next('fetching');
-        WebRTCStreamManager.updatePosition();
-        this.ptzControlTarget = null;
+        if (layoutId) {
+            this.#fetchingLayout$.next('fetching');
+            WebRTCStreamManager.updatePosition();
+            this.ptzControlTarget = null;
+        }
     }
 
     layoutToDropdown({ name, id }: Resource): DropdownItem<string> {
         return { name, value: cleanId(id) };
     }
 
-    createNewLayout = (systemId: string, parentId: string, name: string, items: LayoutItem[] = []): Layout => ({
+    createNewLayout = (systemId: string, parentId = '', name = this.LANG.layouts.helpMessages.unsaved.title, items: LayoutItem[] = []): Layout => ({
         backgroundHeight: -1,
         backgroundImageFilename: '',
         backgroundOpacity: 0.699999988079071,
@@ -392,7 +390,7 @@ export class NxLayoutViewComponent {
             zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
             zoomTop: 0
         }],
-        locked: true,
+        locked: false,
         logicalId: 0,
         name: 'Focus View',
         systemId,
@@ -401,7 +399,10 @@ export class NxLayoutViewComponent {
 
     updateLayout = (layoutId: string): Promise<string> => {
         this.changeLayout(layoutId);
-        this.refreshLayouts$.next(layoutId);
+        if (layoutId) {
+            this.refreshLayouts$.next(layoutId);
+        }
+
         return firstValueFrom(
             this.#selectedLayout$.pipe(
                 map(({ id }) => id),
@@ -417,20 +418,16 @@ export class NxLayoutViewComponent {
                 message: { value: this.LANG.layouts.actions.delete.message, params: items[id as string] }
             })),
             switchMap(res => res === true && this.selectedSystem$),
-            switchMap(system => {
-                if (system) {
-                    return (system.mediaserver as NxSystemRestAPI).deleteLayout(id as string).pipe(
-                        tap(() => this.refreshLayouts$.next(this.refreshLayouts$.value))
-                    );
-                }
-            })
+            switchMap((system: NxSystem) => system && (system.mediaserver as NxSystemRestAPI).deleteLayout(id as string).pipe(
+                tap(() => this.updateLayout(this.refreshLayouts$.value.replace(id as string, '')))
+            ))
         ));
 
     handleEditingResource = async ({ resourceType, details }: { resourceType: ResourceType, details: Record<string, unknown> }): Promise<boolean> => this.dialogsService.edit({
         contextManifest: editManifests[resourceType],
         values: details,
         deleteProcess: (details: Record<string, unknown>) => this.handleRemovingResource({ resourceType, details }).catch(() => this.handleEditingResource({ resourceType, details })),
-        handlerProcess: ({ type: _, ...values }: Layout & { type: ResourceType }) => values.name
+        handlerProcess: ({ type: _, ...values }: Layout & { type: ResourceType }) => values.name && values.id
             ? firstValueFrom(
                 this.selectedSystem$.pipe(
                     // Find better abstraction if/when we allow adding other resource types
@@ -448,16 +445,16 @@ export class NxLayoutViewComponent {
             name
         }: Record<string, unknown>) => name
             ? firstValueFrom(
-                combineLatest([this.selectedSystem$, this.selectedLayout$]).pipe(
-                    filter(vals => vals.every(val => !!val)),
+                combineLatest([this.selectedSystem$, this.selectedLayout$, this.layoutItemLookup$]).pipe(
+                    filter((vals: [NxSystem, Layout, LayoutResourceTree]) => vals.every(val => !!val)),
                     take(1),
                     // Find better abstraction if/when we allow adding other resource types
-                    switchMap(([{ id, mediaserver }, layout]) => (mediaserver as NxSystemRestAPI).createLayout(
+                    switchMap(([{ id, mediaserver }, layout, resourceTree]) => (mediaserver as NxSystemRestAPI).createLayout(
                         omit(this.createNewLayout(
                             id,
                             '',
-                            name as string,
-                            layout.items
+                                name as string,
+                                resourceTree[layout.id] ? [] : layout.items
                         ), ['id', 'systemId'])
                     )),
                     map(({ id }) => id),

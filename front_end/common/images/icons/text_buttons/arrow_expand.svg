@@ -7,6 +7,6 @@
     </style>
     <title>arrow_expand</title>
     <g id="arrow_expand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
-        <polyline id="Path-2-Copy" class="st0" transform="translate(9.997792, 10.000000) scale(1, -1) translate(-9.997792, -10.000000) " points="4 13 10 7 15.995584 13"></polyline>
+        <polyline id="Path-2-Copy" class="st0" transform="translate(9.997792, 10.000000) scale(1, -1) translate(-9.997792, -10.000000) " points="4 13 10 7 15.995584 13" style="fill: none !important;"></polyline>
     </g>
 </svg>

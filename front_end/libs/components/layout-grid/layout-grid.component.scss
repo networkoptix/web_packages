@@ -30,10 +30,6 @@
     background: var(--header-bg);
     z-index: 2;
 
-    .st0 {
-        fill: none !important;
-    }
-
     &.open-menu {
         border-right: 1px solid var(--border-color);
         padding: 24px 0 24px 24px;
@@ -69,6 +65,7 @@
 
                 & .st0 {
                     stroke: var(--left-menu-l3-selected-color);
+                    fill: var(--left-menu-l3-selected-color);
                 }
             }
         }
@@ -111,11 +108,13 @@
 
                             &:active .st0 {
                                 stroke: var(--left-menu-l3-selected-bg);
+                                fill: var(--left-menu-l3-selected-bg);
                             }
                         }
 
                         .st0 {
                             stroke: var(--left-menu-l3-hover-color);
+                            fill: var(--left-menu-l3-hover-color);
                         }
                     }
                 }
@@ -391,9 +390,15 @@ iframe {
 
 .cdk-drag {
     cursor: grab;
+    user-select: none;
 
     &.cdk-drag-disabled {
         cursor: pointer;
+    }
+
+    & .st0 {
+        stroke: var(--body-text-color);
+        fill: var(--body-text-color);
     }
 }
 
@@ -410,12 +415,13 @@ iframe {
     padding: 0 !important;
     border-radius: 24px !important;
 
-    span + & {
+    span+& {
         margin-left: auto !important;
     }
 
     & .st0 {
         stroke: var(--body-text-color);
+        fill: var(--body-text-color);
     }
 
     &:hover {
@@ -427,6 +433,7 @@ iframe {
 
         & .st0 {
             stroke: var(--left-menu-l3-selected-color);
+            fill: var(--left-menu-l3-selected-color);
         }
     }
 }
@@ -437,7 +444,8 @@ iframe {
     align-items: center;
     height: 128px;
 
-    &, nx-health-image {
+    &,
+    nx-health-image {
         width: 216px;
     }
 
@@ -448,27 +456,34 @@ iframe {
 
 .server-tooltip-wrapper {
     min-width: 200px;
+
     h4 {
         padding: 4px 0 2px 0;
     }
+
     .stats-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-auto-rows: 32px;
         border-top: 1px solid var(--border-color);
         border-left: 1px solid var(--border-color);
-        & > div {
+
+        &>div {
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
             padding: 8px;
+
             &:nth-child(-n + 2) {
                 background: var(--header-bg);
                 border-bottom: 2px double var(--border-color);
             }
+
             &:nth-child(even) {
                 text-align: right;
             }
-            &:nth-child(4n), &:nth-child(4n - 1)  {
+
+            &:nth-child(4n),
+            &:nth-child(4n - 1) {
                 background: var(--left-menu-l1-bg-hover);
             }
         }
@@ -487,12 +502,17 @@ iframe {
     right: -4px;
     z-index: 1;
     transform: translateX(100%);
-    width: 300px;
-    .name-message > h4 {
+
+    h4 {
+        white-space: nowrap;
+    }
+
+    .name-message>h4 {
         color: var(--left-menu-disabled-item-color) !important;
     }
 
-    .help-message , .name-message {
+    .help-message,
+    .name-message {
         margin: 4px;
         padding: 4px 8px 8px 8px;
     }
@@ -505,11 +525,13 @@ iframe {
             align-items: center;
         }
 
-        p, button {
+        p,
+        button {
             display: none !important;
         }
 
         &:hover {
+            width: 300px;
             background: var(--left-menu-l3-selected-bg);
             border: 1px solid var(--left-menu-l3-selected-color);
             border-radius: 8px;
@@ -520,7 +542,8 @@ iframe {
                 fill: var(--left-menu-l3-selected-color);
             }
 
-            p, button {
+            p,
+            button {
                 display: block !important;
             }
 
@@ -536,12 +559,13 @@ iframe {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,  -50%);
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+
     p {
         margin-top: 8px;
         max-width: min(288px, calc(100vw - 32px));

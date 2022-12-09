@@ -74,6 +74,10 @@
     justify-content: center;
     flex-wrap: wrap;
 
+    & > button {
+        margin: 32px 8px 0 8px;
+    }
+
     @include bootstrap.media-breakpoint-down(md) {
         flex-direction: column;
         align-items: center;
@@ -113,4 +117,13 @@
 
 .btn-primary {
     margin: 0 auto 48px auto;
+}
+
+.new-feature-body {
+    padding: 16px 48px;
+}
+
+.cloud-layouts .st0 {
+    stroke: var(--body-text-color);
+    fill: var(--body-text-color);
 }

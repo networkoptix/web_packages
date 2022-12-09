@@ -17,9 +17,8 @@ import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 const appRoutes: Routes = [
     {
         path: '',
-        title: SystemTitleResolver,
-        component: NxLayoutViewComponent,
-        canActivate: [AuthGuard],
+        pathMatch: 'full',
+        redirectTo: 'new'
     },
     {
         path: ':layoutId',

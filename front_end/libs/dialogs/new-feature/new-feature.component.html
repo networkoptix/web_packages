@@ -73,6 +73,42 @@
                 Activate Cloud Storage
             </button>
         </div>
+        <div *ngSwitchCase="'cloudLayouts'">
+            <div class="heading cloud-layouts">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirLayouts + 'layouts.svg'"
+                    [applyClass]="true"
+                    class="heading-icon"
+                ></svg-icon>
+                <div>
+                    <h2 translate>New Cloud Layouts</h2>
+                    <span translate>Your favorite feature now availabe on cloud portal</span>
+                </div>
+            </div>
+            <div
+                class="new-feature-body"
+                translate
+            >
+                Layout views are now available on cloud portal. Take a tour to get started.
+            </div>
+            <div class="actions">
+                <button
+                    class="btn btn-primary btn-big"
+                    translate
+                    (click)="close()"
+                >
+                    Take a tour
+                </button>
+                <button
+                    class="btn btn-default btn-big"
+                    translate
+                    (click)="close()"
+                >
+                    Don't show this again
+                </button>
+            </div>
+        </div>
         <div
             *ngSwitchDefault
             translate

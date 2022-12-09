@@ -5,12 +5,12 @@
 >
     <div
         *ngIf="
-            !layout || !layoutItemLookup
+            !layout || !layoutItemLookup || dragging
                 ? ''
-                : !layout.id
-                ? 'unsaved'
                 : !layout.items.length
                 ? 'empty'
+                : !layout.id
+                ? 'unsaved'
                 : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
                 ? 'focus'
                 : layout.name as message
@@ -131,6 +131,7 @@
                 <ng-container *ngIf="hasActions[node.type] as nodeActions">
                     <button
                         *ngFor="let action of nodeActions"
+                        [nxTooltip]="action.tooltip | translate: node.details"
                         (click)="action.handler(node.type, node.details); $event.stopPropagation()"
                         class="action-button"
                     >
@@ -149,6 +150,8 @@
             <!-- This is the tree node template for leaf nodes -->
             <cdk-nested-tree-node
                 *cdkTreeNodeDef="let node"
+                #currentItem
+                cdkDropList
                 class="tree-node"
             >
                 <ng-template #cameraTooltip>
@@ -199,13 +202,15 @@
                     </div>
                 </ng-template>
                 <div
+                    *ngIf="previewSize$ | async as previewSize"
                     cdkDrag
                     [cdkDragDisabled]="
                         !node.details || layout.locked || node.type === RESOURCE_TYPE.LAYOUT
                     "
                     (click)="changeView(node)"
-                    (cdkDragMoved)="moveAddedItem($event)"
-                    (cdkDragReleased)="addItem(node)"
+                    (cdkDragStarted)="dragging = true"
+                    (cdkDragMoved)="moveAddedItem($event, currentItem)"
+                    (cdkDragReleased)="dragging = false; addItem(node)"
                     [nxTooltip]="
                         node.type === RESOURCE_TYPE.CAMERA
                             ? cameraTooltip
@@ -223,6 +228,36 @@
                             cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
                     }"
                 >
+                    <div
+                        *cdkDragPreview
+                        [ngStyle]="previewSize"
+                    >
+                        <div class="layout-item preview">
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="{
+                                    'width.px': '64',
+                                    'height.px': '64',
+                                    'margin-right.px': '16'
+                                }"
+                                [src]="
+                                    icons.dirLayouts +
+                                    node.type +
+                                    (node.details?.status
+                                        ? '_' +
+                                          (node.type !== 'camera'
+                                              ? node.details.status
+                                              : node.details.online
+                                              ? 'online'
+                                              : 'offline')
+                                        : '') +
+                                    '.svg'
+                                "
+                            >
+                            </svg-icon>
+                            <h4>{{ node.details.name }}</h4>
+                        </div>
+                    </div>
                     <ng-container
                         *ngTemplateOutlet="
                             nodeInfo;
@@ -245,8 +280,9 @@
                     cdkDrag
                     (click)="changeView(node)"
                     [cdkDragDisabled]="!node.details || layout.locked"
+                    (cdkDragStarted)="dragging = true"
                     (cdkDragMoved)="moveAddedItem($event)"
-                    (cdkDragReleased)="addItem(node)"
+                    (cdkDragReleased)="dragging = false; addItem(node)"
                 >
                     <ng-container
                         *ngTemplateOutlet="
@@ -330,7 +366,8 @@
                         cdkDrag
                         [cdkDragDisabled]="layout.locked"
                         [cdkDragData]="item"
-                        (cdkDragReleased)="moveItem(item)"
+                        (cdkDragReleased)="dragging = false; moveItem(item)"
+                        (cdkDragStarted)="dragging = true"
                         (cdkDragMoved)="updateBackground($event, item, 'move')"
                         class="layout-item"
                         [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"

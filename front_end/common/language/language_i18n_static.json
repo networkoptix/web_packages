@@ -34,7 +34,9 @@
         "error": "Only Errors"
     },
     "layouts": {
-        "createNew": "Create New Layout",
+        "createNew": "Create new layout",
+        "edit": "Edit \"{name}\" layout",
+        "delete": "Delete \"{name}\" layout",
         "pleaseAddNew": "Please add layout on thick client to view layouts",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "titles": {
@@ -46,7 +48,7 @@
         "helpMessages": {
             "unsaved": {
                 "title": "Unsaved Layout",
-                "help": "Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view and to allow adding additional items."
+                "help": "Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view."
             },
             "empty": {
                 "title": "Empty Layout",
@@ -54,7 +56,7 @@
             },
             "focus": {
                 "title": "Focus Mode",
-                "help": "Currently showing resource focus mode. Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view and to allow adding additional items."
+                "help": "Currently showing resource focus mode. Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view or you can also drag additional items before creating new layout."
             }
         },
         "removeItem": {
@@ -76,6 +78,18 @@
             "create": {
                 "label": "Create Layout",
                 "fields": {
+                    "name": {
+                        "label": "Name",
+                        "placeholder": "Choose name for layout"
+                    }
+                }
+            },
+            "unsaved": {
+                "label": "Save unsaved layout?",
+                "fields": {
+                    "info": {
+                        "label": "This layout hasn't been saved. Do you want to create a new layout to save your changes?"
+                    },
                     "name": {
                         "label": "Name",
                         "placeholder": "Choose name for layout"

@@ -718,7 +718,7 @@ export class NxDialogsService extends DialogBase {
      */
     #newFeatureMethodFactory = <T>(
         template: string | TemplateRef<T>
-    ) => async (data: Record<string, unknown>) => {
+    ) => async (data?: Record<string, unknown>) => {
         await this.preloadDialogsModule();
         const component = await import('./new-feature/new-feature.component').then(m => m.NewFeatureInformationModalContent);
 
@@ -730,6 +730,8 @@ export class NxDialogsService extends DialogBase {
     };
 
     public cloudStorageInfo = this.#newFeatureMethodFactory('cloudStorage');
+
+    public cloudLayoutsInfo = this.#newFeatureMethodFactory('cloudLayouts');
 
     /* ANGULAR CDK DIALOGS */
     private openV2<R, D = never, T = unknown>(
