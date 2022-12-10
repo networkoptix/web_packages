@@ -929,7 +929,7 @@
         "vendors": "製造商",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "沒有相符項目",
-        "userNotFound": "<span class=\"error\">找不到此使用者帳號或使用者帳號不存在</span>"
+        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",

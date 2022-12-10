@@ -929,7 +929,7 @@
         "vendors": "Hersteller",
         "resultsFound": "{count, plural, =0{# Ergebnisse} one{# Ergebnis} other{# Ergebnisse}} gefunden",
         "noMatches": "Keine Treffer",
-        "userNotFound": "<span class=\"error\">Benutzer nicht gefunden</span>"
+        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fehler beim Löschen oder Speichern von Analyticsdaten",

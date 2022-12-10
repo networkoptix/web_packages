@@ -929,7 +929,7 @@
         "vendors": "Producenci",
         "resultsFound": "{count, plural, =0{# Wyników} one{# Wynik} few {# Wyników} many {# Wyników} other{# Wyniki}} znaleziono",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Błąd z usuwaniem lub przechowywaniem danych analitycznych",

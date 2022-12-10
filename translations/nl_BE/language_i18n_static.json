@@ -929,7 +929,7 @@
         "vendors": "Fabrikanten",
         "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
         "noMatches": "Geen overeenkomsten",
-        "userNotFound": "<span class=\"error\">Gebruiker niet gevonden</span>"
+        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
