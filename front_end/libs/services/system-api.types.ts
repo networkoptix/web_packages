@@ -958,6 +958,46 @@ export interface PtzFocusCommand extends BasePtzCommand<PtzCommands.RELATIVE_FOC
 
 export type PtzCommand = PtzMoveCommand | PtzFocusCommand;
 
+type HiddenParams = Partial<{
+    _filter: unknown;
+    _format: 'JSON' | 'XML' | 'CSV';
+    _keepDefault: boolean;
+    _language: string;
+    _pretty: boolean;
+    _with: string;
+    _local: boolean;
+    _orderBy: string | string[];
+    // Single string = array of one string
+}>;
+
+export type BookmarksParams = HiddenParams & Partial<{
+    startTimeMs: number;
+    endTimeMs: number;
+    text: string;
+    limit: number;
+    order: 'asc' | 'desc';
+    column: 'name' |
+        'startTime' |
+        'duration' |
+        'creationTime' |
+        'creator' |
+        'tags' |
+        'description' |
+        'cameraName';
+    minVisibleLengthMs: number;
+    creationStartTimeMs: number;
+    creationEndTimeMs: number;
+    _orderBy: Boomarks_orderBy | Boomarks_orderBy[];
+}>;
+type Boomarks_orderBy = 'id' |
+    'deviceId' |
+    'name' |
+    'description' |
+    'startTimeMs' |
+    'durationMs' |
+    'creatorUserId' |
+    'creationTimeMs';
+
 export interface Bookmark {
     creationTimeMs: number;
     creatorUserId: string;
@@ -970,8 +1010,12 @@ export interface Bookmark {
     tags: string[];
 }
 
-export interface BookmarkTags { [tagName: string]: number }
+export interface BookmarksTagsParams extends Omit<HiddenParams, '_with' | '_orderBy'> {
+    limit?: number;
+}
+export interface BookmarksTags { [tagName: string]: number }
 
+export type DevicesParams = Omit<HiddenParams, '_local'>;
 export interface Device {
     capabilities?: string;
     credentials?: { user: string; password: string };

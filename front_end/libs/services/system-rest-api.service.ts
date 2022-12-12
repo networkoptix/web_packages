@@ -787,20 +787,24 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    getBookmarks(params = {
+    getBookmarks(params: t.BookmarksParams = {
         order: 'desc',
         column: 'creationTime',
-        _keepDefault: 'true',
-        _orderBy: 'creationTimeMs'
+        _keepDefault: true,
+        _orderBy: 'creationTimeMs',
     }): Observable<t.Bookmark[]> {
         return this.get('/rest/v1/devices/*/bookmarks', params);
     }
 
-    getBookmarkTags(): Observable<t.BookmarkTags> {
-        return this.get('/rest/v1/devices/*/bookmarks/*/tags');
+    getBookmarkTags(
+        params: t.BookmarksTagsParams = {}
+    ): Observable<t.BookmarksTags> {
+        return this.get('/rest/v1/devices/*/bookmarks/*/tags', params);
     }
 
-    getDevices(params = {}): Observable<t.Device[]> {
+    getDevices(
+        params: t.DevicesParams = {}
+    ): Observable<t.Device[]> {
         return this.get('/rest/v1/devices', params);
     }
 

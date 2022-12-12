@@ -1387,17 +1387,11 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', { systemName }).toPromise();
     }
 
-    getBookmarks(params = {
-        order: 'desc',
-        column: 'creationTime',
-        deviceId: '*',
-        _keepDefault: 'true',
-        _orderBy: 'creationTimeMs'
-    }): Observable<unknown> {
+    getBookmarks(): Observable<unknown> {
         throw new Error('should only be using rest version');
     }
 
-    getBookmarkTags(limit: number = 100): Observable<any> {
+    getBookmarkTags(): Observable<unknown> {
         throw new Error('should only be using rest version');
     }
 
