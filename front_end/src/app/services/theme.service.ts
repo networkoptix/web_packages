@@ -17,6 +17,7 @@ export class NxThemeService {
     userTheme: string;
 
     public availThemes = {
+        auto: 'auto',
         light: 'light',
         dark: 'dark',
     };
@@ -33,10 +34,10 @@ export class NxThemeService {
     async initTheme(): Promise<void> {
         if (this.CONFIG.themeConfig) {
             // set availThemes //
-            this.availThemes = {
+            Object.assign(this.availThemes, {
                 light: this.CONFIG.themeConfig.light,
                 dark: this.CONFIG.themeConfig.dark,
-            };
+            });
         }
 
         const loginState = this.localStorageService.retrieve('loginstate');

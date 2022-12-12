@@ -346,6 +346,8 @@ export class AppComponent implements AfterViewInit {
 
         if (this.CONFIG.featureFlags.themesEnabled) {
             this.themeService.initTheme().then();
+        } else {
+            this.window.document.documentElement.setAttribute('data-theme', this.CONFIG.themeConfig.light);
         }
     }
 
