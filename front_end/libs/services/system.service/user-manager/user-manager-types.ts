@@ -20,6 +20,8 @@ export interface NxSystemUser {
     fullName: string;
     hash: string;
     id: string;
+    type: string;
+    isHttpDigestEnabled: boolean;
     isAdmin: boolean;
     isCloud: boolean;
     isEnabled: boolean;
