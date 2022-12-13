@@ -10,6 +10,7 @@ VMS_LIN_SERVICE_NAME = '%VMS_LIN_SERVICE_NAME%'
 VMS_MAC_COMPANY_ID ='%VMS_MAC_COMPANY_ID%'
 VMS_WIN_EXECUTABLE = '%VMS_WIN_EXECUTABLE%'
 
+
 class SpecialStructures:
     """ Only use this with assets that are single customization.\n
         Calculates special DataStructures without making DataRecords.\n
@@ -83,7 +84,7 @@ class SpecialStructures:
     @staticmethod
     def calc_cloud_host(asset: Asset):
         customization = asset.customizations.first()
-        if not customization:
+        if not customization or not get_cloud_portal_asset(customization.name, no_create=True):
             return ""
         conf = get_config(customization.name)
         return conf["cloud_portal"]["url"].lstrip('https://').lstrip('http://')
@@ -91,7 +92,7 @@ class SpecialStructures:
     @staticmethod
     def calc_cloud_link(asset: Asset):
         customization = asset.customizations.first()
-        if not customization:
+        if not customization or not get_cloud_portal_asset(customization.name, no_create=True):
             return ""
         conf = get_config(customization.name)
         return conf["cloud_portal"]["url"].replace("http:", "https:")
@@ -102,7 +103,10 @@ class SpecialStructures:
 
     @staticmethod
     def get_vms_and_config(asset: Asset, ds_name):
-        vms_asset = get_vms_asset(asset.customizations.first().name)
+        customization = asset.customizations.first()
+        if not customization:
+            return None
+        vms_asset = get_vms_asset(customization.name)
         struct = SpecialStructure.objects.filter(name=ds_name).first()
         if vms_asset and struct:
             vms_dss = DataStructure.objects.filter(context__asset_type=vms_asset.asset_type)
@@ -110,6 +114,7 @@ class SpecialStructures:
             return vms_asset, vms_dss, config
 
         return None
+
     @staticmethod
     def filter_ds(ds, config, name):
         return ds.filter(name=config[name]).first()
@@ -194,11 +199,15 @@ class SpecialStructures:
     @staticmethod
     def calc_mobile_display_name(asset):
         customization = asset.customizations.first()
-        return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%') or 'the mobile client'
+        if customization:
+            return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%')
+        return 'the mobile client'
 
     @staticmethod
     def calc_abbreviation(asset):
         customization = asset.customizations.first()
+        if not customization:
+            return ''
         if customization.name in ['default', 'default_cn', 'default_zh_CN', 'metavms']:
             return 'Nx'
         else:

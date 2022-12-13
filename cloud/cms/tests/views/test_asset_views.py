@@ -1160,6 +1160,8 @@ def test_download_async_package(arf, account_factory, db):
     mock_request = arf.get('', data={'version_id': version_id, 'draft': draft})
     mock_request.user = account_factory()
     mock_asset = baker.make(Asset)
+    mock_customization = baker.make(Customization)
+    mock_asset.customizations.add(mock_customization)
     cache_key = tasks.get_package_cache_key(mock_asset, draft, version_id)
 
     # Test no package

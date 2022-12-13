@@ -965,6 +965,9 @@ def download_async_package(request, asset_id):
         raise PermissionDenied
 
     asset = Asset.objects.get(id=asset_id)
+    if not asset.customizations.exists():
+        raise APIForbiddenException("Asset must contain at least one customization.")
+
     version_id = request.GET.get('version_id')
     preview = 'draft' in request.GET
 
