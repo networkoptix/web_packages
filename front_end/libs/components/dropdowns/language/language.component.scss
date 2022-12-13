@@ -1,8 +1,9 @@
 @use "typography";
 @use "theme_variables_common" as *;
+@use "../dropdowns";
 
 :host {
-    nx-language-select {
+    .dropdown {
         width   : 300px;
         display : block;
 

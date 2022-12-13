@@ -1,6 +1,5 @@
 import {
     Component,
-    ViewEncapsulation,
     Input,
     forwardRef,
     EventEmitter,
@@ -37,7 +36,6 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
     selector: 'nx-searchable-select',
     templateUrl: 'searchable.component.html',
     styleUrls: ['searchable.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

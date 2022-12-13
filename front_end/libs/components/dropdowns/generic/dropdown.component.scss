@@ -1,160 +1,162 @@
 @use "typography";
-@use "mixins";
+@use "mixins" as mixins;
 @use "theme_variables_common" as *;
+@use "../dropdowns";
 
-
-nx-select {
-    width: 100%;
-    display: block;
-
-    hr {
-        width: 95%;
-        margin: 6px auto;
-        border-color: $light4;
-
-        &.narrow-hr {
-            width: calc(95% - 16px);
-        }
-    }
-
-    .search-box {
-        input {
-            height: 28px !important;
-            padding-left: 28px !important;
-            margin-bottom: 4px;
-            margin-left: 4px;
-            width: calc(100% - 8px) !important;
-        }
-
-        .icon-search {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-        }
-
-        .search-clear {
-            position: absolute;
-            top: 10px;
-            right: 5px;
-        }
-    }
-
-    .additional-help {
-        @include typography.regular13light;
-        margin-left: 0.25rem;
-    }
-
-    .selected .additional-help {
-        color: $light1  !important;
-    }
-
-    @include mixins.keyframe(bubblingG) {
-        0% {
-            opacity: 1;
-        }
-
-        77% {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 0;
-        }
-    }
-
-    .loading {
-        width: 100%;
-        height: 100%;
-
-        text-align: center;
-        vertical-align: middle;
-        overflow: hidden;
-        margin: 0 auto;
-
-        div {
-            margin: 0 auto;
-
-            span {
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                margin: auto 10px;
-                background: $light;
-                border-radius: 8px;
-                animation: bubblingG 650ms infinite alternate;
-                -o-animation: bubblingG 650ms infinite alternate;
-                -webkit-animation: bubblingG 650ms infinite alternate;
-                -moz-animation: bubblingG 650ms infinite alternate;
+:host {
+    .dropdown {
+        width   : 100%;
+        display : block;
+        
+        hr {
+            width        : 95%;
+            margin       : 6px auto;
+            border-color : $light4;
+            
+            &.narrow-hr {
+                width : calc(95% - 16px);
             }
         }
-
-        .dot1 {
-            animation-delay: 0s;
-            -o-animation-delay: 0s;
-            -webkit-animation-delay: 0s;
-            -moz-animation-delay: 0s;
-        }
-
-        .dot2 {
-            animation-delay: 0.3s;
-            -o-animation-delay: 0.3s;
-            -webkit-animation-delay: 0.3s;
-            -moz-animation-delay: 0.3s;
-        }
-
-        .dot3 {
-            animation-delay: 0.6s;
-            -o-animation-delay: 0.6s;
-            -webkit-animation-delay: 0.6s;
-            -moz-animation-delay: 0.6s;
-        }
-    }
-
-    .dropdown-force-position,
-    .force-position {
-        position: static !important;
-
-        &>button#genericSelect:active {
-            box-shadow: none !important;
-        }
-
-        &>.dropdown-menu {
-            transform: translateY(calc(100% - 22px));
-        }
-
-        &>button.dropdown-toggle {
-            height: 24px !important;
-
-            &>.arrow-flip>svg-icon {
-                bottom: 2px !important;
+        
+        .search-box {
+            input {
+                height        : 28px !important;
+                padding-left  : 28px !important;
+                margin-bottom : 4px;
+                margin-left   : 4px;
+                width         : calc(100% - 8px) !important;
+            }
+            
+            .icon-search {
+                position : absolute;
+                top      : 8px;
+                left     : 8px;
+            }
+            
+            .search-clear {
+                position : absolute;
+                top      : 10px;
+                right    : 5px;
             }
         }
-    }
-
-    .dropdown-transparent-button>button.btn.btn-dropdown-toggle.dropdown-toggle {
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-
-    .item-icon {
-        .storage-cloud {
-            fill: var(--brand-core);
+        
+        .additional-help {
+            @include typography.regular13light;
+            margin-left : 0.25rem;
         }
-    }
-
-    .seperator {
-        display: block;
-        overflow: hidden;
-        height: 8px;
-
-        &:after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 12px;
-            width: calc(100% - 24px);
-            height: 1.5px;
-            background: $light7;
+        
+        .selected .additional-help {
+            color : $light1 !important;
+        }
+        
+        @include mixins.keyframe(bubblingG) {
+            0% {
+                opacity : 1;
+            }
+            
+            77% {
+                opacity : 0;
+            }
+            
+            100% {
+                opacity : 0;
+            }
+        }
+        
+        .loading {
+            width          : 100%;
+            height         : 100%;
+            
+            text-align     : center;
+            vertical-align : middle;
+            overflow       : hidden;
+            margin         : 0 auto;
+            
+            div {
+                margin : 0 auto;
+                
+                span {
+                    display           : inline-block;
+                    width             : 8px;
+                    height            : 8px;
+                    margin            : auto 10px;
+                    background        : $light;
+                    border-radius     : 8px;
+                    animation         : bubblingG 650ms infinite alternate;
+                    -o-animation      : bubblingG 650ms infinite alternate;
+                    -webkit-animation : bubblingG 650ms infinite alternate;
+                    -moz-animation    : bubblingG 650ms infinite alternate;
+                }
+            }
+            
+            .dot1 {
+                animation-delay         : 0s;
+                -o-animation-delay      : 0s;
+                -webkit-animation-delay : 0s;
+                -moz-animation-delay    : 0s;
+            }
+            
+            .dot2 {
+                animation-delay         : 0.3s;
+                -o-animation-delay      : 0.3s;
+                -webkit-animation-delay : 0.3s;
+                -moz-animation-delay    : 0.3s;
+            }
+            
+            .dot3 {
+                animation-delay         : 0.6s;
+                -o-animation-delay      : 0.6s;
+                -webkit-animation-delay : 0.6s;
+                -moz-animation-delay    : 0.6s;
+            }
+        }
+        
+        .dropdown-force-position,
+        .force-position {
+            position : static !important;
+            
+            & > button#genericSelect:active {
+                box-shadow : none !important;
+            }
+            
+            & > .dropdown-menu {
+                transform : translateY(calc(100% - 22px));
+            }
+            
+            & > button.dropdown-toggle {
+                height : 24px !important;
+                
+                & > .arrow-flip > svg-icon {
+                    bottom : 2px !important;
+                }
+            }
+        }
+        
+        .dropdown-transparent-button > button.btn.btn-dropdown-toggle.dropdown-toggle {
+            box-shadow : none !important;
+            background : transparent !important;
+        }
+        
+        .item-icon {
+            .storage-cloud {
+                fill : var(--brand-core);
+            }
+        }
+        
+        .seperator {
+            display  : block;
+            overflow : hidden;
+            height   : 8px;
+            
+            &:after {
+                content    : "";
+                position   : absolute;
+                top        : 50%;
+                left       : 12px;
+                width      : calc(100% - 24px);
+                height     : 1.5px;
+                background : $light7;
+            }
         }
     }
 }

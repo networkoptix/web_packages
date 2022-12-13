@@ -1,10 +1,12 @@
-nx-permissions-select {
-    width: 100%;
-    display: block;
-    
+:host {
     .dropdown {
-        &-menu {
-            padding-bottom : 4px;
+        width   : 100%;
+        display : block;
+        
+        .dropdown {
+            &-menu {
+                padding-bottom : 4px;
+            }
         }
     }
 }

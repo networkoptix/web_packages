@@ -1,46 +1,50 @@
-@use '../variables' as *;
-@use "theme_variables_common" as *;
+@use "../variables" as *;
+@use "../dropdowns";
 
-nx-multi-select {
-    width   : 100%;
-    display : block;
-    
-    label {
+:host {
+    .dropdown {
+        width   : 100%;
         display : block;
-    }
-
-    .dropdown-menu {
         
-        overflow : auto;
-        
-        &--list {
-            max-height : $dropdown-multi-list-height !important;
-            margin     : 0;
-            margin-top : 4px;
-            overflow   : auto !important;
+        label {
+            display : block;
         }
         
-        .dropdown-item--non-checkbox {
-            padding-left : 12px !important;
-        }
-        
-        .search-box {
-            input {
-                height: 28px !important;
-                padding-left: 28px !important;
-                margin-bottom: 4px;
-                margin-left: 4px;
-                width: calc(100% - 8px) !important;
+        .dropdown-menu {
+            
+            overflow : auto;
+            
+            &--list {
+                max-height : $dropdown-multi-list-height !important;
+                margin     : 0;
+                margin-top : 4px;
+                overflow   : auto !important;
             }
-            .icon-search {
-                position: absolute;
-                top: 8px;
-                left: 8px;
+            
+            .dropdown-item--non-checkbox {
+                padding-left : 12px !important;
             }
-            .search-clear {
-                position: absolute;
-                top: 10px;
-                right: 5px;
+            
+            .search-box {
+                input {
+                    height        : 28px !important;
+                    padding-left  : 28px !important;
+                    margin-bottom : 4px;
+                    margin-left   : 4px;
+                    width         : calc(100% - 8px) !important;
+                }
+                
+                .icon-search {
+                    position : absolute;
+                    top      : 8px;
+                    left     : 8px;
+                }
+                
+                .search-clear {
+                    position : absolute;
+                    top      : 10px;
+                    right    : 5px;
+                }
             }
         }
 
@@ -58,7 +62,7 @@ nx-multi-select {
         hr {
             width: 95%;
             margin: 6px auto;
-            border-color: $light7;
+            border-color: var(--horizontal-sep-color);
         }
     }
 }

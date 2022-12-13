@@ -1,46 +1,50 @@
 @import "./account-settings.component.scss";
 
-.icon-with-fill {
-    fill-rule: evenodd;
-    clip-rule: evenodd;
-    fill: var(--tab-link-webadm-color) !important;
-}
-
-#accountSettingsSelect {
-    color: var(--tab-link-webadm-color) !important;
-}
-
-.dropdown {
-    & button {
-        color: var(--tab-link-webadm-color) !important;
+:host {
+    .icon-with-fill {
+        fill-rule : evenodd;
+        clip-rule : evenodd;
+        fill      : var(--tab-link-webadm-color) !important;
     }
-    &:not(.show) {
-        & > #accountSettingsSelect {
-            border: 1px solid transparent !important;
-            
-            &:hover {
-                background: var(--tab-link-webadm-hover-bg) !important;
-            }
-            
-            &:active {
-                background: var(--tab-link-webadm-active-bg) !important;
+    
+    #accountSettingsSelect {
+        color : var(--tab-link-webadm-color) !important;
+    }
+    
+    .dropdown {
+        & button {
+            color : var(--tab-link-webadm-color) !important;
+        }
+        
+        &:not(.show) {
+            & > #accountSettingsSelect {
+                border : 1px solid transparent !important;
+                
+                &:hover {
+                    background : var(--tab-link-webadm-hover-bg) !important;
+                }
+                
+                &:active {
+                    background : var(--tab-link-webadm-active-bg) !important;
+                }
             }
         }
-    }
-    &.show {
-        & > #accountSettingsSelect {
-            border: 1px solid transparent !important;
-
-            &:hover {
-                background: var(--tab-link-webadm-hover-bg) !important;
-                border: 1px solid var(--tab-link-webadm-hover-bg) !important;
+        
+        &.show {
+            & > #accountSettingsSelect {
+                border : 1px solid transparent !important;
+                
+                &:hover {
+                    background : var(--tab-link-webadm-hover-bg) !important;
+                    border     : 1px solid var(--tab-link-webadm-hover-bg) !important;
+                }
+                
+                &:active {
+                    background : var(--tab-link-webadm-active-bg) !important;
+                    border     : 1px solid var(--tab-link-webadm-active-bg) !important;
+                }
+                
             }
-            
-            &:active {
-                background: var(--tab-link-webadm-active-bg) !important;
-                border: 1px solid var(--tab-link-webadm-active-bg) !important;
-            }
-
         }
     }
 }

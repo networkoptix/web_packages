@@ -1,6 +1,5 @@
 import {
     Component,
-    ViewEncapsulation,
     Input,
     forwardRef
 } from '@angular/core';
@@ -20,7 +19,6 @@ import { BaseDropdown } from '../injDropdown';
     selector: 'nx-permissions-select',
     templateUrl: 'permissions.component.html',
     styleUrls: ['permissions.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

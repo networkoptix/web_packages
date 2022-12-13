@@ -137,7 +137,6 @@ class BaseLanguageDropdown extends BaseDropdown {
     selector: 'nx-language-select',
     templateUrl: 'language.component.html',
     styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

@@ -1,6 +1,5 @@
 import {
     Component,
-    ViewEncapsulation,
     Input,
     forwardRef,
 } from '@angular/core';
@@ -34,7 +33,6 @@ import type { MultiSelectItem } from './multi-select.component.types';
     selector: 'nx-multi-select',
     templateUrl: 'multi-select.component.html',
     styleUrls: ['multi-select.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

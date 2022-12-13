@@ -1,24 +1,26 @@
-.popup {
-    &.arrow {
-        left: 16px;
-    }
-}
-
-.dropdown {
-    &-menu {
-        padding-bottom : 4px;
+:host {
+    .popup {
+        &.arrow {
+            left : 16px;
+        }
     }
     
-    .dropdown-toggle {
-        padding-right    : 14px !important;
-        padding-left     : 14px !important;
-
-        &::after {
-            border : none;
+    .dropdown {
+        &-menu {
+            padding-bottom : 4px;
         }
-
-        .glyphicon-menu-hamburger {
-            margin : 0;
+        
+        .dropdown-toggle {
+            padding-right : 14px !important;
+            padding-left  : 14px !important;
+            
+            &::after {
+                border : none;
+            }
+            
+            .glyphicon-menu-hamburger {
+                margin : 0;
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 import {
     Component,
-    ViewEncapsulation,
     Input,
     forwardRef
 } from '@angular/core';
@@ -22,7 +21,6 @@ import type { ActionItems } from './three-dot.component.types';
     selector: 'nx-three-dot',
     templateUrl: 'three-dot.component.html',
     styleUrls: ['three-dot.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

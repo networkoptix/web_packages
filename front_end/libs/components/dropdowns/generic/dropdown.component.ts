@@ -1,6 +1,5 @@
 import {
     Component,
-    ViewEncapsulation,
     Input,
     forwardRef,
     EventEmitter,
@@ -36,7 +35,6 @@ import type { DropdownItem } from './dropdown.component.types';
     selector: 'nx-select',
     templateUrl: 'dropdown.component.html',
     styleUrls: ['dropdown.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
