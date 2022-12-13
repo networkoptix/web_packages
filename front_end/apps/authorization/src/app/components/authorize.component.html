@@ -1,7 +1,8 @@
 <nx-app-toasts
     aria-live="polite"
     aria-atomic="true"
-></nx-app-toasts>
+>
+</nx-app-toasts>
 
 <div
     class="authorize-main"
@@ -159,8 +160,12 @@
         class="auth-footer"
     >
         <nx-footer
-            [center]="true"
+            *ngIf="!newHeader; else newFooter"
             [oauth]="true"
+            [center]="true"
         ></nx-footer>
+        <ng-template #newFooter>
+            <nx-nav-footer></nx-nav-footer>
+        </ng-template>
     </div>
 </div>

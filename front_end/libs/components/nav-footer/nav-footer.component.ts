@@ -19,7 +19,7 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 @Component({
     selector: 'nx-nav-footer',
     templateUrl: './nav-footer.component.html',
-    styleUrls: ['./nav-footer.component.scss']
+    styleUrls: ['./nav-footer.component.scss'],
 })
 export class NxNavFooterComponent implements OnInit {
     footerItems: MenuNode[];
@@ -28,29 +28,38 @@ export class NxNavFooterComponent implements OnInit {
     returnToTopVisible$ = new BehaviorSubject(true);
     copyright: Translatable;
     icons = icons;
+    inAuthorization = false;
 
     constructor(
         config: NxConfigService,
         translateService: TranslateService,
         private menusService: NxMenusService,
         private router: Router,
-        public scrollMechanicsService: NxScrollMechanicsService
+        public scrollMechanicsService: NxScrollMechanicsService,
     ) {
+        this.inAuthorization = this.router.url.includes('/authorize');
         this.CONFIG = config.getConfig();
         this.copyright = {
             values: staticLang.appFooter.copyright,
             params: {
-                currentYear: new Date().getFullYear().toString()
-            }
+                currentYear: new Date().getFullYear().toString(),
+            },
         };
 
-        this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
-            this.checkVisible(this.router.url, width);
-        });
+        this.scrollMechanicsService.windowSizeSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(({ width }) => {
+                this.checkVisible(this.router.url, width);
+            });
 
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
-            this.checkVisible(event.url);
-        });
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                untilDestroyed(this),
+            )
+            .subscribe((event: NavigationEnd) => {
+                this.checkVisible(event.url);
+            });
     }
 
     ngOnInit(): void {
@@ -61,7 +70,7 @@ export class NxNavFooterComponent implements OnInit {
                     footerItem.new_window = true;
                     footerItem.url = footerItem.url.replace(
                         '{{CLOUD_HOST}}',
-                        this.CONFIG.cloudHost
+                        this.CONFIG.cloudHost,
                     );
                 });
             }
@@ -72,7 +81,12 @@ export class NxNavFooterComponent implements OnInit {
         this.scrollMechanicsService.windowScrollSubject.next(0);
     }
 
-    checkVisible(url: string, width = this.scrollMechanicsService.windowSizeSubject.value.width): void {
-        this.visible$.next(width > GridBreakpoints.SM && !url.includes('/systems'));
+    checkVisible(
+        url: string,
+        width = this.scrollMechanicsService.windowSizeSubject.value.width,
+    ): void {
+        this.visible$.next(
+            width > GridBreakpoints.SM && !url.includes('/systems'),
+        );
     }
 }

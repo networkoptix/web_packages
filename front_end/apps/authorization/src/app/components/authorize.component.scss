@@ -610,7 +610,8 @@
     }
 
     .auth-footer {
-        min-width: 900px;
-        margin-top: 75px;
+        position: absolute;
+        bottom: 0;
+        width: 100vw;
     }
 }

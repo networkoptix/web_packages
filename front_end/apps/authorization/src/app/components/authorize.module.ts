@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -25,13 +26,37 @@ import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.
 import { NxAuthorizeShow404Component } from './show-404/show-404.component';
 
 export const authorizedRoutes: Routes = [
-    { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
-    { path: 'activate', component: NxAuthorizeComponent, data: { action: '404' } },
-    { path: 'restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } },
-    { path: 'restore_password', component: NxAuthorizeComponent, data: { action: 'reset_request' } }, // for systems < 5.0, desktop password reset request
-    { path: 'register/:code', component: NxAuthorizeComponent, data: { action: 'register' } },
-    { path: 'register', component: NxAuthorizeComponent, data: { action: 'register' } },
-    { path: '**', component: NxAuthorizeComponent }
+    {
+        path: 'activate/:code',
+        component: NxAuthorizeComponent,
+        data: { action: 'activate' },
+    },
+    {
+        path: 'activate',
+        component: NxAuthorizeComponent,
+        data: { action: '404' },
+    },
+    {
+        path: 'restore_password/:code',
+        component: NxAuthorizeComponent,
+        data: { action: 'restore_password' },
+    },
+    {
+        path: 'restore_password',
+        component: NxAuthorizeComponent,
+        data: { action: 'reset_request' },
+    }, // for systems < 5.0, desktop password reset request
+    {
+        path: 'register/:code',
+        component: NxAuthorizeComponent,
+        data: { action: 'register' },
+    },
+    {
+        path: 'register',
+        component: NxAuthorizeComponent,
+        data: { action: 'register' },
+    },
+    { path: '**', component: NxAuthorizeComponent },
 ];
 
 @NgModule({
@@ -45,10 +70,10 @@ export const authorizedRoutes: Routes = [
         AngularSvgIconModule.forRoot(),
         DirectivesModule,
         PipesModule,
-        SharedComponentsModule
+        SharedComponentsModule,
+        NavFooterModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NxAuthorizeComponent,
         NxAuthorizeEmailComponent,
@@ -62,9 +87,8 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeConnectErrorComponent,
         NxAuthorizeAuthCodeComponent,
         NxAuthorizeBackupCodeComponent,
-        NxAuthorizeShow404Component
+        NxAuthorizeShow404Component,
     ],
-    exports: []
+    exports: [],
 })
-export class NxAuthorizeModule {
-}
+export class NxAuthorizeModule {}

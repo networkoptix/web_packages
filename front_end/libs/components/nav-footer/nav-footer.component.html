@@ -8,7 +8,7 @@
             class="item"
         >
             <a
-                *ngIf="item.new_window; else internalLink"
+                *ngIf="item.new_window || inAuthorization; else internalLink"
                 [href]="item.url | safe: 'url'"
                 [target]="item.new_window ? '_blank' : '_self'"
                 >{{ item.display_name | translate }}</a
