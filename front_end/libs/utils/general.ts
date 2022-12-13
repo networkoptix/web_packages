@@ -4,6 +4,7 @@ for a particular part of the codebase. No in-house specific types/structures. */
 
 import type { TemplateRef } from '@angular/core';
 import { last, zip } from 'lodash-es';
+import { IStepOption } from 'ngx-ui-tour-md-menu/public_api';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -14,6 +15,41 @@ import { TranslatableObject, TranslatableStrict } from '@pipes/any-translate.typ
 export function cleanId(id: unknown): string | undefined {
     return (id as string)?.replace(/{|}/g, '');
 }
+
+type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & { title: TranslatableStrict, content: TranslatableStrict };
+
+export const translateStep = (instant: (TranslatableObject) => string) => (step: TranslatableStep): IStepOption => ({
+    ...step,
+    title: instant(step.title),
+    content: instant(step.content)
+});
+
+const tourDefaults: IStepOption = {
+    enableBackdrop: true,
+    backdropConfig: {
+        backgroundColor: 'var(--tour-background)'
+    },
+    placement: {
+        xPosition: 'after',
+        yPosition: 'below',
+        ...staticLang.tours.defaults
+    }
+};
+
+export const generateTour = (
+    tourId: string,
+    baseConfig: Omit<IStepOption, 'anchorId'> = tourDefaults) => (stepNamesOrConfigs: (string | IStepOption)[]): TranslatableStep[] => stepNamesOrConfigs.map(step => {
+    const isConfig = typeof step !== 'string';
+    const lookup = isConfig ? step.anchorId : step;
+    const anchorId = `${tourId}_${lookup}`;
+    const config = isConfig ? { ...tourDefaults, ...baseConfig, ...step } : baseConfig;
+    const translations = staticLang.tours?.[tourId]?.[lookup];
+    const tourTitle = staticLang.tours?.[tourId]?.title;
+    if (tourTitle && translations) {
+        translations.title = { value: tourTitle, params: { step: translations.title } };
+    }
+    return translations ? { ...config, ...translations, anchorId } : null;
+}).filter(step => !!step);
 
 export function cleanIp(ip: string): string {
     const checkIpv6 = /^(?:(?:(?:[0-9A-Fa-f]{0,4}:){7}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}:[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){5}:(?:[0-9A-Fa-f]{0,4}:)?[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){4}:(?:[0-9A-Fa-f]{0,4}:){0,2}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){3}:(?:[0-9A-Fa-f]{0,4}:){0,3}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){2}:(?:[0-9A-Fa-f]{0,4}:){0,4}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:(?:[0-9A-Fa-f]{0,4}:){0,5}:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:::(?:[0-9A-Fa-f]{0,4}:){0,5}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:[0-9A-Fa-f]{0,4}::(?:[0-9A-Fa-f]{0,4}:){0,5}[0-9A-Fa-f]{0,4})|(?:::(?:[0-9A-Fa-f]{0,4}:){0,6}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){1,7}:))$/;

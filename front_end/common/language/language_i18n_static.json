@@ -17,6 +17,56 @@
     "monitoring": {
         "unavailable": "Make sure the specified server is online and try again."
     },
+    "tours": {
+        "defaults": {
+            "prevBtnTitle": "Back",
+            "nextBtnTitle": "Next",
+            "endBtnTitle": "End Tour"
+        },
+        "cloud-layouts": {
+            "title": "Cloud Layouts: {step}",
+            "grid": {
+                "title": "Drag and drop grid",
+                "content": "Items in this grid can be dragged around, resized, and removed. New items can also be added from the resource tree on the left menu."
+            },
+            "left-menu": {
+                "title": "Resource Tree",
+                "content": "This menu will contain items that can be added to the layout by dragging and dropping. To switch a different view click a layout or resource from this tree."
+            },
+            "selected-focus": {
+                "title": "Focus Mode",
+                "content": "This selected resource is currently in focus mode. You can drag more items to the create to create a new layout or click on a different resource to view it in focus mode."
+            },
+            "selected-layout": {
+                "title": "Selected Layout",
+                "content": "This is your currently selected layout. You can add, move, or remove items from the grid."
+            },
+            "layouts": {
+                "title": "Layouts",
+                "content": "This menu will contain your saved layouts. New layouts can also be created by clicking the \"+\" icon on the right."
+            },
+            "add_layout": {
+                "title": "Add Layouts",
+                "content": "Clicking the  \"+\" icon will create a new blank layout if you're currently viewing a saved layout or will create a new layout with your current items if you're currently viewing a temporary layout."
+            },
+            "servers": {
+                "title": "Servers",
+                "content": "Drag a server to your layout to show monitoring for that server or click on a server switch to focus view for that server."
+            },
+            "cameras": {
+                "title": "Cameras",
+                "content": "Drag a camera to your layout to show the stream for that camera or click on a camera to switch to focus view for that camera"
+            },
+            "webpages": {
+                "title": "Webpages",
+                "content": "Drag a webpage to add it to your layout or click on a webpage to switch to focus view for that webpage"
+            },
+            "help": {
+                "title": "Help",
+                "content": "The help box will display the current state of your layout. Additionally, hovering over the help box will display some useful information and actions related to your current layout and layout state."
+            }
+        }
+    },
     "alarmTypes": {
         "Servers": "Servers",
         "Cameras": "Cameras",

@@ -2,6 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
 import { ComponentsCommonModule } from '@components/components-common.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
@@ -20,6 +21,7 @@ import { NxLayoutGridComponent } from './layout-grid.component';
         ComponentsModule,
         CdkTreeModule,
         MonitoringGraphModule,
+        TourMatMenuModule,
         AngularSvgIconModule.forRoot(),
     ],
     declarations: [

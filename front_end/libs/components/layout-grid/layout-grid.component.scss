@@ -9,6 +9,7 @@
     height: 100%;
     display: grid;
     position: relative;
+    user-select: none;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: minmax(0, 1fr);
     grid-template-areas: "left middle right";
@@ -16,8 +17,16 @@
     nx-pre-loader {
         position: absolute;
         top: 50%;
+        left: 50%;
         transform: translateY(-50%);
     }
+}
+
+.centered-anchor {
+    position: absolute;
+    left: calc(50% - 140px);
+    top: calc(50% - 140px);
+    pointer-events: none;
 }
 
 .sidebar-wrapper {
@@ -29,15 +38,23 @@
     transition-timing-function: ease-in-out;
     background: var(--header-bg);
     z-index: 2;
+    --column-width: calc(100vw / 12);
+    --base-width: calc(var(--column-width) * 3);
+    --tab-size: 25px;
+
+    @include bootstrap.media-breakpoint-down(lg) {
+        --base-width: max(calc(var(--column-width) * 6), 300px);
+    }
+    --sidebar-width: calc(var(--base-width) + var(--tab-size));
 
     &.open-menu {
         border-right: 1px solid var(--border-color);
         padding: 24px 0 24px 24px;
-        width: min(50vw, 360px);
+        width: var(--sidebar-width);
     }
 
     .cdk-tree {
-        width: calc(min(50vw, 360px) - 48px);
+        width: calc(var(--sidebar-width) - 48px);
 
         .cdk-tree-node {
             display: flex;
@@ -239,7 +256,8 @@ cdk-tree,
     overflow: hidden;
 
     &:active {
-        background: rgba($green200, .1)
+        background: rgba($brand_core, .1);
+        outline: 2px solid var(--brand-core);
     }
 
     .item-error {
@@ -260,18 +278,17 @@ cdk-tree,
     }
 }
 
-.drag-overlay {
-    position: absolute;
-    top: 16px;
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
-    z-index: 150;
-    background: transparent;
+.drag-container {
+    &, & > nx-pre-loader {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .layout-item {
-    border: 2px solid transparent;
     height: 100%;
     width: 100%;
     max-height: calc(100% - 2px);
@@ -285,12 +302,12 @@ cdk-tree,
     overflow: hidden;
 
     &:hover {
-        border: 2px solid var(--border-color);
+        outline: 2px solid var(--border-color);
     }
 
     &:active,
     :focus {
-        border: 2px solid var(--brand-core);
+        outline: 2px solid var(--brand-core);
     }
 
     ::ng-deep {
@@ -338,6 +355,8 @@ nx-monitoring-graph {
 iframe {
     width: 100%;
     height: 100%;
+    z-index: 2;
+    position: relative;
 }
 
 .layout-grid {
@@ -403,8 +422,11 @@ iframe {
 }
 
 .highlight-adding {
-    background: rgba($green200, .1);
+    z-index: 20;
     grid-area: 1 / 1 / 2 / 2;
+    opacity: 1 !important;
+    background: rgba($brand_core, .1);
+    outline: 2px solid var(--brand-core);
 }
 
 .action-button {
@@ -507,12 +529,11 @@ iframe {
         white-space: nowrap;
     }
 
-    .name-message>h4 {
+    h4.name-message {
         color: var(--left-menu-disabled-item-color) !important;
     }
 
-    .help-message,
-    .name-message {
+    .help-message {
         margin: 4px;
         padding: 4px 8px 8px 8px;
     }
@@ -550,6 +571,19 @@ iframe {
             button {
                 margin: 32px 16px 16px auto;
             }
+
+            button.start-tour {
+                display: inline-block;
+                margin: 4px 0 4px auto;
+                padding: 0px 4px;
+                background: transparent;
+                border: 1px solid var(--brand-core);
+                border-radius: 24px !important;
+                &:hover {
+                    background: var(--brand-core);
+                    border-color: var(--left-menu-l3-selected-color) !important;
+                }
+            }
         }
     }
 
@@ -560,6 +594,8 @@ iframe {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -569,5 +605,20 @@ iframe {
     p {
         margin-top: 8px;
         max-width: min(288px, calc(100vw - 32px));
+    }
+}
+
+.add-preview {
+    background: var(--header-bg);
+    height: 28px;
+    padding: 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+    & .st0 {
+        fill: var(--body-text-color);
     }
 }

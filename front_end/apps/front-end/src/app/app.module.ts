@@ -30,6 +30,7 @@ import {
     TranslateMessageFormatCompiler,
     MESSAGE_FORMAT_CONFIG
 } from 'ngx-translate-messageformat-compiler';
+import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer } from '@common/store/account';
@@ -37,6 +38,7 @@ import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.m
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
+import { TourStepModule } from '@components/tour-step/tour-step.module';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
@@ -100,7 +102,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,
+        TourStepModule,
         NgxMaskModule.forRoot(),
+        TourMatMenuModule.forRoot(),
         LoginWebadminModule
     ],
     providers: [

@@ -64,6 +64,7 @@ require('what-input');
                     cdkScrollable
                     #mainContainer
                 >
+                    <nx-tour-step-component></nx-tour-step-component>
                     <ng-template #cookieBanner></ng-template>
                     <router-outlet></router-outlet>
                 </div>

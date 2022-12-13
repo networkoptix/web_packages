@@ -10022,6 +10022,22 @@
             "path": "cloud_portal/front_end/node_modules/ngx-translate-messageformat-compiler",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-translate-messageformat-compiler/LICENSE"
         },
+        "ngx-ui-tour-core@9.2.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/hakimio/ngx-ui-tour",
+            "publisher": "Isaac Mann",
+            "email": "isaacplmann@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/ngx-ui-tour-core",
+            "licenseFile": "cloud_portal/front_end/node_modules/ngx-ui-tour-core/LICENSE"
+        },
+        "ngx-ui-tour-md-menu@9.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/hakimio/ngx-ui-tour",
+            "publisher": "Isaac Mann",
+            "email": "isaacplmann@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/ngx-ui-tour-md-menu",
+            "licenseFile": "cloud_portal/front_end/node_modules/ngx-ui-tour-md-menu/LICENSE"
+        },
         "ngx-webstorage@9.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/PillowPillow/ng2-webstorage",

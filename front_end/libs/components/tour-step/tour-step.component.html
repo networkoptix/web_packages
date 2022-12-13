@@ -1,0 +1,51 @@
+<ng-template
+    #tourTemplate
+    let-step="step"
+>
+    <div
+        class="tour-step"
+        (click)="$event.stopPropagation()"
+    >
+        <div class="tour-step-header">
+            <h1 class="tour-step-title">{{ step?.title }}</h1>
+            <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+                (click)="tourService.end()"
+            >
+                <div class="close-content"></div>
+            </button>
+        </div>
+        <div
+            [innerHtml]="step?.content"
+            class="tour-step-body"
+        ></div>
+        <div class="tour-step-footer">
+            <button
+                [disabled]="!tourService.hasPrev(step)"
+                (click)="tourService.prev()"
+                class="btn btn-default"
+            >
+                {{ step?.prevBtnTitle || LANG.tours.defaults.prevBtnTitle | translate }}
+            </button>
+            <ng-template #endTour>
+                <button
+                    (click)="tourService.end()"
+                    class="btn btn-primary"
+                >
+                    {{ step?.endBtnTitle || LANG.tours.defaults.endBtnTitle | translate }}
+                </button>
+            </ng-template>
+            <button
+                *ngIf="tourService.hasNext(step); else endTour"
+                (click)="tourService.next()"
+                class="btn btn-primary"
+            >
+                {{ step?.nextBtnTitle || LANG.tours.defaults.nextBtnTitle | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>
+<tour-step-template [stepTemplate]="tourTemplate"></tour-step-template>

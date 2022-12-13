@@ -1,14 +1,17 @@
 // import { Location } from '@angular/common';
 import {
+    ChangeDetectorRef,
     Component,
     Inject,
     LOCALE_ID,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { omit, uniq } from 'lodash-es';
+import { TourService } from 'ngx-ui-tour-md-menu';
 import { BehaviorSubject, combineLatest, concat, defer, firstValueFrom, merge, Observable, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, delay, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
@@ -17,7 +20,9 @@ import { LayoutResourceTree, ResourceNode, ResourceType } from '@components/layo
 import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { AnyTranslatePipe } from '@pipes/any-translate.pipe';
 import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -28,12 +33,31 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphabeticalSort, cleanId, pickFrom } from '@utils/general';
+import { alphabeticalSort, cleanId, generateTour, pickFrom, translateStep } from '@utils/general';
 
 interface Resource {
     name: string;
     id: string;
 }
+
+enum CloudLayoutTours {
+    DEFAULT = 'default'
+}
+
+const cloudLayoutTours = {
+    [CloudLayoutTours.DEFAULT]: [
+        'grid',
+        'left-menu',
+        ResourceType.LAYOUTS,
+        'add_layout',
+        { anchorId: 'selected-layout', isOptional: true },
+        ResourceType.SERVERS,
+        ResourceType.CAMERAS,
+        ResourceType.WEB_PAGES,
+        { anchorId: 'selected-focus', isOptional: true },
+        'help'
+    ]
+};
 
 interface ResourceLookup<T = { id: string }> {
     [id: string]: ResourceNode<T>
@@ -260,7 +284,9 @@ export class NxLayoutViewComponent {
         }),
         untilDestroyed(this)
     );
+
     #fetchingLayout$: Subject<'fetching'> = new Subject();
+
     selectedLayout$ = merge(
         this.#selectedLayout$,
         this.#fetchingLayout$
@@ -273,6 +299,7 @@ export class NxLayoutViewComponent {
         }),
         untilDestroyed(this)
     );
+
     selectedLayoutDropdown$ = this.#selectedLayout$.pipe(
         map(this.layoutToDropdown),
         shareReplay({
@@ -281,10 +308,20 @@ export class NxLayoutViewComponent {
         }),
         untilDestroyed(this)
     );
-    cameras$ = combineLatest([this.selectedLayout$, this.layoutItemLookup$]).pipe(
+
+    layoutAndItems$ = combineLatest([this.selectedLayout$, this.layoutItemLookup$]).pipe(
+        shareReplay({
+            bufferSize: 1,
+            refCount: false
+        }),
+        untilDestroyed(this)
+    );
+
+    cameras$ = this.layoutAndItems$.pipe(
         map(([{ items }, lookup]) => uniq(items.filter(({ resourceId }) => lookup[resourceId]?.type === 'camera').map(({ resourceId }) => resourceId).sort())),
         untilDestroyed(this)
     );
+
     recordedTimes$ = this.selectedLayout$.pipe(
         switchMap(() => concat(
             Promise.resolve(null),
@@ -296,6 +333,7 @@ export class NxLayoutViewComponent {
         ),
         untilDestroyed(this)
     );
+
     constructor(
         configService: NxConfigService,
         private router: Router,
@@ -306,13 +344,35 @@ export class NxLayoutViewComponent {
         private systemsService: NxSystemsService,
         private dialogsService: NxDialogsService,
         @Inject(LOCALE_ID) private locale: string,
+        private tourService: TourService,
+        private translate: TranslateService,
+        private cd: ChangeDetectorRef,
+        private cloudApi: NxCloudApiService
     ) {
         this.CONFIG = configService.config;
     }
 
     ngOnInit(): void {
-        this.dialogsService.cloudLayoutsInfo();
+        this.layoutAndItems$.pipe(
+            filter(([layout, items]) => layout && !!items),
+            take(1),
+            delay(100)
+        ).subscribe(() => this.initTour());
     }
+
+    initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {
+        this.tourService.initialize(
+            generateTour('cloud-layouts')(cloudLayoutTours[tourGroup]).map(
+                translateStep((...args) => new AnyTranslatePipe(this.translate, this.cd).transform(...args))));
+        this.cloudApi.checkFeatureNotice('cloudLayouts', () => this.dialogsService.cloudLayoutsInfo().then(start => {
+            if (start) {
+                this.tourService.start();
+            }
+            if (start !== false) {
+                return Promise.reject();
+            }
+        })).toPromise();
+    };
 
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;

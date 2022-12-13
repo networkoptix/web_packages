@@ -142,6 +142,7 @@
     "ngx-quicklink": "0.3.0",
     "ngx-translate-cut": "2.0.0",
     "ngx-translate-messageformat-compiler": "5.0.1",
+    "ngx-ui-tour-md-menu": "^9.3.1",
     "ngx-webstorage": "9.0.0",
     "rxjs": "7.5.5",
     "swagger-ui": "4.11",

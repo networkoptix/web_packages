@@ -524,14 +524,14 @@ export class NxCloudApiService {
 
     checkFeatureNotice = <T>(noticeKey: string, firstViewCallback: () => T) => this.getCustomAccountProperty('featureNotices').pipe(
         catchError(() => Promise.resolve({})),
-        switchMap(value => {
+        switchMap(async value => {
             if (value[noticeKey]) {
                 return Promise.resolve(value);
             }
 
-            firstViewCallback();
+            await firstViewCallback();
 
-            return this.saveCustomAccountProperty({ ...value, [noticeKey]: true }, 'featureNotices');
+            return this.saveCustomAccountProperty({ ...value, [noticeKey]: true }, 'featureNotices').toPromise();
         }
         ));
 

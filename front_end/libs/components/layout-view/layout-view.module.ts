@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
 import { ComponentsCommonModule } from '@components/components-common.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
@@ -14,7 +15,8 @@ import { NxLayoutViewComponent } from './layout-view.component';
         ComponentsCommonModule,
         LayoutGridModule,
         LayoutTimelineModule,
-        LayoutPtzModule
+        LayoutPtzModule,
+        TourMatMenuModule
     ],
     declarations: [
         NxLayoutViewComponent

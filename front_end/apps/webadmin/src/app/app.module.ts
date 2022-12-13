@@ -28,12 +28,14 @@ import {
     TranslateMessageFormatCompiler,
     MESSAGE_FORMAT_CONFIG
 } from 'ngx-translate-messageformat-compiler';
+import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer } from '@common/store/account';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
+import { TourStepModule } from '@components/tour-step/tour-step.module';
 // import { DirectivesModule } from '@directives/directives.module';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
@@ -92,6 +94,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,
+        TourStepModule,
+        TourMatMenuModule.forRoot(),
         NgxMaskModule.forRoot()
     ],
     providers: [

@@ -36,5 +36,5 @@ export class NewFeatureInformationModalContent<T> {
         }
     }
 
-    close = (): void => this.dialogRef.close();
+    close = (startTour = false): void => this.dialogRef.close(startTour);
 }

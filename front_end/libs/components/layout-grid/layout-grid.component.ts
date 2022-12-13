@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SvgIconComponent } from 'angular-svg-icon';
 import { cloneDeep, isEqual, omit } from 'lodash-es';
+import { TourService } from 'ngx-ui-tour-md-menu';
 import { BehaviorSubject, combineLatest, interval, Observable, Subject, timer, firstValueFrom } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip, debounceTime, takeUntil, startWith } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
@@ -68,7 +68,7 @@ interface DragPosition extends Size {
 interface Collisions {
     moveTo?: unknown;
     opacity?: number;
-    background?: 'red';
+    background?: string;
 }
 
 @UntilDestroy()
@@ -94,11 +94,12 @@ export class NxLayoutGridComponent {
     treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
     dataSource: ArrayDataSource<BaseResourceNode>;
 
-    openMenu: false | HTMLElement | SvgIconComponent = false;
-    previousOpenMenu: HTMLElement | SvgIconComponent = null;
+    openMenu: false | 'left' | 'right' | 'both' = 'left';
+    previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
     dragging = false;
     addingItem = false;
+    addOffset = 0;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
     additionalErrorMessages: Record<string, string> = {};
@@ -157,6 +158,7 @@ export class NxLayoutGridComponent {
                 'background-position': `${wrapperPosition.left}px ${wrapperPosition.top}px`,
                 'background-size': `${cellSize.width}px ${cellSize.height}px`
             };
+            this.addOffset = cellSize.height / 2;
             return { width, height, outerWrapper, wrapperPosition, cellSize, origin, ...gridWrapper };
         }),
         shareReplay({
@@ -287,7 +289,8 @@ export class NxLayoutGridComponent {
         private cd: ChangeDetectorRef,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
+        public tourService: TourService
     ) {
         this.CONFIG = configService.config;
     }
@@ -340,6 +343,8 @@ export class NxLayoutGridComponent {
         }
     }
 
+    startTour = (): void => this.tourService.start();
+
     checkIframeContent(id: string, frame: HTMLIFrameElement): void {
         const loaded = frame.contentWindow.window.length;
         try {
@@ -385,12 +390,12 @@ export class NxLayoutGridComponent {
 
     cleanId = cleanId;
 
-    toggleMenu(target: HTMLElement | SvgIconComponent = this.previousOpenMenu, force = false): void {
+    toggleMenu(menu = this.previousOpenMenu, force = false): void {
         if (!this.openMenu || force) {
             if (this.openMenu) {
                 this.previousOpenMenu = this.openMenu;
             }
-            this.openMenu = this.openMenu === target ? false : target;
+            this.openMenu = this.openMenu === menu ? false : menu;
         }
     }
 
@@ -519,7 +524,7 @@ export class NxLayoutGridComponent {
         this.addingItem = true;
         if (itemParent) {
             move.x -= itemParent.offsetLeft + itemParent.offsetWidth;
-            move.y += itemParent.offsetHeight;
+            move.y += this.addOffset - 108;
         }
         this.#draggingPosition$.next({ move, id: 'added' });
     };
@@ -764,7 +769,7 @@ export class NxLayoutGridComponent {
         return { top: top + y, bottom: bottom + y, left: left + x, right: right + x, transform };
     };
 
-    getCollisionStyle = (item: LayoutItem, dragging: Partial<Position>, items: LayoutItems): { moveTo?: null, opacity?: number, background?: 'red' } => {
+    getCollisionStyle = (item: LayoutItem, dragging: Partial<Position>, items: LayoutItems): Collisions => {
         // TODO: Need to find algorithm for finding best position
         // const { transform, ...targetPosition } = this.getNewPosition(item, dragging);
         const collided = items.length;
@@ -772,8 +777,8 @@ export class NxLayoutGridComponent {
         if (collided) {
             return {
                 moveTo: null,
-                opacity: 0.2,
-                background: 'red'
+                opacity: 0.25,
+                background: 'var(--error)'
             };
         }
 
