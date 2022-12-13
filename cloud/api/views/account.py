@@ -259,7 +259,7 @@ async def login_with_tokens(request):
     }
     validate_token = await sync_to_async(Auth.validate_token)(tokens["access_token"])
     try:
-        user = models.Account.objects.get(email=validate_token['username'])
+        user = await models.Account.objects.aget(email=validate_token['username'])
     except models.Account.DoesNotExist:
         raise APINotFoundException("User not in cloud")
     await sync_to_async(kill_tokens)(request, Auth.delete_token)
