@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxToastService } from '@lib/dialogs/toast.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
@@ -43,6 +44,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
+        private toastService: NxToastService
     ) {
         this.menuService.detail = 'password';
     }
@@ -78,6 +80,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
             errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
             ignoreUnauthorized: true
         }, () => {
+            this.toastService.notify(this.LANG.authorize.newPassConfirmText, 'success');
             this.hideErrors = true;
             this.passwordForm.reset();
         });
