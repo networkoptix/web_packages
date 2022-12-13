@@ -47,7 +47,7 @@ def email_cache(customization_name, cache_type, value=None, force=None):
 EMAIL_CONFIG = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls", "mail_from_name", "mail_from_email"]
 
 
-def send(email, msg_type, message, language_code, customization_name, subject='', attachments=[]):
+def send(email, msg_type, message, language_code, customization_name, subject='', attachments=None):
     from email.mime.image import MIMEImage  # python 3
     from cms.models import cloud_portal_customization_cache
     from django.core.mail import EmailMultiAlternatives, get_connection
@@ -92,7 +92,7 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     ) if not settings.TESTING else get_connection()
 
     msg = EmailMultiAlternatives(
-        subject, email_txt_body, email_from, to=email)
+        subject, email_txt_body, email_from, to=email, reply_to=customization_cache.get("reply_to"))
     msg.content_subtype = 'plain'  # Main content is now text/html
     msg.attach_alternative(email_html_body, "text/html")
 
@@ -104,6 +104,10 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     msg_img = MIMEImage(read_file(customization_name, 'templates/email_logo.png'), _subtype="png")
     msg_img.add_header('Content-ID', '<logo>')
     msg.attach(msg_img)
+
+    if not attachments:
+        attachments = []
+
     for attachment in attachments:
         msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
 

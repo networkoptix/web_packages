@@ -230,8 +230,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         customization = Customization.objects.get(name=customization_name)
         global_vars = ['%INTEGRATION_STORE_ENABLED%', '%PUSH_CONFIG_WEB%', '%CLOUD_NAME%', '%VMS_NAME%',
                        '%INTEGRATION_SEO_PAGE_DESCRIPTION%']
-        email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%', '%SMTP_USER%',
-                 '%SMTP_PASSWORD%', '%SMTP_TLS%']
+        email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%REPLY_TO_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%',
+                 '%SMTP_USER%', '%SMTP_PASSWORD%', '%SMTP_TLS%']
         config = ['%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%', '%ALEXA_INTEGRATION_ENABLED%',
                   '%BOOKMARKS_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_SIZE%',
                   '%COPYRIGHT_YEAR%', '%COMPANY_NAME%', '%COMPANY_LINK%', '%DEVELOPERS_ENABLED%', '%FEEDBACK_ENABLED%',
@@ -269,6 +269,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'mail_from_name': ds_data.get('%MAIL_FROM_NAME%'),
                 'mail_from_email': ds_data.get('%MAIL_FROM_EMAIL%'),
                 'portal_url': SpecialStructures.calc_cloud_link(asset),
+                'reply_to': ds_data.get('%REPLY_TO_EMAIL%'),
                 'smtp_host': ds_data.get('%SMTP_HOST%'),
                 'smtp_port': ds_data.get('%SMTP_PORT%'),
                 'smtp_user': ds_data.get('%SMTP_USER%'),
