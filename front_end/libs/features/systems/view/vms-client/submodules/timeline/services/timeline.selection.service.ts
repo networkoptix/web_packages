@@ -221,6 +221,17 @@ export class TimelineSelectionService {
 
     protected _lastMouseMove: MouseEvent;
 
+    public handleSelectedRangeMouseDown(e: MouseEvent): void {
+        e.preventDefault();
+        e.stopPropagation();
+        this.playback.pause();
+        if (this._dragMode === SELECTION_DRAG_MODE.NO_DRAGGING) {
+            this._dragMode = SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE;
+            this._dragAnchorPx = e.offsetX;
+            this._dragAnchorMs = this._selectedRange.start;
+        }
+    }
+
     public handleMouseMove(e: MouseEvent) {
         this._lastMouseMove = e;
 
@@ -237,6 +248,31 @@ export class TimelineSelectionService {
                     this._selectedRange.start = this._dragAnchorMs;
                 }
 
+                this._emit();
+            } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
+                const offsetPx = this._getOffsetPx(e) - this._dragAnchorPx;
+                const timeUnderMouse = this.timeline.domOffsetXtoTime(offsetPx);
+                const leftEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse);
+                const rightEdgeFits = this.timeline.archiveRange.contains(
+                    timeUnderMouse + this._selectedRange.duration
+                );
+                if (offsetPx < 0) {
+                    if (leftEdgeFits) {
+                        this._selectedRange.moveStartTo(timeUnderMouse);
+                    } else {
+                        this._selectedRange.moveStartTo(
+                            this.timeline.archiveRange.start
+                        );
+                    }
+                } else if (offsetPx > 0) {
+                    if (rightEdgeFits) {
+                        this._selectedRange.moveStartTo(timeUnderMouse);
+                    } else {
+                        this._selectedRange.moveStartTo(
+                            this.timeline.archiveRange.end - this._selectedRange.duration
+                        );
+                    }
+                }
                 this._emit();
             } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR) {
                 const offsetPx = this._getOffsetPx(e);

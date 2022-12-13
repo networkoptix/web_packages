@@ -315,6 +315,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     @HostListener('document:mouseup', ['$event'])
     @HostListener('mouseup', ['$event'])
     public mouseSelectionUpHandler(e: MouseEvent): void {
+        this.selectedRangeView.nativeElement.classList.remove('range-drag');
         if (!this.selectionMode && e.currentTarget !== this.document) {
             this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
             // short click
@@ -354,6 +355,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 this.host.getBoundingClientRect().left +
                 e.offsetX,
         });
+
         if (this.selectionMode && e.buttons) {
             this.selection.handleMouseMove(e);
             this.hideLeftEar = this.selection.range.duration === 0;
@@ -369,7 +371,9 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public selectedRangeMouseDownHandler(e: MouseEvent): void {
-        this.selection.reset();
+        this.selectionMode = true;
+        this.selectedRangeView.nativeElement.classList.add('range-drag');
+        this.selection.handleSelectedRangeMouseDown(e);
     }
 
     public selectedRangeDoubleClickHandler(e: MouseEvent): void {

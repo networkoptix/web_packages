@@ -42,6 +42,10 @@
         &.active {
             display: block;
         }
+        
+        &.range-drag {
+            cursor: grab;
+        }
 
         > .ear {
             width: 130px;
