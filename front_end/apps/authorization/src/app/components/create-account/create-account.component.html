@@ -329,23 +329,6 @@
             </button>
         </div>
         <div class="right">
-            <button
-                *ngIf="!smallView"
-                class="btn text-button"
-                type="button"
-                (click)="setCurrentState.emit('email')"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dir + 'arrow_back_button.svg'"
-                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                ></svg-icon>
-                <span
-                    class="pl-1"
-                    translate
-                    >Back</span
-                >
-            </button>
             <nx-process-button
                 [form]="createAccountForm"
                 [clickFn]="onCreateSubmit"
