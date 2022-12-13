@@ -47,9 +47,9 @@
                 >
                     <span
                         class="filter-label"
-                        [innerHTML]="filtersSelected"
                         [dir]="'auto' | as: Direction"
-                    ></span>
+                        >{{ filtersSelected }}</span
+                    >
                     <span
                         class="close-button"
                         (click)="resetFilters()"

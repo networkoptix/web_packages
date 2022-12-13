@@ -280,14 +280,13 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.localFilter.selects?.forEach(select => {
             if (select.selected && select.selected.value !== '0') { // not default value
                 this.numberFilters += 1;
-                if (this.numberFilters > 1) {
-                    selectsSelected = this.translateSerice.instant(
+                selectsSelected = this.numberFilters > 1
+                    ? this.translateSerice.instant(
                         this.LANG.search.appliedFilters, {
                             count: this.numberFilters
-                        });
-                } else {
-                    selectsSelected = `${select.label}&nbsp;&ndash;&nbsp;${select.selected.name}`;
-                }
+                        }
+                    )
+                    : `${select.label} – ${select.selected.name}`;
                 flag += 1;
             }
         });
@@ -299,26 +298,17 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 flag += 1;
             }
 
-            let label: string;
             if (select.selected.length === 1) {
-                label = select.label;
-
-                if (select.singular) {
-                    label = select.singular;
-                }
-
-                label += ' &ndash; ';
-
-                if (select.searchLabelSingular !== undefined) {
-                    label = select.searchLabelSingular;
-                }
+                const label = select.searchLabelSingular !== undefined
+                    ? select.searchLabelSingular
+                    : `${select.singular || select.label} –`;
 
                 const selectedLabel = select.items
                     .find(item => item.id === select.selected[0])
                     .label;
                 multiSelectsSelected = `${label}${selectedLabel}`;
             } else if (select.selected.length > 1) {
-                label = select.searchLabel ?? select.label.toLowerCase();
+                const label = select.searchLabel ?? select.label.toLowerCase();
                 multiSelectsSelected = `${select.selected.length} ${label}`;
             }
         });
