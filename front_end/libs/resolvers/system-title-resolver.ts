@@ -20,7 +20,7 @@ export class SystemTitleResolver implements Resolve<string> {
     resolve(route: ActivatedRouteSnapshot): string {
         if (!environment.isLocal) {
             const id = route.params.systemId || this.systemId;
-            const systemName = this.systems.find((system: NxSystemInfo) => system.id === id)?.name || '';
+            const systemName = this.systems?.find((system: NxSystemInfo) => system.id === id)?.name || '';
 
             return `{"baseTitle" : "${systemName}", "type": "system"}`;
         }
