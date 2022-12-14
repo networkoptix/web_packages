@@ -597,6 +597,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     async updateMenu(): Promise<void> {
         this.systemNoAccess = false;
 
+        await Promise.all([
+            this.system.serverManager.getServers().toPromise(),
+            this.system.cameraManager.getCameras()
+        ]);
+
         if (this.system.userManager.permissions.editCameras) {
             let camerasNode = this.content.level1.find(node =>
                 node.id === menus.systemSettings.cameras.id

@@ -505,10 +505,12 @@ export class NxCloudApiService {
         const endpoint = apiBase + '/account';
         this.cacheService.addToCache(endpoint);
         let headers = new HttpHeaders();
+        const params: { force?: true } = {};
         if (forceUpdate) {
             headers = headers.set('reset-cache', 'reset');
+            params.force = true;
         }
-        return this.http.get<Account>(endpoint, { headers })
+        return this.http.get<Account>(endpoint, { headers, params })
             .pipe(
                 map(account => {
                     if (!account.isCloud) {
@@ -800,7 +802,7 @@ export class NxCloudApiService {
     #withFreshSession: t.WithFreshSession = (
         minSessionSeconds = 300
     ) => observableInputFactory => {
-        const getAccessToken = (minSession?: number) => this.account().pipe(
+        const getAccessToken = (minSession?: number) => this.account(true).pipe(
             switchMap(({
                 sessionExpires
             }) => !minSession || ((Date.now() + minSession) < sessionExpires) ? this.renewSessionUsingRefreshToken() : this.account())

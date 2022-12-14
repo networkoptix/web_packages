@@ -153,12 +153,14 @@ export class LicenseManager extends Destroyable {
         this.#updater$.pipe(
             filter(updates => updates.includes('system')),
             switchMap(() => this.licenseServerApi.getLicenses(this.system.id)),
+            catchError(() => Promise.resolve([] as LicenseInfo[])),
             this.onDestroyed
         ).subscribe(this.systemLicenses$);
 
         this.#updater$.pipe(
             filter(updates => updates.includes('user')),
             switchMap(() => this.licenseServerApi.getLicenses()),
+            catchError(() => Promise.resolve([] as LicenseInfo[])),
             this.onDestroyed
         ).subscribe(this.userLicenses$);
     }

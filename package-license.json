@@ -1621,12 +1621,6 @@
             "licenseFile": "cloud_portal/front_end/eslint-plugin-nx/node_modules/yocto-queue/license"
         }
     },
-    "/front_end/inline-wizard/": {
-        "inline-wizard@3.2.0": {
-            "licenses": "UNKNOWN",
-            "path": "cloud_portal/front_end/inline-wizard"
-        }
-    },
     "/front_end/": {
         "@ampproject/remapping@2.2.0": {
             "licenses": "Apache-2.0",

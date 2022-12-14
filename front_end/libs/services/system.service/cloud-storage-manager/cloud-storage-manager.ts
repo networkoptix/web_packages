@@ -48,6 +48,7 @@ export class CloudStorageManager extends Destroyable {
             }
             resolve([] as StorageInfo[]);
         }, 2500))))),
+        catchError(() => Promise.resolve([] as StorageInfo[])),
         shareReplay({ bufferSize: 1, refCount: false }),
         this.onDestroyed
     );
