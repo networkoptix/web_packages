@@ -3,6 +3,11 @@
   src: url('/fonts/roboto/roboto_light/Roboto-Light-webfont.woff');
 }
 
+html {
+    /*Django 4.1 seems to have changed some sizes to rems so this base size makes the font sizes reasonable again*/
+    font-size: 16px;
+}
+
 #header {
     height: 40px !important;
     line-height: 40px !important;
