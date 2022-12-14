@@ -91,8 +91,12 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         use_tls=customization_cache["smtp_tls"],
     ) if not settings.TESTING else get_connection()
 
+    reply_to = None
+    if reply_to_email := customization_cache.get("reply_to"):
+        reply_to = [reply_to_email]
+
     msg = EmailMultiAlternatives(
-        subject, email_txt_body, email_from, to=email, reply_to=customization_cache.get("reply_to"))
+        subject, email_txt_body, email_from, to=email, reply_to=reply_to)
     msg.content_subtype = 'plain'  # Main content is now text/html
     msg.attach_alternative(email_html_body, "text/html")
 
