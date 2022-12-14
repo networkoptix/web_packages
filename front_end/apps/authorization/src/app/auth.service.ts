@@ -70,13 +70,22 @@ export class AuthService {
         }
         // TODO: Once client registration is supported verify clientId + redirectUrl before trying to get an access code.
         return this.post(endpoints.token, data)
-            .pipe(map(({ code }) => {
+            .pipe(map(({ code, error } : { code: string, error: string }) => {
                 const [link, qs] = redirectUrl?.split('?') || [this.window.location.origin];
                 const params = new URLSearchParams(qs || '');
-                params.set('code', <string>code);
+                params.set('code', code);
 
                 if (state) {
                     params.set('state', state);
+                }
+
+                if (error) {
+                    // eslint-disable-next-line @typescript-eslint/no-throw-literal
+                    throw {
+                        code,
+                        errorText: error,
+                        link: `${link}?${params.toString()}`
+                    };
                 }
 
                 return {

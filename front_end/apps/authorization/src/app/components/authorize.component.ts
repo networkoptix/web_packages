@@ -448,7 +448,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         this.passwordErrorCode = 'lockedOut';
                     }
                     // error message exists when 2fa is required
-                } else if (err?.error === 'second_factor_required') {
+                } else if (err?.errorText === 'second_factor_required') {
                     this.loginCode = err.access_code || err.code;
                     this.redirectLink = err.link;
                     this.currentState = AuthorizeState.auth;
@@ -659,7 +659,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 console.error(err);
             }
         }
-
         this.window.location.href = route || this.initialData.redirect_uri || '/';
     };
 
