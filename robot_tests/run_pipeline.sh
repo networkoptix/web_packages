@@ -57,6 +57,7 @@ LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
   pabot --pabotlib --processes 4 -e integrations -L trace:info \
   -v ENV:"https://$CLOUD_HOST" \
   -v "FROM EMAIL DEFAULT":True \
+  --listener NoptixLibrary/FeatureFlagListener.py \
   -i 'smoke' 'test-cases'
 TESTS_RESULT_CODE=$?
 
