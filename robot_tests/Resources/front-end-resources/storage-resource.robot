@@ -9,18 +9,13 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
 ${storage string 2}    ${EMPTY}
-#${camera}      00-09-18-64-EE-7D
-#${camera url}    10.1.5.168
-#${camera manufacturer}    3100
-#${camera user}    admin
-#${camera password}    QAbur777$
-#${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
-${camera}      00-02-D1-7E-59-52
-${camera url}    10.1.5.217
-${camera manufacturer}    VIVOTEK
-${camera user}    root
-${camera password}    QAbur777%
-${camera resourceId}   {d6aa35d3-6153-d3cf-8d89-6c4e3f5095f6}
+${camera}      E4-30-22-4A-D1-EB
+${camera url}    172.20.3.253
+${camera manufacturer}    Hanwha Techwin
+${camera user}    admin
+${camera password}    QWEasd!23
+@{camera auth}   ${camera user}   ${camera password}
+${camera resourceId}   {fc98f5dc-6c61-4b38-b9de-7d2ed79f5047}
 ${disk location}    /media/nxwitness-storages/disk1
 ${backup initialized}    ${FALSE}
 ${change focus}    //h4[contains(text(),"Storage")]
@@ -32,7 +27,7 @@ ${drives}    5
 Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
     ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 4.3}'    [\"{beee013e-d913-8f47-144f-2092371ee118}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
-    ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 5.0}'    [\"{177334ce-ee4d-9856-bde8-c212b8c5cd7d}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
+    ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 5.0}'    [\"{d018384f-8f08-6a40-70a8-1405ba18b455}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
     Set Suite Variable     ${value}    ${value}
     ${random} =	   Generate Random String      length=5
     Set Suite Variable     ${random}    ${random}
@@ -138,7 +133,7 @@ Verify Storages
 Turn on Recording
     [Arguments]    ${owner}    ${system}
     IF    ${IMAGE} == ${IMAGE 5.0} or ${IMAGE} == ${IMAGE 5.1}
-        Start Recording API    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}    ${camera resourceId}
+        Start Recording API    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['token']}    ${camera resourceId}    camera_auth=${camera auth}
         Log in to user and system    ${owner}     ${system}
         Go To Cameras
         ${status} =     Run Keyword and Return Status     Wait Until Element Is Visible    //span[contains(text(), "Edit Credentials")]    timeout=15

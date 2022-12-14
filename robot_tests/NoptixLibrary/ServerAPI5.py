@@ -372,62 +372,62 @@ class ServerAPI5(ServerAPI):
             return r.json()
 
     @keyword
-    def start_recording_api(self, serverUrl, auth, cameraId, camera_auth=['root','QAbur777%']):
-        with requests.Session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            payload = {"credentials":{"user": camera_auth[0], "password": camera_auth[1]},
-                       "schedule": {"isEnabled": True},
-                       "tasks":
-                        [
-                           {
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           },
-                           {
-                               "dayOfWeek": 2,
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           },
-                           {
-                               "dayOfWeek": 3,
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           },
-                           {
-                               "dayOfWeek": 4,
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           },
-                           {
-                               "dayOfWeek": 5,
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           },
-                           {
-                               "dayOfWeek": 6,
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           },
-                           {
-                               "dayOfWeek": 7,
-                               "endTime": 86400,
-                               "fps": 30,
-                               "streamQuality": "low"
-                           }
-                       ]
-                    }
-            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            time.sleep(1)
-            r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=payload, verify=False)
-            logger.debug(r.text)
-            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
-            return r.json()
+    def start_recording_api(self, serverUrl, token, cameraId, camera_auth=['root','QAbur777%']):
+        # with requests.Session() as s:
+        # credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+        payload = {"credentials":{"user": camera_auth[0], "password": camera_auth[1]},
+                   "schedule": {"isEnabled": True},
+                   "tasks":
+                    [
+                       {
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       },
+                       {
+                           "dayOfWeek": 2,
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       },
+                       {
+                           "dayOfWeek": 3,
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       },
+                       {
+                           "dayOfWeek": 4,
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       },
+                       {
+                           "dayOfWeek": 5,
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       },
+                       {
+                           "dayOfWeek": 6,
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       },
+                       {
+                           "dayOfWeek": 7,
+                           "endTime": 86400,
+                           "fps": 30,
+                           "streamQuality": "low"
+                       }
+                   ]
+                }
+        # r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+        # time.sleep(1)
+        r = requests.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', headers={"x-runtime-guid": token}, json=payload, verify=False)
+        logger.debug(r.text)
+        assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+        return r.json()
 
     @keyword
     def activate_license(self, auth, serverUrl, license):
@@ -542,3 +542,9 @@ class ServerAPI5(ServerAPI):
         t = requests.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
         r = requests.post(f'{serverUrl}/ec2/saveUser', headers={"x-runtime-guid": t.json()['token']}, json=body, verify=False)
         return r.json()
+
+    @keyword
+    def get_server_token(self, auth, serverUrl):
+        credentials = {"username": auth[0], "password": auth[1], "setCookie": False}
+        t = requests.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+        return t.json()['token']

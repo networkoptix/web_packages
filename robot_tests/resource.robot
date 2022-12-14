@@ -963,6 +963,10 @@ Create Base System
     Run Keyword If    $add_users and $owner    Set To Dictionary    ${server}    cloud users=${cloud users}
        ...    ELSE    Set To Dictionary    ${server}    cloud users=${None}
 
+    # login to server and get access token
+    ${token} =  Get Server Token    ${local auth}   https://${QA BURBANK IP}:${server}[port]
+    Set To Dictionary   ${server}   token=${token}
+
     [Return]    ${server}
 
 Delete Accounts

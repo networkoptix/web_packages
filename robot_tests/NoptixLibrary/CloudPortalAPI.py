@@ -455,12 +455,15 @@ class CloudPortalAPI(object):
     @keyword
     def share(self, auth, systemId, accessRole, accountEmail, customPermissions):
         body = {
-            "systemId": systemId,
             "accessRole": accessRole,
             "accountEmail": accountEmail,
-            "customPermissions": customPermissions
+            "customPermissions": customPermissions,
+            "userRoleId": "",
+            "isEnabled": True,
+            "vmsUserId": "",
+            "sendNotification": ""
         }
-        r = requests.post(f'{self.env}/cdb/system/share', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{self.env}/cdb/systems/{systemId}/users', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         assert r.status_code == 200, r.json()
         return r.json()
 
