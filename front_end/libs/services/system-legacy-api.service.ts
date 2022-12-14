@@ -939,7 +939,13 @@ export class NxSystemAPI {
             'permissions',
             'isCloud',
             'isEnabled',
-            'password'
+            'password',
+            'type',
+            'isOwner',
+            'accessibleResources',
+            'isHttpDigestEnabled',
+            'password',
+            'userRoleId'
         ];
         supportedFields.forEach((field: string) => {
             if (field in user) {

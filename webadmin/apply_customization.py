@@ -48,11 +48,52 @@ def apply_customization(webadmin_package, customization_package, output_package)
             customization_zip, webadmin_zip, temp_dir
         )
 
+    clean_static_info(customization_package, temp_dir)
+
     output_package = Path(output_package)
     shutil.make_archive(output_package, "zip",
                         root_dir=temp_dir, base_dir="static")
     shutil.rmtree(temp_dir)
     Path(str(output_package) + ".zip").replace(output_package)
+
+
+def clean_static_info(customization_package, output_dir):
+    file_to_replace = "description.json"
+    path_to_file = os.path.join("static", "customization", file_to_replace)
+
+    with ZipFile(customization_package) as zip_file:
+        with zip_file.open(file_to_replace) as f:
+            description = json.load(f)
+
+    preserve_keys = [
+        'vmsName', 'cloudName', 'copyrightYear', 'companyName', 'contact', 'desktop.trialLicenseKey',
+        'defaultLanguage']
+
+    cleaned_description = {}
+    for key in preserve_keys:
+        if '.' in key:
+            nested_keys = key.split('.')
+            nested_object = {}
+            temp_nested_object = nested_object
+            last_nested_description = description
+
+            last_key = nested_keys.pop(-1)
+            for nested_key in nested_keys:
+                temp_nested_object[nested_key] = {}
+                temp_nested_object = temp_nested_object[nested_key]
+                last_nested_description = description[nested_key]
+
+            if last_key not in last_nested_description:
+                continue
+            temp_nested_object[last_key] = last_nested_description[last_key]
+            cleaned_description.update(nested_object)
+
+        elif key in description:
+            cleaned_description[key] = description[key]
+
+    data = json.dumps(cleaned_description, indent=4)
+    with open(output_dir / path_to_file, "w") as file:
+        file.write(data)
 
 
 def process_files(customization_zip, webadmin_zip, temp_dir):
@@ -73,7 +114,7 @@ def process_files(customization_zip, webadmin_zip, temp_dir):
     shutil.copyfile(f"{static_dir}/styles/{skin}.css",
                     f"{static_dir}/styles/skin.css")
 
-    for file in ["description.json", "webadmin_config.json", "desktop/webadmin_config.js"]:
+    for file in ["webadmin_config.json", "desktop/webadmin_config.js"]:
         extract_file_to(customization_zip, file, customization_dir)
 
     replace_static(static_dir, customization_dir, description)
