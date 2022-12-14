@@ -47,17 +47,17 @@ html[data-theme="dark"] {
     --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
 
     --spot-gradient : radial-gradient(
-                    ellipse farthest-corner at center center,
-                    #303F47 0,
-                    #2B383F 3%,
-                    #263137 5%,
-                    #212A2F 10%,
-                    #1C2327 15%,
-                    #171C1F 20%,
-                    #121517 23%,
-                    #0D0E0F 25%,
-                    #080707 30%,
-                    #000000 40%
+        ellipse farthest-corner at center center,
+        #303F47 0,
+        #2B383F 3%,
+        #263137 5%,
+        #212A2F 10%,
+        #1C2327 15%,
+        #171C1F 20%,
+        #121517 23%,
+        #0D0E0F 25%,
+        #080707 30%,
+        #000000 40%
     );
 
     --h1 : #E1E7EA; //$light4;
@@ -386,6 +386,7 @@ html[data-theme="dark"] {
     --dialog-bg : #171C1F; //$dark5;
     --dialog-border-color : #35464F; //$dark11;
     --dialog-header-bg : #1C2327; //$dark6;
+    // --dialog-overlay-bg
 
     --svg-legend-bg : #171C1F; //$dark5;
     --svg-legend-border-color : #35464F; //$dark11;
@@ -415,6 +416,7 @@ html[data-theme="dark"] {
 
     --dropdown-item-color: #A5B7C0; //$light10
     --dropdown-item-active-bg : #2B383F; //$dark9;
+    // --dropdown-item-active-color
     --dropdown-item-hover-bg : #212A2F; //dark7;
     --dropdown-item-hover-color : #A5B7C0; //$light10
     --dropdown-item-selected-bg    : #35464F; //dark11;
@@ -582,12 +584,53 @@ html[data-theme="dark"] {
 
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
+
+    // System groups TODO
+    // --groups-sidebar-bg: #{$light5};
+    // @include generateVarAndRgb(--groups-sidebar-highlight, $light16);
+    // --groups-sidebar-highlight-color: #{$light1};
+    // --groups-sidebar-triangle-icon-fill: #{$dark17};
+    // --groups-sidebar-triangle-icon-highlight-fill: #{$light4};
+    // --groups-sidebar-folder-icon-fill: #{$dark17};
+    // --groups-sidebar-folder-icon-highlight-fill: #{$light1};
+
+    // --group-card-folder-icon-body-fill: #{$light10};
+    // --group-card-folder-icon-tab-fill: #{$light13};
+    // --group-card-bg-grad0: #{$light3};
+    // --group-card-bg-grad100: #{$light5};
+    // --group-card-border-color: #{$light7};
+
+    // @include generateVarAndRgb(--system-card-bg-grad0, $light1);
+    // @include generateVarAndRgb(--system-card-bg-grad100, $light3);
+    // --system-card-offline-color: #{$light16};
+    // --system-card-border-color: #{$light5};
+
+    // --card-subtext-color: #{$light16};
+    // --card-menu-dots-fill: #{$light16};
+    // --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark15--rgb), 0.2);
+    // --card-drag-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.2);
+
+    // --card-context-bg: #{$light4};
+    // --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
+
+    /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--dark2) 0.43%, var(--brand-d4) 122.68%);
     --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, var(--dark2) 0%, var(--brand-d4) 0.01%, transparent 98.65%);
     --cloud-storage-focus: var(--dark6);
     --cloud-storage-focus-2: var(--dark6);
     --cloud-storage-info-text: var(--light9);
 
-    --dark-opaque-background: rgba(0, 0, 0, .5);
+    /* Bookmarks */
+    --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);
+    --bookmarks-time-input-active-bg: var(--dark1);
+    --bookmarks-filter-header-bg: var(--dark7);
+    --bookmarks-filter-clear-btn-bg: var(--dark9);
+    --bookmarks-filter-clear-btn-stroke: var(--light4);
+    --bookmarks-filter-body-bg: var(--dark8);
+    --bookmarks-filter-button-bg: var(--dark6);
+    --bookmarks-filter-filled-text: var(--light2);
+    --bookmarks-text-highlight-bg: var(--dark12);
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 }

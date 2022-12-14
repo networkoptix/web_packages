@@ -21,7 +21,7 @@
         left: 17px;
         z-index: 1;
         color: white;
-        background-color: var(--dark-opaque-background);
+        background-color: var(--bookmarks-duration-bg);
         padding: 2px 4px;
     }
 
@@ -39,7 +39,7 @@
         }
 
         &-title {
-            font-size: 18px !important; 
+            font-size: 18px !important;
         }
 
         &-name {

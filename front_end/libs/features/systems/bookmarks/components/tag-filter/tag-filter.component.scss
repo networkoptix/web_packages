@@ -12,6 +12,7 @@
             padding: 0 0.5rem !important;
             border-radius: 2px !important;
             background-color: var(--bookmarks-filter-button-bg);
+            color: var(--body-text-color);
 
             &:hover {
                 background-color: var(--bookmarks-text-highlight-bg);
@@ -44,7 +45,7 @@
             background: none;
             padding: 0 !important;
             height: initial !important;
-            color: var(--bookmarks-secondary-text)
+            color: var(--btn-text-color);
         }
     }
 }

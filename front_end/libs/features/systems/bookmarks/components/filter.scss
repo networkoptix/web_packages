@@ -15,9 +15,14 @@
         padding: 0 !important;
         width: 1.25rem;
         height: 1.25rem !important;
+        background-color: var(--bookmarks-filter-clear-btn-bg);
 
         svg-icon {
             display: flex;
+
+            svg line {
+                stroke: var(--bookmarks-filter-clear-btn-stroke);
+            }
         }
     }
 }

@@ -6,7 +6,7 @@
         background: transparent !important;
 
         &.not-empty {
-            background-color: var(--bookmarks-text-highlight-bg) !important;
+            background-color: var(--bookmarks-time-input-active-bg) !important;
         }
     }
 
@@ -23,6 +23,7 @@
         line-height: 1.25rem;
         background-color: transparent !important;
         border: 1px solid transparent;
+        color: var(--body-text-color);
 
         &:hover {
             background-color: var(--bookmarks-text-highlight-bg) !important;

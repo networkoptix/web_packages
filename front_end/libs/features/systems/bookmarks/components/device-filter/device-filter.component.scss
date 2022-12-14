@@ -17,6 +17,7 @@ $label-height: 1.75rem;
             height: $label-height;
             line-height: $label-height;
             margin-bottom: 0;
+            color: var(--body-text-color) !important;
 
             cursor: pointer;
 
@@ -48,7 +49,7 @@ $label-height: 1.75rem;
             background: none;
             padding: 0 !important;
             height: initial !important;
-            color: var(--bookmarks-secondary-text)
+            color: var(--btn-text-color);
         }
     }
 }

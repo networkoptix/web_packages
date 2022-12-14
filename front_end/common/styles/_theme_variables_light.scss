@@ -46,7 +46,8 @@ html[data-theme="light"] {
 
     --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
 
-    --spot-gradient : radial-gradient(ellipse farthest-corner at center center,
+    --spot-gradient : radial-gradient(
+        ellipse farthest-corner at center center,
         #A5B7C0 0,
         #AFBFC7 3%,
         #B9C7CE 5%,
@@ -56,7 +57,8 @@ html[data-theme="light"] {
         #E1E7EA 23%,
         #EBEFF1 25%,
         #F5F7F8 30%,
-        #FFFFFF 40%);
+        #FFFFFF 40%
+    );
 
     --h1 : #{$dark9};
     --h2 : #{$dark9};
@@ -147,9 +149,14 @@ html[data-theme="light"] {
     --switch-bar-color : #{$green_l2};
     --switch-bar-hover-color : #{$green_l2};
     --switch-bar-disable-color : #{$light12};
+
     --switch-warning-color : #{$red_l1};
     --switch-warning-hover-color : #{$red_l2};
     --switch-warning-circle-color : #{$red_d2};
+    // --switch-circle-off-color
+    // --switch-circle-off-hover-color
+    // --switch-circle-off-disable-color
+
     --switch-circle-color : #{$light12};
     --switch-circle-hover-color : #{$light12};
     --switch-circle-disable-color : #{$light12};
@@ -611,15 +618,19 @@ html[data-theme="light"] {
     --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, #D9D9D9 0%, #A8E1FE 0.01%, rgba(255, 255, 255, 0) 98.65%);
     --cloud-storage-focus: var(--light3);
     --cloud-storage-focus-2: var(--light7);
+    // --cloud-storage-info-text
 
     /* Bookmarks */
+    --bookmarks-calendar-today-border: rgba(0, 0, 0, 0.38);
+    --bookmarks-time-input-active-bg: var(--light3);
     --bookmarks-filter-header-bg: var(--light6);
+    --bookmarks-filter-clear-btn-bg: var(-light3);
+    --bookmarks-filter-clear-btn-stroke: var(--light16);
     --bookmarks-filter-body-bg: var(--light5);
     --bookmarks-filter-button-bg: var(--light4);
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--light3);
-    --bookmarks-secondary-text: var(--light16);
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
 
-    --dark-opaque-background: rgba(0, 0, 0, .5);
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 }
