@@ -59,7 +59,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     serverNameWatcher = new Watcher<string>('');
     previousInputValue: number;
     checking: boolean;
-    _serverLoaded = false;
+    private _serverLoaded = false;
     portBusy: boolean;
 
     dropdownStorages: DropdownStorage[] = [];
@@ -90,6 +90,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     destroyRestartTake$ = new Subject<boolean>();
     icons = icons;
     servers: Servers;
+
+    internalStatus: string = '';
+    shownStatus: string = '';
 
     readonly environment = environment;
 
@@ -154,12 +157,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         if (changes.selectedServer?.currentValue) {
             const { currentValue, previousValue } = changes.selectedServer;
-            if (previousValue) {
-                // remove added properties
-                delete previousValue.internalStatus;
-                delete previousValue.shownStatus;
-            }
-
             if (!isEqual(currentValue, previousValue)) {
                 this.serverOffline = false;
                 if (!this.applyService.locked && currentValue?.id !== previousValue?.id) {
@@ -190,7 +187,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = cleanId(this.selectedServer.id);
-        this.selectedServer.osName = this.selectedServer.osInfo
+        const osName = this.selectedServer.osInfo
             ? JSON.parse(this.selectedServer.osInfo).platform
             : this.LANG.common.unknown;
         const { isAdmin, editAdmins } = this.system.userManager.permissions;
@@ -207,7 +204,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             ),
             new InfoBlockLine(
                 this.LANG.common.os,
-                this.selectedServer.osName || '-'
+                osName || '-'
             ),
             new InfoBlockLine(
                 this.LANG.common.version,
@@ -328,21 +325,21 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     setStatus(status?: string): void {
-        this.selectedServer.internalStatus = status
+        this.internalStatus = status
             ? servers.status[status]
             : '';
-        this.selectedServer.shownStatus = status
+        this.shownStatus = status
             ? this.LANG.servers.status[status]
             : '';
         this.certError = (
             servers.status.mismatchedcertificate ===
-            this.selectedServer.internalStatus
+            this.internalStatus
         );
         this.serverOffline = [
             servers.status.mismatchedcertificate,
             servers.status.offline,
             servers.status.checking
-        ].includes(this.selectedServer.internalStatus);
+        ].includes(this.internalStatus);
 
         this.serverUnavailable = this.serverOffline || (
             !this.system.currentServerNotBusy &&
@@ -355,7 +352,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 this.system.currentBusyServerIds.has(this.selectedServer.id)
             )
         ) {
-            this.selectedServer.internalStatus = servers.status.restarting;
+            this.internalStatus = servers.status.restarting;
         }
 
         if (this.serverOffline || this.serverUnavailable) {

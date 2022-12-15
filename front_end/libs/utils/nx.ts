@@ -1,10 +1,7 @@
 /* In-house specific utility functions. */
 
 import type { MenuNode } from '@services/menus.service.types';
-import type {
-    NxSystemServer,
-    NxMediaServer,
-} from '@services/system.service/system-types';
+import type { ec2MediaServer } from '@services/system-api.types';
 
 /**
  * Pass a function that evaluates a menu node to fulfill a specific condition,
@@ -32,11 +29,11 @@ export function findMenuNode(
     return foundNode;
 }
 
-export function setServerIpAndPort<T extends NxSystemServer | NxMediaServer>(
-    server: T
-): T {
-    const ipv4Addresses: string[] = [];
-    const ipv6Addresses: string[] = [];
+export function setServerIpAndPort(
+    server: ec2MediaServer
+): ec2MediaServer & { ip: string; port: string } {
+    const ipv4Addresses: string[] = []; // [fe80::e58b:1151:3859:a75a%2]:7001
+    const ipv6Addresses: string[] = []; // 192.168.5.1:7001
     server.networkAddresses.split(';').forEach(addr => {
         if (addr.startsWith('[')) {
             ipv6Addresses.push(addr);
@@ -45,23 +42,16 @@ export function setServerIpAndPort<T extends NxSystemServer | NxMediaServer>(
         }
     });
 
-    if (ipv4Addresses.length > 0) {
-        const [ip, port] = ipv4Addresses[0].split(':');
-        server.ip = ip;
-        server.port = port || '';
-    } else if (ipv6Addresses.length > 0) {
-        if (ipv6Addresses[0].startsWith('[')) {
-            const [ip, port] = ipv6Addresses[0].split(']:');
-            server.ip = ip.substring(1);
-            server.port = port || '';
-        } else {
-            server.ip = ipv6Addresses[0];
-            server.port = '';
-        }
+    let ip: string;
+    let port: string;
+    if (ipv4Addresses.length) {
+        [ip, port] = ipv4Addresses[0].split(':');
+    } else if (ipv6Addresses.length) {
+        [ip, port] = ipv6Addresses[0].slice(1).split(']:');
     } else {
-        server.ip = 'N/A';
-        server.port = '';
+        ip = 'N/A';
+        port = '';
     }
 
-    return server;
+    return { ...server, ip, port };
 }

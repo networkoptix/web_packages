@@ -21,7 +21,6 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
-import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -211,12 +210,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            server.osName = server.osInfo
-                ? JSON.parse(server.osInfo).platform
-                : this.LANG.common.unknown;
-            if (!server.ip) {
-                setServerIpAndPort(server);
-            }
             this.selectedServer = server;
             this.isServerOffline = (server.status === 'Offline');
 

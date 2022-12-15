@@ -343,6 +343,19 @@ export function staticImplements<T>() {
     return <U extends T>(constructor: U) => constructor;
 }
 
+/**
+ * Filter keys based on value type.
+ *
+ * `T`: Type to filter
+ *
+ * `F`: Filter type
+ *
+ * Source: https://stackoverflow.com/a/63553761
+ */
+export type KeyFilter<T, F> = {
+    [K in keyof T]: T[K] extends F ? K : never
+}[keyof T];
+
 export const sleep = (time?: number): Promise<void> => new Promise(resolve => setTimeout(resolve, time));
 
 export const toTranslatable = (value: unknown): TranslatableObject => typeof value === 'string' ? { value } : value as TranslatableObject;

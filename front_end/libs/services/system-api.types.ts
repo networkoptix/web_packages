@@ -360,7 +360,7 @@ interface Tasks {
     streamQuality: string
 }
 interface ScheduledTasks extends Array<Tasks> {}
-export interface GetCameras {
+export interface ec2Camera {
     addParams: AddParams,
     audioEnabled: boolean,
     backupType: string,
@@ -398,37 +398,37 @@ export interface GetCameras {
 
 export interface EmptyObjectReturned {}
 
-export interface GetMediaServers {
+export interface ec2MediaServer {
     addParams: AddParams,
     allowAutoRedundancy: boolean,
     authKey: string,
-    backupBitrate: number,
-    backupDaysOfTheWeek: string,
-    backupDuration: number,
-    backupStart: number,
-    backupType: string,
+    // backupBitrate: number,
+    // backupDaysOfTheWeek: string,
+    // backupDuration: number,
+    // backupStart: number,
+    backupBitrateBytesPerSecond: unknown[];
+    backupType?: string,
     flags: string,
     id: string,
+    locationId: number;
     maxCameras: number,
-    metadataStorageId: string,
+    metadataStorageId?: string,
     name: string,
     networkAddresses: string,
     osInfo: string,
     parentId: string,
     status: string,
-    storages: Array<GetStorages>,
+    storages: GetStorages[],
     systemInfo: string,
     typeId: string,
     url: string,
     version: string
 }
 
-interface ec2GetMediaServers extends Array<GetMediaServers> {}
-interface ec2GetCameras extends Array<GetCameras> {}
-export interface AggregatedServersAndCameras {
-    'ec2/getMediaServersEx': ec2GetMediaServers,
-    'ec2/getCamerasEx': ec2GetCameras
-}
+export type AggregatedServersAndCameras = NormalResponse<{
+    '/ec2/getMediaServersEx': ec2MediaServer[],
+    'ec2/getCamerasEx': ec2Camera[]
+}>;
 
 interface ResourceTypes {
     id: string,

@@ -979,12 +979,12 @@ export class NxSystemAPI {
     /* Cameras and Servers */
     getCameras(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
-        return this.get<t.GetCameras>('/ec2/getCamerasEx', params);
+        return this.get<t.ec2Camera>('/ec2/getCamerasEx', params);
     }
 
     getCamerasWithSeverTime(): Observable<any> {
         return this.getRequestAggregator<
-            t.NormalResponse<[t.SystemTime, t.GetCameras]>
+            t.NormalResponse<[t.SystemTime, t.ec2Camera]>
         >(['ec2/getTimeOfServers', 'ec2/getCamerasEx']).pipe(
             map(({ reply }) => {
                 return [
@@ -1014,20 +1014,18 @@ export class NxSystemAPI {
         });
     }
 
-    getMediaServers(useCache: boolean) {
+    getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
         const endpoint = '/ec2/getMediaServersEx';
-        return this.get<t.GetMediaServers[]>(
+        return this.get<t.ec2MediaServer[]>(
             endpoint,
             {},
             { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
         );
     }
 
-    getMediaServersAndCameras() {
+    getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
         const routes = ['/ec2/getMediaServersEx', 'ec2/getCamerasEx'];
-        return this.getRequestAggregator<
-            t.NormalResponse<[t.GetMediaServers, t.GetCameras]>
-        >(routes);
+        return this.getRequestAggregator<t.AggregatedServersAndCameras>(routes);
     }
 
     getResourceTypes() {
@@ -1045,9 +1043,9 @@ export class NxSystemAPI {
             t.NormalResponse<
                 [
                     t.ModuleInformationReply,
-                    t.GetMediaServers,
+                    t.ec2MediaServer[],
                     t.SystemTime,
-                    t.GetCameras
+                    t.ec2Camera
                 ]
             >
         >(routes).pipe(

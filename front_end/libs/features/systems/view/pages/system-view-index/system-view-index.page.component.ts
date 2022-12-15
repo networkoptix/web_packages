@@ -23,15 +23,16 @@ import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxMediaServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
-import { setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
 import { CAMERA_STATUS, ICamera, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import type { IMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
 import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -337,7 +338,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         };
 
         let processingMediaServers = false;
-        let cachedMediaServers = [];
+        let cachedMediaServers: IMediaServer[] = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
@@ -349,7 +350,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
         });
 
-        const mediaServerChanged = mediaServers => {
+        const mediaServerChanged = (mediaServers: NxMediaServer[]): boolean => {
             if (mediaServers.length !== cachedMediaServers.length) {
                 return true;
             } else {
@@ -408,21 +409,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     processingMediaServers = true;
                     const serverTimeInfos = await this.system.getServerTimes();
                     this.vms.serverTimes = serverTimeInfos;
-                    serverTimeInfos.forEach(sti => {
-                        const mediaServer = mediaServers?.find(ms =>
-                            ms.id === sti.serverId
-                        );
-                        if (mediaServer) {
-                            mediaServer.timeInfo = sti;
-                        }
-                    });
 
                     if (this.initializedWithError) {
                         this._setInitializationState(true, false);
                     }
 
                     const archiveRanges = {};
-                    const processCameras = (c, ms) => {
+                    const processCameras = (c, ms: NxMediaServer) => {
                         this.hasCameras = true;
                         const result = new Camera(
                             c.id,
@@ -485,17 +478,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     await findCamerasWithArchive();
 
-                    cachedMediaServers = mediaServers.map(
-                        ms => setServerIpAndPort(({
-                            id: ms.id,
-                            name: ms.name,
-                            networkAddresses: ms.networkAddresses,
-                            status: ms.status,
-                            cameras: ms.cameras.map((c: any) =>
-                                processCameras(c, ms)
-                            )
-                        } as any))
-                    );
+                    cachedMediaServers = mediaServers.map(ms => ({
+                        id: ms.id,
+                        name: ms.name,
+                        networkAddresses: ms.networkAddresses,
+                        status: ms.status,
+                        cameras: ms.cameras.map(c => processCameras(c, ms)),
+                    }));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
                     this.mediaservers = cachedMediaServers;

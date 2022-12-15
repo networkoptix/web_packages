@@ -46,7 +46,6 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanId } from '@utils/general';
-import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from './settings.service';
 
@@ -766,8 +765,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 );
 
                 serversNode.level3 = [];
-                this.system.serverManager.servers.forEach(systemServer => {
-                    const server = setServerIpAndPort(systemServer);
+                this.system.serverManager.servers.forEach(server => {
                     const id = cleanId(server.id);
 
                     serversNode.level3.push({

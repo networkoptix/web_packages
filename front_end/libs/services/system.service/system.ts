@@ -17,13 +17,18 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { cleanId, KeyFilter } from '@utils/general';
+import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxPollService } from '../poll.service';
 import { NxSystemAPIService } from '../system-api.service';
 import {
+    AggregatedServersAndCameras,
     EventRule,
     EventTypes,
+    ec2Camera,
+    ec2MediaServer,
     PtzCommand,
     RawRule,
     SystemConfigSettings
@@ -44,44 +49,6 @@ import type {
     NxSystemRole
 } from './user-manager/user-manager-types';
 import { UserWithGroupsManager } from './user-manager/user-with-groups-manager';
-
-/* Api response cleaners */
-export function trimId(id) {
-    if (!id || !id.length || typeof id !== 'string') { return id; }
-    if (id[0] === '{' && id[id.length - 1] === '}') {
-        return id.slice(1, id.length - 1);
-    } else {
-        return id;
-    }
-}
-
-function trimIds(o) {
-    const result = { ...o };
-
-    const idFields = [
-        'id',
-        'parentId',
-        'preferredServerId',
-        'authKey',
-        'metadataStorageId',
-        'typeId'
-    ];
-
-    idFields.forEach(idField => {
-        if (idField in o) {
-            result[idField] = trimId(o[idField]);
-        }
-    });
-    return result;
-}
-
-// function tryToParseJSON(v) {
-//     try {
-//         return JSON.parse(v);
-//     } catch {
-//         return trimId(v);
-//     }
-// }
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.
@@ -609,38 +576,64 @@ export class NxSystem {
         return this.authPromise;
     }
 
-    public getMediaServersAndCameras(force: boolean = false): any {
+    public getMediaServersAndCameras(
+        force: boolean = false
+    ): Promise<NxMediaServer[]> {
         if (this.mediaservers && !force) {
             return Promise.resolve(this.mediaservers);
         }
 
-        return this.ensureSystemAuth()
-            .then(
-                () => this.mediaserver
-                    .getMediaServersAndCameras().toPromise()
-                    .then(
-                        response => {
-                            if ((response.error && response.error !== '0') || !response.reply) {
-                                console.error('error getting mediaservers and cameras');
-                                return response;
-                            }
-                            return this._setMediaServersAndCameras(response.reply);
-                        }, err => {
-                            console.error('getMediaServersAndCameras failure', err);
-                            return [];
-                        }));
+        return this.ensureSystemAuth().then(() => {
+            return this.mediaserver.getMediaServersAndCameras().toPromise().then(
+                response => {
+                    if ((response.error && response.error !== '0') || !response.reply) {
+                        console.error('error getting mediaservers and cameras');
+                        return [];
+                    }
+                    return this.processMediaServersAndCameras(response.reply);
+                },
+                err => {
+                    console.error('getMediaServersAndCameras failure', err);
+                    return [];
+                }
+            );
+        });
     }
 
-    protected _setMediaServersAndCameras(apiReply) {
-        // `mss` stands for mediaservers, `cs` — for cameras
-        const mss = apiReply['ec2/getMediaServersEx'] ||
-            apiReply['/ec2/getMediaServersEx'];
+    protected processMediaServersAndCameras(
+        apiReply: AggregatedServersAndCameras['reply']
+    ): NxMediaServer[] {
+        const msIds: KeyFilter<ec2MediaServer, string>[] = [
+            'authKey',
+            'id',
+            'metadataStorageId',
+            'typeId',
+        ];
+        const camIds: KeyFilter<ec2Camera, string>[] = [
+            'id',
+            'parentId',
+            'preferredServerId',
+            'typeId',
+        ];
+        // ID properties with enclosing brackets {} that we want to trim
+        // while ignoring JSON strings
 
-        const cs = apiReply['ec2/getCamerasEx'].map(trimIds);
+        const mediaServers = apiReply['/ec2/getMediaServersEx'].map(ms => {
+            msIds.forEach(id => {
+                ms[id] = cleanId(ms[id]);
+            });
+            return ms;
+        });
+        const cameras = apiReply['ec2/getCamerasEx'].map(cam => {
+            camIds.forEach(id => {
+                cam[id] = cleanId(cam[id]);
+            });
+            return cam;
+        });
 
-        this.mediaservers = mss.map(trimIds).map(ms => ({
-            ...ms,
-            cameras: cs.filter(c => c.parentId === ms.id)
+        this.mediaservers = mediaServers.map(ms => ({
+            ...setServerIpAndPort(ms),
+            cameras: cameras.filter(c => c.parentId === ms.id)
         }));
         return this.mediaservers;
     }

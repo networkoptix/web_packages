@@ -1,4 +1,4 @@
-import type { Params, GetStorages } from '../system-api.types';
+import type { ec2MediaServer } from '../system-api.types';
 
 export interface AddResponseTypeHere extends IParams {}
 
@@ -6,35 +6,9 @@ export interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-export interface NxSystemServer {
-    addParams: Params;
-    allowAutoRedundancy: boolean;
-    authKey: string;
-    // backupBitrate: number;
-    // backupDaysOfTheWeek: string;
-    backupBitrateBytesPerSecond: unknown[]; // Doesn't appear anywhere
-    // backupDuration: number;
-    // backupStart: number;
-    backupType?: string;
-    flags: string;
-    id: string;
-    internalStatus: string;
-    ip: string;
-    maxCameras: number;
-    metadataStorageId: string;
-    name: string;
-    networkAddresses: string;
-    osInfo: string;
-    osName: string;
-    parentId: string;
+export interface NxSystemServer extends ec2MediaServer {
     port: string;
-    shownStatus?: string;
-    status: string;
-    storages: GetStorages[];
-    systemInfo: string;
-    typeId: string;
-    url: string;
-    version: string;
+    ip: string;
 }
 
 export interface ModuleInfo {
@@ -91,16 +65,9 @@ export interface NxCamera {
     addParams: Array<AdditionalParam>;
 }
 
-export interface NxMediaServer {
-    id: string;
-    name: string;
-    networkAddresses: string;
-    status: string;
-    timeInfo: ServerTimeInfo;
-    ip?: string,
-    port?: string,
-
-    // considered obligatory for now, though may change later on (@gbezyuk)
+export interface NxMediaServer extends ec2MediaServer {
+    ip: string,
+    port: string,
     cameras: NxCamera[];
 }
 

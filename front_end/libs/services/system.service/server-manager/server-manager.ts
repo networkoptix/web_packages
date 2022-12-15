@@ -12,6 +12,7 @@ import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { alphabeticalSort } from '@utils/general';
+import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
@@ -77,29 +78,29 @@ export class ServerManager {
         return Promise.reject();
     }
 
-    // TODO: Remove servers arg from here and getForceServers, not used anywhere
-    getServers(servers?: NxSystemServer[]): Observable<NxSystemServer[]> {
-        return this.getForceServers(true, servers);
+    getServers(): Observable<NxSystemServer[]> {
+        return this.getForceServers(true);
     }
 
-    getForceServers(useCache: boolean, servers?: NxSystemServer[]): Observable<NxSystemServer[]> {
-        if (!servers) {
-            if (!this.serverSubscription || !useCache) {
-                // @ts-expect-error TODO: Fix mismatch between NxSystemServer and GetMediaServers
-                this.serverSubscription = this.mediaserver.getMediaServers(useCache);
-                this.serverSubscription.subscribe(res => {
-                    if (!res) {
-                        return Promise.reject(new Error(`Request to server has failed ${res}`));
-                    }
+    getForceServers(useCache: boolean): Observable<NxSystemServer[]> {
+        if (!this.serverSubscription || !useCache) {
+            this.serverSubscription = this.mediaserver
+                .getMediaServers(useCache)
+                .pipe(
+                    map(res => {
+                        if (!res) {
+                            console.error(`Request to server has failed ${res}`);
+                            return [];
+                        }
 
-                    this.servers = res.sort(alphabeticalSort(this.locale, server => server.name));
-                    return this.servers;
-                });
-            }
-            return this.serverSubscription;
-        } else {
-            this.servers = servers.sort(alphabeticalSort(this.locale, server => server.name));
+                        this.servers = res
+                            .map(setServerIpAndPort)
+                            .sort(alphabeticalSort(this.locale, server => server.name));
+                        return this.servers;
+                    })
+                );
         }
+        return this.serverSubscription;
     }
 
     getPreviewUrl(

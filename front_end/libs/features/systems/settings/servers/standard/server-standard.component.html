@@ -14,7 +14,7 @@
     >
     </nx-alert-block>
     <div
-        *ngIf="serverOffline || selectedServer?.internalStatus === servers.status.restarting"
+        *ngIf="serverOffline || internalStatus === servers.status.restarting"
         class="col-12"
     >
         <ng-container *ngIf="!checking">
@@ -30,7 +30,7 @@
             >
             </nx-alert-block>
             <nx-alert-block
-                *ngIf="selectedServer.internalStatus === servers.status.restarting"
+                *ngIf="internalStatus === servers.status.restarting"
                 type="info"
                 id="restarting"
                 [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
