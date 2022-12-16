@@ -93,5 +93,13 @@
   "51499": {
     "name": "wheel",
     "note": "Wheel 0.38.1 fixes a potential DoS attack via the 'WHEEL_INFO_RE' regular expression. PVE-2022-51499"
+  },
+  "51885": {
+    "name": "pillow",
+    "note": "Pillow before 9.2.0 performs Improper Handling of Highly Compressed GIF Data (Data Amplification). CVE-2022-45198 For more information, please visit https://pyup.io/v/51885/f17"
+  },
+  "51886": {
+    "name": "pillow",
+    "note": "Pillow before 9.3.0 allows denial of service via SAMPLESPERPIXEL. CVE-2022-45199 For more information, please visit https://pyup.io/v/51886/f17"
   }
 }
