@@ -66,7 +66,7 @@
                 type="text"
                 id="backupCode"
                 name="backupCode"
-                class="fs-exclude"
+                class="fs-exclude form-control"
                 [ngClass]="{
                     'invalid-state': backupCode.invalid && (backupCode.dirty || backupCode.touched)
                 }"
@@ -76,6 +76,7 @@
                 autocomplete="one-time-code"
                 required
                 nxFocusMe
+                [setFocus]="true"
             />
         </div>
         <div
