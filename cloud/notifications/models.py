@@ -12,6 +12,7 @@ from django.core.validators import MaxLengthValidator, validate_email
 from django.db.models import Q, F, Value
 from django.db.models.functions import Concat
 from django.core.cache import caches
+from html2text import html2text
 from model_utils import Choices
 from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
 from push_notifications.models import GCMDevice, GCMDeviceQuerySet
@@ -537,7 +538,7 @@ class SystemEmail(models.Model):
     @property
     def message(self):
         return {
-            'html_body': self.message_html or wrap_text(self.message_text),
+            'html_body': self.message_html,
             'text_body': self.message_text
         }
 
@@ -551,8 +552,8 @@ class SystemEmail(models.Model):
             return content
 
         self.subject = clean(self.subject)
-        self.message_html = clean(self.message_html)
-        self.message_text = clean(self.message_text)
+        self.message_html = clean(self.message_html or wrap_text(self.message_text))
+        self.message_text = clean(self.message_text or html2text(self.message_html))
 
     def auto_test_guard(self):
         # Skips noptixautoqa emails unless they have sendemail in the alias
