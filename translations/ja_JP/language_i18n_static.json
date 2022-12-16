@@ -955,7 +955,7 @@
         "vendors": "メーカー",
         "resultsFound": "{count, plural, =0{# 件の結果} one{# 件の結果} other{# 件の結果}}",
         "noMatches": "該当なし",
-        "userNotFound": "<span class=\"error\">ユーザーが見つかりません</span>"
+        "userNotFound": "<span class=\"error\">指定されたユーザーはこのシステムに存在しません</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "分析データの削除または保存中にエラーが発生しました。",

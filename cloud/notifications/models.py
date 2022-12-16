@@ -506,6 +506,11 @@ def sub_system_id_factory(system_id):
 
     return _sub_system_id
 
+def wrap_text(message):
+    if re.search('  ', message):
+        return f'<pre style="font-family: monaco, monospace;">{message}</pre>'
+    return ''.join(f'<p>{paragraph}</p>' for paragraph in message.split('\n'))
+
 
 class SystemEmail(models.Model):
     MSG_TYPE = 'system_notification'
@@ -529,7 +534,7 @@ class SystemEmail(models.Model):
     @property
     def message(self):
         return {
-            'html_body': self.message_html,
+            'html_body': self.message_html or wrap_text(self.message_text),
             'text_body': self.message_text
         }
 

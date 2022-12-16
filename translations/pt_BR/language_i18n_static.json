@@ -955,7 +955,7 @@
         "vendors": "Fabricantes",
         "resultsFound": "{count, plural, =0{# Resultados} one{#Resultado} other{# Resultados}} encontrado",
         "noMatches": "Sem combinações",
-        "userNotFound": "<span class=\"error\">usuário não encontrado</span>"
+        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Erro ao excluir ou manter dados analíticos",

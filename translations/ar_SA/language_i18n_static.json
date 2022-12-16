@@ -955,7 +955,7 @@
         "vendors": "Manufacturers",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
