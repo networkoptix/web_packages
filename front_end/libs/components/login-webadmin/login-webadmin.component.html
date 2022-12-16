@@ -34,7 +34,7 @@
                 <span
                     *ngIf="account2faRequired"
                     [innerHTML]="
-                        'errorCodes.webadmin2faRequired'
+                        LANG.errorCodes.webadmin2faRequired
                             | translate: { cloudHost: CONFIG.cloudHost }
                     "
                 ></span>

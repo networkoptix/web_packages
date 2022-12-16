@@ -9,7 +9,7 @@
         <h1
             class="modal-title"
             [innerHTML]="
-                'dialogs.titles.serversReset'
+                LANG.dialogs.titles.serversReset
                     | translate: { title: serverName | escapeHTML }
                     | safe: 'html'
             "
@@ -43,10 +43,11 @@
                     >
                         Video archive will remain intact.
                     </p>
-                    <ng-container *ngIf="system.mediaserver.requiresPassword">
-                        <span translate>Enter password for your account to continue</span
-                        ><span>.</span>
-                    </ng-container>
+                    <span
+                        *ngIf="system.mediaserver.requiresPassword"
+                        translate
+                        >Enter password for your account to continue.</span
+                    >
                 </div>
                 <ng-container *ngIf="system.mediaserver.requiresPassword">
                     <input
