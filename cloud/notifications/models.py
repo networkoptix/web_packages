@@ -469,15 +469,22 @@ RESULT_STATES = Choices(('open', 'Open'),
                         ('failure', 'Failure'))
 
 
-URL_REGEX = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+URL_REGEX = r"(?i)\b(([\S])*([a-z0-9\-]+\.)*[a-z0-9\-]{2,63}\.[a-z]{2,})"
+
+FLOAT_OR_VERSION_REGEX = r"^[\d\.]+[\d]+$"
+
+EMAIL_REGEX = r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}"
 
 def check_urls(known_urls, sub_val='{redacted_url}'):
+    relay = settings.TRAFFIC_RELAY_HOST.replace('{systemId}.', '')
     def _check_urls(match_obj):
         original = match_obj.group()
         domain = original.split('//')[-1].split('/')[0]
         parent_domain = '.'.join(domain.split('.')[-2:])
         matched = domain in known_urls or parent_domain in known_urls
-        return original if matched else original.replace(domain, sub_val)
+        is_email = re.fullmatch(EMAIL_REGEX, original)
+        is_relay = relay in original
+        return original if matched or is_email or is_relay else original.replace(domain, sub_val)
 
     return _check_urls
 
