@@ -3,6 +3,7 @@ import os
 import re
 from itertools import chain
 import urllib
+import logging
 from django.conf import settings
 from django import shortcuts
 from django.http import HttpResponse
@@ -16,6 +17,7 @@ from cms.controllers import documentation
 from cms.controllers import integration
 from cms.feature_flags import SWITCHES
 
+logger = logging.getLogger(__name__)
 
 def get_route_meta(path, *args):
     root, *segments = path
@@ -124,14 +126,36 @@ def get_doc_meta(path, config, lang, config_meta, lang_meta):
 # def get_content_meta(path, config, lang, config_meta, lang_meta):
 #     return {}
 
+def sub_translated(target, sub_lookup):
+    if isinstance(target, str):
+        return sub_lookup.get(target, target)
+    if isinstance(target, list):
+        return [sub_translated(val, sub_lookup) for val in target]
 
-def get_lang_meta(request, lang_path=None):
-    lang = detect_language_by_request(request)
-    if not lang_path:
-        lang_path = os.path.join(settings.STATIC_LOCATION, get_customization(request),
-                                 'static', f'lang_{lang}', 'language_compiled.json')
-    with open(lang_path) as file:
-        return json.load(file)['metaDefaults']
+
+    return {key: sub_translated(val, sub_lookup) for key,val in target.items()}
+
+
+def get_lang_meta(request, lang_path=None, static_lang_path=None):
+    try:
+        lang = detect_language_by_request(request)
+        if not lang_path:
+            lang_path = os.path.join(settings.STATIC_LOCATION, get_customization(request),
+                                    'static', f'lang_{lang}', 'language_compiled.json')
+        if not static_lang_path:
+            static_lang_path = os.path.join(settings.STATIC_LOCATION, get_customization(request),
+                                    'static', 'language_i18n_static.json')
+        with open(static_lang_path) as static_lang_file:
+            meta_defaults = json.load(static_lang_file)['metaDefaults']
+
+        with open(lang_path) as compiled_lang_file:
+            compiled_lang = json.load(compiled_lang_file)
+
+        return sub_translated(meta_defaults, compiled_lang)
+    except Exception as e:
+        logger.warn(e)
+
+    return { 'default': {} }
 
 
 def get_config_meta(request, config_path=None):

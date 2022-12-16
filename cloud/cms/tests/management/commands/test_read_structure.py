@@ -119,7 +119,9 @@ def test_find_or_add_context_template(db):
 class FileTest:
     base_dir = 'test_dir/'
 
-    def __init__(self, filename=str(uuid4()), content=str(uuid4())):
+    def __init__(self, filename=None, content=None):
+        filename = filename or str(uuid4())
+        content = content or str(uuid4())
         self.filename = f'{self.base_dir}{filename}'
         self.content = content
 

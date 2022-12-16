@@ -144,12 +144,14 @@ def test_get_lang_meta(arf, mocker):
     request = arf.get(url)
     request.user = AnonymousUser()
     request.session = {}
-    expected_lang_meta = generate_expected_lang_meta()
-    data = json.dumps({'metaDefaults': expected_lang_meta})
+    compiled_lang = generate_expected_lang_meta()
+    meta_defaults = {str(uuid4()): key for key in compiled_lang}
+    static_lang = json.dumps({'metaDefaults': meta_defaults})
 
-    with FileTest(content=data) as lang_path:
-        lang_meta = get_lang_meta(request, lang_path=lang_path)
-        assert lang_meta == expected_lang_meta
+    with FileTest(content=json.dumps(compiled_lang)) as lang_path, FileTest(content=static_lang) as static_lang_path:
+        lang_meta = get_lang_meta(request, lang_path=lang_path, static_lang_path=static_lang_path)
+
+    assert lang_meta == {key: compiled_lang[val] for key, val in meta_defaults.items()}
 
 
 def generate_expected_lang_meta():
