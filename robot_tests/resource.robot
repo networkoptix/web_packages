@@ -117,9 +117,16 @@ Set Language Anonymous
 #    Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
+    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}   ${api}=${True}
     IF    '''${mode}'''=='''cloud'''
-        Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
+        IF   ${api}
+            ${access} =    Get Access Code    ${user}     ${password}
+            Go To   ${access}[link]
+            Sleep   3
+            Run Keyword If   ${validate}     Validate Log In    ${user}    password=${password}
+        ELSE
+            Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
+        END
     ELSE
         Log In Web Admin    ${user}    ${password}    ${validate}
     END

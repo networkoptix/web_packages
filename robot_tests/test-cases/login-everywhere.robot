@@ -23,7 +23,7 @@ Force Tags        Threaded
     ${random email}    Get Random Email Robot    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${EMAIL ALREADY REGISTERED}
-    resource.Log In    user=${email}    password=${password}    button=${LOG IN BTN CREATE ACCOUNT PAGE}
+    resource.Log In    user=${email}    password=${password}    button=${LOG IN BTN CREATE ACCOUNT PAGE}   api=${False}
 
 4. works at registration page on account activation success
     [tags]    email
@@ -31,7 +31,7 @@ Force Tags        Threaded
     ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    mark    hamill    ${random email}    ${password}
     Activate    ${random email}
-    resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True
+    resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True   api=${False}
 
 5. works at registration page on account activation error
 # need to raise a defect, on the second time reloading the activation page error should appear account already activated
@@ -44,7 +44,7 @@ Force Tags        Threaded
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
     Go To    ${link}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
-    resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True
+    resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True   api=${False}
 
 6. works at restore password page with email input - after submit success
     Go To    ${url}/authorize/restore_password
@@ -61,7 +61,7 @@ Force Tags        Threaded
     END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
-    resource.Log In    user=${email}    password=${password}    button=${LOG IN BTN RESET PASSWORD PAGE}    reset=True
+    resource.Log In    user=${email}    password=${password}    button=${LOG IN BTN RESET PASSWORD PAGE}    reset=True   api=${False}
 
 7. Works at restore password page with password input - before submit
     [tags]    email
@@ -93,7 +93,7 @@ Force Tags        Threaded
     Input Text    ${RESET PASSWORD INPUT}    ${new password}
     Click Button    ${RESET PASSWORD NEXT BUTTON}
     Wait Until Element Is Visible    ${RESET SUCCESS MESSAGE}
-    resource.Log In    user=${random email}    password=${new password}    button=${LOG IN BTN SET NEW PASSWORD PAGE}    reset=True
+    resource.Log In    user=${random email}    password=${new password}    button=${LOG IN BTN SET NEW PASSWORD PAGE}    reset=True    api=${False}
 
 8. Works at restore password page with password input - after submit error
     [tags]    email
@@ -156,7 +156,7 @@ Force Tags        Threaded
     Input Text    ${RESET PASSWORD INPUT}    ${password}
     Click Button    ${RESET PASSWORD NEXT BUTTON}
     Wait Until Element Is Visible    ${RESET SUCCESS MESSAGE}
-    resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN SET NEW PASSWORD PAGE}    reset=True
+    resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN SET NEW PASSWORD PAGE}    reset=True   api=${False}
 
 10. Works at IPVD page
     Go To IPVD Page

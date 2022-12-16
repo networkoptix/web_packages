@@ -81,6 +81,22 @@ class CloudPortalAPI(object):
             return r.status_code
 
     @keyword
+    def get_access_code(self, email, password):
+        data = {
+            "client_id": "cloud_portal",
+            "grant_type": "password",
+            "response_type": "code",
+            "email": email,
+            "password": password,
+            "redirect_uri": self.env
+        }
+        with requests.session() as s:
+            r = s.post(f'{self.env}/oauth/authenticate', data=data, verify=_ssl_certs_path)
+            logger.trace(r.content)
+            assert 200 == r.status_code, 'Log in failed.'
+            return r.json()
+
+    @keyword
     def merge_cloud_systems(self, master_id, slave_id, email, password):
         with self._session(email, password) as s:
             logger.trace(f'The headers are {s.headers}')

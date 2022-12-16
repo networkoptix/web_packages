@@ -71,7 +71,7 @@ Turn off 2fa Functionality
     [Arguments]    ${login user}=${login user}    ${password}=${password}
     ${logged in}=    Run Keyword And Return Status    Element Should Be Visible    ${ACCOUNT DROPDOWN}
     IF    "${logged in}" == "False"
-        Log In    ${login user}    ${password}    2fa=${True}
+        Log In    ${login user}    ${password}    2fa=${True}   api=${False}
     END
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Click Element    ${ACCOUNT DROPDOWN}
@@ -91,7 +91,7 @@ Turn off 2fa Functionality
 
 Login with one time backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
-    Log In    ${email}    ${password}    2fa=${True}    2fa backup code=${random one time backup code}
+    Log In    ${email}    ${password}    2fa=${True}    2fa backup code=${random one time backup code}   api=${False}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
@@ -100,7 +100,7 @@ Login with one time backup code
 
 Attempt login with used backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
-    Log In    ${email}    ${password}    validate=${False}    2fa=${True}    2fa backup code=${random one time backup code}
+    Log In    ${email}    ${password}    validate=${False}    2fa=${True}    2fa backup code=${random one time backup code}   api=${False}
     Wait Until Element Contains    ${2FA BACKUP CODE ERROR}    Wrong Backup Code
 
 

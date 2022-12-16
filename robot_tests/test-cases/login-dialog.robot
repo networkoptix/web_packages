@@ -25,22 +25,22 @@ Force Tags        Threaded
 
 3. Allows to log in with existing credentials and to log out
     [tags]    C24212    C24213    smoke
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}    api=${False}
     Log Out
 
 4. Redirects to systems after log In
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}    api=${False}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Location Should Be    ${url}/systems
 
 5. After log In, display user's email and menu in top right corner
     Set Window Size    1920    1080
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}     api=${False}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}/span[text()="${login user}"]
 
 6. Allows log in with existing email in uppercase
     ${email uppercase}    Convert To Uppercase    ${login user}
-    Log In    ${email uppercase}    ${password}    validate=${False}
+    Log In    ${email uppercase}    ${password}    validate=${False}    api=${False}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
 
 #7. Allows log in with 'Remember Me checkmark' switched off
@@ -56,7 +56,7 @@ Force Tags        Threaded
 #    Log In    ${login user}    ${password}    button=None
 
 8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
-    Log In    ${login user}    'aderhgadehf'    validate=${False}
+    Log In    ${login user}    'aderhgadehf'    validate=${False}   api=${False}
     Wait Until Elements are Visible
     ...    ${PASSWORD INPUT}
     ...    ${LOG IN BUTTON}
@@ -114,7 +114,7 @@ Force Tags        Threaded
     Should Be Equal    '${input type}'    'password'
 
 12. Requires log In, if the user has just logged out and pressed back button in browser
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}  api=${False}
     Sleep   2
     Log Out
     Sleep   3
@@ -136,7 +136,7 @@ Force Tags        Threaded
     Textfield Should Contain    ${PASSWORD INPUT}    ${255CHARS}
 
 14. Logout refreshes page
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}    api=${False}
     Log Out
 
 # We don't actually allow copy of the password field at log in.
@@ -214,7 +214,7 @@ Force Tags        Threaded
     # This is specifically for Ubuntu Firefox as the JS seems to
     # load slowly and doesn't redirect correctly after login.
     Sleep    5
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}   api=${False}
     Switch Window    ${tabs}[0]
     Location Should Be    ${url}/authorize?client_type=create
     Go To   ${url}
@@ -261,7 +261,7 @@ Force Tags        Threaded
     [tags]    C41837
     Close All Browsers
     Open Browser and go to URL    ${url}
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}   api=${False}
     Open Browser and go to URL    ${url}
     Get Browser Ids
     Switch Browser    1
@@ -282,7 +282,7 @@ Force Tags        Threaded
     Validate Log Out
     Sleep    1
 
-    Log In    ${login user}    ${ALT PASSWORD}    validate=${False}
+    Log In    ${login user}    ${ALT PASSWORD}    validate=${False}     api=${False}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Sleep    2
     Go To    ${url}/account/password

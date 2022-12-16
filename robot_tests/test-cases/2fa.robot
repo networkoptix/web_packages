@@ -11,15 +11,15 @@ Force Tags
 *** Test Cases ***
 1. Enable and perform login with 2fa
     [tags]    smoke
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}   api=${False}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}
     Log Out
-    Log In    ${login user}    ${password}    2fa=${True}
+    Log In    ${login user}    ${password}    2fa=${True}   api=${False}
 
 2. 2fa login with random backup code
     [Tags]    smoke
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}   api=${False}
     ${random one time backup code}=    Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}
     Log Out
