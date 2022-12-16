@@ -29,8 +29,9 @@ import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
-import type * as Dt from './dialogs.types';
+import * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
+import { TfaAction } from './two-fa/two-fa.component.types';
 
 // import '@dialogs/dialogs.scss';
 
@@ -552,89 +553,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async newCode2FA() {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                type: 'code',
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async off2FA(num2FaSystems: number) {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                type: '2fa-off',
-                num2FaSystems,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    async passwordVerificationCode(newPassword: string, oldPassword: string) {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                type: 'changePassword',
-                newPassword,
-                oldPassword,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async wizard2FA() {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                type: 'wizard',
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    async toggleVerificationCode(enable: boolean) {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                type: `verification-${enable ? 'enable' : 'disable'}`,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async toggleSystem2fa(
         system: NxSystem,
         system2faEnabled: boolean,
@@ -747,6 +665,12 @@ export class NxDialogsService extends DialogBase {
         );
     }
 
+    /**
+     *
+     * @param componentPromise Function that lazy imports the modal content
+     * @param customConfig CDK config options https://material.angular.io/cdk/dialog/api#DialogConfig
+     * @returns A function to open the dialog
+     */
     private dialogV2Factory<DT extends Dt.DialogType, CT = unknown>(
         componentPromise: () => Promise<ComponentType<CT>>,
         customConfig?: CdkDialogConfig<never>,
@@ -764,6 +688,48 @@ export class NxDialogsService extends DialogBase {
     /* General use */
 
     /* Account */
+    private async account2fa<A extends TfaAction>(
+        data: Dt.Account2faData<A>
+    ): Promise<Dt.Account2faReturn> {
+        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
+        const configWithData: CdkDialogConfig<Dt.Account2faData<A>> = {
+            width: DIALOG_SIZE_V2.SMALL,
+            data
+        };
+        return this.openV2(component, configWithData);
+    }
+
+    account2faEnable(): Promise<Dt.Account2faReturn> {
+        return this.account2fa({ action: TfaAction.Enable });
+    }
+
+    account2faDisable(num2FaSystems: number): Promise<Dt.Account2faReturn> {
+        return this.account2fa({
+            action: TfaAction.Disable,
+            data: { num2FaSystems }
+        });
+    }
+
+    account2faCodeToggle(state: boolean): Promise<Dt.Account2faReturn> {
+        const action = state
+            ? TfaAction.CodeOnLoginEnable
+            : TfaAction.CodeOnLoginDisable;
+        return this.account2fa({ action });
+    }
+
+    account2faNewBackupCodes(): Promise<Dt.Account2faReturn> {
+        return this.account2fa({ action: TfaAction.NewBackupCodes });
+    }
+
+    account2faPasswordChange(
+        oldPassword: string,
+        newPassword: string
+    ): Promise<Dt.Account2faReturn> {
+        return this.account2fa({
+            action: TfaAction.PasswordChange,
+            data: { oldPassword, newPassword }
+        });
+    }
 
     /* Systems */
 

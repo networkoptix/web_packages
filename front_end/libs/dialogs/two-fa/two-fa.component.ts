@@ -1,8 +1,8 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnInit,
-    Input,
     ViewChild,
     Renderer2,
     TemplateRef,
@@ -24,7 +24,6 @@ import {
     InfoBlockSection,
     InfoBlockSize
 } from '@components/info-block/info-block.component.types';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { icons, apiBase, credentialsValidation, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
@@ -35,9 +34,10 @@ import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
 
-import { T_FA_STEPS } from './two-fa.component.types';
+import type { Account2faData, Account2faReturn } from '../dialogs.types';
+
+import { TfaAction, T_FA_STEPS } from './two-fa.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,18 +45,10 @@ import { T_FA_STEPS } from './two-fa.component.types';
     templateUrl: 'two-fa.component.html',
     styleUrls: ['two-fa.component.scss']
 })
-export class TwoFAModalContent implements OnInit, AfterViewInit {
-    @Input() closable: boolean = true;
-    // @Input() type: string;
-    // @Input() cancellable: boolean;
-    // @Input() newPassword: string;
-    // @Input() oldPassword: string;
-    // @Input() num2FaSystems: number;
-
+export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterViewInit {
     LANG = staticLang;
 
-    type: string;
-    cancellable: boolean;
+    TfaAction = TfaAction;
     newPassword: string;
     oldPassword: string;
     num2FaSystems: number;
@@ -165,13 +157,23 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private cloudApiService: NxCloudApiService,
         private elem: ElementRef<HTMLElement>,
         private cookieService: CookieService,
-        private dialogRef: DialogRef,
+        protected dialogRef: DialogRef<Account2faReturn>,
         private store: Store,
-        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
+        @Inject(DIALOG_DATA) protected dialogData: Account2faData<A>,
     ) {
         this.setupDefaults();
+
+        // Type narrowing isn't quite working here
+        if (dialogData.action === TfaAction.Disable) {
+            const { data } = dialogData as Account2faData<TfaAction.Disable>;
+            this.num2FaSystems = data.num2FaSystems;
+        } else if (dialogData.action === TfaAction.PasswordChange) {
+            const { data } = dialogData as Account2faData<TfaAction.PasswordChange>;
+            this.oldPassword = data.oldPassword;
+            this.newPassword = data.newPassword;
+        }
     }
 
     // Using fetch api because angular http request is canceled when page is unloading.
@@ -188,19 +190,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     };
 
     ngOnInit(): void {
-        pickFrom(
-            this.dialogData,
-            [
-                'type',
-                'oldPassword',
-                'newPassword',
-                'num2FaSystems',
-                'cancellable',
-            ],
-            this
-        );
-
         this.loginProcess = this.processService.createProcess(() => {
+            this.lock();
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
@@ -211,7 +202,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
             return this.accountService
                 .verify(this.password)
-                .then((result: any) => {
+                .then(() => {
                     this.listenFor2faActivation = true;
                     this.window.addEventListener('beforeunload', this.removeUnverified2faKey);
                     return this.accountService.get2FaKey();
@@ -250,6 +241,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     new InfoBlockLine(this.LANG.account.key, this.code)
                 ]);
             }
+            this.unlock();
+        }, () => {
+            this.unlock();
         });
 
         this.qrProcess = this.processService.createProcess(() => {
@@ -271,12 +265,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         };
 
         this.codeProcess = this.processService.createProcess(() => {
+            this.lock();
             if (this.tfaCode === '') {
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
             // Don't need to get backup codes or refresh session when disabling
-            if (this.type === '2fa-off') {
+            if (this.dialogData.action === TfaAction.Disable) {
                 return this.accountService.update2fa(
                     '',
                     this.tfaCode,
@@ -335,12 +330,15 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.listenFor2faActivation = false;
                 this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
                 this.setTemplate(T_FA_STEPS.WizardFinish);
+                this.unlock();
             }
 
             if (response.account2faEnabled === false) {
                 this.resetDefaults();
                 this.close('disabled');
             }
+        }, () => {
+            this.unlock();
         });
 
         this.verificationProcess = this.processService.createProcess(() => {
@@ -348,6 +346,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
+            this.lock();
             return this.accountService.update2fa('', this.tfaCode, 'toggle');
         }, {
             ignoreUnauthorized: true,
@@ -393,6 +392,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.resetDefaults();
                 this.close('disabled');
             }
+        }, () => {
+            this.unlock();
         });
 
         const invalidCredentialHandler = () => {
@@ -403,6 +404,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         };
 
         this.changePasswordProcess = this.processService.createProcess(() => {
+            this.lock();
             return this.cloudApiService.changePassword(this.newPassword, this.oldPassword, this.tfaCode);
         }, {
             ignoreUnauthorized: true,
@@ -423,6 +425,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         }, res => {
             this.close(res);
+        }, () => {
+            this.unlock();
         });
     }
 
@@ -461,16 +465,20 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (this.type === '2fa-off') {
+        const { action } = this.dialogData;
+        if (action === TfaAction.Disable) {
             this.setTemplate(T_FA_STEPS.Disable2FaCode);
-        } else if (this.type === 'changePassword') {
+        } else if (action === TfaAction.PasswordChange) {
             this.setTemplate(T_FA_STEPS.ChangePassword);
-        } else if (this.type.startsWith('verification')) {
+        } else if (
+            action === TfaAction.CodeOnLoginEnable ||
+            action === TfaAction.CodeOnLoginDisable
+        ) {
             this.setTemplate(T_FA_STEPS.VerificationToggle);
-        } else if (this.type === 'code') {
+        } else if (action === TfaAction.NewBackupCodes) {
             this.accountService
                 .get2FaBackupCode()
-                .then((response: any) => {
+                .then(response => {
                     this.newCodes = response.map(code => code.backup_code);
                     this.setTemplate(T_FA_STEPS.Code);
                 }, () => {
@@ -490,7 +498,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
-    close = (action?: string): void => {
+    close = (action?: Account2faReturn): void => {
         if (this.listenFor2faActivation) {
             this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
         }
@@ -500,7 +508,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     /* Needs to be an arrow function to access this
     when passed to <nx-cancel-button> as [discardFn] */
-    closeWizard = (action?: string): void => {
+    closeWizard = (action?: Account2faReturn): void => {
         if (this.listenFor2faActivation) {
             this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
         }
@@ -551,4 +559,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     copyToClipboard(): void {
         this.clipboardService.copy(this.newCodes.join('\n'));
     }
+
+    lock = (): void => { this.dialogRef.disableClose = true; };
+    unlock = (): void => { this.dialogRef.disableClose = false; };
 }

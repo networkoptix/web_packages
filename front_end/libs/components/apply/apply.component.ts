@@ -51,7 +51,8 @@ export class NxApplyComponent {
             event.key === 'Enter' &&
             this.document.activeElement.tagName === 'INPUT' &&
             this.processButton &&
-            !this.document.querySelector('.modal') // Modal is active
+            !this.document.querySelector('.modal') && // Modal is active (old)
+            !this.document.querySelector('cdk-dialog-container') // CDK dialogs
         ) {
             this.processButton.checkForm();
         }

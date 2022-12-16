@@ -99,7 +99,7 @@
                         class="reminder"
                         *ngIf="twoFaSystems.length > 5"
                         [innerText]="
-                            'security.twoFa.systemsRemainder'
+                            LANG.security.twoFa.systemsRemainder
                                 | translate: { count: twoFaSystems.length - 4 }
                         "
                     ></div>
@@ -136,7 +136,7 @@
                             <span
                                 #v5WarningSpan
                                 [innerHTML]="
-                                    'security.twoFa.v5Warning'
+                                    LANG.security.twoFa.v5Warning
                                         | translate: { count: subV5Systems.length }
                                         | safe: 'html'
                                 "
@@ -145,7 +145,7 @@
                         <p
                             class="mb-0"
                             [innerText]="
-                                'security.twoFa.v5WarningExplanation'
+                                LANG.security.twoFa.v5WarningExplanation
                                     | translate: { count: subV5Systems.length }
                             "
                         ></p>
@@ -181,7 +181,7 @@
                         class="reminder"
                         *ngIf="subV5Systems.length > 5"
                         [innerText]="
-                            'security.twoFa.systemsRemainder'
+                            LANG.security.twoFa.systemsRemainder
                                 | translate: { count: subV5Systems.length - 4 }
                         "
                     ></div>

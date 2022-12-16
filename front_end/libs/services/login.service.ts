@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -49,6 +50,7 @@ export class NxLoginService extends DialogBase {
         private storage: LocalStorageService,
         private simpleDialogService: NxSimpleDialogsService,
         private bootstrapProvider: NxBootstrapProvider,
+        private cdkDialog: Dialog,
         @Inject(WINDOW) private window: Window,
     ) {
         super(overlay, injector);
@@ -147,6 +149,7 @@ export class NxLoginService extends DialogBase {
                 this.simpleDialogService.notify(this.LANG.toastMessage.noInternet, 'warning', true);
                 // Close dialog if any
                 this.dismissDialog();
+                this.cdkDialog.closeAll();
 
                 return Promise.resolve(false);
             }

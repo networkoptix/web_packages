@@ -53,29 +53,30 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.changePassword = this.processService.createProcess(() => {
-            const verifySession = (): Promise<unknown> => {
-                return this.dialogs.passwordVerificationCode(
-                    this.pass.newPassword,
-                    this.pass.password
-                );
+            const { password: oldPass, newPassword: newPass } = this.pass;
+            const verifySession = async (): Promise<string> => {
+                return this.dialogs.account2faPasswordChange(oldPass, newPass)
+                    .then(res => res === 'canceled'
+                        ? Promise.reject({ resultCode: res })
+                        : res
+                    );
             };
-            return this.account.account2faEnabled
-                ? this.cloudApiService.verify(this.pass.password)
-                    .then(
-                        () => verifySession(),
-                        ({ error }) => error?.resultCode === 'forbidden'
-                            ? verifySession()
-                            : Promise.reject(error)
-                    )
-                : this.cloudApiService.changePassword(
-                    this.pass.newPassword,
-                    this.pass.password
+            if (this.account.account2faEnabled) {
+                return this.cloudApiService.verify(oldPass).then(
+                    verifySession,
+                    ({ error }) => error?.resultCode === 'forbidden'
+                        ? verifySession()
+                        : Promise.reject(error)
                 );
+            } else {
+                return this.cloudApiService.changePassword(newPass, oldPass);
+            }
         }, {
             errorCodes: {
                 notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch,
                 wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch,
                 badRequest: this.LANG.errorCodes.oldPasswordMistmatch,
+                canceled: () => {} // User closed 2fa dialog
             },
             errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
             ignoreUnauthorized: true

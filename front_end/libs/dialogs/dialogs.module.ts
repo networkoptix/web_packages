@@ -55,7 +55,7 @@ import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
 import { TransferOwnershipModule } from './transfer-ownership/transfer-ownership.module';
-import { TwoFAModalContent } from './two-fa/two-fa.component';
+import { TwoFAModalModule } from './two-fa/two-fa.module';
 import {
     UpdateCameraCredentialsModalContent
 } from './update-camera-credentials/update-camera-credentials.component';
@@ -89,6 +89,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         TransferOwnershipModule,
         NxMoreDevicesModule,
         NxMoreTagsModule,
+        TwoFAModalModule,
     ],
     declarations: [
         DisconnectModalContent,
@@ -113,7 +114,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddStorageModalContent,
         RemoveSystemModalContent,
         EditModalContent,
-        TwoFAModalContent,
         DownloadAsyncModalContent,
         Mandatory2faModalContent,
         AddWidgetModalContent,

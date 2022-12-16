@@ -14,7 +14,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -84,6 +84,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="changePasswordProcess"
+            [cancelFn]="unlock"
             [discardFn]="closeWizard"
         ></nx-cancel-button>
     </div>
@@ -103,7 +104,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -156,40 +157,6 @@
     </div>
 </ng-template>
 
-<!-- It's removed form spec but let;s keep it just in case -- TT -->
-<!--<ng-template #wizardWarning>-->
-<!--    <div class="modal-header">-->
-<!--        <h1 class="modal-title" translate>Two-factor authentication</h1>-->
-<!--        <button type="button" class="close"-->
-<!--                data-dismiss="modal" aria-label="Close"-->
-<!--                (click)="closeWizard()" *ngIf="closable">-->
-<!--            <span class="close-content"></span>-->
-<!--        </button>-->
-<!--    </div>-->
-
-<!--    <div class="modal-body">-->
-<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarning({ count: incompatibleSystems.length })"></span></div>-->
-<!--        <div class="my-3">-->
-<!--            <div *ngFor="let system of incompatibleSystems" class="d-flex align-items-center">-->
-<!--                <svg-icon nx-add-svg-src-->
-<!--                        class="d-inline-block"-->
-<!--                        [src]="icons.dir + 'system.svg'"-->
-<!--                        [svgStyle]="{'width.px': '32', 'height.px': '32'}"-->
-<!--                        [applyClass]="true"></svg-icon>-->
-<!--                <span class="system-name">{{system.name}}</span>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr"></span></div>-->
-<!--    </div>-->
-
-<!--    <div class="modal-footer justify-end">-->
-<!--        <button id="nextWizardLogin" class="btn btn-danger btn-next" (click)="next()">-->
-<!--            <span translate>Next</span>-->
-<!--            <svg-icon nx-add-svg-src [src]="icons.dir + 'arrow_right.svg'"></svg-icon>-->
-<!--        </button>-->
-<!--    </div>-->
-<!--</ng-template>-->
-
 <ng-template #wizardLogin>
     <div class="modal-header">
         <h1
@@ -204,7 +171,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -303,7 +270,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard('deactivate')"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -319,7 +286,7 @@
                 to your %CLOUD_NAME% account.
             </p>
 
-            <p [innerHTML]="LANG.dialogs.twoFa.installAuthApp"></p>
+            <p [innerHTML]="LANG.dialogs.twoFa.installAuthApp | translate"></p>
         </div>
 
         <div
@@ -402,7 +369,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard('deactivate')"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -504,7 +471,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close('enabled')"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -576,7 +543,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -590,7 +557,7 @@
         >
             <p
                 translate
-                *ngIf="type === 'verification-enable'; else disableText"
+                *ngIf="dialogData.action === TfaAction.CodeOnLoginEnable; else disableText"
             >
                 Verification code from the authentication app will be requested on every login with
                 %CLOUD_NAME% account.
@@ -604,7 +571,7 @@
             </ng-template>
             <div class="form-group mt-3">
                 <label
-                    *ngIf="type === 'verification-enable'; else authOrBackup"
+                    *ngIf="dialogData.action === TfaAction.CodeOnLoginDisable; else authOrBackup"
                     for="tfaCodeInput"
                     translate
                     >Enter a verification code from your authentication app to continue</label
@@ -667,6 +634,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="verificationProcess"
+            [cancelFn]="unlock"
             [discardFn]="closeWizard"
         ></nx-cancel-button>
     </div>
@@ -686,7 +654,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <span class="close-content"></span>
         </button>
@@ -760,6 +728,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="codeProcess"
+            [cancelFn]="unlock"
             [discardFn]="closeWizard"
         ></nx-cancel-button>
     </div>

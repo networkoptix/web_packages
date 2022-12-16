@@ -87,7 +87,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             return;
         }
         this.dialogs
-            .toggleVerificationCode(value)
+            .account2faCodeToggle(value)
             .then(action => {
                 if (action !== 'canceled') {
                     this.account2faEnabled = (action === 'enabled');
@@ -165,7 +165,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
             this.dialogs
-                .wizard2FA()
+                .account2faEnable()
                 .then(action => {
                     const newState = (action === 'enabled');
                     this.account2faEnabled = newState;
@@ -178,7 +178,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 });
         } else {
             this.dialogs
-                .off2FA(this.twoFaSystems.length)
+                .account2faDisable(this.twoFaSystems.length)
                 .then(action => {
                     if (action !== 'canceled') {
                         const newState = !(action === 'disabled');
@@ -194,6 +194,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     genNewCode(): void {
-        this.dialogs.newCode2FA();
+        this.dialogs.account2faNewBackupCodes();
     }
 }
