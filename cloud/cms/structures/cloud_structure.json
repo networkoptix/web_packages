@@ -213,6 +213,15 @@
             "advanced": true
           },
           {
+            "label": "Reply to - email",
+            "name": "%REPLY_TO_EMAIL%",
+            "type": "text",
+            "value": "",
+            "description": "Reply to email for emails from cloud portal. Case sensitive. (Does not need to be verified by Amazon)",
+            "advanced": true,
+            "optional": true
+          },
+          {
             "label": "Favicon",
             "name": "static/images/favicon.ico",
             "value": "",
