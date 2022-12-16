@@ -1,9 +1,13 @@
-
 from CloudPortalAPI import CloudPortalAPI
+from robot.libraries.BuiltIn import BuiltIn
 
-featureAPI = CloudPortalAPI()
 class FeatureFlagListener:
     ROBOT_LISTENER_API_VERSION = 3
-
     def __init__(self):
-        featureAPI.set_feature_flags()
+        self.api_done = False
+         
+    def start_suite(self, data, result):
+        if not self.api_done:
+            featureAPI = CloudPortalAPI(env=BuiltIn().get_variable_value("${ENV}"))
+            featureAPI.set_feature_flags()
+            self.api_done = True
