@@ -417,7 +417,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     public async handleCodeLogin(code: string) {
-        const account = await this.get();
+        const account = await this.get(true);
         if (!account || !account.is_authenticated) {
             return this.cloudApi.loginCode(code)
                 .then(res => {
@@ -470,7 +470,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     public async handleAuthKeyLogin(auth: string) {
-        const account: Account = await this.get();
+        const account: Account = await this.get(true);
         if (!account || !account.is_authenticated) {
             return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
         }
