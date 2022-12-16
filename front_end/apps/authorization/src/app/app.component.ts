@@ -1,4 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { WINDOW } from "@services/window-provider";
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxThemeService } from '@services/theme.service';
@@ -11,11 +12,15 @@ import { NxThemeService } from '@services/theme.service';
 })
 export class AppComponent {
     constructor(
+        @Inject(WINDOW) private window: Window,
         private configService: NxConfigService,
         private themeService: NxThemeService,
     ) {
-        if (this.configService.getConfig().featureFlags.themesEnabled) {
+        const CONFIG = this.configService.getConfig();
+        if (CONFIG.featureFlags.themesEnabled) {
             this.themeService.initTheme().then();
+        } else {
+            this.window.document.documentElement.setAttribute('data-theme', CONFIG.themeConfig.light);
         }
     }
 }

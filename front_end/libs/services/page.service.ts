@@ -15,12 +15,12 @@ import { NxHeaderService } from './nx-header.service';
 import { WINDOW } from './window-provider';
 
 interface MetaLookup {
-    [key: string]: Record<string, string>
+    [key: string]: Record<string, string>;
 }
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxPageService {
     CONFIG: IConfig;
@@ -28,7 +28,9 @@ export class NxPageService {
 
     updater$ = new Subject();
     metaLookup: MetaLookup = {};
-    defaultMetaKey = environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults';
+    defaultMetaKey = environment.isLocal
+        ? 'metaDefaultsWebadmin'
+        : 'metaDefaults';
     templateKey = environment.isLocal ? 'templateWebadmin' : 'template';
 
     constructor(
@@ -38,68 +40,100 @@ export class NxPageService {
         private router: Router,
         headerService: NxHeaderService,
         translate: TranslateService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.updater$.pipe(
-            untilDestroyed(this),
-            debounceTime(50)
-        ).subscribe(_ => {
-            Object.entries(this.metaProperties).forEach(([name, content]) => {
-                const property = `og:${name}`;
-                this.meta.updateTag({ name, property, content });
-                if (name === 'title' && !this.router.url.startsWith('/authorize')) {
-                    this.title.setTitle(content);
+        this.updater$
+            .pipe(untilDestroyed(this), debounceTime(150))
+            .subscribe(_ => {
+                Object.entries(this.metaProperties).forEach(
+                    ([name, content]) => {
+                        const property = `og:${name}`;
+                        this.meta.updateTag({ name, property, content });
+                        if (
+                            name === 'title' &&
+                            !this.router.url.startsWith('/authorize')
+                        ) {
+                            this.title.setTitle(content);
+                        }
+                    },
+                );
+
+                if (
+                    !this.metaProperties.title ||
+                    (this.metaProperties.title ===
+                        this.LANG[this.defaultMetaKey].default.title() &&
+                        !headerService?.currentLocation?.isSystem &&
+                        headerService.currentLocation.childNode)
+                ) {
+                    this.updateLookups(
+                        'title',
+                        translate.instant(
+                            headerService.currentLocation.childNode.name,
+                        ) +
+                        ' - ' +
+                        this.LANG.productName(),
+                    );
                 }
             });
-
-            if (!this.metaProperties.title || this.metaProperties.title === this.LANG[this.defaultMetaKey].default.title() && !headerService?.currentLocation?.isSystem && headerService.currentLocation.childNode) {
-                this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.LANG.productName());
-            }
-        });
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd)
-        )?.subscribe(this.updater$);
+        this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            ?.subscribe(this.updater$);
     }
 
     getRoot() {
         return this.window.location.href.replace(this.router.url, '');
     }
 
-    mapMeta = (metaProperties: Record<string, any>) => Object.entries(metaProperties || {}).reduce((lookup, [property, val]) => ({ ...lookup, [property]: val() }), {});
+    mapMeta = (metaProperties: Record<string, any>) =>
+        Object.entries(metaProperties || {}).reduce(
+            (lookup, [property, val]) => ({ ...lookup, [property]: val() }),
+            {},
+        );
 
     getBaseMeta() {
-        const baseLangMeta = this.mapMeta(this.LANG[this.defaultMetaKey].default);
+        const baseLangMeta = this.mapMeta(
+            this.LANG[this.defaultMetaKey].default,
+        );
         const { image, type } = this.CONFIG.metaDefaults.default;
         return { ...baseLangMeta, type, image: this.getRoot() + image };
     }
 
-    findMatchingMeta = url => (lookupDict): Record<string, any> => Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {};
+    findMatchingMeta =
+        url =>
+            (lookupDict): Record<string, any> =>
+                Object.entries(lookupDict).find(([partialPath]) =>
+                    url.startsWith(partialPath),
+                )?.[1] || {};
 
     getPathMeta(url) {
         const findIn = this.findMatchingMeta(url);
         return {
             ...this.mapMeta(findIn(this.LANG[this.defaultMetaKey])),
-            ...findIn(this.CONFIG.metaDefaults)
+            ...findIn(this.CONFIG.metaDefaults),
         };
     }
 
-    generateDefaultMeta = (url: string): Record<string, string> => ({ ...this.getBaseMeta(), ...this.getPathMeta(url) });
+    generateDefaultMeta = (url: string): Record<string, string> => ({
+        ...this.getBaseMeta(),
+        ...this.getPathMeta(url),
+    });
 
     /**
-     * Use this method to update a pages metadata.
+     * Use this method to update pages metadata.
      *
      * @param property string
      * @param value string
      */
     updateLookups(property, value): void {
-        const { url } = this.router;
+        const url = this.router.url.split('?')[0];
         this.metaLookup[url] ||= this.generateDefaultMeta(url);
         const urlProperties = this.metaLookup[url];
         if (value) {
             urlProperties[property] = value;
         }
         urlProperties.url = this.getRoot() + url;
+
         this.updater$.next('update');
     }
 
@@ -135,9 +169,16 @@ export class NxPageService {
         if (this.router.url === '/authorize') {
             return;
         }
-        const txt = (typeof title === 'function') ? title() : title;
-        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.productName()) {
-            this.updateLookups('title', this.LANG.pageTitles[this.templateKey]({ title: txt }));
+        const txt = typeof title === 'function' ? title() : title;
+        if (
+            this.LANG &&
+            this.LANG.pageTitles &&
+            txt !== this.LANG.productName()
+        ) {
+            this.updateLookups(
+                'title',
+                this.LANG.pageTitles[this.templateKey]({ title: txt }),
+            );
             return;
         }
         this.updateLookups('title', txt);
@@ -157,8 +198,14 @@ export class NxPageService {
 
     public set pageTitleRemoveHyphen(title: any) {
         if (this.LANG && title !== this.LANG.productName()) {
-            const txt = (typeof title === 'function') ? title() : title;
-            this.updateLookups('title', this.LANG.pageTitles[this.templateKey]({ title: txt }).replace('- ', ''));
+            const txt = typeof title === 'function' ? title() : title;
+            this.updateLookups(
+                'title',
+                this.LANG.pageTitles[this.templateKey]({ title: txt }).replace(
+                    '- ',
+                    '',
+                ),
+            );
             return;
         }
         this.updateLookups('title', title());
@@ -182,7 +229,7 @@ export class NxPageService {
         this.router
             .navigate([this.CONFIG.redirect.page404], {
                 replaceUrl: true,
-                queryParams
+                queryParams,
             })
             .catch(error => {
                 console.error(error);

@@ -3,7 +3,8 @@ import {
     OnInit,
     OnDestroy,
     ElementRef,
-    HostListener, Renderer2,
+    HostListener,
+    Renderer2,
     HostBinding,
     Inject,
 } from '@angular/core';
@@ -21,6 +22,7 @@ import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -30,9 +32,15 @@ import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import {
+    CAMERA_STATUS,
+    SimpleTimeRange,
+} from '@vms-client/submodules/vms/datatypes/ICamera';
 import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
-import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import {
+    VmsState,
+    VMS_MODE,
+} from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
 
@@ -45,7 +53,7 @@ import { sidebarLayout } from '../sidebarLayout.cfg';
 @Component({
     selector: 'nx-system-view-index-page',
     templateUrl: 'system-view-index.page.component.html',
-    styleUrls: ['system-view-index.page.component.scss']
+    styleUrls: ['system-view-index.page.component.scss'],
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
@@ -92,7 +100,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     @HostListener('window:resize', ['$event'])
     public onResize(event): void {
-        const widthThreshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
+        const widthThreshold =
+            sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
         const newWidth = event.target.innerWidth;
         if (newWidth <= widthThreshold && this._windowWidth > widthThreshold) {
             this._handleMovingFromWideInterfaceToNarrow();
@@ -114,6 +123,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        pageService: NxPageService,
         private self: ElementRef,
         private renderer: Renderer2,
         private router: Router,
@@ -135,14 +145,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
+        pageService.pageTitle = this.LANG.pageTitles.view;
     }
 
     private setSystemSubscription(): void {
         this.systemsSubscription?.unsubscribe();
         this.systemsSubscription = this.systemsService.systemsSubject
-            .pipe(
-                distinctUntilChanged(),
-                untilDestroyed(this))
+            .pipe(distinctUntilChanged(), untilDestroyed(this))
             .subscribe(systems => {
                 if (systems.length) {
                     this.systems = systems;
@@ -158,17 +167,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.vms.reset();
 
-        this.vms.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: VmsState) => {
-                this._onVmsSubjectChange(s);
-            });
+        this.vms.subject.pipe(untilDestroyed(this)).subscribe((s: VmsState) => {
+            this._onVmsSubjectChange(s);
+        });
 
-        this.route.params
-            .pipe(untilDestroyed(this))
-            .subscribe(s => {
-                this._onRouteChange(s);
-            });
+        this.route.params.pipe(untilDestroyed(this)).subscribe(s => {
+            this._onRouteChange(s);
+        });
 
         this.ux.subject
             .pipe(untilDestroyed(this))
@@ -181,7 +186,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         // Handles the case where you are on the view tab and get redirected back to /view
         this.router.events
             .pipe(
-                filter(e => e instanceof NavigationEnd && !this.route.snapshot.children.length),
+                filter(
+                    e =>
+                        e instanceof NavigationEnd &&
+                        !this.route.snapshot.children.length,
+                ),
                 untilDestroyed(this)
             )
             .subscribe(() => {
@@ -227,20 +236,29 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
 
-            this.unListenMouseMove = this.renderer
-                .listen(this.$self, 'mousemove', (event: MouseEvent) => {
+            this.unListenMouseMove = this.renderer.listen(
+                this.$self,
+                'mousemove',
+                (event: MouseEvent) => {
                     this.onEvent(event);
-                });
+                },
+            );
 
-            this.unListenTouch = this.renderer
-                .listen(this.$self, 'touch', (event: MouseEvent) => {
+            this.unListenTouch = this.renderer.listen(
+                this.$self,
+                'touch',
+                (event: MouseEvent) => {
                     this.onEvent(event);
-                });
+                },
+            );
 
-            this.unListenTouchMove = this.renderer
-                .listen(this.$self, 'touchmove', (event: MouseEvent) => {
+            this.unListenTouchMove = this.renderer.listen(
+                this.$self,
+                'touchmove',
+                (event: MouseEvent) => {
                     this.onEvent(event);
-                });
+                },
+            );
         } else {
             clearTimeout(this.onShowElements);
             clearTimeout(this.onMoveShowElements);
@@ -277,9 +295,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.initialized = initialized;
         this.$self.classList[initialized ? 'add' : 'remove']('initialized');
         this.initializedWithError = initializedWithError;
-        this.$self.classList[
-            initializedWithError ? 'add' : 'remove'
-        ]('initialization-error');
+        this.$self.classList[initializedWithError ? 'add' : 'remove'](
+            'initialization-error',
+        );
         if (!initializedWithError) {
             this.ribbonService.hide();
         }
@@ -311,18 +329,27 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this.system = this.systemService.createLocalSystem(
                         this.accountService.mediaServerApi,
                         account.id,
-                        account.email
+                        account.email,
                     );
                     this.settingsService.system = this.system;
                     return Promise.resolve();
                 }
 
                 // _initSystem is called on systems subscription
-                const systemInfoFromCDB: NxSystemInfo = this.systems.find(s => s.id === this.systemId);
+                const systemInfoFromCDB: NxSystemInfo =
+                    this.systems.find(s => s.id === this.systemId);
                 if (systemInfoFromCDB) {
-                    this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
+                    this.system = this.systemService.createSystem(
+                        account.email,
+                        this.systemId,
+                        undefined,
+                        false,
+                    );
                     this.settingsService.system = this.system;
-                    if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
+                    if (
+                        systemInfoFromCDB.stateOfHealth !==
+                        this.CONFIG.system.status.online
+                    ) {
                         this._setInitializationState(true, true);
                     } else {
                         this.ribbonService.hide();
@@ -352,29 +379,35 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 return true;
             } else {
                 return mediaServers.some(server => {
-                    const matchServer = cachedMediaServers.find(_server =>
-                        _server.id === server.id
+                    const matchServer = cachedMediaServers.find(
+                        _server => _server.id === server.id,
                     );
                     if (!matchServer || server.status !== matchServer.status) {
                         return true;
                     } else {
-                        if (server.cameras.length !== matchServer.cameras.length) {
+                        if (
+                            server.cameras.length !== matchServer.cameras.length
+                        ) {
                             return true;
                         } else {
                             return server.cameras.some(camera => {
                                 const matchCamera = matchServer.cameras.find(
-                                    _camera => _camera.id === camera.id
+                                    _camera => _camera.id === camera.id,
                                 );
 
                                 return (
                                     !matchCamera ||
-                                    camera.name !== matchCamera.name
+                                    camera.name !==
+                                    matchCamera.name
                                         .replace(/&lt;/g, '<')
                                         .replace(/&gt;/g, '>') ||
-                                    (
-                                        camera.status !== matchCamera.status &&
-                                        !(camera.status === 'Online' && matchCamera.status === 'Live') // remapped param "status"
-                                    ) || camera.scheduleEnabled !== matchCamera.isScheduleEnabled // remapped param "scheduleEnabled"
+                                    (camera.status !== matchCamera.status &&
+                                        !(
+                                            camera.status === 'Online' &&
+                                            matchCamera.status === 'Live'
+                                        )) || // remapped param "status"
+                                    camera.scheduleEnabled !==
+                                    matchCamera.isScheduleEnabled // remapped param "scheduleEnabled"
                                 );
                             });
                         }
@@ -383,127 +416,152 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
         };
 
-        createSystem().then(() => {
-            timer(0, VideoManagementSystemService.statusRefreshInterval)
-                .pipe(takeUntil(this.cancelPoll$))
-                .subscribe(async () => {
-                    if (!this.system || !this.system.isOnline || processingMediaServers) {
-                        return;
-                    }
-
-                    let mediaServers = this.system.mediaservers;
-                    if (mediaServers === null) {
-                        mediaServers = await this.system.getMediaServersAndCameras(true);
-                    }
-                    // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
-                    if (
-                        this.initialized && !mediaServerChanged(mediaServers) ||
-                        mediaServers.length === 0
-                    ) {
-                        return;
-                    }
-
-                    processingMediaServers = true;
-                    const serverTimeInfos = await this.system.getServerTimes();
-                    this.vms.serverTimes = serverTimeInfos;
-                    serverTimeInfos.forEach(sti => {
-                        const mediaServer = mediaServers?.find(ms =>
-                            ms.id === sti.serverId
-                        );
-                        if (mediaServer) {
-                            mediaServer.timeInfo = sti;
+        createSystem()
+            .then(() => {
+                timer(0, VideoManagementSystemService.statusRefreshInterval)
+                    .pipe(takeUntil(this.cancelPoll$))
+                    .subscribe(async () => {
+                        if (
+                            !this.system ||
+                            !this.system.isOnline ||
+                            processingMediaServers
+                        ) {
+                            return;
                         }
-                    });
 
-                    if (this.initializedWithError) {
-                        this._setInitializationState(true, false);
-                    }
+                        let mediaServers = this.system.mediaservers;
+                        if (mediaServers === null) {
+                            mediaServers =
+                                await this.system.getMediaServersAndCameras(
+                                    true,
+                                );
+                        }
+                        // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
+                        if (
+                            (this.initialized &&
+                                !mediaServerChanged(mediaServers)) ||
+                            mediaServers.length === 0
+                        ) {
+                            return;
+                        }
 
-                    const archiveRanges = {};
-                    const processCameras = (c, ms) => {
-                        this.hasCameras = true;
-                        const result = new Camera(
-                            c.id,
-                            c.parentId,
-                            c.preferredServerId,
-                            c.name,
-                            c.model,
-                            c.url,
-                            ms.status === 'Offline'
-                                ? 'Offline'
-                                : (
-                                    c.status === 'Online'
+                        processingMediaServers = true;
+                        const serverTimeInfos =
+                            await this.system.getServerTimes();
+                        this.vms.serverTimes = serverTimeInfos;
+                        serverTimeInfos.forEach(sti => {
+                            const mediaServer = mediaServers?.find(
+                                ms => ms.id === sti.serverId,
+                            );
+                            if (mediaServer) {
+                                mediaServer.timeInfo = sti;
+                            }
+                        });
+
+                        if (this.initializedWithError) {
+                            this._setInitializationState(true, false);
+                        }
+
+                        const archiveRanges = {};
+                        const processCameras = (c, ms) => {
+                            this.hasCameras = true;
+                            const result = new Camera(
+                                c.id,
+                                c.parentId,
+                                c.preferredServerId,
+                                c.name,
+                                c.model,
+                                c.url,
+                                ms.status === 'Offline'
+                                    ? 'Offline'
+                                    : ((c.status === 'Online'
                                         ? 'Live'
-                                        : c.status
-                                ) as CAMERA_STATUS,
-                            c.scheduleEnabled,
-                            c.disableDualStreaming,
-                            archiveRanges[c.id] || new SimpleTimeRange(0, 0),
-                            [],
-                            c.status !== 'Offline'
-                                ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
-                                : '',
-                            (transport: string, quality: string, t?: ms) =>
-                                this.system?.getPlaybackUrl(
-                                    c.id,
-                                    transport,
-                                    quality,
-                                    t
-                                ),
-                            (t?: ms, width = 128, height = 128) =>
-                                this.system?.mediaserver.previewUrl(
-                                    c.id,
-                                    t,
-                                    width,
-                                    height
-                                )
-                        );
-                        result.parseAdditionalParams(c.addParams);
-                        return result;
-                    };
+                                        : c.status) as CAMERA_STATUS),
+                                c.scheduleEnabled,
+                                c.disableDualStreaming,
+                                archiveRanges[c.id] ||
+                                new SimpleTimeRange(0, 0),
+                                [],
+                                c.status !== 'Offline'
+                                    ? this.system?.mediaserver.previewUrl(
+                                        c.id,
+                                        0,
+                                        128,
+                                        128,
+                                    )
+                                    : '',
+                                (transport: string, quality: string, t?: ms) =>
+                                    this.system?.getPlaybackUrl(
+                                        c.id,
+                                        transport,
+                                        quality,
+                                        t,
+                                    ),
+                                (t?: ms, width = 128, height = 128) =>
+                                    this.system?.mediaserver.previewUrl(
+                                        c.id,
+                                        t,
+                                        width,
+                                        height,
+                                    ),
+                            );
+                            result.parseAdditionalParams(c.addParams);
+                            return result;
+                        };
 
-                    const findCamerasWithArchive = () => {
-                        return this.system.getCameraHistoryItems().toPromise()
-                            .then(result => {
-                                if (!result?.length) {
-                                    return;
-                                }
-                                mediaServers.forEach(mediaServer => {
-                                    const rec = result.find(rec =>
-                                        rec.serverGuid === `{${mediaServer.id}}`
-                                    );
-                                    rec?.archivedCameras.forEach(cameraId => {
-                                        // trick camera 'hasArchive' - here we don't need a real info -- TT
-                                        archiveRanges[cleanId(cameraId)] =
-                                            new SimpleTimeRange(1, 2);
+                        const findCamerasWithArchive = () => {
+                            return this.system
+                                .getCameraHistoryItems()
+                                .toPromise()
+                                .then(result => {
+                                    if (!result?.length) {
+                                        return;
+                                    }
+                                    mediaServers.forEach(mediaServer => {
+                                        const rec = result.find(
+                                            rec =>
+                                                rec.serverGuid ===
+                                                `{${mediaServer.id}}`,
+                                        );
+                                        rec?.archivedCameras.forEach(
+                                            cameraId => {
+                                                // trick camera 'hasArchive' - here we don't need a real info -- TT
+                                                archiveRanges[
+                                                    cleanId(cameraId)
+                                                    ] = new SimpleTimeRange(1, 2);
+                                            },
+                                        );
                                     });
                                 });
-                            });
-                    };
+                        };
 
-                    await findCamerasWithArchive();
+                        await findCamerasWithArchive();
 
-                    cachedMediaServers = mediaServers.map(
-                        ms => setServerIpAndPort(({
-                            id: ms.id,
-                            name: ms.name,
-                            networkAddresses: ms.networkAddresses,
-                            status: ms.status,
-                            cameras: ms.cameras.map((c: any) =>
-                                processCameras(c, ms)
-                            )
-                        } as any))
-                    );
+                        cachedMediaServers = mediaServers.map(ms =>
+                            setServerIpAndPort({
+                                id: ms.id,
+                                name: ms.name,
+                                networkAddresses: ms.networkAddresses,
+                                status: ms.status,
+                                cameras: ms.cameras.map((c: any) =>
+                                    processCameras(c, ms),
+                                ),
+                            } as any),
+                        );
 
-                    this.vms.setMediaServers(this.systemId, cachedMediaServers);
-                    processingMediaServers = false;
+                        this.vms.setMediaServers(
+                            this.systemId,
+                            cachedMediaServers,
+                        );
+                        processingMediaServers = false;
 
-                    firstLoad.next(true);
-                });
-        }).catch(e => {
-            processingMediaServers = false;
-            setTimeout(() => this._setInitializationState(true, true));
-        });
+                        firstLoad.next(true);
+                    });
+            })
+            .catch(e => {
+                processingMediaServers = false;
+                setTimeout(() => this._setInitializationState(true, true));
+            });
     }
 
     private _tryToRedirectToCamera(): void {
@@ -511,7 +569,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         if (cid) {
             this.router.navigate([cid], {
                 relativeTo: this.route,
-                replaceUrl: true
+                replaceUrl: true,
             });
         }
     }
