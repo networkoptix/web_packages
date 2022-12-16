@@ -92,7 +92,7 @@ def clean_static_info(customization_package, output_dir):
             cleaned_description[key] = description[key]
 
     data = json.dumps(cleaned_description, indent=4)
-    with open(output_dir / path_to_file, "w") as file:
+    with open(output_dir / path_to_file, "w", newline='\n') as file:
         file.write(data)
 
 

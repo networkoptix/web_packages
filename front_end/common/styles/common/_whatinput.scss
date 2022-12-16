@@ -6,13 +6,13 @@
 }
 
 [data-whatintent="keyboard"] .btn.btn-primary:focus:not([disabled]):not(.disabled) {
-    outline: 2px solid rgba(var(--btn-primary-focus-outline-rgb), 0.3) !important;
+    outline: 2px solid var(--btn-primary-focus-outline-rgb) !important;
     outline-offset: 2px;
     box-shadow: 0 0 0 2px var(--btn-primary-focus-shadow) !important;
 }
 
 [data-whatintent="keyboard"] .btn.btn-danger:focus:not([disabled]):not(.disabled) {
-    outline: 2px solid rgba(var(--btn-danger-focus-outline-rgb), 0.3) !important;
+    outline: 2px solid var(--btn-danger-focus-outline-rgb) !important;
     outline-offset: 2px;
     box-shadow: 0 0 0 2px var(--btn-danger-focus-shadow) !important;
 }
@@ -20,7 +20,7 @@
 [data-whatintent="keyboard"] .btn.btn-dropdown-toggle:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] .btn.btn-default:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] a.btn.badge:focus:not([disabled]):not(.disabled) {
-    outline: 2px solid rgba(var(--btn-default-focus-outline-rgb), 0.3) !important;
+    outline: 2px solid var(--btn-default-focus-outline-rgb) !important;
     outline-offset: 2px;
     box-shadow: 0 0 0 2px var(--btn-default-focus-shadow) !important;
 }
@@ -40,7 +40,7 @@
     border-color: var(--input-focus-border-color) !important;
     outline: 1px solid var(--input-focus-border-color) !important;
     outline-offset: 0;
-    box-shadow: 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
+    box-shadow: 0 0 0 2px var(--input-focus-shadow-color) !important;
 
     &.inset {
         @include inset-outline;
