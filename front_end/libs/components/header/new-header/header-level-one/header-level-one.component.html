@@ -1,13 +1,14 @@
 <div class="menu-level-one">
     <ng-container *ngFor="let node of menuNodes">
-        <button
+        <a
             *ngIf="!node.invisible"
             (click)="handleNavigation(node, $event); onNodeSelect(node)"
             [ngClass]="{ active: node?.name === selectedNode?.name }"
             class="menu-item btn btn-menu"
+            [href]="node.url"
         >
             {{ node.display_name }}
-        </button>
+        </a>
     </ng-container>
     <ng-container *ngIf="loggedIn !== undefined">
         <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>

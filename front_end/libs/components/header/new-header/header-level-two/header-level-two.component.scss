@@ -30,6 +30,10 @@
             width: auto;
             margin: 19px 32px 23px 0px;
 
+            a{
+                text-decoration: none;
+            }
+
             .inner-menu-item {
                 color: var(--light6);
                 .active-border {

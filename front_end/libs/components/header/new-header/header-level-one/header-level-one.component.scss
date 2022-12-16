@@ -38,6 +38,11 @@
         min-height: 24px;
         margin: 13px 95px 10px auto;
     }
+
+    a{
+        color: var(--header-level-one-color);
+        text-decoration: none;
+    }
 }
 
 .header-button {

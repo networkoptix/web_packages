@@ -18,8 +18,9 @@ export class NxHeaderLevelOneComponent {
 
     constructor(public headerService: NxHeaderService, private menusService: NxMenusService) {}
 
-    onNodeSelect(event: MenuNode): void {
+    onNodeSelect(event: MenuNode): false {
         this.nodeSelect.emit(event);
+        return false;
     }
 
     handleNavigation(node: MenuNode, event: MouseEvent): void {
