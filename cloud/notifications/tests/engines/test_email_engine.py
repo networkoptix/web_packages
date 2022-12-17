@@ -75,7 +75,7 @@ class TestEmailEngine:
         mock_read_template.assert_has_calls(
             call(customization_name, msg_type, language_code, is_html) for is_html in [True, False])
         mock_email_multi_alternatives.assert_called_once_with(
-            expected_subject, expected_body, expected_email_from, to=(email,), reply_to=customization_cache['reply_to'])
+            expected_subject, expected_body, expected_email_from, to=(email,), reply_to=[customization_cache['reply_to']])
         mock_mime_image.assert_called_once_with(b'', _subtype="png")
         mock_msg.attach_alternative.assert_called_once_with(
             expected_body, 'text/html')

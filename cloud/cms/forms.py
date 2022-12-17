@@ -68,7 +68,7 @@ def get_branding_shortcuts(customization=None, request=None):
                                      asset_type=get_cloud_portal_asset(customization=customization).asset_type)
     branding_context_structures = branding_context.datastructure_set.all() if (
         branding_context := Context.objects.filter(
-            name='branding', asset_type=get_cloud_portal_asset().asset_type).first()
+            name='branding', asset_type=get_cloud_portal_asset(customization=customization).asset_type).first()
     ) else []
     brand_structures = [ds for ds in branding_context_structures if 'shortcut' in ds.meta_settings]
     hidden_branding_structures = [ds for ds in DataStructure.objects.filter(

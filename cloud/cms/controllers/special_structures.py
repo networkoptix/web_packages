@@ -84,7 +84,7 @@ class SpecialStructures:
     @staticmethod
     def calc_cloud_host(asset: Asset):
         customization = asset.customizations.first()
-        if not customization or not get_cloud_portal_asset(customization.name, no_create=True):
+        if not customization or not get_cloud_portal_asset(customization=customization.name, no_create=True):
             return ""
         conf = get_config(customization.name)
         return conf["cloud_portal"]["url"].lstrip('https://').lstrip('http://')
@@ -92,7 +92,7 @@ class SpecialStructures:
     @staticmethod
     def calc_cloud_link(asset: Asset):
         customization = asset.customizations.first()
-        if not customization or not get_cloud_portal_asset(customization.name, no_create=True):
+        if not customization or not get_cloud_portal_asset(customization=customization.name, no_create=True):
             return ""
         conf = get_config(customization.name)
         return conf["cloud_portal"]["url"].replace("http:", "https:")
@@ -106,7 +106,7 @@ class SpecialStructures:
         customization = asset.customizations.first()
         if not customization:
             return None
-        vms_asset = get_vms_asset(customization.name)
+        vms_asset = get_vms_asset(customization=customization.name)
         struct = SpecialStructure.objects.filter(name=ds_name).first()
         if vms_asset and struct:
             vms_dss = DataStructure.objects.filter(context__asset_type=vms_asset.asset_type)
@@ -200,7 +200,7 @@ class SpecialStructures:
     def calc_mobile_display_name(asset):
         customization = asset.customizations.first()
         if customization:
-            return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%')
+            return get_cloud_portal_asset(customization=customization.name).read_global_value('%MOBILE_DISPLAY_NAME%')
         return 'the mobile client'
 
     @staticmethod
