@@ -1,8 +1,8 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { WINDOW } from "@services/window-provider";
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxThemeService } from '@services/theme.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-auth-app-root',

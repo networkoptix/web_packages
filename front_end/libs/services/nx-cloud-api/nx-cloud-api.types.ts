@@ -198,7 +198,7 @@ export interface Downloads {
     releaseUrl: string
     type: string,
     version: string,
-    meta_version: string|null, // Used for metavms builds
+    meta_version: string | null, // Used for metavms builds
 }
 
 type ReadOnlyAPIType = 'VMS';
