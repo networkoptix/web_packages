@@ -48,7 +48,12 @@
             *ngFor="let bookmark of bookmarks; index as i"
             class="bookmarks-container"
             [nxTooltip]="bookmark.description"
+            [alternativeTargetRef]="targetThis"
         >
+            <div
+                #targetThis
+                class="bookmarks-tooltip"
+            ></div>
             <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
         </div>
     </div>

@@ -34,6 +34,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     private positionStrategy: FlexibleConnectedPositionStrategy;
 
     @Input('nxTooltip') content: string | TemplateRef<unknown>;
+    @Input() alternativeTargetRef: Element;
 
     @IBool() @Input() horizontal: CoercedBoolInput;
 
@@ -83,8 +84,9 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                 panelClass: ['bottom', 'center'],
             }
         ];
+
         this.positionStrategy = this.overlayPositionBuilder
-            .flexibleConnectedTo(this.elementRef)
+            .flexibleConnectedTo(this.alternativeTargetRef || this.elementRef)
             .withPositions(positions);
 
         this.overlayRef = this.overlay.create({

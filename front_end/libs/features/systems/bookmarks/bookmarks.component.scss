@@ -48,10 +48,18 @@
         }
 
         &-container {
+            position: relative;
             width: 100%;
             max-width: 320px;
             margin-bottom: 5px;
             justify-self: center;
+        }
+
+        &-tooltip {
+            position: absolute;
+            right: 0;
+            bottom: 20%;
+            max-width: 320px;
         }
     }
 
