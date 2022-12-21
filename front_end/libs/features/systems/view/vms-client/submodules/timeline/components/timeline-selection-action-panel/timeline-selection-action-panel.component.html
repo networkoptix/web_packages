@@ -22,6 +22,7 @@
 
 <a
     #exportBtn
+    [ngClass]="{ disabled: !exportEnabled }"
     class="export-link"
     href="#"
     (click)="downloadFile()"

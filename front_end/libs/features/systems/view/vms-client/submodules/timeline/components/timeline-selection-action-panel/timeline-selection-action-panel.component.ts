@@ -40,6 +40,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
 
+    exportEnabled: boolean;
     exportLink: string;
     exportName: string;
     icons = icons;
@@ -132,6 +133,11 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         this.self.nativeElement.classList.toggle('active', s.isActive);
         if (s.isActive) {
             this.exportUrl();
+            this.exportEnabled = !!this.vms.selectedCamera.getRecords(
+                this.status.range.start,
+                this.status.range.end,
+                1000
+            ).length;
         } else {
             this.exportLink = '';
             this.exportBtn.nativeElement.href = '#';
