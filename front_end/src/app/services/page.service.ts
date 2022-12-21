@@ -78,7 +78,12 @@ export class NxPageService {
             });
         this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
-            ?.subscribe(this.updater$);
+            ?.subscribe((event: NavigationEnd) => {
+                // This is just a bandaid for 22.1
+                if (!event.urlAfterRedirects.includes('/view')) {
+                    this.updater$.next('update');
+                }
+            });
     }
 
     getRoot() {
