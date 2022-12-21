@@ -2,6 +2,7 @@ import { coerceArray } from '@angular/cdk/coercion';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
+import { BehaviorSubject } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { FeatureFlagType } from '@services/nx-config/base-config';
@@ -18,6 +19,8 @@ const findNode = <T>(targetObject: T, nodes: string[]) => nodes.reduce((ref, nod
 export class NxConfigService {
     config: IConfig;
     static OVERRIDE_KEY = 'configOverrides';
+
+    static configChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
         private http?: HttpClient,
@@ -147,5 +150,6 @@ export class NxConfigService {
 
     static set isDarkTheme(res: boolean) {
         nxConfig.isDarkTheme = res;
+        this.configChanged.next(true);
     }
 }

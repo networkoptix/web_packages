@@ -69,7 +69,9 @@ export class NxThemeService {
                     console.error('Feature not available', err);
                 });
         } else {
-            this.themeSelected = this.CONFIG.themeConfig.default;
+            this.themeSelected = this.CONFIG.themeConfig.default === 'auto'
+                ? this.CONFIG.themeConfig.default
+                : this.getThemeRealName(this.CONFIG.themeConfig.default);
         }
 
         this.setTheme(this.themeSelected, loginState);
