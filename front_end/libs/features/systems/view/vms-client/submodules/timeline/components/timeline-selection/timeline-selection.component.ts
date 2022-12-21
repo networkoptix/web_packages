@@ -54,6 +54,11 @@ enum EDGE_SCROLLING_SPEED_POS {
     NEAR = 20,
 }
 
+const MARGIN = 5;
+const ARROW_WIDTH = 10;
+const PRIMARY_WIDTH = 140;
+const WNM = PRIMARY_WIDTH - 2 * MARGIN; // widthNoMargins
+
 @UntilDestroy()
 @Component({
     selector: 'nx-timeline-selection',
@@ -81,6 +86,11 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     _lastMouseMoveEvent: MouseEvent;
 
     private clickAndHoldHandler;
+
+    // Initial values
+    tl = ARROW_WIDTH / 2; // top left vertex
+    tr = ARROW_WIDTH; // top right vertex
+    b = ARROW_WIDTH / 2; // bottom vertex
 
     @ViewChild('selectedRange')
     protected selectedRangeView: ElementRef<HTMLDivElement>;
@@ -239,6 +249,26 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 this.selectionStatus.range.duration,
             );
 
+            const canvas = this.timeline.canvasGeometry;
+            const range = this.left + this.duration;
+            // right ear
+            if (this.rightEarView) {
+                this.rightEarView.nativeElement.style.right = `${-WNM}px`;
+                if (range >= canvas.width - WNM) {
+                    const padding = canvas.width - range - WNM;
+                    this.rightEarView.nativeElement.style.right = `${-WNM - padding}px`;
+                }
+            }
+
+            // left ear
+            if (this.leftEarView) {
+                this.leftEarView.nativeElement.style.left = `${-WNM}px`;
+                if (this.left - WNM <= 0) {
+                    const padding = this.left - WNM;
+                    this.leftEarView.nativeElement.style.left = `${-WNM - padding}px`;
+                }
+            }
+
             this.selectedRangeView.nativeElement.style.left = `${this.left}px`;
             this.selectedRangeView.nativeElement.style.width = `${this.duration}px`;
             this.leftEarView?.nativeElement.classList.toggle(
@@ -252,6 +282,69 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         } else if (this.selectedRangeView) {
             this.selectedRangeView.nativeElement.classList.remove('active');
         }
+    }
+
+    public get svgLeftArrowPoints(): string {
+        let offset;
+
+        if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
+            offset = this.left - WNM;
+
+            this.tl = this.left - offset + MARGIN;
+            this.tr = this.left - offset;
+            this.b = this.left - offset + MARGIN;
+
+            if (offset < 0) {
+                if (offset > -MARGIN) {
+                    this.tl = WNM + MARGIN;
+                } else {
+                    this.tl += offset + MARGIN;
+                }
+                this.tr += offset;
+                this.b += offset;
+
+                if (offset < -WNM + MARGIN) {
+                    this.tr = MARGIN;
+                }
+            }
+        }
+
+        return `${this.tl},0 ${this.tr},0 ${this.b},5`;
+    }
+
+    public get svgRightArrowPoints(): string {
+        const wwm = PRIMARY_WIDTH + 2 * MARGIN; // widthWithMargins
+
+        let offset;
+
+        if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
+            const canvas = this.timeline.canvasGeometry;
+            const range = this.left + this.duration;
+            offset = canvas.width - range - WNM;
+
+            this.tl = MARGIN;
+            this.tr = ARROW_WIDTH;
+            this.b = MARGIN;
+
+            if (offset < 0) {
+                if (offset > -MARGIN) {
+                    this.tl = MARGIN;
+                } else {
+                    this.tl -= offset + MARGIN;
+                }
+                this.tr -= offset;
+                this.b -= offset;
+
+                if (this.tl > wwm - 2 * ARROW_WIDTH) {
+                    this.tl = wwm - 2 * ARROW_WIDTH;
+                }
+                if (this.tr > wwm - (ARROW_WIDTH + MARGIN)) {
+                    this.tr = wwm - (ARROW_WIDTH + MARGIN);
+                }
+            }
+        }
+
+        return `${this.tl},0 ${this.tr},0 ${this.b},5`;
     }
 
     protected _playbackOverlays(t: ms): boolean {

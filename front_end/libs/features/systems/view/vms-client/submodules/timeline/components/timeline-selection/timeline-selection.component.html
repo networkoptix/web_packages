@@ -18,6 +18,9 @@
     >
         <span class="date">{{ leftDate }}</span>
         <span class="time">{{ leftTime }}</span>
+        <svg viewbox="0 0 140 5">
+            <polygon [attr.points]="svgLeftArrowPoints" />
+        </svg>
     </div>
     <div
         #rightEar
@@ -26,6 +29,9 @@
     >
         <span class="date">{{ rightDate }}</span>
         <span class="time">{{ rightTime }}</span>
+        <svg viewbox="0 0 140 5">
+            <polygon [attr.points]="svgRightArrowPoints" />
+        </svg>
     </div>
     <div
         class="right-draggable"

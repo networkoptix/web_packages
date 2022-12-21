@@ -12,11 +12,13 @@
     
     font-size     : 13px;
     line-height   : 28px;
-    
+
+    pointer-events: none;
     opacity       : 0;
     transition    : opacity 0.2s ease-in-out;
     
     &.active {
+        pointer-events: auto;
         opacity : 1;
     }
     

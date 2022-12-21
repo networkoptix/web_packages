@@ -59,6 +59,20 @@
             line-height: 1.2em;
             cursor: col-resize;
 
+            > svg {
+                position: absolute;
+                bottom: -5px;
+                left: -5px;
+                right: -5px;
+                // width: 180px;
+                height: 5px;
+
+                > polygon {
+                    transition: fill .2s ease-in-out;
+                    fill: var(--timeline-selection-panel-bg);
+                }
+            }
+
             > span {
                 display: block;
                 text-align: center;
@@ -76,18 +90,9 @@
                 }
             }
 
-            &::before {
-                content: '';
-                width: 0;
-                height: 0;
-                position: absolute;
-                bottom: -4px;
-                border-top: 4px solid var(--timeline-selection-panel-bg);
-            }
-
             &.left {
                 left: -130px;
-                border-radius: 2px 2px 0 2px;
+                border-radius: 2px 2px 0 0;
                 text-align: right;
                 padding-right: 8px;
 
@@ -99,7 +104,7 @@
 
             &.right {
                 right: -130px;
-                border-radius: 2px 2px 2px 0;
+                border-radius: 2px 2px 0 0;
                 padding-left: 8px;
 
                 &::before {
