@@ -17,7 +17,7 @@
     "(cancel)": "(cancel)",
     "(change)": "(change)",
     "(copy)": "(copy)",
-    "(if Nx Witness has been already setup)": "(if Nx Witness has been already setup)",
+    "(if %VMS_NAME% has been already setup)": "(if %VMS_NAME% has been already setup)",
     "(log all information available)": "(log all information available)",
     "(log disabled)": "(log disabled)",
     "(log errors only)": "(log errors only)",
