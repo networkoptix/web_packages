@@ -18,8 +18,4 @@ export class InitFailureComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
-    retry(): void {
-        this.wizardService.retry();
-    }
 }

@@ -11,6 +11,7 @@ import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 import { SearchModule } from '@components/search/search.module';
+import { NxSliderModule } from '@components/slider/slider.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -148,6 +149,7 @@ const appRoutes: Routes = [
         AlertBlockModule,
         ContentBlockModule,
         NxAccountSettingsModule,
+        NxSliderModule
     ],
     providers: [
     ],

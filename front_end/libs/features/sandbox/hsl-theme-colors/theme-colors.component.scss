@@ -2,12 +2,13 @@
 @use "sass:map";
 
 :host {
-    --color-h: 200;
-    /* Hue        */
-    --color-s: 60%;
-    /* Saturation */
-    --color-l: 50%;
-    /* Lightness  */
+    --color-h: 200; // Hue
+    --color-s: 60%; // Saturation
+    --color-l: 50%; // Lightness
+    
+    --brand-h: 200;
+    --brand-s: 60%;
+    --brand-l: 50%;
 
     --new-error-core: hsl(0, var(--color-s), var(--color-l));
 
@@ -25,19 +26,19 @@
 
     @each $key,
     $value in $brand-colors {
-        --new-brand-#{$key}: hsl(var(--color-h), var(--color-s), calc(var(--color-l) * #{$value}));
+        --new-brand-#{$key}: hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * #{$value}));
     }
 
     @for $i from 1 through 21 {
         --new-light#{$i}: hsl(var(--color-h), calc(var(--color-s) / 2), calc(#{$i - 1} * 5%));
     }
 
-    --new-brand-inverted: hsl(calc(var(--color-h) + 180),
-        var(--color-s),
-        var(--color-l));
-    --new-brand-dimmed: hsl(var(--color-h),
-        calc(var(--color-s) - var(--color-s) * 0.6),
-        var(--color-l));
+    --new-brand-inverted: hsl(calc(var(--brand-h) + 180),
+        var(--brand-s),
+        var(--brand-l));
+    --new-brand-dimmed: hsl(var(--brand-h),
+        calc(var(--color-s) - var(--brand-s) * 0.6),
+        var(--brand-l));
 
     div.color {
         height: 30px;
@@ -89,7 +90,7 @@
     --card-header-text: var(--new-light20);
     --card-header-bg: var(--new-light4);
     --border-color: var(--new-light6);
-    --image-box-selected-border-color: var(--new-brand-dimmed) !important;
+    --image-box-selected-border-color: var(--new-brand-core) !important;
 
     .input {
         color: var(--new-light12);

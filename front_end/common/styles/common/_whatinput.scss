@@ -17,6 +17,7 @@
     box-shadow: 0 0 0 2px var(--btn-danger-focus-shadow) !important;
 }
 
+[data-whatintent="keyboard"] .btn.btn-default-clear:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] .btn.btn-dropdown-toggle:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] .btn.btn-default:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] a.btn.badge:focus:not([disabled]):not(.disabled) {

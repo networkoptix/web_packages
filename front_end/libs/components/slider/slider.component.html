@@ -1,0 +1,15 @@
+<div
+    class="slider-boundary"
+    #sliderBoundary
+>
+    <div class="ruler"></div>
+    <div
+        #slider
+        class="slider"
+        cdkDragBoundary=".slider-boundary"
+        cdkDragLockAxis="x"
+        (cdkDragEnded)="sliderDragEnd()"
+        (cdkDragMoved)="sliderDragMove($event)"
+        cdkDrag
+    ></div>
+</div>

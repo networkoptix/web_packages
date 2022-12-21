@@ -220,17 +220,72 @@
                     >
                     </nx-checkbox>
                 </div>
+                <br />
+                <br />
+
+                <button
+                    type="submit"
+                    class="btn btn-default"
+                >
+                    Click me!
+                </button>
             </div>
 
-            <br />
+            <br /><br /><br />
+
+            <nx-mat-like-input
+                componentId="firstName"
+                name="firstName"
+                [label]="'First Name' | translate"
+                [(ngModel)]="user.firstName"
+                [required]="true"
+            ></nx-mat-like-input>
+
             <br />
 
-            <button
-                type="submit"
-                class="btn btn-default"
-            >
-                Click me!
-            </button>
+            <nx-mat-like-password-input
+                name="newPassword"
+                componentId="newPassword"
+                class="fs-exclude"
+                [label]="'Password' | translate"
+                [confirmation]="true"
+                [validation]="true"
+                [(ngModel)]="newPasswordForUser"
+                [form]="testForm2"
+                [component]="newPassword"
+                #newPassword="ngModel"
+            ></nx-mat-like-password-input>
+
+            <br /><br />
+
+            <div class="form-group">
+                <nx-mat-like-type-ahead-select
+                    name="mergeDropdown"
+                    componentId="mergeDropdown"
+                    [form]="testForm2"
+                    [items]="items"
+                    [(ngModel)]="remoteSystem"
+                    [label]="'Existing System URL (https://host:port)' | translate"
+                    [noMatchMsg]="'No peers found' | translate"
+                    [freeText]="true"
+                    [validation]="urlRegex"
+                    #mergeDropdown="ngModel"
+                    required
+                ></nx-mat-like-type-ahead-select>
+            </div>
+
+            <br /><br />
+
+            <nx-slider
+                [range]="{ start: 0, end: 360 }"
+                [(ngModel)]="sliderValue"
+                (onDrag)="sliderValue = $event"
+            ></nx-slider>
+            <br />
+            {{ sliderValue }}
+
+            <br /><br />
+            <br />
         </form>
     </div>
 

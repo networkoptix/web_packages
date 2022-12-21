@@ -90,6 +90,10 @@ html[data-theme="light"] {
     --tooltip-bg : #{$dark1};
     --tooltip-color : #{$light1};
 
+    --validation-popover-shadow-color : none;
+    --validation-popover-bg           : #{$light1};
+    --validation-popover-color        : #{$dark9};
+    
     --popover-shadow-color : 0 1rem 2rem 0 #{$light15};
     --popover-bg : #{$light1};
     --popover-color : #{$dark9};
@@ -525,6 +529,8 @@ html[data-theme="light"] {
     --support-lang-wrapper-color : #{$light16};
     --support-tech-apple-color : #{$dark1};
 
+     --success-label : var(--green_main);
+    
     --error-label : #{$red-l2};
     --error : #{$red-l2};
 

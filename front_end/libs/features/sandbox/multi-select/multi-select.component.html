@@ -39,6 +39,17 @@
     style="border: 1px solid lightgray"
 >
     <div class="col-3 p-5">
+        <h4>Mat like select</h4>
+        <nx-mat-like-select
+            name="ddSSingle"
+            [items]="itemsDDSingle"
+            [ngModel]="selectedDDItem"
+            (ngModelChange)="ddSingleModelChanged($event)"
+            [selected]="selectedDDItem ? selectedDDItem : null"
+        >
+        </nx-mat-like-select>
+    </div>
+    <div class="col-3 p-5">
         <h4>Simple select</h4>
         <nx-select
             name="ddSSingle"

@@ -20,15 +20,17 @@ export class LocalLoginComponent implements AfterViewInit {
         this.wizardService.setupConfig.localPassword = password;
     }
 
-    get confirmedPassword(): string {
-        return this.wizardService.setupConfig.localPasswordConfirmation;
-    }
+    // get confirmedPassword(): string {
+    //     return this.wizardService.setupConfig.localPasswordConfirmation;
+    // }
+    //
+    // set confirmedPassword(password: string) {
+    //     this.wizardService.setupConfig.localPasswordConfirmation = password;
+    // }
 
-    set confirmedPassword(password: string) {
-        this.wizardService.setupConfig.localPasswordConfirmation = password;
-    }
-
-    constructor(public wizardService: WizardStateService) { }
+    constructor(
+        public wizardService: WizardStateService
+    ) { }
 
     ngAfterViewInit(): void {
         this.setAdminPasswordForm.statusChanges
@@ -50,9 +52,9 @@ export class LocalLoginComponent implements AfterViewInit {
             });
     }
 
-    checkPasswords(): void {
-        if (this.confirmedPassword !== this.password) {
-            this.setAdminPasswordForm.controls.confirmPassword.setErrors({ dontMatch: true });
-        }
-    }
+    // checkPasswords(): void {
+    //     if (this.confirmedPassword !== this.password) {
+    //         this.setAdminPasswordForm.controls.confirmPassword.setErrors({ dontMatch: true });
+    //     }
+    // }
 }

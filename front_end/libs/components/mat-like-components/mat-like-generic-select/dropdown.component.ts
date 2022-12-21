@@ -1,0 +1,147 @@
+import {
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef,
+    EventEmitter,
+    Output,
+    ViewChild,
+    ElementRef
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { icons } from '@lib/variables/static-variables';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { caseInsenstiveSearch } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
+
+import { BaseDropdown } from '../../dropdowns/injDropdown';
+
+import type { DropdownItem } from './dropdown.component.types';
+
+/* Usage
+ <nx-mat-like-select [id]="select.id"
+     [name]="permissions"
+     [items]="accessRoles"
+     label="optionLabel"          <- which property should be shown
+     [(ngModel)]="user.role.name"
+     (ngModelChange)="onModelChange($event)"
+     [selected]="user.role.name ? user.role.name : null"
+     required>
+ </nx-select>
+ */
+
+@Component({
+    selector: 'nx-mat-like-select',
+    templateUrl: 'dropdown.component.html',
+    styleUrls: ['dropdown.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            useExisting: forwardRef(() => NxMatLikeGenericDropdown),
+            multi: true
+        }
+    ]
+})
+export class NxMatLikeGenericDropdown<
+    Item extends DropdownItem<unknown> = DropdownItem<unknown>
+> extends BaseDropdown {
+    @Input() id: string = 'genericSelect';
+    @Input() items: Item[];
+    @Input() selected: Item | false;
+    @IBool() @Input() merge: CoercedBoolInput;
+    @IBool() @Input() ellipsisMargin: CoercedBoolInput;
+    @IBool() @Input() hrMargin: CoercedBoolInput;
+    @Input() stillLoading: boolean;
+    @Input() type: string;
+    @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
+    @IBool() @Input() canSearch: CoercedBoolInput;
+    @Input() noMatchMsg: string;
+    @Input() forcePosition: {
+        left?: number,
+        top?: number,
+        width?: number,
+        offsetTop?: number
+    };
+
+    @Output() onSelected = new EventEmitter<Item>();
+    icons = icons;
+
+    dropdownType: string;
+    nativeElementTop: number = 0;
+
+    filter: string;
+    _items: Item[];
+
+    // Used in merge.component.ts
+    @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
+
+    constructor(
+
+        configService: NxConfigService,
+        public ref: ElementRef<HTMLElement>
+    ) {
+        super(configService);
+        this.noMatchMsg ??= this.LANG.search.noMatches || 'No matches';
+    }
+
+    ngOnInit(): void {
+        this._items = this.items;
+        this.dropdownType = `dropdown-${this.type || 'default'}`;
+    }
+
+    ngAfterViewInit(): void {
+        Promise.resolve().then(() => {
+            this.nativeElementTop = this.forcePosition
+                ? this.ref.nativeElement.parentElement.parentElement.offsetTop
+                : this.ref.nativeElement.offsetHeight;
+        });
+    }
+
+    change(item: Item): void {
+        this._selectedItem = item;
+        this.onSelected.emit(item);
+        this.onChangeCallback(this._selectedItem);
+    }
+
+    ngOnChanges(changes: NgChanges<NxMatLikeGenericDropdown>): void {
+        if (changes.items?.currentValue) {
+            this._items = this.items;
+        }
+        // detect changes in list of items and changes in selected to support clear option
+        if (changes.selected?.currentValue) {
+            this._selectedItem = changes.selected.currentValue;
+        } else if (!this.selected && !changes.selected?.firstChange) {
+            this._selectedItem = { name: this.message, value: '0' };
+        }
+    }
+
+    blockEnter(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+        // Don't trigger form submit while inside search
+    }
+
+    handleKeyup(ev: KeyboardEvent, item: Item): void {
+        if (ev.key === 'Enter') {
+            this.show = false;
+            this.change(item);
+        }
+    }
+
+    filterChanged(value: string): void {
+        this.filter = value;
+        this._items = this.items.filter(item =>
+            caseInsenstiveSearch(item.name, this.filter) ||
+            item.help && caseInsenstiveSearch(item.help, this.filter)
+        );
+
+        if (!this._items.length) {
+            this._items = [<Item>{ name: this.noMatchMsg, value: '', disabled: true }];
+        }
+    }
+}

@@ -1,27 +1,29 @@
 import { KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
+import staticLang from '@app/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
     selector: 'nx-advanced-component',
-    templateUrl: 'advanced.component.html'
+    templateUrl: 'advanced.component.html',
+    styleUrls: ['advanced.component.scss']
 })
 export class AdvancedComponent {
     stringBool: { string: boolean };
     itemsSecurity: DropdownItem<string>[];
     selectedSecurity: DropdownItem<string>;
 
+    LANG = staticLang;
+
     constructor(
-        translate: TranslateService,
         public wizardService: WizardStateService
     ) {
         this.itemsSecurity = [
-            { value: 'standard', name: translate.instant('setupWizard.advancedSettings.standard') },
-            { value: 'high', name: translate.instant('setupWizard.advancedSettings.high') }
+            { value: 'standard', name: this.LANG.setupWizard.advancedSettings.standard },
+            { value: 'high', name: this.LANG.setupWizard.advancedSettings.high }
         ];
 
         this.selectedSecurity = this.itemsSecurity[0];

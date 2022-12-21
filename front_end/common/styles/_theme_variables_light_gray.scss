@@ -89,6 +89,10 @@ html[data-theme="light-gray"] {
     --tooltip-bg : #{$dark_gray_1};
     --tooltip-color : #{$light_gray_1};
 
+    --validation-popover-shadow-color : none;
+    --validation-popover-bg           : #{$light_gray_1};
+    --validation-popover-color        : #{$dark_gray_9};
+    
     --popover-shadow-color : 0 1rem 2rem 0 #{$light_gray_15};
     --popover-bg           : #{$light_gray_1};
     --popover-color        : #{$dark_gray_9};

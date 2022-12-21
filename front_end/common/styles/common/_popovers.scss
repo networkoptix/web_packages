@@ -6,6 +6,54 @@
     border-radius: 2px;
     box-shadow: var(--popover-shadow-color);
 
+    &.validation-popover {
+        nx-popover {
+            background : var(--validation-popover-bg);
+    
+            .arrow::after {
+                border-right-color : var(--validation-popover-bg);
+            }
+        }
+        .mat-like-validation-wrapper {
+            .marker-error {
+                width        : 12px;
+                display      : inline-block;
+                padding-left : 2px;
+            }
+            
+            .marker-success {
+                width        : 12px;
+                display      : inline-block;
+            }
+            
+            & .validation-msg {
+                .marker-success {
+                    display: none;
+                }
+                
+                &.validation-success {
+                    color : var(--success-label);
+                    
+                    .marker-error {
+                        display: none;
+                    }
+                    
+                    .marker-success {
+                        display: inline-block;
+                    }
+                }
+                
+                &.validation-error {
+                    color : var(--error-label);
+                    
+                    .marker-success {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+    
     &.system-popover {
         width: 250px;
         z-index: 4;

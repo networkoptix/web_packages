@@ -1,0 +1,40 @@
+//@use "theme_variables_common" as *;
+
+:host {
+	position: relative;
+	display: block;
+	
+	.mat-like-input-wrapper {
+		position: relative;
+	}
+	
+	.mat-like-label {
+		position: absolute;
+		top: 7px;
+		left: 7px;
+		padding: 0 4px;
+		background: var(--input-bg);
+		pointer-events: none;
+		transition: top .1s;
+		color: var(--input-color);
+	}
+
+	input:focus,
+	input.hasValue{
+		& + div.mat-like-label {
+			top: -6px;
+			line-height: 10px;
+			font-size: 10px;
+			background: linear-gradient(0deg, var(--input-bg) 50%, var(--body-bg) 50%);
+			color: var(--input-color) !important;
+		}
+	}
+	
+	input.ng-invalid:not(.ng-untouched) {
+		border-color: var(--input-error-color);
+		
+		& + div.mat-like-label {
+			color: var(--input-error-color);
+		}
+	}
+}

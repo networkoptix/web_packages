@@ -3,40 +3,92 @@
     style="border: 1px solid lightgray"
 >
     <form
-        class="col-12"
+        class="row col-12"
         name="frmTheme"
         #frmTheme="ngForm"
         novalidete
     >
-        <div class="row col-12">
+        <div class="row col-6">
             <div class="row col-4">
                 <div class="input-label col-12">Hue</div>
                 <div class="col-12">
-                    <input
-                        class="input"
+                    <nx-slider
+                        name="hue"
+                        [range]="{ start: 0, end: 360 }"
                         [value]="brand.hue"
-                        (keyup)="setHue($event)"
-                    />
+                        (onDrag)="setBrandHue($event)"
+                    >
+                    </nx-slider>
+                    {{ brand.hue }}
                 </div>
             </div>
             <div class="row col-4">
                 <div class="input-label col-12">Saturation</div>
                 <div class="col-12">
-                    <input
-                        class="input"
+                    <nx-slider
+                        name="saturation"
+                        [range]="{ start: 0, end: 100 }"
                         [value]="brand.saturation"
-                        (keyup)="setSaturation($event)"
-                    />
+                        (onDrag)="setBrandSaturation($event)"
+                    >
+                    </nx-slider>
+                    {{ brand.saturation }}
                 </div>
             </div>
             <div class="row col-4">
                 <div class="input-label col-12">Luminosity</div>
                 <div class="col-12">
-                    <input
-                        class="input"
+                    <nx-slider
+                        name="luminosity"
+                        [range]="{ start: 0, end: 100 }"
                         [value]="brand.luminosity"
-                        (keyup)="setLuminosity($event)"
-                    />
+                        (onDrag)="setBrandLuminosity($event)"
+                    >
+                    </nx-slider>
+                    {{ brand.luminosity }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-6">
+            <div class="row col-4">
+                <div class="input-label col-12">Hue</div>
+                <div class="col-12">
+                    <nx-slider
+                        name="hue"
+                        [range]="{ start: 0, end: 360 }"
+                        [value]="color.hue"
+                        (onDrag)="setColorHue($event)"
+                    >
+                    </nx-slider>
+                    {{ color.hue }}
+                </div>
+            </div>
+            <div class="row col-4">
+                <div class="input-label col-12">Saturation</div>
+                <div class="col-12">
+                    <nx-slider
+                        name="saturation"
+                        [range]="{ start: 0, end: 100 }"
+                        [value]="color.saturation"
+                        (onDrag)="setColorSaturation($event)"
+                    >
+                    </nx-slider>
+                    {{ color.saturation }}
+                </div>
+            </div>
+            <div class="row col-4">
+                <div class="input-label col-12">Luminosity</div>
+                <div class="col-12">
+                    Set to +5% from previous color
+                    <!--                    <nx-slider-->
+                    <!--                        name="luminosity"-->
+                    <!--                        [range]="{ start: 0, end: 100 }"-->
+                    <!--                        [value]="color.luminosity"-->
+                    <!--                        (onDrag)="setColorLuminosity($event)"-->
+                    <!--                    >-->
+                    <!--                    </nx-slider>-->
+                    <!--                    {{ color.luminosity }}-->
                 </div>
             </div>
         </div>

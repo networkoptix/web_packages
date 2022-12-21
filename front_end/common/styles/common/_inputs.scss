@@ -157,7 +157,18 @@ input.hide-errors {
 }
 
 .input-error {
-    @include typography.regular13error;
+    @include typography.regular13nocolor;
+    color: var(--error-label);
+    line-height: 1rem;
+
+    @include bootdtrap.media-breakpoint-down(sm) {
+        margin-top: .5rem;
+    }
+}
+
+.input-info {
+    @include typography.regular11nocolor;
+    color: var(--body-text-color);
     line-height: 1rem;
 
     @include bootdtrap.media-breakpoint-down(sm) {

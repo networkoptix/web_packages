@@ -146,6 +146,9 @@
 	@include generateVarAndRgb(--additional_light3, $additional_light3);
 	@include generateVarAndRgb(--additional_light4, $additional_light4);
 
+	@include generateVarAndRgb(--green_d3, palette.$green_d3);
+	@include generateVarAndRgb(--green_d2, palette.$green_d2);
+	@include generateVarAndRgb(--green_d1, palette.$green_d1);
 	@include generateVarAndRgb(--green_main, $green_main);
 	@include generateVarAndRgb(--green_l1, palette.$green_l1);
 	@include generateVarAndRgb(--green_l2, palette.$green_l2);

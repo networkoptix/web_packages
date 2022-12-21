@@ -9,7 +9,8 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @UntilDestroy()
 @Component({
     selector: 'nx-merge-component',
-    templateUrl: 'merge.component.html'
+    templateUrl: 'merge.component.html',
+    styleUrls: ['merge.component.scss']
 })
 export class MergeComponent implements OnInit, AfterViewInit {
     item: Item;

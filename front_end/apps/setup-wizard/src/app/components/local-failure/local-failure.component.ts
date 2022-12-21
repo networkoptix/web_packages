@@ -18,8 +18,4 @@ export class LocalFailureComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
-    retry(): void {
-        this.wizardService.retry();
-    }
 }

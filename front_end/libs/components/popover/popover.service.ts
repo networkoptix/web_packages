@@ -85,6 +85,17 @@ export class NxPopoverService {
                     offsetY: panelOffset
                 },
             ];
+        } else if (popoverConfig.positionStrategy === POS_STRATEGY.TOP) {
+            positions = [
+                {
+                    overlayX: 'center',
+                    overlayY: 'bottom',
+                    originX: 'center',
+                    originY: 'top',
+                    panelClass: ['bottom', 'center'],
+                    offsetY: -1 * panelOffset
+                }
+            ];
         } else {
             // Preferred positions, in order of priority.
             // In general we should have only one preferable strategy

@@ -1,0 +1,161 @@
+<div
+    class="dropdown {{ dropdownType }}"
+    [ngClass]="{
+        'dropdown-show': show,
+        'display-only': stillLoading
+    }"
+    (nxClickElsewhere)="show = false"
+>
+    <button
+        class="btn btn-dropdown-toggle dropdown-toggle"
+        #dropdownButtonFocus
+        (click)="show = !show"
+        type="button"
+        [id]="id"
+        data-toggle="dropdown"
+    >
+        <div
+            class="btn loading"
+            *ngIf="stillLoading"
+        >
+            <div>
+                <span class="dot1"></span>
+                <span class="dot2"></span>
+                <span class="dot3"></span>
+            </div>
+        </div>
+        <nx-item-icon
+            *ngIf="_selectedItem?.icon && !stillLoading"
+            [item]="_selectedItem"
+            marginLeft="4"
+        ></nx-item-icon>
+        <span
+            *ngIf="!stillLoading"
+            [ngClass]="{
+                'ellipsis-mr': merge || ellipsisMargin,
+                ellipsis: !merge
+            }"
+        >
+            <ng-container *ngIf="_selectedItem">
+                {{ _selectedItem.name | translate }}
+                <span
+                    *ngIf="_selectedItem.help && !_selectedItem.name.includes(_selectedItem.help)"
+                    class="additional-help"
+                    >{{ _selectedItem.help | translate }}</span
+                >
+            </ng-container>
+        </span>
+        <div class="arrow-flip">
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+            ></svg-icon>
+        </div>
+    </button>
+
+    <div
+        class="dropdown-menu"
+        [nxArrowNav]="show"
+        [style]="{
+            display: show ? 'inline-block' : 'none',
+            width: forcePosition?.width ? forcePosition.width + 'px' : '100%'
+        }"
+        [style.left.px]="forcePosition?.left || 0"
+        [style.top.px]="forcePosition?.top || nativeElementTop - (forcePosition?.offsetTop || 0)"
+        [attr.aria-labelledby]="id"
+    >
+        <div
+            *ngIf="canSearch"
+            class="search-box"
+        >
+            <span class="glyphicon web-icon-search icon-search"></span>
+            <input
+                class="form-control search-input inset"
+                autocomplete="off"
+                [placeholder]="'Search' | translate"
+                [ngModel]="filter"
+                (ngModelChange)="filterChanged($event)"
+                (keypress)="blockEnter($event)"
+            />
+            <span
+                class="glyphicon close-icon search-clear"
+                [hidden]="filter === ''"
+                (click)="filterChanged('')"
+            ></span>
+        </div>
+        <ul class="dropdown-menu--list">
+            <li
+                class="dropdown-item-container"
+                *ngFor="let item of _items; trackBy: trackItem"
+            >
+                <ng-container
+                    *ngIf="
+                        !hideSelectedItem || !(_selectedItem && _selectedItem.value === item.value)
+                    "
+                    [ngTemplateOutlet]="dropdownRow"
+                ></ng-container>
+                <ng-template
+                    #dropdownRow
+                    [ngSwitch]="item.name"
+                >
+                    <hr
+                        *ngSwitchCase="'horizontal'"
+                        [ngClass]="{ 'narrow-hr': hrMargin }"
+                    />
+                    <div
+                        *ngSwitchCase="'seperator'"
+                        class="seperator"
+                    ></div>
+                    <ng-container
+                        *ngSwitchDefault
+                        [ngTemplateOutlet]="!item.disabled ? enabledItem : disabledItem"
+                    >
+                    </ng-container>
+                </ng-template>
+                <ng-template #itemText>
+                    {{ item.name | translate }}
+                    <span
+                        *ngIf="item.help && !item.name.includes(item.help)"
+                        class="additional-help"
+                        >{{ item.help | translate }}</span
+                    >
+                </ng-template>
+                <ng-template #enabledItem>
+                    <a
+                        class="dropdown-item inset"
+                        (keyup)="handleKeyup($event, item)"
+                        tabindex="0"
+                        [ngClass]="{
+                            selected: _selectedItem && _selectedItem.value === item.value
+                        }"
+                        (click)="show = false; change(item)"
+                    >
+                        <nx-item-icon
+                            *ngIf="item.icon"
+                            [item]="item"
+                            marginLeft="15"
+                        ></nx-item-icon>
+                        <span>
+                            <ng-container [ngTemplateOutlet]="itemText"></ng-container>
+                        </span>
+                    </a>
+                </ng-template>
+                <ng-template #disabledItem>
+                    <a
+                        class="dropdown-item inset disabled"
+                        (click)="show = false"
+                    >
+                        <nx-item-icon
+                            *ngIf="item.icon"
+                            [item]="item"
+                            marginLeft="15"
+                        ></nx-item-icon>
+                        <span class="disabled">
+                            <ng-container [ngTemplateOutlet]="itemText"></ng-container>
+                        </span>
+                    </a>
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -7,14 +7,17 @@ import { NxPopoverService } from './popover.service';
 import { NxPopoverComponent } from './popover/popover.component';
 
 @NgModule({
-    declarations: [NxPopoverComponent],
+    declarations: [
+        NxPopoverComponent
+    ],
     imports: [
         CommonModule,
         OverlayModule,
-        PortalModule
+        PortalModule,
     ],
     providers: [
-        NxPopoverService
+        NxPopoverService,
+        NxPopoverComponent
     ]
 })
 export class PopoverModule {

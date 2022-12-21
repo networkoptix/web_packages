@@ -72,4 +72,5 @@
 	@include generateVarAndRgb(--brand-d5, $brand_d5);
 	@include generateVarAndRgb(--brand-d6, $brand_d6);
 	@include generateVarAndRgb(--brand-d7, $brand_d7);
+	@include generateVarAndRgb(--error-label, $red_l1);
 }

@@ -1,25 +1,13 @@
-<div class="state-container">
-    <div
-        class="state-container--title"
-        style="margin-bottom: 2rem"
-        translate
-    >
-        The System cannot be configured.
+<div class="state-container centered">
+    <div class="state-container--title">
+        <div translate>The System cannot be configured.</div>
     </div>
     <div class="state-container--body">
         <svg-icon
             nx-add-svg-src
-            [src]="icons.dirConfirmations + 'error.svg'"
+            [src]="icons.dirConfirmations + 'no_system.svg'"
             [svgStyle]="{ 'width.px': '280', 'height.px': '120', 'margin-bottom': '2rem' }"
         >
         </svg-icon>
-
-        <button
-            class="btn btn-primary"
-            (click)="retry()"
-            translate
-        >
-            Try Again
-        </button>
     </div>
 </div>

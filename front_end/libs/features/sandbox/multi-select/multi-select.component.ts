@@ -69,8 +69,7 @@ export class MultiSelectComponent {
             { value: '15824256', name: '16mp' }
         ];
 
-        this.selectedDDItem = { value: '0', name: 'All' };
-
+        // this.selectedDDItem = { value: '0', name: 'All' };
         this.itemsSearchableDDSingle = [
             { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },
             { value: 'test1@test.com', name: 'test1@test.com', help: 'Test Test Test Test Test Test Test' },

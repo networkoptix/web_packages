@@ -16,24 +16,28 @@ a {
 .card-wizard {
     box-shadow : var(--popover-shadow-color);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     height: 100%;
+    padding: 0 45px !important;
+    
+    &.centered {
+        align-items: center;
+    }
 
     .header {
         h2 {
-            @include typography.regular30nocolor;
-            padding: 0 1rem;
-            text-align: center;
+            @include typography.medium24nocolor;
+            text-align: left;
         }
     }
 
     .body {
-        height: 55%;
+        width: 100%;
 
         .additional-action-link {
-            position: absolute;
-            bottom: 70px;
+            display: block;
+            margin: 1rem auto 0;
         }
 
         .wrapper {
@@ -50,24 +54,41 @@ a {
     .footer {
         position: absolute;
         bottom: 0;
+        left: 0;
         width: 100%;
-        padding: 0 0 0.75rem;
+        padding: 0 45px 45px;
+        
+        &.centered:not(.normal) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            & > .btn {
+                min-width: 210px;
+            }
+        }
     }
 }
 
 .state-container {
     height: 100%;
-    width: 280px;
+    width: 100%;
 
     & > div {
         display        : flex;
         flex-direction : column;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
+    }
+    
+    &.centered {
+        & > div {
+            align-items: center;
+        }
     }
 
     &--title {
-        margin-bottom: 4rem;
+        margin-bottom: 3rem;
     }
 }
 
@@ -81,6 +102,11 @@ nx-checkbox {
 .helper-block {
     @include typography.regular12light;
     margin: 8px 0 8px 1px;
+    line-height: 16px;
+}
+
+.btn-helper-block {
+    @include typography.regular11nocolor;
     line-height: 16px;
 }
 

@@ -9,7 +9,10 @@
     [style.width.vw]="100"
     *ngIf="fsm"
 >
-    <div class="card p-3 card-wizard">
+    <div
+        class="card p-3 card-wizard"
+        [ngClass]="{ centered: isCentered }"
+    >
         <div class="header">
             <h2>{{ fsm?.title }}</h2>
         </div>
@@ -18,9 +21,9 @@
         </div>
         <div
             class="footer"
+            [ngClass]="{ centered: isCentered, normal: fsm?.skip && fsm?.retry }"
             *ngIf="showFooter"
         >
-            <hr />
             <button
                 *ngIf="fsm?.cancel"
                 class="btn btn-default-clear btn-backward"
@@ -31,17 +34,22 @@
                 Cancel
             </button>
             <button
+                *ngIf="fsm?.skip"
+                class="btn btn-default"
+                [ngClass]="{ 'float-left': fsm?.retry }"
+                (click)="skip()"
+                translate
+            >
+                Setup Again
+            </button>
+            <button
                 *ngIf="fsm?.back"
-                class="btn btn-default-clear btn-backward"
+                class="btn btn-default float-left"
                 (click)="back()"
                 [disabled]="nextDisabled"
+                translate
             >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dir + 'arrow_left.svg'"
-                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                    [applyClass]="true"
-                ></svg-icon>
+                Back
             </button>
             <button
                 *ngIf="fsm?.next"
@@ -65,6 +73,15 @@
                 translate
             >
                 Finish
+            </button>
+            <button
+                *ngIf="fsm?.retry"
+                class="btn btn-primary"
+                [ngClass]="{ 'float-right': fsm?.skip }"
+                (click)="retry()"
+                translate
+            >
+                Try Again
             </button>
         </div>
     </div>

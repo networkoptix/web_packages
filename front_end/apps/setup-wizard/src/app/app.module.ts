@@ -11,6 +11,7 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { PopoverModule } from '@components/popover/popover.module';
 import { GenericDialogModule } from '@dialogs/generic/generic.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
@@ -47,6 +48,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 useClass: TranslateMessageFormatCompiler
             }
         }),
+        PopoverModule,
         NxGenericDropdownModule,
         NgxWebstorageModule.forRoot(),
         OverlayModule,

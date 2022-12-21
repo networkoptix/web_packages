@@ -10,9 +10,14 @@ import { NxMenuService } from '@app/menu/menu.service';
 })
 export class NxHSLThemeColorsComponent implements OnInit {
     brand = {
-        hue: '',
-        saturation: '',
-        luminosity: '',
+        hue: 0,
+        saturation: 0,
+        luminosity: 0,
+    };
+    color = {
+        hue: 0,
+        saturation: 0,
+        luminosity: null, // set to +5%
     };
     rs: CSSStyleDeclaration;
 
@@ -29,23 +34,42 @@ export class NxHSLThemeColorsComponent implements OnInit {
 
         this.rs = getComputedStyle(this.self.nativeElement);
 
-        this.brand.hue = this.rs.getPropertyValue('--color-h');
-        this.brand.saturation = this.rs.getPropertyValue('--color-s');
-        this.brand.luminosity = this.rs.getPropertyValue('--color-l');
+        this.brand.hue = parseInt(this.rs.getPropertyValue('--brand-h'));
+        this.brand.saturation = parseInt(this.rs.getPropertyValue('--brand-s'));
+        this.brand.luminosity = parseInt(this.rs.getPropertyValue('--brand-l'));
+
+        this.color.hue = parseInt(this.rs.getPropertyValue('--color-h'));
+        this.color.saturation = parseInt(this.rs.getPropertyValue('--color-s'));
+        this.color.luminosity = parseInt(this.rs.getPropertyValue('--color-l'));
     }
 
-    setHue(event: KeyboardEvent): void {
-        this.brand.hue = (event.target as HTMLInputElement).value;
-        this.self.nativeElement.style.setProperty('--color-h', this.brand.hue);
+    setBrandHue(value: number): void {
+        this.brand.hue = value;
+        this.self.nativeElement.style.setProperty('--brand-h', `${this.brand.hue}`);
     }
 
-    setSaturation(event: KeyboardEvent): void {
-        this.brand.saturation = (event.target as HTMLInputElement).value;
-        this.self.nativeElement.style.setProperty('--color-s', this.brand.saturation);
+    setBrandSaturation(value: number): void {
+        this.brand.saturation = value;
+        this.self.nativeElement.style.setProperty('--brand-s', `${this.brand.saturation}%`);
     }
 
-    setLuminosity(event: KeyboardEvent): void {
-        this.brand.luminosity = (event.target as HTMLInputElement).value;
-        this.self.nativeElement.style.setProperty('--color-l', this.brand.luminosity);
+    setBrandLuminosity(value: number): void {
+        this.brand.luminosity = value;
+        this.self.nativeElement.style.setProperty('--brand-l', `${this.brand.luminosity}%`);
+    }
+
+    setColorHue(value: number): void {
+        this.color.hue = value;
+        this.self.nativeElement.style.setProperty('--color-h', `${this.color.hue}`);
+    }
+
+    setColorSaturation(value: number): void {
+        this.color.saturation = value;
+        this.self.nativeElement.style.setProperty('--color-s', `${this.color.saturation}%`);
+    }
+
+    setColorLuminosity(value: number): void {
+        this.color.luminosity = value;
+        this.self.nativeElement.style.setProperty('--color-l', `${this.color.luminosity}%`);
     }
 }

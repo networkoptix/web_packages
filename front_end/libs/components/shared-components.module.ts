@@ -7,6 +7,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import {
+    NxMatLikeGenericDropdownModule
+} from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
+import { NxMatLikeInputModule } from '@components/mat-like-components/mat-like-input/input.module';
+import { NxMatLikePasswordModule } from '@components/mat-like-components/mat-like-password-input/password.module';
+import { NxMatLikeTypeAheadModule } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { CheckboxModule } from './checkbox/checkbox.module';
@@ -44,6 +50,9 @@ import { TooltipModule } from './tooltip/tooltip.module';
         ToastContainerModule,
         ThemeSwitcherModule,
         TooltipModule,
+        NxMatLikeInputModule,
+        NxMatLikePasswordModule,
+        NxMatLikeGenericDropdownModule,
     ],
     declarations: [
     ],
@@ -62,6 +71,10 @@ import { TooltipModule } from './tooltip/tooltip.module';
         ToastContainerModule,
         ThemeSwitcherModule,
         TooltipModule,
+        NxMatLikeInputModule,
+        NxMatLikePasswordModule,
+        NxMatLikeTypeAheadModule,
+        NxMatLikeGenericDropdownModule,
     ]
 })
 export class SharedComponentsModule {

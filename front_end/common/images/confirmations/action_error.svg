@@ -1,0 +1,22 @@
+<svg width="144" height="88" viewBox="0 0 144 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style type="text/css">
+        .action-error-light {
+            stroke:var(--svg-path-light-color);
+            fill: none
+        }
+        .action-error-dark {
+            stroke:var(--svg-path-dark-color);
+            fill: none
+        }
+    </style>
+
+    <path d="M58 58L86 30" class="action-error-light" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M58 30L86 58" class="action-error-light" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="72" cy="44" r="42" class="action-error-light" stroke-width="4"/>
+    <line x1="97" y1="87" x2="143" y2="87" class="action-error-dark" stroke-width="2" stroke-linecap="round"/>
+    <line x1="111" y1="77" x2="133" y2="77" class="action-error-dark" stroke-width="2" stroke-linecap="round"/>
+    <line x1="119" y1="67" x2="125" y2="67" class="action-error-dark" stroke-width="2" stroke-linecap="round"/>
+    <line x1="19" y1="67" x2="25" y2="67" class="action-error-dark" stroke-width="2" stroke-linecap="round"/>
+    <line x1="10" y1="77" x2="33" y2="77" class="action-error-dark" stroke-width="2" stroke-linecap="round"/>
+    <line x1="1" y1="87" x2="47" y2="87" class="action-error-dark" stroke-width="2" stroke-linecap="round"/>
+</svg>

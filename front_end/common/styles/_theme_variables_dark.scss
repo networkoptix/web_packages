@@ -93,6 +93,10 @@ html[data-theme="dark"] {
     --popover-shadow-color : none;
     --popover-bg           : #3F545F; //$dark13;
     --popover-color        : #E1E7EA; //$light4;
+    
+    --validation-popover-shadow-color : none;
+    --validation-popover-bg           : #{$dark9};
+    --validation-popover-color        : #E1E7EA; //$light4;
 
     --radio-color              : #A5B7C0; //$light10;
     --radio-check-color        : var(--brand-d1);
@@ -525,7 +529,9 @@ html[data-theme="dark"] {
     --support-lang-wrapper-color : #A5B7C0; //$light10;
     --support-tech-apple-color : #E1E7EA; //$light4;
 
-    --error-label : #C22626; //$red_main;
+    --success-label : var(--green_main);
+    
+    --error-label : #{$red_l1};
     --error : #C22626; //$red_main;
 
     --input-bg                 : #{$dark4};

@@ -1,0 +1,18 @@
+<div class="mat-like-input-wrapper">
+    <input
+        type="{{ type }}"
+        style=""
+        class="form-control"
+        id="{{ componentId }}"
+        name="{{ componentId }}"
+        autocomplete="{{ autocomplete }}"
+        [required]="required ? '' : null"
+        [ngClass]="{ hasValue: value }"
+        [disabled]="disabled"
+        [(ngModel)]="value"
+        (keyup)="setValue()"
+        nxFocusMe
+        [setFocus]="setFocus"
+    />
+    <div class="mat-like-label">{{ label }}</div>
+</div>

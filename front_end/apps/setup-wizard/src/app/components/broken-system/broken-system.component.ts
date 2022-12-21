@@ -18,8 +18,4 @@ export class BrokenSystemComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
-    retry(): void {
-        this.wizardService.retry();
-    }
 }

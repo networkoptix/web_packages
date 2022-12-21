@@ -4,6 +4,8 @@ import { NgForm } from '@angular/forms';
 import { NxMenuService } from '@app/menu/menu.service';
 import * as staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
+import { simpleURLRegex } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
 
 import type {
@@ -33,6 +35,17 @@ export class FormElementsComponent {
     rotations: RotationDropdownItem[];
     itemsSearchableDDSingle: DropdownItem<string>[];
     selectedSearchableDDItem: DropdownItem<string>;
+
+    user = {
+        firstName: '',
+    };
+    newPasswordForUser: string;
+
+    item: Item;
+    items: Item[];
+    urlRegex: string;
+    _remoteSystem: Item;
+    _sliderValue: number = 0;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
@@ -93,6 +106,29 @@ export class FormElementsComponent {
             { value: 'test19@test.com', name: 'test19@test.com', help: 'Test 19' },
             { value: 'test20@test.com', name: 'test20@test.com', help: 'Test 20' },
         ];
+
+        this.urlRegex = simpleURLRegex;
+        this.items = [{
+            name: 'SOFIA - (10.0.0.1)',
+            value: 'https://10.0.0.1:7001',
+            help: 'Ask Tsanko'
+        }];
+    }
+
+    get remoteSystem(): Item {
+        return this._remoteSystem;
+    }
+
+    set remoteSystem(item: Item) {
+        this._remoteSystem = item;
+    }
+
+    set sliderValue(val: number) {
+        this._sliderValue = val;
+    }
+
+    get sliderValue(): number {
+        return this._sliderValue;
     }
 
     ddSearchableModelChanged(result: DropdownItem<string>): void {

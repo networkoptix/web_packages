@@ -237,9 +237,6 @@ export class WizardStateService {
                 next: () => {
                     this.currentState = WIZARD_STATE.LocalLogin;
                 },
-                skip: () => {
-                    this.currentState = WIZARD_STATE.Merge;
-                },
                 validate: () => this.setupConfig.systemName.length > 0
             },
             advanced: {
@@ -363,9 +360,6 @@ export class WizardStateService {
             },
             mergeFailure: {
                 title: this.LANG.setupWizard.title.mergeFailure,
-                back: () => {
-                    this.currentState = WIZARD_STATE.Merge;
-                },
                 skip: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },
@@ -391,13 +385,9 @@ export class WizardStateService {
             },
             localFailure: {
                 title: this.LANG.setupWizard.title.localFailure,
-                back: () => {
-                    this.currentState = WIZARD_STATE.SystemName;
-                },
                 retry: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },
-                finish: true
             },
 
             initFailure: {
@@ -473,6 +463,11 @@ export class WizardStateService {
 
     jump(): void {
         this.wizardFSM[this.currentState]?.jump();
+    }
+
+    // for testing purposes
+    jumpTo(state: WIZARD_STATE): void {
+        this.wizardFSM[state]?.jump();
     }
 
     next(): void {
@@ -735,6 +730,8 @@ export class WizardStateService {
                 }
                 this.setupConfig.localPassword = '';
                 clearInterval(systemReadyInterval);
+
+                // this.currentState$.next(WIZARD_STATE.MergeProcess);
             });
         }, alertTimeout);
     }
@@ -831,7 +828,14 @@ export class WizardStateService {
 
     init(): void {
         this.server = this.nxSystemAPIService
-            .createConnection(undefined, undefined, undefined, () => of(''), this.serverVersion);
+            .createConnection(
+                undefined,
+                undefined,
+                undefined,
+                () => of(''),
+                this.serverVersion
+            );
+
         this.initWizard();
     }
 }
