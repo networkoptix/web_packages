@@ -248,7 +248,7 @@
         "changePassword": "Change Password",
         "security": "Security",
         "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Password successfully changed",
         "saveChanges": "Save"
     },
     "activeActions": {

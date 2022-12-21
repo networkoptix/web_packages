@@ -81,7 +81,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
             errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
             ignoreUnauthorized: true
         }, () => {
-            this.toastService.notify(this.LANG.authorize.newPassConfirmText, 'success');
+            this.toastService.notify(this.LANG.account.passwordChangedSuccess, 'success');
             this.hideErrors = true;
             this.passwordForm.reset();
         });
