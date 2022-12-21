@@ -15,7 +15,7 @@ import { isUUID } from '@utils/general';
 import { addAPIInfoNodesToMenu, mergeAPIDocs, prepareSwaggerAPIDoc, addSeperator, generateMenu } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, Store, ReadOnlyAPIStore, Markdown } from './api-tool-service-types';
+import type { EmitInfo, Store, ReadOnlyAPIStore, MarkdownObj } from './api-tool-service-types';
 
 @UntilDestroy()
 @Injectable()
@@ -81,7 +81,7 @@ export class NxReadonlyAPIService {
                 }
             }
             const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, !!(APIPreamble && APIChangelog));
-            let markdown: Markdown;
+            let markdown: MarkdownObj;
             if (APIPreamble && APIChangelog) {
                 markdown = {
                     APIPreamble,
