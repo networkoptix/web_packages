@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 
 import { WizardStateService } from '../../services/wizard-state.service';
+import { SECURITY_LEVEL } from '../../types/wizard-state.types';
 
 @Component({
     selector: 'nx-advanced-component',
@@ -12,25 +13,27 @@ import { WizardStateService } from '../../services/wizard-state.service';
 })
 export class AdvancedComponent {
     stringBool: { string: boolean };
-    itemsSecurity: DropdownItem<string>[];
-    selectedSecurity: DropdownItem<string>;
+    itemsSecurity: DropdownItem<SECURITY_LEVEL>[];
+    selectedSecurity: DropdownItem<SECURITY_LEVEL>;
 
     constructor(
         translate: TranslateService,
         public wizardService: WizardStateService
     ) {
         this.itemsSecurity = [
-            { value: 'standard', name: translate.instant('setupWizard.advancedSettings.standard') },
-            { value: 'high', name: translate.instant('setupWizard.advancedSettings.high') }
+            { value: SECURITY_LEVEL.STANDARD, name: translate.instant('setupWizard.advancedSettings.standard') },
+            { value: SECURITY_LEVEL.HIGH, name: translate.instant('setupWizard.advancedSettings.high') }
         ];
 
-        this.selectedSecurity = this.itemsSecurity[0];
+        this.selectedSecurity = this.itemsSecurity.find(item => {
+            return item.value === this.wizardService.security;
+        });
     }
 
-    onSecurityChange(result: DropdownItem<string>): void {
+    onSecurityChange(result: DropdownItem<SECURITY_LEVEL>): void {
         // ensure 'change' will be triggered
         this.selectedSecurity = { ...result };
-        this.wizardService.setSecurityLevel(this.selectedSecurity.value);
+        this.wizardService.security = this.selectedSecurity.value;
     }
 
     // Preserve original property order
