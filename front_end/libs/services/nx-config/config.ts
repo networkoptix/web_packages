@@ -27,7 +27,7 @@ export const nxConfig: IConfig = {
     extendedRequestTimeout: 15 * 1000,
     apiRequestAttempts: 4, // combined with extendedRequestTimeout this mean we'll give up after 1 min
     maxNumberServerChecked: 6, // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
-    simpleURLRegex: '^https:\\/\\/[a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}:[0-9]{2,6}$',
+    simpleURLRegex: '^(https:\\/\\/)?[a-zA-Z0-9@:%._\\+~#=]{2,256}(\\.[a-z]{2,6})?:[0-9]{2,6}$',
     staticBase,
     accountDropdown: [
         {

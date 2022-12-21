@@ -528,7 +528,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                                 // trick camera 'hasArchive' - here we don't need a real info -- TT
                                                 archiveRanges[
                                                     cleanId(cameraId)
-                                                    ] = new SimpleTimeRange(1, 2);
+                                                ] = new SimpleTimeRange(1, 2);
                                             },
                                         );
                                     });
