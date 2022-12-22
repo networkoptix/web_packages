@@ -12,7 +12,7 @@ import {
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 
-type SliderRange = { start: number, end: number };
+type SliderRange = { start: number, end: number, decimal?: boolean };
 
 @Component({
     selector: 'nx-slider',
@@ -23,14 +23,14 @@ export class NxSliderComponent implements OnInit {
     @Input() id: string;
     @Input() name: string;
     @IBool() @Input() disabled: CoercedBoolInput;
-    @Input() value: number = 0;
+    @Input() value: number;
     @Input() label: string;
-    @Input() range: SliderRange = { start: 0, end: 100 };
+    @Input() range: SliderRange = { start: 0, end: 100, decimal: false };
     @IBool() @Input() showWarning: CoercedBoolInput;
     @Output() onDrag = new EventEmitter<number>();
 
     componentId: string;
-    endValue: number = 0;
+    endValue: number;
     sliderWidth: number;
     scale: number;
 
@@ -61,7 +61,13 @@ export class NxSliderComponent implements OnInit {
     }
 
     sliderDragMove(event: CdkDragMove<unknown>): void {
-        this.value = this.endValue + Math.round(event.distance.x / this.scale);
+        if (this.range.decimal) {
+            this.value = this.endValue + parseFloat((event.distance.x / this.scale).toFixed(1));
+            this.value = parseFloat(this.value.toFixed(1));
+        } else {
+            this.value = this.endValue + Math.round(event.distance.x / this.scale);
+        }
+
         // adjust rounding error
         if (this.value > this.range.end) {
             this.value = this.range.end;

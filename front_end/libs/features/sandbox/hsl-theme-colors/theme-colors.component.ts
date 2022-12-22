@@ -17,9 +17,12 @@ export class NxHSLThemeColorsComponent implements OnInit {
     color = {
         hue: 0,
         saturation: 0,
-        luminosity: null, // set to +5%
+        luminosity: 0, // set to +5%
     };
+    luminosityStep: number;
     rs: CSSStyleDeclaration;
+
+    colorNumbers: Array<number>;
 
     @ViewChild('frmTheme', { static: true }) public frmTheme: NgForm;
 
@@ -40,7 +43,12 @@ export class NxHSLThemeColorsComponent implements OnInit {
 
         this.color.hue = parseInt(this.rs.getPropertyValue('--color-h'));
         this.color.saturation = parseInt(this.rs.getPropertyValue('--color-s'));
-        this.color.luminosity = parseInt(this.rs.getPropertyValue('--color-l'));
+        this.color.luminosity = parseFloat(this.rs.getPropertyValue('--color-l'));
+
+        this.luminosityStep = parseFloat(this.rs.getPropertyValue('--color-l-step'));
+
+        this.colorNumbers = Array.from(Array(20), (_, i) => i);
+        this.colorNumbers.shift();
     }
 
     setBrandHue(value: number): void {
@@ -71,5 +79,10 @@ export class NxHSLThemeColorsComponent implements OnInit {
     setColorLuminosity(value: number): void {
         this.color.luminosity = value;
         this.self.nativeElement.style.setProperty('--color-l', `${this.color.luminosity}%`);
+    }
+
+    setColorLuminosityStep(value: number): void {
+        this.luminosityStep = value;
+        this.self.nativeElement.style.setProperty('--color-l-step', `${this.luminosityStep}%`);
     }
 }
