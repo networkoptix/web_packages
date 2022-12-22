@@ -120,7 +120,7 @@
         "expiredHeader": "Økten din har utløpt",
         "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
         "connectSubheader": "For å få tilgang til den fra hvor som helst og aktivere tilleggsfunksjoner",
-        "expiredSubheader": "Vennligst logg inn igjen",
+        "expiredSubheader": "Vennligst logg inn igjen 🔐",
         "connectAdditional": "Denne kontoen får eiertilgangsnivå",
         "createText": "Opprett konto",
         "setupText": "Sett opp Ikke-cloud system",
@@ -135,7 +135,7 @@
         "passwordRestart": "å restarte serveren",
         "passwordDetach": "å koble fra serveren",
         "passwordTransfer": "å overføre systemet",
-        "expiredAccountSubheader": "Vennligst logg inn igjen",
+        "expiredAccountSubheader": "Vennligst logg inn igjen 🔐",
         "createAccountHeader": "Opprett %CLOUD_NAME% konto",
         "activateHeader": "Aktiver %CLOUD_NAME% -konto",
         "createdText": "Konto opprettet!",
@@ -262,12 +262,12 @@
             "low": "Lav"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{{count, plural, =0{# years} one{# year} other{# years}}}",
+            "monthS": "{{count, plural, =0{# months} one{# month} other{# months}}}",
+            "weekS": "{{count, plural, =0{# weeks} one{# week} other{# weeks}}}",
+            "dayS": "{{count, plural, =0{# days} one{# day} other{# days}}}",
+            "hourS": "{{count, plural, =0{# hours} one{# hour} other{# hours}}}",
+            "minuteS": "{{count, plural, =0{# minutes} one{# minute} other{# minutes}}}"
         },
         "general": "Generell",
         "generalError": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
@@ -441,7 +441,7 @@
             "unknownBothSystemsConnectedToCloud": "Kan ikke slå sammen to systemer koblet til skyen. Gå til %CLOUD_NAME% for å slå sammen disse systemene.",
             "checking": "Kontrollerer...",
             "cloud": "Cloud",
-            "commonText": "Kunne ikke slå sammen systemer <strong>{primarySystem}</strong> og <strong>{secondarySystem}</strong>.",
+            "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble til systemet du ønsker å slå sammen med dette til <strong>%CLOUD_NAME%</strong> eller slå sammen lokalt med <strong>%VMS_NAME%</strong>-klienten.",
             "failedToFindAnySystemHeader": "Kunne ikke finne noe system å slå sammen med",
             "failedToFindAnySystem": "Sørg for at du har eierrollen i Clouden du vil slå sammen med. Eller at systemet du ønsker å slå sammen med er tilgjengelig over det lokale nettverket til gjeldende system.",
@@ -449,7 +449,7 @@
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
             "enterSystemAddressTitle": "Skriv inn adressen til en hvilken som helst server i systemet du vil slå sammen med denne.",
             "latestBuild": "siste versjon",
-            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{primarySystem}</strong> og <strong>{secondarySystem}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{primarySystem}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.</p>",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
             "mergeSuccess": "Sammenslåing av system {primaryName} og {secondaryName} fullført",
             "mergeSystemsTitle": "Slå sammen nåværende system med",
@@ -714,26 +714,26 @@
         "systemList": "Systemliste",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "velkommen",
                 "nodes": [
                     {
-                        "displayName": "Welcome To %CLOUD_NAME%"
+                        "displayName": "Velkommen til %CLOUD_NAME%"
                     }
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "konto",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Kontoinnstillinger"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "systemer",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "Mine systemer"
                     }
                 ]
             }
@@ -955,7 +955,7 @@
         "vendors": "Produsenter",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "Ingen treff",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Avanserte systeminnstillinger",
+            "brokenSystem": "Kan ikke konfigurere System",
+            "initFailure": "Kan ikke initialisere systemet",
+            "localFailure": "Kan ikke konfigurere System",
+            "localLogin": "Sett opp et administratorpassord",
+            "localSuccess": "Systemet er klart til bruk",
+            "merge": "Koble serveren til det eksisterende systemet",
+            "mergeFailure": "Kan ikke slå sammen systemer",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Skriv inn systemnavn"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Tillat optimalisering av kamerainnstillinger",
+            "autoDiscoveryEnabled": "Legg til kamera på nettverket automatisk",
+            "statisticsAllowed": "Send anonym brukstatistikk og krasjrapporter",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Høy"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "toppnivå",
-        "groupCount": "{count, plural, =0{# grupper} one{# Gruppe} other{# grupper}}",
-        "systemCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}}",
+        "groupCount": "{count, plural, =0{#GRUPPER} one{#GRUPPE} other{#GRUPPER}}",
+        "systemCount": "{count, plural, =0{#SYSTEMER} one{#SYSTEM} other{#SYSTEMER}}",
         "connectionLost": "Tilkoblingen mistet, kobler til på nytt...",
         "connectionRestored": "Forbindelse gjenopprettet",
         "couldNotReconnect": "Kunne ikke gjenopprette tilkoblingen",
@@ -1107,6 +1107,9 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "utilgjengelig"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
@@ -1334,7 +1337,7 @@
         "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "additionalSystems": "{{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}}",
     "security": {
         "twoFa": {
             "twoFADescription": "For øyeblikket har du <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",

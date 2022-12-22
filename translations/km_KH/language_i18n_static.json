@@ -1,5 +1,5 @@
 {
-    "language": "en_US",
+    "language": "km_KH",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Administration": "Administration",
     "All Servers": "All Servers",
@@ -955,7 +955,7 @@
         "vendors": "Manufacturers",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -1009,7 +1009,7 @@
             "autoDiscoveryEnabled": "Enable device auto discovery",
             "statisticsAllowed": "Send anonymous usage statistics and crash reports",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "High"
         }
     },
     "system": {
@@ -1107,6 +1107,9 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "unavailable"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

@@ -722,15 +722,15 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "帐户",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "帐户设置"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "系统",
                 "nodes": [
                     {
                         "displayName": "My Systems"
@@ -955,7 +955,7 @@
         "vendors": "制造商",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "进阶系統设置",
+            "brokenSystem": "无法安装系统",
+            "initFailure": "无法初始化系统",
+            "localFailure": "无法安装系统",
+            "localLogin": "设置管理员密码",
+            "localSuccess": "系统可供使用",
+            "merge": "将服务器连接到现有的系统",
+            "mergeFailure": "不能合并系统",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "输入的系统名称"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "允许设备设置优化",
+            "autoDiscoveryEnabled": "启用设备自动查找",
+            "statisticsAllowed": "发送匿名使用统计信息和崩溃报告",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "高"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "根",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1107,6 +1107,9 @@
         "offline": "离线",
         "online": "在线",
         "unavailable": "不可用"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

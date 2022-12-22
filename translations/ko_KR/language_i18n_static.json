@@ -722,15 +722,15 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "계정",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "계정 설정"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "시스템",
                 "nodes": [
                     {
                         "displayName": "My Systems"
@@ -738,8 +738,7 @@
                 ]
             }
         }
-    }
-},
+    },
     "integration": {
         "Access Control": "접근 제어",
         "Connector": "커넥터",
@@ -956,7 +955,7 @@
         "vendors": "제조사들",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -991,26 +990,26 @@
         "Layouts": "레이아웃",
         "Monitoring": "모니터링"
     },
-        "setupWizard": {
+    "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "고급 시스템 설정",
+            "brokenSystem": "시스템을 설정 할수 없습니다.",
+            "initFailure": "시스템을 초기화할 수 없습니다.",
+            "localFailure": "시스템을 설정 할수 없습니다.",
+            "localLogin": "관리자 암호 설정",
+            "localSuccess": "시스템 사용할 준비가 되었습니다.",
+            "merge": "서버를 기존 시스템에 연결",
+            "mergeFailure": "시스템을 병합할 수 없습니다.",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "시스템 이름을 입력하세요"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "장비 설정 최적화를 허용",
+            "autoDiscoveryEnabled": "장치 자동 검색 활성화",
+            "statisticsAllowed": "익명의 사용 통계와 충돌 보고서 보내기",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "높음"
         }
     },
     "system": {
@@ -1080,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1108,6 +1107,9 @@
         "offline": "오프라인",
         "online": "온라인",
         "unavailable": "사용할 수 없음"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

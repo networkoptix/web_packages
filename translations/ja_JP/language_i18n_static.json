@@ -189,7 +189,7 @@
             "ACTIVE": "有効",
             "INACTIVE": "無効",
             "Unassigned": "未割り当て",
-            "until": "{size} until {expires}",
+            "until": "{expires} まで {size}",
             "This license was deactivated more than once AND was reactivated less than 24 hours ago": "このライセンスは24時間以内に複数回無効化され、かつ再度有効化されました",
             "License key is already activated": "ライセンスキーはすでに有効化されています",
             "Maximum number of items is 10000": "アイテムの最大数は10000です",
@@ -955,7 +955,7 @@
         "vendors": "メーカー",
         "resultsFound": "{count, plural, =0{# 件の結果} one{# 件の結果} other{# 件の結果}}",
         "noMatches": "該当なし",
-        "userNotFound": "<span class=\"error\">指定されたユーザーはこのシステムに存在しません</span>"
+        "userNotFound": "<span class=\"error\">ユーザーが見つかりません</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "分析データの削除または保存中にエラーが発生しました。",
@@ -993,23 +993,23 @@
     "setupWizard": {
         "title": {
             "advanced": "システム詳細設定",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "brokenSystem": "システムをセットアップできません",
+            "initFailure": "システムを初期化できません",
+            "localFailure": "システムをセットアップできません",
+            "localLogin": "管理者パスワードの設定",
+            "localSuccess": "システムは使用可能",
+            "merge": "サーバーを既存システムに接続",
+            "mergeFailure": "システムを統合できません",
+            "mergeProcess": "システム統合中",
+            "start": "%VMS_NAME% を始める",
+            "systemName": "システム名を入力"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-            "standard": "Standard",
-            "safe": "Safe"
+            "cameraSettingsOptimization": "デバイス設定の最適化を許可する",
+            "autoDiscoveryEnabled": "デバイス自動検出の有効化",
+            "statisticsAllowed": "匿名の使用統計とクラッシュレポートを送信",
+            "standard": "標準",
+            "high": "高"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "ルート",
-        "groupCount": "{count, plural, =0{# グループ}  other{# グループ}}",
-        "systemCount": "{count, plural, =0{# システム} other{# システム}}",
+        "groupCount": "{count, plural, =0{# グループ} one{# グループ} other{# グループ}}",
+        "systemCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}",
         "connectionLost": "切断されました。再接続しています…",
         "connectionRestored": "接続が復旧しました",
         "couldNotReconnect": "接続を復旧できませんでした",
@@ -1107,6 +1107,9 @@
         "offline": "オフライン",
         "online": "オンライン",
         "unavailable": "利用できません"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
@@ -1460,7 +1463,7 @@
             "timeNames": {
                 "a": "a",
                 "p": "p",
-                "am": "午前",
+                "am": "am",
                 "pm": "pm",
                 "A": "A",
                 "P": "P",

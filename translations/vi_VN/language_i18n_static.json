@@ -722,18 +722,18 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "tài khoản",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Cài đặt tài khoản"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "hệ thống",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "Hệ thống của tôi"
                     }
                 ]
             }
@@ -829,7 +829,7 @@
         },
         "health": {
             "importedSystem": "System: { system }",
-            "importedTime": "Generated: { time }"
+            "importedTime": "Đã tạo: { time }"
         }
     },
     "pageTitles": {
@@ -955,7 +955,7 @@
         "vendors": "Nhà sản xuất của",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "Không có kết quả nào khớp",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">Không tìm thấy người dùng</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Lỗi khi xóa hoặc giữ dữ liệu phân tích",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Thiết lập hệ thống nâng cao",
+            "brokenSystem": "Không thể thiết lập Hệ thống",
+            "initFailure": "Không thể khởi tạo hệ thống",
+            "localFailure": "Không thể thiết lập Hệ thống",
+            "localLogin": "Thiết lập mật khẩu quản trị viên",
+            "localSuccess": "Hệ thống đã sẵn sàng để sử dụng",
+            "merge": "Kết nối máy chủ với Hệ thống hiện có",
+            "mergeFailure": "Không thể hợp nhất các hệ thống",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Nhập tên hệ thống"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Cho phép tối ưu hóa cài đặt thiết bị",
+            "autoDiscoveryEnabled": "Cho phép tự động phát hiện thiết bị",
+            "statisticsAllowed": "Gửi số liệu thống kê sử dụng ẩn danh và báo cáo sự cố",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Cao"
         }
     },
     "system": {
@@ -1078,25 +1078,25 @@
         "transferTo": "Đang chuyển quyền sở hữu cho - <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
-        "root": "root",
-        "groupCount": "{count, plural, =0{# Nhóm} one{# Nhóm} other{# Nhóm}}",
-        "systemCount": "{count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
-        "connectionLost": "Connection lost, reconnecting...",
-        "connectionRestored": "Connection restored",
-        "couldNotReconnect": "Could not restore connection",
-        "noConnection": "No connection",
-        "groupAlreadyIn": "Group { srcName } is already in { destName }",
-        "systemAlreadyIn": "System { srcName } is already in { destName }",
-        "addGroupToSelf": "You cannot add a group to itself",
+        "root": "Gốc",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "connectionLost": "Mất kết nối, đang kết nối lại...",
+        "connectionRestored": "Đã khôi phục kết nối",
+        "couldNotReconnect": "Không thể khôi phục kết nối",
+        "noConnection": "Không có kết nối",
+        "groupAlreadyIn": "Nhóm { srcName } đã có trong { destName }",
+        "systemAlreadyIn": "Hệ thống { srcName } đã có trong { destName }",
+        "addGroupToSelf": "Không thể thêm một nhóm vào chính nhóm đó",
         "errorMsg": {
-            "You can only delete groups that you own": "You can only delete groups that you own",
-            "You can only move systems that you own.": "You can only move systems that you own.",
-            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
-            "You cannot add a group to itself": "You cannot add a group to itself",
-            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
-            "You can only move groups that you own.": "You can only move groups that you own.",
-            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
-            "User does not exist in group": "User does not exist in group"
+            "You can only delete groups that you own": "Bạn chỉ có thể xóa các nhóm mà bạn sở hữu",
+            "You can only move systems that you own.": "Bạn chỉ có thể di chuyển các hệ thống mà bạn sở hữu.",
+            "You can only move systems into groups that you own.": "Bạn chỉ có thể di chuyển các hệ thống vào các nhóm mà bạn sở hữu.",
+            "You cannot add a group to itself": "Không thể thêm một nhóm vào chính nhóm đó",
+            "You cannot add a parent group to its child.": "Bạn không thể thêm một nhóm mẹ vào nhóm con.",
+            "You can only move groups that you own.": "Bạn chỉ có thể di chuyển các nhóm mà bạn sở hữu.",
+            "Adding src group to dst group would create a cycle in tree.": "Việc thêm nhóm src vào nhóm dst sẽ tạo ra một sự tuần hoàn trong cấu trúc cây.",
+            "User does not exist in group": "Người dùng không tồn tại trong nhóm"
         }
     },
     "systemStatuses": {
@@ -1107,6 +1107,9 @@
         "offline": "ngoại tuyến",
         "online": "trực tuyến",
         "unavailable": "không khả dụng"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Đã xảy ra lỗi. Vui lòng làm mới trang sau khoảng 30 giây.",

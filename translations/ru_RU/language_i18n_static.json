@@ -722,18 +722,18 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "учетная запись",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Настройки учётной записи"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "системы",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "Мои системы"
                     }
                 ]
             }
@@ -955,7 +955,7 @@
         "vendors": "Производители",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">Пользователь не найден в этой системе</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Ошибка удаления или сохранения данных аналитики",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Дополнительные настройки системы",
+            "brokenSystem": "Не удаётся настроить систему",
+            "initFailure": "Не удаётся инициализировать систему",
+            "localFailure": "Не удаётся настроить систему",
+            "localLogin": "Настройка пароля администратора",
+            "localSuccess": "Система готова к использованию",
+            "merge": "Подключить сервер к существующей системе",
+            "mergeFailure": "Невозможно объединить системы",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Имя системы"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Разрешить оптимизацию настроек устройств",
+            "autoDiscoveryEnabled": "Включить автоматическое обнаружение устройств",
+            "statisticsAllowed": "Отправлять анонимную статистику использования и отчеты о сбоях",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Высокое"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "корень",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1107,6 +1107,9 @@
         "offline": "не в сети",
         "online": "в сети",
         "unavailable": "недоступен"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Что-то пошло не так. Пожалуйста, обновите страницу и повторите попытку.",

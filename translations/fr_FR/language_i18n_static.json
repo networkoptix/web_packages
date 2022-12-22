@@ -722,18 +722,18 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "compte",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Paramètres du compte"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "systèmes",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "Mes systèmes"
                     }
                 ]
             }
@@ -955,7 +955,7 @@
         "vendors": "Fabricants",
         "resultsFound": "{count, plural, =0{# Résultat} one{# Résultat} other{# Résultats}} trouvé",
         "noMatches": "Aucune correspondance.",
-        "userNotFound": "<span class=\"error\">L'utilisateur n'a pas été trouvé dans ce systčme</span>"
+        "userNotFound": "<span class=\"error\">Utilisateur non trouvé</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Erreur lors de la suppression ou de la conservation des données d'analyse",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Paramètres avancés du système",
+            "brokenSystem": "Impossible de configurer le système",
+            "initFailure": "Impossible d'initialiser le système",
+            "localFailure": "Impossible de configurer le système",
+            "localLogin": "Configurer un mot de passe administrateur",
+            "localSuccess": "Système prêt à l’emploi",
+            "merge": "Connectez le serveur au système existant",
+            "mergeFailure": "Impossible de fusionner les systèmes",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Entrez le nom du système"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Autoriser l'optimisation des paramètres du périphérique",
+            "autoDiscoveryEnabled": "Activer la détection automatique de périphérique",
+            "statisticsAllowed": "Envoyer des statistiques d'utilisation et des rapports de plantage anonymes",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Élevée"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groupes} one{# Groupe} other{# Groupes}}",
-        "systemCount": "{count, plural, =0{# Systèmes} one{# Système} other{# Systèmes}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connexion perdue, reconnexion...",
         "connectionRestored": "Connexion restaurée",
         "couldNotReconnect": "Impossible de restaurer la connexion",
@@ -1107,6 +1107,9 @@
         "offline": "hors ligne",
         "online": "en ligne",
         "unavailable": "non disponible"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",

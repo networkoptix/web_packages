@@ -725,15 +725,15 @@
                 "displayName": "account",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Accountinstellingen"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "systemen",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "Mijn Systemen"
                     }
                 ]
             }
@@ -955,7 +955,7 @@
         "vendors": "Fabrikanten",
         "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
         "noMatches": "Geen overeenkomsten",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">Gebruiker niet gevonden</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Geavanceerde systeeminstellingen",
+            "brokenSystem": "Kan het systeem niet aanmaken",
+            "initFailure": "Kan het systeem niet initialiseren",
+            "localFailure": "Kan het systeem niet aanmaken",
+            "localLogin": "Een administrator wachtwoord instellen",
+            "localSuccess": "Het systeem is klaar voor gebruik",
+            "merge": "De server verbinden met het bestaande systeem",
+            "mergeFailure": "Kan systemen niet samenvoegen",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Voer systeemnaam in"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Optimalisatie van apparaatinstellingen toestaan",
+            "autoDiscoveryEnabled": "Schakel automatische detectie van apparaten in",
+            "statisticsAllowed": "Verzend anonieme gebruiksstatistieken en crashmeldingen",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Hoog"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
-        "systemCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1107,6 +1107,9 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "niet beschikbaar"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",

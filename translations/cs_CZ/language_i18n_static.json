@@ -722,15 +722,15 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "účet",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Nastavení účtu"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "systémy",
                 "nodes": [
                     {
                         "displayName": "My Systems"
@@ -955,7 +955,7 @@
         "vendors": "Výrobci",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -989,26 +989,27 @@
         "Bookmarks": "Záložky",
         "Layouts": "Rozložení",
         "Monitoring": "Monitorování"
-    },"setupWizard": {
+    },
+    "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Pokročilé nastavení systému",
+            "brokenSystem": "Systém nelze nastavit",
+            "initFailure": "Nelze inicializovat systém",
+            "localFailure": "Systém nelze nastavit",
+            "localLogin": "Nastavit heslo správce",
+            "localSuccess": "Systém je připraven k použití",
+            "merge": "Připojit server k existujícímu systému",
+            "mergeFailure": "Systémy nelze sloučit",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Zadat název systému"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Povolit optimalizaci nastavení zařízení",
+            "autoDiscoveryEnabled": "Povolit automatické zjišťování zařízení",
+            "statisticsAllowed": "Odeslat anonymní statistiky o používání a zprávy o selhání",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Hlavní"
         }
     },
     "system": {
@@ -1078,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1106,6 +1107,9 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "nedostupný"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

@@ -1,5 +1,5 @@
 {
-    "language": "en_US",
+    "language": "bg_BG",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Administration": "Administration",
     "All Servers": "All Servers",
@@ -40,7 +40,7 @@
     "accessRoles": {
         "Administrator": {
             "description": "Unrestricted access including the ability to share",
-            "label": "Administrator"
+            "label": "Администратор"
         },
         "Advanced Viewer": {
             "description": "Can view live video, browse the archive, control PTZ etc",
@@ -56,19 +56,19 @@
         },
         "Owner": {
             "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
-            "label": "Owner"
+            "label": "Собственик"
         },
         "Viewer": {
             "description": "Can view live video and browse the archive",
             "label": "Viewer"
         },
         "advancedViewer": {
-            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
+            "description": "Може да гледате видео на живо, да преглеждате архива, да конфигурирате камерите, да контролирате PTZ и т.н.",
             "label": "Advanced Viewer"
         },
         "cloudAdmin": {
             "description": "Can configure System and share it",
-            "label": "Administrator"
+            "label": "Администратор"
         },
         "custom": {
             "description": "Use the %VMS_NAME% Client application to set up custom permissions",
@@ -88,7 +88,7 @@
         },
         "owner": {
             "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
-            "label": "Owner"
+            "label": "Собственик"
         },
         "viewer": {
             "description": "Can view live video and browse the archive",
@@ -457,7 +457,7 @@
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner",
-            "passwordRequired": "Password is required",
+            "passwordRequired": "Изисква се парола",
             "passwordWrong": "Wrong password",
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
@@ -955,7 +955,7 @@
         "vendors": "Manufacturers",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -1009,7 +1009,7 @@
             "autoDiscoveryEnabled": "Enable device auto discovery",
             "statisticsAllowed": "Send anonymous usage statistics and crash reports",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "High"
         }
     },
     "system": {
@@ -1107,6 +1107,9 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "unavailable"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

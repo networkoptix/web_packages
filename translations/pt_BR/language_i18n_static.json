@@ -722,18 +722,18 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "conta",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Configurações da conta"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "sistemas",
                 "nodes": [
                     {
-                        "displayName": "My Systems"
+                        "displayName": "Meus sistemas"
                     }
                 ]
             }
@@ -955,7 +955,7 @@
         "vendors": "Fabricantes",
         "resultsFound": "{count, plural, =0{# Resultados} one{#Resultado} other{# Resultados}} encontrado",
         "noMatches": "Sem combinações",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">usuário não encontrado</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Erro ao excluir ou manter dados analíticos",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Configurações avançadas do sistema",
+            "brokenSystem": "Não é possível configurar o sistema",
+            "initFailure": "Não é possível inicializar o sistema",
+            "localFailure": "Não é possível configurar o sistema",
+            "localLogin": "Configure uma senha de administrador",
+            "localSuccess": "O sistema está pronto para uso",
+            "merge": "Conecte o servidor ao sistema existente",
+            "mergeFailure": "Não é possível mesclar sistemas",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Digite o nome do sistema"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Permitir otimização de configuração do dispositivo",
+            "autoDiscoveryEnabled": "Ativar descoberta automática de dispositivos",
+            "statisticsAllowed": "Envie estatísticas de uso anônimas e relatórios de falhas",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Alta"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "raiz",
-        "groupCount": "{count, plural, =0{#Grupos} one{# Grupo} other{#Grupos}}",
-        "systemCount": "{count, plural, =0{#Sistemas} one{# Sistema} other{#Sistemas}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Conexão perdida, reconectando...",
         "connectionRestored": "Conexão restaurada",
         "couldNotReconnect": "Não foi possível restaurar a conexão",
@@ -1107,6 +1107,9 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "indisponível"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Algo deu errado. Atualize a página em cerca de 30 segundos.",

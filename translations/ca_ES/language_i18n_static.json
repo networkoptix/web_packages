@@ -722,15 +722,15 @@
                 ]
             },
             "accountSettings": {
-                "displayName": "account",
+                "displayName": "compte",
                 "nodes": [
                     {
-                        "displayName": "Account Settings"
+                        "displayName": "Configuració del compte"
                     }
                 ]
             },
             "system": {
-                "displayName": "systems",
+                "displayName": "sistemes",
                 "nodes": [
                     {
                         "displayName": "My Systems"
@@ -955,7 +955,7 @@
         "vendors": "Fabricants",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -992,24 +992,24 @@
     },
     "setupWizard": {
         "title": {
-            "advanced": "Advanced System settings",
-            "brokenSystem": "Cannot setup System",
-            "initFailure": "Cannot initialize System",
-            "localFailure": "Cannot setup System",
-            "localLogin": "Set up an administrator password",
-            "localSuccess": "System is ready for use",
-            "merge": "Connect the server to the existing System",
-            "mergeFailure": "Cannot merge Systems",
+            "advanced": "Configuració avançada del sistema",
+            "brokenSystem": "No es pot configurar el sistema",
+            "initFailure": "No es pot inicialitzar el sistema",
+            "localFailure": "No es pot configurar el sistema",
+            "localLogin": "Configureu una contrasenya d'administrador",
+            "localSuccess": "El sistema està preparat per al seu ús",
+            "merge": "Connecta el servidor al sistema existent",
+            "mergeFailure": "No es poden combinar els sistemes",
             "mergeProcess": "Merging Systems",
             "start": "Get Started with %VMS_NAME%",
-            "systemName": "Enter System Name"
+            "systemName": "Introduïu el nom del sistema"
         },
         "advancedSettings": {
-            "cameraSettingsOptimization": "Allow device setting optimization",
-            "autoDiscoveryEnabled": "Enable device auto discovery",
-            "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+            "cameraSettingsOptimization": "Permetre l'optimització de la configuració del dispositiu",
+            "autoDiscoveryEnabled": "Activa el descobriment automàtic de dispositius",
+            "statisticsAllowed": "Envia estadístiques d'ús anònimes i informes d'errors",
             "standard": "Standard",
-            "safe": "Safe"
+            "high": "Alta"
         }
     },
     "system": {
@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
+        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
+        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
@@ -1107,6 +1107,9 @@
         "offline": "desconnectat",
         "online": "connectat",
         "unavailable": "no disponible"
+    },
+    "serverDocumentation": {
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
