@@ -101,7 +101,7 @@ Force Tags        system    cloud
     [Tags]    threaded
     Go To    ${ENV}/systems
     Wait Until Element Is Visible    ${LOG IN MODAL}
-    Log In    ${system}[owner]    ${base password}    button=None
+    Log In    ${system}[owner]    ${base password}    button=None  api=${False}
 
 11. Should update owner name in systems list, if it's changed
     [Tags]    threaded

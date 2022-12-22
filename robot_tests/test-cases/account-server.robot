@@ -10,7 +10,7 @@ Force Tags        account
 1. Delete account button becomes enabled
     [Tags]    C69856        delete_account
     Go To    ${url}/account
-    Log In    ${server 4}[owner]    ${password}    button=None
+    Log In    ${server 4}[owner]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
@@ -31,17 +31,17 @@ Force Tags        account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
     Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}     ${permissions}[viewer]
-6    Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
+    Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
+    Log In    ${random email}    ${password}    button=None    api=${False}
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
-    Log In    ${random email}    ${password}   validate=${False}    exists=${False}
-    Log In    ${server 1}[owner]    ${password}    button=None
+    Log In    ${random email}    ${password}   validate=${False}    exists=${False}   api=${False}
+    Log In    ${server 1}[owner]    ${password}    button=None   api=${False}
     Go To   ${url}/systems/${server 1}[cloud id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
@@ -71,7 +71,7 @@ Force Tags        account
 4. Change first and last name shows in system
     [Tags]    C41573    C30655
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None
+    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None    api=${False}
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
@@ -79,13 +79,13 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/systems/${server 1}[cloud id]
-    Log In    ${server 1}[owner]    ${password}    button=None
+    Log In    ${server 1}[owner]    ${password}    button=None    api=${False}
     Go To Users List
     Select User in Users List   ${server 1}[cloud users][liveViewer]
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'nameChanged nameChanged')]
     Log Out
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None
+    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None    api=${False}
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -105,7 +105,7 @@ Force Tags        account
 5. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account
-    Log In    ${server 1}[owner]    ${password}    button=None
+    Log In    ${server 1}[owner]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
@@ -114,21 +114,21 @@ Force Tags        account
 6. Delete account button is enabled
     [Tags]    C69854        delete account
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][cloudAdmin]    ${password}    button=None
+    Log In    ${server 1}[cloud users][cloudAdmin]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
     Log Out
     Sleep   2
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][viewer]    ${password}    button=None
+    Log In    ${server 1}[cloud users][viewer]    ${password}    button=None    api=${False}
     Verify in Account Page
     Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
 7. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account
-    Log In    ${server 1}[owner]    ${password}    button=None
+    Log In    ${server 1}[owner]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}

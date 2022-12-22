@@ -44,7 +44,7 @@ Force Tags        account
 5. Changing first name and saving maintains that setting
     [Tags]    C41573    smoke
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
@@ -53,7 +53,7 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -66,7 +66,7 @@ Force Tags        account
 6. Changing last name and saving maintains that setting
     [Tags]    C41573    smoke
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Wait Until Element Is Visible    ${ACCOUNT SAVE}
@@ -74,7 +74,7 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL   ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
@@ -85,7 +85,7 @@ Force Tags        account
 7. First name is required
     [Tags]    C41573
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Delete All Text    ${ACCOUNT FIRST NAME}
     Click Element    ${ACCOUNT LAST NAME}
@@ -105,7 +105,7 @@ Force Tags        account
 8. Last name is required
     [Tags]    C41573
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Delete All Text    ${ACCOUNT LAST NAME}
     Click Element    ${ACCOUNT FIRST NAME}
@@ -127,7 +127,7 @@ Force Tags        account
 9. SPACE for first name is not valid
     [Tags]    C41573
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
     Click Element    //header/h4[contains(text(),'${ACCOUNT INFORMATION}')]
@@ -140,7 +140,7 @@ Force Tags        account
 10. SPACE for last name is not valid
     [Tags]    C41573
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
@@ -154,7 +154,7 @@ Force Tags        account
 11. Email field is un-editable
     [Tags]    C41573
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     ${read only}    Get Element Attribute    ${ACCOUNT EMAIL}    readOnly
     Should Be True    "${read only}"
@@ -162,7 +162,7 @@ Force Tags        account
 12. Should respond to tab and go in the correct order
     [Tags]    C41838
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
     Press Keys    None    TAB
@@ -183,7 +183,7 @@ Force Tags        account
 13. Language is changeable on the account page
     [Tags]    C41574    smokef
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None    api=${False}
     Reload Page
     ${lang dict} =    Get Lang List
     @{LANGUAGES LIST} =    Get Dictionary Keys    ${lang dict}
@@ -274,7 +274,7 @@ Force Tags        account
     ${ja_JP account info} =    Get From Dictionary    ${lang dict}[ja_JP]    ACCOUNT INFORMATION
     ${de_DE account info} =    Get From Dictionary    ${lang dict}[de_DE]    ACCOUNT INFORMATION
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    button=None
+    Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     ${lang}    Set Variable If    "${LANGUAGE}"=="ja_JP"    de_DE
@@ -294,7 +294,7 @@ Force Tags        account
     Log Out Japanese
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
-    Log In    ${no perm}    ${password}    validate=False    button=None
+    Log In    ${no perm}    ${password}    validate=False    button=None   api=${False}
     Set Account Language     ${no perm}    ${password}    ${lang}
     Sleep    5
     Reload Page
@@ -318,7 +318,7 @@ Force Tags        account
     [Tags]    C69858    C69857        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
+    Log In    ${random email}    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element Is Enabled    ${DELETE ACCOUNT BUTTON}
     Click Button    ${DELETE ACCOUNT BUTTON}
@@ -335,7 +335,7 @@ Force Tags        account
     [Tags]    C69859        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
+    Log In    ${random email}    ${password}    button=None   api=${False}
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
@@ -350,7 +350,7 @@ Force Tags        account
     [Tags]    C69860        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
+    Log In    ${random email}    ${password}    button=None   api=${False}
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
@@ -367,27 +367,27 @@ Force Tags        account
     [Tags]    C69861   delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
+    Log In    ${random email}    ${password}    button=None   api=${False}
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
-    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}     exists=${False}
+    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}     exists=${False}   api=${False}
 
 21. After account deletion user can create account with the same email again
     [Tags]    C69864    delete_account      deb
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
+    Log In    ${random email}    ${password}    button=None   api=${False}
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
-    Log In    ${random email}    ${password}    validate=${False}   exists=${False}
+    Log In    ${random email}    ${password}    validate=${False}   exists=${False}   api=${False}
     
     Go To    ${url}/register
     Register    mark    hamil    ${random email}    ${password}    
@@ -395,4 +395,4 @@ Force Tags        account
     
     Wait Until Element Is Visible    ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
     Click Button      ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
-    Log In    ${random email}    ${password}    button=None    reset=${True}
+    Log In    ${random email}    ${password}    button=None    reset=${True}   api=${False}

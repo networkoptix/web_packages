@@ -232,14 +232,21 @@ Validate Log In
 Check Log In
     [Arguments]    ${user}    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email Robot    ${BASE EMAIL}
-    Log In    ${random email}    ${password}      validate=False     button=${button}    exists=${False}
-    Log In    ${user}    ${password}    button=None
+    Log In    ${random email}    ${password}      validate=False     button=${button}    exists=${False}   api=${False}
+    Log In    ${user}    ${password}    button=None   api=${False}
 
 Log Out
     # Add a delay to your call if logging in soon after logging oiut to avoid session race condition
-    [Arguments]     ${add_delay}=0
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log Out cloud
-    ...    ELSE    Log Out Web Admin
+    [Arguments]     ${add_delay}=0   ${api}=${True}
+    IF    '''${mode}'''=='''cloud'''
+        IF   ${api}
+            Log Out via API
+        ELSE
+            Log Out cloud
+        END
+    ELSE
+        Log Out Web Admin
+    END
     IF   ${add_delay} > 0
         Sleep   ${add_delay}
     END
@@ -1260,7 +1267,7 @@ Log Out via API
     Should Be Equal as Strings    ${status}    200
     Sleep    2
     Reload Page
-    Sleep    5
+    Sleep    1
     Go To    ${ENV}
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}

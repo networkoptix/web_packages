@@ -111,6 +111,7 @@ ${cascade}      PASS
     [Documentation]   To run with 4.2 server use:  robot -v IMAGE:4.2_test
     [Tags]   C106349
     [Setup]     Run Keywords    QA Video Recording Start       Skip If Irrelevant
+    [Teardown]    QA Video Recording Stop
     Skip If Image Is    5.0   5.1   5.2    msg=Test case designed for 4.2 and below
     Log in to user and system    ${server 1['owner']}    ${server ['cloud id']}
     Wait Until Element Is Visible    ${SYSTEM OWNER}//span[contains(text(), "${server 1}[owner]")]
