@@ -6,6 +6,20 @@ FRONTEND_REVISION="${1:?First parameter must be a frontend revision}"
 
 : "${API_TOKEN:?Provide manually or from Jenkins credentials}"
 
+if [ "$MERGE_REQUEST_ACTION" ]; then
+  case "$MERGE_REQUEST_ACTION" in
+    open|reopen|update) ;;
+    close|approved|unapproved|approval|unapproval|merge)
+      echo "Merge request action is '$MERGE_REQUEST_ACTION'. No need to run tests"
+      exit 0
+      ;;
+    *)
+      echo >&2 "Unknown merge request action: '$MERGE_REQUEST_ACTION'"
+      exit 1
+      ;;
+  esac
+fi
+
 python3.8 -m venv venv
 VENV_BIN_DIR=venv/bin
 
