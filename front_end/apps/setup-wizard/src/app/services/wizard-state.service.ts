@@ -797,8 +797,12 @@ export class WizardStateService {
             });
     }
 
-    setSecurityLevel(level: string): void {
-        this.securityLevel = <SECURITY_LEVEL>level;
+    set security(level: SECURITY_LEVEL) {
+        this.securityLevel = level;
+    }
+
+    get security(): SECURITY_LEVEL {
+        return this.securityLevel;
     }
 
     initWizard = (): void => {
