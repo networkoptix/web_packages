@@ -20,6 +20,10 @@ if [ "$MERGE_REQUEST_ACTION" ]; then
   esac
 fi
 
+if [ "$MERGE_REQUEST_SOURCE_WEB_URL" ]; then
+  echo "Testing changes to merge from the repository $MERGE_REQUEST_SOURCE_WEB_URL"
+fi
+
 python3.8 -m venv venv
 VENV_BIN_DIR=venv/bin
 
