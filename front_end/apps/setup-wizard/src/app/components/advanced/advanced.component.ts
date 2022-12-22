@@ -30,7 +30,6 @@ export class AdvancedComponent {
         this.selectedSecurity = this.itemsSecurity.find(item => {
             return item.value === this.wizardService.security;
         });
-        this.wizardService.setSecurityLevel(this.selectedSecurity.value);
     }
 
     onSecurityChange(result: DropdownItem<SECURITY_LEVEL>): void {
