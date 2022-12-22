@@ -21,7 +21,7 @@ export const cameraCredentialUpdateTimeout: number = 1500;
 export const longAlertTimeout: number = 6 * 1000; // Alerts are shown for 6 seconds
 export const maxNumberServerChecked: number = 6; // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
 export const pollingTimeout: number = 30 * 1000;
-export const simpleURLRegex: string = '^https:\\/\\/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$';
+export const simpleURLRegex: string = '^(https:\\/\\/)?[a-zA-Z0-9@:%._\\+~#=]{2,256}(\\.[a-z]{2,6})?:[0-9]{2,6}$';
 export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
 export const staticBase: string = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';

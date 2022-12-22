@@ -457,29 +457,28 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         return result;
                     };
 
-                        const findCamerasWithArchive = () => {
-                            return this.system
-                                .getCameraHistoryItems()
-                                .toPromise()
-                                .then(result => {
-                                    if (!result?.length) {
-                                        return;
-                                    }
-                                    mediaServers.forEach(mediaServer => {
-                                        const rec = result.find(
-                                            rec =>
-                                                rec.serverGuid ===
-                                                `{${mediaServer.id}}`,
-                                        );
-                                        rec?.archivedCameras.forEach(
-                                            cameraId => {
-                                                // trick camera 'hasArchive' - here we don't need a real info -- TT
-                                                archiveRanges[
-                                                    cleanId(cameraId)
-                                                ] = new SimpleTimeRange(1, 2);
-                                            },
-                                        );
-                                    });
+                    const findCamerasWithArchive = () => {
+                        return this.system
+                            .getCameraHistoryItems()
+                            .toPromise()
+                            .then(result => {
+                                if (!result?.length) {
+                                    return;
+                                }
+                                mediaServers.forEach(mediaServer => {
+                                    const rec = result.find(
+                                        rec =>
+                                            rec.serverGuid ===
+                                            `{${mediaServer.id}}`,
+                                    );
+                                    rec?.archivedCameras.forEach(
+                                        cameraId => {
+                                            // trick camera 'hasArchive' - here we don't need a real info -- TT
+                                            archiveRanges[
+                                                cleanId(cameraId)
+                                            ] = new SimpleTimeRange(1, 2);
+                                        },
+                                    );
                                 });
                             });
                     };
