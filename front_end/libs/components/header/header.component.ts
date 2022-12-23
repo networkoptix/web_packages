@@ -19,7 +19,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
-import { LocalStorageService } from 'ngx-webstorage';
+import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import {
     BehaviorSubject,
     combineLatest,
@@ -131,6 +131,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private router: Router,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
+        private sessionStorage: SessionStorageService,
         @Inject(WINDOW) private window: Window,
         private bootstrapProvider: NxBootstrapProvider,
         private cookieService: CookieService,
@@ -324,7 +325,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
-        this.storageService.observe('theme')
+        this.sessionStorage.observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 // wait CONFIG to update

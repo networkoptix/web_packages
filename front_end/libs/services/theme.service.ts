@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
-import { LocalStorageService } from 'ngx-webstorage';
+import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
@@ -26,14 +26,15 @@ export class NxThemeService {
 
     constructor(
         configService: NxConfigService,
-        private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
         private cookieService: CookieService,
+        private sessionStorage: SessionStorageService,
+        private localStorageService: LocalStorageService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.localStorageService.observe('theme')
+        this.sessionStorage.observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(theme => {
                 if (!this.window.document.hasFocus()) {
@@ -55,7 +56,7 @@ export class NxThemeService {
         }
 
         const loginState = this.localStorageService.retrieve('loginstate');
-        this.themeSelected = this.localStorageService.retrieve('theme');
+        this.themeSelected = this.sessionStorage.retrieve('theme');
         NxConfigService.isDarkTheme = this.themeSelected === this.availThemes.dark;
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
@@ -67,14 +68,14 @@ export class NxThemeService {
         }
 
         this.darkThemeMq.addEventListener('change', e => {
-            this.themeSelected = this.localStorageService.retrieve('theme');
+            this.themeSelected = this.sessionStorage.retrieve('theme');
             if (this.themeSelected !== 'auto') {
                 return;
             }
             NxConfigService.isDarkTheme = e.matches;
             const theme = NxConfigService.isDarkTheme ? this.availThemes.dark : this.availThemes.light;
             this.window.document.documentElement.setAttribute('data-theme', theme);
-            this.cookieService.set('theme', theme);
+            this.cookieService.set('theme', theme, new Date().getDate(), '/');
         });
 
         if (loginState) {
@@ -116,28 +117,29 @@ export class NxThemeService {
             !themeSelected &&
             !username
         ) {
-            this.localStorageService.store('theme', themeSelected);
+            this.sessionStorage.store('theme', themeSelected);
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
             const theme = NxConfigService.isDarkTheme && themesEnabled ? 'dark' : 'light';
             this.window.document.documentElement.setAttribute(
                 'data-theme',
                 theme
             );
-            this.cookieService.set('theme', theme);
+            this.cookieService.set('theme', theme, new Date().getDate(), '/');
         } else {
             if (
                 docTheme === this.userTheme &&
-                docTheme === themeSelected
+                docTheme === themeSelected &&
+                docTheme === this.sessionStorage.retrieve('theme')
             ) {
                 return; // avoid reloading if same theme is set
             }
-            this.localStorageService.store('theme', themeSelected);
+            this.sessionStorage.store('theme', themeSelected);
             NxConfigService.isDarkTheme = themeSelected === this.availThemes.dark;
             this.window.document.documentElement.setAttribute(
                 'data-theme',
                 themeSelected
             );
-            this.cookieService.set('theme', themeSelected);
+            this.cookieService.set('theme', themeSelected, new Date().getDate(), '/');
         }
 
         username &&
