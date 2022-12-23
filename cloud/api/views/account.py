@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 import requests
 from uuid import uuid4
-from django.core.cache import cache
+from django.core.cache import caches
 
 from asgiref.sync import sync_to_async
 import django
@@ -312,11 +312,11 @@ async def index(request):
         # Redirect if no version
         # Add indefinate cache heading
         cached = request.query_params.get('cached')
-        current_version = not request.query_params.get('force') and cache.get(request.user.email)
+        current_version = not request.query_params.get('force') and caches['requests'].get(request.user.email)
         if not cached or not current_version or cached != current_version:
             if not current_version:
                 current_version = str(uuid4())
-                cache.set(request.user.email, current_version)
+                caches['requests'].set(request.user.email, current_version)
             return redirect(f'{reverse("account")}?cached={current_version}')
         serializer = AccountSerializer(request, many=False)
         theme_custom_property = await request.user.accountcustomproperty_set.filter(endpoint='theme').afirst()
@@ -428,7 +428,7 @@ class AccountSecurity(APIView):
         """
         Clears the cached version for a user to invalidate browser cached version on next request.
         """
-        cache.delete(email)
+        caches['requests'].delete(email)
 
     @method_decorator_async(swagger_auto_schema(
         # auto_schema=None,
@@ -472,7 +472,7 @@ class AccountSecurity(APIView):
         if (await sync_to_async(Account.get, thread_sensitive=False)(request)).get("account2faEnabled"):
             raise APIRequestException('Cannot delete totp while 2fa is enabled', ErrorCodes.bad_request)
         request.session["has2fa"] = False
-        cache.delete(request.user.email)
+        caches['requests'].delete(request.user.email)
         return api_success(await sync_to_async(Auth.delete_2fa_key, thread_sensitive=False)(request))
 
 

@@ -279,8 +279,10 @@ export class NxCloudApiService {
         return this.cloudDbApi.getAuth(systemId);
     }
 
-    getSystemToken(systemId: string) {
-        return this.cloudDbApi.getToken(systemId);
+    getSystemToken(systemId: string): Observable<{ access_token: string, refresh_token: string }> {
+        // Todo: Using cloud portal to avoid auth issue with clouddb. Need to revert this once cloudDbApi.getToken is fixed.
+        return this.http.post<{ access_token: string, refresh_token: string }>(`${apiBase}/systems/${systemId}/token`, {});
+        // return this.cloudDbApi.getToken(systemId);
     }
 
     @swClear('cloudSystemAPI', '/systems', true)

@@ -340,6 +340,12 @@ CACHES = {
         "TIMEOUT" : None,
         "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
         "KEY_PREFIX": 'license_servers'
+    },
+    "requests": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
+        "KEY_PREFIX": 'requests'
     }
 }
 
