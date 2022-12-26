@@ -714,7 +714,7 @@
         "systemList": "System List",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "Hoş geldiniz ",
                 "nodes": [
                     {
                         "displayName": "Welcome To %CLOUD_NAME%"
@@ -1008,7 +1008,7 @@
             "cameraSettingsOptimization": "Cihaz optimizasyonuna izin ver",
             "autoDiscoveryEnabled": "Cihaz otomatik bulmayı etkinleştir",
             "statisticsAllowed": "Anonim kullanım istatistiklerini ve kilitlenme raporlarını gönder",
-            "standard": "Standard",
+            "standard": "Standart",
             "high": "Yüksek"
         }
     },
@@ -1084,7 +1084,7 @@
         "connectionLost": "Connection lost, reconnecting...",
         "connectionRestored": "Connection restored",
         "couldNotReconnect": "Could not restore connection",
-        "noConnection": "No connection",
+        "noConnection": "Bağlantı yok",
         "groupAlreadyIn": "Group { srcName } is already in { destName }",
         "systemAlreadyIn": "System { srcName } is already in { destName }",
         "addGroupToSelf": "You cannot add a group to itself",

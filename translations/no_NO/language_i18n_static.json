@@ -955,7 +955,7 @@
         "vendors": "Produsenter",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "Ingen treff",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "userNotFound": "<span class=\"error\">Bruker ikke funnet</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -1000,8 +1000,8 @@
             "localSuccess": "Systemet er klart til bruk",
             "merge": "Koble serveren til det eksisterende systemet",
             "mergeFailure": "Kan ikke slå sammen systemer",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
+            "mergeProcess": "Slår sammen systemer",
+            "start": "Kom i gang med %VMS_NAME%",
             "systemName": "Skriv inn systemnavn"
         },
         "advancedSettings": {
@@ -1109,7 +1109,7 @@
         "unavailable": "utilgjengelig"
     },
     "serverDocumentation": {
-        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
+        "accessibleAt": "For Windows i registernøkkel: { windowsPath } Media Server \n For alle andre plattformer er den plassert i en konfigurasjonsfil: {defaultPath} For midlertidig å kommentere noen innstilling, legg til understreksymbolet (\"_\") i begynnelsen av navnet, f.eks. \"absoluteRtcpTimestamps= false\" konverterer til \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

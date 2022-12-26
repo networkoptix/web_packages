@@ -714,10 +714,10 @@
         "systemList": "Список систем",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "добро пожаловать",
                 "nodes": [
                     {
-                        "displayName": "Welcome To %CLOUD_NAME%"
+                        "displayName": "Добро пожаловать в %CLOUD_NAME%"
                     }
                 ]
             },
@@ -955,7 +955,7 @@
         "vendors": "Производители",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "userNotFound": "<span class=\"error\">Пользователь не найден</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Ошибка удаления или сохранения данных аналитики",
@@ -1000,8 +1000,8 @@
             "localSuccess": "Система готова к использованию",
             "merge": "Подключить сервер к существующей системе",
             "mergeFailure": "Невозможно объединить системы",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
+            "mergeProcess": "Объединение систем",
+            "start": "Начните с %VMS_NAME%",
             "systemName": "Имя системы"
         },
         "advancedSettings": {

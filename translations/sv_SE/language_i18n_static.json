@@ -714,10 +714,10 @@
         "systemList": "Systemlista",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "välkommen",
                 "nodes": [
                     {
-                        "displayName": "Welcome To %CLOUD_NAME%"
+                        "displayName": "Välkommen till %CLOUD_NAME%"
                     }
                 ]
             },
@@ -1000,8 +1000,8 @@
             "localSuccess": "Systemet är klart för användning",
             "merge": "Anslut servern till det befintliga systemet",
             "mergeFailure": "Kan inte slå samman system",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
+            "mergeProcess": "Sammanfogar system",
+            "start": "Kom igång med %VMS_NAME%",
             "systemName": "Ange systemnamn"
         },
         "advancedSettings": {
@@ -1109,7 +1109,7 @@
         "unavailable": "inte tillgänglig"
     },
     "serverDocumentation": {
-        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
+        "accessibleAt": "För Windows i registernyckel: { windowsPath } Media Server \n För alla andra plattformar placeras den i en konfigurationsfil: {defaultPath} För att tillfälligt kommentera en inställning, lägg till understreckssymbolen (\"_\") i början av namnet, t.ex. \"absoluteRtcpTimestamps= false\" konverterar till \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",

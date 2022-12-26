@@ -997,7 +997,7 @@
             "initFailure": "システムを初期化できません",
             "localFailure": "システムをセットアップできません",
             "localLogin": "管理者パスワードの設定",
-            "localSuccess": "システムは使用可能",
+            "localSuccess": "システムを使用する準備ができました",
             "merge": "サーバーを既存システムに接続",
             "mergeFailure": "システムを統合できません",
             "mergeProcess": "システム統合中",
@@ -1109,7 +1109,7 @@
         "unavailable": "利用できません"
     },
     "serverDocumentation": {
-        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
+        "accessibleAt": "Windowsの場合、レジストリキー: { windowsPath } Media Server \n 他のすべてのプラットフォームでは、次の設定ファイルに配置されます: {defaultPath} 設定を一時的にコメントアウトする場合、下線記号 (\"_\") を名前の先頭に追加します。 例として、\"absoluteRtcpTimestamps=false\" は \"_absoluteRtcpTimestamps=false\" とします。"
     },
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
