@@ -75,8 +75,10 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 this.twoFaSystems = systems.filter(sys => sys.system2faEnabled);
                 this.subV5Systems = systems.filter(sys => !sys.useRest);
 
-                this.clearPopoverTargets();
-                this.setPopoverTargets();
+                setTimeout(() => {
+                    this.clearPopoverTargets();
+                    this.setPopoverTargets();
+                });
             });
     }
 
