@@ -75,6 +75,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     editMode = false;
     enableEdit = false;
     connectToCloudProcess: Process;
+    disconnectProcess: Process;
 
     settingsForSystem;
     systemName: string;
@@ -116,27 +117,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.betaMode = clientMode.beta;
         this.menuService.section = menus.systemSettings.admin.id;
         this.menuService.detail = menus.systemSettings.general.id;
-
-        this.connectToCloudProcess = this.processService.createProcess(
-            () => this.connectLocalToCloud(),
-            { ignoreError: true },
-            skip => {
-                if (skip === true) {
-                    return;
-                }
-                this.toastService.notify(
-                    this.LANG.toastMessage.system.cloudConnect.success,
-                    'success'
-                );
-                setTimeout(() => this.window.location.reload(), 2000);
-            },
-            () => {
-                this.toastService.notify(
-                    this.LANG.toastMessage.system.cloudConnect.failed,
-                    'danger'
-                );
-            }
-        );
 
         this.route.queryParams.subscribe(params => {
             this.advanced = (this.router.url.includes('/advanced') ||
@@ -306,6 +286,27 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     initProcesses(): void {
+        this.connectToCloudProcess = this.processService.createProcess(
+            () => this.connectLocalToCloud(),
+            { ignoreError: true },
+            skip => {
+                if (skip === true) {
+                    return;
+                }
+                this.toastService.notify(
+                    this.LANG.toastMessage.system.cloudConnect.success,
+                    'success'
+                );
+                setTimeout(() => this.window.location.reload(), 2000);
+            },
+            () => {
+                this.toastService.notify(
+                    this.LANG.toastMessage.system.cloudConnect.failed,
+                    'danger'
+                );
+            }
+        );
+
         this.systemNameProcess = this.processService.createProcess(
             () => {
                 const trimmedName = this.systemName.trim();
@@ -324,6 +325,48 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     { value: this.LANG.toastMessage.nameFail, params: { type: this.LANG.common.system } },
                     toast.warning,
                 );
+            });
+
+        this.disconnectProcess = this.processService.createProcess(
+            () => {
+                let disconnectPromise: Promise<any> = Promise.reject();
+                if (this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable) {
+                    disconnectPromise = this.cloudApiService.getCloudStorageUsage(this.system.id)
+                        // If cloud storage usage returns okay then that probably means we are using cloud storage.
+                        .then(_ => Promise.reject())
+                        // If the request fails that means storage is probably not used.
+                        .catch(_ => Promise.resolve());
+                }
+                return disconnectPromise;
+            },
+            { ignoreError: true },
+            async () => {
+                const pageDidntChangePattern = new RegExp(`\/systems\/${this.system.id}$`);
+                if (pageDidntChangePattern.test(this.router.url) && await this.dialogs.disconnect(this.accountService, this.system)) {
+                    if (this.environment.isLocal && this.system.currentUser?.isCloud) {
+                        this.accountService.logout();
+                    } else {
+                        if (this.environment.isLocal) {
+                            // give the user chance to read the toaster
+                            setTimeout(() => this.window.location.reload(), 2000);
+                        } else {
+                            this.router
+                                .navigate([redirect.authorised])
+                                .catch(error => {
+                                    console.error(error);
+                                });
+                        }
+                    }
+                }
+            },
+            () => {
+                const {
+                    dialogs: {
+                        cloudStorage: { systemDisconnectError: { title, message } },
+                        buttons: { ok }
+                    }
+                } = this.LANG;
+                return this.dialogs.confirm(message, title, ok);
             });
     }
 
@@ -378,75 +421,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 true
             );
             return Promise.resolve(true);
-        }
-    }
-
-    public getCloudStorageUsagePromise: Promise<any> = null;
-
-    async disconnectFromCloud() {
-        if (!this.system) {
-            return setTimeout(() => this.disconnectFromCloud(), 500);
-        }
-        const handleDisconnect = () => this.dialogs
-            .disconnect(this.accountService, this.system)
-            .then(result => {
-                if (result) {
-                    if (this.environment.isLocal) {
-                        // give the user chance to read the toaster
-                        setTimeout(() => this.window.location.reload(), 2000);
-                    } else {
-                        this.router
-                            .navigate([redirect.authorised])
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    }
-                }
-            }).catch(_ => _);
-
-        if (this.system.userManager.isMine) {
-            if (!this.system.cloudStorageCapable) {
-                return handleDisconnect();
-            }
-            if (this.getCloudStorageUsagePromise) {
-                return;
-            }
-            this.getCloudStorageUsagePromise = this.cloudApiService.getCloudStorageUsage(this.system.id);
-            this.getCloudStorageUsagePromise.then(() => {
-                // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
-                const {
-                    dialogs: {
-                        cloudStorage: { systemDisconnectError: { title, message } },
-                        buttons: { ok }
-                    }
-                } = this.LANG;
-                this.dialogs.confirm(message, title, ok);
-                this.getCloudStorageUsagePromise = null;
-            }).catch(() => {
-                // User is the owner. Deleting system means unbinding it and disconnecting all accounts
-                // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-                this.getCloudStorageUsagePromise = null;
-                this.dialogs
-                    .disconnect(this.accountService, this.system)
-                    .then(result => {
-                        if (result) {
-                            if (this.environment.isLocal && this.system.currentUser?.isCloud) {
-                                this.accountService.logout();
-                            } else {
-                                if (this.environment.isLocal) {
-                                    // give the user chance to read the toaster
-                                    setTimeout(() => this.window.location.reload(), 2000);
-                                } else {
-                                    this.router
-                                        .navigate([redirect.authorised])
-                                        .catch(error => {
-                                            console.error(error);
-                                        });
-                                }
-                            }
-                        }
-                    });
-            });
         }
     }
 

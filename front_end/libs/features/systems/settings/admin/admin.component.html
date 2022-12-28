@@ -163,20 +163,14 @@
                         *ngIf="!environment.isLocal && !CONFIG.cloudSystemId"
                     >
                         <div class="float-xl-right">
-                            <button
-                                [disabled]="
-                                    settings.disconnectDisabled || getCloudStorageUsagePromise
-                                "
-                                class="btn btn-default"
-                                (click)="disconnectFromCloud()"
+                            <nx-process-button
+                                id="disconnectFromCloud"
+                                actionType="default"
+                                [buttonDisabled]="settings.disconnectDisabled"
+                                [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
+                                [process]="disconnectProcess"
                             >
-                                <span
-                                    class="ellipsis"
-                                    id="disconnectFromCloud"
-                                    translate
-                                    >Disconnect from %CLOUD_NAME%</span
-                                >
-                            </button>
+                            </nx-process-button>
                         </div>
                     </div>
                 </div>
@@ -257,8 +251,8 @@
                     <div class="col-12 pl-0">
                         <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
                             <nx-process-button
-                                buttonText="{{ 'Connect to %CLOUD_NAME%' | translate }}"
-                                [actionType]="'default'"
+                                actionType="default"
+                                [buttonText]="'Connect to %CLOUD_NAME%' | translate"
                                 [process]="connectToCloudProcess"
                             ></nx-process-button>
                         </div>
@@ -278,18 +272,13 @@
                                     <span>&nbsp;({{ system.info.ownerAccountEmail }})</span>
                                 </span>
                             </span>
-                            <button
+                            <nx-process-button
                                 *ngIf="system.isMine"
-                                [disabled]="settings.disconnectDisabled"
-                                class="btn btn-default mt-3"
-                                (click)="disconnectFromCloud()"
+                                actionType="default"
+                                [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
+                                [process]="disconnectProcess"
                             >
-                                <span
-                                    class="ellipsis"
-                                    translate
-                                    >Disconnect from %CLOUD_NAME%</span
-                                >
-                            </button>
+                            </nx-process-button>
                         </div>
                     </div>
                 </div>
