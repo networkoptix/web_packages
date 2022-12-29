@@ -165,7 +165,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
     // Setup wizard calls
     wizardGetSystemSettings(): Observable<SettingsConfig> {
-        return this.get('/rest/v2/system/settings');
+        return this.get('/rest/v2/system/settings?_keepDefault');
     }
 
     // Servers
