@@ -91,7 +91,7 @@ Test Passwords Invalid
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    ${system['owner']}    admin
     @{new locals} =    Create List
-    @{local users} =    Reset Local Users    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
+    @{local users} =    Reset Local Users    ${server 1['local auth']}   ${server 1['token']}    https://${QA BURBANK IP}:${server 1['port']}
     ${user} =    Set Variable    cloudAdmin
     Log in To User and System    ${server 1['cloud users']}[cloudAdmin]    ${server 1['cloud id']}
     Go to Users List

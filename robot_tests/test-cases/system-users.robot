@@ -13,7 +13,7 @@ Force Tags        system    Threaded    users
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -32,7 +32,7 @@ Force Tags        system    Threaded    users
 
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -51,7 +51,7 @@ Force Tags        system    Threaded    users
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -71,7 +71,7 @@ Force Tags        system    Threaded    users
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -87,7 +87,7 @@ Force Tags        system    Threaded    users
      @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -101,10 +101,10 @@ Force Tags        system    Threaded    users
     [Tags]    local_user    C76240    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
-    @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+    @{local users} =    Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
     Log    Step 1
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -123,9 +123,9 @@ Force Tags        system    Threaded    users
     [Tags]    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
-    @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+    @{local users} =    Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -146,8 +146,8 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
-        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -168,7 +168,7 @@ Force Tags        system    Threaded    users
         @{locals}=   Get Local Users
         Delete All Local Users via API    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
         Log    Step 1
-        @{new local users}=   Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        @{new local users}=   Reset Local Users    ${server 1}[local auth]    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -199,7 +199,7 @@ Force Tags        system    Threaded    users
     ...    ELSE    Create List    ${server 1['owner']}    admin
     Log    Preconditions
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server auth}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         @{locals} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
@@ -290,7 +290,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -318,7 +318,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server 1['local auth']}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -344,7 +344,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]    ${server 1}[local users][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server 1['local auth']}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -374,7 +374,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server 1}[local auth]    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -402,7 +402,7 @@ Force Tags        system    Threaded    users
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
         @{new locals} =    Create List
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server auth}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -423,7 +423,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server auth}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -466,7 +466,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server auth}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -503,7 +503,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{local users} =    Reset Local Users    ${server auth}    ${server 1}[token]   https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         ${id}    Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+advancedViewer
@@ -513,7 +513,7 @@ Force Tags        system    Threaded    users
         Click Element    //span[text()="Local+advancedViewer"]
         Log    Step 4
         Save User    
-        ...    ${server 1}[local auth]    
+        ...    ${server 1}[token]
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[advancedViewer]    
@@ -526,7 +526,7 @@ Force Tags        system    Threaded    users
         Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=65
         Log    Step 5
         Save User    
-        ...    ${server 1}[local auth]    
+        ...    ${server 1}[token]
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[advancedViewer]    
@@ -539,7 +539,7 @@ Force Tags        system    Threaded    users
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
         Log    Step 6
         Save User    
-        ...    ${server 1}[local auth]    
+        ...    ${server 1}[token]
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[viewer]    
@@ -552,7 +552,7 @@ Force Tags        system    Threaded    users
         Wait Until Element is Visible    //nx-permissions-select/div/button/span[text()="${VIEWER TEXT}"]    timeout=45
         Log    Step 7
         Save User    
-        ...    ${server 1}[local auth]    
+        ...    ${server 1}[token]
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[viewer]    
@@ -566,7 +566,7 @@ Force Tags        system    Threaded    users
         Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 8
         Save User    
-        ...    ${server 1}[local auth]    
+        ...    ${server 1}[token]
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[viewer]    
@@ -583,7 +583,7 @@ Force Tags        system    Threaded    users
         
         Log    Step 10
         Save User    
-        ...    ${server 1}[local auth]    
+        ...    ${server 1}[token]
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+newApiUser   
         ...    ${permissions}[advancedViewer]    
@@ -622,7 +622,7 @@ Force Tags        system    Threaded    users
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     Log    Preconditions
-    @{local users} =   Reset Local Users    ${server 2['local auth']}    https://${QA BURBANK IP}:${server 2['port']}
+    @{local users} =   Reset Local Users    ${server 2['local auth']}    ${server 2}[token]   https://${QA BURBANK IP}:${server 2['port']}
     ${results}    Execute Command    docker container stop ${server 2['name']}
     Log In    ${server 1['owner']}    ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 2['cloud id']}

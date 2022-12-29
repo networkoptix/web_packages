@@ -184,7 +184,7 @@ Web Admin Suite Setup
     #Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
     #Click Link    //header//a/span[text()="Log Out"]/..
 
-    @{local users}=   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    password=${password}
+    @{local users}=   Reset Local Users    ${server auth}    ${server 1}[token]    https://${QA BURBANK IP}:${server 1}[port]    password=${password}
     Set Suite Variable    ${admin}          Local+${local users[1]}
     Set Suite Variable    ${viewer}         Local+${local users[4]}
     Set Suite Variable    ${live viewer}    Local+${local users[3]}

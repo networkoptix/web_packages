@@ -675,12 +675,12 @@ Force Tags        merge
     ${all systems user}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
 
     ${auth}=   Create List    admin    ${BASE PASSWORD}
-    Save User     ${auth}    https://${QA BURBANK IP}:${system 1}[port]    sys1_admin    ${permissions}[cloudAdmin]    ${sys 1 admin}    sys1 admin    ${BASE PASSWORD}
-    Save User     ${auth}    https://${QA BURBANK IP}:${system 2}[port]    sys2_adv    ${permissions}[advancedViewer]    ${sys 2 adv viewer}    sys2 adv    ${BASE PASSWORD}
-    Save User     ${auth}    https://${QA BURBANK IP}:${system 3}[port]    sys3_custom    ${permissions}[custom]    ${sys 3 custom}    sys3 custom    ${BASE PASSWORD}
-    Save User     ${auth}    https://${QA BURBANK IP}:${system 1}[port]    all_sys    ${permissions}[cloudAdmin]    ${all systems user}    all sys    ${BASE PASSWORD}
-    Save User     ${auth}    https://${QA BURBANK IP}:${system 2}[port]    all_sys    ${permissions}[advancedViewer]    ${all systems user}    all sys    ${BASE PASSWORD}
-    Save User     ${auth}    https://${QA BURBANK IP}:${system 3}[port]    all_sys    ${permissions}[custom]    ${all systems user}    all sys    ${BASE PASSWORD}
+    Save User     ${system 1}[token]    https://${QA BURBANK IP}:${system 1}[port]    sys1_admin    ${permissions}[cloudAdmin]    ${sys 1 admin}    sys1 admin    ${BASE PASSWORD}
+    Save User     ${system 2}[token]    https://${QA BURBANK IP}:${system 2}[port]    sys2_adv    ${permissions}[advancedViewer]    ${sys 2 adv viewer}    sys2 adv    ${BASE PASSWORD}
+    Save User     ${system 3}[token]    https://${QA BURBANK IP}:${system 3}[port]    sys3_custom    ${permissions}[custom]    ${sys 3 custom}    sys3 custom    ${BASE PASSWORD}
+    Save User     ${system 1}[token]    https://${QA BURBANK IP}:${system 1}[port]    all_sys    ${permissions}[cloudAdmin]    ${all systems user}    all sys    ${BASE PASSWORD}
+    Save User     ${system 2}[token]    https://${QA BURBANK IP}:${system 2}[port]    all_sys    ${permissions}[advancedViewer]    ${all systems user}    all sys    ${BASE PASSWORD}
+    Save User     ${system 3}[token]    https://${QA BURBANK IP}:${system 3}[port]    all_sys    ${permissions}[custom]    ${all systems user}    all sys    ${BASE PASSWORD}
 
     Log    Step 1: Merge System 1(primary) with System 2(secondary), check users
     Log In    ${owner email}    ${BASE PASSWORD}

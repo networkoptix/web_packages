@@ -112,7 +112,7 @@ class ServerAPI5(ServerAPI):
 
     @keyword
     def save_user(self,
-        auth,
+        token,
         serverUrl,
         name,
         permissions,
@@ -143,14 +143,14 @@ class ServerAPI5(ServerAPI):
             body["type"] = "local"
         if userRoleId:
             body["id"]=userRoleId
-        with requests.session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            if patch:
-                r = s.patch(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
-            else:
-                r = s.post(f'{serverUrl}/rest/v1/users', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
-            return r.json()
+        # with requests.session() as s:
+        #     credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+        #     s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+        if patch:
+            r = requests.patch(f'{serverUrl}/rest/v1/users/{userId}', headers={"x-runtime-guid": token}, json=body, verify=False)
+        else:
+            r = requests.post(f'{serverUrl}/rest/v1/users', headers={"x-runtime-guid": token}, json=body, verify=False)
+        return r.json()
 
     @keyword
     def remove_user(self, auth, serverUrl, userId):
@@ -528,7 +528,7 @@ class ServerAPI5(ServerAPI):
         return p.text
 
     @keyword
-    def save_user_existing_legacy(self, auth, serverUrl, name, permissions, email, userRoleId, userId, isEnabled=True):
+    def save_user_existing_legacy(self, token, serverUrl, name, permissions, email, userRoleId, userId, isEnabled=True):
         body = {
             "email": email,
             "name": name,
@@ -538,9 +538,7 @@ class ServerAPI5(ServerAPI):
             "id": userId,
             "userRoleId": userRoleId
         }
-        credentials = {"username": auth[0], "password": auth[1], "setCookie": False}
-        t = requests.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-        r = requests.post(f'{serverUrl}/ec2/saveUser', headers={"x-runtime-guid": t.json()['token']}, json=body, verify=False)
+        r = requests.post(f'{serverUrl}/ec2/saveUser', headers={"x-runtime-guid": token}, json=body, verify=False)
         return r.json()
 
     @keyword

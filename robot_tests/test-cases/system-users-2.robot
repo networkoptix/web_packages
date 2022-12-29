@@ -50,8 +50,8 @@ Force Tags        system    Threaded    users
     #${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
     ${user 1}=   Register and activate account with random email    firstName    lastName    ${password}
     ${user 2}=   Register and activate account with random email    firstName    lastName    ${password}
-    Save User    ${server 2['local auth']}    https://${QA BURBANK IP}:${server 2['port']}    ${user 1}    ${ACCESS ROLES}[viewer]    ${user 1}    Mark Hamil    ${password}    
-    Save User    ${server 2['local auth']}    https://${QA BURBANK IP}:${server 2['port']}    ${user 2}    ${ACCESS ROLES}[viewer]    ${user 2}    Mark Hamil2    ${password}    
+    Save User    ${server 2['token']}    https://${QA BURBANK IP}:${server 2['port']}    ${user 1}    ${ACCESS ROLES}[viewer]    ${user 1}    Mark Hamil    ${password}
+    Save User    ${server 2['token']}    https://${QA BURBANK IP}:${server 2['port']}    ${user 2}    ${ACCESS ROLES}[viewer]    ${user 2}    Mark Hamil2    ${password}
     #Share    ${auth}    ${server 2['sysId']}    ${ACCESS ROLES}[viewer]    ${user email}
     #Share    ${auth}    ${server 2['sysId']}    ${ACCESS ROLES}[viewer]    ${user 2 email}
     # Make the system offline
@@ -64,7 +64,7 @@ Force Tags        system    Threaded    users
     Log    C41898: Step 1
     Go To    ${url}/systems/${server 2['cloud id']}
     IF    '''${mode}'''=='''cloud'''    
-        Log In    ${user 1}    ${password}    button=None
+        Log In    ${user 1}    ${password}    button=None   api=${False}
     ELSE    
         Log In Web Admin    admin    ${password}
     END

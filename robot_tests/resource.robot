@@ -750,7 +750,7 @@ Get the link from email
     [Return]    ${link}
 
 Create Local Users via API
-    [Arguments]    ${auth}    ${server}    ${locals}    ${password}
+    [Arguments]    ${token}    ${server}    ${locals}    ${password}
     &{local users} =    Create Dictionary
     &{advancedViewer} =    Create Dictionary
     &{cloudAdmin} =    Create Dictionary
@@ -758,7 +758,7 @@ Create Local Users via API
     &{liveViewer} =    Create Dictionary
     &{viewer} =    Create Dictionary
     FOR    ${user}    IN    @{locals}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
+        Save User    ${token}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
         Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
         Set To Dictionary    ${local users}    ${user}=&{${user}}
     END
@@ -959,7 +959,11 @@ Create Base System
     ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${password}    img=${image}
     # If add users is true add local users.  Add cloud users if both are true.
     @{local users}=    Get Dictionary Keys    ${role names}
-    ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${password}
+
+    ${token} =  Get Server Token    ${local auth}   https://${QA BURBANK IP}:${server}[port]
+    Set To Dictionary   ${server}   token=${token}
+
+    ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${token}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${password}
     ${cloud users}=    Run Keyword If    $add_users and $owner   Register and Activate Generic Users
     Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
 
@@ -978,8 +982,7 @@ Create Base System
        ...    ELSE    Set To Dictionary    ${server}    cloud users=${None}
 
     # login to server and get access token
-    ${token} =  Get Server Token    ${local auth}   https://${QA BURBANK IP}:${server}[port]
-    Set To Dictionary   ${server}   token=${token}
+
 
     [Return]    ${server}
 
@@ -1487,7 +1490,7 @@ Enable Cloud User via API
                 IF    '${local}[email]' == '${user}[accountEmail]'
                     Set Test Variable    ${name}   ${local}[email]
                     ${response} =   Save User Existing Legacy
-                    ...    auth=${server 1}[local auth]
+                    ...    token=${server}[token]
                     ...    serverUrl=https://${QA BURBANK IP}:${server}[port]
                     ...    name=${local}[name]
                     ...    permissions=${local}[permissions]

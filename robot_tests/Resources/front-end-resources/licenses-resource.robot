@@ -24,7 +24,7 @@ LM Suite Set Up
 
     FOR    ${role}    IN    @{LM USERS.keys()}
         Save User
-            ...    ${LOCAL AUTH}
+            ...    ${system 1}[token]
             ...    https://${QA BURBANK IP}:${system 1}[port]
             ...    ${LM USERS}[${role}]
             ...    ${permissions}[${role}]

@@ -323,7 +323,7 @@ Modify All Local User Info
     [Return]    ${new local}
 
 Reset Local Users
-    [Arguments]     ${auth}    ${server}    ${local user}=ocal+    ${password}=${BASE PASSWORD}
+    [Arguments]     ${auth}    ${token}   ${server}    ${local user}=ocal+    ${password}=${BASE PASSWORD}
     @{locals} =    Create List
     @{local users} =    Get Dictionary Keys    ${role names}
     @{users} =    Get Users     ${auth}    ${server}
@@ -343,19 +343,19 @@ Reset Local Users
     ${count} =    Get Length    ${locals}
     ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    5
     IF    ${status}==${true}
-        Reset Local Users API    ${locals}    ${auth}    ${server}
+        Reset Local Users API    ${locals}    ${token}    ${server}
     ELSE
-        Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
+        Create New Local Users    ${count}    ${auth}    ${server}   ${token}  ${local users}    ${locals}     ${password}
     END
     [Return]    ${local users}
 
 Create New Local Users
-    [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}    ${password}
+    [Arguments]    ${count}    ${auth}    ${server}    ${token}   ${local users}    ${locals}    ${password}
     IF    ${count}==0
-        Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+        Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
     ELSE
         Delete All Local Users via API    ${auth}    ${server}    ${locals}
-        Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+        Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
     END
 
 Delete All Local Users via API
@@ -365,7 +365,7 @@ Delete All Local Users via API
     END
 
 Reset Local Users API
-    [Arguments]    ${locals}    ${auth}    ${server}
+    [Arguments]    ${locals}    ${token}    ${server}
     FOR    ${user}    IN    @{locals}
         ${name} =    Remove String    ${user}[name]    _changed
         ${variable} =    Get Substring    ${name}    6
@@ -373,7 +373,7 @@ Reset Local Users API
         ...    '${variable}' == 'liveviewer'    liveViewer
         ...    '${variable}' == 'advancedviewer'    advancedViewer
         ...    ${variable}
-        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}   patch=${True}
+        Save User    ${token}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}   patch=${True}
     END
 
 Check Special Hints
