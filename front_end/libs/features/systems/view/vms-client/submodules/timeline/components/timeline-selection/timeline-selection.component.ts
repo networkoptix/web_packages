@@ -249,16 +249,8 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 this.selectionStatus.range.duration,
             );
 
-            const canvas = this.timeline.canvasGeometry;
+            const canvasWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
             const range = this.left + this.duration;
-            // right ear
-            if (this.rightEarView) {
-                this.rightEarView.nativeElement.style.right = `${-WNM}px`;
-                if (range >= canvas.width - WNM) {
-                    const padding = canvas.width - range - WNM;
-                    this.rightEarView.nativeElement.style.right = `${-WNM - padding}px`;
-                }
-            }
 
             // left ear
             if (this.leftEarView) {
@@ -269,16 +261,25 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 }
             }
 
+            // right ear
+            if (this.rightEarView) {
+                this.rightEarView.nativeElement.style.right = `${-WNM}px`;
+                if (range >= canvasWidth - WNM) {
+                    const padding = canvasWidth - range - WNM;
+                    this.rightEarView.nativeElement.style.right = `${-WNM - padding}px`;
+                }
+            }
+
             this.selectedRangeView.nativeElement.style.left = `${this.left}px`;
             this.selectedRangeView.nativeElement.style.width = `${this.duration}px`;
-            this.leftEarView?.nativeElement.classList.toggle(
-                'playback',
-                this._leftEarOverPlayback,
-            );
-            this.rightEarView?.nativeElement.classList.toggle(
-                'playback',
-                this._rightEarOverPlayback,
-            );
+            // this.leftEarView?.nativeElement.classList.toggle(
+            //     'playback',
+            //     this._leftEarOverPlayback,
+            // );
+            // this.rightEarView?.nativeElement.classList.toggle(
+            //     'playback',
+            //     this._rightEarOverPlayback,
+            // );
         } else if (this.selectedRangeView) {
             this.selectedRangeView.nativeElement.classList.remove('active');
         }
@@ -318,9 +319,9 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         let offset;
 
         if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
-            const canvas = this.timeline.canvasGeometry;
+            const canvasWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
             const range = this.left + this.duration;
-            offset = canvas.width - range - WNM;
+            offset = canvasWidth - range - WNM;
 
             this.tl = MARGIN;
             this.tr = ARROW_WIDTH;
