@@ -270,7 +270,7 @@ class ContextProcessor:
             content = self.process_global_contexts(content, language=language)
 
         # If json -> dump it to string
-        if type(content) == dict:
+        if isinstance(content, (dict, list)):
             content = json.dumps(content, indent=4, separators=(',', ': '))
 
         return content
