@@ -116,7 +116,7 @@ http {
 
         location ~* /ngsw-worker\.js$ {
             add_header Content-Security-Policy "default-src *; script-src *; img-src *; style-src *; font-src *; frame-src * cox-vms://* demo-vms://* dtv-vms://* dw-vms://* ez-vms://* fly-vms://* hanwha-vms://* mvss-vms://* nvision-vms://* nx-vms://* pcms-vms://* qulu-vms://* ras-vms://* sentry-vms://* sk-vms://* https://*; connect-src * https://www.googletagmanager.com; object-src *; media-src *";
-            try_files /static/scripts/ngsw-worker.js =404;
+            try_files /static/ngsw-worker.js =404;
         }
 
         location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$|.*\.otf$|.*\.ttf$|.*\.woff$|.*\.woff2$|.*\.eot$ {
