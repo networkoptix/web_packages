@@ -862,7 +862,7 @@
         "systemList": "System List",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "home",
                 "nodes": [
                     {
                         "displayName": "Welcome To %CLOUD_NAME%"

@@ -10,7 +10,13 @@
     height: 100%;
     background-color: var(--mobile-header-bg);
     width: 100%;
-    z-index: 3;
+    z-index: 40;
+
+    &.tablet {
+        width: 50%;
+        right: 0px;
+        height: calc(100% - 60px);
+    }
 
     .menu-items-container {
         padding-bottom: 88px;

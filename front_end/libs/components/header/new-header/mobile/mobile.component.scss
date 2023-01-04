@@ -1,6 +1,5 @@
 @use "theme_variables_common" as *;
 
-
 .mobile-header {
     display: flex;
     width: 100%;
@@ -10,7 +9,15 @@
     border-bottom: 1px solid var(--mobile-header-border-one);
 
     &.open {
+        z-index: 99;
+        position: absolute;
+        right: 0px;
+        top: 0px;
         background-color: var(--mobile-header-bg);
+        &.tablet {
+            width: 50%;
+            right: 0px;
+        }
     }
 
     .user-section {

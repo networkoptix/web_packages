@@ -7,17 +7,6 @@
         [ngSwitch]="logoState"
     >
         <div
-            *ngSwitchCase="'systems'"
-            class="system-list"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{ 'width.px': '24' }"
-                [src]="icons.dir + 'system.svg'"
-            ></svg-icon>
-            {{ systemListText }}
-        </div>
-        <div
             *ngSwitchCase="'system'"
             class="current-system-display"
         >

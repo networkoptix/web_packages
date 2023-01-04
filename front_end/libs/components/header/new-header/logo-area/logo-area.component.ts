@@ -49,9 +49,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
 
     checkLogoState(currentLocation): void {
         let newLogoState = logoAreaState.LOGO;
-        if (currentLocation?.path === '/systems') {
-            newLogoState = logoAreaState.SYSTEMS;
-        } else if (this.headerService.activeSystem && currentLocation?.path?.includes('/systems/')) {
+        if (this.headerService.activeSystem && currentLocation?.path?.includes('/systems/')) {
             newLogoState = logoAreaState.SYSTEM;
         }
         if (this.isMobile) {

@@ -273,17 +273,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 this.headerService.setLocation(this.window.location.pathname);
-                if (this.newHeader) {
-                    if (this.loginState) {
-                        const systemNode = this.menusService.makeSystemMenuNode();
-                        const accountNode = this.menusService.makeAccountSettingsNode();
-                        nodes.unshift(systemNode);
-                        nodes.push(accountNode);
-                    } else {
-                        nodes.unshift(this.menusService.makeWelcomeNode());
-                    }
+                if (this.newHeader && !this.loginState) {
+                    nodes.unshift(this.menusService.makeWelcomeNode());
                 }
-
                 this.headerService.nodes = nodes;
 
                 this.headerService.setLocation(this.window.location.pathname);
@@ -386,6 +378,19 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.loginState = true;
                     this.renderer.removeClass(this.document.body, 'anonymous');
                     this.renderer.addClass(this.document.body, 'authorized');
+                    if (this.newHeader) {
+                        const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
+                        const systemLang = this.LANG.appHeader.headerMenuNodes.system;
+                        if (this.headerService.nodes[0].name !== systemLang.displayName) {
+                            if (this.headerService.nodes[0].name === welcomeLang.displayName) {
+                                this.headerService.nodes.shift();
+                            }
+                            const systemNode = this.menusService.makeSystemMenuNode();
+                            const accountNode = this.menusService.makeAccountSettingsNode();
+                            this.headerService.nodes.unshift(systemNode);
+                            this.headerService.nodes.push(accountNode);
+                        }
+                    }
                     if (!this.environment.isLocal) {
                         setTimeout(() => {
                             this.systemsService

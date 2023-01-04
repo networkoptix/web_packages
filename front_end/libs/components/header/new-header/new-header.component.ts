@@ -71,7 +71,7 @@ export class NxNewHeaderComponent {
         });
 
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
-            this.isMobile$.next(width < GridBreakpoints.SM);
+            this.isMobile$.next(width < GridBreakpoints.MD);
         });
 
         if (router.url === '/') {

@@ -23,6 +23,7 @@ export class NxMobileHeaderMenuComponent {
   @Input() selectedNode: MenuNode;
   @Input() loggedIn: boolean = false;
   @Input() isProfile: boolean = false;
+  @Input() isTablet: boolean = false;
   @Output() nodeClicked = new EventEmitter<boolean>();
   profileMenu: MenuNode[];
   currentSystemMenu: MenuNode;

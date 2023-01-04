@@ -1,4 +1,7 @@
-<div class="menu-container">
+<div
+    class="menu-container"
+    [ngClass]="{ tablet: isTablet }"
+>
     <div
         class="menu-items-container"
         *ngIf="!isProfile; else profile"

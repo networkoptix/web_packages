@@ -42,14 +42,10 @@
 
                 &:hover {
                     cursor: pointer;
-                    border-bottom: 2px solid var(--header-level-two-hover-border-color);
                 }
-
-                padding-bottom: 16px;
 
                 &.active {
                     color: var(--light4);
-                    border-bottom: 2px solid var(--brand_core);
                     .active-border {
                         display: block;
                         margin-top: 16px;

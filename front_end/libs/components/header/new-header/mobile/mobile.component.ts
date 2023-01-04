@@ -3,9 +3,10 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
 import { icons } from '@lib/variables/static-variables';
-import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { GridBreakpoints } from '@styles/theme-variables-common';
 import { NgChanges } from '@utils/ng-changes';
 
 import { mobileIconState } from '../new-header-types';
@@ -21,17 +22,22 @@ export class NxHeaderMobileComponent {
     @Input() menuNodes: MenuNode[] = [];
     menuOpen$ = new BehaviorSubject(false);
     isProfile$ = new BehaviorSubject(false);
+    isTablet$ = new BehaviorSubject(false);
     currentSystemMenu: MenuNode;
     iconState: mobileIconState;
     icons = icons;
     constructor(public headerService: NxHeaderService,
-        menusService: NxMenusService) {
+        scrollMechanics: NxScrollMechanicsService) {
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.setIconState(this.loggedIn, currentLocation?.path);
         });
 
         this.menuOpen$.pipe(untilDestroyed(this)).subscribe(() => {
             this.setIconState(this.loggedIn, this.headerService.currentLocation?.path);
+        });
+
+        scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
+            this.isTablet$.next(width < GridBreakpoints.MD && width > GridBreakpoints.SM);
         });
     }
 

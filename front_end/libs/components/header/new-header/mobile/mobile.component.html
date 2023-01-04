@@ -1,8 +1,35 @@
 <div
     class="mobile-header"
-    [ngClass]="{ open: (menuOpen$ | async) }"
+    [ngClass]="{ tablet: (isTablet$ | async) }"
 >
-    <ng-container *ngTemplateOutlet="headerLeftIcon"></ng-container>
+    <ng-container
+        *ngTemplateOutlet="
+            headerLeftIcon;
+            context: { none: (isTablet$ | async) && (menuOpen$ | async) }
+        "
+    ></ng-container>
+    <nx-header-logo-area
+        class="logo"
+        [isMobile]="true"
+        [isProfile]="isProfile$ | async"
+        [menuOpen]="(isTablet$ | async) ? false : (menuOpen$ | async)"
+    ></nx-header-logo-area>
+    <svg-icon
+        (click)="toggleMenuOpen()"
+        *ngIf="!(menuOpen$ | async); else closeButton"
+        class="menu-button"
+        nx-add-svg-src
+        [src]="icons.dirHeader + 'menu.svg'"
+        [svgStyle]="{ 'width.px': '32', 'height.px': '32' }"
+    >
+    </svg-icon>
+</div>
+<div
+    *ngIf="menuOpen$ | async"
+    class="mobile-header open"
+    [ngClass]="{ tablet: (isTablet$ | async) }"
+>
+    <ng-container *ngTemplateOutlet="headerLeftIcon; context: { none: false }"></ng-container>
     <nx-header-logo-area
         class="logo"
         [isMobile]="true"
@@ -23,57 +50,60 @@
     *ngIf="menuOpen$ | async"
     [menuNodes]="menuNodes"
     [isProfile]="isProfile$ | async"
+    [isTablet]="isTablet$ | async"
     [loggedIn]="loggedIn"
     (nodeClicked)="toggleMenuOpen()"
 ></nx-mobile-menu>
 
 <ng-template
     #headerLeftIcon
-    [ngSwitch]="iconState"
+    let-none="none"
 >
-    <a
-        *ngSwitchCase="'createAccount'"
-        [href]="headerService.createUrl"
-    >
+    <ng-container [ngSwitch]="none ? 'none' : iconState">
+        <a
+            *ngSwitchCase="'createAccount'"
+            [href]="headerService.createUrl"
+        >
+            <svg-icon
+                class="user-section"
+                nx-add-svg-src
+                [src]="icons.dirHeader + 'add_user.svg'"
+                [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
+            >
+            </svg-icon>
+        </a>
         <svg-icon
+            *ngSwitchCase="'profile'"
             class="user-section"
             nx-add-svg-src
-            [src]="icons.dirHeader + 'add_user.svg'"
+            (click)="openProfile()"
+            [src]="icons.dirHeader + 'user.svg'"
             [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
         >
         </svg-icon>
-    </a>
-    <svg-icon
-        *ngSwitchCase="'profile'"
-        class="user-section"
-        nx-add-svg-src
-        (click)="openProfile()"
-        [src]="icons.dirHeader + 'user.svg'"
-        [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
-    >
-    </svg-icon>
-    <svg-icon
-        *ngSwitchCase="'returnToSystems'"
-        (click)="headerService.handleNav({ url: '/systems', new_window: false }, $event)"
-        class="user-section"
-        nx-add-svg-src
-        [src]="icons.dirHeader + 'return_to_systems.svg'"
-        [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
-    >
-    </svg-icon>
-    <svg-icon
-        *ngSwitchCase="'return'"
-        (click)="toggleMenuOpen()"
-        class="user-section back-arrow"
-        nx-add-svg-src
-        [src]="icons.dir + 'arrow_back.svg'"
-        [svgStyle]="{ 'width.px': '27', 'height.px': '20' }"
-    >
-    </svg-icon>
-    <span
-        class="none"
-        *ngSwitchCase="'none'"
-    ></span>
+        <svg-icon
+            *ngSwitchCase="'returnToSystems'"
+            (click)="headerService.handleNav({ url: '/systems', new_window: false }, $event)"
+            class="user-section"
+            nx-add-svg-src
+            [src]="icons.dirHeader + 'return_to_systems.svg'"
+            [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
+        >
+        </svg-icon>
+        <svg-icon
+            *ngSwitchCase="'return'"
+            (click)="toggleMenuOpen()"
+            class="user-section back-arrow"
+            nx-add-svg-src
+            [src]="icons.dir + 'arrow_back.svg'"
+            [svgStyle]="{ 'width.px': '27', 'height.px': '20' }"
+        >
+        </svg-icon>
+        <span
+            class="none"
+            *ngSwitchCase="'none'"
+        ></span>
+    </ng-container>
 </ng-template>
 
 <ng-template #profileButton>
