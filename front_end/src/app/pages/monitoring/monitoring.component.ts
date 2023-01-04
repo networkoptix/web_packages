@@ -22,6 +22,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 import { Content } from '../../menu/menu.types';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxPageService } from '../../services/page.service';
 
 import { NxMonitoringService } from './monitoring.service';
 
@@ -48,6 +49,7 @@ export class NxMonitoringComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private pageService: NxPageService,
         private route: ActivatedRoute,
         private menuService: NxMenuService,
         private sourceService: NxAppSourceService,
@@ -57,6 +59,8 @@ export class NxMonitoringComponent implements OnInit {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+
+        this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
 
         this.content = {
             base: '',
@@ -80,6 +84,9 @@ export class NxMonitoringComponent implements OnInit {
         this.menuService.selectedSectionSubject
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
+                setTimeout(() => {
+                    this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
+                });
                 if (this.content.selectedSection === selection) {
                     return;
                 }

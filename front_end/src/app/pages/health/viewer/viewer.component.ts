@@ -29,6 +29,7 @@ import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
+import { NxPageService } from '../../../services/page.service';
 import { NxHealthService } from '../health.service';
 
 @UntilDestroy()
@@ -64,6 +65,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        pageService: NxPageService,
         private appStateService: NxAppStateService,
         private router: Router,
         private uriService: NxUriService,
@@ -75,6 +77,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+
+        pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     ngOnInit(): void {

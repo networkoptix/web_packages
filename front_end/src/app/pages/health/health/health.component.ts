@@ -33,6 +33,7 @@ import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@src/language_i18n_static_types';
 
+import { NxPageService } from '../../../services/page.service';
 import { NxHealthService } from '../health.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -66,6 +67,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        pageService: NxPageService,
         private accountService: NxAccountService,
         private appStateService: NxAppStateService,
         private systemService: NxSystemService,
@@ -82,6 +84,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+
+        pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     private cleanUp(): void {

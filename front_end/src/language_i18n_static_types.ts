@@ -964,6 +964,8 @@ export interface PageTitles {
     apiTool:                (params?: Record<string, string | number>) => string;
     security:               (params?: Record<string, string | number>) => string;
     twofaRequired:          (params?: Record<string, string | number>) => string;
+    information:            (params?: Record<string, string | number>) => string;
+    monitoring:             (params?: Record<string, string | number>) => string;
 }
 
 export interface Pages {
