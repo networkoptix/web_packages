@@ -116,7 +116,7 @@ async def receiving(cloud_connector):
         elif action != 'list_groups':
             res = {'msg': 'Please send data in a json format', 'error': 400}
 
-        if res:
+        if action != 'list_groups':
             return_data = {
                 'action': action or 'error',
                 'data': res
