@@ -654,11 +654,11 @@ export class NxDialogsService extends DialogBase {
     /* ANGULAR CDK DIALOGS */
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
-        customconfig?: CdkDialogConfig<D>
+        customconfig: CdkDialogConfig<D> = {}
     ): Promise<R> {
         const dialogConfig: CdkDialogConfig<D> = {
             width: DIALOG_SIZE_V2.NORMAL, // Default width
-            ...(customconfig ?? {})
+            ...customconfig
         };
         return firstValueFrom(
             this.cdkDialog.open<R, D>(component, dialogConfig).closed
@@ -673,12 +673,12 @@ export class NxDialogsService extends DialogBase {
      */
     private dialogV2Factory<DT extends Dt.DialogType, CT = unknown>(
         componentPromise: () => Promise<ComponentType<CT>>,
-        customConfig?: CdkDialogConfig<never>,
+        customConfig: CdkDialogConfig<never> = {},
     ): (data: DT['data']) => Promise<DT['return']> {
         return async data => {
             const component = await componentPromise();
             const configWithData: CdkDialogConfig<DT['data']> = {
-                ...(customConfig ?? {}),
+                ...customConfig,
                 data
             };
             return this.openV2(component, configWithData);
@@ -689,11 +689,13 @@ export class NxDialogsService extends DialogBase {
 
     /* Account */
     private async account2fa<A extends TfaAction>(
-        data: Dt.Account2faData<A>
+        data: Dt.Account2faData<A>,
+        config: CdkDialogConfig<never> = {},
     ): Promise<Dt.Account2faReturn> {
         const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
         const configWithData: CdkDialogConfig<Dt.Account2faData<A>> = {
             width: DIALOG_SIZE_V2.SMALL,
+            ...config,
             data
         };
         return this.openV2(component, configWithData);
@@ -714,7 +716,7 @@ export class NxDialogsService extends DialogBase {
         const action = state
             ? TfaAction.CodeOnLoginEnable
             : TfaAction.CodeOnLoginDisable;
-        return this.account2fa({ action });
+        return this.account2fa({ action }, { restoreFocus: false });
     }
 
     account2faNewBackupCodes(): Promise<Dt.Account2faReturn> {

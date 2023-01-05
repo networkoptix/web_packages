@@ -430,7 +430,7 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
         });
     }
 
-    async setTemplate(step): Promise<void> {
+    async setTemplate(step: T_FA_STEPS): Promise<void> {
         await new Promise(resolve => setTimeout(resolve)); // sleep
         this.currentStep = step;
         switch (step) {
@@ -462,6 +462,9 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
                 this.templateType = this.disable2FaCodeTemplate;
                 break;
         }
+        setTimeout(() => {
+            this.elem.nativeElement.querySelector('input')?.focus();
+        });
     }
 
     ngAfterViewInit(): void {
