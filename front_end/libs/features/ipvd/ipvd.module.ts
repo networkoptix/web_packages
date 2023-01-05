@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { ComponentsModule } from '@components/components.module';
@@ -34,6 +35,7 @@ const appRoutes: Routes = [
         CommonModule,
         FormsModule,
         TranslateModule,
+        NgxTranslateCutModule,
         ComponentsModule,
         DirectivesModule,
         PipesModule,

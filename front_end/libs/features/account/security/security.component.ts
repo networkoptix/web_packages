@@ -1,12 +1,8 @@
 import {
-    AfterViewInit,
     Component,
-    ElementRef,
     HostListener,
-    OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,20 +16,14 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
-import {
-    addPseudoAnchor,
-    clearPseudoAnchors,
-    PseudoAnchorTarget,
-    sleep
-} from '@utils/general';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-account-security-component',
     templateUrl: 'security.component.html',
     styleUrls: ['security.component.scss']
 })
-export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NxAccountSecurityComponent implements OnInit {
     LANG = staticLang;
 
     account: Account;
@@ -44,12 +34,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     twoFaSystems: NxSystemInfo[] = [];
     subV5Systems: NxSystemInfo[] = [];
     icons = icons;
-    private targets: PseudoAnchorTarget[] = [];
-
-    @ViewChild('twoFaSystemsSpan') private twoFaSystemsSpan: ElementRef<HTMLSpanElement>;
-    @ViewChild('v5WarningSpan') private v5WarningSpan: ElementRef<HTMLSpanElement>;
-    @ViewChild('popLegend2faTemplate') private popLegend2faTemplate: TemplateRef<unknown>;
-    @ViewChild('popLegendSubV5Template') private popLegendSubV5Template: TemplateRef<unknown>;
 
     constructor(
         private accountService: NxAccountService,
@@ -74,11 +58,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             .subscribe(systems => {
                 this.twoFaSystems = systems.filter(sys => sys.system2faEnabled);
                 this.subV5Systems = systems.filter(sys => !sys.useRest);
-
-                setTimeout(() => {
-                    this.clearPopoverTargets();
-                    this.setPopoverTargets();
-                });
             });
     }
 
@@ -99,46 +78,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             });
     }
 
-    private clearPopoverTargets(): void {
-        this.targets = clearPseudoAnchors(this.targets);
-        this.popoverService.close();
-    }
-
-    private async setPopoverTargets(): Promise<void> {
-        if (this.subV5Systems.length && this.v5WarningSpan) {
-            await sleep();
-            const targetV5 = this.v5WarningSpan.nativeElement
-                .querySelector<HTMLSpanElement>('span#targetV5');
-            addPseudoAnchor(
-                this.targets,
-                targetV5,
-                this.popLegendSubV5Template,
-                'click',
-                this.showPopoverWithTemplate.bind(this)
-            );
-        }
-
-        if (this.twoFaSystems.length && this.twoFaSystemsSpan) {
-            await sleep();
-            const target2FaSystems = this.twoFaSystemsSpan.nativeElement
-                .querySelector<HTMLSpanElement>('span#target2FaSystems');
-            addPseudoAnchor(
-                this.targets,
-                target2FaSystems,
-                this.popLegend2faTemplate,
-                'click',
-                this.showPopoverWithTemplate.bind(this)
-            );
-        }
-    }
-
-    ngAfterViewInit(): void {
-        // popover targets are in ngIf blocks and need to be "translated" first
-        // ... we need to wait before set them
-        setTimeout(() => { this.setPopoverTargets(); });
-    }
-
-    private showPopoverWithTemplate(template: TemplateRef<unknown>, target: HTMLElement): void {
+    showPopoverWithTemplate(template: TemplateRef<unknown>, target: HTMLElement): void {
         if (this.popoverService.close() === target.id) {
             return;
         }
@@ -148,7 +88,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             {
                 panelClass: 'system-popover',
             },
-            this._viewContainerRef);
+            this._viewContainerRef
+        );
     }
 
     @HostListener('document:click', ['$event.target'])
@@ -156,10 +97,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         if (targetElement.className !== 'pseudo-anchor') {
             this.popoverService.close();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.clearPopoverTargets();
     }
 
     switch2FA(targetState: boolean): void {
@@ -174,9 +111,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     this.totpExistsForAccount = newState;
                     this.account2faEnabledCheck = this.account2faEnabled;
                     this.accountService.get(true).catch(_ => { });
-                    setTimeout(() => {
-                        this.setPopoverTargets();
-                    });
                 });
         } else {
             this.dialogs

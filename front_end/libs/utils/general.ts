@@ -2,7 +2,6 @@
 /* General-purpose utility functions not strongly associated with/specialized
 for a particular part of the codebase. No in-house specific types/structures. */
 
-import type { TemplateRef } from '@angular/core';
 import { last, zip } from 'lodash-es';
 import { IStepOption } from 'ngx-ui-tour-md-menu/public_api';
 import { combineLatest, Observable, timer } from 'rxjs';
@@ -242,40 +241,6 @@ export function pickFrom(
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* DOM */
-export interface PseudoAnchorTarget {
-    id: string;
-    target: HTMLElement;
-    eventType: string;
-    handler: (event: Event) => void
-}
-
-/** Create pseudo anchor out of an element and attach an event handler
- * typical usage is element supplied by translations i.e. `Blah <span  id=\"target\">{number}</span>`
- * @param {PseudoAnchorTarget[]} targetArr Array to store current targets  (anchors) ... needed for handlers cleanup
- * @param {HTMLElement} target Element we want to make an anchor
- * @param {TemplateRef} template Template to show or `undefined`
- * @param {string} eventType
- * @param {Function} handler Function to be caller on event ...
- * ... function should be passed bind to `this` (`this.showPopoverWithTemplate. bind(this)`)
- * ... or if specific/no additional params as `() => { this.onFeedbackClick.emit ('page'); }`
- */
-export function addPseudoAnchor(
-    targetArr: PseudoAnchorTarget[],
-    target: HTMLElement,
-    template: TemplateRef<unknown>,
-    eventType: string,
-    handler: (template: TemplateRef<unknown>, target: HTMLElement) => void
-): void {
-    const newTarget: PseudoAnchorTarget = {
-        id: `${target.id}`,
-        target,
-        eventType,
-        handler: event => handler(template, event.target as HTMLElement)
-    };
-    targetArr.push(newTarget);
-    createPseudoAnchor(target, eventType, newTarget.handler);
-}
-
 interface Language {
     [key: string]: Language | string
 }
@@ -293,22 +258,6 @@ export const processLanguageFactory = (customStrings: { [key: string]: string })
     }
     return language;
 };
-
-export function clearPseudoAnchors(targetArr: PseudoAnchorTarget[]): [] {
-    targetArr.forEach(({ target, eventType, handler }) => {
-        target.removeEventListener(eventType, handler);
-    });
-    return [];
-}
-
-function createPseudoAnchor(
-    target: HTMLElement,
-    eventType: string,
-    handler: (e: Event) => void
-): void {
-    target.classList.add('pseudo-anchor');
-    target.addEventListener(eventType, handler);
-}
 
 /* Async */
 /**
@@ -355,8 +304,6 @@ export function staticImplements<T>() {
 export type KeyFilter<T, F> = {
     [K in keyof T]: T[K] extends F ? K : never
 }[keyof T];
-
-export const sleep = (time?: number): Promise<void> => new Promise(resolve => setTimeout(resolve, time));
 
 export const toTranslatable = (value: unknown): TranslatableObject => typeof value === 'string' ? { value } : value as TranslatableObject;
 

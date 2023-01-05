@@ -46,35 +46,34 @@
                 </div>
 
                 <ng-template #enabledText>
-                    <span translate
-                        >Verification code from the authentication app allows you to log in to
-                        systems that require two-factor authentication.</span
-                    >
-
                     <span
-                        class="ml-1"
-                        *ngIf="!twoFaSystems.length"
-                        translate
-                        >Currently you don’t have such systems.</span
+                        *ngIf="
+                            LANG.security.twoFa.twoFADescription
+                                | translate: { count: twoFaSystems.length } as twoFADescription
+                        "
+                        >{{ twoFADescription | translateCut: 0
+                        }}<ng-container *ngIf="!twoFaSystems.length">{{
+                            twoFADescription | translateCut: 1
+                        }}</ng-container
+                        ><span *ngIf="twoFaSystems.length"
+                            ><span
+                                #twoFaSystemCount
+                                id="twoFaSystemCount"
+                                class="pseudo-anchor"
+                                (click)="
+                                    showPopoverWithTemplate(popLegend2faTemplate, twoFaSystemCount)
+                                "
+                                >{{ twoFADescription | translateCut: 1 }}</span
+                            ></span
+                        >{{ twoFADescription | translateCut: 2 }}</span
                     >
-                    <span
-                        class="ml-1"
-                        *ngIf="twoFaSystems.length"
-                    >
-                        <span
-                            #twoFaSystemsSpan
-                            [innerHTML]="
-                                LANG.security.twoFa.twoFADescription
-                                    | translate: { count: twoFaSystems.length }
-                                    | safe: 'html'
-                            "
-                        ></span>
-                    </span>
-                    <span
-                        class="ml-1"
-                        translate
-                        >System owner can change this setting at any time.</span
-                    >
+                    <!-- (0) ...Currently you have -->
+                    <!-- (1) # such systems -->
+                    <!-- (2) . System owner can change this... -->
+                    <!-- Note: (1) is plaintext if # of 2fa systems is 0 -->
+                    <!-- Another note: Popover for (1) doesn't seem to work with
+                    anything Angular on the span itself, so the if check goes on
+                    a parent span instead -->
                 </ng-template>
 
                 <ng-template #popLegend2faTemplate>
@@ -132,16 +131,34 @@
                         >
                             WARNING
                         </h4>
-                        <div class="float-left">
-                            <span
-                                #v5WarningSpan
-                                [innerHTML]="
-                                    LANG.security.twoFa.v5Warning
-                                        | translate: { count: subV5Systems.length }
-                                        | safe: 'html'
+                        <p
+                            class="mb-1"
+                            *ngIf="
+                                LANG.security.twoFa.v5Warning
+                                    | translate: { count: subV5Systems.length } as v5Warning
+                            "
+                        >
+                            {{ v5Warning | translateCut: 0
+                            }}<span
+                                #subV5SystemCount
+                                id="subV5SystemCount"
+                                class="pseudo-anchor"
+                                (click)="
+                                    showPopoverWithTemplate(
+                                        popLegendSubV5Template,
+                                        subV5SystemCount
+                                    )
                                 "
-                            ></span>
-                        </div>
+                                >{{ v5Warning | translateCut: 1 }}</span
+                            >{{ v5Warning | translateCut: 2
+                            }}<strong>{{ v5Warning | translateCut: 3 }}</strong
+                            >{{ v5Warning | translateCut: 4 }}
+                            <!-- (0) You have -->
+                            <!-- (1) # system(s) -->
+                            <!-- (2) w/ version <5.0, these will be inaccessible via -->
+                            <!-- (3) %VMS_NAME% Client -->
+                            <!-- (4) since earlier versions do not support 2FA -->
+                        </p>
                         <p
                             class="mb-0"
                             [innerText]="

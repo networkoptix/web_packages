@@ -7,7 +7,6 @@ import {
     OnInit,
     ViewEncapsulation,
     Inject,
-    OnDestroy,
     AfterViewInit,
     ElementRef,
     ViewChild,
@@ -30,12 +29,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { GridBreakpoints } from '@styles/theme-variables-common';
-import {
-    paramSortFunc,
-    addPseudoAnchor,
-    clearPseudoAnchors,
-    PseudoAnchorTarget,
-} from '@utils/general';
+import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { IpvdParams, Disclaimer, FilteredCamera, csvData } from '../../ipvd.types';
@@ -57,14 +51,14 @@ type CsvData = Record<string, string | number>[];
     styleUrls: ['./cam-table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
+export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     @Input() elements: FilteredCamera[];
     @Input() allowedParameters: string[];
     @Input() activeCamera: Cameras;
     @Input() params: IpvdParams;
 
     @Output() public onRowClick = new EventEmitter<FilteredCamera>();
-    @Output() public onFeedbackClick = new EventEmitter<'page'>();
+    @Output() public onFeedbackClick = new EventEmitter<void>();
 
     public selectedHeader: string;
     public showHeaders: string[];
@@ -77,7 +71,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     private cameraHeaders: string[];
     private beta: boolean;
 
-    targets: PseudoAnchorTarget[] = [];
     currentPage: number = 1;
     pageSize: number;
     pagedItems: FilteredCamera[] = [];
@@ -131,13 +124,10 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     };
 
     @ViewChild('nxScrollWrapper', { static: false })
-    scrollWrapper: ElementRef<HTMLDivElement>;
+    private scrollWrapper: ElementRef<HTMLDivElement>;
 
     @ViewChild('nxTable', { static: false })
-    camerasTable: ElementRef<HTMLDivElement>;
-
-    @ViewChild('ipvdRequest', { static: false })
-    ipvdRequest: ElementRef<HTMLSpanElement>;
+    private camerasTable: ElementRef<HTMLDivElement>;
 
     constructor(
         configService: NxConfigService,
@@ -259,17 +249,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     ngAfterViewInit(): void {
-        if (this.ipvdRequest) {
-            const linkRequest = this.ipvdRequest.nativeElement
-                .querySelector<HTMLSpanElement>('span#request');
-            addPseudoAnchor(
-                this.targets,
-                linkRequest,
-                undefined,
-                'click',
-                () => { this.onFeedbackClick.emit('page'); });
-        }
-
         this.calcElementScrollMechanics();
 
         this.windowScrollSubscription = this.scrollMechanicsService
@@ -293,10 +272,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 const { HEADER_OFFSET } = NxScrollMechanicsService;
                 this.scrollHeight = searchViewHeight + HEADER_OFFSET;
             });
-    }
-
-    ngOnDestroy(): void {
-        this.targets = clearPseudoAnchors(this.targets);
     }
 
     ngOnChanges(changes: NgChanges<CamTableComponent>): void {

@@ -26,7 +26,6 @@ import type {
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import type { MessageParams } from '@dialogs/message/message.component.types';
 import { dialogs, icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -36,12 +35,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import {
-    addPseudoAnchor,
-    clearPseudoAnchors,
-    PseudoAnchorTarget,
-    alphabeticalSort,
-} from '@utils/general';
+import { alphabeticalSort } from '@utils/general';
 
 import { IpvdSearchService } from './ipvd-search.service';
 import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
@@ -58,7 +52,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     LANG = staticLang;
     CONFIG: IConfig;
 
-    targets: PseudoAnchorTarget[] = [];
     placeholder: string = '';
     company: string;
     vmsName: string;
@@ -103,10 +96,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     icons = icons;
 
-    @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef<HTMLDivElement>;
-    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef<HTMLDivElement>;
-    @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef<HTMLDivElement>;
-    @ViewChild('ipvdRequest', { static: false }) ipvdRequest: ElementRef<HTMLSpanElement>;
+    @ViewChild('viewContainer', { static: false }) private viewContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('tableContainer', { static: false }) private tableContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('searchContainer', { static: false }) private searchContainer: ElementRef<HTMLDivElement>;
 
     private setupDefaults(): void {
         this.allowedParameters = [
@@ -235,29 +227,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
     }
 
-    initPseudoAnchors(): void {
-        if (this.ipvdRequest) {
-            this.targets = clearPseudoAnchors(this.targets);
-            const linkRequest = this.ipvdRequest.nativeElement
-                .querySelector<HTMLSpanElement>('span#request');
-            addPseudoAnchor(
-                this.targets,
-                linkRequest,
-                undefined,
-                'click',
-                () => { this.openFeedback('page'); });
-        }
-    }
-
     ngAfterViewInit(): void {
         if (this.searchContainer?.nativeElement) {
             this.scrollMechanicsService.searchViewHeight =
                 this.searchContainer.nativeElement.clientHeight;
         }
-    }
-
-    ngOnDestroy(): void {
-        this.targets = clearPseudoAnchors(this.targets);
     }
 
     findVendorForCamera(name: string): [string] | [] {
@@ -524,10 +498,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.uri.resetURI(this.uriPath, queryParams);
 
                 this.params = queryParams;
-
-                setTimeout(() => {
-                    this.initPseudoAnchors();
-                });
             }
         }
     }
@@ -584,23 +554,23 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }, 500);
     }
 
-    openFeedback(param: 'device' | 'page'): false {
-        const type = (param === 'device')
-            ? dialogs.message.type.ipvd_device
-            : dialogs.message.type.ipvd_page;
-        const device = (param === 'device' && this.activeCamera)
-            ? this.activeCamera.model
-            : '';
-        const data: MessageParams = {
-            disclaimer: this.LANG.privacyPolicy.ipvd,
-            asset: device
-        };
-        this.dialogs
-            .message(this.accountService, type, data)
-            .then(() => {
-            });
+    openPageFeedback(): void {
+        this.dialogs.message(
+            this.accountService,
+            dialogs.message.type.ipvd_page,
+            { disclaimer: this.LANG.privacyPolicy.ipvd, asset: '' }
+        );
+    }
 
-        return false;
+    openDeviceFeedback(): void {
+        this.dialogs.message(
+            this.accountService,
+            dialogs.message.type.ipvd_device,
+            {
+                disclaimer: this.LANG.privacyPolicy.ipvd,
+                asset: this.activeCamera?.model ?? ''
+            }
+        );
     }
 
     resetActiveCamera(skipUpdateURI?: boolean): void {

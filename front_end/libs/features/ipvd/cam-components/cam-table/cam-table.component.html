@@ -106,14 +106,22 @@
             <div *ngIf="pagedItems.length">
                 <p
                     class="m-0"
-                    *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd"
+                    *ngIf="CONFIG.cloudCapabilities.feedbackEnabled"
                     dir="auto"
                 >
-                    <span>{{ LANG.ipvdDisclaimer | translate: disclaimerParams }} </span>
-                    <span
-                        #ipvdRequest
-                        [innerHTML]="LANG.ipvdFeedback.request | translate | safe: 'html'"
-                    ></span>
+                    <ng-container
+                        *ngIf="LANG.ipvd.disclaimer | translate: disclaimerParams as disclaimer"
+                    >
+                        {{ disclaimer | translateCut: 0
+                        }}<span
+                            class="pseudo-anchor"
+                            (click)="onFeedbackClick.emit()"
+                            >{{ disclaimer | translateCut: 1 }}</span
+                        >{{ disclaimer | translateCut: 2 }}
+                        <!-- (0) ...Please -->
+                        <!-- (1) submit a request -->
+                        <!-- (2) for addional quesions/concerns... -->
+                    </ng-container>
                 </p>
                 <button
                     *ngIf="debug"
