@@ -248,9 +248,7 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = escape(
-                this.formatVersion(plugin.versionDetails.version)
-            );
+            plugin.versionDetails.version = this.formatVersion(escape(plugin.versionDetails.version));
         } else {
             plugin.versionDetails = {
                 version: '&nbsp;'
