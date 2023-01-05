@@ -1,21 +1,24 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import dateFormat from 'dateformat';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { pickFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-const DATE_FORMAT_STRING = 'yyyy-MM-dd';
-const TIME_FORMAT_STRING = 'HH:mm:ss';
+const DATE_FORMAT_STRING = 'yyyy-mm-dd';
+const TIME_FORMAT_STRING = 'HH:MM:ss';
 
 @Component({
     selector: 'nx-modal-select-time-range',
     templateUrl: 'select-time-range.component.html',
     styleUrls: ['select-time-range.component.scss'],
 })
-export class SelectTimeRangeModalContent {
+export class SelectTimeRangeModalContent implements OnInit {
+    CONFIG: IConfig;
     LANG = staticLang;
     hideErrors = true;
     startDate: string;
@@ -24,10 +27,12 @@ export class SelectTimeRangeModalContent {
     endTime: string;
 
     selection: TimelineSelectionService;
+    themeClass: string;
 
     @Input() closable = true;
 
     constructor(
+        configService: NxConfigService,
         private dialogRef: DialogRef,
         private vms: VideoManagementSystemService,
         @Inject(DIALOG_DATA)
@@ -36,6 +41,10 @@ export class SelectTimeRangeModalContent {
         },
     ) {
         pickFrom(this.dialogData, ['selection'], this);
+
+        this.CONFIG = configService.getConfig();
+
+        this.themeClass = this.CONFIG.isDarkTheme ? 'dark' : 'light';
     }
 
     public closeModal = $event => {

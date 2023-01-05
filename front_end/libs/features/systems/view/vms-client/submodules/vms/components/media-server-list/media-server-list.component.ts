@@ -52,7 +52,7 @@ export class MediaServerListComponent implements OnChanges {
     }
 
     public ngOnChanges(changes: NgChanges<MediaServerListComponent>) {
-        if (changes._mediaservers.previousValue !== changes._mediaservers.currentValue) {
+        if (changes._mediaservers?.previousValue !== changes._mediaservers?.currentValue) {
             this.processedMediaservers = this._mediaservers || [];
             this.processedMediaservers.sort(alphabeticalSort(this.locale, ms => ms.name));
             this.processedMediaservers.forEach(ms => {

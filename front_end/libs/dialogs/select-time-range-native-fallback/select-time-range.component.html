@@ -32,12 +32,14 @@
             <div class="col-12 px-0">
                 <input
                     class="form-control"
+                    [ngClass]="themeClass"
                     name="start-date"
                     type="date"
                     [(ngModel)]="startDate"
                 />
                 <input
                     class="form-control ml-3"
+                    [ngClass]="themeClass"
                     name="start-time"
                     type="time"
                     [(ngModel)]="startTime"
@@ -54,12 +56,14 @@
             <div class="col-12 px-0">
                 <input
                     class="form-control"
+                    [ngClass]="themeClass"
                     name="end-date"
                     type="date"
                     [(ngModel)]="endDate"
                 />
                 <input
                     class="form-control ml-3"
+                    [ngClass]="themeClass"
                     name="end-time"
                     type="time"
                     [(ngModel)]="endTime"
