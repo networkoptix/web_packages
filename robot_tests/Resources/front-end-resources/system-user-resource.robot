@@ -341,14 +341,14 @@ Create New Local Users
     IF    ${count}==0
         Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
     ELSE
-        Delete All Local Users via API    ${auth}    ${server}    ${locals}
+        Delete All Local Users via API    ${token}    ${server}    ${locals}
         Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
     END
 
 Delete All Local Users via API
-    [Arguments]    ${auth}    ${server}    ${locals}
+    [Arguments]    ${token}    ${server}    ${locals}
     FOR    ${user}    IN    @{locals}
-        Remove User    ${auth}    ${server}    ${user}[id]
+        Remove User    ${token}    ${server}    ${user}[id]
     END
 
 Reset Local Users API
