@@ -48,6 +48,7 @@
             *ngFor="let bookmark of bookmarks; index as i"
             class="bookmarks-container"
             [nxTooltip]="bookmark.description"
+            alternateStyle
             [alternativeTargetRef]="targetThis"
         >
             <div
