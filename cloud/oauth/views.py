@@ -165,7 +165,7 @@ def authenticate(request):
             "Invalid value for response_type. It must be code.", error_code=ErrorCodes.bad_request)
 
     ip = get_ip(request)
-    redirect_uri = get_param(request, "redirect_uri") or "/"
+    redirect_uri = get_param(request, "redirect_uri") or "/systems"
     state = get_param(request, "state")
     scope = get_param(request, "scope")
     email = get_param(request, "email")

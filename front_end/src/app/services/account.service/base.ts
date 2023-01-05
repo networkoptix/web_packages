@@ -422,6 +422,7 @@ export abstract class BaseAccount implements OnDestroy {
                     this.loginSubscription && this.loginSubscription.unsubscribe();
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
+                    this.window.location.reload();
                 })
                 .catch(e => this.handleCodeError(e)
                     .then(reload => reload && this.window.location.reload())
