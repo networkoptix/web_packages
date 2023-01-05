@@ -249,31 +249,32 @@ export class TimelineSelectionService {
                 }
 
                 this._emit();
-            } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
-                const offsetPx = this._getOffsetPx(e) - this._dragAnchorPx;
-                const timeUnderMouse = this.timeline.domOffsetXtoTime(offsetPx);
-                const leftEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse);
-                const rightEdgeFits = this.timeline.archiveRange.contains(
-                    timeUnderMouse + this._selectedRange.duration
-                );
-                if (offsetPx < 0) {
-                    if (leftEdgeFits) {
-                        this._selectedRange.moveStartTo(timeUnderMouse);
-                    } else {
-                        this._selectedRange.moveStartTo(
-                            this.timeline.archiveRange.start
-                        );
-                    }
-                } else if (offsetPx > 0) {
-                    if (rightEdgeFits) {
-                        this._selectedRange.moveStartTo(timeUnderMouse);
-                    } else {
-                        this._selectedRange.moveStartTo(
-                            this.timeline.archiveRange.end - this._selectedRange.duration
-                        );
-                    }
-                }
-                this._emit();
+            // Keep this just in case UX change their mind ... again
+            // } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
+            //     const offsetPx = this._getOffsetPx(e) - this._dragAnchorPx;
+            //     const timeUnderMouse = this.timeline.domOffsetXtoTime(offsetPx);
+            //     const leftEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse);
+            //     const rightEdgeFits = this.timeline.archiveRange.contains(
+            //         timeUnderMouse + this._selectedRange.duration
+            //     );
+            //     if (offsetPx < 0) {
+            //         if (leftEdgeFits) {
+            //             this._selectedRange.moveStartTo(timeUnderMouse);
+            //         } else {
+            //             this._selectedRange.moveStartTo(
+            //                 this.timeline.archiveRange.start
+            //             );
+            //         }
+            //     } else if (offsetPx > 0) {
+            //         if (rightEdgeFits) {
+            //             this._selectedRange.moveStartTo(timeUnderMouse);
+            //         } else {
+            //             this._selectedRange.moveStartTo(
+            //                 this.timeline.archiveRange.end - this._selectedRange.duration
+            //             );
+            //         }
+            //     }
+            //     this._emit();
             } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR) {
                 const offsetPx = this._getOffsetPx(e);
                 const newStart = this.timeline.domOffsetXtoTime(offsetPx);

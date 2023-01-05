@@ -432,6 +432,10 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     @HostListener('mouseleave', ['$event'])
     public mouseLeaveHandler(e: MouseEvent): void {
+        if (!this.selectionMode) {
+            this.hideLeftEar = true;
+            this.hideRightEar = true;
+        }
         this.selection.handleMouseLeave(e);
         this.timeUnderMouse.handleMouseLeave(e);
     }
@@ -440,6 +444,11 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     public mouseMoveHandler(e: MouseEvent): void {
         this._lastMouseMoveEvent = e;
         this.updateMouseMoveEvent(e);
+    }
+
+    @HostListener('dblclick', ['$event'])
+    public selectedRangeDoubleClickHandler(e: MouseEvent): void {
+        this.selection.reset();
     }
 
     private updateMouseMoveEvent(e: MouseEvent) {
@@ -456,23 +465,6 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             this.hideLeftEar = this.selection.range.duration === 0;
             this.hideRightEar = this.selection.range.duration === 0;
         }
-    }
-
-    public selectedRangeMouseLeaveHandler(e: MouseEvent): void {
-        if (!this.selectionMode) {
-            this.hideLeftEar = true;
-            this.hideRightEar = true;
-        }
-    }
-
-    public selectedRangeMouseDownHandler(e: MouseEvent): void {
-        this.selectionMode = true;
-        this.selectedRangeView.nativeElement.classList.add('range-drag');
-        this.selection.handleSelectedRangeMouseDown(e);
-    }
-
-    public selectedRangeDoubleClickHandler(e: MouseEvent): void {
-        this.selection.reset();
     }
 
     public leftEarMouseDownHandler(e: MouseEvent): void {

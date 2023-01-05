@@ -37,6 +37,7 @@ const CANVAS_SELECTION_OFFSET_START = 60;
 const CANVAS_SELECTION_OFFSET_END = 85;
 const MOUSE_MINIMAL_MOVE_PX = 2;
 const MOUSE_HIDE_UNTIL_PX = 8;
+const MOUSE_MOVE_DT_LIMIT = 99999999;
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
@@ -181,22 +182,29 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.selection.handleMouseMove(e as MouseEvent)) {
             return;
         }
+
         const screenX = calcScreenX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
+
         if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
             // console.log('dragging started', delta);
             this.isDragging = true;
         }
+
         if (this.isDragging) {
             const dt =
                 -1 *
                 this.timeline.domWidthToDuration(
                     screenX - this._mouseDownScreenX,
                 );
-            // console.log('dragging in progress', dt)
-            this.timeline.shiftVisibleRange(dt);
+            // short circuit unrealistically big "dt"
+            // and prevent timeline jump when dragging
+            if (Math.abs(dt) < MOUSE_MOVE_DT_LIMIT) {
+                this.timeline.shiftVisibleRange(dt);
+            }
             this._mouseDownScreenX = screenX;
         }
+
         if (delta > MOUSE_HIDE_UNTIL_PX && this.hideTimeUnderMouse) {
             this.hideTimeUnderMouse = false;
         }
@@ -248,20 +256,49 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 offsetY <= CANVAS_SELECTION_OFFSET_END
             ) {
                 this.selection.handleBackgroundMouseDown(e as MouseEvent);
-            } else {
-                this.selection.reset();
-                this._mouseDownScreenX = calcScreenX(e);
-                this.timeUnderMouse.handleMouseDown();
             }
         } else {
             this._mouseDownScreenX = calcScreenX(e);
-            this.timeUnderMouse.handleMouseDown();
         }
+        this.timeUnderMouse.handleMouseDown();
         this._mouseNotReleasedYet = true;
         this.clickAndHoldHandler = setTimeout(() => {
             this.isDragging = true;
             clearTimeout(this.clickAndHoldHandler);
         }, CLICK_AND_HOLD_TIMEOUT);
+    }
+
+    public canvasMouseUpHandler(
+        e: MouseEvent | TouchEvent,
+        mustPlay: boolean = false,
+    ): void {
+        e.stopPropagation();
+        e.preventDefault();
+
+        this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
+
+        if (!this.isDragging) {
+            if (!mustPlay && this.archiveSelectionEnabled) {
+                mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
+            }
+            this.selection.reset();
+            this._mouseDownScreenX = calcScreenX(e);
+            this.timeUnderMouse.handleMouseDown();
+
+            const screenX = calcScreenX(e);
+            const offsetX = calcOffsetX(e);
+            const delta = Math.abs(screenX - this._mouseDownScreenX);
+
+            mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
+            if (mustPlay) {
+                this._play(offsetX);
+            }
+        }
+
+        this._mouseDownScreenX = 0;
+        this._mouseNotReleasedYet = false;
+        this.isDragging = false;
+        this.timeUnderMouse.handleMouseUp();
     }
 
     protected _play(offsetX): void {
@@ -288,36 +325,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 true,
             );
         }
-    }
-
-    public canvasMouseUpHandler(
-        e: MouseEvent | TouchEvent,
-        mustPlay: boolean = false,
-    ): void {
-        e.stopPropagation();
-        e.preventDefault();
-
-        this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
-
-        if (!this.isDragging) {
-            if (!mustPlay && this.archiveSelectionEnabled) {
-                mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
-            }
-            const screenX = calcScreenX(e);
-            const offsetX = calcOffsetX(e);
-            const delta = Math.abs(screenX - this._mouseDownScreenX);
-            // console.log('mouse up', e.screenX, delta)
-            mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
-            if (mustPlay) {
-                this._play(offsetX);
-
-                // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
-            }
-        }
-
-        this._mouseNotReleasedYet = false;
-        this.isDragging = false;
-        this.timeUnderMouse.handleMouseUp();
     }
 
     @HostListener('document:mouseup', ['$event'])
