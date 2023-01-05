@@ -154,9 +154,10 @@ class SearchableCache(BaseCache):
             self['last_updated'] = time.time()
 
     # @ignore_index_not_found
-    def clear_cache(self):
-        super().clear_cache()
-        if not settings.TESTING:
+    def clear_cache(self, immediate=False):
+        if immediate:
+            super().clear_cache()
+        elif not settings.TESTING:
             try:
                 if self.search_index:
                     self.search_index.delete_all_documents()
