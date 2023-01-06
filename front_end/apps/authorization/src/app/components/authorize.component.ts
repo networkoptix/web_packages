@@ -254,7 +254,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
 
             // Add backwards support for redirect_url. If redirect_uri exists it should take priority.
-            this.initialData.redirect_uri ||= this.initialData.redirect_url || '';
+            this.initialData.redirect_uri ||= this.initialData.redirect_url || '/systems';
 
             const { access_token, access_code, code, email, redirect_uri } = this.initialData;
             const skipTo2FaClientTypes = [
