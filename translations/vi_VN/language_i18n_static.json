@@ -1079,8 +1079,8 @@
     },
     "systemGroups": {
         "root": "Gốc",
-        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
-        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "groupCount": "{count, plural, =0{# Nhóm} one{# Nhóm} other{# Nhóm}}",
+        "systemCount": "{count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
         "connectionLost": "Mất kết nối, đang kết nối lại...",
         "connectionRestored": "Đã khôi phục kết nối",
         "couldNotReconnect": "Không thể khôi phục kết nối",
