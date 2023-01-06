@@ -75,6 +75,8 @@ export class NxNavFooterComponent implements OnInit {
                 });
             }
         });
+
+        this.checkVisible(this.router.url);
     }
 
     scrollToTop(): void {

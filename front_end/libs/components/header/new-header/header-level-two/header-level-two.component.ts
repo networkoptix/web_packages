@@ -98,7 +98,9 @@ export class NxHeaderLevelTwoComponent {
 
     nodeClick(node: MenuNode, event: MouseEvent): false {
         this.headerService.handleNav(node, event);
-        this.optimisticSelectedSubNode = node;
+        if (!node.new_window) {
+            this.optimisticSelectedSubNode = node;
+        }
         return false;
     }
 
