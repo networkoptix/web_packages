@@ -204,9 +204,11 @@ export class NxOpenAPIJSONService {
     };
 
     setMenuNodes = (menu: MenuNodeWithParent[]): void => {
-        this.menuNodes = menu;
-        this.activeNode = getFirstNode(this.menuNodes);
-        this.navigateToMenuNodeFromURL();
+        if (menu) {
+            this.menuNodes = menu;
+            this.activeNode = getFirstNode(this.menuNodes);
+            this.navigateToMenuNodeFromURL();
+        }
     };
 
     createAPIStore(serverID: string): void {

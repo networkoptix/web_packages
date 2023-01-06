@@ -82,13 +82,15 @@ export class NxThemeService {
             await this.cloudApi.getCustomAccountProperty('theme', loginState)
                 .toPromise()
                 .then(result => {
-                    this.userTheme = this.getThemeRealName(result.theme);
-                    this.themeSelected = this.getThemeRealName(result.theme);
+                    this.userTheme = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
+                    this.themeSelected = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
                 }, err => {
                     console.error('Feature not available', err);
                 });
         } else {
-            this.themeSelected = this.CONFIG.themeConfig.default;
+            this.themeSelected = this.CONFIG.themeConfig.default === 'auto'
+                ? this.CONFIG.themeConfig.default
+                : this.getThemeRealName(this.CONFIG.themeConfig.default);
         }
 
         await this.setTheme(this.themeSelected, loginState);

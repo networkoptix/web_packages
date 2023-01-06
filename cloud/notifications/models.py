@@ -12,6 +12,7 @@ from django.core.validators import MaxLengthValidator, validate_email
 from django.db.models import Q, F, Value
 from django.db.models.functions import Concat
 from django.core.cache import caches
+from html2text import html2text
 from model_utils import Choices
 from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
 from push_notifications.models import GCMDevice, GCMDeviceQuerySet
@@ -473,15 +474,22 @@ RESULT_STATES = Choices(('open', 'Open'),
                         ('failure', 'Failure'))
 
 
-URL_REGEX = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+URL_REGEX = r"(?i)\b(([\S])*([a-z0-9\-]+\.)*[a-z0-9\-]{2,63}\.[a-z]{2,})"
+
+FLOAT_OR_VERSION_REGEX = r"^[\d\.]+[\d]+$"
+
+EMAIL_REGEX = r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}"
 
 def check_urls(known_urls, sub_val='{redacted_url}'):
+    relay = settings.TRAFFIC_RELAY_HOST.replace('{systemId}.', '')
     def _check_urls(match_obj):
         original = match_obj.group()
         domain = original.split('//')[-1].split('/')[0]
         parent_domain = '.'.join(domain.split('.')[-2:])
         matched = domain in known_urls or parent_domain in known_urls
-        return original if matched else original.replace(domain, sub_val)
+        is_email = re.fullmatch(EMAIL_REGEX, original)
+        is_relay = relay in original
+        return original if matched or is_email or is_relay else original.replace(domain, sub_val)
 
     return _check_urls
 
@@ -534,7 +542,7 @@ class SystemEmail(models.Model):
     @property
     def message(self):
         return {
-            'html_body': self.message_html or wrap_text(self.message_text),
+            'html_body': self.message_html,
             'text_body': self.message_text
         }
 
@@ -548,8 +556,8 @@ class SystemEmail(models.Model):
             return content
 
         self.subject = clean(self.subject)
-        self.message_html = clean(self.message_html)
-        self.message_text = clean(self.message_text)
+        self.message_html = clean(self.message_html or wrap_text(self.message_text))
+        self.message_text = clean(self.message_text or html2text(self.message_html))
 
     def auto_test_guard(self):
         # Skips noptixautoqa emails unless they have sendemail in the alias

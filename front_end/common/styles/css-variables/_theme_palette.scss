@@ -1,6 +1,5 @@
 @use "../utils" as *;
 @use "../theme_palette.scss" as *;
-@use "../custom/_custom_palette.scss" as *;
 
 :root {
 	@include generateVarAndRgb(--dark1, $dark1);
@@ -59,18 +58,4 @@
 	@include generateVarAndRgb(--red_d6, $red_d6);
 	@include generateVarAndRgb(--red_d7, $red_d7);
 	@include generateVarAndRgb(--error, $red_l2);
-
-	@include generateVarAndRgb(--brand-l4, $brand_l4);
-	@include generateVarAndRgb(--brand-l3, $brand_l3);
-	@include generateVarAndRgb(--brand-l2, $brand_l2);
-	@include generateVarAndRgb(--brand-l1, $brand_l1);
-	@include generateVarAndRgb(--brand-core, $brand_core);
-	@include generateVarAndRgb(--brand-d1, $brand_d1);
-	@include generateVarAndRgb(--brand-d2, $brand_d2);
-	@include generateVarAndRgb(--brand-d3, $brand_d3);
-	@include generateVarAndRgb(--brand-d4, $brand_d4);
-	@include generateVarAndRgb(--brand-d5, $brand_d5);
-	@include generateVarAndRgb(--brand-d6, $brand_d6);
-	@include generateVarAndRgb(--brand-d7, $brand_d7);
-	@include generateVarAndRgb(--error-label, $red_l1);
 }
