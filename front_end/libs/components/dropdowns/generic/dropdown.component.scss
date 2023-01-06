@@ -4,6 +4,8 @@
 @use "../dropdowns";
 
 :host {
+    width: 100%;
+    
     .dropdown {
         width   : 100%;
         display : block;
