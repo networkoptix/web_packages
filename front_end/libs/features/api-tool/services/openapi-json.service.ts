@@ -13,7 +13,7 @@ import { findMenuNode } from '@utils/nx';
 import { addAPIInfoNodesToMenu, addSeperator, generateAPIRouteName, generateMenu, getFirstNode, mergeAPIDocs, prepareSwaggerAPIDoc, queryInDescription } from '../api-file-utils';
 import type { APIDoc, APIInfo } from '../api-tool-types';
 
-import { APIData, Store, EmitInfo, APIType, ServerInfo, ReadOnlyAPIStore, Markdown, FetchedJSONs } from './api-tool-service-types';
+import { APIData, Store, EmitInfo, APIType, ServerInfo, ReadOnlyAPIStore, MarkdownObj, FetchedJSONs } from './api-tool-service-types';
 import { NxAPIToolSystemService } from './api-tool-system.service';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
@@ -22,7 +22,7 @@ import { NxReadonlyAPIService } from './readonly-api.service';
 export class NxOpenAPIJSONService {
     currentAPIDoc$ = new BehaviorSubject<APIDoc>(null);
     currentType$ = new BehaviorSubject<number>(null);
-    currentMarkdown: Markdown;
+    currentMarkdown: MarkdownObj;
     queuedServerChange: string = null;
     APIStore: Store<APIData> = {}; // Storing JSONs, API Info (part of jsons), and Menus for developers-menu
     APIInfoNodes = ['APIInformation', 'APIPreamble', 'APIChangelog'];
@@ -204,9 +204,11 @@ export class NxOpenAPIJSONService {
     };
 
     setMenuNodes = (menu: MenuNodeWithParent[]): void => {
-        this.menuNodes = menu;
-        this.activeNode = getFirstNode(this.menuNodes);
-        this.navigateToMenuNodeFromURL();
+        if (menu) {
+            this.menuNodes = menu;
+            this.activeNode = getFirstNode(this.menuNodes);
+            this.navigateToMenuNodeFromURL();
+        }
     };
 
     createAPIStore(serverID: string): void {
@@ -228,7 +230,7 @@ export class NxOpenAPIJSONService {
         }
     }
 
-    storeMarkdown(serverID: string, markdown: Markdown): void {
+    storeMarkdown(serverID: string, markdown: MarkdownObj): void {
         this.APIStore[serverID].markdown = markdown;
     }
 

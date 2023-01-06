@@ -18,8 +18,8 @@ export class NxSwaggerAPIInformationComponent {
     }
 
     modifyTable(): void {
-        const table = this.markdown.element.nativeElement.querySelector('table');
-        if (table) {
+        const tables = this.markdown.element.nativeElement.querySelectorAll('table');
+        for (const table of tables) {
             table.innerHTML = '<thead><tr><th>It was</th><th>It Is</th></tr></thead>' + table.innerHTML;
             const cells = table.querySelectorAll('tbody td');
             for (const cell of cells) {

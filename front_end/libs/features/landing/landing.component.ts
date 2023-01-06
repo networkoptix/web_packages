@@ -76,7 +76,7 @@ export class NxLandingComponent implements OnInit {
                 .pipe(untilDestroyed(this))
                 .subscribe(account => {
                     if (account && !this.startParams.next) {
-                        this.accountService.redirectAuthorised();
+                        this.loaded = true;
                         this.userEmail = this.accountService.email;
                     } else {
                         if (this.startUrl.includes('/login') && !this.startParams.code) {

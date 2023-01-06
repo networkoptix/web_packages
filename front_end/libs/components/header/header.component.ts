@@ -264,6 +264,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
         }
         this.headerService.createUrl = `${this.headerService.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
+
+        NxConfigService.configChanged.subscribe(() => {
+            this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
+        });
     }
 
     private getMenu(): void {
@@ -320,7 +324,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void { }
 
     ngOnInit(): void {
-        this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
         this.storageService.observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(() => {
