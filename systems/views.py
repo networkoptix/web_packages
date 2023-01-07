@@ -124,6 +124,11 @@ class GroupView:
             groups = groups.filter(Group.owner_account_email == email)
         groups_list = [group.data() for group in groups]
 
+        shared_group_ids = [user_group.group_id for user_group in User.query.filter(email=email, enabled=True)]
+        shared_groups = Group.query.filter(Group.id.in_(shared_group_ids))
+        for shared_group in shared_groups:
+            groups_list.append(shared_group.data())
+
         return groups_list
 
     @staticmethod
