@@ -186,21 +186,21 @@
             "key": "Key"
         },
         "fromServer": {
-            "ACTIVE": "Active",
-            "INACTIVE": "Inactive",
-            "Unassigned": "Unassigned",
+            "ACTIVE": "Aktif",
+            "INACTIVE": "Pasif",
+            "Unassigned": "Atanmamış",
             "until": "{size} until {expires}",
             "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
-            "License key is already activated": "License key is already activated",
-            "Maximum number of items is 10000": "Maximum number of items is 10000",
-            "This Cloud license does not exist": "This Cloud license does not exist",
-            "This license is already activated": "This license is already activated",
-            "This license is not activated": "This license is not activated",
-            "This license has already expired": "This license has already expired",
+            "License key is already activated": "Lisans zaten etkinleştirildi",
+            "Maximum number of items is 10000": "Maksimum öğe sayısı 10000'dir",
+            "This Cloud license does not exist": "Bu Bulut lisansı mevcut değil",
+            "This license is already activated": "Bu lisans zaten etkinleştirilmiş",
+            "This license is not activated": "Bu lisans etkinleştirilmemiş",
+            "This license has already expired": "Bu lisansın süresi zaten dolmuş",
             "Already has a cloud storage license active": "Already has a cloud storage license active",
             "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
-            "Not Authorized for cloud system": "Not Authorized for cloud system",
-            "This license is not currently activated": "This license is not currently activated",
+            "Not Authorized for cloud system": "Bulut sistemi için Yetkili değil",
+            "This license is not currently activated": "Bu lisans etkinleştirilmemiş",
             "This license has no deactivations remaining": "This license has no deactivations remaining",
             "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
             "used": "{used} of {total} ({percent}%) is used",
@@ -366,7 +366,7 @@
                 },
                 "modify": {
                     "heading": "Modify Cloud Storage",
-                    "action": "Modify",
+                    "action": "Değiştir",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
@@ -390,7 +390,7 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
+                    "title": "Değiştir",
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Evrensel"
             }
         },
         "mobile": {
@@ -647,7 +647,7 @@
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
         "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
-        "This user does not exist.": "This user does not exist.",
+        "This user does not exist.": "Kullanıcı mevcut değil.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
         "cloud_systems_have_different_owners": "Bu sistem %CLOUD_NAME% bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
@@ -666,7 +666,7 @@
         "cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
         "cantChangePasswordPrefix": "Parola kaydedilemiyor",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "Sisteme bağlanılamıyor",
         "cantDisconnectSystemPrefix": "Sistem silinemiyor",
         "cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
         "cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
@@ -710,8 +710,8 @@
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Sistemlerim",
+        "systemList": "Sistem Listesi"
     },
     "integration": {
         "Access Control": "Erişim Kontrolü",
@@ -781,7 +781,7 @@
             "alerts": "Alerts",
             "systems": "Sistem",
             "storages": "Depolama konumları",
-            "networkInterfaces": "Network Interfaces",
+            "networkInterfaces": "Ağ Arabirimleri",
             "graphs": "Grafikler",
             "logs": "Logs"
         }
@@ -789,7 +789,7 @@
     "tableHeaders": {
         "type": "Tür",
         "server": "Sunucu",
-        "alert": "Alert"
+        "alert": "Alarm"
     },
     "appFooter": {
         "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
@@ -935,7 +935,7 @@
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
         "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Sunucu şimdi ayrılıyor",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "Sunucu şimdi sıfırlanıyor.",
         "detachSystemFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
         "detachSystemSuccess": "Sunucu başarıyla sistemden ayrıldı.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
@@ -951,7 +951,7 @@
         "status": {
             "checking": "kontrol Ediliyor...",
             "offline": "çevrimdışı",
-            "resetting": "resetting...",
+            "resetting": "sıfırlanıyor...",
             "restarting": "yeniden başlatılıyor..."
         },
         "successRename": "Sunucu adı kaydedildi."
@@ -966,7 +966,7 @@
     },
     "system": {
         "connected": "Bağlandı",
-        "not_connected": "Not connected",
+        "not_connected": "Bağlanmadı",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
         "mySystemSearch": "IMeMyMine",
@@ -1022,7 +1022,7 @@
         "storageToolTips": {
             "local": "Yerel",
             "usb": "USB",
-            "network": "Network, added through OS",
+            "network": "Ağ, işletim sistemi aracılığıyla eklendi",
             "smb": "Network (smb), added through VMS",
             "cloud": "Bulut"
         },
@@ -1030,11 +1030,11 @@
         "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
-        "root": "root",
+        "root": "kök",
         "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
         "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
-        "connectionLost": "Connection lost, reconnecting...",
-        "connectionRestored": "Connection restored",
+        "connectionLost": "Bağlantı kesildi, yeniden bağlanılıyor...",
+        "connectionRestored": "Bağlantı geri yüklendi",
         "couldNotReconnect": "Could not restore connection",
         "noConnection": "Bağlantı yok",
         "groupAlreadyIn": "Group { srcName } is already in { destName }",
@@ -1048,7 +1048,7 @@
             "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
             "You can only move groups that you own.": "You can only move groups that you own.",
             "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
-            "User does not exist in group": "User does not exist in group"
+            "User does not exist in group": "Kullanıcı grupta mevcut değil"
         }
     },
     "systemStatuses": {
@@ -1089,28 +1089,28 @@
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Bu hesap için iki faktörlü kimlik doğrulama etkinleştirildi. Lütfen açılır pencereye doğrulama kodunuzu girin.",
         "loggingIn": "Oturum açılıyor. Lütfen bekleyin.",
-        "sessionRenewed": "Session has been renewed.",
+        "sessionRenewed": "Oturum yenilendi.",
         "failedToUpdateSession": "Updating the session failed."
     },
     "healthMonitor": {
         "groups": {
             "info": "Bilgi",
             "availability": "Availability",
-            "load": "Load",
+            "load": "Yükle",
             "activity": "Etkinlik"
         },
         "keys": {
             "name": "Ad",
             "servers": "Sunucular",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "cameras": "Kamera kanalları",
+            "storages": "Depolama konumları",
             "users": "Kullanıcılar",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Sistem sürümü",
+            "cloudSystemId": "Bulut sistem kimliği",
             "status": "Durum",
             "offlineEvents": "Events: Server Offline (24h)",
             "uptimeS": "Uptime",
-            "cpuUsageP": "CPU %",
+            "cpuUsageP": "İŞLEMCİ %",
             "serverCpuUsageP": "CPU (VMS Server) %",
             "ramUsageB": "RAM Usage",
             "ramUsageP": "RAM %",
@@ -1128,7 +1128,7 @@
             "logLevel": "Logging level",
             "publicIp": "Public IP",
             "os": "OS",
-            "osTime": "OS Time",
+            "osTime": "İşletim Sistemi Zamanı",
             "vmsTime": "VMS Zamanı",
             "cpu": "CPU",
             "cpuCores": "Cores",
@@ -1376,13 +1376,13 @@
                 "Thu": "Thu",
                 "Fri": "Fri",
                 "Sat": "Sat",
-                "Sunday": "Sunday",
-                "Monday": "Monday",
-                "Tuesday": "Tuesday",
-                "Wednesday": "Wednesday",
-                "Thursday": "Thursday",
-                "Friday": "Friday",
-                "Saturday": "Saturday"
+                "Sunday": "Pazar",
+                "Monday": "Pazartesi",
+                "Tuesday": "Salı",
+                "Wednesday": "Çarşamba",
+                "Thursday": "Perşembe",
+                "Friday": "Cuma",
+                "Saturday": "Cumartesi"
             },
             "monthNames": {
                 "Jan": "Jan",
@@ -1397,17 +1397,17 @@
                 "Oct": "Oct",
                 "Nov": "Nov",
                 "Dec": "Dec",
-                "January": "January",
-                "February": "February",
-                "March": "March",
-                "April": "April",
-                "June": "June",
-                "July": "July",
-                "August": "August",
-                "September": "September",
-                "October": "October",
-                "November": "November",
-                "December": "December"
+                "January": "Ocak",
+                "February": "Şubat",
+                "March": "Mart",
+                "April": "Nisan",
+                "June": "Haziran",
+                "July": "Temmuz",
+                "August": "Ağustos",
+                "September": "Eylül",
+                "October": "Ekim",
+                "November": "Kasım",
+                "December": "Aralık"
             },
             "timeNames": {
                 "a": "a",
