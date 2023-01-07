@@ -28,6 +28,7 @@ import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
 
+import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-partners-api';
 import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
@@ -108,6 +109,7 @@ export class NxCloudApiService {
     public licenseServerApiFactory: (licenseServer: string, cloudHost: string) => LicenseServerAPI;
     public cloudStorageApi: CloudStorageAPI;
     public cloudDbApi: CloudDbAPI;
+    public cloudChannelPartnersApi: ChannelPartnersApi;
 
     constructor(
         private configService: NxConfigService,
@@ -131,6 +133,10 @@ export class NxCloudApiService {
         this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(targetInstance);
         const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code), shareReplay({ refCount: true, bufferSize: 1 }));
         this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(targetInstance, this.CONFIG.customization);
+
+        // TODO: Remove it
+        const tempPartnersInstance = 'https://nxlicensed.test.hdw.mx';
+        this.cloudChannelPartnersApi = ChannelPartnersApi.createApiFactory(this.http, this.#withFreshSession, refreshToken)(tempPartnersInstance, '');
     }
 
     getSubAPI(route: ConsoleSection) {

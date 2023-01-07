@@ -1,0 +1,81 @@
+<div class="organizations">
+    <div class="ml-4 mr-4 pt-3">
+        <nx-search
+            name="filterModel"
+            [ngModel]="filterModel"
+            (ngModelChange)="modelChanged($event)"
+            layout="compact"
+            ngDefaultControl
+        ></nx-search>
+    </div>
+
+    <div class="ml-3 mr-3 pt-2">
+        <div
+            class="col text-placeholder d-flex align-items-center"
+            *ngIf="!elements?.length"
+            translate
+        >
+            Nothing Found
+        </div>
+
+        <div
+            class="row p-0 m-0"
+            *ngIf="elements?.length"
+        >
+            <div
+                *ngFor="let organization of elements"
+                name="plugin"
+                class="list col-12 col-md-6 col-lg-4 col-xxl-3 p-2"
+            >
+                <a
+                    class="plugin m-0"
+                    [routerLink]="'/organizations/' + organization.id"
+                >
+                    <nx-block
+                        fixed-height
+                        hoverable
+                        header-style="extended"
+                    >
+                        <nx-section>
+                            <div class="card--body-name">
+                                <h3 [innerText]="organization.name"></h3>
+                            </div>
+                            <div class="card--body-descr"></div>
+                        </nx-section>
+
+                        <!--                        <footer-->
+                        <!--                            class="tags-compact"-->
+                        <!--                            [ngStyle]="{ opacity: (ready | async) ? 1 : 0 }"-->
+                        <!--                        >-->
+                        <!--                            <ng-container-->
+                        <!--                                *ngFor="-->
+                        <!--                                    let type of [-->
+                        <!--                                        {-->
+                        <!--                                            label: 'In Review' | translate,-->
+                        <!--                                            type: 'danger',-->
+                        <!--                                            hidden: !plugin.pending-->
+                        <!--                                        },-->
+                        <!--                                        {-->
+                        <!--                                            label: 'Draft' | translate,-->
+                        <!--                                            type: 'danger',-->
+                        <!--                                            hidden: !plugin.draft-->
+                        <!--                                        },-->
+                        <!--                                        {-->
+                        <!--                                            label: 'Mine' | translate,-->
+                        <!--                                            type: 'brand',-->
+                        <!--                                            hidden: !plugin.mine-->
+                        <!--                                        }-->
+                        <!--                                    ].concat(plugin.information.type)-->
+                        <!--                                "-->
+                        <!--                            >-->
+                        <!--                                <ng-container-->
+                        <!--                                    *ngTemplateOutlet="compactTags; context: { tag: type }"-->
+                        <!--                                ></ng-container>-->
+                        <!--                            </ng-container>-->
+                        <!--                        </footer>-->
+                    </nx-block>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

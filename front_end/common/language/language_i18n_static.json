@@ -945,6 +945,8 @@
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "menu": {
         "titles": {
+            "customizations": "Customizations",
+            "channelPartners": "Channel partners",
             "cameras": "Cameras",
             "systemAdministration": "System Administration",
             "general": "General",

@@ -31,9 +31,9 @@ interface Alert {
 }
 
 export interface Level2Item {
-    id: string;
+    id?: string;
     label?: string;
-    items: Level2Button[]
+    items?: Level2Button[]
     level3?: Level3Item[];
 
     path?: string;

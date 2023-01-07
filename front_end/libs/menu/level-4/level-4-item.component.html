@@ -1,0 +1,53 @@
+<a
+    class="menu-level-3 alternative"
+    [ngClass]="{
+        selected: selected,
+        'item-disabled': item.disabled,
+        focus: menuNavItemId === item.id
+    }"
+    [tabindex]="selected ? '-1' : undefined"
+    [id]="item.id"
+    [routerLink]="[itemPath]"
+    [queryParams]="item.query"
+    (mouseover)="setNavIdx(item)"
+>
+    <div
+        *ngIf="first"
+        class="top-shadow-cover"
+    ></div>
+    <div class="menu-level-3-content ellipsis">
+        <span
+            *ngIf="item.icon"
+            class="menu-level-3-icon glyphicon"
+            [ngClass]="item.icon"
+        ></span>
+        <svg-icon
+            *ngIf="item.svgIcon"
+            nx-add-svg-src
+            [src]="icons.dir + item.svgIcon + '.svg'"
+            [applyClass]="true"
+            class="menu-level-3-svg-icon"
+        ></svg-icon>
+        <span
+            class="fs-mask menu-level-3-label user"
+            [ngClass]="{
+                indent: item.indent && !item.icon && !item.svgIcon
+            }"
+        >
+            <nx-search-highlight
+                [text]="item.label | translate"
+                [search]="search"
+            ></nx-search-highlight>
+        </span>
+        <span
+            *ngIf="item.additionalLabel"
+            class="menu-level-3-additional"
+        >
+            <span class="ml-1 mr-1">&ndash;</span>
+            <nx-search-highlight
+                [text]="item.additionalLabel | translate"
+                [search]="search"
+            ></nx-search-highlight>
+        </span>
+    </div>
+</a>

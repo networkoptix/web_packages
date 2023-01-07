@@ -1,0 +1,57 @@
+<form
+    name="addCustomizationUserForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Add User
+        </h1>
+        <button
+            type="button"
+            class="close"
+            id="closeAddCustomizationUser"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form
+            #createUserForm="ngForm"
+            class="form"
+        >
+            <div class="form-group">
+                <label
+                    for="email"
+                    translate
+                    >Email</label
+                >
+                <nx-email-input
+                    name="email"
+                    componentId="email"
+                    class="fs-mask form-component"
+                    [(ngModel)]="email"
+                    [form]="createUserForm"
+                    [setFocus]="true"
+                    [isUsername]="true"
+                    #createUser="ngModel"
+                ></nx-email-input>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            class="btn btn-default"
+            (click)="saveCustomizationUser()"
+            translate
+        >
+            Save
+        </button>
+    </div>
+</form>

@@ -1,0 +1,52 @@
+<div class="organizations">
+    <div class="ml-3 mr-3 pt-2 row">
+        <div
+            class="row col-4 p-0 m-0"
+            *ngIf="organization"
+        >
+            <div
+                name="plugin"
+                class="col-12 p-2"
+            >
+                <nx-block
+                    fixed-height
+                    hoverable
+                    header-style="extended"
+                >
+                    <nx-section>
+                        <div class="card--body-name">
+                            <h3 [innerText]="organization.name"></h3>
+                        </div>
+                        <div class="card--body-descr"></div>
+                    </nx-section>
+                </nx-block>
+
+                <nx-block type="mt-3">
+                    <header><h4 translate>Info</h4></header>
+                    <nx-section>
+                        <div><span translate>Name</span> {{ organization.name }}</div>
+                        <div><span translate>Id</span> {{ organization.id }}</div>
+                        <div><span translate>Users</span> {{ organization.users }}</div>
+                    </nx-section>
+                </nx-block>
+            </div>
+        </div>
+        <div
+            class="row col-8 p-0 m-0"
+            *ngIf="organization"
+        >
+            <div
+                name="plugin"
+                class="col-12 p-2"
+            >
+                <nx-block hoverable>
+                    <header><h3 translate>Systems</h3></header>
+                    <nx-section>
+                        <div class="card--body-name"></div>
+                        <div class="card--body-descr"></div>
+                    </nx-section>
+                </nx-block>
+            </div>
+        </div>
+    </div>
+</div>

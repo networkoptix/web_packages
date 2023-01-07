@@ -14,9 +14,7 @@ import type { Level2Button } from '../menu.types';
     selector: 'nx-menu-button',
     template: `
         <button
-            *ngIf="!environment.isLocal ||
-                CONFIG.cloudSystemId ||
-                button.id !== 'addUser'"
+            *ngIf="!environment.isLocal || CONFIG.cloudSystemId"
             class="inset btn btn-menu btn-clear"
             [disabled]="button.disabled"
             (click)="action()"
@@ -43,23 +41,46 @@ export class NxMenuButtonComponent {
     ngOnInit(): void {}
 
     action(): void {
-        if (this.button.id === 'addUser') {
-            // Handling promise to satisfy the linter.
-            this.dialogs.addUser(this.system)
-                .then((userId: string) => {
-                    if (userId) {
-                        const systemId = this.system.id;
-                        userId = this.system.mediaserver.cleanId(userId);
-                        this.menuService.detail = userId;
-                        this.uriService
-                            .updateURI(this.uriService.getSystemSettingsRoute({
-                                systemId,
-                                userId
-                            }))
-                            .catch(error => console.error(error));
-                    }
-                })
-                .catch(err => console.error(err));
+        switch (this.button.id) {
+            case 'addUser':
+                // Handling promise to satisfy the linter.
+                this.dialogs.addUser(this.system)
+                    .then((userId: string) => {
+                        if (userId) {
+                            const systemId = this.system.id;
+                            userId = this.system.mediaserver.cleanId(userId);
+                            this.menuService.detail = userId;
+                            this.uriService
+                                .updateURI(this.uriService.getSystemSettingsRoute({
+                                    systemId,
+                                    userId
+                                }))
+                                .catch(error => console.error(error));
+                        }
+                    })
+                    .catch(err => console.error(err));
+                break;
+            case 'addCustomization':
+                this.dialogs.addPartnerBrand()
+                    .then((customizationId: string) => {
+                        if (customizationId) {
+                            this.menuService.detail = customizationId;
+                            this.uriService
+                                .updateURI('/partners/' + customizationId, {})
+                                .catch(error => console.error(error));
+                        }
+                    });
+                break;
+            case 'addPartner':
+                this.dialogs.addBrandPartner()
+                    .then((partnerId: string) => {
+                        if (partnerId) {
+                            this.menuService.detail = partnerId;
+                            // this.uriService
+                            //     .updateURI('/partners/' + customizationId, {})
+                            //     .catch(error => console.error(error));
+                        }
+                    });
         }
     }
 }

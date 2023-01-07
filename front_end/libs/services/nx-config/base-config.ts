@@ -161,7 +161,8 @@ const FeatureFlagKeys = [
     'layoutsRightMenu',
     'layoutsTimeline',
     'layoutsPtz',
-    'layoutsDemo'
+    'layoutsDemo',
+    'channelPartners'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -543,10 +544,25 @@ export interface Table {
 }
 
 export interface Menus {
+    customization: Customization,
     account: Account;
     systemHealth: SystemHealth;
     systemSettings: SystemSettings;
     systemMonitoring: SystemMonitoring;
+}
+
+export interface Customization {
+    id: string,
+    baseUrl: string;
+    icon: string;
+    partners: Partners;
+    buttons: Buttons;
+}
+
+export interface Partners {
+    id: string;
+    icon?: string;
+    path: string;
 }
 
 export interface Account {

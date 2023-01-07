@@ -1,0 +1,218 @@
+.arch-svg {
+    background-color: var(--alt-body-bg);
+}
+/*** architecture svg ***/
+svg#ourArchitecture a {
+    text-decoration: none !important;
+}
+
+svg#ourArchitecture a:hover {
+    text-decoration: none;
+}
+
+svg#ourArchitecture a text {
+    fill: var(--h7);
+}
+
+svg#ourArchitecture .spacer {
+    fill: var(--arch-svg-spacer-fill);
+}
+
+svg#ourArchitecture .dashed-line {
+    stroke: var(--arch-svg-dash-stroke);
+}
+
+svg#ourArchitecture .solid-path-arrow {
+    fill: var(--arch-svg-solid-path-arrow-fill);
+}
+
+svg#ourArchitecture a.arch-node .shadow {
+    filter: url(#dropShadow);
+}
+
+svg#ourArchitecture a.arch-node .shadowSmall {
+    filter: url(#dropShadowSmall);
+}
+
+svg#ourArchitecture a.arch-node .nx-server-left {
+    fill: var(--arch-svg-server-fill); /* url(#linearGradientLeft); */
+}
+
+svg#ourArchitecture a.arch-node .nx-server-right {
+    fill: var(--arch-svg-server-fill); /*url(#linearGradientRight); */
+}
+
+svg#ourArchitecture a.arch-node:hover .nx-server-left {
+    fill: var(--arch-svg-server-hover-fill); /* url(#linearGradientLeftHover); */
+}
+
+svg#ourArchitecture a.arch-node:hover .nx-server-right {
+    fill: var(--arch-svg-server-hover-fill); /* url(#linearGradientRightHover); */
+}
+
+svg#ourArchitecture a.arch-node:hover .shadow {
+    filter: url(#dropShadowHover);
+}
+
+svg#ourArchitecture a.arch-node:hover .shadowSmall {
+    filter: url(#dropShadowSmallHover);
+}
+
+svg#ourArchitecture a.arch-node .transparent-tile {
+    stroke: var(--arch-svg-transparent-tile-stroke);
+    stroke-width: 2px;
+}
+
+svg#ourArchitecture a.arch-node:hover .transparent-tile {
+    stroke: var(--arch-svg-transparent-tile-stroke);
+}
+
+svg#ourArchitecture a.arch-node .third-party {
+    fill: var(--arch-svg-third-party-fill);
+}
+
+svg#ourArchitecture a.arch-node:hover .third-party {
+    fill: var(--arch-svg-third-party-fill);
+}
+
+svg#ourArchitecture a.arch-node .built-in {
+    fill: var(--arch-svg-built-in-fill);
+}
+
+svg#ourArchitecture a.arch-node .built-in-text {
+    fill: var(--arch-svg-built-in-fill);
+}
+
+svg#ourArchitecture a.arch-node .level1 {
+    fill: var(--arch-svg-level1-fill);
+}
+
+svg#ourArchitecture a.arch-node:hover .level1 {
+    fill: var(--arch-svg-level1-fill);
+}
+
+svg#ourArchitecture a.arch-node:hover .level1-text {
+    fill: var(--arch-svg-level1-color);
+}
+
+svg#ourArchitecture a.arch-node .level2 {
+    fill: var(--arch-svg-level2-fill);
+}
+
+svg#ourArchitecture a.arch-node:hover .level2 {
+    fill: var(--arch-svg-level2-fill);
+}
+
+svg#ourArchitecture a.arch-node .level3 {
+    fill: var(--arch-svg-level3-fill);
+}
+
+svg#ourArchitecture a.arch-node .rest-streaming-api {
+    fill: var(--arch-svg-rest-streaming-api-fill);
+}
+
+svg#ourArchitecture a.arch-node .rest-streaming-api-text {
+    fill: var(--arch-svg-rest-streaming-api-color);
+}
+
+svg#ourArchitecture a.arch-node .cloud {
+    fill: var(--arch-svg-cloud-fill);
+}
+
+svg#ourArchitecture a.arch-node:hover .cloud {
+    fill: var(--arch-svg-cloud-fill);
+}
+
+svg#ourArchitecture .cloud-text {
+    fill: var(--arch-svg-cloud-color);
+}
+
+svg#ourArchitecture a.arch-node .cloud-relay {
+    fill: var(--arch-svg-cloud-relay-fill);
+}
+
+svg#ourArchitecture a.arch-node:hover .cloud-relay {
+    fill: var(--arch-svg-cloud-relay-fill);
+}
+
+svg#ourArchitecture a.arch-node .cloud-relay-text {
+    fill: var(--arch-svg-cloud-relay-color);
+}
+
+.nx-svg-container {
+    position: relative;
+}
+
+.nx-tooltip {
+    font-family: robotoregular, sans-serif;
+    font-size: 13px;
+    color: var(--h1);
+    line-height: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.15);
+    display: none;
+    position: absolute;
+    background-color: var(--alt-body-bg);
+    padding: 1rem;
+    z-index: 99;
+    max-width: 300px;
+}
+
+.nx-tooltip:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -16px;
+    transform: translateY(-50%);
+    border-style: solid;
+    border-width: 16px 16px 16px 0;
+    border-color: transparent var(--alt-body-bg);
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+
+.nx-tooltip:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -17px;
+    transform: translateY(-50%);
+    border-style: solid;
+    border-width: 17px 17px 17px 0;
+    border-color: transparent var(--border-color);
+    display: block;
+    width: 0;
+    z-index: 0;
+}
+
+.nx-tooltip.left:before {
+    border-width: 17px 0 17px 17px;
+    left: auto;
+    right: -17px;
+}
+
+.nx-tooltip.left:after {
+    border-width: 16px 0 16px 16px;
+    left: auto;
+    right: -16px;
+}
+
+.nx-tooltip.top:before {
+    border-color: var(--border-color) transparent;
+    border-width: 17px 17px 0 17px;
+    left: 50%;
+    bottom: -17px;
+    top: auto;
+    transform: translateX(-50%);
+}
+
+.nx-tooltip.top:after {
+    border-color: var(--alt-body-bg) transparent;
+    border-width: 16px 16px 0 16px;
+    left: 50%;
+    bottom: -16px;
+    top: auto;
+    transform: translateX(-50%);
+}

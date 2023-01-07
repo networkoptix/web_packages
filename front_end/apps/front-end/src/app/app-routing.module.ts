@@ -25,6 +25,14 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/account/account.module').then(m => m.NxAccountModule)
     },
     {
+        path: 'partners',
+        loadChildren: () => import('@pages/channel-partners/partners.module').then(m => m.NxChannelPartnersModule)
+    },
+    {
+        path: 'organizations',
+        loadChildren: () => import('@pages/channel-partners/organizations').then(m => m.NxPartnerOrganizationsModule)
+    },
+    {
         path: 'systems/:systemId/advanced',
         loadChildren: () => import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
         canActivate: [AuthGuard, SystemGuard, TwofaGuard]

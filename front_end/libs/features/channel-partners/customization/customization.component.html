@@ -1,0 +1,26 @@
+<div class="row d-flex align-items-start">
+    <div class="col-12 mt-3">
+        <ng-container *ngIf="currentCustomization; else noCurrentCustomization">
+            <nx-block header-style="extended">
+                <header class="header-users">
+                    <h4>{{ currentCustomization.name }}</h4>
+                </header>
+
+                <nx-section type="no-spacing">
+                    <div>
+                        <span translate>Customization</span>&nbsp;-&nbsp;<strong>{{
+                            currentCustomization.brand
+                        }}</strong>
+                    </div>
+                </nx-section>
+            </nx-block>
+        </ng-container>
+        <ng-template #noCurrentCustomization>
+            <div translate>Please select or add a customization</div>
+        </ng-template>
+    </div>
+
+    <ng-container #pageApply></ng-container>
+</div>
+
+<nx-customization-users *ngIf="currentCustomization"></nx-customization-users>

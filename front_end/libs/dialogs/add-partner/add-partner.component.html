@@ -1,0 +1,46 @@
+<form
+    name="addPartnerForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Add Partner
+        </h1>
+        <button
+            type="button"
+            class="close"
+            id="closeAddPartner"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label translate>Name</label>
+            <input
+                class="form-control"
+                id="partnerName"
+                name="partnerName"
+                [(ngModel)]="name"
+                autofocus
+                required
+            />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button
+            class="btn btn-default"
+            (click)="savePartner()"
+            translate
+        >
+            Save
+        </button>
+    </div>
+</form>

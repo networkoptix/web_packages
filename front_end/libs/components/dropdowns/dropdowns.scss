@@ -159,10 +159,13 @@ header {
             list-style-type: none;
             margin-bottom: 0;
         }
-
-        &--footer,
+        
         &--header {
             height: $dropdown-header-height;
+        }
+        
+        &--header,
+        &--footer {
             padding: 0;
             margin: 0;
             list-style-type: none;

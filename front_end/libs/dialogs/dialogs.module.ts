@@ -18,8 +18,11 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
+import { AddCustomizationUserModalContent } from '@dialogs/add-customization-user/add-customization-user.component';
+import { AddPartnerModalContent } from '@dialogs/add-partner/add-partner.component';
 import { DirectivesModule } from '@directives/directives.module';
 
+import { AddPartnerBrandModalContent } from './add-brand/add-brand.component';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
@@ -93,6 +96,9 @@ import { WizardModalContent } from './wizard/wizard.component';
     ],
     declarations: [
         DisconnectModalContent,
+        AddPartnerBrandModalContent,
+        AddCustomizationUserModalContent,
+        AddPartnerModalContent,
         AddUserModalContent,
         AddStorageModalContent,
         ChangeStorageModalContent,

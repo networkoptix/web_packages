@@ -71,6 +71,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_ptz_control = ('Layouts PTZ Control', 'layoutsPtz', '%LAYOUTS_PTZ_ENABLED%')
     layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
+    channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')

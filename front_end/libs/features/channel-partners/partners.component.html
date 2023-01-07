@@ -1,0 +1,24 @@
+<div class="row">
+    <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
+    <div
+        class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+        style="margin-top: 16px !important"
+        [ngStyle]="{ height: 'calc(100% - 146px)' }"
+    >
+        <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
+        <nx-menu
+            *ngIf="menuVisible"
+            [ngStyle]="{ display: _menuSearchMode ? 'contents' : 'block' }"
+            [content]="content"
+            [searchable]="menuSearchable"
+            [autoFit]="true"
+            (menuSearchMode)="menuMode($event)"
+            (contentToggle)="contentToggle($event)"
+        ></nx-menu>
+    </div>
+    <!-- Offset for the fixed menu -->
+    <div class="col-12 col-lg-8 col-xl-7 pt-3 pt-lg-0 px-3 pl-lg-0 pl-xl-3 offset-lg-4 offset-xl-3">
+        <router-outlet></router-outlet>
+        <nx-footer *ngIf="menuVisible"></nx-footer>
+    </div>
+</div>

@@ -64,6 +64,11 @@ export const accountDropdownStaff = [
         name: 'Administration',
         route: '/admin/',
         newWindow: true
+    },
+    {
+        name: 'Channel partners',
+        route: '/partners/',
+        newWindow: false
     }
 ];
 
@@ -434,6 +439,18 @@ export const manifest = {
 };
 
 export const menus: configTypes.Menus = {
+    customization: {
+        id: 'partners',
+        baseUrl: '/partners/',
+        icon: 'system',
+        partners: {
+            id: 'channels',
+            path: ''
+        },
+        buttons: {
+            id: 'buttons'
+        }
+    },
     account: {
         baseUrl: '/account',
         icon: 'user',

@@ -1,0 +1,41 @@
+<div class="row d-flex align-items-start">
+    <div class="col-12 mt-3">
+        <ng-container>
+            <nx-block header-style="extended">
+                <header class="header-users">
+                    <h4 translate>Users</h4>
+                </header>
+
+                <nx-section type="no-spacing">
+                    <div *ngIf="users.length; else noUsers">
+                        <div class="mt-2">
+                            <div *ngFor="let user of users">{{ user.email }}</div>
+                        </div>
+                    </div>
+                </nx-section>
+
+                <nx-section type="no-spacing">
+                    <div>
+                        <button
+                            class="btn btn-default"
+                            (click)="addUser()"
+                            translate
+                        >
+                            Add user
+                        </button>
+                    </div>
+                </nx-section>
+            </nx-block>
+        </ng-container>
+        <ng-template #noUsers>
+            <div
+                class="mt-2"
+                translate
+            >
+                Please add a user
+            </div>
+        </ng-template>
+    </div>
+
+    <ng-container #pageApply></ng-container>
+</div>

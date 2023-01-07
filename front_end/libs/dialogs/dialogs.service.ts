@@ -314,6 +314,39 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
+    public async addPartnerBrand() {
+        const config: Partial<DialogConfig> = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+
+        await this.preloadDialogsModule();
+        const component = await import('./add-brand/add-brand.component').then(m => m.AddPartnerBrandModalContent);
+
+        return this.open(component, dialogConfig)
+            .afterClosed();
+    }
+
+    public async addBrandUser() {
+        const config: Partial<DialogConfig> = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+
+        await this.preloadDialogsModule();
+        const component = await import('./add-customization-user/add-customization-user.component').then(m => m.AddCustomizationUserModalContent);
+
+        return this.open(component, dialogConfig)
+            .afterClosed();
+    }
+
+    public async addBrandPartner() {
+        const config: Partial<DialogConfig> = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+
+        await this.preloadDialogsModule();
+        const component = await import('./add-partner/add-partner.component').then(m => m.AddPartnerModalContent);
+
+        return this.open(component, dialogConfig)
+            .afterClosed();
+    }
+
     public async addUser(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
