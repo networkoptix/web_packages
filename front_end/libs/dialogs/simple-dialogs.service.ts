@@ -1,7 +1,6 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Injectable, Injector } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -31,8 +30,7 @@ export class NxSimpleDialogsService extends DialogBase {
         location: Location,
         overlay: Overlay,
         injector: Injector,
-        private toastService: NxToastService,
-        private domSanitizer: DomSanitizer,
+        private toastService: NxToastService
     ) {
         super(overlay, injector);
         this.CONFIG = configService.getConfig();
@@ -57,11 +55,12 @@ export class NxSimpleDialogsService extends DialogBase {
         actionLabel: Translatable,
         actionType?: string,
         cancelLabel?: Translatable,
-        footerClass?: string
+        footerClass?: string,
+        unsafe?: boolean,
     ): any {
         const config: Partial<DialogConfig> = {
             data: {
-                message: message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '',
+                message,
                 title,
                 actionLabel,
                 buttonType: actionType || 'default',
@@ -70,7 +69,8 @@ export class NxSimpleDialogsService extends DialogBase {
                 footerClass: footerClass || '',
                 hasFooter: true,
                 cancellable: false,
-                closable: false
+                closable: false,
+                unsafe
             }
         };
 

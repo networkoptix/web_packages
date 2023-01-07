@@ -244,7 +244,10 @@ export class NxDashboardComponent implements DashboardGroup {
             'Confirm dashboard update?',
             'Update dashboard',
             'btn-primary',
-            "Don't update"
+            "Don't update",
+            undefined,
+            undefined,
+            true
         );
 
         const updated = state === true;

@@ -366,7 +366,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         buttons: { ok }
                     }
                 } = this.LANG;
-                return this.dialogs.confirm(message, title, ok);
+                return this.dialogs.confirm(
+                    message,
+                    title,
+                    ok,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    true);
             });
     }
 
@@ -538,7 +546,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.LANG.dialogs.merge.mergeFailedTitle,
                     this.LANG.dialogs.buttons.ok,
                     'btn-primary',
-                    undefined).then(() => { });
+                    undefined,
+                    undefined,
+                    undefined,
+                    true).then(() => { });
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);

@@ -2,7 +2,6 @@ import { Dialog, DialogConfig as CdkDialogConfig } from '@angular/cdk/dialog';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Injectable, Injector, TemplateRef } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike, firstValueFrom } from 'rxjs';
 
@@ -64,7 +63,6 @@ export class NxDialogsService extends DialogBase {
         injector: Injector,
         overlay: Overlay,
         private toastService: NxToastService,
-        private domSanitizer: DomSanitizer,
         private cdkDialog: Dialog,
     ) {
         super(overlay, injector);
@@ -87,11 +85,12 @@ export class NxDialogsService extends DialogBase {
         this.toastService.show(message, type, { autohide: !hold });
     }
 
-    public async alert(message: string, title: string, footerClass?: string) {
+    public async alert(message: string, title: string, footerClass?: string, unsafe?: boolean) {
         const config: Partial<DialogConfig> = {
             data: {
-                message: this.domSanitizer.bypassSecurityTrustHtml(message),
+                message,
                 title,
+                unsafe,
                 actionLabel: this.LANG.dialogs.buttons.ok,
                 buttonType: 'default',
                 cancelLabel: this.LANG.dialogs.buttons.cancel,
@@ -118,7 +117,8 @@ export class NxDialogsService extends DialogBase {
         actionType?: string,
         cancelLabel?: string,
         footerClass?: string,
-        requireInput?: boolean
+        requireInput?: boolean,
+        unsafe?: boolean
     );
     public async confirm(
         messageOrConfig: TranslatableStrict | ConfirmConfig,
@@ -127,7 +127,8 @@ export class NxDialogsService extends DialogBase {
         actionType?: string,
         cancelLabel?: string,
         footerClass?: string,
-        requireInput = false
+        requireInput = false,
+        unsafe = false
     ): Promise<unknown> {
         const usingConfig = typeof messageOrConfig !== 'string' && !('value' in messageOrConfig);
         const message = usingConfig ? messageOrConfig.message : messageOrConfig;
@@ -144,7 +145,8 @@ export class NxDialogsService extends DialogBase {
         const config: Partial<DialogConfig> = {
             data: {
                 ...configParams,
-                message: typeof configParams.message === 'string' ? this.domSanitizer.bypassSecurityTrustHtml(configParams.message) : configParams.message || '',
+                unsafe,
+                message: configParams.message || '',
                 buttonType: configParams.actionType || 'default',
                 buttonClass: configParams.actionType || 'btn-primary',
                 footerClass: configParams.footerClass || '',

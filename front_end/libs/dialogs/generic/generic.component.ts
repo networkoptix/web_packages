@@ -26,6 +26,7 @@ export class GenericModalContent implements OnInit {
     footerClass: string;
     hasFooter: boolean;
     cancellable: boolean;
+    unsafe: boolean;
 
     constructor(
         private dialogRef: DialogRef,
@@ -45,6 +46,7 @@ export class GenericModalContent implements OnInit {
                 'footerClass',
                 'hasFooter',
                 'cancellable',
+                'unsafe'
             ],
             this
         );

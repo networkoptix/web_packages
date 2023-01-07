@@ -23,7 +23,13 @@
     class="modal-body"
     *ngIf="message"
 >
-    <p [innerHTML]="message | translate"></p>
+    <ng-template #safe>
+        <p [innerHTML]="message | translate"></p>
+    </ng-template>
+    <p
+        *ngIf="unsafe; else safe"
+        [innerHTML]="message | translate | safe: 'html'"
+    ></p>
 </div>
 
 <div
