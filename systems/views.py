@@ -213,7 +213,7 @@ class UserView:
     @staticmethod
     async def add_user_to_group(add_user_to_cloud, group_id, email, role):
         user = [UserView.add_user_to_db(group_id, email, role)]
-        group = Group.query.filter(group_id)
+        group = Group.query.get(group_id)
         if not group:
             return {'msg': f'Group not found. Failed to add {email}'}, 404
         await group.add_users_to_group(add_user_to_cloud, user)
@@ -221,7 +221,7 @@ class UserView:
 
     @staticmethod
     def list_users(group_id):
-        group = Group.query.filter(group_id)
+        group = Group.query.get(group_id)
         if not group:
             return []
 
@@ -240,7 +240,7 @@ class UserView:
     @staticmethod
     async def remove_user_from_group(remove_user_from_system, group_id, email):
         res = UserView.remove_user_from_db(group_id, email)
-        group = Group.query.filter(group_id)
+        group = Group.query.get(group_id)
         if not group:
             return {'msg': f'Group not found. Failed to remove {email}'}, 404
         await group.remove_users_from_group(remove_user_from_system, email)
@@ -248,7 +248,7 @@ class UserView:
 
     @staticmethod
     async def update_users_in_group(modify_user, group_id, users):
-        group = Group.query.filter(group_id)
+        group = Group.query.get(group_id)
         if not group:
             return {'msg': f'Group not found. Failed to update users'}, 404
         await group.update_users_in_group(modify_user, users)
