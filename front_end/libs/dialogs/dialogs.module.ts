@@ -24,9 +24,9 @@ import { DirectivesModule } from '@directives/directives.module';
 
 import { AddPartnerBrandModalContent } from './add-brand/add-brand.component';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
-import { AddUserModalContent } from './add-user/add-user.component';
+import { AddUserModalModule } from './add-user/add-user.module';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
-import { ApplyModalContent } from './apply/apply.component';
+import { ApplyModalModule } from './apply/apply.module';
 import { NxMoreDevicesModule } from './bookmarks/more-devices/more-devices.module';
 import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
@@ -38,7 +38,7 @@ import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-sto
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
 import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
-import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
+import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
 import { DownloadAsyncModalContent } from './download-async/download-async.component';
@@ -51,7 +51,7 @@ import { MessageModalContent } from './message/message.component';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RefreshSessionModalContent } from './refresh-session/refresh-session';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
-import { RemoveUserModalContent } from './remove-user/remove-user.component';
+import { RemoveUserModalModule } from './remove-user/remove-user.module';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
@@ -93,26 +93,26 @@ import { WizardModalContent } from './wizard/wizard.component';
         NxMoreDevicesModule,
         NxMoreTagsModule,
         TwoFAModalModule,
+        ApplyModalModule,
+        AddUserModalModule,
+        RemoveUserModalModule,
+        DeleteCloudUserModalModule,
     ],
     declarations: [
         DisconnectModalContent,
         AddPartnerBrandModalContent,
         AddCustomizationUserModalContent,
         AddPartnerModalContent,
-        AddUserModalContent,
         AddStorageModalContent,
         ChangeStorageModalContent,
         MergeModalContent,
         MessageModalContent,
-        RemoveUserModalContent,
         EmbedModalContent,
-        ApplyModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
         WizardModalContent,
-        DeleteCloudUserModalContent,
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
         UpdateCameraCredentialsModalContent,

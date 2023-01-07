@@ -211,7 +211,7 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
         this.locked.add(user.email);
         const nextUserId = this.calcNextUserId();
 
-        this.dialogs.removeUser(this.system, user).then(result => {
+        this.dialogs.removeUser({ system: this.system, user }).then(result => {
             this.locked.delete(user.email);
             if (result) {
                 this.paramUser = nextUserId;

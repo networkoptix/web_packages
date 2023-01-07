@@ -7,7 +7,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <div class="close-content"></div>
         </button>
@@ -20,14 +20,11 @@
             [buttonText]="dialogButtonText | translate"
             [id]="'removeUserBtn'"
         ></nx-process-button>
-        <button
-            type="button"
-            class="btn btn-default"
-            id="closeRemoveUserModalBtn"
-            (click)="close()"
-            translate
-        >
-            Cancel
-        </button>
+        <nx-cancel-button
+            [process]="removeUserProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+            [id]="'cancelRemoveUserBtn'"
+        ></nx-cancel-button>
     </div>
 </div>

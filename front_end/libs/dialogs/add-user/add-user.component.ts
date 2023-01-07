@@ -1,19 +1,16 @@
-import {
-    Component, Inject,
-    Input,
-    ViewChild
-} from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
-import { pickFrom } from '@utils/general';
+import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+
+import type { AddUser as DialogTypes } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-add-user-content',
@@ -21,15 +18,13 @@ import { pickFrom } from '@utils/general';
     styleUrls: []
 })
 export class AddUserModalContent {
-    @Input() closable = true;
-    @ViewChild('addUserForm') form: NgForm;
+    @ViewChild('addUserForm') private form: NgForm;
 
     LANG = staticLang;
     CONFIG: IConfig;
 
-    system: NxSystem;
     hideErrors: boolean = true;
-    alreadyExists: string;
+    systemName: string;
     addUser: Process;
     user;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
@@ -38,8 +33,8 @@ export class AddUserModalContent {
     constructor(
         configService: NxConfigService,
         private processService: NxProcessService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        public dialogRef: DialogRef<DialogTypes['return']>,
+        @Inject(DIALOG_DATA) public system: DialogTypes['data'],
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -53,15 +48,12 @@ export class AddUserModalContent {
         this.selectedPermissionSubject.next(role);
     }
 
-    private getAccessDescription() {
-        let description;
+    private getAccessDescription(): string {
         if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            description = this.LANG.accessRoles[this.selectedPermission.name].description;
+            return this.LANG.accessRoles[this.selectedPermission.name].description;
         } else {
-            description = this.LANG.accessRoles.customRole.description;
+            return this.LANG.accessRoles.customRole.description;
         }
-
-        return (typeof description === 'function') ? description() : description;
     }
 
     preSubmit = (): void => {
@@ -73,26 +65,17 @@ export class AddUserModalContent {
         this.accessDescription = this.getAccessDescription();
     }
 
-    saveUser() {
+    private saveUser(): Promise<NxSystemUser> {
         this.user.email = this.user.email.toLowerCase();
         // this.user.userGroupIds.push(this.userGroupIds);
-        return this.system.saveUser(this.user, this.user.role)
-            .then(user => {
-                return this.system.getUsers(true)
-                    .then(() => user);
-            });
+        return this.system.userManager.saveUser(this.user, this.user.role)
+            .then(user => this.system.getUsers(true).then(() => user));
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system'], this);
+        this.systemName = this.system.info.systemName || this.system.info.name;
 
-        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists
-            .replace(
-                '%systemName%',
-                this.system.info.systemName || this.system.info.name
-            );
-
-        const defaultRole = this.system.accessRoles.find(role =>
+        const defaultRole = this.system.userManager.accessRoles.find(role =>
             role.name === this.CONFIG.accessRoles.default
         );
 
@@ -105,27 +88,43 @@ export class AddUserModalContent {
         this.setPermission(defaultRole);
 
         this.addUser = this.processService.createProcess(() => {
+            this.dialogRef.disableClose = true;
             this.hideErrors = false;
-            const userExists: boolean = this.system.users.some(item => {
+            const userExists = this.system.userManager.users.some(item => {
                 return item.email === this.user.email;
             });
             if (userExists) {
-                this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
-                return Promise.resolve();
+                return Promise.reject({ resultCode: 'alreadyExists' });
             } else {
                 return this.saveUser();
             }
         },
-        {},
-        user => {
-            if (user) {
-                this.hideErrors = true;
-                this.close(user.id);
+        {
+            errorCodes: {
+                alreadyExists: () => {
+                    this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
+                }
             }
+        },
+        user => {
+            this.hideErrors = true;
+            this.close(user.id);
+            this.unlock();
+        },
+        err => {
+            this.unlock();
+            if (err?.resultCode === 'alreadyExists') {
+                return;
+            }
+            console.error(err);
         });
     }
 
-    close = (msg?: string): void => {
+    close = (msg?: DialogTypes['return']): void => {
         this.dialogRef.close(msg);
+    };
+
+    unlock = (): void => {
+        this.dialogRef.disableClose = false;
     };
 }

@@ -11,7 +11,6 @@ import { GenericEditModalContent, ModalContent } from '@components/console-table
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 import { Translatable, TranslatableStrict } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -347,21 +346,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async addUser(system: NxSystem) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./add-user/add-user.component').then(m => m.AddUserModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async disconnect(account: NxAccountService, system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
@@ -373,22 +357,6 @@ export class NxDialogsService extends DialogBase {
 
         await this.preloadDialogsModule();
         const component = await import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async removeUser(system: NxSystem, user: NxSystemUser) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                user,
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./remove-user/remove-user.component').then(m => m.RemoveUserModalContent);
 
         return this.open(component, dialogConfig)
             .afterClosed();
@@ -531,21 +499,6 @@ export class NxDialogsService extends DialogBase {
     //     return this.open(EmbedModalContent, dialogConfig)
     //         .afterClosed();
     // }
-
-    public async deleteCloudUser(cloudApi: NxCloudApiService) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                cloudApi,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./delete-cloud-user/delete-cloud-user.component').then(m => m.DeleteCloudUserModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
 
     public async updateCameraCredentials(
         camera: ICamera,
@@ -778,6 +731,18 @@ export class NxDialogsService extends DialogBase {
     /* Cameras */
 
     /* Users */
+    addUser = this.dialogV2Factory<Dt.AddUser>(
+        () => import('./add-user/add-user.component').then(m => m.AddUserModalContent)
+    );
+
+    removeUser = this.dialogV2Factory<Dt.RemoveUser>(
+        () => import('./remove-user/remove-user.component').then(m => m.RemoveUserModalContent)
+    );
+
+    deleteCloudUser = this.dialogV2Factory<Dt.DeleteCloudUser>(
+        () => import('./delete-cloud-user/delete-cloud-user.component').then(m => m.DeleteCloudUserModalContent),
+        { autoFocus: 'input' }
+    );
 
     /* Servers */
 

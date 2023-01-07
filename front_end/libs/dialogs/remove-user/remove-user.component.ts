@@ -1,18 +1,11 @@
-import {
-    Component,
-    Inject,
-    Input
-} from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
-import type {
-    NxSystemUser
-} from '@services/system.service/user-manager/user-manager-types';
-import { pickFrom } from '@utils/general';
+
+import type { RemoveUser as DialogTypes } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-remove-user-content',
@@ -20,42 +13,44 @@ import { pickFrom } from '@utils/general';
     styleUrls: []
 })
 export class RemoveUserModalContent {
-    @Input() closable = true;
-
     LANG = staticLang;
 
-    system: NxSystem;
-    user: NxSystemUser;
     removeUserProcess: Process;
     dialogTitle: string;
     dialogButtonText: string;
 
     constructor(
         private processService: NxProcessService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        public dialogRef: DialogRef<DialogTypes['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
     ) {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'user'], this);
-
-        const msg = this.user.isCloud ? 'remove' : 'delete';
+        const { user, system } = this.dialogData;
+        const msg = user.isCloud ? 'remove' : 'delete';
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
         this.dialogButtonText = this.LANG.dialogs.buttons[msg];
 
         this.removeUserProcess = this.processService.createProcess(() => {
-            return this.system.deleteUser(this.user).then(() => {
-                return this.system.getUsers(true);
-            });
+            this.dialogRef.disableClose = true;
+            return system.userManager.deleteUser(user)
+                .then(() => system.getUsers(true));
         }, {
             errorPrefix: this.LANG.errorCodes.cantSharePrefix
-        }).then(() => {
-            this.dialogRef.close(true);
+        }, () => {
+            this.close(true);
+            this.unlock();
+        }, () => {
+            this.unlock();
         });
     }
 
-    close = (): void => {
-        this.dialogRef.close();
+    close = (result?: DialogTypes['return']): void => {
+        this.dialogRef.close(result);
+    };
+
+    unlock = (): void => {
+        this.dialogRef.disableClose = false;
     };
 }

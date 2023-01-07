@@ -480,7 +480,7 @@
             "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
         },
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "This email has already been registered in the { systemName } system"
         },
         "buttons": {
             "cancel": "Cancel",

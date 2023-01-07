@@ -1,10 +1,8 @@
-import { Overlay } from '@angular/cdk/overlay';
+import { Dialog } from '@angular/cdk/dialog';
 import { DOCUMENT } from '@angular/common';
 import {
-    ComponentFactoryResolver,
     ComponentRef,
     Injectable,
-    Injector,
     ViewContainerRef,
     Inject,
 } from '@angular/core';
@@ -14,6 +12,7 @@ import { isEqual, cloneDeep, isArray } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest as combineLatestFrom,
+    firstValueFrom,
     Subject,
 } from 'rxjs';
 import {
@@ -26,9 +25,8 @@ import {
 
 import { NxApplyComponent } from '@components/apply/apply.component';
 import { ApplyModalContent } from '@dialogs/apply/apply.component';
-import { DialogBase } from '@dialogs/dialog-base';
-import { DialogConfig } from '@dialogs/dialog-config';
-import { defaultConfig } from '@dialogs/dialog-ref';
+import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
+import type { Apply as DialogTypes } from '@dialogs/dialogs.types';
 import { isObject } from '@utils/general';
 
 import { NxProcessService } from '../process.service';
@@ -63,7 +61,7 @@ import { Watcher, SectionWatcher, FormWatcher } from './watcher';
  * dataWatcher.value = 'new string'; // NxApplyComponent becomes visible.
  * @class
  */
-export class NxApplyService extends DialogBase {
+export class NxApplyService {
     public applyComponentRef: ComponentRef<NxApplyComponent>;
     private applyComponentInstance: NxApplyComponent;
     private applyFunctions: Process[] = [];
@@ -83,13 +81,10 @@ export class NxApplyService extends DialogBase {
     isOnline$ = new BehaviorSubject(true);
 
     constructor(
-        overlay: Overlay,
-        injector: Injector,
-        private factoryResolver: ComponentFactoryResolver,
+        private dialog: Dialog,
         private processService: NxProcessService,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        super(overlay, injector);
     }
 
     get locked() {
@@ -468,9 +463,8 @@ export class NxApplyService extends DialogBase {
         if (!component) {
             return sectionWatcher;
         }
-        const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         component.clear();
-        const applyComponentRef = component.createComponent(compFactory);
+        const applyComponentRef = component.createComponent(NxApplyComponent);
         if (form) {
             applyComponentRef.instance.form = form;
         }
@@ -491,7 +485,7 @@ export class NxApplyService extends DialogBase {
         applyFunc: Process,
         discardFunc: () => void,
         form: NgForm
-    ) {
+    ): Promise<DialogTypes['return']> {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (this.document.activeElement instanceof HTMLElement) {
             this.document.activeElement.blur();
@@ -503,17 +497,16 @@ export class NxApplyService extends DialogBase {
             discardFunc = this.applyComponentInstance.discard;
         }
 
-        const config: Partial<DialogConfig> = {
-            data: {
-                applyFunc,
-                discardFunc,
-                form
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        return this.open(ApplyModalContent, dialogConfig)
-            .afterClosed();
+        return firstValueFrom(
+            this.dialog.open<DialogTypes['return'], DialogTypes['data']>(
+                ApplyModalContent,
+                {
+                    width: DIALOG_SIZE.NORMAL,
+                    disableClose: true,
+                    data: { applyFunc, discardFunc, form }
+                }
+            ).closed
+        );
     }
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
@@ -527,7 +520,7 @@ export class NxApplyService extends DialogBase {
 
         return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
             .then(
-                (status: string) => {
+                status => {
                     this.applyOnNavSubject.next(status);
                     if (status !== 'applied' && status !== 'discarded') {
                         return false;
@@ -561,9 +554,8 @@ export class NxApplyService extends DialogBase {
     }
 
     private createComponent(onlyShowSectionWatchers: boolean = false): void {
-        const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
-        this.applyComponentRef = this.component.createComponent(compFactory);
+        this.applyComponentRef = this.component.createComponent(NxApplyComponent);
         if (onlyShowSectionWatchers) {
             this.applyComponentRef.instance.showSectionWarning = onlyShowSectionWatchers;
         }

@@ -17,7 +17,7 @@
             aria-label="Close"
             (click)="close()"
             (mousedown)="clearErrors()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <div class="close-content"></div>
         </button>
@@ -46,7 +46,6 @@
                 (ngModelChange)="setPassword(password)"
                 (blur)="setPassword(password)"
                 [ngModel]="passwordForUser"
-                nxFocusMe
             />
             <label
                 class="error-label mt-2 mb-0"
@@ -63,13 +62,11 @@
             actionType="danger"
             [buttonText]="LANG.dialogs.buttons.delete"
         ></nx-process-button>
-        <button
-            type="button"
-            class="btn btn-default"
-            (click)="close()"
-            (mousedown)="clearErrors()"
-        >
-            {{ LANG.dialogs.buttons.cancel }}
-        </button>
+        <nx-cancel-button
+            [process]="deleteCloudUser"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+            [id]="'cancelRemoveUserBtn'"
+        ></nx-cancel-button>
     </div>
 </form>

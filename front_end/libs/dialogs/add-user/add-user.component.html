@@ -18,7 +18,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="closable"
+            *ngIf="!dialogRef.disableClose"
         >
             <div class="close-content"></div>
         </button>
@@ -46,7 +46,9 @@
                     <span
                         *ngIf="addUserEmail.errors.alreadyExists"
                         class="input-error"
-                        >{{ alreadyExists }}</span
+                        >{{
+                            this.LANG.dialogs.addUser.alreadyExists | translate: { systemName }
+                        }}</span
                     >
                     <ng-container *ngIf="addUserEmail.touched">
                         <span
@@ -98,6 +100,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="addUser"
+            [cancelFn]="unlock"
             [discardFn]="close"
             [id]="'cancelAddUserBtn'"
         ></nx-cancel-button>

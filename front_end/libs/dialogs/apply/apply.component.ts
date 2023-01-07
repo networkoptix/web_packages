@@ -1,3 +1,4 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import {
     Component,
     Inject,
@@ -5,23 +6,24 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
+
+import type { Apply as DialogTypes } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-apply-content',
     templateUrl: 'apply.component.html',
     styleUrls: []
 })
-export class ApplyModalContent<Apply extends Process, Discard extends Function> implements OnInit {
-    applyFunc: Apply;
-    discardFunc: Discard;
+export class ApplyModalContent implements OnInit {
+    applyFunc: Process;
+    discardFunc?: () => void;
     form: NgForm;
 
     constructor(
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        private dialogRef: DialogRef<DialogTypes['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
     ) {
     }
 
@@ -40,11 +42,11 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
         });
     };
 
-    close = (msg: string = 'canceled'): void => {
+    close = (msg: DialogTypes['return'] = 'canceled'): void => {
         this.dialogRef.close(msg);
     };
 
-    discard = () => {
+    discard = (): void => {
         this.dialogRef.close('discarded');
         return this.discardFunc?.();
     };

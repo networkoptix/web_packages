@@ -1,8 +1,11 @@
 import type { SelectionModel } from '@angular/cdk/collections';
-import { EventEmitter } from '@angular/core';
+import type { EventEmitter } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 
-import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 
 import { TfaAction } from './two-fa/two-fa.component.types';
 
@@ -12,6 +15,12 @@ export interface DialogType<D = unknown, R = unknown> {
 }
 
 /* General use */
+interface ApplyData {
+    applyFunc: Process;
+    discardFunc?: () => void;
+    form: NgForm;
+}
+export type Apply = DialogType<ApplyData, 'applied' | 'canceled' | 'discarded'>;
 
 /* Account */
 interface Account2faActionData {
@@ -42,6 +51,15 @@ export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
 /* Cameras */
 
 /* Users */
+export type AddUser = DialogType<NxSystem, string>;
+export type RemoveUser = DialogType<
+    {
+        system: NxSystem;
+        user: NxSystemUser;
+    },
+    true
+>;
+export type DeleteCloudUser = DialogType<void, CloudResponse>;
 
 /* Servers */
 
