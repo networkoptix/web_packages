@@ -45,8 +45,9 @@ export class AuthService {
         return this.httpClient.put<ApiData>(`${this.apiBase}/${route}`, data, { headers });
     }
 
-    account(): Observable<ApiData> {
-        return this.get(endpoints.getAccount);
+    account(accessToken: string): Observable<ApiData> {
+        const headers = new HttpHeaders({ Authorization: `Bearer ${accessToken}` });
+        return this.get(endpoints.getAccount, undefined, headers);
     }
 
     activate(code: string): Observable<ApiData> {
