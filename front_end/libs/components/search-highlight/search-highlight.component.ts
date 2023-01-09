@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { escapeRegExp } from 'lodash-es';
 
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import type { NgChanges } from '@utils/ng-changes';
 
 /**
@@ -24,6 +25,7 @@ export class NxSearchHighlightComponent implements OnChanges {
     @Input() text: string;
     @Input() search: string | RegExp;
     @Input() flags: string = 'i';
+    @Input() @IBool() bold: CoercedBoolInput = false;
 
     subStrings: string[] = [];
 

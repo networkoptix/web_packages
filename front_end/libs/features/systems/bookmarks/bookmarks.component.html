@@ -20,6 +20,7 @@
     <nx-simple-search
         [(ngModel)]="search"
         (ngModelChange)="updateParam('search')"
+        [suggestions]="suggestions"
     ></nx-simple-search>
     <div
         class="no-bookmarks"

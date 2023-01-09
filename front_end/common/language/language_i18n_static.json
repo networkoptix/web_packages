@@ -1111,7 +1111,8 @@
         "vendors": "Manufacturers",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "<span class=\"error\">User not found</span>"
+        "userNotFound": "<span class=\"error\">User not found</span>",
+        "noMatchesFor": "No matching results for { query }"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",

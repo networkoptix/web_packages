@@ -1,7 +1,11 @@
 <input
     [ngModel]="search"
-    (ngModelChange)="writeValue($event)"
-    (keyup.enter)="$event.preventDefault()"
+    (ngModelChange)="writeValue($event, true)"
+    (focus)="dropdownOpen = true"
+    (keydown.Esc)="dropdownOpen = false; matchIndexes = undefined"
+    (keydown.arrowdown)="preventUpDownDefault($event); incrementMatchIndex()"
+    (keydown.arrowup)="preventUpDownDefault($event); decrementMatchIndex()"
+    (keydown.Enter)="keyboardSelect()"
     type="text"
     class="form-control"
     name="query"
@@ -13,9 +17,57 @@
     class="clear-btn"
     *ngIf="search"
     (click)="writeValue('')"
+    (keydown.Esc)="dropdownOpen = false; matchIndexes = undefined"
 >
     <svg-icon
         [src]="icons.dirTextButtons + 'close.svg'"
         [svgStyle]="{ 'width.rem': '1.25', 'height.rem': '1.25' }"
     ></svg-icon>
 </button>
+<ul
+    class="suggestions"
+    *ngIf="suggestions && search && dropdownOpen"
+>
+    <ng-container *ngIf="matchList">
+        <li
+            *ngFor="let match of matchList; index as i"
+            class="suggestion__item"
+            [class.suggestion__item--selected]="i === matchIndexes?.[0]"
+            (click)="writeValue(match)"
+        >
+            <nx-search-highlight
+                [text]="match"
+                [search]="search"
+                bold
+            ></nx-search-highlight>
+        </li>
+    </ng-container>
+    <ng-container *ngIf="matchSections">
+        <li *ngFor="let matchEntry of matchSections; index as i">
+            <span class="suggestion__section-name">{{ matchEntry[0] }}</span>
+            <hr />
+            <ul>
+                <li
+                    *ngFor="let match of matchEntry[1]; index as j"
+                    class="suggestion__item"
+                    [class.suggestion__item--selected]="i === matchIndexes?.[0] && j === matchIndexes?.[1]"
+                    (click)="writeValue(match)"
+                >
+                    <nx-search-highlight
+                        [text]="match"
+                        [search]="search"
+                        bold
+                    ></nx-search-highlight>
+                </li>
+            </ul>
+        </li>
+    </ng-container>
+    <li
+        *ngIf="!matchList?.length && !matchSections?.length"
+        class="suggestion__no-matches"
+        [innerHTML]="
+            noMatchMsg ||
+            (LANG.search.noMatchesFor | translate: { query: wrapStrong(escapeHTML(search)) })
+        "
+    ></li>
+</ul>

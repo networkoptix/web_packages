@@ -885,6 +885,7 @@
     "No main storage drive was selected for writing - video will not be recorded on this server.": "No main storage drive was selected for writing - video will not be recorded on this server.",
     "No matches": "No matches",
     "No matches found": "No matches found",
+    "No matching results for { query }": "No matching results for { query }",
     "No official releases yet": "No official releases yet",
     "No peers found": "No peers found",
     "No server found": "No server found",

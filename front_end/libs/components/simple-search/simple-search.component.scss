@@ -30,4 +30,55 @@
             display: flex;
         }
     }
+
+    .suggestions {
+        position: absolute;
+        top: 2rem;
+        left: 0;
+        right: 0;
+        z-index: 10;
+
+        background: var(--dropdown-menu-bg);
+        box-shadow: var(--dropdown-menu-shadow);
+
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+
+        hr {
+            margin: 0 0.5rem;
+        }
+
+        .suggestion {
+            &__section-name {
+                display: block;
+                height: 2rem;
+                line-height: 2rem;
+                padding: 0 0.75rem;
+            }
+
+            &__item,
+            &__no-matches {
+                height: 1.5rem;
+                line-height: 1.5rem;
+                padding: 0 0.75rem;
+
+                cursor: default;
+            }
+
+            &__item:hover,
+            &__item--selected {
+                background: var(--dropdown-item-hover-bg);
+            }
+        }
+
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+    }
 }

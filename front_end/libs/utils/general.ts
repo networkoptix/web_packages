@@ -318,6 +318,8 @@ const flattenTranslatables = ([start, ...end]: TranslatableStrict[]): Translatab
 /**
  * Tagged template literal for using markup within templates.
  *
+ * For simple inner HTML, just use regular string concatenation instead of this.
+ *
  * Example:
  * import { nestedTranslation as nt } from '@unils/general'
  *

@@ -3,6 +3,7 @@
     ><span
         *ngIf="i % 2"
         class="highlighted"
+        [style.font-weight]="bold ? 'bold' : null"
         >{{ substring }}</span
     >
 </ng-container>

@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-// import { TranslateModule } from '@ngx-translate/core';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
+
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 
 import { NxSimpleSearchComponent } from './simple-search.component';
 
@@ -11,7 +14,9 @@ import { NxSimpleSearchComponent } from './simple-search.component';
         CommonModule,
         FormsModule,
         AngularSvgIconModule.forRoot(),
-        // TranslateModule
+        NgxTranslateCutModule,
+        TranslateModule,
+        NxSearchHighlightModule,
     ],
     declarations: [
         NxSimpleSearchComponent,

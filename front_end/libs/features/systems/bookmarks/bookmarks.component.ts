@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { combineLatest, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import type { SuggestionSections } from '@components/simple-search/simple-search.types';
 import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -77,6 +78,12 @@ export class NxBookmarksComponent implements OnInit {
     tags: string[] = [];
 
     search: string = '';
+    suggestions: SuggestionSections = {
+        DEVICE: [],
+        TAGS: [],
+        // TITLE: [],
+    };
+
     dateFilter: DateRange<Date> = null;
     timeFilter: TimeRange = { start: null, end: null };
     deviceFilter = new SelectionModel<string>(true, []);
@@ -172,12 +179,24 @@ export class NxBookmarksComponent implements OnInit {
                 })),
                 isVisible: false,
             }));
+            // this.suggestions = {
+            //     ...this.suggestions,
+            //     TITLE: this.bookmarks.map(bk => bk.name)
+            // };
         });
         mediaserver.getBookmarkTags().subscribe(tags => {
             this.tags = Object.keys(tags);
+            this.suggestions = {
+                ...this.suggestions,
+                TAGS: this.tags,
+            };
         });
         mediaserver.getDevices().subscribe(devices => {
             this.devices = devices.filter(d => !!d.model).map(d => d.model);
+            this.suggestions = {
+                ...this.suggestions,
+                DEVICE: this.devices,
+            };
         });
     }
 
