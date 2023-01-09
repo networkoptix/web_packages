@@ -93,7 +93,7 @@ html[data-theme="light"] {
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$light1};
     --validation-popover-color        : #{$dark9};
-    
+
     --popover-shadow-color : 0 1rem 2rem 0 #{$light15};
     --popover-bg : #{$light1};
     --popover-color : #{$dark9};
@@ -248,9 +248,9 @@ html[data-theme="light"] {
     --header-profile-active-bg : #{$dark9};
 
     // Footer
-    --footer-bg : #{$dark4};
-    --footer-text-color : #{$dark9};
-    --footer-link-color : #{$dark15};
+    --footer-bg : #{$light3};
+    --footer-text-color : #{$light16};
+    --footer-link-color : #{$light16};
 
     // View tab ********************************
     --view-bg : #{$additional_light2};
@@ -530,7 +530,7 @@ html[data-theme="light"] {
     --support-tech-apple-color : #{$dark1};
 
      --success-label : var(--green_main);
-    
+
     --error-label : #{$red-l2};
     --error : #{$red-l2};
 

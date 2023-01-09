@@ -861,7 +861,7 @@
     },
     "appHeader": {
         "mySystems": "My Systems",
-        "systemList": "System List",
+        "systemsList": "Systems List",
         "headerMenuNodes": {
             "welcome": {
                 "displayName": "home",

@@ -22,7 +22,6 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
     LANG = staticLang;
     logoState = logoAreaState.LOGO;
-    systemListText: string;
     singleSystem = false;
     icons = icons;
     images = images;
@@ -40,7 +39,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemList;
+        // this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemsList;
     }
 
     emitClick(clickType: logoClickType): void {

@@ -6,27 +6,30 @@
         class="menu-items-container"
         *ngIf="!isProfile; else profile"
     >
-        <div
-            class="menu-item"
-            *ngIf="showCurrentSystem"
-        >
-            <div class="node-name">
-                {{ currentSystemMenu.display_name }}
-            </div>
-            <ng-container
-                *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
-            ></ng-container>
-        </div>
         <ng-container *ngFor="let node of menuNodes">
             <div
-                *ngIf="!node.invisible && !(showCurrentSystem && node.url == '/systems')"
+                *ngIf="!node.invisible"
                 class="menu-item"
             >
-                <div class="node-name">
-                    {{ node.display_name }}
-                </div>
+                <div
+                    class="node-name"
+                    [innerText]="
+                        node.url === '/systems' ? LANG.appHeader.systemsList : node.display_name
+                    "
+                ></div>
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: node.nodes }"
+                ></ng-container>
+            </div>
+            <div
+                class="menu-item"
+                *ngIf="showCurrentSystem && node.url === '/systems'"
+            >
+                <div class="node-name">
+                    {{ currentSystemMenu.display_name }}
+                </div>
+                <ng-container
+                    *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
                 ></ng-container>
             </div>
         </ng-container>
@@ -124,5 +127,19 @@
                 ></svg-icon>
             </div>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #currentSystem>
+    <div
+        class="menu-item"
+        *ngIf="showCurrentSystem"
+    >
+        <div class="node-name">
+            {{ currentSystemMenu.display_name }}
+        </div>
+        <ng-container
+            *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
+        ></ng-container>
     </div>
 </ng-template>

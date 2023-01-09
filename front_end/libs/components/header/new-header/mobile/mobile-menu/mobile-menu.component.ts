@@ -3,6 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { filter } from 'rxjs/operators';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { accountDropdown, icons, images } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
@@ -26,6 +27,7 @@ export class NxMobileHeaderMenuComponent {
   @Input() isTablet: boolean = false;
   @Output() nodeClicked = new EventEmitter<boolean>();
   profileMenu: MenuNode[];
+  LANG = staticLang;
   currentSystemMenu: MenuNode;
   showCurrentSystem = false;
 
