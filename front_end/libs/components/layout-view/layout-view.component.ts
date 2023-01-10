@@ -209,7 +209,7 @@ export class NxLayoutViewComponent {
                         type: ResourceType.LAYOUTS,
                         children: layoutsForTree
                     },
-                    {
+                    (this.CONFIG.featureFlags.layoutsServers || this.CONFIG.featureFlags.layoutsDemo) && {
                         name: 'Servers',
                         type: ResourceType.SERVERS,
                         children: serversForTree.map(server => ({
@@ -223,12 +223,12 @@ export class NxLayoutViewComponent {
                         type: ResourceType.CAMERAS,
                         children: camerasForTree
                     },
-                    {
+                    (this.CONFIG.featureFlags.layoutsWebpages || this.CONFIG.featureFlags.layoutsDemo) && {
                         name: 'Web Pages',
                         type: ResourceType.WEB_PAGES,
                         children: webPagesForTree
                     },
-                ],
+                ].filter(item => !!item),
                 ...parsedResources
             };
         }),
@@ -263,13 +263,30 @@ export class NxLayoutViewComponent {
         untilDestroyed(this)
     );
 
+    #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
+        switchMap(async ({ tree }) => {
+            const layout = tree.find(({ type }) => type === ResourceType.LAYOUTS).children.find(({ details }: ResourceNode<Layout>) => details?.items.length) as ResourceNode<Layout>;
+            const camera = tree.find(({ type }) => type === ResourceType.CAMERAS).children.shift() as ResourceNode<ICamera>;
+            const layoutId = cleanId((layout || camera)?.details?.id);
+            const queryParams = this.activatedRoute.snapshot.queryParams;
+            if (layoutId) {
+                await this.router.navigate([`${this.router.url.split('layouts')[0]}layouts/${layoutId}`], { queryParams });
+            }
+            return layoutId;
+        }),
+        distinctUntilChanged()
+    );
+
+    #layoutId$ = this.activatedRoute.params.pipe(
+        switchMap(({ layoutId }) => this.CONFIG.featureFlags.layoutsEditable || layoutId !== 'new' ? Promise.resolve(layoutId.replace('new', '')) : this.#defaultLayout$)
+    );
+
     #selectedLayout$ = combineLatest([
         this.selectedSystem$,
-        this.activatedRoute.params,
-        this.availableLayouts$
+        this.#layoutId$,
+        this.availableLayouts$,
     ]).pipe(
-        map(([system, { layoutId }, layouts]): Layout => {
-            layoutId = layoutId.replace('new', '');
+        map(([system, layoutId, layouts]): Layout => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
                 if (existingLayout) {
@@ -361,6 +378,9 @@ export class NxLayoutViewComponent {
     }
 
     initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {
+        if (!this.CONFIG.featureFlags.layoutsTour && !this.CONFIG.featureFlags.layoutsDemo) {
+            return;
+        }
         this.tourService.initialize(
             generateTour('cloud-layouts')(cloudLayoutTours[tourGroup]).map(
                 translateStep((...args) => new AnyTranslatePipe(this.translate, this.cd).transform(...args))));

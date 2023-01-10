@@ -65,11 +65,17 @@ class FLAGS(metaclass=_FlagType):
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
     layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
-    layouts_left_menu = ('Layouts Left Menu', 'layoutsLeftMenu', '%LAYOUTS_LEFT_ENABLED%')
+
+    layouts_editable = ('Layouts Editable', 'layoutsEditable', '%LAYOUTS_EDITABLE%')
+    layouts_helper = ('Layouts Helper', 'layoutsHelper', '%LAYOUTS_HELPER%')
+    layouts_servers = ('Layouts Servers', 'layoutsServers', '%LAYOUTS_SERVERS%')
+    layouts_webpages = ('Layouts Webpages', 'layoutsWebpages', '%LAYOUTS_WEBPAGES%')
+    layouts_tour = ('Layouts Tour', 'layoutsTour', '%LAYOUTS_TOUR%')
     layouts_right_menu = ('Layouts Right Menu', 'layoutsRightMenu', '%LAYOUTS_RIGHT_ENABLED%')
     layouts_timeline = ('Layouts Timeline', 'layoutsTimeline', '%LAYOUTS_TIMELINE_ENABLED%')
     layouts_ptz_control = ('Layouts PTZ Control', 'layoutsPtz', '%LAYOUTS_PTZ_ENABLED%')
     layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
+
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
     channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
 

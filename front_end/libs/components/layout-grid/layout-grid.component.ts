@@ -510,7 +510,7 @@ export class NxLayoutGridComponent {
         this.#wrapperSize$.next({ height, width });
     };
 
-    parseLayout = (layout: Layout): ParsedLayout => ({ ...layout, locked: !(this.CONFIG.featureFlags.layoutsLeftMenu || this.CONFIG.featureFlags.layoutsDemo) || layout.locked, renderConfig: this.generateRenderConfig(layout), settings: this.SETTINGS_CONFIG });
+    parseLayout = (layout: Layout): ParsedLayout => ({ ...layout, locked: !this.CONFIG.featureFlags.layoutsEditable || !this.CONFIG.featureFlags.layoutsDemo || layout.locked, renderConfig: this.generateRenderConfig(layout), settings: this.SETTINGS_CONFIG });
 
     entered(event: CdkDragEnter): void {
         console.log(event);

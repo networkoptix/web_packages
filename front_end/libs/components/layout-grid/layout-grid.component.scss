@@ -381,8 +381,12 @@ iframe {
         width: 100%;
         height: 100%;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+        h3 {
+            margin-bottom: 8px;
+        }
     }
 
     .resize-handle {

@@ -1,9 +1,5 @@
 <div
-    *ngIf="
-        layout &&
-        layoutItemLookup &&
-        (CONFIG.featureFlags.layoutsLeftMenu || CONFIG.featureFlags.layoutsDemo)
-    "
+    *ngIf="layout && layoutItemLookup"
     class="sidebar-wrapper left"
     [ngClass]="{ 'open-menu': layoutItemLookup && openMenu === 'left' }"
 >
@@ -25,6 +21,7 @@
             <h4 class="name-message">{{ message }}</h4>
         </ng-template>
         <div
+            *ngIf="CONFIG.featureFlags.layoutsHelper || CONFIG.featureFlags.layoutsDemo"
             tourAnchor="cloud-layouts_help"
             class="help-message"
         >
@@ -38,6 +35,7 @@
                         [src]="icons.dirTextButtons + 'info.svg'"
                     ></svg-icon>
                     <button
+                        *ngIf="CONFIG.featureFlags.layoutsTour || CONFIG.featureFlags.layoutsDemo"
                         (click)="startTour()"
                         class="start-tour"
                         translate
@@ -144,7 +142,12 @@
                 >
                 </svg-icon>
                 <span>{{ node.name }}</span>
-                <ng-container *ngIf="hasActions[node.type] as nodeActions">
+                <ng-container
+                    *ngIf="
+                        (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
+                        hasActions[node.type] as nodeActions
+                    "
+                >
                     <button
                         *ngFor="let action of nodeActions"
                         [nxTooltip]="action.tooltip | translate: node.details"
@@ -357,7 +360,16 @@
                     [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
                 ></svg-icon>
                 <h3 translate>No Cameras</h3>
-                <p translate>
+                <ng-template #editingNotSupported>
+                    <p translate>Drag and drop editing feature will be added in a future version</p>
+                </ng-template>
+                <p
+                    *ngIf="
+                        CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo;
+                        else editingNotSupported
+                    "
+                    translate
+                >
                     Drag and drop a camera or other items from the resource tree to add it to the
                     layout
                 </p>
@@ -514,14 +526,33 @@
                                     ></nx-monitoring-graph>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
-                                    <nx-pre-loader></nx-pre-loader>
-                                    <iframe
-                                        #webpage
-                                        cdkDragHandle
-                                        (load)="checkIframeContent(itemDetail.details.id, webpage)"
-                                        [src]="itemDetail.details.url | safe: 'resourceUrl'"
-                                        frameBorder="0"
-                                    ></iframe>
+                                    <ng-template #webpagesNotSupported>
+                                        <div class="not-supported">
+                                            <h3 translate>Webpages not currently supported</h3>
+                                            <p translate>
+                                                Support will be added in a future version of cloud
+                                                layouts
+                                            </p>
+                                        </div>
+                                    </ng-template>
+                                    <ng-container
+                                        *ngIf="
+                                            CONFIG.featureFlags.layoutsWebpages ||
+                                                CONFIG.featureFlags.layoutsDemo;
+                                            else webpagesNotSupported
+                                        "
+                                    >
+                                        <nx-pre-loader></nx-pre-loader>
+                                        <iframe
+                                            #webpage
+                                            cdkDragHandle
+                                            (load)="
+                                                checkIframeContent(itemDetail.details.id, webpage)
+                                            "
+                                            [src]="itemDetail.details.url | safe: 'resourceUrl'"
+                                            frameBorder="0"
+                                        ></iframe>
+                                    </ng-container>
                                 </ng-container>
                                 <ng-container *ngSwitchCaseDefault>
                                     <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
