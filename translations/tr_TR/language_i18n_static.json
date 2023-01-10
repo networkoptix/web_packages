@@ -135,16 +135,16 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "passwordTransfer": "to transfer system",
-        "expiredAccountSubheader": "Please, log in again as",
+        "expiredAccountSubheader": "Lütfen tekrar giriş yapın",
         "createAccountHeader": "%CLOUD_NAME% hesabı oluştur",
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Hesap oluşturuldu!",
-        "activatedText": "Account Activated!",
+        "activatedText": "Hesap Etkinleştirildi!",
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "Parolayı sıfırla -",
-        "newPassHeader": "Set New Password",
-        "newPassConfirmText": "Password is set!",
+        "newPassHeader": "Yeni Şifre Belirle",
+        "newPassConfirmText": "Şifre ayarlandı!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "Sistem %CLOUD_NAME% e bağlı!",
@@ -153,16 +153,16 @@
         "connectErrorAdditional": "Lütfen daha sonra tekrar dene.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
         "connectedText": "Sistem %CLOUD_NAME% e bağlı",
-        "setupConnectedText": "System connected",
+        "setupConnectedText": "Sistem bağlandı",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
         "copiedToClipboard": "Copied to clipboard",
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
-            "newPass": "set a new password",
+            "newPass": "yeni şifre belirle",
             "login": "giriş yap"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "E-posta gönderildi!"
     },
     "cameraFilters": {
         "H265": "H.265 Kameralar",
@@ -324,7 +324,7 @@
         "unlockToMove": "Unlock dashboard to move widgets"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "Oluştur"
     },
     "dialogs": {
         "twoFa": {
@@ -416,7 +416,7 @@
             },
             "moveCloudStorage": {
                 "title": "Bulut Depolama Alanını Taşı",
-                "success": "Storage successfully moved",
+                "success": "Depolama başarıyla taşındı",
                 "errorPrefix": "Bulut depolama alanı taşınırken hata oluştu",
                 "notFound": "Depolama alanı bulunamadı. Depolama alanı başka bir kullanıcı tarafından taşınmış veya silinmiş olabilir",
                 "status": {
