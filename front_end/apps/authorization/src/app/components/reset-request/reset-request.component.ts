@@ -33,6 +33,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Output() resetEmailChange = new EventEmitter<string>();
     @Input() loginEmail: string;
     @Input() confirm: boolean;
+    @Output() confirmChange = new EventEmitter<boolean>();
     @Input() errorCode: string;
     @Input() resetRequestProcess: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
@@ -62,7 +63,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
 
     goBack(): void {
         if (this.confirm) {
-            this.confirm = false;
+            this.confirmChange.emit(false);
         } else {
             this.setCurrentState.emit('password');
         }

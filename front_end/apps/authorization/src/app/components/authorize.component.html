@@ -85,7 +85,7 @@
             *ngSwitchCase="AuthorizeState.request"
             [viewType]="viewType"
             [smallView]="windowSmallEnough"
-            [confirm]="confirmRequest"
+            [(confirm)]="confirmRequest"
             [(resetEmail)]="resetPasswordEmail"
             [loginEmail]="loginEmail"
             [resetRequestProcess]="resetRequestProcess"
