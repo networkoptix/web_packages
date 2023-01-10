@@ -1,0 +1,24 @@
+
+{
+    "server 1":
+    {
+        "cloudConnected":true,
+        "ports":2,
+        "network":"host",
+        "addUsers":true
+    },  
+
+    "server 2":
+    {
+        "ports":1,
+        "cloudConnected":true,
+        "addUsers":true
+    },
+
+    "server 3":
+    {
+        "ports":1,
+        "cloudConnected":true,
+        "addUsers":true
+    }
+}    

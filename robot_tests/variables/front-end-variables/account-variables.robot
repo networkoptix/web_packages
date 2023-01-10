@@ -14,8 +14,8 @@ ${ACCOUNT LAST NAME}                  //input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //button[@id="saveSettingsBtn"]
 ${ACCOUNT CANCEL}                     //button[@id="cancelSettingsBtn"]
-${TEST FIRST NAME}                    testFirstName
-${TEST LAST NAME}                     testLastName
+${TEST FIRST NAME}                    mark
+${TEST LAST NAME}                     hamill
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
 ${CAN NOT DELETE ACCOUNT TOOLTIP}     //nx-tooltip-component/div[contains(@class,"tooltip-body")]

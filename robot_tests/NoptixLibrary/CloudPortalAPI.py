@@ -101,6 +101,7 @@ class CloudPortalAPI(object):
         with self._session(email, password) as s:
             logger.trace(f'The headers are {s.headers}')
             data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
+            s.headers.update({"referer": f"{self.env}"})
             r = s.post(f'{self.env}/api/systems/merge', data)
             logger.trace(f'Value of r.content: {r.content}')
             assert r.status_code == 200, f'merge failed with {r.status_code}'
@@ -110,6 +111,7 @@ class CloudPortalAPI(object):
     def cdb_merge_cloud_systems(self, master_id, slave_id, email, password):
         r = requests.post(f'{self.env}/cdb/system/{master_id}/merged_systems/', auth=HTTPBasicAuth(email, password),
                           json={"systemId": slave_id}, verify=False)
+        assert 200 == r.status_code, f'Merge failed with code:{r.status_code}'
         return r.json()
 
     @keyword
@@ -185,6 +187,7 @@ class CloudPortalAPI(object):
     @keyword
     def disconnect(self, email, password, system_id):
         with self._session(email, password) as s:
+            s.headers.update({"referer": f"{self.env}"})
             r = s.post(
                 f'{self.env}/api/systems/disconnect',
                 json={'system_id': system_id, 'password': password})
@@ -194,8 +197,10 @@ class CloudPortalAPI(object):
     @keyword
     def delete_account(self, email, password):
         with self._session(email, password, logout=False) as s:
+            s.headers.update({"referer": f"{self.env}"})
             r = s.post(
                 f'{self.env}/api/account/delete', json={'password': password})
+            logger.trace(password)
             logger.trace(r.json())
             return r.json()
 
@@ -579,6 +584,7 @@ class CloudPortalAPI(object):
         with self._session(
                 email, password,
                 backup_code=backup_code, verification_code=verification_code) as s:
+            s.headers.update({'Referer': self.env})
             r = s.get(f'{self.env}/api/account')
             logger.trace(r.json())
             if r.json()['account2faEnabled'] == True or r.json()['totpExistsForAccount'] == True:

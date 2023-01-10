@@ -90,7 +90,6 @@ class CloudSession:
                     self._verify_with_backup(code)
             except requests.exceptions.HTTPError as e:
                 print(e)
-
         self._request_wrapper("/api/account/loginCode", method='post', data={"code": code})
         self.session.headers.update({'X-CSRFToken': self.session.cookies['csrftoken']})
         return self.session

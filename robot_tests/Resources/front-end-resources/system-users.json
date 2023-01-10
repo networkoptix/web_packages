@@ -1,0 +1,27 @@
+
+[
+    {   
+        "addUsers":false,
+        "cloudConnected":true,
+        "cloudOwner":"",
+        "cloudUsers":{},
+        "localUsers":{},
+        "mac" : "",
+        "name": "",
+        "port": "",
+        "ports":1,
+        "serverId":""
+    },  
+    {
+        "addUsers":false,
+        "cloudConnected":true,
+        "cloudOwner":"",
+        "cloudUsers":{},
+        "localUsers":{},
+        "mac" : "",
+        "name": "",
+        "port": "",
+        "ports":1,
+        "serverId":""
+    },
+]    

@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import string
 import docker
 import email.header
 import imaplib
+import json
 import os
+import paramiko
 import re
 import socket
 import subprocess
 import time
 import uuid
 
+from contextlib import contextmanager
 from datetime import date
 from platform import system
 from random import *
@@ -35,7 +39,12 @@ from googletrans import Translator
 @library
 class GenericKeywords(object):
     def __init__(self):
-        self.cloud = CloudPortalAPI()
+        self.cloud_host = BuiltIn().get_variable_value("${ENV}")
+        self.ssh_host = BuiltIn().get_variable_value("${QA BURBANK IP}")
+        self.image = BuiltIn().get_variable_value("${IMAGE}")
+        self.password = BuiltIn().get_variable_value("${BASE PASSWORD}")
+        self.from_email = BuiltIn().get_variable_value("${FROM EMAIL DEFAULT}")
+        self.base_email = BuiltIn().get_variable_value("${BASE EMAIL}")
         self.permissions={
             "cloudAdmin":"GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
             "viewer":"GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
@@ -43,6 +52,8 @@ class GenericKeywords(object):
             "advancedViewer":"GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
             "custom":"NoGlobalPermissions"
             }
+        self.cloud_api = CloudPortalAPI(env=self.cloud_host)
+        self.server_api = ServerAPI5()
 
     @keyword
     def go_forward(self):
@@ -535,11 +546,14 @@ class GenericKeywords(object):
             return s.connect_ex(('localhost', port)) == 0
 
     @keyword
-    def get_random_port():
-        in_use = True
-        while in_use:
-            port = random_port()
-            in_use = NoptixLibrary.is_port_in_use(port)
+    def get_random_port_from_docker_server(self):
+        with self._ssh_client() as ssh_client:
+            command = "comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1"
+            _, ssh_stdout, ssh_stderr = ssh_client.exec_command(command)
+            error = ssh_stderr.read()
+            if error:
+                raise Exception(f'Unable to get port: {error}')
+            port = ssh_stdout.read().decode("utf-8").strip()
         return port
 
     @keyword
@@ -756,28 +770,170 @@ class GenericKeywords(object):
 
     @keyword
     def Get_Cloud_User_Role(self, auth, email, systemId):
-        users = self.cloud.get_cloud_system_users(auth, systemId)
+        users = self.cloud_api.get_cloud_system_users(auth, systemId)
         for user in users:
             if user["accountEmail"] == email:
                 return user["accessRole"]
 
     @keyword
     def User_Is_In_Cloud_System(self, email, systemId, auth):
-        users = self.cloud.get_cloud_system_users(auth, systemId)
+        users = self.cloud_api.get_cloud_system_users(auth, systemId)
         for user in users:
             if user["accountEmail"] == email:
                 return True
-        
+                
     @keyword
     def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth):
         isThere = self.User_Is_In_Cloud_System(email, systemId, auth)
         if isThere:
             logger.info(email + " already in system")
         else:
-            r = self.cloud.share(auth, systemId, accessRole, email, self.permissions[accessRole])
+            r = self.cloud_api.share(auth, systemId, accessRole, email, self.permissions[accessRole])
             logger.info(r)
 
     @keyword
     def Add_Cloud_Users(self, auth, users, systemId):
         for permission in users:
             self.Add_user_to_cloud_system_if_not_there(systemId, permission, users[permission], auth)
+
+    @contextmanager
+    def _ssh_client(self):
+        with paramiko.SSHClient() as ssh_client:
+            ssh_client.load_system_host_keys()
+            ssh_client.connect(self.ssh_host, username='qaburbank', password='QABurbank777$')
+            yield ssh_client
+
+
+    @keyword
+    def create_systems(self):
+        jsonPath = os.path.join(
+            "Resources",
+            "front-end-resources", 
+            f"{BuiltIn().get_variable_value('${SUITE NAME}').lower()}.json".replace("test-cases.", "")
+            )
+        with open(jsonPath,  encoding="utf-8") as suite_json:
+            serversJson = json.load(suite_json)
+            # Start Docker server for each server in the JSON
+            for idx, server in enumerate(serversJson):
+                server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}{idx}_"
+                server.update(self.create_docker_server(server))
+            
+            # Set up systems
+            for server in serversJson:
+                self.server_api.setup_local_system(f"https://{self.ssh_host}:{server['port'][0]}", "qweasd 123", server["name"])
+            
+            # Register and activate owner user
+            for server in serversJson:
+                if server['cloudConnected'] == True:
+                    owner = self.get_random_email(self.base_email, sendemail=self.from_email)
+                    self.cloud_api.register_account("mark", "hamill", owner, self.password)
+                    BuiltIn().run_keyword('Activate', owner)
+                    break
+                
+            # Connect systems to cloud
+            for server in serversJson:
+                if server["cloudConnected"]:
+                    logger.trace(server['port'][0])
+                    serverId = self.server_api.API_connect_to_cloud(
+                        [owner, self.password], 
+                        f"https://{self.ssh_host}:{server['port'][0]}", 
+                        self.cloud_host, 
+                        name=server["name"])
+                    server.update({"id": serverId, "cloudOwner":owner})
+
+            # add cloud and local auth lists
+            for server in serversJson:
+                server.update({"localAuth":["admin", self.password]})
+                if server["cloudConnected"]:
+                    server.update({"cloudAuth":[server["cloudOwner"], self.password]})
+
+            # get server token for authentication
+            for server in serversJson:
+                server["token"] = self.server_api.get_server_token(server["localAuth"], f"https://{self.ssh_host}:{server['port'][0]}")
+                
+            # Add local users if required
+            for server in serversJson:
+                if server["addUsers"] == True:
+                    localUsersNames = BuiltIn().get_variable_value('${role names}').keys()
+                    permissions = BuiltIn().get_variable_value('${permissions}')
+                    localUsers={}
+                    for user in localUsersNames:
+                        self.server_api.save_user(
+                            server["token"],
+                            f"https://{self.ssh_host}:{server['port'][0]}",
+                            "Local"+user, 
+                            permissions[user], 
+                            f"noptixautoqa+local{user}@gmail.com",
+                            "Local User",
+                            self.password,
+                            isCloud=False
+                            )
+                        localUsers.update({user:{"login":"Local"+user, "email": f"noptixautoqa+local{user}@gmail.com"}})
+                    server.update({"localUsers":localUsers})
+
+            # Register, Activate, and Share cloud users if required
+            for server in serversJson:
+                if server["addUsers"] == True and server["cloudConnected"] == True:
+                    cloudUsers = BuiltIn().run_keyword('Register and Activate Generic Users')
+                    self.Add_Cloud_Users(server["cloudAuth"], cloudUsers, server['id'])
+                    server.update({"cloudUsers":cloudUsers})
+        
+        return serversJson
+
+
+    def create_docker_server(self, server):
+        name = server['name'] +''.join(choices(string.ascii_lowercase +string.digits, k=8))
+        mac = self.get_random_mac()
+        ports = []
+        for _ in range(server["ports"]):
+            ports.append(self.get_random_port_from_docker_server())
+
+        command = self.create_docker_run_command(server, name, mac, ports)
+        with self._ssh_client() as ssh_client:
+            _, _, ssh_stderr = ssh_client.exec_command(command)
+            error = ssh_stderr.read()
+            if error:
+                raise RuntimeError(f'Failed to start server: {error}')
+
+        return {
+            "name": name,
+            "port": ports,
+            "mac" : mac,
+            }
+
+    def create_docker_run_command(self, server, name, mac, ports):
+        base_command = "docker run -d  --restart always --privileged --cap-add=NET_ADMIN"
+        storage_command = server.get('storage', '')
+        name_command = f"--name={name}"
+        mac_command = f"--mac-address={mac}"
+        port_command = ""
+        port_count = 7001
+        for port in ports:
+            port_command = f"{port_command} -p {port}:{port_count}"
+            port_count = port_count + 1
+        cloud_host_command = f"-e CLOUD_HOST={self.cloud_host.replace('https://', '')}"
+        return (
+            f"{base_command} {name_command} {mac_command} {port_command}"
+            f"{storage_command} {cloud_host_command} {self.image}")
+
+
+    def delete_docker_server(self, server):
+        command = f"docker rm -f {server['name']}"
+        with self._ssh_client() as ssh_client:
+            _, _, ssh_stderr = ssh_client.exec_command(command)
+        error = ssh_stderr.read()
+        if error:
+            raise Exception(f'Failed to stop server: {error}')
+
+    @keyword
+    def teardown_servers(self, serversJson):
+        # Disconnect each server from cloud
+        for server in serversJson:
+            self.cloud_api.disconnect(server["cloudOwner"], self.password, server["id"])
+            # Delete each user's account if they were added
+            for user in server["cloudUsers"]:
+                self.cloud_api.delete_account(server["cloudUsers"][user], self.password)
+            self.delete_docker_server(server)
+        # Delete the owner account
+        self.cloud_api.delete_account(server["cloudOwner"], self.password)
+

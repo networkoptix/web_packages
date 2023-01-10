@@ -133,7 +133,7 @@ Log In
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
-    Sleep    4
+    #Sleep    4
     IF    '''${button}''' != "None" 
         Wait Until Element Is Visible    ${button}
     END
@@ -318,7 +318,7 @@ Register
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
-    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    10
+    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    5
     IF    ${read only}==${False}
         Input Text    ${REGISTER EMAIL INPUT}    ${email}
     END
@@ -380,9 +380,9 @@ Get Email Link
         Return From Keyword    ${link}
     END
 Activate
-    [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${from email}=${FROM EMAIL DEFAULT}
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${fromEmail}=${FROM EMAIL DEFAULT}
     IF    ${from email}
-        ${link}=   Get Email Link    ${email}    activate    via email=${from email}
+        ${link}=   Get Email Link    ${email}    activate    via email=${fromEmail}
         Go To    ${link}
 
         Wait Until Elements Are Visible
@@ -410,14 +410,14 @@ Register And Activate Account
         Register    ${first name}    ${last name}    ${email}    ${password}
     END
     Sleep    1
-    Activate    ${email}    ${password}    from email=${from email}
+    Activate    ${email}    ${password}    fromEmail=${from email}
     
 
 Register and activate account with random email
     [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=${FROM EMAIL DEFAULT}
     ${email}=    Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    from email=${act}
-    Go to    ${url}
+    #Go to    ${url}
     [Return]    ${email}
 
 Disconnect all systems from account
@@ -985,12 +985,6 @@ Create Base System
 
 
     [Return]    ${server}
-
-Delete Accounts
-    [Arguments]    ${accounts}
-    FOR    ${email}    IN   @{accounts}
-        Delete Account    ${email}    ${base password}
-    END
 
 Delete Base System
     [Arguments]     ${system}    ${password}=${BASE PASSWORD}

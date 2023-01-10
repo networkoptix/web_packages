@@ -34,6 +34,7 @@ class ServerAPI5(ServerAPI):
     def setup_local_system(self, serverUrl, newPassword, systemName):
         with requests.Session() as s:
             credentials = {"username": "admin", "password": "admin", "setCookie": True}
+            logger.trace(f"{serverUrl}/rest/v1/login/sessions")
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             data = {
                 "name": systemName,
@@ -262,6 +263,7 @@ class ServerAPI5(ServerAPI):
             s.headers.update({'X-Runtime-Guid': s.cookies['x-runtime-guid'], "X-Server-guid": serverId})
             body = {"port": newPort}
             r = s.post(f'{serverUrl}/api/configure', json=body, verify=False)
+            assert r.status_code == 200, f'Changing port failed with {r}'
             return r
             
     @keyword

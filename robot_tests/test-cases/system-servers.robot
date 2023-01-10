@@ -28,7 +28,7 @@ Force Tags        system
     Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
     Wait Until Element is Visible    //nx-level-3-item//a//span[contains(text(),"server 1 name changed")]     
     Log    Reset the name to server 1
-    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
+    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port]
     Reload Page
     Wait Until Element Is Visible    //header//nx-text-editable[contains(text(),"server 1")]
 
@@ -40,7 +40,27 @@ Force Tags        system
     Verify Server Buttons Are Enabled
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
-    Change server name via API    ${server auth}    server 1 name changed    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
+=======
+<<<<<<< HEAD
+    Change server name via API    ${server auth}    server 1 name changed    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+=======
+    Change server name via API    ${server auth}    server 1 name changed    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port]
+>>>>>>> some updates to dictionary references
+>>>>>>> some updates to dictionary references
+=======
+    Change server name via API    ${server auth}    server 1 name changed    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+>>>>>>> update users2 for new dict, and add auths to dict
+=======
+    Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
+>>>>>>> handle token and convert to list of dicts instead of 1 dict
+=======
+    Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
+>>>>>>> 1af0104885264d2bbe6e8347936c9fb4fd4487cb
     Sleep    1
     Reload Page
     Sleep   5
@@ -48,7 +68,27 @@ Force Tags        system
     #Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Element Text Should Be    ${SYSTEM NAME}    server 1 name changed
     Log    Reset the name to server 1
-    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
+=======
+<<<<<<< HEAD
+    Change server name via API    ${server auth}    server 1    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+=======
+    Change server name via API    ${server auth}    server 1    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port]
+>>>>>>> some updates to dictionary references
+>>>>>>> some updates to dictionary references
+=======
+    Change server name via API    ${server auth}    server 1    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+>>>>>>> update users2 for new dict, and add auths to dict
+=======
+    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
+>>>>>>> handle token and convert to list of dicts instead of 1 dict
+=======
+    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
+>>>>>>> 1af0104885264d2bbe6e8347936c9fb4fd4487cb
 
 3. Restart close button works
     [Tags]    C70968    cloud    webadmin
@@ -85,14 +125,14 @@ Force Tags        system
     ELSE
         Sleep    60
         Close Browser
-        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[0][port]
         Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
     END
 
 6. Restart server as administrator
     [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
     [Tags]    C70968    webadmin    # cloud
-    [Setup]    Server Settings Test Setup    user=${admin}
+    [Setup]    Server Settings Test Setup    user=${servers}[0][cloudUsers][cloudAdmin]
     Skip If    '''${mode}'''=='''cloud'''
     Verify on Servers Page
     Wait Until Element Is Enabled    ${RESTART SERVER BUTTON}
@@ -107,13 +147,38 @@ Force Tags        system
     ELSE
         Sleep    60
         Close Browser
-        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[0][port][0]
+=======
+=======
+>>>>>>> update users2 for new dict, and add auths to dict
+<<<<<<< HEAD
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+=======
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port]
+>>>>>>> some updates to dictionary references
+<<<<<<< HEAD
+>>>>>>> some updates to dictionary references
+=======
+=======
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+>>>>>>> update users2 for new dict, and add auths to dict
+>>>>>>> update users2 for new dict, and add auths to dict
+=======
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port][0]
+>>>>>>> handle token and convert to list of dicts instead of 1 dict
+=======
+        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[0][port][0]
+>>>>>>> 1af0104885264d2bbe6e8347936c9fb4fd4487cb
         Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
     END
 
 7. Change port is only available for owner
     [Tags]    C70927    cloud    webadmin
-    [Setup]    Server Settings Test Setup    user=${admin}
+    [Setup]    Server Settings Test Setup    user=${servers}[0][cloudUsers][cloudAdmin]
     Verify on Servers Page
     Element Should Be Disabled    ${PORT INPUT}
 
@@ -128,7 +193,7 @@ Force Tags        system
     Delete All Text    ${PORT INPUT}
     Wait Until Element Is Visible    ${SERVER PORT IS REQUIRED ERROR}
     Reload Page
-    Wait Until Element Is Visible    ${PORT INPUT}
+_    Wait Until Element Is Visible    ${PORT INPUT}
     Wait Until Element Is Not Visible    ${SERVER PORT IS REQUIRED ERROR}
     ${after port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${before port}    ${after port}
@@ -179,37 +244,34 @@ Force Tags        system
 
 9. Change port
     [Tags]    C70975    cloud    webadmin
-    Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
     @{auth}=    Create List    admin    ${password}
-    Get Cameras    ${auth}    https://${QA BURBANK IP}:${extra port}
-    Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    ${7001}    ${server 1}[serverId]
+    Get Cameras    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][1]
+    Change server port via API    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][1]    ${7001}    ${servers}[0][id]
     Log To Console    port changed back
-    Get Cameras    ${auth}    https://${QA BURBANK IP}:${server 1}[port]
+    Get Cameras    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][0]
 
 # Waiting to hear back from server team about proper error code
 10. Administrator cannot change port via API
     [Tags]    C70927    cloud    webadmin
-    Verify on Servers Page
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
-    @{auth}=    Create List    ${server 2}[local users][cloudAdmin][email]    ${password}
-    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${server 1}[sysId].relay.vmsproxy.hdw.mx    7777    ${split[1]}
-    ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${server 1}[port]    7777    ${split[1]}
+    @{auth}=    Create List    ${servers}[0][localUsers][cloudAdmin]    ${password}
+    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${servers}[0][id].relay.vmsproxy.hdw.mx    7777    ${split[1]}
+    ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][0]    7777    ${split[1]}
     ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
     Should Be True    ${status is correct}
 
 11. Check status
     [Tags]    C70957    cloud    webadmin
-    Verify on Servers Page
-    Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}
+    Wait Until Element Is Not Visible    ${CHECK STATUS BUTTON}
     Select Server By Name    server 2
-    Verify on Servers Page
-    Wait Until Element is Visible    ${CHECK STATUS BUTTON}
+    Verify On Servers Page
+    Wait Until Element Is Visible    ${CHECK STATUS BUTTON}
     Element Text Should Be    ${OFFLINE BANNER}   ${SERVER OFFLINE TEXT}
     Click Button    ${CHECK STATUS BUTTON}
-    Wait Until Element is Visible    ${CHECKING BANNER}
+    Wait Until Element Is Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${CHECKING BANNER}
     Element Text Should Be    ${OFFLINE BANNER}    ${SERVER OFFLINE TEXT}
     Start Docker Server    ${server 2}[id]
@@ -224,28 +286,28 @@ Force Tags        system
 
 12. Detailed info 1 server
     [Tags]   C70923    cloud    webadmin
-    [Setup]    Server Settings Test Setup    server=${server 3}
+    [Setup]    Server Settings Test Setup    server=${servers}[2]
     Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
     ${loc}=    Get Location
     log    ${loc}
     IF    '''${mode}'''=='''cloud'''
-        Wait Until Location Contains    ${ENV}/systems/${server 3}[sysId]/health/servers
+        Wait Until Location Contains    ${ENV}/systems/${servers}[2][id]/health/servers
     ELSE
-        Wait Until Location Contains    https://${QA BURBANK IP}:${server 3}[port]/#/health/servers
+        Wait Until Location Contains    https://${QA BURBANK IP}:${servers}[2][port]/#/health/servers
     END
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
 
 13. Detailed info 2 servers
     [Tags]    C70923    cloud    webadmin
-    Execute Command Remotely   docker container start ${server 2}[id]
+    Execute Command Remotely   docker container start ${servers}[1][id]
     Select Server By Name    server 1
     Click Button    ${SERVER DETAILED INFO BUTTON}
     IF    '''${mode}'''=='''cloud'''
-        Wait Until Location Contains    ${ENV}/systems/${server 1}[sysId]/health/servers
+        Wait Until Location Contains    ${ENV}/systems/${servers}[0][id]/health/servers
     ELSE
-        Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
+        Wait Until Location Contains    https://${QA BURBANK IP}:${servers}[0][port]/#/health/servers
     END
     
     Wait Until Elements Are Visible
@@ -255,12 +317,12 @@ Force Tags        system
     ...     //span[contains(text(), "Activity")]
 #    Page Should Not Contain Element    ${HM SINGLE ENTITY}
 #    Wait Until Element is Visible    //nx-block//h4[@class="panel-title"]
-    Execute Command Remotely    docker container stop ${server 2}[id]
+    Execute Command Remotely    docker container stop ${servers}[1][name]
 
 14. Offline system 1 server settings
     [Tags]    C70950    cloud
-    [Setup]    Server Settings Test Setup    server=${server 3}
-    Execute Command Remotely    docker container stop ${server 3}[id]
+    [Setup]    Server Settings Test Setup    server=${servers}[2]
+    Execute Command Remotely    docker container stop ${servers}[2][name]
     Reload Page
     Wait Until Elements Are Visible
         ...    ${SERVER NOT ACCESIBLE IMAGE}
@@ -284,7 +346,7 @@ Force Tags        system
     Element Should be Enabled    ${PORT INPUT}
     Element Should be Enabled    ${RESTART SERVER BUTTON}
     Element Should be Visible    ${SERVER DETAILED INFO BUTTON}
-    stop docker server    ${server 2}[id]
+    stop docker server    ${servers}[1][id]
     Select Server By Name    server 2
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Element Should be Disabled    ${RESTART SERVER BUTTON}
