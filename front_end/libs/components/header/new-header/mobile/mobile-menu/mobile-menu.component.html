@@ -69,16 +69,6 @@
                     [src]="images.dirHeader + 'external_link.svg'"
                 ></svg-icon>
             </div>
-            <div
-                *ngIf="false"
-                class="nav-arrow"
-                (click)="nodeClick(node, $event)"
-            >
-                <svg-icon
-                    [src]="icons.dirHeader + 'nav_arrow.svg'"
-                    [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
-                ></svg-icon>
-            </div>
         </div>
     </div>
     <div class="account-button-wrapper">
@@ -114,16 +104,6 @@
                 <svg-icon
                     *ngIf="subnode.new_window"
                     [src]="images.dirHeader + 'external_link.svg'"
-                ></svg-icon>
-            </div>
-            <div
-                *ngIf="subnode.url == '/systems'"
-                class="nav-arrow"
-                (click)="nodeClick(subnode, $event)"
-            >
-                <svg-icon
-                    [src]="icons.dirHeader + 'nav_arrow.svg'"
-                    [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
                 ></svg-icon>
             </div>
         </div>

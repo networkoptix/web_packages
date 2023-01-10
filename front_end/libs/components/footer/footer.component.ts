@@ -54,7 +54,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnInit(): void {
-        this.visible = this.oauth || this.CONFIG.featureFlags.newHeader;
+        this.visible = this.oauth || !this.CONFIG.featureFlags.newHeader;
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
