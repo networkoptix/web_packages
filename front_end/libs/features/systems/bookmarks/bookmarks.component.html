@@ -24,7 +24,7 @@
     ></nx-simple-search>
     <div
         class="no-bookmarks"
-        *ngIf="bookmarks && !bookmarks.length"
+        *ngIf="!(bookmarks | async)?.length"
     >
         <svg-icon
             nx-add-svg-src
@@ -43,10 +43,10 @@
     </div>
     <div
         class="bookmarks"
-        *ngIf="bookmarks?.length"
+        *ngIf="(bookmarks | async)?.length"
     >
         <div
-            *ngFor="let bookmark of bookmarks; index as i"
+            *ngFor="let bookmark of bookmarks | async"
             class="bookmarks-container"
             [nxTooltip]="bookmark.description"
             alternateStyle

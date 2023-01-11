@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { combineLatest, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
@@ -10,6 +10,7 @@ import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { Bookmark as BookmarkResp } from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -73,7 +74,7 @@ export class NxBookmarksComponent implements OnInit {
 
     private system: NxSystem;
 
-    bookmarks: Bookmark[] = [];
+    bookmarks = new BehaviorSubject<Bookmark[]>([]);
     devices: string[] = [];
     tags: string[] = [];
 
@@ -157,7 +158,7 @@ export class NxBookmarksComponent implements OnInit {
     private getData(): void {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
         mediaserver.getBookmarks().subscribe(bks => {
-            this.bookmarks = bks.map(bk => ({
+            const formatBookmark = (bk: BookmarkResp): Bookmark => ({
                 ...bk,
                 src: this.system.mediaserver.getExportUrl({
                     cameraId: bk.deviceId,
@@ -178,11 +179,12 @@ export class NxBookmarksComponent implements OnInit {
                     label: tag
                 })),
                 isVisible: false,
-            }));
+            });
             // this.suggestions = {
             //     ...this.suggestions,
             //     TITLE: this.bookmarks.map(bk => bk.name)
-            // };
+            //
+            this.bookmarks.next(bks.map(formatBookmark));
         });
         mediaserver.getBookmarkTags().subscribe(tags => {
             this.tags = Object.keys(tags);
