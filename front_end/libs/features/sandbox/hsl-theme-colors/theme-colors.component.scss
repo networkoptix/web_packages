@@ -128,4 +128,11 @@
             box-shadow: none !important;
         }
     }
+
+    .editable-edit {
+        padding: 0 4px;
+        margin-left: -4px;
+        width: 100px;
+        caret-color: var(--input-active-color);
+    }
 }

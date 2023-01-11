@@ -179,7 +179,11 @@
                         (onDrag)="setColorLuminosityStep($event)"
                     >
                     </nx-slider>
-                    {{ luminosityStep }}
+                    <nx-text-editable
+                        name="luminosityStep"
+                        [(ngModel)]="luminosityStep"
+                        (ngModelChange)="setColorLuminosityStep($event)"
+                    ></nx-text-editable>
                 </div>
             </div>
 
