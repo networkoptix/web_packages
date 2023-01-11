@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef, Inject
@@ -19,7 +20,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
+import { ModuleInformation } from '@services/system-api.types';
+import { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
@@ -31,6 +33,12 @@ import { StateMachine } from './stateMachine';
 
 interface SystemDropdownItem extends DropdownItem<string> {
     peer?: boolean;
+}
+
+interface NxSystemModuleInfo extends NxSystemWithUserInfo {
+    moduleInfo: any;
+    protoVersion: string;
+    status: string;
 }
 
 @Component({
@@ -48,7 +56,8 @@ export class MergeModalContent {
 
     user;
     system;
-    systems: NxSystem[];
+    systems: NxSystemWithUserInfo[];
+    systemsWithInfo: NxSystemModuleInfo[];
     account: NxAccountService;
     checkMergeabilityFunction;
     checkMergeabilityProcess: Process;
@@ -117,6 +126,7 @@ export class MergeModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private httpService: HttpClient,
         private cloudApi: NxCloudApiService,
         private cdRef: ChangeDetectorRef,
         private loginService: NxLoginService,
@@ -131,6 +141,11 @@ export class MergeModalContent {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+    }
+
+    private getSystemInfo(systemId: string): Promise<ModuleInformation> {
+        const url = `https://${this.CONFIG.trafficRelayHost.replace('{systemId}', systemId)}/api/moduleInformation`;
+        return this.httpService.get<ModuleInformation>(url).toPromise();
     }
 
     ngOnInit(): void {
@@ -148,34 +163,24 @@ export class MergeModalContent {
             await this.system.serverManager.getModuleInfo().toPromise();
             environment.isLocal && await this.getPeerSystems();
             this.account = await this.user.get();
-            await Promise.all(
-                this.systems.map(async (system: any) => {
-                    if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
-                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id, undefined, true, true);
+            this.systemsWithInfo = await Promise.all(
+                this.systems.map(async (system: NxSystemWithUserInfo) => {
+                    const newSystem: NxSystemModuleInfo = Object.assign({}, system, { status: '', protoVersion: '' });
+                    if (!newSystem.moduleInfo && !['offline', 'unavailable'].includes(newSystem.stateOfHealth)) {
                         try {
-                            const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
-                            system.moduleInfo = moduleInfo.reply;
+                            newSystem.moduleInfo = (await this.getSystemInfo(system.id)).reply;
+                            newSystem.protoVersion = newSystem.moduleInfo.protoVersion;
                         } catch (err) {
-                            system.status = 'offline';
-                            system.stateOfHealth = 'offline';
                             console.error(err);
-                        }
-                        tempSystemService.stopPoll();
-                    }
-                    if (system.moduleInfo) {
-                        system.protoVersion = system.moduleInfo.protoVersion;
-                        system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
-                        if (system.moduleInfo.remoteAddresses) {
-                            system.moduleInfo.remoteAddresses.forEach((addy: string) => {
-                                const ip = cleanIp(addy);
-                                this.systemUrls[`${ip}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
-                            });
+                            newSystem.status = 'offline';
+                            newSystem.stateOfHealth = 'offline';
                         }
                     }
+                    return newSystem;
                 })
             );
 
-            if (this.systems.length === 0 && this.peerSystems.length === 0) {
+            if (this.systemsWithInfo.length === 0 && this.peerSystems.length === 0) {
                 if (environment.isLocal) {
                     this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
                     this.secondarySystem = this.targetSystem;
@@ -184,9 +189,9 @@ export class MergeModalContent {
                     this.machine.transition('failedToFindAnySystem');
                 }
             } else {
-                if (this.systems.length) {
+                if (this.systemsWithInfo.length) {
                     this.processedSystems.push(
-                        ...this.makeSelectorList(this.systems)
+                        ...this.makeSelectorList(this.systemsWithInfo)
                     );
                 }
                 if (environment.isLocal) {
@@ -204,8 +209,8 @@ export class MergeModalContent {
                 if (targetSystem) {
                     this.systemsService.forceUpdateSystems();
                     const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
-                        this.systems = systems || [];
-                        const updatedTargetSystem = [...this.systems, ...this.peerSystems]
+                        this.systemsWithInfo = systems as NxSystemModuleInfo[] || [];
+                        const updatedTargetSystem = [...this.systemsWithInfo, ...this.peerSystems]
                             .find(system => system.id === targetSystem.id);
                         if (updatedTargetSystem) {
                             updatedTargetSystem.value = updatedTargetSystem.id;
@@ -310,7 +315,7 @@ export class MergeModalContent {
                 showUpdate = this.serverUrlState;
                 Object.assign(templateUpdates, { serverUrlInputValue, selectedTarget: this.otherSystem });
             } else {
-                this.targetSystem = this.systems.find(system => system.id === targetSystem.value) ||
+                this.targetSystem = this.systemsWithInfo.find(system => system.id === targetSystem.value) ||
                     this.peerSystems.find(system => system.id === targetSystem.value);
                 this.targetSystem.value = this.targetSystem.id;
                 this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
@@ -387,7 +392,7 @@ export class MergeModalContent {
             url += ':7001';
         }
         if (this.targetSystem.value === this.otherSystem && this.systemUrls[url]) {
-            const targetSystem = this.systems.find(system => system.id === this.systemUrls[url]) ||
+            const targetSystem = this.systemsWithInfo.find(system => system.id === this.systemUrls[url]) ||
                 this.peerSystems.find(system => system.id === this.systemUrls[url]);
             targetSystem.value = targetSystem.id;
             this.setTargetSystem(targetSystem, url);
@@ -709,10 +714,10 @@ export class MergeModalContent {
 
         this.systemsService.forceUpdateSystems().toPromise()
             .then(systems => {
-                this.systems = systems;
+                this.systemsWithInfo = systems as NxSystemModuleInfo[];
             })
             .finally(() => {
-                const system: any = this.systems.find(system => system.id === this.primarySystem.id);
+                const system: any = this.systemsWithInfo.find(system => system.id === this.primarySystem.id);
                 const stateOfHealth = system?.stateOfHealth || this.primarySystem.stateOfHealth;
                 err.failedSystemName = stateOfHealth === 'online'
                     ? err.secondarySystemName
@@ -824,34 +829,32 @@ export class MergeModalContent {
                 throw Error(this.secondarySystemUnavailable);
             }
 
-            let systems;
+            let mainSystemProto, targetSystemProto;
             try {
-                systems = await Promise.all([
+                const [mainSystem, targetSystem] = await Promise.all([
                     this.system.serverManager.getModuleInfo().toPromise(),
                     this.targetSystemService.serverManager.getModuleInfo().toPromise()
                 ]);
+                mainSystemProto = mainSystem.reply.protoVersion;
+                targetSystemProto = targetSystem.reply.protoVersion;
             } catch (err) {
                 if (err.status === 502) {
                     throw Error(this.systemOffline);
                 }
             }
 
-            const [sys1, sys2] = systems;
-            if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
-                const [servers, target] = await Promise.all([
+            if (mainSystemProto === targetSystemProto) {
+                const [mainServers, targetServers] = await Promise.all([
                     this.system.mediaserver.getMediaServers(false).toPromise(),
                     this.targetSystemService.mediaserver.getMediaServers(false).toPromise()
                 ]);
-                const serverIds = {};
-                servers.forEach(server => {
-                    serverIds[server.id] = true;
-                });
-                if (target.some(server => serverIds[server.id])) {
+                const primaryServerIds: Set<string> = mainServers.reduce((list, { id }) => list.add(id), new Set<string>());
+                if (targetServers.some(server => primaryServerIds.has(server.id))) {
                     throw Error(this.duplicateServers);
                 }
-                this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
+                this.tooManyServers = mainServers.length + targetServers.length > this.CONFIG.maxServers;
             } else {
-                throw Error(`systemVersion${sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old'}`);
+                throw Error(`systemVersion${mainSystemProto < targetSystemProto ? 'New' : 'Old'}`);
             }
             this.targetSystemService.stopPoll();
         }
@@ -991,7 +994,7 @@ export class MergeModalContent {
     }
 
     selectDefaultSystem() {
-        const systems = [...this.systems, ...this.peerSystems];
+        const systems = [...this.systemsWithInfo, ...this.peerSystems];
         for (const system of systems) {
             if (this.checkMergeability(system) === '') {
                 return { ...system, value: system.id };

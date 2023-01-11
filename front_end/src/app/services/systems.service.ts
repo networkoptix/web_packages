@@ -157,7 +157,7 @@ export class NxSystemsService implements OnDestroy {
         return system.ownerAccountEmail;
     }
 
-    getMySystems(currentUserEmail: string, currentSystemId: string): NxSystem[] {
+    getMySystems(currentUserEmail: string, currentSystemId: string): NxSystemWithUserInfo[] {
         return this.systems.filter(system =>
             system.ownerAccountEmail === currentUserEmail &&
             system.id !== currentSystemId
