@@ -374,6 +374,7 @@ html[data-theme="light-gray"] {
     --btn-header-webadm-main-color      : #{$additional_gray_light1};
     --btn-header-webadm-main-hover-bg   : #{$dark_gray_15};
     --btn-header-webadm-main-active-bg  : #{$dark_gray_13};
+    --btn-disabled-opacity: 0.3;
 
     --dialog-bg : #{$light_gray_1};
     --dialog-border-color : #{$additional_light8};

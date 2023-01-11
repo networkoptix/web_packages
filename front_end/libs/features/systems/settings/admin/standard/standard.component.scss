@@ -60,3 +60,7 @@ nx-block div.checkbox-block:last-of-type+.helper-block {
 .session-toggle-disabled {
     margin-left: 20px !important;
 }
+
+.btn:disabled {
+    opacity: var(--btn-disabled-opacity) !important;
+}

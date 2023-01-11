@@ -386,6 +386,7 @@ html[data-theme="light"] {
     --btn-header-webadm-main-color : #{$additional_light1};
     --btn-header-webadm-main-hover-bg : #{$dark15};
     --btn-header-webadm-main-active-bg : #{$dark13};
+    --btn-disabled-opacity: 0.3;
 
     --dialog-bg : #{$light1};
     --dialog-border-color : #{$additional_light8};
