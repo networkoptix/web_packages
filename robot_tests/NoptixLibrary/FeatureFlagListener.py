@@ -7,7 +7,7 @@ class FeatureFlagListener:
         self.api_done = False
          
     def start_suite(self, data, result):
-        if not self.api_done:
-            featureAPI = CloudPortalAPI(env=BuiltIn().get_variable_value("${ENV}"))
-            featureAPI.set_feature_flags()
-            self.api_done = True
+        #if not self.api_done:
+        featureAPI = CloudPortalAPI(env=BuiltIn().get_variable_value("${ENV}"))
+        featureAPI.set_feature_flags()
+        self.api_done = True
