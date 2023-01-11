@@ -60,30 +60,29 @@ export class NxPageMetaService {
         return this.window.location.href.replace(this.routerUrl, '');
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private mapMeta = (metaProperties: Record<string, () => string>) => {
+    private mapMeta = (metaProperties: Record<string, () => string>): Record<string, string> => {
         return Object.entries(metaProperties || {})
             .reduce((lookup, [property, val]) => {
                 return ({ ...lookup, [property]: val });
             }, {});
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private getBaseMeta() {
+    private getBaseMeta(): Record<string, string> {
         const baseLangMeta = this.mapMeta(this.LANG[this.defaultMetaKey].default);
         const { image, type } = this.CONFIG.metaDefaults.default;
         return { ...baseLangMeta, type, image: this.getRoot() + image };
     }
 
     private findMatchingMeta = (url: string) => {
-        // eslint-disable-next-line
-        return (lookupDict): Record<string, any> => {
-            return Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {};
+        return (lookupDict): Record<never, never> => {
+            return Object.entries(lookupDict)
+                .find(([partialPath]) => {
+                    return url.startsWith(partialPath);
+                })?.[1] || {};
         };
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type,nx/no-untyped-arg
-    private getPathMeta(url) {
+    private getPathMeta(url: string): Record<string, string> {
         const findIn = this.findMatchingMeta(url);
         return {
             ...this.mapMeta(findIn(this.LANG[this.defaultMetaKey])),
@@ -115,8 +114,7 @@ export class NxPageMetaService {
     /**
      * Get a pages current metadata
      */
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    getMetaProperties() {
+    getMetaProperties(): Record<string, string> {
         const url = this.routerUrl.split('?')[0];
         return this.metaLookup[url] || this.generateDefaultMeta(url);
     }
