@@ -17,9 +17,6 @@
                 <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
             </ng-template>
         </li>
-        <div class="copyright">
-            <span>{{ copyright | translate }}</span>
-        </div>
         <div
             [ngClass]="{
                 invisible: (scrollMechanicsService.windowScrollSubject | async) === 0

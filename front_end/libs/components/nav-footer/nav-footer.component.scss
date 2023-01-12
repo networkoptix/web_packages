@@ -25,23 +25,23 @@
             }
         }
 
-        .copyright {
-            color: var(--footer-link-color);
-            display: flex;
-            white-space: nowrap;
-            margin-left: auto;
-            margin-right: 10px;
-        }
+        // .copyright {
+        //     color: var(--footer-link-color);
+        //     display: flex;
+        //     white-space: nowrap;
+        //     margin-left: auto;
+        //     margin-right: 10px;
+        // }
 
         .return-to-top {
             background-color: var(--footer-bg);
             width: 20px;
-            padding-left: 20px;
-            padding-right: 15px;
-            position: sticky;
+            position: relative;
+            padding: 0px 20px;
+            margin: auto 0px auto auto;
             right: 0;
             bottom: 1px;
-            transition-property: width, margin-left, padding;
+            transition-property: width, margin, padding;
             transition-duration: 500ms, 500ms, 500ms;
 
             &.invisible {

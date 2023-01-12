@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
@@ -26,25 +23,17 @@ export class NxNavFooterComponent implements OnInit {
     CONFIG: IConfig;
     visible$ = new BehaviorSubject(true);
     returnToTopVisible$ = new BehaviorSubject(true);
-    copyright: Translatable;
     icons = icons;
     inAuthorization = false;
 
     constructor(
         config: NxConfigService,
-        translateService: TranslateService,
         private menusService: NxMenusService,
         private router: Router,
         public scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.inAuthorization = this.router.url.includes('/authorize');
         this.CONFIG = config.getConfig();
-        this.copyright = {
-            values: staticLang.appFooter.copyright,
-            params: {
-                currentYear: new Date().getFullYear().toString(),
-            },
-        };
 
         this.scrollMechanicsService.windowSizeSubject
             .pipe(untilDestroyed(this))
