@@ -42,6 +42,10 @@ $card-border-radius: 0.25rem;
                 var(--system-card-bg-grad100) 100%
             );
 
+            h2{
+                display: block !important;
+            }
+
             &:hover {
                 background: var(--system-card-bg-grad0);
             }

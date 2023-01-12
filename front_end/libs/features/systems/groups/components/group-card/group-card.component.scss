@@ -6,6 +6,11 @@
     .system-button {
         &.card-condensed {
             .card-body {
+
+                .card-name{
+                    padding-left: 10px;
+                }
+
                 background: linear-gradient(
                     180deg,
                     var(--group-card-bg-grad0) 0%,
@@ -19,9 +24,7 @@
         }
     }
     h2 {
-        display: flex !important;
-        align-items: center;
-        gap: 0.5rem;
+        display: block !important;
     }
 
     .group-children {
