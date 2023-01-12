@@ -49,11 +49,11 @@
     }
 
     color: var(--light4);
-    background-color: var(--additional_light2);
+    background-color: var(--additional-light2);
     transition: all .2s ease-in-out;
 
     &:hover {
-      background-color: var(--additional_light3);
+      background-color: var(--additional-light3);
     }
     &:active {
       background-color: var(--light5) !important;

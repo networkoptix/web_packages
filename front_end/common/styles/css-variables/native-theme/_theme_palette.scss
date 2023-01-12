@@ -101,51 +101,6 @@
 	@include generateVarAndRgb(--orange800, $orange800);
 	@include generateVarAndRgb(--orange900, $orange900);
 
-	@include generateVarAndRgb(--dark1, $dark1);
-	@include generateVarAndRgb(--dark2, $dark2);
-	@include generateVarAndRgb(--dark3, $dark3);
-	@include generateVarAndRgb(--dark4, $dark4);
-	@include generateVarAndRgb(--dark5, $dark5);
-	@include generateVarAndRgb(--dark6, $dark6);
-	@include generateVarAndRgb(--dark7, $dark7);
-	@include generateVarAndRgb(--dark8, $dark8);
-	@include generateVarAndRgb(--dark9, $dark9);
-	@include generateVarAndRgb(--dark10, $dark10);
-	@include generateVarAndRgb(--dark11, $dark11);
-	@include generateVarAndRgb(--dark12, $dark12);
-	@include generateVarAndRgb(--dark13, $dark13);
-	@include generateVarAndRgb(--dark14, $dark14);
-	@include generateVarAndRgb(--dark15, $dark15);
-	@include generateVarAndRgb(--dark16, $dark16);
-	@include generateVarAndRgb(--dark17, $dark17);
-	@include generateVarAndRgb(--dark18, $dark18);
-	@include generateVarAndRgb(--dark19, $dark19);
-
-	@include generateVarAndRgb(--light1, $light1);
-	@include generateVarAndRgb(--light2, $light2);
-	@include generateVarAndRgb(--light3, $light3);
-	@include generateVarAndRgb(--light4, $light4);
-	@include generateVarAndRgb(--light5, $light5);
-	@include generateVarAndRgb(--light6, $light6);
-	@include generateVarAndRgb(--light7, $light7);
-	@include generateVarAndRgb(--light8, $light8);
-	@include generateVarAndRgb(--light9, $light9);
-	@include generateVarAndRgb(--light10, $light10);
-	@include generateVarAndRgb(--light11, $light11);
-	@include generateVarAndRgb(--light12, $light12);
-	@include generateVarAndRgb(--light13, $light13);
-	@include generateVarAndRgb(--light14, $light14);
-	@include generateVarAndRgb(--light15, $light15);
-	@include generateVarAndRgb(--light16, $light16);
-	@include generateVarAndRgb(--light17, $light17);
-	@include generateVarAndRgb(--light18, $light18);
-	@include generateVarAndRgb(--light19, $light19);
-
-	@include generateVarAndRgb(--additional_light1, $additional_light1);
-	@include generateVarAndRgb(--additional_light2, $additional_light2);
-	@include generateVarAndRgb(--additional_light3, $additional_light3);
-	@include generateVarAndRgb(--additional_light4, $additional_light4);
-
 	@include generateVarAndRgb(--green_d3, palette.$green_d3);
 	@include generateVarAndRgb(--green_d2, palette.$green_d2);
 	@include generateVarAndRgb(--green_d1, palette.$green_d1);
@@ -179,20 +134,4 @@
 	@include generateVarAndRgb(--link, $link);
 	@include generateVarAndRgb(--linkVisited, $linkVisited);
 
-	@include generateVarAndRgb(--button_l1, $button_l1);
-	@include generateVarAndRgb(--button, $button);
-	@include generateVarAndRgb(--button_d1, $button_d1);
-	@include generateVarAndRgb(--button_d2, $button_d2);
-	@include generateVarAndRgb(--button_d3, $button_d3);
-
-	@include generateVarAndRgb(--brand_l4, $brand_l4);
-	@include generateVarAndRgb(--brand_l3, $brand_l3);
-	@include generateVarAndRgb(--brand_l2, $brand_l2);
-	@include generateVarAndRgb(--brand_l1, $brand_l1);
-	@include generateVarAndRgb(--brand_core, $brand_core);
-	@include generateVarAndRgb(--brand_d1, $brand_d1);
-	@include generateVarAndRgb(--brand_d2, $brand_d2);
-	@include generateVarAndRgb(--brand_d3, $brand_d3);
-	@include generateVarAndRgb(--brand_d3_darker, $brand_d3_darker);
-	@include generateVarAndRgb(--brand_d4, $brand_d4);
 }

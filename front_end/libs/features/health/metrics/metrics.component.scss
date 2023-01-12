@@ -48,7 +48,7 @@ nx-system-metrics-component {
                 .all-results-btn {
                     position: sticky;
                     top: calc(-3rem - 1px); // button + hr(padding, neight)
-                    box-shadow: 0 1rem 0 2px var(--additional_light2);
+                    box-shadow: 0 1rem 0 2px var(--additional-light2);
                     z-index: 99;
                 }
             }

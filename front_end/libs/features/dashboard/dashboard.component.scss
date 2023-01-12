@@ -187,7 +187,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--brand_d4) !important;
+            background: var(--brand-d4) !important;
             border-bottom: 2px solid var(--dark9);
             height: 48px;
             padding: 16px 8px 16px 16px;
@@ -200,7 +200,7 @@
         }
 
         iframe {
-            background: var(--additional_light1);
+            background: var(--additional-light1);
             border: none;
             width: 100%;
             height: calc(100% - 48px);
@@ -373,7 +373,7 @@
         .sidebar-toggling-ear {
             width: 16px;
             height: 40px;
-            background-color: var(--additional_light2);
+            background-color: var(--additional-light2);
             background-image: url("arrow-left.png");
             background-position: center center;
             background-repeat: no-repeat;

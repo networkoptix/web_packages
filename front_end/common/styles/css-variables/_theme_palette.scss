@@ -38,14 +38,14 @@
 	@include generateVarAndRgb(--light15, $light15);
 	@include generateVarAndRgb(--light16, $light16);
 	@include generateVarAndRgb(--light17, $light17);
-	@include generateVarAndRgb(--additional_light1, $additional_light1);
-	@include generateVarAndRgb(--additional_light2, $additional_light2);
-	@include generateVarAndRgb(--additional_light3, $additional_light3);
-	@include generateVarAndRgb(--additional_light4, $additional_light4);
-	@include generateVarAndRgb(--additional_light5, $additional_light5);
-	@include generateVarAndRgb(--additional_light6, $additional_light6);
-	@include generateVarAndRgb(--additional_light7, $additional_light7);
-	@include generateVarAndRgb(--additional_light8, $additional_light8);
+	@include generateVarAndRgb(--additional-light1, $additional_light1);
+	@include generateVarAndRgb(--additional-light2, $additional_light2);
+	@include generateVarAndRgb(--additional-light3, $additional_light3);
+	@include generateVarAndRgb(--additional-light4, $additional_light4);
+	@include generateVarAndRgb(--additional-light5, $additional_light5);
+	@include generateVarAndRgb(--additional-light6, $additional_light6);
+	@include generateVarAndRgb(--additional-light7, $additional_light7);
+	@include generateVarAndRgb(--additional-light8, $additional_light8);
 	@include generateVarAndRgb(--red_l2, $red_l2);
 	@include generateVarAndRgb(--red_l1, $red_l1);
 	@include generateVarAndRgb(--red_main, $red_main);
@@ -58,4 +58,5 @@
 	@include generateVarAndRgb(--red_d6, $red_d6);
 	@include generateVarAndRgb(--red_d7, $red_d7);
 	@include generateVarAndRgb(--error, $red_l2);
+	@include generateVarAndRgb(--error-label, $red_l1);
 }
