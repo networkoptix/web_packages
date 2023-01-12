@@ -510,6 +510,7 @@
                                         cdkDragHandle
                                         [cdkDragHandleDisabled]="layout.locked"
                                         [camera]="itemDetail.details"
+                                        [rotation]="item.rotation"
                                         (showError)="
                                             itemDetail.details.online = false;
                                             errors[itemDetail.details.id] = $event

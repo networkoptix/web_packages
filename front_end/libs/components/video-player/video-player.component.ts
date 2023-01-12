@@ -18,6 +18,7 @@ import { filter, map } from 'rxjs';
 })
 export class NxVideoPlayerComponent {
     @Input() camera: ICamera;
+    @Input() rotation: number;
     @IBool() @Input() controls: CoercedBoolInput = false;
     @IBool() @Input() autoplay: CoercedBoolInput = false;
     @IBool() @Input() autopause: CoercedBoolInput = false;

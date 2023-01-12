@@ -28,7 +28,7 @@ export class NxResizeObserver implements OnDestroy {
     @Output() resize = new EventEmitter<Size>();
 
     constructor(
-        private el: ElementRef<Element>
+        protected el: ElementRef<HTMLElement>
     ) {
         const target = this.el.nativeElement;
         entriesMap.set(target, this);

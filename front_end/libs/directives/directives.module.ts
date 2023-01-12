@@ -17,6 +17,7 @@ import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxTooltipDirective } from './nx-tooltip.directive';
 import { NxUrlValidatorDirective } from './nx-url-validator';
 import { ResizeModule } from './resize/resize.module';
+import { RotateModule } from './rotate/rotate.module';
 
 @NgModule({
     imports: [
@@ -55,7 +56,8 @@ import { ResizeModule } from './resize/resize.module';
         NxTooltipDirective,
         NxMatchHeightDirective,
         FeatureFlagDirective,
-        ResizeModule
+        ResizeModule,
+        RotateModule
     ]
 })
 export class DirectivesModule {

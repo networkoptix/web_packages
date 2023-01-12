@@ -387,7 +387,7 @@
             "offline": "Offline",
             "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
             "unauthorized": "Authentication required",
-            "websocket": "Error establishing peer connection"
+            "websocket": "Error establishing webRTC peer connection"
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
         "copiedToClipboard": "Copied to clipboard",
