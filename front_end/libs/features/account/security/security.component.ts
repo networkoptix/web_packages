@@ -57,10 +57,10 @@ export class NxAccountSecurityComponent implements OnInit {
             .pipe(untilDestroyed(this))
             .subscribe(systems => {
                 this.twoFaSystems = systems.filter(sys => sys.system2faEnabled);
-                this.subV5Systems = systems.filter(sys => !sys.useRest && !!sys.version);
-                /* If version string from API is undefined or empty string,
-                version number is 0 and useRest is false, but we don't know for
-                sure it's sub v5  */
+                /* If the system doesn't have a version useRest will be false.
+                This should only happen on non-prod instances where mediator is out of date.
+                 */
+                this.subV5Systems = systems.filter(sys => !sys.useRest);
             });
     }
 
