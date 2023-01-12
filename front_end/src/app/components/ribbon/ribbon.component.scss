@@ -1,3 +1,4 @@
+@use "bootstrap_utils" as bootstrap;
 @use "../../styles/typography";
 @use "../../../styles/theme_variables_common" as *;
 
@@ -12,7 +13,12 @@
     align-items      : center;
 
     .message {
-        flex : 70%;
+        flex : 60%;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            flex : 50%;
+        }
+
         &-content {
             position: relative;
             display: flex;
@@ -26,8 +32,12 @@
     }
 
     .action {
-        flex       : 30%;
+        flex       : 40%;
         text-align : right;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            flex : 50%;
+        }
 
         a {
             @include typography.regular13nocolor;
