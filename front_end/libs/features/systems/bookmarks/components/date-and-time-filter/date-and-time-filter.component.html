@@ -18,10 +18,10 @@
             translate
             [ngClass]="{ selected: quickSelectMatch(lastDay) }"
             (click)="quickSelect(lastDay)"
-            (mouseover)="preview = lastDay"
-            (mouseout)="preview = null"
-            (focus)="preview = lastDay"
-            (blur)="preview = null"
+            (mouseover)="quickPreview = lastDay"
+            (mouseout)="quickPreview = null"
+            (focus)="quickPreview = lastDay"
+            (blur)="quickPreview = null"
         >
             Last Day
         </button>
@@ -29,10 +29,10 @@
             translate
             [ngClass]="{ selected: quickSelectMatch(last7Days) }"
             (click)="quickSelect(last7Days)"
-            (mouseover)="preview = last7Days"
-            (mouseout)="preview = null"
-            (focus)="preview = last7Days"
-            (blur)="preview = null"
+            (mouseover)="quickPreview = last7Days"
+            (mouseout)="quickPreview = null"
+            (focus)="quickPreview = last7Days"
+            (blur)="quickPreview = null"
         >
             Last 7 Days
         </button>
@@ -40,17 +40,23 @@
             translate
             [ngClass]="{ selected: quickSelectMatch(last30Days) }"
             (click)="quickSelect(last30Days)"
-            (mouseover)="preview = last30Days"
-            (mouseout)="preview = null"
-            (focus)="preview = last30Days"
-            (blur)="preview = null"
+            (mouseover)="quickPreview = last30Days"
+            (mouseout)="quickPreview = null"
+            (focus)="quickPreview = last30Days"
+            (blur)="quickPreview = null"
         >
             Last 30 Days
         </button>
     </div>
     <mat-calendar
-        [selected]="dateRange || preview"
+        #matCalendar
+        [ngClass]="{
+            'quick-preview': !dateRange
+        }"
+        [selected]="dateRange || quickPreview"
         (selectedChange)="selectedChange($event)"
+        [comparisonStart]="comparisonStart"
+        [comparisonEnd]="comparisonEnd"
     ></mat-calendar>
     <div class="time-inputs">
         <div>

@@ -93,7 +93,7 @@ html[data-theme="dark"] {
     --popover-shadow-color : none;
     --popover-bg           : #3F545F; //$dark13;
     --popover-color        : #E1E7EA; //$light4;
-    
+
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$dark9};
     --validation-popover-color        : #E1E7EA; //$light4;
@@ -531,7 +531,7 @@ html[data-theme="dark"] {
     --support-tech-apple-color : #E1E7EA; //$light4;
 
     --success-label : var(--green_main);
-    
+
     --error-label : #{$red_l1};
     --error : #C22626; //$red_main;
 
@@ -629,6 +629,7 @@ html[data-theme="dark"] {
 
     /* Bookmarks */
     --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);
+    --bookmarks-calendar-today-highlight-shadow: var(--light1);
     --bookmarks-time-input-active-bg: var(--dark1);
     --bookmarks-filter-header-bg: var(--dark7);
     --bookmarks-filter-clear-btn-bg: var(--dark9);

@@ -629,9 +629,10 @@ html[data-theme="light"] {
 
     /* Bookmarks */
     --bookmarks-calendar-today-border: rgba(0, 0, 0, 0.38);
+    --bookmarks-calendar-today-highlight-shadow: var(--light1);
     --bookmarks-time-input-active-bg: var(--light3);
     --bookmarks-filter-header-bg: var(--light6);
-    --bookmarks-filter-clear-btn-bg: var(-light3);
+    --bookmarks-filter-clear-btn-bg: var(--light3);
     --bookmarks-filter-clear-btn-stroke: var(--light16);
     --bookmarks-filter-body-bg: var(--light5);
     --bookmarks-filter-button-bg: var(--light4);
