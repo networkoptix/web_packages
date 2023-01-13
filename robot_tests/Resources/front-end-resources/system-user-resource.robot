@@ -55,7 +55,7 @@ Users Teardown
     # ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
     # ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
     # Remove Temporary Users
-    teardown servers    ${servers}
+    Teardown Servers    ${servers}
     Close All Browsers
 
 Remove Temporary Users
