@@ -179,9 +179,11 @@ class CloudPortalAPI(object):
     @keyword
     def set_account_name(self, email, password, first_name, last_name):
         with self._session(email, password) as s:
+            s.headers.update({"referer": f"{self.env}"})
             r = s.post(
                 f'{self.env}/api/account/',
                 json={'first_name': first_name, 'last_name': last_name})
+            logger.trace(r.content)
             return r.json()
 
     @keyword
