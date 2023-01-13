@@ -822,29 +822,38 @@ class GenericKeywords(object):
             for server in serversJson:
                 self.server_api.setup_local_system(f"https://{self.ssh_host}:{server['port'][0]}", "qweasd 123", server["name"])
             
-            # Register and activate owner user
+            # Register and activate owner user(s)
+            ownerRequired = False
             for server in serversJson:
-                if server['cloudConnected'] == True:
-                    owner = self.get_random_email(self.base_email, sendemail=self.from_email)
+                if 'cloudOwnerId' in server:
+                    ownerRequired = True
+                    break
+            if ownerRequired:
+                owners_ids = set([server["cloudOwnerId"] for server in serversJson])
+                owners = [self.get_random_email(self.base_email, sendemail=self.from_email) for _ in range (len(owners_ids))]
+                for owner in owners:
                     self.cloud_api.register_account("mark", "hamill", owner, self.password)
                     BuiltIn().run_keyword('Activate', owner)
-                    break
+
+            # Add owner users to json
+            for server in serversJson:
+                if 'cloudOwnerId' in server:
+                    server["cloudOwner"] = owners[server["cloudOwnerId"]]
                 
             # Connect systems to cloud
             for server in serversJson:
-                if server["cloudConnected"]:
-                    logger.trace(server['port'][0])
+                if 'cloudOwnerId' in server:
                     serverId = self.server_api.API_connect_to_cloud(
-                        [owner, self.password], 
+                        [server["cloudOwner"], self.password], 
                         f"https://{self.ssh_host}:{server['port'][0]}", 
                         self.cloud_host, 
                         name=server["name"])
-                    server.update({"id": serverId, "cloudOwner":owner})
+                    server.update({"id": serverId})
 
             # add cloud and local auth lists
             for server in serversJson:
                 server.update({"localAuth":["admin", self.password]})
-                if server["cloudConnected"]:
+                if 'cloudOwnerId' in server:
                     server.update({"cloudAuth":[server["cloudOwner"], self.password]})
 
             # get server token for authentication
@@ -873,7 +882,7 @@ class GenericKeywords(object):
 
             # Register, Activate, and Share cloud users if required
             for server in serversJson:
-                if server["addUsers"] == True and server["cloudConnected"] == True:
+                if server["addUsers"] == True and 'cloudOwnerId'in server:
                     cloudUsers = BuiltIn().run_keyword('Register and Activate Generic Users')
                     self.Add_Cloud_Users(server["cloudAuth"], cloudUsers, server['id'])
                     server.update({"cloudUsers":cloudUsers})
