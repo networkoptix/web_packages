@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
-import { processLanguageFactory } from '@utils/general';
+import { processLanguageFactory } from '@utils/nx';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';

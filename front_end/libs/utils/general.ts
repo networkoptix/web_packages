@@ -1,54 +1,15 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-/* General-purpose utility functions not strongly associated with/specialized
-for a particular part of the codebase. No in-house specific types/structures. */
+/* General-purpose utility functions. If a function/type involves in-house or
+third party data/types it should probably go in nx.ts instead. */
 
-import { last, zip } from 'lodash-es';
-import { IStepOption } from 'ngx-ui-tour-md-menu/public_api';
+import { last } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import staticLang from '@common/language/language_i18n_static.json';
-import { TranslatableObject, TranslatableStrict } from '@pipes/any-translate.types';
 
 /* String */
 export function cleanId(id: unknown): string | undefined {
     return (id as string)?.replace(/{|}/g, '');
 }
-
-type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & { title: TranslatableStrict, content: TranslatableStrict };
-
-export const translateStep = (instant: (TranslatableObject) => string) => (step: TranslatableStep): IStepOption => ({
-    ...step,
-    title: instant(step.title),
-    content: instant(step.content)
-});
-
-const tourDefaults: IStepOption = {
-    enableBackdrop: true,
-    backdropConfig: {
-        backgroundColor: 'var(--tour-background)'
-    },
-    placement: {
-        xPosition: 'after',
-        yPosition: 'below',
-        ...staticLang.tours.defaults
-    }
-};
-
-export const generateTour = (
-    tourId: string,
-    baseConfig: Omit<IStepOption, 'anchorId'> = tourDefaults) => (stepNamesOrConfigs: (string | IStepOption)[]): TranslatableStep[] => stepNamesOrConfigs.map(step => {
-    const isConfig = typeof step !== 'string';
-    const lookup = isConfig ? step.anchorId : step;
-    const anchorId = `${tourId}_${lookup}`;
-    const config = isConfig ? { ...tourDefaults, ...baseConfig, ...step } : baseConfig;
-    const translations = staticLang.tours?.[tourId]?.[lookup];
-    const tourTitle = staticLang.tours?.[tourId]?.title;
-    if (tourTitle && translations) {
-        translations.title = { value: tourTitle, params: { step: translations.title } };
-    }
-    return translations ? { ...config, ...translations, anchorId } : null;
-}).filter(step => !!step);
 
 export function cleanIp(ip: string): string {
     const checkIpv6 = /^(?:(?:(?:[0-9A-Fa-f]{0,4}:){7}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}:[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){5}:(?:[0-9A-Fa-f]{0,4}:)?[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){4}:(?:[0-9A-Fa-f]{0,4}:){0,2}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){3}:(?:[0-9A-Fa-f]{0,4}:){0,3}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){2}:(?:[0-9A-Fa-f]{0,4}:){0,4}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:(?:[0-9A-Fa-f]{0,4}:){0,5}:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:::(?:[0-9A-Fa-f]{0,4}:){0,5}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:[0-9A-Fa-f]{0,4}::(?:[0-9A-Fa-f]{0,4}:){0,5}[0-9A-Fa-f]{0,4})|(?:::(?:[0-9A-Fa-f]{0,4}:){0,6}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){1,7}:))$/;
@@ -241,23 +202,6 @@ export function pickFrom(
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* DOM */
-interface Language {
-    [key: string]: Language | string
-}
-
-export const processLanguageFactory = (customStrings: { [key: string]: string }) => function processLanguage(language: Language) {
-    if (language) {
-        Object.entries(language).forEach(([key, phrase]) => {
-            if (typeof phrase === 'string') {
-                language[key] = Object.entries(customStrings)
-                    .reduce((text: string, [rKey, rValue]) => text.replace(new RegExp(rKey, 'g'), rValue), phrase);
-            } else if (typeof phrase !== 'number') {
-                language[key] = processLanguage(phrase);
-            }
-        });
-    }
-    return language;
-};
 
 /* Async */
 /**
@@ -304,37 +248,3 @@ export function staticImplements<T>() {
 export type KeyFilter<T, F> = {
     [K in keyof T]: T[K] extends F ? K : never
 }[keyof T];
-
-export const toTranslatable = (value: unknown): TranslatableObject => typeof value === 'string' ? { value } : value as TranslatableObject;
-
-const flattenTranslatables = ([start, ...end]: TranslatableStrict[]): TranslatableObject => ({
-    value: staticLang.exclude.nested,
-    params: {
-        start,
-        end: end.length > 1 ? flattenTranslatables(end) : end.pop()
-    }
-});
-
-/**
- * Tagged template literal for using markup within templates.
- *
- * For simple inner HTML, just use regular string concatenation instead of this.
- *
- * Example:
- * import { nestedTranslation as nt } from '@unils/general'
- *
- * const translatable = nt`
- * <div class="some-class">
- *     ${translatableObjectOrString}
- * </div>
- * ${nt`
- *     <span>
- *         ${anotherTranlatable}
- *     </span>`
- * }`
- * @param strings
- * @param translatableExpressions
- * @returns
- */
-export const nestedTranslation = (strings: TemplateStringsArray, ...translatableExpressions: TranslatableStrict[]): TranslatableObject => flattenTranslatables(
-    zip(strings, translatableExpressions.map(toTranslatable)).reduce((vals, val) => [...vals, ...val], []).filter(val => val));

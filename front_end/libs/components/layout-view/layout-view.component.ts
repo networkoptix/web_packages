@@ -33,7 +33,8 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphabeticalSort, cleanId, generateTour, pickFrom, translateStep } from '@utils/general';
+import { alphabeticalSort, cleanId, pickFrom } from '@utils/general';
+import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
     name: string;

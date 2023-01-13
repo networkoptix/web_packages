@@ -20,7 +20,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
-import { processLanguageFactory } from '@utils/general';
+import { processLanguageFactory } from '@utils/nx';
 
 import type { APIDoc } from '../api-tool-types';
 
