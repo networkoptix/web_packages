@@ -838,7 +838,9 @@
         "view": "Ver câmeras",
         "apiTool": "Ferramenta de teste de API",
         "security": "Segurança",
-        "twofaRequired": "Autenticação de dois fatores necessária"
+        "twofaRequired": "Autenticação de dois fatores necessária",
+        "information": "Informações",
+        "monitoring": "Monitoramento"
     },
     "pageDescriptions": {
         "integrations": "As integrações de Marketplace é um ecossistema centralizado de produtos que se integram perfeitamente com produtos VMS como %VMS_NAME%, todos disponíveis em %CLOUD_NAME% para que você possa encontrar soluções para construir e personalizar seu sistema de Vídeo IP.",

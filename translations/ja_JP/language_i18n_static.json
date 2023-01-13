@@ -838,7 +838,9 @@
         "view": "カメラを表示",
         "apiTool": "API テストツール",
         "security": "セキュリティ",
-        "twofaRequired": "二要素認証が必須です"
+        "twofaRequired": "二要素認証が必須です",
+        "information": "情報",
+        "monitoring": "モニタリング"
     },
     "pageDescriptions": {
         "integrations": "インテグレーションマーケットプレイスは、%VMS_NAME% などのVMS製品とシームレスに統合する製品の集中型エコシステムであり、すべて %CLOUD_NAME% で利用できるため、IPビデオシステムを構築およびカスタマイズするためのソリューションを見つけることができます。",

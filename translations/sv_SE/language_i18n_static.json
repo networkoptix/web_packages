@@ -838,7 +838,9 @@
         "view": "Visa kameror",
         "apiTool": "API-testverktyg",
         "security": "Säkerhet",
-        "twofaRequired": "Tvåfaktorsautentisering krävs"
+        "twofaRequired": "Tvåfaktorsautentisering krävs",
+        "information": "Information",
+        "monitoring": "Övervakning"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",

@@ -838,7 +838,9 @@
         "view": "View cameras",
         "apiTool": "Outil de test d'API",
         "security": "Sécurité",
-        "twofaRequired": "Authentification à deux facteurs requise"
+        "twofaRequired": "Authentification à deux facteurs requise",
+        "information": "Information",
+        "monitoring": "Surveillance"
     },
     "pageDescriptions": {
         "integrations": "Le Marché des Intégrations est un écosystème centralisé de produits qui s'intègrent parfaitement aux produits VMS comme %VMS_NAME%, tous disponibles en %CLOUD_NAME% afin que vous puissiez trouver des solutions pour construire et personnaliser votre système vidéo IP.",

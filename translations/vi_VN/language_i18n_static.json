@@ -838,7 +838,9 @@
         "view": "Xem camera",
         "apiTool": "Công cụ kiểm tra API",
         "security": "Bảo mật",
-        "twofaRequired": "Yêu cầu xác thực hai yếu tố"
+        "twofaRequired": "Yêu cầu xác thực hai yếu tố",
+        "information": "Thông tin",
+        "monitoring": "Giám sát"
     },
     "pageDescriptions": {
         "integrations": "Nền tảng tích hợp là một hệ sinh thái tập trung các sản phẩm tích hợp liền mạch với các sản phẩm VMS như %VMS_NAME%, tất cả đều có sẵn trong %CLOUD_NAME% từ đó bạn có thể tìm giải pháp để xây dựng và tùy chỉnh hệ thống Video IP của mình.",

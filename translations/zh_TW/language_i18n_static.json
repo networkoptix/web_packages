@@ -838,7 +838,9 @@
         "view": "查看攝影機",
         "apiTool": "API testing tool",
         "security": "安全性",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Two-factor authentication required",
+        "information": "資訊",
+        "monitoring": "系統監控"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
