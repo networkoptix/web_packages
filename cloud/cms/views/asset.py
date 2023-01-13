@@ -1,7 +1,9 @@
 from functools import wraps
 from collections import defaultdict, OrderedDict
+from contextlib import suppress
 from django.core.files import base
 from django.db.models.expressions import OuterRef, Subquery
+from util.config import UnableToFetchConfigException
 from waffle import flag_is_active
 from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
 from cms.views.celery import download_result

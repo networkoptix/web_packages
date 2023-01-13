@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from contextlib import suppress
 import base64
 from io import BytesIO
 import json
@@ -16,6 +17,7 @@ from PIL import Image
 
 from api.models import Account
 from cms.models import *
+from util.config import UnableToFetchConfigException
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[
@@ -417,10 +419,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         # TODO: Refactor image/file logic - CLOUD-1524
         """
             Currently if the data structure is optional you can remove the value.
-            
+
             Planned change is to make it to where you can "delete" the value and if its not optional then fallback
             to the default value.
-            
+
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
@@ -674,7 +676,8 @@ def send_version_for_review(asset, user, notify=True):
     update_records_to_version(asset, Context.objects.filter(asset_type=asset.asset_type), version)
 
     if notify:
-        notify_version_ready(asset, version, user)
+        with suppress(UnableToFetchConfigException):
+            notify_version_ready(asset, version, user)
 
     return []
 
