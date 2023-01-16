@@ -43,7 +43,6 @@ export class SelectTimeRangeModalContent implements OnInit {
         pickFrom(this.dialogData, ['selection'], this);
 
         this.CONFIG = configService.getConfig();
-
         this.themeClass = this.CONFIG.isDarkTheme ? 'dark' : 'light';
     }
 
@@ -69,6 +68,24 @@ export class SelectTimeRangeModalContent implements OnInit {
             return this.close({ start, end });
         }
     };
+
+    checkMaxDate() {
+        const setStartDate = new Date(
+            this.startDate + 'T' + this.startTime
+        ).getTime();
+
+        if (isNaN(setStartDate)) {
+            this.startDate = '';
+        }
+
+        const setEndDate = new Date(
+            this.endDate + 'T' + this.endTime
+        ).getTime();
+
+        if (isNaN(setEndDate)) {
+            this.endDate = '';
+        }
+    }
 
     ngOnInit(): void {
         const tweakedTStart = new Date(
