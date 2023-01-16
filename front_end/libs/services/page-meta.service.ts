@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -32,6 +33,7 @@ export class NxPageMetaService {
 
     constructor(
         configService: NxConfigService,
+        private translateService: TranslateService,
         protected readonly title: Title,
         protected readonly meta: Meta,
         // headerService: NxHeaderService,
@@ -60,9 +62,10 @@ export class NxPageMetaService {
         return this.window.location.href.replace(this.routerUrl, '');
     }
 
-    private mapMeta = (metaProperties: Record<string, () => string>): Record<string, string> => {
+    private mapMeta = (metaProperties: Record<string, string>): Record<string, string> => {
         return Object.entries(metaProperties || {})
             .reduce((lookup, [property, val]) => {
+                val = this.translateService.instant(val);
                 return ({ ...lookup, [property]: val });
             }, {});
     };
