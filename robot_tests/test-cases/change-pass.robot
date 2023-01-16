@@ -51,7 +51,7 @@ Force Tags        Threaded
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    button=None    validate=${False}
+    Log In    ${email}    ${password}    button=None    validate=${False}    api=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     API Log In    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
