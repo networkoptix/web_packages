@@ -27,7 +27,7 @@ Force Tags
     Log Out
     Attempt login with used backup code    ${login user}    ${password}    random one time backup code=${random one time backup code}
     Go To    ${ENV}
-    Log In    ${login user}    ${password}    2fa=${True}
+    Log In    ${login user}    ${password}    2fa=${True}    api=${False}
 
 3. Enable and perform login with 2fa using QR
     Log In    ${login user}    ${password}
