@@ -342,7 +342,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             { ignoreError: true },
             async () => {
                 const pageDidntChangePattern = new RegExp(`\/systems\/${this.system.id}$`);
-                if (pageDidntChangePattern.test(this.router.url) && await this.dialogs.disconnect(this.accountService, this.system)) {
+                if (pageDidntChangePattern.test(this.router.url) && await this.dialogs.disconnect(this.system)) {
                     if (this.environment.isLocal && this.system.currentUser?.isCloud) {
                         this.accountService.logout();
                     } else {
@@ -366,15 +366,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         buttons: { ok }
                     }
                 } = this.LANG;
-                return this.dialogs.confirm(
-                    message,
+                return this.dialogs.confirm({
                     title,
-                    ok,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    true);
+                    message,
+                    safeHTML: true,
+                    footer: {
+                        actionLabel: ok
+                    }
+                });
             });
     }
 
@@ -418,10 +417,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     connectLocalToCloud() {
         if (this.window.navigator.onLine) {
-            return this.dialogs.connectLocalToCloud(
-                this.accountService,
-                this.system
-            );
+            return this.dialogs.connectLocalToCloud(this.system);
         } else {
             this.dialogs.notify(
                 this.LANG.toastMessage.noInternet,
@@ -461,13 +457,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         }
                     });
             }
-            this.dialogs.confirm(
-                this.LANG.dialogs.removeSystem.message,
-                this.LANG.dialogs.removeSystem.title,
-                this.LANG.dialogs.removeSystem.action,
-                'btn-danger',
-                this.LANG.dialogs.buttons.cancel
-            ).then(result => {
+            const { title, message, action } = this.LANG.dialogs.removeSystem;
+            this.dialogs.confirm({
+                title,
+                message,
+                footer: {
+                    buttonClass: 'btn-danger',
+                    actionLabel: action,
+                    cancelLabel: this.LANG.dialogs.buttons.cancel,
+                }
+            }).then(result => {
                 if (result === true) {
                     return this.system.deleteFromCurrentAccount().subscribe(res => {
                         this.toastService.notify(
@@ -504,7 +503,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         return this.dialogs
-            .merge(this.accountService, this.system, this.systems)
+            .merge(this.system, this.systems)
             .then((mergeInfo: any) => {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;
@@ -540,16 +539,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // HTML needed for section formatting
                 const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
 
-                // Handling promise to satisfy the linter.
-                this.dialogs.confirm(
-                    dialogBody,
-                    this.LANG.dialogs.merge.mergeFailedTitle,
-                    this.LANG.dialogs.buttons.ok,
-                    'btn-primary',
-                    undefined,
-                    undefined,
-                    undefined,
-                    true).then(() => { });
+                this.dialogs.confirm({
+                    title: this.LANG.dialogs.merge.mergeFailedTitle,
+                    message: dialogBody,
+                    safeHTML: true,
+                    footer: {
+                        actionLabel: this.LANG.dialogs.buttons.ok,
+                    }
+                });
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);

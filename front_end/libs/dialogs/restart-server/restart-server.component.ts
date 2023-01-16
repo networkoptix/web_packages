@@ -11,7 +11,7 @@ import {
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { maxNumberServerChecked, servers, toast } from '@lib/variables/static-variables';
@@ -43,7 +43,7 @@ export class RestartServerModalContent {
     constructor(
         private loginService: NxLoginService,
         private processService: NxProcessService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         public dialogRef: DialogRef,
@@ -222,7 +222,7 @@ export class RestartServerModalContent {
                             }
                         });
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 } else {
                     this.toastService.notify(message, toast.warning);
                 }

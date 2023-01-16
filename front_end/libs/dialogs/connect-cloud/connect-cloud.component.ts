@@ -35,7 +35,6 @@ export class ConnectCloudModalContent implements OnInit {
     readonly isLocal: boolean;
     readonly environment = environment;
 
-    account: NxAccountService;
     system;
     cloudTokens: any;
     codeExists: boolean;
@@ -57,6 +56,7 @@ export class ConnectCloudModalContent implements OnInit {
         private processService: NxProcessService,
         private renderer: Renderer2,
         private storage: LocalStorageService,
+        private account: NxAccountService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
@@ -65,7 +65,7 @@ export class ConnectCloudModalContent implements OnInit {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['account', 'system'], this);
+        pickFrom(this.dialogData, ['system'], this);
 
         this.setupProcess();
         this.setupAuth();

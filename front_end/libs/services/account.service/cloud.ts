@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { redirect, responseOk } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -45,6 +46,7 @@ export class CloudAccount extends BaseAccount {
         protected cookieService: CookieService,
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
+        protected dialogs: NxDialogsService,
     ) {
         super(
             configService,
@@ -66,6 +68,7 @@ export class CloudAccount extends BaseAccount {
             cookieService,
             bootstrapProviderService,
             store,
+            dialogs,
         );
     }
 

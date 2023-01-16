@@ -10,7 +10,7 @@ import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/ope
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions, accountSelectors } from '@common/store/account';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { oauthStore, redirect, updateInterval } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
@@ -55,7 +55,6 @@ export abstract class BaseAccount implements OnDestroy {
     private _account: Account;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
-    dialogs: NxSimpleDialogsService;
     protected applyService: NxApplyService;
 
     // Only in LocalAccount but added here for TS convenience
@@ -93,6 +92,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected cookieService: CookieService,
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
+        protected dialogs: NxDialogsService,
     ) {
         this.CONFIG = configService.getConfig();
         // language provider will be ready at this point
@@ -130,7 +130,6 @@ export abstract class BaseAccount implements OnDestroy {
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         // setTimeout(() => {
-        this.dialogs = injector.get(NxSimpleDialogsService);
         this.applyService = injector.get(NxApplyService);
         this.loginService.accountService = this;
 
@@ -356,13 +355,14 @@ export abstract class BaseAccount implements OnDestroy {
                         cancelLabel = this.LANG.dialogs.buttons.cancel;
                     }
                     return this.dialogs
-                        .confirm('',
-                            { value: this.LANG.dialogs.titles.changeAccount, params: { email: account.email } },
-                            this.LANG.dialogs.buttons.stayLoggedIn,
-                            undefined,
-                            cancelLabel,
-                            ''
-                        ).then(result => {
+                        .confirm({
+                            disableClose: true,
+                            title: { value: this.LANG.dialogs.titles.changeAccount, params: { email: account.email } },
+                            footer: {
+                                actionLabel: this.LANG.dialogs.buttons.stayLoggedIn,
+                                cancelLabel,
+                            }
+                        }).then(result => {
                             if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
                                 this.logout(true, skipReload);
                                 return true;
@@ -451,12 +451,15 @@ export abstract class BaseAccount implements OnDestroy {
                 return false;
             }
 
-            const res = await this.dialogs.confirm('',
-                this.LANG.dialogs.titles.loggedFromOtherAccount,
-                this.LANG.dialogs.buttons.ok,
-                undefined,
-                { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
-                'long-cancel-button');
+            const res = await this.dialogs.confirm({
+                disableClose: true,
+                title: this.LANG.dialogs.titles.loggedFromOtherAccount,
+                footer: {
+                    footerClass: 'long-cancel-button',
+                    actionLabel: this.LANG.dialogs.buttons.ok,
+                    cancelLabel: { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
+                }
+            });
             if (res === true) {
                 this.stopAccountPoll();
                 return this.loginTokens(tokens);
@@ -479,13 +482,15 @@ export abstract class BaseAccount implements OnDestroy {
             if (result.email === account.email) {
                 return;
             }
-            const response = await this.dialogs
-                .confirm('',
-                    this.LANG.dialogs.titles.loggedFromOtherAccount,
-                    this.LANG.dialogs.buttons.ok,
-                    undefined,
-                    { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
-                    'long-cancel-button');
+            const response = await this.dialogs.confirm({
+                disableClose: false,
+                title: this.LANG.dialogs.titles.loggedFromOtherAccount,
+                footer: {
+                    footerClass: 'long-cancel-button',
+                    actionLabel: this.LANG.dialogs.buttons.ok,
+                    cancelLabel: { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
+                }
+            });
 
             if (response === true) {
                 await this.logoutHelper(true, true);
@@ -510,7 +515,6 @@ export abstract class BaseAccount implements OnDestroy {
                 catchError(res => {
                     if (res?.error?.resultCode === 'badUsername') {
                         return this.dialogs.expiredSession()
-                            .afterClosed()
                             .then(() => this.logoutHelper(true));
                     }
                     return of(undefined);

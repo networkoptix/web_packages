@@ -714,13 +714,15 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     deleteStorage(storage: Storage): void {
-        this.dialogs.confirm(
-            cleanSmbUrl(storage.url),
-            this.LANG.storage.deleteExternalStorage,
-            this.LANG.dialogs.buttons.delete,
-            'btn-danger',
-            this.LANG.dialogs.buttons.cancel
-        ).then(response => {
+        this.dialogs.confirm({
+            title: this.LANG.storage.deleteExternalStorage,
+            message: cleanSmbUrl(storage.url),
+            footer: {
+                buttonClass: 'btn-danger',
+                actionLabel: this.LANG.dialogs.buttons.delete,
+                cancelLabel: this.LANG.dialogs.buttons.cancel,
+            }
+        }).then(response => {
             if (response === true) {
                 this.system
                     .removeStorage({ id: storage.storageId })

@@ -8,14 +8,12 @@ import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig } from '@dialogs/dialog-ref';
 import { RefreshSessionModalContent } from '@dialogs/refresh-session/refresh-session';
-import { Translatable } from '@pipes/any-translate.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
 
 import { toast } from '../variables/static-variables';
 
-import { GenericModalContent } from './generic/generic.component';
 import { NxToastService } from './toast.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -47,44 +45,6 @@ export class NxSimpleDialogsService extends DialogBase {
         hold?: boolean
     ): void {
         this.toastService.show(message, type, { autohide: !hold });
-    }
-
-    public confirm(
-        message: string,
-        title: Translatable,
-        actionLabel: Translatable,
-        actionType?: string,
-        cancelLabel?: Translatable,
-        footerClass?: string,
-        unsafe?: boolean,
-    ): any {
-        const config: Partial<DialogConfig> = {
-            data: {
-                message,
-                title,
-                actionLabel,
-                buttonType: actionType || 'default',
-                cancelLabel,
-                buttonClass: actionType || 'btn-primary',
-                footerClass: footerClass || '',
-                hasFooter: true,
-                cancellable: false,
-                closable: false,
-                unsafe
-            }
-        };
-
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        return this.open(GenericModalContent, dialogConfig).afterClosed();
-    }
-
-    public expiredSession() {
-        return this.confirm(
-            this.LANG.dialogs.renewAuth.message,
-            this.LANG.dialogs.renewAuth.title,
-            this.LANG.dialogs.buttons.ok
-        );
     }
 
     public refreshSession(system: NxSystem) {

@@ -16,10 +16,11 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons, maxServers, servers } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
+import type { Account } from '@services/account.service/account';
 import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -54,10 +55,9 @@ export class MergeModalContent {
 
     readonly environment = environment;
 
-    user;
     system;
     systems: NxSystemInfo[];
-    account: NxAccountService;
+    account: Account;
     checkMergeabilityFunction;
     checkMergeabilityProcess: Process;
     checkPasswordProcess: Process;
@@ -133,10 +133,11 @@ export class MergeModalContent {
         private cdRef: ChangeDetectorRef,
         private loginService: NxLoginService,
         private processService: NxProcessService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
+        private accountService: NxAccountService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
@@ -147,7 +148,7 @@ export class MergeModalContent {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'systems', 'user'], this);
+        pickFrom(this.dialogData, ['system', 'systems'], this);
 
         this.machine = new StateMachine(this.checkMerge, State);
         this.init();
@@ -160,7 +161,7 @@ export class MergeModalContent {
             this.updateShow(this.checkMergeDefault);
             await this.system.serverManager.getModuleInfo().toPromise();
             environment.isLocal && await this.getPeerSystems();
-            this.account = await this.user.get();
+            this.account = await this.accountService.get();
             await Promise.all(
                 this.systems.map(async (system: any) => {
                     if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
@@ -463,7 +464,7 @@ export class MergeModalContent {
                     if (err.errorId === servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                        return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                        return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     }
                     if (err !== 'canceled') {
                         this.checkMergeButtonText = this.LANG.dialogs.merge.check;
@@ -579,7 +580,7 @@ export class MergeModalContent {
                 if (err.errorId === servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
                 console.error(err);
                 if (this.machine.currentState !== this.serverUrlErrors) {
@@ -683,7 +684,7 @@ export class MergeModalContent {
                 if (error.errorId === servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
                     return this.handleOldSession(this.mergingProcess);
                 } else if (error.status === 403 || error.errorId === servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data?.resultCode);

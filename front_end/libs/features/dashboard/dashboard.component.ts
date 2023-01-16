@@ -235,20 +235,16 @@ export class NxDashboardComponent implements DashboardGroup {
         this.prepareConfigDownload(currentDashboard);
         const date = new Date().toLocaleDateString().replace(/\//g, '_');
         const fileName = `${this.CUSTOM_PROPERTY_KEY}-${date}-settings-backup.dsh`;
-        const state = await this.dialogs.confirm(
-            `<p>Your dashboard <b>"${currentDashboard.dashboardName}"</b> is being updated to downloaded dashboard${downloadedDashboard.dashboardName ? ' <b>"' + downloadedDashboard.dashboardName + '"</b>' : ''
-            }.</p><p>This dashboard was downloaded from <b>"${url}"</b>.</p> <div class="mt-3 d-flex justify-content-center"><a href="${this.backupDownloadLink
-            }" download="${fileName
-            }">Download backup of <b>"${currentDashboard.dashboardName
-            } dashboard"</b></a></div>`,
-            'Confirm dashboard update?',
-            'Update dashboard',
-            'btn-primary',
-            "Don't update",
-            undefined,
-            undefined,
-            true
-        );
+        const message = `<p>Your dashboard <b>"${currentDashboard.dashboardName}"</b> is being updated to downloaded dashboard${downloadedDashboard.dashboardName ? ' <b>"' + downloadedDashboard.dashboardName + '"</b>' : ''}.</p><p>This dashboard was downloaded from <b>"${url}"</b>.</p> <div class="mt-3 d-flex justify-content-center"><a href="${this.backupDownloadLink}" download="${fileName}">Download backup of <b>"${currentDashboard.dashboardName} dashboard"</b></a></div>`;
+        const state = await this.dialogs.confirm({
+            title: 'Confirm dashboard update?',
+            message,
+            safeHTML: true,
+            footer: {
+                actionLabel: 'Update dashboard',
+                cancelLabel: "Don't update",
+            }
+        });
 
         const updated = state === true;
 
@@ -379,7 +375,7 @@ export class NxDashboardComponent implements DashboardGroup {
     async addWidget() {
         const firstPartyWidgets = NxDynamicWidgetComponent.getFirstPartyWidgetConfigs();
         const newDashboard = new DashboardConfiguration('Add New Dashboard +');
-        const card = await this.dialogsService.addWidget(
+        const card = await this.dialogs.addWidget(
             this.gridSize,
             this.GRID_GAP,
             firstPartyWidgets,
@@ -418,7 +414,14 @@ export class NxDashboardComponent implements DashboardGroup {
 
     async removeDashboard(dashboardId): Promise<void> {
         const removeIndex = this.menu.findIndex(({ id }) => id === dashboardId);
-        const result = await this.dialogsService.confirm(`Are you sure that you want to remove "${this.menu[removeIndex].dashboardName}" dashboard?`, 'Confirm Remove Dashboard', 'Remove', 'btn-primary', 'Cancel');
+        const result = await this.dialogs.confirm({
+            title: 'Confirm Remove Dashboard',
+            message: `Are you sure that you want to remove "${this.menu[removeIndex].dashboardName}" dashboard?`,
+            footer: {
+                actionLabel: 'Remove',
+                cancelLabel: 'Cancel',
+            }
+        });
         if (result !== true) {
             return;
         }
@@ -514,7 +517,6 @@ export class NxDashboardComponent implements DashboardGroup {
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private sanitizer: DomSanitizer,
-        private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
         private router: Router,
         private http: HttpClient,

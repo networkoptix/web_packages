@@ -1,67 +1,65 @@
-<div
-    class="modal-header"
-    *ngIf="title"
->
+<div class="modal-header">
     <button
         type="button"
         class="close"
         data-dismiss="modal"
         aria-label="Close"
         (click)="close()"
-        *ngIf="closable"
+        *ngIf="!dialogRef.disableClose"
     >
         <div class="close-content"></div>
     </button>
     <h1
         class="modal-title"
-        [ngClass]="{ closable: closable }"
+        [ngClass]="{ closable: !dialogRef.disableClose }"
     >
-        <span class="ellipsis">{{ title | translate }}</span>
+        <span class="ellipsis">{{ dialogData.title | translate }}</span>
     </h1>
 </div>
 <div
     class="modal-body"
-    *ngIf="message"
+    *ngIf="dialogData.message as message"
 >
-    <ng-template #safe>
-        <p [innerHTML]="message | translate"></p>
-    </ng-template>
     <p
-        *ngIf="unsafe; else safe"
-        [innerHTML]="message | translate | safe: 'html'"
+        *ngIf="!dialogData.safeHTML; else safe"
+        [innerHTML]="message | translate"
     ></p>
+    <ng-template #safe>
+        <p [innerHTML]="message | translate | safe: 'html'"></p>
+    </ng-template>
 </div>
 
 <div
     class="modal-footer"
-    *ngIf="hasFooter"
-    [ngClass]="footerClass"
+    *ngIf="dialogData.footer as f"
+    [ngClass]="f.footerClass"
 >
+    <ng-container *ngIf="f.actionable">
+        <button
+            type="button"
+            class="btn"
+            [ngClass]="f.buttonClass || 'btn-primary'"
+            (click)="close(true)"
+        >
+            {{ f.actionLabel | translate }}
+        </button>
+        <button
+            type="button"
+            class="btn btn-default"
+            *ngIf="f.cancelLabel"
+            (click)="close(f.cancelLabel)"
+        >
+            <span class="ellipsis">{{ f.cancelLabel | translate }}</span>
+        </button>
+    </ng-container>
     <button
+        *ngIf="!f.actionable"
         type="button"
         class="btn"
-        [ngClass]="buttonClass"
-        *ngIf="cancellable"
+        [ngClass]="f.buttonClass || 'btn-primary'"
         (click)="close('CANCEL')"
         translate
     >
         Close
-    </button>
-    <button
-        type="button"
-        class="btn"
-        [ngClass]="buttonClass"
-        *ngIf="!cancellable"
-        (click)="close(true)"
-    >
-        <ng-container>{{ actionLabel | translate }}</ng-container>
-    </button>
-    <button
-        type="button"
-        class="btn btn-default"
-        *ngIf="!cancellable && cancelLabel"
-        (click)="close(cancelLabel)"
-    >
-        <span class="ellipsis">{{ cancelLabel | translate }}</span>
     </button>
 </div>

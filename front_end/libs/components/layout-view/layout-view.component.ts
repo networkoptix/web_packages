@@ -492,11 +492,14 @@ export class NxLayoutViewComponent {
 
     handleRemovingResource = async ({ details: { id } }: { resourceType: ResourceType, details: Record<string, unknown> }): Promise<unknown> => firstValueFrom(
         this.layoutItemLookup$.pipe(
-            switchMap(items => this.dialogsService.confirm({
-                ...this.LANG.layouts.actions.delete,
-                actionType: 'btn-primary',
-                message: { value: this.LANG.layouts.actions.delete.message, params: items[id as string] }
-            })),
+            switchMap(items => {
+                const { title, message, footer } = this.LANG.layouts.removeItem;
+                return this.dialogsService.confirm({
+                    title,
+                    message: { value: message, params: items[id as string] },
+                    footer,
+                });
+            }),
             switchMap(res => res === true && this.selectedSystem$),
             switchMap((system: NxSystem) => system && (system.mediaserver as NxSystemRestAPI).deleteLayout(id as string).pipe(
                 tap(() => this.updateLayout(this.refreshLayouts$.value.replace(id as string, '')))

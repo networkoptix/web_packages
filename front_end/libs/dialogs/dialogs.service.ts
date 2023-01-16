@@ -8,8 +8,7 @@ import { SubscriptionLike, firstValueFrom } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { GenericEditModalContent, ModalContent } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
-import { Translatable, TranslatableStrict } from '@pipes/any-translate.types';
-import { NxAccountService } from '@services/account.service';
+import { Translatable } from '@pipes/any-translate.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -31,20 +30,8 @@ import * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
 
-// import '@dialogs/dialogs.scss';
-
 interface IParams<Value = any> {
     [key: string]: Value;
-}
-
-interface ConfirmConfig {
-    message: TranslatableStrict,
-    title: string,
-    actionLabel: string,
-    actionType?: string,
-    cancelLabel?: string,
-    footerClass?: string,
-    requireInput?: boolean
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -83,84 +70,6 @@ export class NxDialogsService extends DialogBase {
         hold?: boolean
     ): void {
         this.toastService.show(message, type, { autohide: !hold });
-    }
-
-    public async alert(message: string, title: string, footerClass?: string, unsafe?: boolean) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                message,
-                title,
-                unsafe,
-                actionLabel: this.LANG.dialogs.buttons.ok,
-                buttonType: 'default',
-                cancelLabel: this.LANG.dialogs.buttons.cancel,
-                buttonClass: 'btn-primary',
-                footerClass: footerClass || '',
-                hasFooter: true,
-                cancellable: true,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async confirm(config: ConfirmConfig);
-    public async confirm(
-        messageOrConfig: TranslatableStrict,
-        title: string,
-        actionLabel: string,
-        actionType?: string,
-        cancelLabel?: string,
-        footerClass?: string,
-        requireInput?: boolean,
-        unsafe?: boolean
-    );
-    public async confirm(
-        messageOrConfig: TranslatableStrict | ConfirmConfig,
-        title?: string,
-        actionLabel?: string,
-        actionType?: string,
-        cancelLabel?: string,
-        footerClass?: string,
-        requireInput = false,
-        unsafe = false
-    ): Promise<unknown> {
-        const usingConfig = typeof messageOrConfig !== 'string' && !('value' in messageOrConfig);
-        const message = usingConfig ? messageOrConfig.message : messageOrConfig;
-        const configParams = usingConfig ? messageOrConfig : {
-            message,
-            title,
-            actionLabel,
-            actionType,
-            cancelLabel,
-            footerClass,
-            requireInput
-        };
-
-        const config: Partial<DialogConfig> = {
-            data: {
-                ...configParams,
-                unsafe,
-                message: configParams.message || '',
-                buttonType: configParams.actionType || 'default',
-                buttonClass: configParams.actionType || 'btn-primary',
-                footerClass: configParams.footerClass || '',
-                hasFooter: true,
-                cancellable: false,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
     }
 
     public async addWidget(gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
@@ -297,12 +206,10 @@ export class NxDialogsService extends DialogBase {
     );
 
     async connectLocalToCloud(
-        account: NxAccountService,
         system: NxSystem,
     ) {
         const config: Partial<DialogConfig> = {
             data: {
-                account,
                 system,
             }
         };
@@ -348,10 +255,9 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async disconnect(account: NxAccountService, system: NxSystem) {
+    public async disconnect(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
-                account,
                 system,
             }
         };
@@ -459,10 +365,9 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
+    public async merge(system: NxSystem, systems: NxSystem[]) {
         const config: Partial<DialogConfig> = {
             data: {
-                user: account,
                 system,
                 systems,
             }
@@ -476,10 +381,9 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async message(account: NxAccountService, type: string, data: IParams): Promise<any> {
+    public async message(type: string, data: IParams): Promise<any> {
         const config: Partial<DialogConfig> = {
             data: {
-                account,
                 messageType: type,
                 data,
             }
@@ -674,6 +578,43 @@ export class NxDialogsService extends DialogBase {
     }
 
     /* General use */
+    generic = this.dialogV2Factory<Dt.Generic>(
+        () => import('./generic/generic.component').then(m => m.GenericModalContent)
+    );
+
+    async alert(data: Dt.Alert['data']): Promise<Dt.Alert['return']> {
+        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
+        const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
+            width: DIALOG_SIZE_V2.NORMAL,
+            data: { ...data, footer: { actionable: false, ...data.footer } },
+            // Only close button
+        };
+        return firstValueFrom(
+            this.cdkDialog.open<Dt.Alert['return']>(component, dialogConfig).closed
+        );
+    }
+
+    async confirm(data: Dt.Confirm['data']): Promise<Dt.Confirm['return']> {
+        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
+        const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
+            width: DIALOG_SIZE_V2.NORMAL,
+            data: { ...data, footer: { actionable: true, ...data.footer } },
+            // With action/cancel buttons
+        };
+        return firstValueFrom(
+            this.cdkDialog.open<Dt.Confirm['return']>(component, dialogConfig).closed
+        );
+    }
+
+    /* Auth */
+    async expiredSession(): Promise<Dt.Confirm['return']> {
+        return this.confirm({
+            disableClose: true,
+            title: this.LANG.dialogs.renewAuth.title,
+            message: this.LANG.dialogs.renewAuth.message,
+            footer: { actionLabel: this.LANG.dialogs.buttons.ok }
+        });
+    }
 
     /* Account */
     private async account2fa<A extends TfaAction>(

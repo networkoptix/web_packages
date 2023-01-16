@@ -280,29 +280,21 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         this.currentStorageState.saveStorages()
             .toPromise().then(response => {
                 if (response.error !== undefined && response.error !== '0') {
-                    const errorToShow = response.errorString;
-                    this.dialogsService
-                        .alert(errorToShow, this.LANG.dialogs.titles.error)
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    this.dialogsService.alert({
+                        title: this.LANG.dialogs.titles.error,
+                        message: response.errorString,
+                    });
                 } else {
-                    this.dialogsService
-                        .alert(
-                            this.LANG.dialogs.message.storageSettingsSaved,
-                            this.LANG.dialogs.titles.success
-                        ).catch(error => {
-                            console.error(error);
-                        });
+                    this.dialogsService.alert({
+                        title: this.LANG.dialogs.titles.success,
+                        message: this.LANG.dialogs.message.storageSettingsSaved,
+                    });
                 }
             }, () => {
-                this.dialogsService
-                    .alert(
-                        this.LANG.dialogs.message.storageSettingsNotSaved,
-                        this.LANG.dialogs.titles.error
-                    ).catch(error => {
-                        console.error(error);
-                    });
+                this.dialogsService.alert({
+                    title: this.LANG.dialogs.titles.error,
+                    message: this.LANG.dialogs.message.storageSettingsNotSaved,
+                });
             }).then(() => {
                 this.updateWatchers();
             });

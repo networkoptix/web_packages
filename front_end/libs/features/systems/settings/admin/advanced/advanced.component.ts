@@ -85,30 +85,22 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                         typeof (response.error) !== 'undefined' &&
                         response.error !== '0'
                     ) {
-                        const errorToShow = response.errorString;
-                        this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error)
-                            .catch(error => {
-                                console.error(error);
-                            });
+                        this.dialogsService.alert({
+                            title: this.LANG.dialogs.titles.error,
+                            message: response.errorString,
+                        });
                     } else {
                         this.settingsToBeDisplayedOrUpdated(this.changedFields);
-                        this.dialogsService
-                            .alert(
-                                this.LANG.dialogs.message.settingsSaved,
-                                this.LANG.dialogs.titles.success
-                            ).catch(error => {
-                                console.error(error);
-                            });
+                        this.dialogsService.alert({
+                            title: this.LANG.dialogs.titles.success,
+                            message: this.LANG.dialogs.message.settingsSaved,
+                        });
                     }
                 }, () => {
-                    this.dialogsService
-                        .alert(
-                            this.LANG.dialogs.message.settingsNotSaved,
-                            this.LANG.dialogs.titles.error
-                        ).catch(error => {
-                            console.error(error);
-                        });
+                    this.dialogsService.alert({
+                        title: this.LANG.dialogs.titles.error,
+                        message: this.LANG.dialogs.message.settingsNotSaved,
+                    });
                 });
         });
     }

@@ -234,7 +234,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             asset: this.plugin.information.name
         };
         this.dialogs
-            .message(this.accountService, dialogs.message.type.integration, data)
+            .message(dialogs.message.type.integration, data)
             .then(() => { });
     }
 
@@ -254,13 +254,27 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     async addWidgetDialog({ url, name }): Promise<void> {
-        const open = await this.dialogs.confirm(`Would you like to add "${name}" to your dashboard?`, 'Add widget to dashboard?', 'Add to dashboard', 'btn-primary', 'Download file');
+        const open = await this.dialogs.confirm({
+            title: 'Add widget to dashboard?',
+            message: `Would you like to add "${name}" to your dashboard?`,
+            footer: {
+                actionLabel: 'Add to dashboard',
+                cancelLabel: 'Download file',
+            }
+        });
         const queryParams = { widgetUrl: url };
         this.handleDashboardOpen(open, queryParams, url);
     }
 
     async updateDashboardDialog({ url }): Promise<void> {
-        const open = await this.dialogs.confirm('Would you like to replace your dashboard with the one from this config?', 'Update dashboard?', 'Update dashboard', 'btn-primary', 'Download file');
+        const open = await this.dialogs.confirm({
+            title: 'Update dashboard?',
+            message: 'Would you like to replace your dashboard with the one from this config?',
+            footer: {
+                actionLabel: 'Update dashboard',
+                cancelLabel: 'Download file',
+            }
+        });
         const queryParams = { dashboardUrl: url };
         this.handleDashboardOpen(open, queryParams, url);
     }

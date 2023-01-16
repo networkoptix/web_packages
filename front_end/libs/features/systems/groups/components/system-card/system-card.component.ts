@@ -82,13 +82,14 @@ export class NxSystemCardComponent implements OnInit {
                 }
                 this.modalActive = true;
                 return this.dialogs
-                    .confirm(
-                        this.LANG.errorCodes.cantOpenClient,
-                        this.LANG.dialogs.titles.noClientDetected,
-                        this.LANG.dialogs.buttons.download,
-                        'btn-primary',
-                        this.LANG.dialogs.buttons.cancel
-                    )
+                    .confirm({
+                        title: this.LANG.dialogs.titles.noClientDetected,
+                        message: this.LANG.errorCodes.cantOpenClient,
+                        footer: {
+                            actionLabel: this.LANG.dialogs.buttons.download,
+                            cancelLabel: this.LANG.dialogs.buttons.cancel,
+                        }
+                    })
                     .then(result => {
                         if (result === true) {
                             this.router

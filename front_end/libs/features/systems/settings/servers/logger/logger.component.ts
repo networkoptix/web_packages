@@ -78,23 +78,17 @@ export class NxServerLoggerComponent implements OnChanges {
                 this.systemLoggers.forEach(logger => {
                     logger.originalValue = logger.value;
                 });
-                this.dialogsService
-                    .alert(
-                        this.LANG.dialogs.message.logLevelsSaved,
-                        this.LANG.dialogs.titles.success
-                    ).catch(error => {
-                        console.error(error);
-                    });
+                this.dialogsService.alert({
+                    title: this.LANG.dialogs.titles.success,
+                    message: this.LANG.dialogs.message.logLevelsSaved,
+                });
             },
             err => {
                 const handleError = (): void => {
-                    this.dialogsService
-                        .alert(
-                            this.LANG.dialogs.message.logLevelsNotSaved,
-                            this.LANG.dialogs.titles.error
-                        ).catch(error => {
-                            console.error(error);
-                        });
+                    this.dialogsService.alert({
+                        title: this.LANG.dialogs.titles.error,
+                        message: this.LANG.dialogs.message.logLevelsNotSaved,
+                    });
                 };
                 if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.simpleDialogService.refreshSession(this.system).then(res => {

@@ -1,61 +1,25 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    Inject
-} from '@angular/core';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
 
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { Translatable } from '@pipes/any-translate.types';
-import { pickFrom } from '@utils/general';
+import staticLang from '@common/language/language_i18n_static.json';
+import type { Generic as DialogTypes } from '@dialogs/dialogs.types';
 
 @Component({
     selector: 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
     styleUrls: ['generic.component.scss']
 })
-export class GenericModalContent implements OnInit {
-    @Input() closable: boolean = true;
-
-    message: Translatable;
-    title: Translatable;
-    actionLabel: Translatable;
-    buttonType: string;
-    cancelLabel: Translatable;
-    buttonClass: string;
-    footerClass: string;
-    hasFooter: boolean;
-    cancellable: boolean;
-    unsafe: boolean;
+export class GenericModalContent {
+    LANG = staticLang;
 
     constructor(
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
-    ) {}
-
-    ngOnInit(): void {
-        pickFrom(
-            this.dialogData,
-            [
-                'message',
-                'title',
-                'actionLabel',
-                'buttonType',
-                'cancelLabel',
-                'buttonClass',
-                'footerClass',
-                'hasFooter',
-                'cancellable',
-                'unsafe'
-            ],
-            this
-        );
-
-        this.buttonClass ||= '';
-        this.footerClass ||= '';
+        public dialogRef: DialogRef<DialogTypes['return']>,
+        @Inject(DIALOG_DATA) public dialogData: DialogTypes['data'],
+    ) {
+        dialogRef.disableClose = dialogData.disableClose;
     }
 
-    close(action?): void {
+    close(action?: DialogTypes['return']): void {
         this.dialogRef.close(action);
     }
 }

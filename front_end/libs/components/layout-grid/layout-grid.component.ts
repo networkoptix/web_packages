@@ -800,9 +800,17 @@ export class NxLayoutGridComponent {
 
     removeItem = async ({ id, resourceId }: LayoutItem): Promise<void> => {
         const item = this.layoutItemLookup[resourceId];
-        let update = true;
+        let update: boolean | string = true;
         if (item) {
-            update = await this.dialogsService.confirm({ ...this.LANG.layouts.removeItem, message: { value: this.LANG.layouts.removeItem.message, params: { name: item.name, layoutName: this.layout.name } } as TranslatableStrict });
+            const { title, message, footer } = this.LANG.layouts.removeItem;
+            update = await this.dialogsService.confirm({
+                title,
+                message: {
+                    value: message,
+                    params: { name: item.name, layoutName: this.layout.name }
+                } as TranslatableStrict,
+                footer,
+            });
         }
 
         if (update === true) {

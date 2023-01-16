@@ -223,3 +223,8 @@ span.marked {
 .cdk-overlay-dark-backdrop {
     background-color: var(--dialog-overlay-bg) !important;
 }
+
+// <p> has bottom margin which can create a gap between the body and footer
+.cdk-dialog-container {
+    background-color: var(--dialog-bg);
+}

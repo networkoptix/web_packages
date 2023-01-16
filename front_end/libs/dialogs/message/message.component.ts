@@ -33,7 +33,6 @@ export class MessageModalContent implements OnInit {
 
     LANG = staticLang;
 
-    account: NxAccountService;
     messageType: string;
     data: any;
     placeholder: string;
@@ -53,6 +52,7 @@ export class MessageModalContent implements OnInit {
     constructor(
         private translateService: TranslateService,
         private processService: NxProcessService,
+        private account: NxAccountService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
@@ -64,7 +64,7 @@ export class MessageModalContent implements OnInit {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['account', 'messageType', 'data'], this);
+        pickFrom(this.dialogData, ['messageType', 'data'], this);
 
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {

@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
@@ -32,7 +32,6 @@ export class DisconnectModalContent {
     needsUpdate: boolean;
     disconnect: Process;
     disconnectInterval: number;
-    account: NxAccountService;
     system: NxSystem;
     // password: string;
     // wrongPassword: boolean;
@@ -48,13 +47,13 @@ export class DisconnectModalContent {
     constructor(
         private processService: NxProcessService,
         private loginService: NxLoginService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
         private systemsService: NxSystemsService,
+        private account: NxAccountService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: {
-            account: NxAccountService;
             system: NxSystem;
         },
         @Inject(WINDOW) private window: Window,
@@ -62,7 +61,7 @@ export class DisconnectModalContent {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['account', 'system'], this);
+        pickFrom(this.dialogData, ['system'], this);
 
         // const passwordError = () => {
         //     this.wrongPassword = true;
@@ -129,7 +128,7 @@ export class DisconnectModalContent {
                         }
                     });
             } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                return this.dialogs.expiredSession().then(() => this.window.location.reload());
             }
         });
     }

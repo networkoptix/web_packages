@@ -114,8 +114,10 @@
         "removeItem": {
             "title": "Remove item from layout",
             "message": "Are you sure that you want to remove \"{name}\" from \"{layoutName}\" layout?",
-            "actionLabel": "Remove Item",
-            "cancelLabel": "Cancel"
+            "footer": {
+                "actionLabel": "Remove Item",
+                "cancelLabel": "Cancel"
+            }
         },
         "ptzActionLabels": {
             "up": "UP",
@@ -162,10 +164,12 @@
                 }
             },
             "delete": {
-                "message": "Are you sure that you want to delete the \"{name}\" layout?",
                 "title": "Delete layout",
-                "actionLabel": "Delete",
-                "cancelLabel": "Cancel"
+                "message": "Are you sure that you want to delete the \"{name}\" layout?",
+                "footer": {
+                    "actionLabel": "Delete",
+                    "cancelLabel": "Cancel"
+                }
             },
             "errors": {
                 "required": "'This field is required'"

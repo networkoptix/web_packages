@@ -27,7 +27,6 @@ import type {
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { dialogs, icons } from '@lib/variables/static-variables';
-import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -139,7 +138,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         private location: Location,
         private breakpointObserver: BreakpointObserver,
         private router: Router,
-        private accountService: NxAccountService,
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(PLATFORM_ID) private platformId: object,
         @Inject(WINDOW) private window: Window,
@@ -556,7 +554,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     openPageFeedback(): void {
         this.dialogs.message(
-            this.accountService,
             dialogs.message.type.ipvd_page,
             { disclaimer: this.LANG.privacyPolicy.ipvd, asset: '' }
         );
@@ -564,7 +561,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     openDeviceFeedback(): void {
         this.dialogs.message(
-            this.accountService,
             dialogs.message.type.ipvd_device,
             {
                 disclaimer: this.LANG.privacyPolicy.ipvd,

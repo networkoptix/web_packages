@@ -70,7 +70,6 @@ const typeLintBlacklist = [
     '**/download-async/package-handler.ts',
     '**/edit/edit.component.ts',
     '**/embed/embed.component.ts',
-    '**/generic/generic.component.ts',
     '**/mandatory-2fa/mandatory-2fa.component.ts',
     '**/merge/merge.component.ts',
     '**/merge/stateForMergeDialog.ts',

@@ -10,7 +10,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -27,7 +27,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     constructor(
         configService: NxConfigService,
         private appState: NxAppStateService,
-        private dialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
@@ -54,7 +54,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     }
 
     // appState.systemAvailable for webadmin, overlay-modal.component
-    checkIfSystemAvailable(res: HttpResponse<unknown> | HttpErrorResponse): void {
+    private checkIfSystemAvailable(res: HttpResponse<unknown> | HttpErrorResponse): void {
         // res might be just { type: number } and not full response
         const url = res.url && new URL(res.url, this.window.location.origin);
         if (url?.pathname.startsWith('/static')) {
@@ -93,7 +93,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             // remove overlay if visible
             this.appState.systemAvailable$.next(true);
             this.isDialogActive = true;
-            return this.dialogService.expiredSession()
+            this.dialogs.expiredSession()
                 .then(() => this.window.location.reload());
         } else if (
             res instanceof HttpResponse &&

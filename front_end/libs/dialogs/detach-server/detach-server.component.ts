@@ -2,7 +2,7 @@ import { Component, Inject, Input } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
@@ -33,7 +33,7 @@ export class DetachServerModalContent {
     constructor(
         private loginService: NxLoginService,
         private processService: NxProcessService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private toastService: NxToastService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
@@ -79,7 +79,7 @@ export class DetachServerModalContent {
                                 }
                             });
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                        return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                        return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     } else {
                         this.close();
                         this.system.currentServerNotBusy = true;

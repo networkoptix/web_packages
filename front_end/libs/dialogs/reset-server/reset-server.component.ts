@@ -7,7 +7,7 @@ import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
@@ -42,7 +42,7 @@ export class ResetServerModalContent {
         private appState: NxAppStateService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
         private router: Router,
@@ -179,7 +179,7 @@ export class ResetServerModalContent {
                             }
                         });
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
             });
     }
