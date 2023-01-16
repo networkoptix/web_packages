@@ -27,6 +27,11 @@ export class NxRotate {
     #constrainToParent = ({ width, height }: { width: number, height: number }): void => {
         this.el.nativeElement.style.maxHeight = this.changeAspect ? `${width}px` : '';
         this.el.nativeElement.style.maxWidth = this.changeAspect ? `${height}px` : '';
+        if (this.changeAspect) {
+            const wider = height > width;
+            const scale = (wider ? height / width : width / height) * 100;
+            this.el.nativeElement.style[wider ? 'width' : 'height'] = `${scale}%`;
+        }
     };
 
     constructor(

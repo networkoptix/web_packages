@@ -1,5 +1,5 @@
 <div
-    *ngIf="layout && layoutItemLookup"
+    *ngIf="layoutItemLookup && (layout$ | async) as layout"
     class="sidebar-wrapper left"
     [ngClass]="{ 'open-menu': layoutItemLookup && openMenu === 'left' }"
 >

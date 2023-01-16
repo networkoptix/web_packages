@@ -421,7 +421,7 @@ export class NxLayoutViewComponent {
         fixedWidth: 0,
         id: null,
         items,
-        locked: false,
+        locked: !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
         logicalId: 0,
         name,
         systemId,
@@ -471,7 +471,7 @@ export class NxLayoutViewComponent {
             zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
             zoomTop: 0
         }],
-        locked: false,
+        locked: !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
         logicalId: 0,
         name: 'Focus View',
         systemId,
