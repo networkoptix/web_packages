@@ -2,11 +2,28 @@
     id="groups"
     cdkDropListGroup
 >
-    <div class="sidebar">
-        <nx-pre-loader
-            *ngIf="(loadingState$ | async) === LoadingState.LOADING; else sideBarContent"
-        ></nx-pre-loader>
-        <ng-template #sideBarContent>
+    <div
+        class="sidebar-container"
+        [ngClass]="{ shown: isSidebarShown }"
+    >
+        <nx-pre-loader *ngIf="(loadingState$ | async) === LoadingState.LOADING"></nx-pre-loader>
+        <div
+            class="sidebar-toggling-ear-wrapper"
+            (click)="handleSidebarTogglingEarClick()"
+            *ngIf="(loadingState$ | async) !== LoadingState.LOADING"
+        >
+            <div class="sidebar-toggling-ear">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                >
+                </svg-icon>
+            </div>
+        </div>
+        <div
+            class="sidebar"
+            *ngIf="isSidebarShown && (loadingState$ | async) !== LoadingState.LOADING"
+        >
             <div class="buttons">
                 <button
                     class="btn btn-default mr-2"
@@ -60,7 +77,7 @@
                 [groups]="rootGroups$ | async"
                 [systems]="rootSystems$ | async"
             ></nx-sidebar-level>
-        </ng-template>
+        </div>
     </div>
     <div class="cards">
         <nx-pre-loader *ngIf="(loadingState$ | async) === LoadingState.LOADING"></nx-pre-loader>

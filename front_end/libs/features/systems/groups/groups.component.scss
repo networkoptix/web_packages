@@ -1,24 +1,78 @@
 @use 'components/sidebar-level/sidebar-level.component.scss' as *;
+@use 'bootstrap_utils' as bootstrap;
 
 #groups {
     display: flex;
     height: 100%;
 
-    .sidebar {
-        overflow-y: auto;
-        padding: 1rem;
-
+    .sidebar-container {
         @include sidebar-level();
 
         & > .group-drop-list {
             margin-top: 0.4rem;
         }
 
-        min-width: 15rem;
-        background-color: var(--groups-sidebar-bg);
+        .sidebar {
+            height: 100%;
+            overflow-y: auto;
+            padding: 1rem;
+            width: 320px;
+            background-color: var(--groups-sidebar-bg);
+
+            @include bootstrap.media-breakpoint-down(sm) {
+                position: absolute;
+                width: 100%;
+                height: calc(100% - 98px);
+                z-index: 2;
+            }
+
+            @include bootstrap.media-breakpoint-down(xs) {
+                height: calc(100% - 60px);
+            }
+        }
 
         .buttons {
             display: flex;
+        }
+
+        .sidebar-toggling-ear-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: calc(50% - 40px / 2);
+            left: 0;
+            width: 16px;
+            height: 40px;
+            background-color: var(--control-color);
+            opacity: 0.8;
+            cursor: pointer;
+
+            .sidebar-toggling-ear {   
+                svg {
+                    transform: rotate(270deg);
+                }
+            }
+            
+            &:hover {
+                opacity: 1.0;
+            }
+
+        }
+
+        &.shown {
+            left: 0;
+            .sidebar-toggling-ear-wrapper {
+                left: 320px;
+                @include bootstrap.media-breakpoint-down(sm) {
+                    left: calc(100% - 16px);
+                }
+                .sidebar-toggling-ear {
+                    svg {
+                        transform: rotate(90deg);
+                    }
+                }
+            }
         }
     }
 

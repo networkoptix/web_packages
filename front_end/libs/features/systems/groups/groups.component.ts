@@ -48,6 +48,7 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
 
     private groupId: string;
+    public isSidebarShown: boolean = true;
 
     LoadingState = LoadingState;
 
@@ -73,6 +74,10 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.groupsService.disconnect();
+    }
+
+    public handleSidebarTogglingEarClick(): void {
+        this.isSidebarShown = !this.isSidebarShown;
     }
 
     trackItem(_index: number, item: Crumb): string {
