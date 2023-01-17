@@ -1,7 +1,11 @@
 @mixin sidebar-level() {
     ul {
         list-style-type: none;
-        padding-inline-start: 1.5rem;
+        padding: 0;
+
+        ul {
+            padding-inline-start: 1.5rem;
+        }
 
         li {
             margin: 0.4rem 0;
@@ -27,6 +31,10 @@
     .group-drop-list {
         display: flex;
         align-items: center;
+        
+        &.no-nested-groups{
+            margin-left: 25px;
+        }
 
         &.selected {
             background-color: var(--groups-sidebar-highlight);

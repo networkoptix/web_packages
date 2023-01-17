@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { icons } from '@lib/variables/static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
-import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
+import { GroupItem, GroupsItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import { selectCurrentGroupId } from '../../store/groups.selectors';
 
@@ -18,7 +18,6 @@ import { selectCurrentGroupId } from '../../store/groups.selectors';
 })
 export class NxGroupsSidebarLevelComponent implements OnChanges {
     @Input() groups: GroupItem[];
-    @Input() systems: SystemItem[];
 
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 

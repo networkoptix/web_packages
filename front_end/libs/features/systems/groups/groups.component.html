@@ -59,24 +59,15 @@
                 cdkDropList
                 (cdkDropListDropped)="moveToRoot($event)"
             >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dir + 'folder.svg'"
-                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                    svgClass="folder"
-                ></svg-icon>
                 <h3>
                     <a
                         routerLink="/groups/"
                         translate
-                        >(root)</a
+                        >My Systems</a
                     >
                 </h3>
             </div>
-            <nx-sidebar-level
-                [groups]="rootGroups$ | async"
-                [systems]="rootSystems$ | async"
-            ></nx-sidebar-level>
+            <nx-sidebar-level [groups]="rootGroups$ | async"></nx-sidebar-level>
         </div>
     </div>
     <div class="cards">
@@ -86,7 +77,7 @@
                 <a
                     routerLink="/groups/"
                     translate
-                    >(root)</a
+                    >My Systems</a
                 >
                 <ng-container *ngFor="let crumb of crumbs$ | async; trackBy: trackItem">
                     {{ ' / ' }}
