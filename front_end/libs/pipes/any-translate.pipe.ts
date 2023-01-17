@@ -26,7 +26,7 @@ export class AnyTranslatePipe extends TranslatePipe implements PipeTransform {
         param?: any
     ): string {
         const value = text?.value || text;
-        const params = Object.assign({}, text.params, param);
+        const params = Object.assign({}, text?.params, param);
         return super.transform(value, Object.entries(params).reduce((params, [param, paramValue]) => ({ ...params, [param]: this.transform(paramValue) }), {}));
     }
 }

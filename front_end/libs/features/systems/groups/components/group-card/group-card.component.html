@@ -42,6 +42,14 @@
             <div
                 class="card-menu-option"
                 cdkMenuItem
+                (cdkMenuItemTriggered)="addGroup()"
+                translate
+            >
+                Add group
+            </div>
+            <div
+                class="card-menu-option"
+                cdkMenuItem
                 (cdkMenuItemTriggered)="deleteGroup()"
                 translate
             >

@@ -24,7 +24,8 @@ export class CreateSystemGroupModalContent implements OnInit {
     // parentOptions: GroupNameOption[];
     // selectedParent: GroupNameOption;
 
-    target_id: string | undefined;
+    targetId: string | undefined;
+    targetName: string | undefined;
 
     createSystemGroupProcess: Process;
 
@@ -33,17 +34,18 @@ export class CreateSystemGroupModalContent implements OnInit {
         public dialogRef: DialogRef,
         // private store: Store,
         @Inject(DIALOG_DATA) dialogData: {
-            target_id?: string;
+            targetId?: string;
+            targetName?: string;
         },
         private groupsService: NxSystemGroupsService,
     ) {
-        this.target_id = dialogData.target_id;
+        [this.targetId, this.targetName] = [dialogData.targetId, dialogData.targetName];
     }
 
     ngOnInit(): void {
         this.createSystemGroupProcess = this.processService.createProcess(
             () => {
-                this.groupsService.createGroup(this.newGroupName, this.target_id);
+                this.groupsService.createGroup(this.newGroupName, this.targetId);
                 return Promise.resolve();
             },
             {},

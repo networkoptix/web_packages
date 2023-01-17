@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 
 import type { GroupItem } from '../../groups.types';
@@ -25,6 +26,7 @@ export class NxGroupCardComponent implements OnInit {
     constructor(
         private router: Router,
         private groupsService: NxSystemGroupsService,
+        private dialogsService: NxDialogsService
     ) {
     }
 
@@ -36,5 +38,9 @@ export class NxGroupCardComponent implements OnInit {
 
     deleteGroup(): void {
         this.groupsService.deleteGroup(this.group.id);
+    }
+
+    addGroup(): void {
+        this.dialogsService.createSystemGroup(this.group.id, this.group.name);
     }
 }

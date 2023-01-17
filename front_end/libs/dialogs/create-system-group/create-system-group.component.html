@@ -38,9 +38,10 @@
             />
             <p class="modal-paragraph-light">
                 {{
-                    target_id
-                        ? LANG.dialogs.systemGroups.createdInCurrentGroup
-                        : LANG.dialogs.systemGroups.createdInRoot
+                    (targetName
+                        ? LANG.dialogs.systemGroups.createdInsideSelectedGroup
+                        : LANG.dialogs.systemGroups.createdInCurrentGroup
+                    ) | translate: { targetName: targetName }
                 }}
             </p>
         </div>
