@@ -180,7 +180,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.title.setTitle(`${this.LANG.pageTitles.auth()} - ${this.CONFIG.cloudName}`);
+        setTimeout(() => {
+            this.title.setTitle(`${this.LANG.pageTitles.auth()} - ${this.CONFIG.cloudName}`);
+        });
         this.footerItems = this.CONFIG.dynamicMenus?.footer?.nodes || [];
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
@@ -202,7 +204,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData = cloneDeep(params);
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             if (this.window.nativeClient && !this.initialData.email) {
-                const clientEmail = nativeClient.username();
+                const clientEmail = nativeClient.username && await nativeClient?.username();
                 if (clientEmail) {
                     this.initialData.email = clientEmail;
                 }
@@ -212,7 +214,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.viewType = this.initialData.view_type || 'web';
 
             if (this.viewType === 'desktop') {
-                this.themeService.setTheme('dark', 'undefined');
+                this.themeService.setTheme('dark', undefined);
             }
             const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
