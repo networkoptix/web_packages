@@ -46,9 +46,9 @@ Force Tags
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
-    Log In    ${email}    ${password}    validate=${False}    button=${RESET LOGIN BUTTON}
+    Log In    ${email}    ${password}    validate=${False}    button=${RESET LOGIN BUTTON}    api=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    validate=${True}    button=${LOG IN BUTTON}    reset=${True}
+    Log In    ${email}    ${ALT PASSWORD}    validate=${True}    button=${LOG IN BUTTON}    reset=${True}    api=${False}
 
 6. Displays password masked, shows password and changes eye icon when clicked
     [Tags]    C26260    
@@ -167,7 +167,7 @@ Force Tags
     ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${user}    ${BASE PASSWORD}
     ${email}    Wait For Email    recipient=${user}    timeout=120
-    Activate   ${user}    ${BASE PASSWORD}    from email=${True}
+    Activate   ${user}    ${BASE PASSWORD}    fromEmail=${True}
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     # Now for the actual email we are testing...
     Send "Restore Password" Email    ${user}
@@ -178,7 +178,7 @@ Force Tags
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
     Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ${links}    Get Links From Email    ${email}
+    ${links}    Get Links fromEmail    ${email}
     @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/restore_password
     FOR    ${link}  IN  @{links}
         check in list    ${expected links}    ${link}
