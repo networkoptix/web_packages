@@ -20,13 +20,13 @@ import { LicenseManager } from '@services/system.service/license-manager/licence
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
 import { NxToastService } from './toast.service';
-import {NxSystemInfo} from "@services/systems.service.types";
 
 // import '@dialogs/dialogs.scss';
 

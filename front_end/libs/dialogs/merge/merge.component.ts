@@ -24,7 +24,7 @@ import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo } from "@services/systems.service.types";
+import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
 
