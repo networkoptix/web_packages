@@ -16,6 +16,7 @@ import { icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
+import { NxPageService } from '@services/page.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -42,6 +43,7 @@ export class NxMonitoringComponent implements OnInit {
     private destroy$ = new Subject<true>();
 
     constructor(
+        private pageService: NxPageService,
         private route: ActivatedRoute,
         private menuService: NxMenuService,
         private sourceService: NxAppSourceService,
@@ -49,6 +51,8 @@ export class NxMonitoringComponent implements OnInit {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
+        this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
+
         this.content = {
             base: '',
             selectedSection: 'graphs',
@@ -71,6 +75,9 @@ export class NxMonitoringComponent implements OnInit {
         this.menuService.selectedSectionSubject
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
+                setTimeout(() => {
+                    this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
+                });
                 if (this.content.selectedSection === selection) {
                     return;
                 }

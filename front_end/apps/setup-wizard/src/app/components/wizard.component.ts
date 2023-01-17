@@ -84,7 +84,11 @@ export class WizardComponent implements OnInit {
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
-            this.next();
+            if (this.wizardService.currentState === 'localSuccess') {
+                this.finish();
+            } else {
+                this.next();
+            }
         }
     }
 }

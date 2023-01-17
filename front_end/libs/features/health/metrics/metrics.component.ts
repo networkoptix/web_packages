@@ -16,6 +16,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { icons } from '@lib/variables/static-variables';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -79,6 +80,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(
+        private pageService: NxPageService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
         private route: ActivatedRoute,
@@ -88,6 +90,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
+        this.pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     ngOnInit(): void {
@@ -123,6 +126,9 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
+                setTimeout(() => {
+                    this.pageService.pageTitle = this.LANG.pageTitles.information;
+                });
                 // when user click same section in the menu - we need to reset table and entity
                 if (this.metricId === selection) {
                     this.filterModel.query = '';

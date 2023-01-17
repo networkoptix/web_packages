@@ -21,6 +21,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
@@ -82,6 +83,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(
+        pageService: NxPageService,
         public healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
         private route: ActivatedRoute,
@@ -92,6 +94,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
+        pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     private sortAlertsFunc() {

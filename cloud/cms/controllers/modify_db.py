@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from contextlib import suppress
 import base64
 from io import BytesIO
 import json
@@ -16,6 +17,7 @@ from PIL import Image
 
 from api.models import Account
 from cms.models import *
+from util.config import UnableToFetchConfigException
 from util.helpers import get_customization
 
 BYTES_TO_MEGABYTES = 1048576.0
@@ -708,7 +710,8 @@ def send_version_for_review(asset, user, notify=True):
         asset_type=asset.asset_type), version)
 
     if notify:
-        notify_version_ready(asset, version, user)
+        with suppress(UnableToFetchConfigException):
+            notify_version_ready(asset, version, user)
 
     return []
 

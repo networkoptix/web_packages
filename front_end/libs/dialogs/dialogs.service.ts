@@ -29,6 +29,7 @@ import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogC
 import * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
+import {NxSystemInfo} from "@services/systems.service.types";
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -365,7 +366,7 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async merge(system: NxSystem, systems: NxSystem[]) {
+    public async merge(system: NxSystem, systems: NxSystemInfo[]) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,

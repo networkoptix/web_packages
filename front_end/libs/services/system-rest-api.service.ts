@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { SessionStorageService } from 'ngx-webstorage';
 import { from, Observable, of, throwError } from 'rxjs';
 import {
     catchError,
@@ -89,6 +90,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.injector.get(NxStorageService);
     }
 
+    private get sessionStorage() {
+        return this.injector.get(SessionStorageService);
+    }
+
     public get isSessionOauth() {
         return !environment.isLocal || this.currentUser?.type === 'cloud';
     }
@@ -98,7 +103,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public get accessToken() {
-        return this.cookieService.get(this.cloudAccessTokenName);
+        return this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
 
     public set accessToken(token) {
@@ -106,8 +111,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (this.isSessionOauth && accessToken && cloudAccessToken) {
             this.deleteToken(cloudAccessToken, accessToken).toPromise();
         }
-        this.cookieService.delete(this.cloudAccessTokenName);
-        this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
+        this.sessionStorage.clear(this.cloudAccessTokenName);
+        this.sessionStorage.store(this.cloudAccessTokenName, token);
     }
 
     public setVmsToken(token) {
@@ -219,8 +224,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private clearTokens(): void {
         const storageService = this.storageService;
-        this.cookieService.delete(this.cloudAccessTokenName);
-        this.cookieService.delete(this.token);
+        this.sessionStorage.clear(this.cloudAccessTokenName);
+        this.sessionStorage.clear(this.token);
         storageService.clear(this.cloudToken);
         storageService.clear(this.refreshToken);
         this.accessToken = '';

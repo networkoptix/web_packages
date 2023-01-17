@@ -23,6 +23,7 @@ import { icons, healthMonitoring } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -64,6 +65,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     @ViewChild('loadReportMain') loadReportMain;
 
     constructor(
+        pageService: NxPageService,
         private translateService: TranslateService,
         private appStateService: NxAppStateService,
         private router: Router,
@@ -75,6 +77,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
+        pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     ngOnInit(): void {

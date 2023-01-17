@@ -84,7 +84,7 @@ class SpecialStructures:
     @staticmethod
     def calc_cloud_host(asset: Asset):
         customization = asset.customizations.first()
-        if not customization or not get_cloud_portal_asset(customization=customization.name, no_create=True):
+        if not customization or not customization.enabled or not get_cloud_portal_asset(customization=customization.name, no_create=True):
             return ""
         conf = get_config(customization.name)
         return conf["cloud_portal"]["url"].lstrip('https://').lstrip('http://')
@@ -92,7 +92,7 @@ class SpecialStructures:
     @staticmethod
     def calc_cloud_link(asset: Asset):
         customization = asset.customizations.first()
-        if not customization or not get_cloud_portal_asset(customization=customization.name, no_create=True):
+        if not customization or not customization.enabled or not get_cloud_portal_asset(customization=customization.name, no_create=True):
             return ""
         conf = get_config(customization.name)
         return conf["cloud_portal"]["url"].replace("http:", "https:")

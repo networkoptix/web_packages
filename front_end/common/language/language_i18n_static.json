@@ -1023,7 +1023,9 @@
         "releases": "Releases",
         "patches": "Patches",
         "betas": "Betas",
-        "systemServerError": "Internal server error"
+        "systemServerError": "Internal server error",
+        "information": "Information",
+        "monitoring": "Monitoring"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",

@@ -6,6 +6,14 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
+class UnableToFetchConfigException(Exception):
+    def __init__(self, msg):
+        """
+        Exception for when config file is missing.
+        """
+        self.msg = f"Unable to fetch config file. {msg}"
+
+
 def get_config(customization=None):
     # Allows cloud_portal to run migratedb, readstructure, and filldata.
     # In an actual instance gunicorn is used to run cloud_portal
@@ -23,7 +31,7 @@ def get_config(customization=None):
         msg = f"To fix this problem run force update on the latest accepted review " \
               f"for {customization}'s cloud portal asset to fix the problem."
         logger.critical(msg)
-        raise Exception(f"Unable to fetch config file. {msg}")
+        raise UnableToFetchConfigException(msg)
     if not os.path.isfile(file_path):  # this is for local environment
         file_path = os.path.join(conf_dir, '../../etc', 'cloud_portal.yaml')
     if not os.path.isfile(file_path):  # this is for Jenkins to collect static
