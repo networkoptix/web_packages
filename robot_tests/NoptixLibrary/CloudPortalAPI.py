@@ -629,3 +629,9 @@ class CloudPortalAPI(object):
             featuresDict = json.load(featuresJson)
             res = requests.post(f'{self.env}/api/robot/set_flags', data=featuresDict, verify=False)
             assert res.status_code == 200
+            return featuresDict
+
+    @keyword
+    def get_cloud_settings(self):
+        res = requests.get(f'{self.env}/api/utils/settings')
+        return res.json()
