@@ -1238,7 +1238,8 @@
             "cloud": "Cloud"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>",
+        "noUsersForTransfer": "There are no other users on the system besides you. Add them to system to be able to transfer rights"
     },
     "systemGroups": {
         "root": "root",

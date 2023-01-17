@@ -9,3 +9,16 @@
     @include typography.medium16nocolor;
     color: var(--body-text-color); // dark9
 }
+
+.no-users{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 50px;
+    padding-top: 25px;
+
+    text-align: center;
+    font-size: 16px;
+}

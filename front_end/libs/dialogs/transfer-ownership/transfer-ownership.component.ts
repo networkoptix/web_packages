@@ -7,6 +7,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import type {
     SearchableDropdownItem
 } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons, servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -44,6 +45,7 @@ export class TransferOwnershipModalContent implements OnInit {
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
         private loginService: NxLoginService,
+        private dialogService: NxDialogsService,
         public dialogRef: DialogRef<DialogTypes['return']>,
         @Inject(DIALOG_DATA) public system: DialogTypes['data'],
     ) {}
@@ -124,4 +126,9 @@ export class TransferOwnershipModalContent implements OnInit {
     close = (info?: DialogTypes['return']): void => {
         this.dialogRef.close(info);
     };
+
+    openAddUserDialog(): void {
+        this.dialogRef.close();
+        this.dialogService.addUser(this.system);
+    }
 }
