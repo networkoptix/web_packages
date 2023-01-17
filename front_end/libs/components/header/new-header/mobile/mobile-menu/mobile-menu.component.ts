@@ -12,6 +12,7 @@ import { AccountDropdown } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxSystemsService } from '@services/systems.service';
 
 @UntilDestroy()
 @Component({
@@ -25,6 +26,7 @@ export class NxMobileHeaderMenuComponent {
   @Input() loggedIn: boolean = false;
   @Input() isProfile: boolean = false;
   @Input() isTablet: boolean = false;
+  @Input() singleSystem: boolean = false;
   @Output() nodeClicked = new EventEmitter<boolean>();
   profileMenu: MenuNode[];
   LANG = staticLang;
@@ -42,6 +44,7 @@ export class NxMobileHeaderMenuComponent {
   constructor(public headerService: NxHeaderService,
               private configService: NxConfigService,
               private accountService: NxAccountService,
+              systemsService: NxSystemsService,
               menusService: NxMenusService) {
       this.CONFIG = this.configService.getConfig();
       this.profileMenu = this.makeProfileMenu(accountDropdown);

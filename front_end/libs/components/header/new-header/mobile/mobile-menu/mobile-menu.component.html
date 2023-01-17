@@ -8,15 +8,10 @@
     >
         <ng-container *ngFor="let node of menuNodes">
             <div
-                *ngIf="!node.invisible"
+                *ngIf="!node.invisible && !(singleSystem && node.url === '/systems')"
                 class="menu-item"
             >
-                <div
-                    class="node-name"
-                    [innerText]="
-                        node.url === '/systems' ? LANG.appHeader.systemsList : node.display_name
-                    "
-                ></div>
+                <div class="node-name">{{ node.display_name }}</div>
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: node.nodes }"
                 ></ng-container>
@@ -71,7 +66,10 @@
             </div>
         </div>
     </div>
-    <div class="account-button-wrapper">
+    <div
+        class="account-button-wrapper"
+        [ngClass]="{ tablet: isTablet }"
+    >
         <div
             class="logout-button btn account-button"
             (click)="logout()"

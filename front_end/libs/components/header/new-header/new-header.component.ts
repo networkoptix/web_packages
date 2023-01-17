@@ -80,7 +80,7 @@ export class NxNewHeaderComponent {
     }
 
     handleNodeSelect(node: MenuNode): void {
-        if (this.selectedNode !== node && !(this.selectedNode.url.includes('/systems') && node.url.includes('/systems'))) {
+        if (this.selectedNode !== node && !(this.selectedNode?.url.includes('/systems') && node.url.includes('/systems'))) {
             this.selectedNode = node;
         }
     }

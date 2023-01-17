@@ -76,6 +76,10 @@
     width: 100%;
     background-color: var(--mobile-header-bg);
 
+    &.tablet {
+        width: 50%;
+    }
+
     .account-button {
         position: relative;
         top: 32px;
@@ -87,6 +91,7 @@
             background-color: var(--mobile-header-logout-btn-bg) !important;
             @include typography.regular14nocolor;
             color: var(--mobile-header-logout-btn-color);
+            box-shadow: inset 0px -1px 0px $dark8;
         }
     }
 }

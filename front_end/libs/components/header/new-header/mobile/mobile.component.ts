@@ -24,9 +24,9 @@ export class NxHeaderMobileComponent {
     menuOpen$ = new BehaviorSubject(false);
     isProfile$ = new BehaviorSubject(false);
     isTablet$ = new BehaviorSubject(false);
+    singleSystem$ = new BehaviorSubject(false);
     currentSystemMenu: MenuNode;
     iconState: mobileIconState;
-    singleSystem = false;
     icons = icons;
     constructor(public headerService: NxHeaderService,
         systemsService: NxSystemsService,
@@ -44,7 +44,7 @@ export class NxHeaderMobileComponent {
         });
 
         systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
-            this.singleSystem = systems.length === 1;
+            this.singleSystem$.next(systems.length === 1);
         });
     }
 
@@ -73,7 +73,7 @@ export class NxHeaderMobileComponent {
                 if (path === '/systems') {
                     state = mobileIconState.NONE;
                 } else if (this.headerService.activeSystem && path?.includes('/systems/')) {
-                    if (!this.singleSystem) {
+                    if (!this.singleSystem$.value) {
                         state = mobileIconState.RETURN_TO_SYSTEMS;
                     } else {
                         state = mobileIconState.NONE;
