@@ -186,34 +186,37 @@
     "depth": 1,
     "nodes": [
       {
-        "name": "About %CLOUD_NAME%",
-        "url": "/content/about",
-        "new_window": false,
-        "enabled": true,
-        "authentication": "both"
-      },
-      {
-        "name": "Download %VMS_NAME%",
+        "name": "Downloads",
+        "display_name": "Downloads",
         "url": "/download",
         "new_window": false,
-        "enabled": true,
-        "authentication": "both"
-      },
-      {
-        "name": "Integrations",
-        "url": "/integrations",
-        "new_window": false,
-        "enabled": true,
-        "condition": "%INTEGRATION_STORE_ENABLED%",
-        "authentication": "both"
-      },
-      {
-        "name": "For developers",
-        "url": "https://support.networkoptix.com/hc/en-us/categories/360000737654-Develop-with-Nx-Meta",
-        "new_window": true,
-        "enabled": false,
+        "icon": "",
         "authentication": "both",
-        "condition": "%DEVELOPERS_ENABLED%"
+        "enabled": true
+      },
+      {
+        "name": "Terms",
+        "display_name": "Terms",
+        "url": "/content/eula",
+        "new_window": false,
+        "icon": "",
+        "authentication": "both",
+        "enabled": true
+      },
+      {
+        "name": "Privacy",
+        "display_name": "Privacy",
+        "url": "%PRIVACY_LINK%",
+        "new_window": false,
+        "icon": "",
+        "authentication": "both",
+        "enabled": true
+      },
+      {
+        "name": "System Calculator",
+        "url": "http://nx.networkoptix.com/calculator/",
+        "enabled": true,
+        "new_window": true
       },
       {
         "name": "Support",
@@ -221,39 +224,6 @@
         "new_window": true,
         "enabled": true,
         "authentication": "both"
-      },
-      {
-        "name": "Terms",
-        "url": "/content/eula",
-        "new_window": false,
-        "enabled": true,
-        "authentication": "both"
-      },
-      {
-        "name": "Privacy",
-        "url": "%PRIVACY_LINK%",
-        "new_window": true,
-        "enabled": true,
-        "authentication": "both"
-      },
-      {
-        "name": "Supported Devices",
-        "url": "/ipvd",
-        "new_window": false,
-        "condition": "%IPVD_ENABLED%",
-        "enabled": true,
-        "authentication": "both"
-      },
-      {
-        "name": "System Calculator",
-        "url": "http://nx.networkoptix.com/calculator/",
-        "enabled": [
-          "default",
-          "default_cn",
-          "default_zh_CN",
-          "metavms"
-        ],
-        "new_window": true
       }
     ]
   }
