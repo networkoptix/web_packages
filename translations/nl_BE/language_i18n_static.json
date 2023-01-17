@@ -864,7 +864,9 @@
         "view": "Bekijk camera's",
         "apiTool": "API testing tool",
         "security": "Beveiliging",
-        "twofaRequired": "Tweestapsverificatie vereist"
+        "twofaRequired": "Tweestapsverificatie vereist",
+        "information": "Informatie",
+        "monitoring": "Controle"
     },
     "pageDescriptions": {
         "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",

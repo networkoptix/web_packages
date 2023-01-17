@@ -864,7 +864,9 @@
         "view": "Kameras ansehen",
         "apiTool": "API-Testing Tool",
         "security": "Sicherheit",
-        "twofaRequired": "Zwei-Faktor-Authentifizierung erforderlich"
+        "twofaRequired": "Zwei-Faktor-Authentifizierung erforderlich",
+        "information": "Informationen",
+        "monitoring": "Überwachung"
     },
     "pageDescriptions": {
         "integrations": "Der Integrations Marketplace ist ein zentralisiertes Ökosystem von Produkten, die sich nahtlos in VMS-Produkte wie %VMS_NAME% integrieren lassen. Sie sind alle in %CLOUD_NAME% verfügbar, sodass Sie Lösungen zum Aufbau und zur Anpassung Ihres IP-Videosystems finden können.",

@@ -1,7 +1,9 @@
 from functools import wraps
 from collections import defaultdict, OrderedDict
+from contextlib import suppress
 from django.core.files import base
 from django.db.models.expressions import OuterRef, Subquery
+from util.config import UnableToFetchConfigException
 from waffle import flag_is_active
 from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
 from cms.views.celery import download_result
@@ -437,7 +439,7 @@ def handle_publish_single_customization(request, asset_review, can_publish, has_
 
     manage_release_note_notification(asset_review)
 
-    return publish_review(request, asset_review, asset_review.customization)
+    return publish_review(request, asset_review, asset_review.customization.name)
 
 
 @defer_handler

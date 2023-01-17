@@ -60,12 +60,13 @@ class MenuCache(BaseCache):
         DOC_CACHE.clear_cache()
         super().__setitem__(key.lower(), menu)
 
-    def clear_cache(self):
+    def clear_cache(self, immediate = False):
         from cms.controllers.documentation import DOC_CACHE
         from cms.tasks import async_generate_menus
         from notifications.celery import app
-        super().clear_cache()
-        if not settings.TESTING:
+        if immediate:
+            super().clear_cache()
+        elif not settings.TESTING:
             running_task = cache.get(INITIALIZATION_TASK_KEY)
             if running_task:
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')

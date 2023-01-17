@@ -864,7 +864,9 @@
         "view": "Podgląd kamer",
         "apiTool": "Narzędzie testowania API",
         "security": "Ochrona",
-        "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe"
+        "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe",
+        "information": "Informacje",
+        "monitoring": "Monitoring"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace to scentralizowany ekosystem produktów, które bezproblemowo integrują się z produktami VMS, takimi jak %VMS_NAME%, wszystkie dostępne w %CLOUD_NAME% dzięki czemu można znaleźć rozwiązania umożliwiające zbudowanie i dostosowanie systemu wideo IP.",

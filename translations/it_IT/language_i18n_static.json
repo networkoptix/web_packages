@@ -864,7 +864,9 @@
         "view": "Visualizza telecamere",
         "apiTool": "Strumento di test API",
         "security": "Sicurezza",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Two-factor authentication required",
+        "information": "Informazioni",
+        "monitoring": "Monitoraggio"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace è un ecosistema centralizzato di prodotti che si integrano perfettamente con i prodotti VMS come %VMS_NAME%, tutti disponibili in %CLOUD_NAME% +permettendo di trovare soluzioni per costruire e personalizzare il tuo sistema video IP.",
