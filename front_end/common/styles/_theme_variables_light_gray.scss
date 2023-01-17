@@ -92,7 +92,7 @@ html[data-theme="light-gray"] {
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$light_gray_1};
     --validation-popover-color        : #{$dark_gray_9};
-    
+
     --popover-shadow-color : 0 1rem 2rem 0 #{$light_gray_15};
     --popover-bg           : #{$light_gray_1};
     --popover-color        : #{$dark_gray_9};
@@ -234,6 +234,11 @@ html[data-theme="light-gray"] {
     --header-profile-hover-color          : #{$light_gray_10};
     --header-profile-active-color         : #{$light_gray_4};
     --header-profile-active-bg            : #{$dark_gray_9};
+
+    // Header lang
+    --header-lang-bg   : #{$dark_gray_4};
+    --header-lang-code : #{$light_gray_16};
+    --header-lang-code-text: #{$light_gray_1};
 
     // Footer
     --footer-bg                           : #{$dark_gray_4};

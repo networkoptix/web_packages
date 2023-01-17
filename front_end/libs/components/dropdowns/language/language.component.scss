@@ -4,7 +4,10 @@
 
 :host {
     .dropdown {
-        width   : 300px;
+        width   : min(100%, 450px);
+        &.in-header {
+            width: 350px;
+        }
         display : block;
 
         &.auto {
@@ -23,6 +26,23 @@
     .short {
         width : 64px !important;
     }
+}
+
+.lang-code {
+    @include typography.regular11nocolor;
+    color: var(--light1);
+    background-color: var(--header-lang-code);
+    width: 26px;
+    height: 16px;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 2px;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.new-header {
+    background-color: var(--header-lang-bg) !important;
 }
 
 .new-header-lang {

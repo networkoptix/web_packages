@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
 import { icons, images } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -28,7 +29,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     @Input() dropup;
     @Input() short;
     @Input() altStyle;
-    @Input() newHeader = false;
+    @IBool() @Input() inHeader: CoercedBoolInput = false;
     @Output() langChange = new EventEmitter<string>();
 
     currentLang: string;
@@ -41,10 +42,10 @@ class BaseLanguageDropdown extends BaseDropdown {
     };
     icons = icons;
     images = images;
+    newHeader = false;
 
     languages: ILanguages = [];
-    languagesCol1 = [];
-    languagesCol2 = [];
+    langColumns = [];
 
     constructor(
         configService: NxConfigService,
@@ -56,14 +57,22 @@ class BaseLanguageDropdown extends BaseDropdown {
     ) {
         super(configService);
         this.currentLang = languageService.currentLang;
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
     }
 
     private splitLanguages(): void {
         if (this.languages.length > 12) {
-            const halfWayThough = Math.ceil(this.languages.length / 2);
-
-            this.languagesCol1 = this.languages.slice(0, halfWayThough);
-            this.languagesCol2 = this.languages.slice(halfWayThough, this.languages.length);
+            if (this.inHeader) {
+                const halfWayThough = Math.ceil(this.languages.length / 2);
+                this.langColumns.push(this.languages.slice(0, halfWayThough));
+                this.langColumns.push(this.languages.slice(halfWayThough, this.languages.length));
+            } else {
+                const languagesCopy = [...this.languages];
+                const threeParts = Math.ceil(this.languages.length / 3);
+                for (let i = 3; i > 0; i--) {
+                    this.langColumns.push(languagesCopy.splice(-threeParts));
+                }
+            }
         }
     }
 

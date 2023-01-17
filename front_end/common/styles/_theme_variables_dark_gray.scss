@@ -91,7 +91,7 @@ html[data-theme="dark-gray"] {
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$dark_gray_9};
     --validation-popover-color        : #E8E8E8; //$light_gray_4;
-    
+
     --popover-shadow-color : none;
     --popover-bg           : #606060; //$dark_gray_13;
     --popover-color        : #E8E8E8; //$light_gray_4;
@@ -244,6 +244,11 @@ html[data-theme="dark-gray"] {
    --header-profile-hover-color          : #{$light_gray_10};
    --header-profile-active-color         : #{$light_gray_4};
    --header-profile-active-bg            : #{$dark_gray_9};
+
+    // Header lang
+    --header-lang-bg   : #{$dark_gray_4};
+    --header-lang-code : #{$light_gray_16};
+    --header-lang-code-text: #{$light_gray_1};
 
     // Footer
     --footer-bg                           : #{$dark_gray_4};

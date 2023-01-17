@@ -210,42 +210,47 @@ html[data-theme="dark"] {
     --left-menu-disabled-item-color             : #3F545F; //$dark13;
     --left-menu-disabled-item-addtitional-color : #445B67; //$dark14;
 
-   // New header ******************************
-   --header-level-one-color              : #{$light13};
-   --header-level-one-bg                 : #{$dark4};
-   --header-level-one-active-bg          : #{$dark5};
-   --header-level-one-active-color       : #{$light4};
-   --header-level-one-hover-color        : #{$light10};
-   --header-level-two-bg                 : #{$dark6};
-   --header-item-disabled                : #{$dark13};
-   --header-level-two-hover-border-color : #{$dark11};
-   --header-arrow-hover                  : #{$dark8};
-   --header-nav-arrow-bg                 : #{$dark7};
-   --header-logout-action-color          : #{$light16};
+    // New header ******************************
+    --header-level-one-color              : #{$light13};
+    --header-level-one-bg                 : #{$dark4};
+    --header-level-one-active-bg          : #{$dark5};
+    --header-level-one-active-color       : #{$light4};
+    --header-level-one-hover-color        : #{$light10};
+    --header-level-two-bg                 : #{$dark6};
+    --header-item-disabled                : #{$dark13};
+    --header-level-two-hover-border-color : #{$dark11};
+    --header-arrow-hover                  : #{$dark8};
+    --header-nav-arrow-bg                 : #{$dark7};
+    --header-logout-action-color          : #{$light16};
 
     // Logo;
     --header-logo-text-color              : #{$light4};
     --header-logo-border                  : #{$dark11};
 
-   // Mobile header
-   --mobile-header-bg                    : #{$dark4};
-   --mobile-level-one-color              : #{$dark15};
-   --mobile-level-two-color              : #{$light6};
-   --mobile-header-svg-color             : #{$light1};
-   --mobile-header-border-one            : #{$dark2};
-   --mobile-header-border-two            : #{$dark5};
-   --mobile-header-border-three          : #{$dark3};
-   --mobile-header-item-nav-arrow        : #{$dark13};
-   --mobile-header-logout-btn-bg         : #{$dark12};
-   --mobile-header-logout-btn-color      : #{$light2};
+    // Mobile header
+    --mobile-header-bg                    : #{$dark4};
+    --mobile-level-one-color              : #{$dark15};
+    --mobile-level-two-color              : #{$light6};
+    --mobile-header-svg-color             : #{$light1};
+    --mobile-header-border-one            : #{$dark2};
+    --mobile-header-border-two            : #{$dark5};
+    --mobile-header-border-three          : #{$dark3};
+    --mobile-header-item-nav-arrow        : #{$dark13};
+    --mobile-header-logout-btn-bg         : #{$dark12};
+    --mobile-header-logout-btn-color      : #{$light2};
 
-   // Header profile dropdown
-   --header-profile-bg                   : #{$dark7};
-   --header-profile-color                : #{$light13};
-   --header-profile-hover-bg             : #{$dark9};
-   --header-profile-hover-color          : #{$light10};
-   --header-profile-active-color         : #{$light4};
-   --header-profile-active-bg            : #{$dark9};
+    // Header profile dropdown
+    --header-profile-bg                   : #{$dark7};
+    --header-profile-color                : #{$light13};
+    --header-profile-hover-bg             : #{$dark9};
+    --header-profile-hover-color          : #{$light10};
+    --header-profile-active-color         : #{$light4};
+    --header-profile-active-bg            : #{$dark9};
+
+    // Header lang
+    --header-lang-bg   : #{$dark4};
+    --header-lang-code : #{$light16};
+    --header-lang-code-text: #{$light1};
 
     // Footer
     --footer-bg                           : #{$dark4};

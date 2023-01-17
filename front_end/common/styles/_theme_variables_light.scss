@@ -247,6 +247,11 @@ html[data-theme="light"] {
     --header-profile-active-color : #{$light4};
     --header-profile-active-bg : #{$dark9};
 
+    // Header lang
+    --header-lang-bg   : #{$light4};
+    --header-lang-code : #{$light16};
+    --header-lang-code-text: #{$light1};
+
     // Footer
     --footer-bg : #{$light3};
     --footer-text-color : #{$light16};
