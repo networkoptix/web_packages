@@ -1,7 +1,9 @@
 <div
     *ngIf="layoutItemLookup && (layout$ | async) as layout"
     class="sidebar-wrapper left"
-    [ngClass]="{ 'open-menu': layoutItemLookup && openMenu === 'left' }"
+    [ngClass]="{
+        'open-menu': layoutItemLookup && (layoutSettings?.value$ | async)?.openMenu === 'left'
+    }"
 >
     <div
         *ngIf="
@@ -57,7 +59,7 @@
     </div>
     <div
         class="tab"
-        [ngClass]="{ 'active-menu': openMenu === 'left' }"
+        [ngClass]="{ 'active-menu': (layoutSettings?.value$ | async)?.openMenu === 'left' }"
     >
         <svg-icon
             #resources
@@ -70,7 +72,7 @@
     </div>
     <div class="resource-tree-wrapper">
         <cdk-tree
-            *ngIf="openMenu === 'left'"
+            *ngIf="(layoutSettings?.value$ | async)?.openMenu === 'left'"
             cdkDropList
             tourAnchor="cloud-layouts_left-menu"
             [cdkDropListDisabled]="layout.locked"

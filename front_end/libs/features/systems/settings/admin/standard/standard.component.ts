@@ -23,6 +23,7 @@ import { icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -82,6 +83,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     readonly environment = environment;
     LANG = staticLang;
 
+    alexaSettingsCustomProperty: CustomAccountProperty<Partial<AlexaSettings>>;
+
     selectedTimeUnit: LimitSessionTimeItem;
     sessionLimitToggle: boolean;
     timeValue: number;
@@ -134,6 +137,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         private systemsService: NxSystemsService,
     ) {
         this.CONFIG = configService.getConfig();
+        this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(AlexaSettings.CUSTOM_PROPERTY_ENDPOINT, new AlexaSettings());
     }
 
     DAY_MINS = DAY_MINS; // For template access
@@ -167,9 +171,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
             delayInitial(
-                this.cloudApi.getCustomAccountProperty(
-                    AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
-                )
+                this.alexaSettingsCustomProperty.value$
             )
                 .pipe(
                     AlexaSettings.cleanObservable(this.system.id),
@@ -374,10 +376,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                         this.alexaSettings.eventRulesSetup = !!setup && settings.enabled;
                     }
                     this.eventRulesBeingSetup = false;
-                    this.cloudApi.saveCustomAccountProperty(
-                        this.alexaSettings,
-                        AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
-                    );
+                    this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
                 })
             ).toPromise();
     };
@@ -396,10 +395,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                 const rulesSetup = !!checkCommand(layoutCommand) && !!checkCommand(customCommand);
                 if (settings.eventRulesSetup !== rulesSetup) {
                     settings.eventRulesSetup = rulesSetup;
-                    await this.cloudApi.saveCustomAccountProperty(
-                        settings,
-                        AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
-                    ).toPromise();
+                    await this.alexaSettingsCustomProperty.save(settings, true);
                 }
                 return settings;
             }));
@@ -407,10 +403,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     #updateAlexa = (settings: Partial<AlexaSettings>) =>
         this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
-            this.cloudApi.saveCustomAccountProperty(
-                settings,
-                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
-            )
+            this.alexaSettingsCustomProperty.save(settings)
         ).pipe(
             tap(settings => {
                 this.alexaSettings = settings;
@@ -420,10 +413,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             untilDestroyed(this)
         ).subscribe(settings => {
             this.alexaSettings = settings;
-            this.cloudApi.saveCustomAccountProperty(
-                this.alexaSettings,
-                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
-            );
+            this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
         });
 
     toggleAlexaEnabled = (): void => {

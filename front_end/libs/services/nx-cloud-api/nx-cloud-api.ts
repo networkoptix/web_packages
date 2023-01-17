@@ -32,6 +32,7 @@ import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-pa
 import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
+import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
 
@@ -532,24 +533,39 @@ export class NxCloudApiService {
             );
     };
 
-    checkFeatureNotice = <T>(noticeKey: string, firstViewCallback: () => T) => this.getCustomAccountProperty('featureNotices').pipe(
-        catchError(() => Promise.resolve({})),
-        switchMap(async value => {
+    checkFeatureNotice = <T>(
+        noticeKey: string, firstViewCallback: () => T
+    ) => this.customAccountPropertyFactory('featureNotices', {} as Record<string, boolean>).update(
+        async value => {
             if (value[noticeKey]) {
                 return Promise.resolve(value);
             }
 
             await firstViewCallback();
 
-            return this.saveCustomAccountProperty({ ...value, [noticeKey]: true }, 'featureNotices').toPromise();
+            return { ...value, [noticeKey]: true };
         }
-        ));
+    );
 
+    customAccountPropertyFactory<T>(property: string, initialValue: T): CustomAccountProperty<T>;
+    customAccountPropertyFactory<T>(property: string, username: string, initialValue: T): CustomAccountProperty<T>;
+    customAccountPropertyFactory<T>(property: string, usernameOrInitialValue: string | T, initialValue?: T): CustomAccountProperty<T> {
+        const username = initialValue && usernameOrInitialValue ? usernameOrInitialValue as string : '';
+        initialValue ||= usernameOrInitialValue as T;
+        return CustomAccountProperty.getInstance(this.http, property, initialValue, username);
+    }
+
+    /**
+        @deprecated use customAccountPropertyFactory instead.
+    */
     getCustomAccountProperty(property: string, username?: string) {
         const endpoint = `${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
         return this.http.get<any>(endpoint);
     }
 
+    /**
+        @deprecated use customAccountPropertyFactory instead.
+    */
     saveCustomAccountProperty(payload: any, property: string, username?: string) {
         const endpoint = `${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
         return this.http.post<any>(endpoint, payload);

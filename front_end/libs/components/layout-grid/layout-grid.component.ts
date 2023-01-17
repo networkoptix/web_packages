@@ -18,6 +18,8 @@ import { ConfigType } from '@components/console-table/console-table.component.ty
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { TranslatableStrict } from '@pipes/any-translate.types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
@@ -71,6 +73,11 @@ interface Collisions {
     background?: string;
 }
 
+interface LayoutSettings {
+    openMenu: 'left' | 'right' | 'both',
+    previousOpenMenu: 'left' | 'right' | 'both'
+}
+
 @UntilDestroy()
 @Component({
     selector: 'nx-layout-grid',
@@ -94,7 +101,8 @@ export class NxLayoutGridComponent {
     treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
     dataSource: ArrayDataSource<BaseResourceNode>;
 
-    openMenu: false | 'left' | 'right' | 'both' = 'left';
+    layoutSettings: CustomAccountProperty<LayoutSettings>;
+
     previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
     dragging = false;
@@ -290,9 +298,11 @@ export class NxLayoutGridComponent {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private dialogsService: NxDialogsService,
-        public tourService: TourService
+        public tourService: TourService,
+        private cloudApi: NxCloudApiService
     ) {
         this.CONFIG = configService.config;
+        this.layoutSettings = this.cloudApi.customAccountPropertyFactory(`layouts_${activatedRoute.snapshot.params.systemId}`, { openMenu: 'left', previousOpenMenu: null });
     }
 
     async ngOnChanges({ layout, layoutItemLookup }: NgChanges<NxLayoutGridComponent>): Promise<void> {
@@ -390,19 +400,18 @@ export class NxLayoutGridComponent {
 
     cleanId = cleanId;
 
-    toggleMenu(menu = this.previousOpenMenu, force = false): void {
-        if (!this.openMenu || force) {
-            if (this.openMenu) {
-                this.previousOpenMenu = this.openMenu;
+    toggleMenu(menu: 'left' | 'right' | 'both' = null, force = false): void {
+        this.layoutSettings.update(curr => {
+            menu ||= curr.previousOpenMenu;
+            if (!curr.openMenu || force) {
+                if (curr.openMenu) {
+                    curr.previousOpenMenu = curr.openMenu;
+                }
+                curr.openMenu = curr.openMenu === menu ? null : menu;
             }
-            this.openMenu = this.openMenu === menu ? false : menu;
-        }
-    }
 
-    closeMenu(): void {
-        if (!this.addingItem) {
-            this.openMenu = false;
-        }
+            return curr;
+        }, true);
     }
 
     getScale = (itemId: string, resize: Point): string => {

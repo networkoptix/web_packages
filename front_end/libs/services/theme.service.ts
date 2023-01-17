@@ -8,6 +8,14 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
+import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
+
+enum AvailableThemes {
+    auto = 'auto',
+    light = 'light',
+    dark = 'dark'
+}
+
 @UntilDestroy()
 @Injectable({
     providedIn: 'root'
@@ -18,11 +26,9 @@ export class NxThemeService {
     themeSelected: string;
     userTheme: string;
 
-    public availThemes = {
-        auto: 'auto',
-        light: 'light',
-        dark: 'dark',
-    };
+    themeCustomProperty: CustomAccountProperty<{ theme: AvailableThemes }>;
+
+    public availThemes = AvailableThemes;
 
     constructor(
         configService: NxConfigService,
@@ -33,6 +39,7 @@ export class NxThemeService {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
+        this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
 
         this.sessionStorage.observe('theme')
             .pipe(untilDestroyed(this))
@@ -79,8 +86,7 @@ export class NxThemeService {
         });
 
         if (loginState) {
-            await this.cloudApi.getCustomAccountProperty('theme', loginState)
-                .toPromise()
+            await this.themeCustomProperty.get(false, true)
                 .then(result => {
                     this.userTheme = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
                     this.themeSelected = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
@@ -147,15 +153,13 @@ export class NxThemeService {
         username &&
         username !== 'setup' &&
         this.userTheme !== themeSelected &&
-        await this.cloudApi.saveCustomAccountProperty(
-            { theme: themeSelected },
-            'theme',
-            username
-        ).toPromise()
-            .then(result => {
-                this.themeSelected = this.getThemeRealName(result.theme);
-            }, err => {
-                console.warn('Cannot save theme: ', err);
-            });
+        await this.themeCustomProperty.save(
+            { theme: themeSelected as AvailableThemes },
+            true
+        ).then(result => {
+            this.themeSelected = this.getThemeRealName(result.theme);
+        }, err => {
+            console.warn('Cannot save theme: ', err);
+        });
     }
 }

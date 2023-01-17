@@ -25,6 +25,7 @@ import { environment } from '@environments/environment';
 import { icons, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
@@ -75,6 +76,8 @@ export class NxDashboardComponent implements DashboardGroup {
     LANG = staticLang;
 
     readonly environment = environment;
+
+    dashboardCustomProperty: CustomAccountProperty<DashboardGroup>;
 
     dashboardGroupName = 'Drag and Drop Dashboard';
     activeId: string;
@@ -258,7 +261,7 @@ export class NxDashboardComponent implements DashboardGroup {
         const { widgetUrl, dashboardUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
         const currentDashboard = DashboardGroup.validateDashboard(
-            await this.cloudApi.getCustomAccountProperty(this.CUSTOM_PROPERTY_KEY).toPromise().catch(_ => ({})),
+            await this.dashboardCustomProperty.get(false, true),
             `${this.accountService.account.first_name}'s Dashboards`
         );
         const beingUpdated = downloadedDashboard && downloadedDashboard?.cards.length;
@@ -504,7 +507,7 @@ export class NxDashboardComponent implements DashboardGroup {
         });
         this.updatePersisted$.pipe(
             debounceTime(250),
-            switchMap(_ => this.cloudApi.saveCustomAccountProperty(this.getPreparedConfig(), this.CUSTOM_PROPERTY_KEY)),
+            switchMap(_ => this.dashboardCustomProperty.save(this.getPreparedConfig())),
             untilDestroyed(this)
         ).subscribe(this.updated$);
         this.getPersistedConfig();
@@ -528,5 +531,6 @@ export class NxDashboardComponent implements DashboardGroup {
         private cookieService: CookieService
     ) {
         this.CONFIG = configService.config;
+        this.dashboardCustomProperty = this.cloudApi.customAccountPropertyFactory(this.CUSTOM_PROPERTY_KEY, new DashboardGroup(`${this.accountService.account.first_name}'s Dashboards`));
     }
 }
