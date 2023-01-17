@@ -21,6 +21,7 @@ import { environment } from '@environments/environment';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
@@ -84,6 +85,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        pageService: NxPageService,
         public healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
         private route: ActivatedRoute,
@@ -91,10 +93,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private location: Location,
         private menuService: NxMenuService,
         private uriService: NxUriService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+
+        pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     private sortAlertsFunc() {

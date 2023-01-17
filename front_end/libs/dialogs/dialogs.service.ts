@@ -26,6 +26,7 @@ import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
 import { NxToastService } from './toast.service';
+import {NxSystemInfo} from "@services/systems.service.types";
 
 // import '@dialogs/dialogs.scss';
 
@@ -407,7 +408,7 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
+    public async merge(account: NxAccountService, system: NxSystem, systems: NxSystemInfo[]) {
         const config: Partial<DialogConfig> = {
             data: {
                 user: account,

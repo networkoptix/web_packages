@@ -50,7 +50,10 @@ export class NxBootstrapProvider {
 
     #useRefreshTokenFromVms = async () => {
         // @ts-expect-error
-        const refreshToken = await this.window.vms.auth.cloudToken();
+        const refreshToken = await this.window?.vms?.auth.cloudToken();
+        if (!refreshToken) {
+            return;
+        }
         const url = new URL(this.window.location.href);
         url.searchParams.set('refresh_token', refreshToken);
         this.window.history.pushState({ url: url.toString() }, '', url.toString());

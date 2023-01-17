@@ -26,6 +26,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
@@ -68,6 +69,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        pageService: NxPageService,
         private accountService: NxAccountService,
         private appStateService: NxAppStateService,
         private systemService: NxSystemService,
@@ -85,6 +87,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+
+        pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     private cleanUp(): void {

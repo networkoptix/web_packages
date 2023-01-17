@@ -35,6 +35,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 
 import { NxSettingsService } from '../settings.service';
+import {NxSystemInfo} from "@services/systems.service.types";
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -56,7 +57,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     user: Account;
     system: NxSystem;
-    systems;
+    systems: NxSystemInfo[];
 
     emptyName = false;
 

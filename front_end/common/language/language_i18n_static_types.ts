@@ -965,8 +965,10 @@ export interface PageTitles {
     failedToAccess2FA:      (params?: Record<string, string | number>) => string;
     failedToAccessSystem:   (params?: Record<string, string | number>) => string;
     failedToAccessCamera:   (params?: Record<string, string | number>) => string;
+    information:            (params?: Record<string, string | number>) => string;
     integrations:           (params?: Record<string, string | number>) => string;
     login:                  (params?: Record<string, string | number>) => string;
+    monitoring:             (params?: Record<string, string | number>) => string;
     pageNotFound:           (params?: Record<string, string | number>) => string;
     register:               (params?: Record<string, string | number>) => string;
     registerSuccess:        (params?: Record<string, string | number>) => string;

@@ -18,6 +18,7 @@ import type { SearchFilter } from '@components/search/search.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -83,6 +84,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private pageService: NxPageService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
         private route: ActivatedRoute,
@@ -94,6 +96,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.information;
     }
 
     ngOnInit(): void {
@@ -129,6 +132,9 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
+                setTimeout(() => {
+                    this.pageService.pageTitle = this.LANG.pageTitles.information;
+                });
                 // when user click same section in the menu - we need to reset table and entity
                 if (this.metricId === selection) {
                     this.filterModel.query = '';
