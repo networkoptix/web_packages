@@ -31,7 +31,7 @@ import { Process } from '@services/process.service/process';
 import { DiscoveredPeers, ModuleInformation } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo } from "@services/systems.service.types";
+import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 import { cleanIp, strSplice, pickFrom, alphabeticalSort } from '@utils/general';
 
@@ -173,7 +173,7 @@ export class MergeModalContent {
             this.updateShow(this.checkMergeDefault);
             await this.system.serverManager.getModuleInfo().toPromise();
             environment.isLocal && await this.getPeerSystems();
-            this.account = this.accountService.get();
+            this.account = await this.accountService.get();
             this.systemsWithInfo = await Promise.all(
                 this.systems.map(async (system: NxSystemInfo) => {
                     const newSystem: NxSystemModuleInfo = { ...system, status: '', protoVersion: '', moduleInfo: undefined };

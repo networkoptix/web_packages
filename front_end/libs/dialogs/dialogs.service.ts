@@ -17,6 +17,7 @@ import { LicenseManager } from '@services/system.service/license-manager/licence
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { pickFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
@@ -29,7 +30,6 @@ import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogC
 import * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
-import {NxSystemInfo} from "@services/systems.service.types";
 
 interface IParams<Value = any> {
     [key: string]: Value;

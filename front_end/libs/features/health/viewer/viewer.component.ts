@@ -77,7 +77,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
-        pageService.pageTitle = this.LANG.pageTitles.information;
+        pageService.pageTitle(this.LANG.pageTitles.information);
     }
 
     ngOnInit(): void {

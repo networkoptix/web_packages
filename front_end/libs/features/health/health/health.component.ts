@@ -88,7 +88,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
 
-        pageService.pageTitle = this.LANG.pageTitles.information;
+        pageService.pageTitle(this.LANG.pageTitles.information);
     }
 
     private cleanUp(): void {

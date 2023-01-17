@@ -94,7 +94,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        pageService.pageTitle = this.LANG.pageTitles.information;
+        pageService.pageTitle(this.LANG.pageTitles.information);
     }
 
     private sortAlertsFunc() {

@@ -90,7 +90,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.pageService.pageTitle = this.LANG.pageTitles.information;
+        this.pageService.pageTitle(this.LANG.pageTitles.information);
     }
 
     ngOnInit(): void {
@@ -127,7 +127,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .pipe(throttleTime(1000))
             .subscribe(selection => {
                 setTimeout(() => {
-                    this.pageService.pageTitle = this.LANG.pageTitles.information;
+                    this.pageService.pageTitle(this.LANG.pageTitles.information);
                 });
                 // when user click same section in the menu - we need to reset table and entity
                 if (this.metricId === selection) {

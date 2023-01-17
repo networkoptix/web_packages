@@ -32,10 +32,10 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 
 import { NxSettingsService } from '../settings.service';
-import {NxSystemInfo} from "@services/systems.service.types";
 
 interface Settings {
     disconnectDisabled: boolean;

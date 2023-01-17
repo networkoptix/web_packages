@@ -51,7 +51,7 @@ export class NxMonitoringComponent implements OnInit {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
-        this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
+        this.pageService.pageTitle(this.LANG.pageTitles.monitoring);
 
         this.content = {
             base: '',
@@ -76,7 +76,7 @@ export class NxMonitoringComponent implements OnInit {
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 setTimeout(() => {
-                    this.pageService.pageTitle = this.LANG.pageTitles.monitoring;
+                    this.pageService.pageTitle(this.LANG.pageTitles.monitoring);
                 });
                 if (this.content.selectedSection === selection) {
                     return;
