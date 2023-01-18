@@ -35,7 +35,7 @@
                         <td>
                             <span
                                 *ngIf="system.useRest && license.required > 0"
-                                class="error-label"
+                                class="error-label error-text"
                                 >{{
                                     LANG.license.messages.required
                                         | translate: { number: license.required }
