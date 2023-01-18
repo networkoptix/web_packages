@@ -1271,6 +1271,7 @@ export interface WarningMessages {
 export interface SystemStatus {
     offline:     (params?: Record<string, string | number>) => string;
     unavailable: (params?: Record<string, string | number>) => string;
+    outOfTimeSync: (params?: Record<string, string | number>) => string;
 }
 
 export interface StorageToolTips {

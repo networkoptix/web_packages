@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -36,6 +37,7 @@ export class NxSystemService {
         private systemsService: NxSystemsService,
         private router: Router,
         private ribbonService: NxRibbonService,
+        private toastService: NxToastService,
         private translateService: TranslateService,
     ) {
         this.CONFIG = configService.getConfig();
@@ -69,6 +71,7 @@ export class NxSystemService {
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.toastService,
                 this.router,
                 this.translateService,
                 currentUserEmail,
@@ -116,6 +119,7 @@ export class NxSystemService {
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.toastService,
                 this.router,
                 this.translateService,
                 userEmail,

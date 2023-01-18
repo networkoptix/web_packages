@@ -70,11 +70,15 @@ export class CameraManager {
             let dayOfWeek;
             let secondsToday;
             if (server) {
-                const { timeZoneOffset, vmsTime } = server;
-                const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
-                const vmsDate = new Date(serverTime);
+                // Intentionally made descriptive ... I dislike time manipulation
+                const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = server;
+                const localTimeZoneOffsetMs = (new Date().getTimezoneOffset()) * 60 * 1000;
+                const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
+                const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
+                const vmsDate = new Date(vmsTimeFromLocal);
+
                 dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
-                secondsToday = Math.round((serverTime % 86400000) / 1000);
+                secondsToday = Math.round((vmsDate.getTime() % 86400000) / 1000);
             }
             const {
                 rotation,

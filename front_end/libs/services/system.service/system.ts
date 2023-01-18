@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -192,6 +193,7 @@ export class NxSystem {
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
+        private toastService: NxToastService,
         private router: Router,
         private translateService: TranslateService,
         currentUserEmail: string,
@@ -471,6 +473,14 @@ export class NxSystem {
             // this.systemInfo = undefined;
             this.subscriberCount = 0;
         }
+    }
+
+    isSomewhereInTime(really = false) {
+        really && this.toastService.show(
+            this.LANG.system.status.outOfTimeSync?.(),
+            this.CONFIG.toast.danger,
+            { autohide: true }
+        );
     }
 
     update = (): Promise<any> => {

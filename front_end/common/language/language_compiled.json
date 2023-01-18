@@ -1993,6 +1993,7 @@
         },
         "status": {
             "offline": "System is offline",
+            "outOfTimeSync": "Time on one or more servers is out of sync.",
             "unavailable": "System is unreachable"
         },
         "storageToolTips": {

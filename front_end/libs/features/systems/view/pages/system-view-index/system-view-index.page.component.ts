@@ -49,6 +49,8 @@ import type { WebClientUxState } from '../../view.types';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
+const MAX_OUT_OF_SYNC_TIME = 60000; // ms
+
 @UntilDestroy()
 @Component({
     selector: 'nx-system-view-index-page',
@@ -455,6 +457,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             );
                             if (mediaServer) {
                                 mediaServer.timeInfo = sti;
+
+                                const serverAndLocalTimeDiff = Math.abs(new Date().getTime() - sti.vmsTime);
+                                // fixes issue https://www.youtube.com/watch?v=sRqGfIbdJyI
+                                const timeDiff = serverAndLocalTimeDiff > MAX_OUT_OF_SYNC_TIME;
+                                this.system.isSomewhereInTime(timeDiff);
                             }
                         });
 
