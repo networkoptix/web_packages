@@ -38,7 +38,7 @@
         [style.display]="'inline-block'"
         [style.right.px]="rightOffset$.value"
         aria-labelledby="accountSettingsSelect"
-        id="accountSettingsDropdown"
+        data-testid="accountSettingsDropdown"
     >
         <ul class="dropdown-menu--list width-override">
             <ng-container *ngIf="!environment.isLocal">
@@ -48,7 +48,7 @@
                 >
                     <a
                         class="dropdown-item inset"
-                        id="dropdownItem{{ i }}"
+                        attr.data-testid="dropdownItem{{ i }}"
                         [href]="dropdownItem.route"
                     >
                         <span>{{ dropdownItem.name | translate }}</span>
@@ -58,7 +58,7 @@
             <li class="dropdown-item-container">
                 <a
                     class="dropdown-item inset"
-                    id="logoutHeader"
+                    data-testid="logoutHeader"
                     (click)="show = false; logout()"
                 >
                     <span translate>Log Out</span>

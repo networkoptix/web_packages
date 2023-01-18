@@ -8,7 +8,7 @@
         (click)="$event.stopPropagation()"
         [textOnly]="textOnly"
         [buttonText]="'Open in %VMS_NAME%' | translate"
-        [id]="'btnOpenInVMS1'"
+        data-testid="btnOpenInVMS1"
     ></nx-process-button>
 
     <nx-process-button
@@ -20,6 +20,6 @@
         (click)="$event.stopPropagation()"
         [textOnly]="textOnly"
         [buttonText]="'Open %VMS_NAME%' | translate"
-        [id]="'btnOpenInVMS2'"
+        data-testid="btnOpenInVMS2"
     ></nx-process-button>
 </ng-container>

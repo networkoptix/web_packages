@@ -93,7 +93,7 @@
                     <p
                         *ngIf="createAccountEmail.errors.required"
                         class="error-label mt-2 mb-0"
-                        id="emailRequiredError"
+                        data-testid="emailRequiredError"
                         translate
                     >
                         Required
@@ -101,7 +101,7 @@
                     <p
                         *ngIf="createAccountEmail.errors.pattern"
                         class="error-label mt-2 mb-0"
-                        id="emailPatternError"
+                        data-testid="emailPatternError"
                         translate
                     >
                         Invalid email
@@ -109,7 +109,7 @@
                     <p
                         *ngIf="createAccountEmail.errors.alreadyExists"
                         class="error-label mt-2 mb-0"
-                        id="emailExistsError"
+                        data-testid="emailExistsError"
                         translate
                     >
                         Account already exists
@@ -117,7 +117,7 @@
                     <p
                         *ngIf="createAccountEmail.errors.portalError"
                         class="error-label mt-2 mb-0"
-                        id="emailPortalError"
+                        data-testid="emailPortalError"
                         translate
                     >
                         An error occurred, please try again later. If the problem continues, please
@@ -166,7 +166,7 @@
                         firstName.errors.required
                     "
                     class="error-label mt-2 mb-0"
-                    id="firstNameRequiredError"
+                    data-testid="firstNameRequiredError"
                     translate
                 >
                     Required
@@ -207,7 +207,7 @@
                         lastName.errors.required
                     "
                     class="error-label mt-2 mb-0"
-                    id="lastNameRequiredError"
+                    data-testid="lastNameRequiredError"
                     translate
                 >
                     Required
@@ -323,7 +323,7 @@
                 <span
                     class="pl-2"
                     translate
-                    id="createAccountLogIn"
+                    data-testid="createAccountLogIn"
                     >Log In</span
                 >
             </button>
@@ -335,7 +335,7 @@
                 [process]="createAccountProcess"
                 [svg]="{ src: 'plus', height: '20', width: '20' }"
                 buttonText="{{ 'Create Account' | translate }}"
-                [id]="'btnCreateAccount'"
+                data-testid="btnCreateAccount"
             >
             </nx-process-button>
         </div>

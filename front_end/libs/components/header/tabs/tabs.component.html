@@ -6,7 +6,7 @@
     class="tab-link"
     *ngIf="node && !node.new_window"
     [ngClass]="{ active: headerService.currentLocation.path === node.url }"
-    [attr.id]="headerService.currentLocation.path === node.url ? 'activeTabLink' : null"
+    [attr.data-testid]="headerService.currentLocation.path === node.url ? 'activeTabLink' : null"
 >
     <a
         *ngIf="!node.nodes?.length; else tabDropdown"

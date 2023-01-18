@@ -14,7 +14,7 @@
         <button
             type="button"
             class="close"
-            id="closeAddUser"
+            data-testid="closeAddUser"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
@@ -85,7 +85,7 @@
             </nx-permissions-select>
             <span
                 class="help-block"
-                id="addUserHelpBlock"
+                data-testid="addUserHelpBlock"
                 [innerText]="accessDescription | translate"
             ></span>
         </div>
@@ -96,13 +96,13 @@
             [process]="addUser"
             [form]="addUserForm"
             [buttonText]="'Add' | translate"
-            [id]="'addUserBtn'"
+            data-testid="addUserBtn"
         ></nx-process-button>
         <nx-cancel-button
             [process]="addUser"
             [cancelFn]="unlock"
             [discardFn]="close"
-            [id]="'cancelAddUserBtn'"
+            data-testid="cancelAddUserBtn"
         ></nx-cancel-button>
     </div>
 </form>

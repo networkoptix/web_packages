@@ -1,7 +1,6 @@
 <button
     type="reset"
     class="min-w-80 btn btn-default {{ customClass }}"
-    [attr.id]="id ? id : null"
     (click)="handleClick()"
 >
     <ng-container *ngIf="!process?.processing && showDiscard; else cancel">{{

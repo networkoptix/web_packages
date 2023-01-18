@@ -9,7 +9,7 @@
         <a
             class="inset navbar-brand asset-name add-version ml-sm-0 d-block"
             [routerLink]="mainUrl"
-            id="NxLogo"
+            data-testid="NxLogo"
         >
             <img
                 [alt]="environment.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'"
@@ -49,7 +49,7 @@
     <nx-header-tabs
         *ngFor="let node of headerService.currentLocation.parentNode?.nodes"
         [node]="node"
-        id="headerTabs"
+        data-testid="headerTabs"
     ></nx-header-tabs>
 </ng-template>
 
@@ -62,7 +62,7 @@
             <span>
                 <a
                     class="btn"
-                    id="createAccountBtn"
+                    data-testid="createAccountBtn"
                     [href]="headerService.createUrl"
                     [ngClass]="[
                         showSmall ? 'small-button' : '',
@@ -84,7 +84,7 @@
             <span>
                 <a
                     class="btn btn-default"
-                    id="loginBtn"
+                    data-testid="loginBtn"
                     [href]="headerService.authorizeUrl"
                     [ngClass]="showSmall ? 'small-button' : 'login-button'"
                 >
@@ -96,7 +96,7 @@
                         *ngIf="!showSmall"
                         class="btn-caption"
                         translate
-                        id="loginBtnText"
+                        data-testid="loginBtnText"
                         >Log In</span
                     >
                 </a>
@@ -106,7 +106,7 @@
                     class="auto"
                     short="true"
                     altStyle="true"
-                    id="languageSelect1"
+                    data-testid="languageSelect1"
                     inHeader
                 ></nx-header-language-select>
             </span>
@@ -143,7 +143,7 @@
                 </div>
                 <div
                     class="tab-wrapper"
-                    id="tabWrapper1"
+                    data-testid="tabWrapper1"
                     (resize)="tabsWidth$.next($event.width)"
                 >
                     <ng-container *ngTemplateOutlet="menuTabs"></ng-container>
@@ -153,7 +153,7 @@
         <div (resize)="menuTabsCollapsed$.next($event.width)">
             <nx-nav-dropdown
                 [nodeLocation]="headerService.currentLocation"
-                id="navDropdownHeader1"
+                data-testid="navDropdownHeader1"
             ></nx-nav-dropdown>
         </div>
         <div
@@ -171,7 +171,7 @@
                         class="auto"
                         short="true"
                         altStyle="true"
-                        id="languageSelect2"
+                        data-testid="languageSelect2"
                         inHeader
                     ></nx-header-language-select>
                 </li>
@@ -261,11 +261,11 @@
                         <div
                             *ngIf="!(showTabs$ | async); else menuTabs"
                             class="tab-wrapper"
-                            id="tabWrapper2"
+                            data-testid="tabWrapper2"
                         >
                             <nx-nav-dropdown
                                 [nodeLocation]="headerService.currentLocation"
-                                id="navDropdownHeader2"
+                                data-testid="navDropdownHeader2"
                             ></nx-nav-dropdown>
                         </div>
                     </ng-container>
@@ -293,7 +293,7 @@
                             class="auto"
                             short="true"
                             altStyle="true"
-                            id="languageSelect3"
+                            data-testid="languageSelect3"
                             inHeader
                         ></nx-header-language-select>
                     </li>
