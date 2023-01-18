@@ -1,4 +1,4 @@
-<div id="removeUserModal">
+<div data-testid="removeUserModal">
     <div class="modal-header">
         <h1 class="modal-title">{{ dialogTitle | translate }}</h1>
         <button
@@ -18,13 +18,13 @@
             [process]="removeUserProcess"
             [actionType]="'danger'"
             [buttonText]="dialogButtonText | translate"
-            [id]="'removeUserBtn'"
+            data-testid="removeUserBtn"
         ></nx-process-button>
         <nx-cancel-button
             [process]="removeUserProcess"
             [cancelFn]="unlock"
             [discardFn]="close"
-            [id]="'cancelRemoveUserBtn'"
+            data-testid="closeRemoveUserModalBtn"
         ></nx-cancel-button>
     </div>
 </div>

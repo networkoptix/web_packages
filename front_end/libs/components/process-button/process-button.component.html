@@ -24,7 +24,6 @@
         [disabled]="buttonDisabled"
         type="submit"
         (click)="clickHandler($event)"
-        [attr.id]="id ? id : null"
     >
         <ng-container>{{ buttonText }}</ng-container>
         <ng-container *ngIf="svg">

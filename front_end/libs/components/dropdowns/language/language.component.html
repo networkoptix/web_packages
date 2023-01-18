@@ -19,7 +19,7 @@
         <span
             *ngIf="!newHeader"
             class="lang-sm"
-            id="activeLang"
+            data-testid="activeLang"
             lang="{{ activeLanguage?.language }}"
         ></span>
         <span
@@ -57,7 +57,7 @@
                 <span *ngIf="!newHeader">
                     <span
                         class="lang-sm"
-                        id="{{ lang.name }}"
+                        attr.data-testid="{{ lang.name }}"
                         lang="{{ lang.language }}"
                     ></span>
                     <span>{{ lang.name }}</span>
@@ -114,7 +114,7 @@
     <span *ngIf="!newHeader">
         <span
             class="lang-sm"
-            id="{{ lang.language }}"
+            attr.data-testid="{{ lang.language }}"
             lang="{{ lang.language }}"
         ></span>
         <span>{{ lang.name }}</span>

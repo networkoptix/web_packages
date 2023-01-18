@@ -5,7 +5,7 @@
     >
         <div
             class="message"
-            id="ribbonMessage"
+            data-testid="ribbonMessage"
         >
             {{ message | translate }}
         </div>
@@ -45,7 +45,7 @@
                 <div class="message-content-wrapper">
                     <div
                         [innerHTML]="message | translate"
-                        id="systemMessage"
+                        data-testid="systemMessage"
                     ></div>
                     <a
                         *ngIf="updateFunction"

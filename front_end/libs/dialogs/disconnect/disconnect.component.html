@@ -45,13 +45,13 @@
                 [form]="disconnectForm"
                 [actionType]="'danger'"
                 [buttonDisabled]="needsUpdate"
-                [id]="'disconnectSystemBtn'"
+                data-testid="disconnectSystemBtn"
                 buttonText="{{ 'Disconnect' | translate }}"
             ></nx-process-button>
             <nx-cancel-button
                 [process]="disconnect"
                 [discardFn]="close"
-                [id]="'cancelDisconnectSystemBtn'"
+                data-testid="cancelDisconnectSystemBtn"
             ></nx-cancel-button>
         </div>
     </div>

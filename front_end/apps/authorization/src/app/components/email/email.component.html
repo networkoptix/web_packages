@@ -97,7 +97,7 @@
                         class="fake-link"
                         (click)="reactivate()"
                         translate
-                        id="resendActivationEmail"
+                        data-testid="resendActivationEmail"
                     >
                         Resend activation email.
                     </p>
@@ -105,14 +105,14 @@
                 <ng-container *ngIf="email.errors.accountDoesNotExist">
                     <p
                         class="mb-2"
-                        id="accountDoesNotExist"
+                        data-testid="accountDoesNotExist"
                         translate
                     >
                         Account does not exist.
                     </p>
                     <p
                         translate
-                        id="canCreateAccount"
+                        data-testid="canCreateAccount"
                     >
                         You can create an account with this email address or try to enter a
                         different one.
@@ -121,7 +121,7 @@
                 <p
                     *ngIf="email.errors.accountNotAccessSystem"
                     class="error-label"
-                    id="accountNoAccess"
+                    data-testid="accountNoAccess"
                     translate
                 >
                     Account doesn't have access to this system.
@@ -130,7 +130,7 @@
                     *ngIf="email.errors.lockedOut"
                     class="error-label"
                     translate
-                    id="tooManyAttemptsEmail"
+                    data-testid="tooManyAttemptsEmail"
                 >
                     Too many attempts. Try again in a minute.
                 </p>
@@ -189,7 +189,7 @@
                     *ngIf="login.errors.accountNotAccessSystem"
                     class="error-label"
                     translate
-                    id="accountDoesntExistEmail"
+                    data-testid="accountDoesntExistEmail"
                 >
                     Account doesn't exist in this system.
                 </p>
@@ -197,7 +197,7 @@
                     *ngIf="login.errors.lockedOut"
                     class="error-label"
                     translate
-                    id="tooManyAttemptsLogin"
+                    data-testid="tooManyAttemptsLogin"
                 >
                     Too many attempts. Try again in a minute.
                 </p>
@@ -261,7 +261,7 @@
                 [form]="emailForm"
                 [process]="emailProcess"
                 [svg]="{ src: 'arrow_right', height: '20', width: '20' }"
-                [id]="'btnLogin'"
+                data-testid="btnLogin"
             >
             </nx-process-button>
         </div>

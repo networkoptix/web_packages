@@ -35,11 +35,11 @@
             "
             [svgStyle]="{ 'width.px': '280', 'height.px': '120' }"
             [applyClass]="true"
-            id="accountActivatedIcon"
+            data-testid="accountActivatedIcon"
         ></svg-icon>
         <h3
             class="authorize-header mt-3 mb-2"
-            id="activationHeader"
+            data-testid="activationHeader"
         >
             {{ contentHeader$ | async }}
         </h3>
@@ -61,7 +61,7 @@
                 class="btn text-button"
                 type="button"
                 (click)="setCurrentState.emit('email')"
-                id="btnActivateLogIn"
+                data-testid="btnActivateLogIn"
             >
                 <span translate>Log In</span>
             </button>
@@ -73,7 +73,7 @@
             <nx-process-button
                 [form]="activateAccountForm"
                 [process]="loginProcess"
-                [id]="'accountActivatedLogin'"
+                data-testid="accountActivatedLogin"
                 buttonText="{{ 'Log In' | translate }}"
             >
             </nx-process-button>

@@ -35,7 +35,6 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() textOnly: boolean = false;
     @Input() reverseButton = false;
     @Input() removeMinWidth = false;
-    @Input() id: string;
 
     buttonClass: string;
     icons = icons;

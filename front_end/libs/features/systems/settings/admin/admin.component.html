@@ -164,7 +164,7 @@
                     >
                         <div class="float-xl-right">
                             <nx-process-button
-                                id="disconnectFromCloud"
+                                data-testid="disconnectFromCloud"
                                 actionType="default"
                                 [buttonDisabled]="settings.disconnectDisabled"
                                 [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
@@ -179,7 +179,7 @@
                 <span class="system-owner"
                     ><span
                         translate
-                        id="accessLevelText"
+                        data-testid="accessLevelText"
                         >Your access level</span
                     ><span>&nbsp;– </span>
                     <span
@@ -194,7 +194,7 @@
                     <button
                         [disabled]="settings.disconnectDisabled"
                         class="btn btn-default"
-                        id="disconnectAccountBtn"
+                        data-testid="disconnectAccountBtn"
                         (click)="delete()"
                         translate
                     >

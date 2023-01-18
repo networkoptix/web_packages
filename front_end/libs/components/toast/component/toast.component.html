@@ -9,7 +9,7 @@
         <span
             *ngIf="toast.showHTML"
             class="toast-content"
-            id="toast-content"
+            data-testid="toast-content"
             [innerHTML]="toast.content | translate"
         ></span>
         <span
@@ -20,7 +20,7 @@
         <button
             type="button"
             class="close"
-            id="toast-content-close"
+            data-testid="toast-content-close"
             data-dismiss="alert"
             aria-label="Close"
             *ngIf="!toast.autohide"
