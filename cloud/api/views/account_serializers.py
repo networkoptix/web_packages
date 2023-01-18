@@ -78,9 +78,10 @@ class BaseAccountModelSerializer(CdbAccountMixin, serializers.ModelSerializer):
         model = Account
         fields = CdbAccountMixin.Meta.fields + ('first_name', 'last_name', 'language', 'account2faEnabled')
 
-    def __init__(self, request, *args, **kwargs):
-        super().__init__(request.user, *args, **kwargs)
-        super().get_cdb_fields(request)
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request.user if request else None, *args, **kwargs)
+        if request:
+            super().get_cdb_fields(request)
 
     def save(self, *args, **kwargs):
         validated_data = { key: val for key, val in self.validated_data.items() if key not in CdbAccountMixin.Meta.fields }
