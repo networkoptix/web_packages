@@ -329,17 +329,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
 
         this.disconnectProcess = this.processService.createProcess(
-            () => {
-                let disconnectPromise: Promise<any> = Promise.reject();
-                if (this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable) {
-                    disconnectPromise = this.cloudApiService.getCloudStorageUsage(this.system.id)
-                        // If cloud storage usage returns okay then that probably means we are using cloud storage.
-                        .then(_ => Promise.reject())
-                        // If the request fails that means storage is probably not used.
-                        .catch(_ => Promise.resolve());
-                }
-                return disconnectPromise;
-            },
+            async () => this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable && this.cloudApiService.getCloudStorageUsage(this.system.id)
+                .then(_ => Promise.reject()) // If cloud storage usage returns okay then that probably means we are using cloud storage.
+                .catch(_ => Promise.resolve()), // If the request fails that means storage is probably not used.
             { ignoreError: true },
             async () => {
                 const pageDidntChangePattern = new RegExp(`\/systems\/${this.system.id}$`);
