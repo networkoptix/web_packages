@@ -1253,6 +1253,7 @@
         "groupAlreadyIn": "Group { srcName } is already in { destName }",
         "systemAlreadyIn": "System { srcName } is already in { destName }",
         "addGroupToSelf": "You cannot add a group to itself",
+        "introduction" :  "Cloud Layouts are <strong>cross-system layouts</strong> that allow you to work with devices from different Systems. Currently, only some features of regular layouts are available, but we will continue to expand the capabilities of Cloud Layouts",
         "errorMsg": {
             "You can only delete groups that you own": "You can only delete groups that you own",
             "You can only move systems that you own.": "You can only move systems that you own.",

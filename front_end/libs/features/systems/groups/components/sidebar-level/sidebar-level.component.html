@@ -34,7 +34,11 @@
                 cdkDragBoundary=".sidebar"
             >
                 <span *cdkDragPlaceholder></span>
-                <a [routerLink]="'/groups/' + group.id">{{ group.name }}</a>
+                <a
+                    [routerLink]="'/groups/' + group.id"
+                    class="level-name"
+                    >{{ group.name }}</a
+                >
             </h3>
         </div>
         <nx-sidebar-level

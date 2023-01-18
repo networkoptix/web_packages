@@ -36,11 +36,24 @@
             margin-left: 25px;
         }
 
+        .level-name {
+            width:200px;
+            display: block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
         &.selected {
             background-color: var(--groups-sidebar-highlight);
             h3, a {
                 color: var(--groups-sidebar-highlight-color);
-            }
+
+                .st0 {
+                    stroke: var(--groups-sidebar-highlight-color);
+                }
+            }        
+  
 
             .triangle path {
                 fill: var(--groups-sidebar-triangle-icon-highlight-fill);
