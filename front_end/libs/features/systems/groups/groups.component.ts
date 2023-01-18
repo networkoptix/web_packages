@@ -2,9 +2,13 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { LocalStorageService } from 'ngx-webstorage';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
 import type { GroupItem, GroupsItem, SystemItem, Crumb } from './groups.types';
 import { LoadingState } from './groups.types';
@@ -20,6 +24,10 @@ import {
     selectRootSystemItems,
 } from './store/groups.selectors';
 
+interface sidebarSettings {
+    showSidebarState: boolean
+}
+
 @Component({
     selector: 'nx-groups',
     templateUrl: 'groups.component.html',
@@ -27,6 +35,12 @@ import {
 })
 export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     icons = icons;
+    LoadingState = LoadingState;
+    LANG = staticLang;
+    crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
+    username: string = this.localStorageService.retrieve('loginstate');
+    sidebarSetting: CustomAccountProperty<sidebarSettings>;
+    private groupId: string;
 
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
 
@@ -45,20 +59,16 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     );
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
-    crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
-
-    private groupId: string;
-    public isSidebarShown: boolean = true;
-
-    LoadingState = LoadingState;
-
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
+        private localStorageService: LocalStorageService,
+        private cloudApi: NxCloudApiService
     ) {
         this.groupsService.connect();
+        this.initSidebar();
     }
 
     ngOnInit(): void {
@@ -76,8 +86,15 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         this.groupsService.disconnect();
     }
 
+    initSidebar(): void {
+        this.sidebarSetting = this.cloudApi.customAccountPropertyFactory('showSidebarState', this.username, { showSidebarState: true });
+    }
+
     public handleSidebarTogglingEarClick(): void {
-        this.isSidebarShown = !this.isSidebarShown;
+        this.sidebarSetting.update(curr => {
+            curr.showSidebarState = !curr.showSidebarState;
+            return curr;
+        }, true);
     }
 
     trackItem(_index: number, item: Crumb): string {
@@ -99,5 +116,12 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     __crash(): void {
         // @ts-expect-error Deliberately crash the backend for testing
         this.groupsService.moveGroup(['foo'], ['bar']);
+    }
+
+    dismissIntroduction(): void {
+        this.sidebarSetting.update(curr => {
+            curr.showSidebarState = false;
+            return curr;
+        }, true);
     }
 }

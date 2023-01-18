@@ -29,6 +29,58 @@
             @include bootstrap.media-breakpoint-down(xs) {
                 height: calc(100% - 60px);
             }
+
+
+            &.no-groups {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                text-align: center;
+
+                padding: 250px 35px 30px 35px;
+
+                .intro-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 15px;
+
+                    h2 {
+                        width: 75%;
+                    }
+                }
+
+                button {
+                    background: transparent;
+                    justify-content: space-between !important;
+                    width: 56%;
+
+                    p {
+                        margin-bottom: 0;
+                        font-family: 'robotoregular';
+                    }
+                }
+            }
+
+            .group-drop-list {
+                padding: 0;
+                
+                .root {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    padding: 0;
+                    align-self: center;
+
+                    .close-button {
+                        background-color: transparent;
+                        padding: 0 10px 0 0 !important;
+                    }
+                }
+            }
         }
 
         .buttons {

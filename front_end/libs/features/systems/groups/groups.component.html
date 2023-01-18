@@ -4,71 +4,97 @@
 >
     <div
         class="sidebar-container"
-        [ngClass]="{ shown: isSidebarShown }"
+        [ngClass]="{ shown: (sidebarSetting.value$ | async)?.showSidebarState }"
     >
-        <nx-pre-loader *ngIf="(loadingState$ | async) === LoadingState.LOADING"></nx-pre-loader>
-        <div
-            class="sidebar-toggling-ear-wrapper"
-            (click)="handleSidebarTogglingEarClick()"
-            *ngIf="(loadingState$ | async) !== LoadingState.LOADING"
-        >
-            <div class="sidebar-toggling-ear">
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-                >
-                </svg-icon>
-            </div>
-        </div>
-        <div
-            class="sidebar"
-            *ngIf="isSidebarShown && (loadingState$ | async) !== LoadingState.LOADING"
-        >
-            <div class="buttons">
-                <button
-                    class="btn btn-default mr-2"
-                    (click)="newGroupDialog()"
-                    [disabled]="(loadingState$ | async) === LoadingState.NOT_FOUND"
-                    translate
-                >
-                    New group
-                </button>
-                <!-- eslint-disable-next-line nx/template/no-untranslated -->
-                <!-- <button (click)="__crash()">Crash!</button> -->
-            </div>
-            <!-- TODO: Add styling when spec is updated  -->
-            <div class="buttons">
-                <button
-                    class="btn btn-default mr-2"
-                    (click)="setSidebarAll(true)"
-                    translate
-                >
-                    Open all
-                </button>
-                <button
-                    class="btn btn-default"
-                    (click)="setSidebarAll(false)"
-                    translate
-                >
-                    Collapse all
-                </button>
+        <nx-pre-loader
+            *ngIf="
+                (sidebarSetting.value$ | async)?.showSidebarState &&
+                    (loadingState$ | async) === LoadingState.LOADING;
+                else loadedContent
+            "
+        ></nx-pre-loader>
+
+        <ng-template #loadedContent>
+            <div
+                class="sidebar-toggling-ear-wrapper"
+                (click)="handleSidebarTogglingEarClick()"
+            >
+                <div class="sidebar-toggling-ear">
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                    >
+                    </svg-icon>
+                </div>
             </div>
             <div
-                class="group-drop-list"
-                [ngClass]="{ selected: (currentGroupId$ | async) === undefined }"
-                cdkDropList
-                (cdkDropListDropped)="moveToRoot($event)"
+                *ngIf="
+                    (sidebarSetting.value$ | async)?.showSidebarState &&
+                        !(rootGroups$ | async).length &&
+                        !(currentGroups$ | async).length;
+                    else groupsSidebar
+                "
+                class="sidebar no-groups"
             >
-                <h3>
-                    <a
-                        routerLink="/groups/"
+                <div class="intro-content">
+                    <img alt="placeholder image" />
+                    <h2 translate>Introducing System Groups</h2>
+                    <p [innerHTML]="LANG.systemGroups.introduction | translate"></p>
+                    <button
+                        class="btn btn-default"
+                        (click)="newGroupDialog()"
                         translate
-                        >My Systems</a
                     >
-                </h3>
+                        Create First Group
+                    </button>
+                </div>
+
+                <button (click)="dismissIntroduction()">
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dirTextButtons + 'close.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    ></svg-icon>
+                    <p translate>Not interested</p>
+                </button>
+                <nx-sidebar-level [groups]="rootGroups$ | async"></nx-sidebar-level>
             </div>
-            <nx-sidebar-level [groups]="rootGroups$ | async"></nx-sidebar-level>
-        </div>
+            <ng-template #groupsSidebar>
+                <div
+                    class="sidebar"
+                    *ngIf="(sidebarSetting.value$ | async)?.showSidebarState"
+                >
+                    <div
+                        class="group-drop-list"
+                        [ngClass]="{
+                            selected: !(currentGroupId$ | async)
+                        }"
+                        cdkDropList
+                        (cdkDropListDropped)="moveToRoot($event)"
+                    >
+                        <h3 class="root">
+                            <a
+                                routerLink="/groups/"
+                                translate
+                                >My Systems</a
+                            >
+
+                            <button
+                                (click)="newGroupDialog()"
+                                class="close-button"
+                            >
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [src]="icons.dir + 'plus.svg'"
+                                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                                ></svg-icon>
+                            </button>
+                        </h3>
+                    </div>
+                    <nx-sidebar-level [groups]="rootGroups$ | async"></nx-sidebar-level>
+                </div>
+            </ng-template>
+        </ng-template>
     </div>
     <div class="cards">
         <nx-pre-loader *ngIf="(loadingState$ | async) === LoadingState.LOADING"></nx-pre-loader>
