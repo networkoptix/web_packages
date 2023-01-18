@@ -1,12 +1,19 @@
 .section-table-wrapper {
-    overflow-x : auto;
 
     table {
-        grid-template-columns : 120px 100px 100px 100px auto;
-        min-width: 681px;
+        grid-template-columns : repeat(5, 1fr);
 
         .table-row-spacer {
             grid-column-end : span 5;
+        }
+
+        th {
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .error-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
