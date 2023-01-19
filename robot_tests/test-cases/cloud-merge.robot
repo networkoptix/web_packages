@@ -268,7 +268,7 @@ Force Tags        merge
 
 # Positive scenarios
 8. Positive scenario with selected cloud system (selected system is secondary)
-    [Tags]    C70930    pos    must    smokef
+    [Tags]    C70930    pos    must    smoke
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -278,11 +278,11 @@ Force Tags        merge
 
     Sleep    60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
 
     ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 1}[id]
     ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[local auth]    Server ${system 2}[id]
     Log    Step 1: Open System 1 page
+    Log In    ${owner email}    ${BASE PASSWORD}
     ${url}=   Set Variable If
         ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system 1}[cloud id]
         ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system 1}[port]
