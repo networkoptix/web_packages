@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "המערכת אינה מקוונת",
-            "unavailable": "המערכת אינה זמינה"
+            "unavailable": "המערכת אינה זמינה",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "הסר משתמש",

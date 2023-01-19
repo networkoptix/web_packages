@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "系统处于离线状态",
-            "unavailable": "系统无法访问"
+            "unavailable": "系统无法访问",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "移除用户",

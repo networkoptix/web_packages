@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "Järjestelmään ei saada yhteyttä",
-            "unavailable": "Järjestelmä ei ole tavoitettavissa"
+            "unavailable": "Järjestelmä ei ole tavoitettavissa",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Remove User",

@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "Systém je offline",
-            "unavailable": "Systém je nedostupný"
+            "unavailable": "Systém je nedostupný",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Odebrat uživatele",

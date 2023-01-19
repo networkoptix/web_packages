@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "시스템이 오프라인 상태입니다.",
-            "unavailable": "시스템에 연결할 수 없습니다."
+            "unavailable": "시스템에 연결할 수 없습니다.",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "사용자 제거",

@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "Система знаходиться поза мережею",
-            "unavailable": "Система недоступна"
+            "unavailable": "Система недоступна",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Видалити користувача",

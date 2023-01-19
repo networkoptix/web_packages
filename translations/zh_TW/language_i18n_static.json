@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "系統處於離線狀態",
-            "unavailable": "無法連接至系統"
+            "unavailable": "無法連接至系統",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "移除使用者",

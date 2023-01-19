@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "A rendszer offline",
-            "unavailable": "Rendszer nem elérhető"
+            "unavailable": "Rendszer nem elérhető",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Felhasználó eltávolítása",

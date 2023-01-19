@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "El sistema està desconnectat",
-            "unavailable": "No es pot accedir al sistema"
+            "unavailable": "No es pot accedir al sistema",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Suprimeix l'usuari",

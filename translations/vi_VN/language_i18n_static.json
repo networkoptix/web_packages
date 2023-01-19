@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "Hệ thống offline",
-            "unavailable": "Hệ thống không thể truy cập được"
+            "unavailable": "Hệ thống không thể truy cập được",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Xóa người dùng",

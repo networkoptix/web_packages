@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "O sistema está offline",
-            "unavailable": "O sistema está inacessível"
+            "unavailable": "O sistema está inacessível",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Remover usuário",

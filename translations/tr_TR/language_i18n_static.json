@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "Sistem çevrimdışı",
-            "unavailable": "Sistem erişilebilir değil"
+            "unavailable": "Sistem erişilebilir değil",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "Kullanıcıyı Sil",

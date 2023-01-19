@@ -1035,7 +1035,8 @@
         },
         "status": {
             "offline": "ระบบออฟไลน์",
-            "unavailable": "ระบบไม่สามารถเข้าถึงได้"
+            "unavailable": "ระบบไม่สามารถเข้าถึงได้",
+            "outOfTimeSync": "Time on one or more servers is out of sync."
         },
         "users": {
             "cloudDelete": "ลบผู้ใช้",
