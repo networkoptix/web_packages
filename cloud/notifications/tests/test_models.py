@@ -1,5 +1,6 @@
+import random
 from cms.models import AssetType
-from conftest import check_against_expected_meta, BaseModelTest
+from conftest import check_against_expected_meta, BaseModelTest, generate_uuids
 import functools
 import pytest
 from unittest.mock import call
@@ -464,10 +465,10 @@ def test_clean_content_factory_and_check_urls(mocker):
 
 
 def test_sub_system_id_factory():
-    to_sub = str(uuid4())
-    route = '/some/route'
-    result = sub_system_id_factory(to_sub)(to_sub + route)
-    assert result == f'{to_sub}{settings.TRAFFIC_RELAY_HOST.replace("{systemId}", "")}{route}'
+    to_sub, *segments = generate_uuids(random.randint(3, 8))
+    route = '/'.join(segments)
+    result = sub_system_id_factory()(f'https://{to_sub}/{route}')
+    assert result == f'https://{to_sub}{settings.TRAFFIC_RELAY_HOST.replace("{systemId}", "")}/{route}'
 
 
 class TestSystemEmail(BaseModelTest):
