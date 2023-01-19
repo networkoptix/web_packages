@@ -115,12 +115,12 @@ def make_structure(user_id, output_format='json', use_actual_values=True, asset_
         data.append(asset_dict)
     update_progress(total, total)
     single_html_asset = not asset_type and output_format == "html"
-    file_name = f"{assets[0].asset_type}-all-structures.json" if asset_type is not None else f"{data[0]['name']}-structure.{output_format}"
+    file_name = f"{assets[0].asset_type}-{'all-structures' if asset_type else 'structure'}.{output_format}"
 
     content = structure_to_html.process_structure_json(data[0]) if single_html_asset else json.dumps(
         data, ensure_ascii=False, indent=4, separators=(',', ': '))
     get_complete_updater(make_structure.request.id)(
-        file_name.replace(" ", "_"), content)
+        file_name.replace(" ", "_").lower(), content)
 
 
 def make_asset_dict(asset, use_actual_values):

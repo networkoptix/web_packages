@@ -165,8 +165,8 @@ def test_make_custom_client(mocker, db):
         assert e.errors == errors
 
 
-def test_make_structure(mocker, account_factory, db):
-    asset = baker.make(Asset)
+def test_make_structure(mocker, account_factory, cloud_portal_type, db):
+    asset = baker.make(Asset, asset_type=cloud_portal_type)
     mock_asset_dict = {'name': asset.name, 'other': str(uuid4())}
     use_actual_values = True
     mock_updater = mocker.MagicMock()
@@ -180,7 +180,7 @@ def test_make_structure(mocker, account_factory, db):
 
     make_structure(user.id, asset_id=asset.id,
                    use_actual_values=use_actual_values)
-    expected_file_name = f"{asset.name}-structure.json"
+    expected_file_name = f"{asset.asset_type}-structure.json".replace(" ", "_").lower()
     expected_content = json.dumps(
         [mock_asset_dict], ensure_ascii=False, indent=4, separators=(',', ': '))
     mock_updater.assert_has_calls([call(0, 1), call(1, 1)])

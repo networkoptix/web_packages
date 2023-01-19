@@ -352,7 +352,7 @@ class AssetSettingsForm(forms.Form):
     file = forms.FileField(
         label="File",
         help_text="Archive with static files and images for content or structure.json file.",
-        required=False
+        required=True
     )
 
     ASSET_ACTIONS = (
