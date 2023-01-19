@@ -6,6 +6,7 @@ from django.forms.fields import *
 from django.forms.models import ModelChoiceField, ModelMultipleChoiceField
 from django.forms.widgets import CheckboxInput, HiddenInput, PasswordInput, RadioSelect, Select, TextInput, Textarea
 from django.contrib.admin import site
+from django.core.files.uploadedfile import SimpleUploadedFile
 from cms.forms import *
 from cms.models import *
 from conftest import generate_uuids
@@ -455,7 +456,7 @@ class TestAssetSettingsForm:
         for form in self.forms:
             field = form.fields['file']
             assert field
-            assert field.required == False
+            assert field.required == True
             assert field.label == "File"
             assert isinstance(field, FileField)
 
@@ -495,7 +496,7 @@ class TestAssetSettingsForm:
         assert form.errors
 
     def test_no_form_errors_from_required_fields(self):
-        form = AssetSettingsForm(data = {'action': 'generate_json'}, target_class=AssetType)
+        form = AssetSettingsForm(data={'action': 'generate_json'}, files={ 'file': SimpleUploadedFile('test.zip', b'content')}, target_class=AssetType)
         assert not form.errors
 
 
