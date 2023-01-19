@@ -499,18 +499,24 @@ def clean_content_factory(known_urls=None):
     from cms.forms import get_branding_shortcuts
     _branding, hidden_branding = get_branding_shortcuts()
     known_urls = [url] if isinstance(url := known_urls or [], str) else url
-    known_urls += [val.split('//')[-1] for _, val in _branding + hidden_branding if re.search(URL_REGEX, val)]
+    known_urls += [val.split('//')[-1] for _, val in _branding + hidden_branding if val and re.search(URL_REGEX, val)]
 
     def _clean_content(to_clean):
         return re.sub(URL_REGEX, check_urls(known_urls), to_clean)
 
     return _clean_content
 
-def sub_system_id_factory(system_id):
-    proxy = settings.TRAFFIC_RELAY_HOST.replace('{systemId}', system_id)
+def sub_system_id_factory():
+    proxy = settings.TRAFFIC_RELAY_HOST.replace('{systemId}', '')
+    system_link_regex = r"(?<=://)([0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12})" + f'(?!{proxy})'
+
+    def replace_proxy(match):
+        system_id, = match.groups()
+        return system_id + proxy
+
 
     def _sub_system_id(content):
-        return content.replace(system_id, proxy) if system_id else content
+        return re.sub(system_link_regex, replace_proxy, content)
 
     return _sub_system_id
 
@@ -551,11 +557,12 @@ class SystemEmail(models.Model):
             content_cleaners = [clean_content_factory, sub_system_id_factory]
 
             for cleaner in content_cleaners:
-                content = cleaner(self.system_id)(content)
+                content = cleaner()(content)
 
             return content
 
         self.subject = clean(self.subject)
+        self.message_html = ''.join(f'<p>{segment}</p>' for segment in self.message_html.split('\n') if segment)
         self.message_html = clean(self.message_html or wrap_text(self.message_text))
         self.message_text = clean(self.message_text or html2text(self.message_html))
 

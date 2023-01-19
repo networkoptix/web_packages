@@ -22,7 +22,7 @@ def test_email_notification(arf, account_factory, db, mocker):
             'content': attachment
         } for attachment in uuid_list]
     }
-    
+
     url = reverse('push_notification')
     user = account_factory()
 
@@ -33,7 +33,7 @@ def test_email_notification(arf, account_factory, db, mocker):
 
     # Test success
     assert res.status_code == status.HTTP_200_OK
-    assert res.data == {**data, 'messageId': res.data['messageId']}
+    assert res.data == {**data, 'messageId': res.data['messageId'], 'messageHtml': f'<p>{message_html}</p>'}
 
     # Test missing subject
     request = arf.post(url, {**data, 'subject': ''}, format='json')
