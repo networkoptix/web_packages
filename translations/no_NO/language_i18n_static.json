@@ -1036,7 +1036,7 @@
         "status": {
             "offline": "Systemet er offline",
             "unavailable": "Systemet er ikke tilgjengelig",
-            "outOfTimeSync": "Time on one or more servers is out of sync."
+            "outOfTimeSync": "Tiden på en eller flere servere er ikke synkronisert."
         },
         "users": {
             "cloudDelete": "Fjern bruker",

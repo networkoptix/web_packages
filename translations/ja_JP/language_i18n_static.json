@@ -1036,7 +1036,7 @@
         "status": {
             "offline": "システムはオフラインです",
             "unavailable": "システムに到達できません",
-            "outOfTimeSync": "Time on one or more servers is out of sync."
+            "outOfTimeSync": "1つ以上のサーバーの時刻が同期していません。"
         },
         "users": {
             "cloudDelete": "ユーザーを削除",

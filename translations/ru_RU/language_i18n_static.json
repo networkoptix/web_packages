@@ -1036,7 +1036,7 @@
         "status": {
             "offline": "Система не в сети",
             "unavailable": "Система недоступна",
-            "outOfTimeSync": "Time on one or more servers is out of sync."
+            "outOfTimeSync": "Время на одном или нескольких серверах не синхронизировано."
         },
         "users": {
             "cloudDelete": "Удалить пользователя",
