@@ -360,24 +360,24 @@
             "cameras": "kameralar",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
+                    "heading": "Bulut Depolamayı Etkinleştirin",
                     "action": "Etkinleştir",
-                    "success": "Cloud Storage activated successfully!"
+                    "success": "Bulut Depolama başarıyla etkinleştirildi!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
+                    "heading": "Bulut Depolamayı Değiştirin",
                     "action": "Değiştir",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "success": "Bulut Depolama başarıyla yükseltildi!"
                 },
                 "move": {
                     "heading": "Bulut Depolama Alanını Taşı",
                     "action": "Taşı",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "success": "Bulut Depolama başarıyla yükseltildi!"
                 },
                 "delete": {
                     "heading": "Cloud Storage silinsin mi?",
                     "action": "Sil",
-                    "success": "Cloud Storage deleted successfully!"
+                    "success": "Bulut Depolama başarıyla silindi!"
                 }
             },
             "usageLabels": {
@@ -1036,7 +1036,7 @@
         "status": {
             "offline": "Sistem çevrimdışı",
             "unavailable": "Sistem erişilebilir değil",
-            "outOfTimeSync": "Time on one or more servers is out of sync."
+            "outOfTimeSync": "Bir veya daha fazla sunucudaki zaman senkronize değil."
         },
         "users": {
             "cloudDelete": "Kullanıcıyı Sil",
