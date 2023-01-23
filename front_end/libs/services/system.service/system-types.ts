@@ -68,6 +68,7 @@ export interface NxCamera {
 export interface NxMediaServer extends ec2MediaServer {
     ip: string,
     port: string,
+    timeInfo?: ServerTimeInfo,
     cameras: NxCamera[];
 }
 
