@@ -484,7 +484,8 @@ class CloudPortalAPI(object):
             "userRoleId": "",
             "isEnabled": True,
             "vmsUserId": "",
-            "sendNotification": ""
+            "sendNotification": "",
+            "systemId": systemId
         }
         r = requests.post(f'{self.env}/cdb/systems/{systemId}/users', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         assert r.status_code == 200, r.json()
