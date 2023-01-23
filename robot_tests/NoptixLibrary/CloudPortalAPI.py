@@ -627,11 +627,11 @@ class CloudPortalAPI(object):
     def set_feature_flags(self):
         with codecs.open("NoptixLibrary/features.json", encoding="utf-8") as featuresJson:
             featuresDict = json.load(featuresJson)
-            res = requests.post(f'{self.env}/api/robot/set_flags', data=featuresDict, verify=False)
+            res = requests.post(f'{self.env}/api/robot/set_flags', data=featuresDict, verify=_ssl_certs_path)
             assert res.status_code == 200
             return featuresDict
 
     @keyword
     def get_cloud_settings(self):
-        res = requests.get(f'{self.env}/api/utils/settings')
+        res = requests.get(f'{self.env}/api/utils/settings', verify=_ssl_certs_path)
         return res.json()

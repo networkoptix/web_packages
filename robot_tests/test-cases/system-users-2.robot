@@ -586,20 +586,12 @@ Force Tags        system    Threaded    users
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
-    # Modifying the flow according to CLOUD-8444, user will no longer login automatically after account creation, Activation of the account is needed first
-    #Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-    #Wait Until Element is Visible    ${SYSTEM NAME}
-    #Element Text Should Be    ${SYSTEM NAME}    ${servers}[0][name]
-    #Log    Step 7 skipped thick client login
-    #Log    Step 8
-    #Log Out
-    #Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
     Wait Until Element Is Visible    ${ACCOUNT CREATION EMAIL SUCCESS}
     Capture Page Screenshot
     ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
 
     Sleep    5
-    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}
+    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
     Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
     Go To    ${ENV}/systems/${servers}[0][id]
     Go To Users List

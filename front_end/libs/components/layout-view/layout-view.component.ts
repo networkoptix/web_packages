@@ -244,14 +244,9 @@ export class NxLayoutViewComponent {
     availableLayouts$: Observable<Layouts> = this.refreshLayouts$.pipe(
         switchMap(_ => this.selectedSystem$),
         switchMap(({
-            mediaserver,
-            id: systemId,
-            userManager: {
-                currentUser: {
-                    id: parentId
-                }
-            }
+            mediaserver
         }) => (mediaserver as NxSystemRestAPI).getLayouts()),
+        map(layouts => layouts.sort(alphabeticalSort(this.locale, layout => layout.name))),
         shareReplay({
             bufferSize: 1,
             refCount: false

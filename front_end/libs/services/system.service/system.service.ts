@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -32,6 +33,7 @@ export class NxSystemService {
         private systemsService: NxSystemsService,
         private router: Router,
         private ribbonService: NxRibbonService,
+        private toastService: NxToastService,
         private translateService: TranslateService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
@@ -64,6 +66,7 @@ export class NxSystemService {
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.toastService,
                 this.router,
                 this.translateService,
                 this.locale,
@@ -111,6 +114,7 @@ export class NxSystemService {
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.toastService,
                 this.router,
                 this.translateService,
                 this.locale,

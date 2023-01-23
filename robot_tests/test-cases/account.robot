@@ -181,7 +181,7 @@ Force Tags        account
     Press Keys   None    ENTER
 
 13. Language is changeable on the account page
-    [Tags]    C41574    smokef
+    [Tags]    C41574
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None    api=${False}
     Reload Page
