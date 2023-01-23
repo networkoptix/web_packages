@@ -12,7 +12,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { apiRequestAttempts, updateInterval } from '@lib/variables/static-variables';
+import { apiRequestAttempts, toast, updateInterval } from '@lib/variables/static-variables';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -449,8 +449,8 @@ export class NxSystem {
 
     isSomewhereInTime(really = false) {
         really && this.toastService.show(
-            this.LANG.system.status.outOfTimeSync?.(),
-            this.CONFIG.toast.danger,
+            this.LANG.system.status.outOfTimeSync,
+            toast.danger,
             { autohide: true }
         );
     }
