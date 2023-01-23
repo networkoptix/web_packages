@@ -133,7 +133,7 @@ Force Tags        system    Threaded    users
         @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         ${user to delete} =    Set Variable    Local+viewer
         ${user id}=   Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+viewer
-        Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${user id}
+        Remove User    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}    ${user id}
         Reload Page
         Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
         Page Should Not Contain    //span[text()="${user to delete}"]
@@ -166,7 +166,7 @@ Force Tags        system    Threaded    users
     ...    ELSE    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
         @{locals}=   Get Local Users
-        Delete All Local Users via API    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
+        Delete All Local Users via API    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
         Log    Step 1
         @{new local users}=   Reset Local Users    ${server 1}[local auth]    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
@@ -578,7 +578,7 @@ Force Tags        system    Threaded    users
         ...    patch=${True}
         Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 9
-        Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
+        Remove User    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
         Wait Until Element is Not Visible    //span[text()="Local+advancedViewer"]    timeout=45
         
         Log    Step 10
@@ -612,7 +612,7 @@ Force Tags        system    Threaded    users
         
         Log    Clean up
         ${id}    Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+newApiUser
-        Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
+        Remove User    ${server 1}[token]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END

@@ -55,7 +55,7 @@ Users Teardown
     # ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
     # ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
     # Remove Temporary Users
-    teardown servers    ${servers}
+    Teardown Servers    ${servers}
     Close All Browsers
 
 Remove Temporary Users
@@ -341,14 +341,14 @@ Create New Local Users
     IF    ${count}==0
         Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
     ELSE
-        Delete All Local Users via API    ${auth}    ${server}    ${locals}
+        Delete All Local Users via API    ${token}    ${server}    ${locals}
         Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
     END
 
 Delete All Local Users via API
-    [Arguments]    ${auth}    ${server}    ${locals}
+    [Arguments]    ${token}    ${server}    ${locals}
     FOR    ${user}    IN    @{locals}
-        Remove User    ${auth}    ${server}    ${user}[id]
+        Remove User    ${token}    ${server}    ${user}[id]
     END
 
 Reset Local Users API

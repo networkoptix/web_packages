@@ -120,7 +120,6 @@ class ServerAPI5(ServerAPI):
         email,
         fullName,
         password,
-        # cloudAuth=None,
         userId=None,
         userRoleId=None,
         isEnabled=True,
@@ -133,8 +132,6 @@ class ServerAPI5(ServerAPI):
             "fullName":fullName,
             "permissions":permissions,
             "isCloud":isCloud,
-            # "isEnabled":isEnabled
-            # "password":password
         }
         if userId:
             body["id"]=userId
@@ -144,9 +141,6 @@ class ServerAPI5(ServerAPI):
             body["type"] = "local"
         if userRoleId:
             body["id"]=userRoleId
-        # with requests.session() as s:
-        #     credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-        #     s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
         if patch:
             r = requests.patch(f'{serverUrl}/rest/v1/users/{userId}', headers={"x-runtime-guid": token}, json=body, verify=False)
         else:
@@ -154,13 +148,10 @@ class ServerAPI5(ServerAPI):
         return r.json()
 
     @keyword
-    def remove_user(self, auth, serverUrl, userId):
-        with requests.session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            r = s.delete(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            assert r.status_code == 200
-            # return r.json()
+    def remove_user(self, token, serverUrl, userId):
+        r = requests.delete(f'{serverUrl}/rest/v1/users/{userId}', headers={"x-runtime-guid": token}, verify=False)
+        assert r.status_code == 200
+
 
     @keyword
     def set_system_settings(self, auth, serverUrl, settings):
