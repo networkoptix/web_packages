@@ -820,6 +820,7 @@ class GenericKeywords(object):
                 server.update(self.create_docker_server(server, runName))
             
             # Set up systems
+            time.sleep(5)
             for server in serversJson:
                 self.server_api.setup_local_system(f"https://{self.ssh_host}:{server['port'][0]}", "qweasd 123", server["name"])
             

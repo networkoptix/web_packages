@@ -7,19 +7,18 @@ Resource          storage-resource.robot
 # Setups and teardowns
 System Admin Suite Setup
     Open browser and go to URL    ${ENV}
-    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String      length=5
-    ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
-    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
-    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}    ${servers}
+    Set Suite Variable    ${system}   ${servers}[0]
+    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port][0]
+    Add Virtual Camera    ${server url}    ${system}[localAuth]    ${CAMERA NAME}
     ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE}
-    Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
     Go To    ${url}
 
 System Admin Suite Teardown
-    Delete Base System    ${system}
+    Teardown Servers    ${servers}
     Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[id]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
@@ -40,10 +39,10 @@ System Admin Test Restart
         ...    Start Docker Server    ${system}[id]
         ...    AND    Sleep    10
 
-    Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
+    Set System Name    ${server url}    ${system}[localAuth]    ${system}[name]
     ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
-    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
-    Set System Settings    ${system}[local auth]    ${server url}    ${default advanced settings}
+    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${system}[localAuth]    ${server url}    ${default advanced settings}
 # Waits
 Wait until settings are visible
     [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
@@ -434,5 +433,13 @@ System Offline Suite Teardown
 
 System Offline Restart
     Common Restart Logout    ${ENV}
-    Log in to user and system   ${system}[owner]    ${system}[cloud id]
+    Log in to user and system   ${system}[cloudOwner]    ${system}[id]
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
+
+Log in to system new
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
+    ${url}=   Set Variable If
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port][0]
+    Go To    ${url}
+    Log In    ${email}    ${password}    validate=${validate}    button=${None}
