@@ -1,4 +1,5 @@
 from asgiref.sync import sync_to_async
+from cms.feature_flags import FLAGS, SWITCHES
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
@@ -45,26 +46,45 @@ async def get_code(request):
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
-                             "flag name": openapi.Schema(type=openapi.TYPE_BOOLEAN)
+                             "flag name": openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_BOOLEAN))
                          })
                      )
 @api_view(['POST'])
 @permission_classes([AllowAny])
 async def set_flags(request):
     flags = request.data
-    flag_objs = Flag.objects.filter(name__in=flags.keys())
-    switch_objs = Switch.objects.filter(name__in=flags.keys())
+    flags_response = {}
 
-    set_flags = {}
+    async for flag in Flag.objects.all():
+        try:
+            json_key = flag.get_json_key()
+        except (TypeError, AttributeError):
+            continue
 
-    async for flag in flag_objs:
-        flag.everyone = flags[flag.name]
-        await sync_to_async(flag.save)()
-        set_flags[flag.name] = flag.everyone
+        flags_response[json_key] = [flag.everyone]
 
-    async for switch in switch_objs:
-        switch.active = flags[switch.name]
-        await sync_to_async(switch.save)()
-        set_flags[switch.name] = switch.active
+        if json_key in flags:
+            flag.everyone = flags[json_key]
+            await sync_to_async(flag.save)()
 
-    return api_success(set_flags)
+        flags_response[json_key].append(flag.everyone)
+
+    async for switch in Switch.objects.all():
+        try:
+            json_key = FLAGS.json_key(SWITCHES.value_to_key(switch.name))
+        except (TypeError, AttributeError):
+            continue
+
+        flags_response[json_key] = [switch.everyone]
+
+        if json_key in flags:
+            switch.everyone = flags[json_key]
+            await sync_to_async(switch.save)()
+
+        flags_response[json_key].append(switch.everyone)
+
+    for key in flags:
+        if key not in flags_response:
+            flags_response[key] = []
+
+    return api_success(flags_response)
