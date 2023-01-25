@@ -60,6 +60,9 @@ export interface Confirm extends Generic {
     data: ConfirmData;
 }
 
+/* Auth */
+export type RefreshSession = DialogType<NxSystem, true>;
+
 /* Account */
 interface Account2faActionData {
     [TfaAction.Enable]: void;

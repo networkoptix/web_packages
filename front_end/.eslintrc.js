@@ -79,7 +79,6 @@ const typeLintBlacklist = [
     '**/reset-backup/reset-backup.component.ts',
     '**/reset-server/reset-server.component.ts',
     '**/select-time-range-native-fallback/select-time-range.component.ts',
-    '**/simple-dialogs.service.ts',
     '**/two-fa/two-fa.component.ts',
     '**/update-camera-credentials/update-camera-credentials.component.ts',
     /* Directives */

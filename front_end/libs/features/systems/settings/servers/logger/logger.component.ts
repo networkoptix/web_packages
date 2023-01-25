@@ -10,7 +10,6 @@ import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { servers } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
@@ -49,7 +48,6 @@ export class NxServerLoggerComponent implements OnChanges {
     constructor(
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
-        private simpleDialogService: NxSimpleDialogsService,
         private applyService: NxApplyService
     ) {
         this.loggerOptions = [
@@ -91,7 +89,7 @@ export class NxServerLoggerComponent implements OnChanges {
                     });
                 };
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.simpleDialogService.refreshSession(this.system).then(res => {
+                    this.dialogsService.refreshSession(this.system).then(res => {
                         if (res) {
                             this.saveLoggers.run();
                         } else {

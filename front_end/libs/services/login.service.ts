@@ -15,7 +15,7 @@ import {
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig, DIALOG_SIZE } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import type { NxAccountService } from '@services/account.service';
 
@@ -48,7 +48,7 @@ export class NxLoginService extends DialogBase {
         private location: Location,
         private router: Router,
         private storage: LocalStorageService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private bootstrapProvider: NxBootstrapProvider,
         private cdkDialog: Dialog,
         @Inject(WINDOW) private window: Window,
@@ -146,7 +146,7 @@ export class NxLoginService extends DialogBase {
         if (['disconnect', 'transfer'].includes(state) && !environment.isLocal ||
         this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
-                this.simpleDialogService.notify(this.LANG.toastMessage.noInternet, 'warning', true);
+                this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
                 // Close dialog if any
                 this.dismissDialog();
                 this.cdkDialog.closeAll();

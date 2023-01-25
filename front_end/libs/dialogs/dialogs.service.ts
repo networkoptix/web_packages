@@ -618,6 +618,11 @@ export class NxDialogsService extends DialogBase {
         });
     }
 
+    refreshSession = this.dialogV2Factory<Dt.RefreshSession>(
+        () => import('./refresh-session/refresh-session.component').then(m => m.RefreshSessionModalContent),
+        { disableClose: true }
+    );
+
     /* Account */
     private async account2fa<A extends TfaAction>(
         data: Dt.Account2faData<A>,

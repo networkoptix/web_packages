@@ -12,7 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons, redirect } from '@lib/variables/static-variables';
 import type { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -101,7 +101,7 @@ export class LoginWebadminModalContent implements OnInit {
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
-        private simpleDialogService: NxSimpleDialogsService,
+        private dialogs: NxDialogsService,
         private router: Router,
         private cookieService: CookieService,
         private dialogRef: DialogRef,
@@ -143,7 +143,7 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     private displayCloudConnectionError(): void {
-        this.simpleDialogService.notify(
+        this.dialogs.notify(
             this.LANG.toastMessage.noInternet,
             'warning',
             true
