@@ -51,7 +51,12 @@
                             <div class="col-md-4 pl-md-4 order-2 order-md-2 version-panel">
                                 <b translate>Latest version</b>
                                 <h2 class="version-number d-flex">
-                                    <b>{{ downloadsData.version }}<ng-container *ngIf="downloadsData.meta_version"> {{downloadsData.meta_version}}</ng-container></b>
+                                    <b>
+                                        {{ downloadsData.version }}
+                                        <ng-container *ngIf="downloadsData.meta_version">
+                                            {{ downloadsData.meta_version }}
+                                        </ng-container>
+                                    </b>
                                 </h2>
                                 <p>
                                     <a
