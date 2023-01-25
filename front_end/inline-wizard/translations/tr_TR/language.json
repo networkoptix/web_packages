@@ -158,7 +158,7 @@
         "newSystemDisplayName": "Yeni sistem",
         "incompatibleProtocol": "uyumsuz versiyon",
         "incompatibleCloudHost": "cloud conflict",
-        "incompatibleCloudState": "cloud connected"
+        "incompatibleCloudState": "bulut bağlandı"
     },
     "login": {
         "incorrectPassword": "Kullanıcı adı veya şifre hatalı",
