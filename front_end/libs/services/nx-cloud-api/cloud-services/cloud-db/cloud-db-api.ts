@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
 import md5 from 'md5';
 import { Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+
+import { WINDOW } from '@services/window-provider';
 
 import { CloudResponse, CloudUsers, System, WithFreshSession } from '../../nx-cloud-api.types';
 import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
@@ -26,6 +29,8 @@ interface ShareBody {
     isEnabled
 }
 
+const getWindow = (): Window => inject(WINDOW);
+
 @implementsCloudServiceApi
 export class CloudDbAPI extends BaseCloudServiceAPI {
     /**
@@ -44,6 +49,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     static createApiFactory: CreateApiFactory<CloudDbAPI> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) => (serverUrl: string = '', hostOrCustomization: string = '') => new CloudDbAPI(serverUrl, hostOrCustomization, http, withFreshSession, refreshToken);
 
     #refreshToken$: Observable<string>;
+    window = getWindow();
 
     constructor(serverUrl: string, hostOrCustomization: string, http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) {
         super(serverUrl, CloudDbAPI.API_BASE, hostOrCustomization, http, withFreshSession);
@@ -91,7 +97,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
                 client_id: 'cloud_portal',
                 grant_type: 'authorization_code',
                 response_type: responseType,
-                scope: systemId === '*' ? systemId : `cloudSystemId=${systemId}`,
+                scope: systemId === '*' ? undefined : `${this.window.location.host} cloudSystemId=${systemId}`,
                 code
             })),
             switchMap(body => this.post<{ code: string }>(this.authEndpoint('token'), { body }))
