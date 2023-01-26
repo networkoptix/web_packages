@@ -150,7 +150,7 @@
                         *ngIf="LANG.downloads.mobile[platform.name].link !== 'disabled'"
                         class="mobile-link"
                         [ngClass]="platform.os"
-                        [href]="LANG.downloads.mobile[platform.name].link"
+                        [href]="LANG.downloads.mobile[platform.name].link | translate"
                     >
                     </a>
                 </div>
