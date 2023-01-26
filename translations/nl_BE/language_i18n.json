@@ -538,7 +538,7 @@
     "The recommended maximum user session lifetime is 30 days.": "De aanbevolen maximale sessieduur is 30 dagen.",
     "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.": "De server wordt losgekoppeld van dit systeem en toegevoegd aan een nieuwe. Database, lokale gebruikers, configuratie en videoarchief blijven intact.",
     "The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.": "Het systeem gebruikt de oude API-versie. We raden u aan het systeem bij te werken naar de nieuwe versie om toegang te krijgen tot nieuwe functies.",
-    "The user was not found in this system": "The user was not found in this system",
+    "The user was not found in this system": "De gebruiker is niet gevonden in dit systeem",
     "Themes": "Thema's",
     "This account will get owner access level": "Dit account krijgt het toegangsniveau van de eigenaar",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Dit apparaat heeft gemeld sommige analyse-evenementen te ondersteunen, maar we hebben geen exacte informatie daarover.",
