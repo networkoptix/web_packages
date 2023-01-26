@@ -832,7 +832,13 @@ class GenericKeywords(object):
                     break
             if ownerRequired:
                 owners_ids = set([server["cloudOwnerId"] for server in serversJson])
-                owners = [self.get_random_email(self.base_email, sendemail=self.from_email) for _ in range (len(owners_ids))]
+                if "owner-transfer" in BuiltIn().get_variable_value('${SUITE NAME}').lower():
+                    logger.info("owner-transfer detected")
+                    owners = [self.get_random_email(self.base_email, sendemail=True) for _ in
+                              range(len(owners_ids))]
+                else:
+                    logger.info("owner-transfer NOT detected")
+                    owners = [self.get_random_email(self.base_email, sendemail=self.from_email) for _ in range (len(owners_ids))]
                 for owner in owners:
                     self.cloud_api.register_account("mark", "hamill", owner, self.password)
                     BuiltIn().run_keyword('Activate', owner)
