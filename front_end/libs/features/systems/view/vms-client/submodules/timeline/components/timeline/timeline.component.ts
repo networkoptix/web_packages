@@ -9,6 +9,7 @@ import {
     Inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
@@ -64,7 +65,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public isDragging: boolean = false;
     clickAndHoldHandler;
 
+    public readonly archiveSelectionEnabled: boolean = false;
+
     constructor(
+        deviceService: DeviceDetectorService,
         protected configService: NxConfigService,
         public timeline: TimelineService,
         protected playback: PlaybackService,
@@ -75,8 +79,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         public ux: WebClientUxService,
         @Inject(WINDOW) private window: Window,
     ) {
+        const device = deviceService.getDeviceInfo();
         this.archiveSelectionEnabled =
-            this.configService.flagsEnabled('archiveSelection');
+            this.configService.flagsEnabled('archiveSelection') && device.deviceType !== 'mobile';
 
         this.selection.subject
             .pipe(untilDestroyed(this))
@@ -86,8 +91,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                     selection.hoverMode;
             });
     }
-
-    public readonly archiveSelectionEnabled: boolean = false;
 
     protected _onTimelineStatusChange(s: TimelineServiceStatus): void {
         if (s.canvasGeometryUpdateRequested) {
