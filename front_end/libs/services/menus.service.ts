@@ -330,7 +330,7 @@ export class NxMenusService {
                 this.LANG?.serverTabTitles.Bookmarks,
                 this.endpoint.bookmarks || false
             );
-            nodes.push(bookmarksNode);
+            nodes.splice(1, 0, bookmarksNode); // Right after view
         }
 
         const activeSystemMenu = new MenuNode(
