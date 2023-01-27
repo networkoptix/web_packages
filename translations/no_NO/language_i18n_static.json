@@ -441,7 +441,7 @@
             "unknownBothSystemsConnectedToCloud": "Kan ikke slå sammen to systemer koblet til skyen. Gå til %CLOUD_NAME% for å slå sammen disse systemene.",
             "checking": "Kontrollerer...",
             "cloud": "Cloud",
-            "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
+            "commonText": "Kunne ikke slå sammen systemer <strong>{primarySystem}</strong> og <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Koble til systemet du ønsker å slå sammen med dette til <strong>%CLOUD_NAME%</strong> eller slå sammen lokalt med <strong>%VMS_NAME%</strong>-klienten.",
             "failedToFindAnySystemHeader": "Kunne ikke finne noe system å slå sammen med",
             "failedToFindAnySystem": "Sørg for at du har eierrollen i Clouden du vil slå sammen med. Eller at systemet du ønsker å slå sammen med er tilgjengelig over det lokale nettverket til gjeldende system.",
