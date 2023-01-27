@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from './WebRTCStreamManager';
 import { filter, map } from 'rxjs';
@@ -17,13 +17,13 @@ import { filter, map } from 'rxjs';
     styleUrls: ['video-player.component.scss']
 })
 export class NxVideoPlayerComponent {
-    @Input() camera: ICamera;
+    @Input() camera: NxSystemCamera;
     @Input() rotation: number;
     @IBool() @Input() controls: CoercedBoolInput = false;
     @IBool() @Input() autoplay: CoercedBoolInput = false;
     @IBool() @Input() autopause: CoercedBoolInput = false;
 
-    @Output() showPtz = new EventEmitter<ICamera>();
+    @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
 
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;

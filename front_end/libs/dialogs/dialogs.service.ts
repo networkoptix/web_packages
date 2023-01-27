@@ -11,7 +11,7 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration
 import { Translatable } from '@pipes/any-translate.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
+import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
@@ -408,9 +408,9 @@ export class NxDialogsService extends DialogBase {
     // }
 
     public async updateCameraCredentials(
-        camera: ICamera,
+        camera: NxSystemCamera,
         system: NxSystem,
-        updateCallback: () => Promise<any>
+        updateCallback: () => Promise<void>
     ) {
         const config: Partial<DialogConfig> = {
             data: {

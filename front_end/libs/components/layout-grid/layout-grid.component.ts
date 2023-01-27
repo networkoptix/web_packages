@@ -24,7 +24,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { cleanId, pickFrom } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -91,7 +91,7 @@ export class NxLayoutGridComponent {
     @Input() system: NxSystem;
 
     @Output() layoutChanged = new EventEmitter<string>();
-    @Output() showPtz = new EventEmitter<ICamera>();
+    @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() addResource = new EventEmitter<ResourceType>();
     @Output() removeResource = new EventEmitter<{ resourceType: ResourceType, details: Record<string, unknown> }>();
     @Output() editResource = new EventEmitter<{ resourceType: ResourceType, details: Record<string, unknown> }>();

@@ -848,18 +848,18 @@ export class NxSystemRestAPI extends NxSystemAPI {
     previewUrl(
         cameraId: string,
         time?: number | string,
-        width?: number,
-        height?: number,
-        rotate?: number,
+        width?: number | string,
+        height?: number | string,
+        rotate?: number | string,
         auth?: string
     ) {
         const data: {
             cameraId: string;
             auth: string;
             time?: number | string;
-            width?: number;
-            height?: number;
-            rotate?: number;
+            width?: number | string;
+            height?: number | string;
+            rotate?: number | string;
         } = {
             cameraId: this.cleanId(cameraId),
             auth: auth || this.authGet

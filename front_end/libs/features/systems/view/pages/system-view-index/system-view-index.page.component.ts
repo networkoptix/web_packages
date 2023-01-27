@@ -22,6 +22,7 @@ import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { ec2Camera } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxMediaServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -303,41 +304,146 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.setSystemSubscription();
     }
 
+    private createSystem(): Promise<void> {
+        return this.accountService.get().then(account => {
+            if (!account) {
+                return Promise.reject();
+            }
+
+            if (environment.isLocal) {
+                this.system = this.systemService.createLocalSystem(
+                    this.accountService.mediaServerApi,
+                    account.id,
+                    account.email
+                );
+                this.settingsService.system = this.system;
+                return Promise.resolve();
+            }
+
+            // _initSystem is called on systems subscription
+            const systemInfoFromCDB = this.systems.find(s => s.id === this.systemId);
+            if (systemInfoFromCDB) {
+                this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
+                this.settingsService.system = this.system;
+                if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
+                    this._setInitializationState(true, true);
+                } else {
+                    this.ribbonService.hide();
+                }
+                return Promise.resolve(); // this.system.update();
+            }
+
+            return Promise.reject();
+        });
+    }
+
+    private mediaServerChanged(
+        mediaServers: NxMediaServer[],
+        cachedServers: IMediaServer[],
+    ): boolean {
+        if (mediaServers.length !== cachedServers.length) {
+            return true;
+        }
+
+        return mediaServers.some(server => {
+            const cachedServer = cachedServers.find(cached =>
+                cached.id === server.id
+            );
+            if (!cachedServer || server.status !== cachedServer.status) {
+                return true;
+            }
+
+            if (server.cameras.length !== cachedServer.cameras.length) {
+                return true;
+            }
+
+            return server.cameras.some(camera => {
+                const cachedCamera = cachedServer.cameras.find(
+                    cached => cached.id === camera.id
+                );
+
+                return (
+                    !cachedCamera ||
+                    camera.name !== cachedCamera.name
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>') ||
+                    (
+                        camera.status !== cachedCamera.status &&
+                        !(camera.status === 'Online' && cachedCamera.status === 'Live') // remapped param "status"
+                    ) || camera.scheduleEnabled !== cachedCamera.isScheduleEnabled // remapped param "scheduleEnabled"
+                );
+            });
+        });
+    }
+
+    private processCameras(
+        c: ec2Camera,
+        ms: NxMediaServer,
+        archiveRanges: Record<string, SimpleTimeRange>
+    ): Camera {
+        this.hasCameras = true;
+        const result = new Camera(
+            c.id,
+            c.parentId,
+            c.preferredServerId,
+            c.name,
+            c.model,
+            c.url,
+            ms.status === 'Offline'
+                ? 'Offline'
+                : (
+                    c.status === 'Online'
+                        ? 'Live'
+                        : c.status
+                ) as CAMERA_STATUS,
+            c.scheduleEnabled,
+            c.disableDualStreaming,
+            archiveRanges[c.id] || new SimpleTimeRange(0, 0),
+            [],
+            c.status !== 'Offline'
+                ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
+                : '',
+            (transport: string, quality: string, t?: ms) =>
+                this.system?.getPlaybackUrl(
+                    c.id,
+                    transport,
+                    quality,
+                    t
+                ),
+            (t?: ms, width = 128, height = 128) =>
+                this.system?.mediaserver.previewUrl(
+                    c.id,
+                    t,
+                    width,
+                    height
+                )
+        );
+        result.parseAdditionalParams(c.addParams);
+        return result;
+    }
+
+    private async findCamerasWithArchive(
+        mediaServers: NxMediaServer[],
+        archiveRanges: Record<string, SimpleTimeRange>
+    ): Promise<void> {
+        return this.system.getCameraHistoryItems().toPromise().then(result => {
+            if (!result?.length) {
+                return;
+            }
+            mediaServers.forEach(mediaServer => {
+                const rec = result.find(rec =>
+                    rec.serverGuid === `{${mediaServer.id}}`
+                );
+                rec?.archivedCameras.forEach(cameraId => {
+                    // trick camera 'hasArchive' - here we don't need a real info -- TT
+                    archiveRanges[cleanId(cameraId)] = new SimpleTimeRange(1, 2);
+                });
+            });
+        });
+    }
+
     private _initSystem() {
         this.vms.reset();
-
-        const createSystem = () => {
-            return this.accountService.get().then(account => {
-                if (!account) {
-                    return Promise.reject();
-                }
-
-                if (environment.isLocal) {
-                    this.system = this.systemService.createLocalSystem(
-                        this.accountService.mediaServerApi,
-                        account.id,
-                        account.email
-                    );
-                    this.settingsService.system = this.system;
-                    return Promise.resolve();
-                }
-
-                // _initSystem is called on systems subscription
-                const systemInfoFromCDB: NxSystemInfo = this.systems.find(s => s.id === this.systemId);
-                if (systemInfoFromCDB) {
-                    this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
-                    this.settingsService.system = this.system;
-                    if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
-                        this._setInitializationState(true, true);
-                    } else {
-                        this.ribbonService.hide();
-                    }
-                    return Promise.resolve(); // this.system.update();
-                }
-
-                return Promise.reject();
-            });
-        };
 
         let processingMediaServers = false;
         let cachedMediaServers: IMediaServer[] = [];
@@ -352,43 +458,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
         });
 
-        const mediaServerChanged = (mediaServers: NxMediaServer[]): boolean => {
-            if (mediaServers.length !== cachedMediaServers.length) {
-                return true;
-            } else {
-                return mediaServers.some(server => {
-                    const matchServer = cachedMediaServers.find(_server =>
-                        _server.id === server.id
-                    );
-                    if (!matchServer || server.status !== matchServer.status) {
-                        return true;
-                    } else {
-                        if (server.cameras.length !== matchServer.cameras.length) {
-                            return true;
-                        } else {
-                            return server.cameras.some(camera => {
-                                const matchCamera = matchServer.cameras.find(
-                                    _camera => _camera.id === camera.id
-                                );
-
-                                return (
-                                    !matchCamera ||
-                                    camera.name !== matchCamera.name
-                                        .replace(/&lt;/g, '<')
-                                        .replace(/&gt;/g, '>') ||
-                                    (
-                                        camera.status !== matchCamera.status &&
-                                        !(camera.status === 'Online' && matchCamera.status === 'Live') // remapped param "status"
-                                    ) || camera.scheduleEnabled !== matchCamera.isScheduleEnabled // remapped param "scheduleEnabled"
-                                );
-                            });
-                        }
-                    }
-                });
-            }
-        };
-
-        createSystem().then(() => {
+        this.createSystem().then(() => {
             timer(0, VideoManagementSystemService.statusRefreshInterval)
                 .pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
@@ -402,7 +472,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     }
                     // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
                     if (
-                        this.initialized && !mediaServerChanged(mediaServers) ||
+                        this.initialized && !this.mediaServerChanged(mediaServers, cachedMediaServers) ||
                         mediaServers.length === 0
                     ) {
                         return;
@@ -417,8 +487,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             ms => ms.id === sti.serverId,
                         );
                         if (mediaServer) {
-                            mediaServer.timeInfo = sti;
-
                             const serverAndLocalTimeDiff = Math.abs(new Date().getTime() - sti.vmsTime);
                             // fixes issue https://www.youtube.com/watch?v=sRqGfIbdJyI
                             const timeDiff = serverAndLocalTimeDiff > MAX_OUT_OF_SYNC_TIME;
@@ -430,83 +498,18 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         this._setInitializationState(true, false);
                     }
 
-                    const archiveRanges = {};
-                    const processCameras = (c, ms: NxMediaServer) => {
-                        this.hasCameras = true;
-                        const result = new Camera(
-                            c.id,
-                            c.parentId,
-                            c.preferredServerId,
-                            c.name,
-                            c.model,
-                            c.url,
-                            ms.status === 'Offline'
-                                ? 'Offline'
-                                : (
-                                    c.status === 'Online'
-                                        ? 'Live'
-                                        : c.status
-                                ) as CAMERA_STATUS,
-                            c.scheduleEnabled,
-                            c.disableDualStreaming,
-                            archiveRanges[c.id] || new SimpleTimeRange(0, 0),
-                            [],
-                            c.status !== 'Offline'
-                                ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
-                                : '',
-                            (transport: string, quality: string, t?: ms) =>
-                                this.system?.getPlaybackUrl(
-                                    c.id,
-                                    transport,
-                                    quality,
-                                    t
-                                ),
-                            (t?: ms, width = 128, height = 128) =>
-                                this.system?.mediaserver.previewUrl(
-                                    c.id,
-                                    t,
-                                    width,
-                                    height
-                                )
-                        );
-                        result.parseAdditionalParams(c.addParams);
-                        return result;
-                    };
+                    const archiveRanges: Record<string, SimpleTimeRange> = {};
 
-                    const findCamerasWithArchive = () => {
-                        return this.system
-                            .getCameraHistoryItems()
-                            .toPromise()
-                            .then(result => {
-                                if (!result?.length) {
-                                    return;
-                                }
-                                mediaServers.forEach(mediaServer => {
-                                    const rec = result.find(
-                                        rec =>
-                                            rec.serverGuid ===
-                                            `{${mediaServer.id}}`,
-                                    );
-                                    rec?.archivedCameras.forEach(
-                                        cameraId => {
-                                            // trick camera 'hasArchive' - here we don't need a real info -- TT
-                                            archiveRanges[
-                                                cleanId(cameraId)
-                                            ] = new SimpleTimeRange(1, 2);
-                                        },
-                                    );
-                                });
-                            });
-                    };
-
-                    await findCamerasWithArchive();
+                    await this.findCamerasWithArchive(mediaServers, archiveRanges);
 
                     cachedMediaServers = mediaServers.map(ms => ({
                         id: ms.id,
                         name: ms.name,
                         networkAddresses: ms.networkAddresses,
                         status: ms.status,
-                        cameras: ms.cameras.map(c => processCameras(c, ms)),
+                        cameras: ms.cameras.map(c =>
+                            this.processCameras(c, ms, archiveRanges)
+                        ),
                     }));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);

@@ -5,7 +5,7 @@ import type {
     StreamQuality
 } from '@services/system.service/camera-manager/camera-manager-types';
 
-export type AspectRatioDropdownItem = DropdownItem<number | ''>;
+export type AspectRatioDropdownItem = DropdownItem<number | null>;
 
 export type RotationDropdownItem = DropdownItem<number>;
 

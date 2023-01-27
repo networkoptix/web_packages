@@ -6,13 +6,10 @@ import {
     OnDestroy
 } from '@angular/core';
 
+import type { Size } from './nx-resize.directive.types';
+
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 const entriesMap = new WeakMap<Element, NxResizeObserver>();
-
-interface Size {
-    width: number,
-    height: number
-}
 
 const observer = new ResizeObserver(entries => {
     for (const entry of entries) {

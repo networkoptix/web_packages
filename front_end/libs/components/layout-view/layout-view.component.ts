@@ -28,7 +28,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { ICamera, TimeDetail } from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemCamera, TimeDetail } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -112,7 +112,7 @@ const editManifests: Partial<Record<ResourceType, ContextManifest>> = {
 export class NxLayoutViewComponent {
     LANG = staticLang;
     CONFIG: IConfig;
-    ptzControlTarget: ICamera;
+    ptzControlTarget: NxSystemCamera;
 
     refreshLayouts$ = new BehaviorSubject('');
 
@@ -163,7 +163,7 @@ export class NxLayoutViewComponent {
                     type: ResourceType.CAMERA,
                     name: camera.name,
                     details: { ...camera, status: camera.status.toLowerCase(), resourceType: this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA] },
-                    aspectRatio: +camera.overrideAr || camera.defaultRatio || aspectRatio
+                    aspectRatio: camera.parsedAddParams.overrideAr || camera.defaultRatio || aspectRatio
                 }
             }), {} as ResourceLookup<typeof cameras[0]>);
 
@@ -262,7 +262,7 @@ export class NxLayoutViewComponent {
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
         switchMap(async ({ tree }) => {
             const layout = tree.find(({ type }) => type === ResourceType.LAYOUTS).children.find(({ details }: ResourceNode<Layout>) => details?.items.length) as ResourceNode<Layout>;
-            const camera = tree.find(({ type }) => type === ResourceType.CAMERAS).children.shift() as ResourceNode<ICamera>;
+            const camera = tree.find(({ type }) => type === ResourceType.CAMERAS).children.shift() as ResourceNode<NxSystemCamera>;
             const layoutId = cleanId((layout || camera)?.details?.id);
             const queryParams = this.activatedRoute.snapshot.queryParams;
             if (layoutId) {

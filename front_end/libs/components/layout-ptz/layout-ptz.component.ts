@@ -5,7 +5,7 @@ import { BehaviorSubject, map, NEVER, switchMap } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { PtzCommands } from '@services/system-api.types';
-import { ICamera } from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 
 @UntilDestroy()
@@ -16,7 +16,7 @@ import { NxSystem } from '@services/system.service/system';
 })
 
 export class NxLayoutPtzComponent {
-    @Input() camera: ICamera;
+    @Input() camera: NxSystemCamera;
     @Input() system: NxSystem;
     @Output() exitPtz = new EventEmitter<boolean>();
     @HostBinding('class.show-ptz') showPtz = true;

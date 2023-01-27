@@ -153,13 +153,13 @@ interface UserPermissions {
 }
 export interface GetUserRoles extends NormalResponse<UserPermissions> {}
 
-export interface Params {
+export interface Param {
     name: string,
     value: string
 }
-interface AddParams extends Array<Params> {}
+
 export interface GetStorages {
-    addParams: AddParams,
+    addParams: Param[],
     id: string,
     isBackup: boolean,
     name: string,
@@ -350,20 +350,24 @@ export interface ChangedIdReturned {
     id: string
 }
 
-interface Tasks {
+export interface Task {
     bitrateKbps: number,
     dayOfWeek: number,
     endTime: number,
     fps: number,
+    metadataTypes: string;
     recordingType: string,
     startTime: number,
     streamQuality: string
 }
-interface ScheduledTasks extends Array<Tasks> {}
+
 export interface ec2Camera {
-    addParams: AddParams,
+    addParams: Param[],
     audioEnabled: boolean,
-    backupType: string,
+    backupContentType: string;
+    backupPolicy: string;
+    backupQuality: string;
+    backupType?: string,
     controlEnabled: boolean,
     dewarpingParams: string,
     disableDualStreaming: boolean,
@@ -376,7 +380,9 @@ export interface ec2Camera {
     mac: string,
     manuallyAdded: boolean,
     maxArchiveDays: number,
+    maxArchivePeriodS: number;
     minArchiveDays: number,
+    minArchivePeriodS: number;
     model: string,
     motionMask: string,
     motionType: string,
@@ -387,7 +393,7 @@ export interface ec2Camera {
     recordAfterMotionSec: number,
     recordBeforeMotionSec: number,
     scheduleEnabled: boolean,
-    scheduleTasks: ScheduledTasks,
+    scheduleTasks: Task[],
     status: string,
     statusFlags: string,
     typeId: string,
@@ -399,7 +405,7 @@ export interface ec2Camera {
 export interface EmptyObjectReturned {}
 
 export interface ec2MediaServer {
-    addParams: AddParams,
+    addParams: Param[],
     allowAutoRedundancy: boolean,
     authKey: string,
     // backupBitrate: number,
@@ -430,6 +436,30 @@ export type AggregatedServersAndCameras = NormalResponse<{
     'ec2/getCamerasEx': ec2Camera[]
 }>;
 
+export type CameraManagerUpdateResp = NormalResponse<{
+    '/api/moduleInformation': NormalResponse<ModuleInformationReply>;
+    '/ec2/getMediaServersEx': ec2MediaServer[];
+    'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
+    'ec2/getCamerasEx': ec2Camera[];
+}>;
+
+export interface CameraManagerUpdate {
+    moduleInfo: ModuleInformationReply;
+    servers: ec2MediaServer[];
+    serverTimes: ServerTime[];
+    cameras: ec2Camera[];
+}
+
+export type TimeAndCamerasResp = NormalResponse<{
+    'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
+    'ec2/getCamerasEx': ec2Camera[];
+}>;
+
+export interface TimeAndCameras {
+    serverTimes: ServerTime[];
+    cameras: ec2Camera[];
+}
+
 interface ResourceTypes {
     id: string,
     name: string,
@@ -444,15 +474,16 @@ interface ResourceTypes {
 
 export interface GetResourceTypes extends Array<ResourceTypes> {}
 
-interface AlarmsReply {
-    cameras: {
+export interface AlarmsReply {
+    cameras?: {
         [id: string]: {
             availability: {
-                status: { level: string, text: string }[]
+                status?: { level: string, text: string }[];
+                offlineEvents?: { level: string, text: string }[];
             }
         }
     },
-    servers: {
+    servers?: {
         [id: string]: {
             [key: string]: {
                 [key: string]: {
@@ -481,7 +512,7 @@ interface ManifestReplyObjects {
     }[]
 }
 
-interface Cameras {
+export interface CameraValues {
     [id: string]: {
         _: {
             name: string,
@@ -625,7 +656,7 @@ interface SystemInfo {
 }
 
 interface ValuesReply {
-    cameras: Cameras,
+    cameras: CameraValues,
     networkInterfaces: NetworkInterfaces,
     servers: Servers,
     storage: Storage,
@@ -697,7 +728,7 @@ export class SystemConfigSettings {
     mergeInfo: any;
     settingsPreset: string;
 
-    constructor(params: Params[]) {
+    constructor(params: Param[]) {
         params.forEach(({ name, value }) => {
             this[name] = value;
         });

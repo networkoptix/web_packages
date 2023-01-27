@@ -12,7 +12,7 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type {
-    ICamera
+    NxSystemCamera
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { pickFrom } from '@utils/general';
@@ -29,9 +29,9 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     LANG = staticLang;
     update: Process;
 
-    camera: ICamera;
+    camera: NxSystemCamera;
     system: NxSystem;
-    updateCallback: () => Promise<any>;
+    updateCallback: () => Promise<void>;
     currentCredentials: { loginName: string, password: string };
     cameraLoginCredentials = '';
     cameraPasswordCredentials = '';
@@ -52,10 +52,9 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'camera', 'updateCallback'], this);
 
-        const [loginName, password] = (
-            this.camera.parsedAddParams && this.camera.parsedAddParams.credentials ||
-            ':'
-        ).split(':');
+        const [loginName, password] = this.camera.addParams.credentials
+            ? this.camera.addParams.credentials.split(':')
+            : ['', ''];
         this.currentCredentials = { loginName, password };
         this.cameraLoginCredentials = loginName;
         this.cameraPasswordCredentials = loginName && password;

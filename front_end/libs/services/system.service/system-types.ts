@@ -1,4 +1,4 @@
-import type { ec2MediaServer } from '../system-api.types';
+import type { ec2Camera, ec2MediaServer } from '../system-api.types';
 
 export interface AddResponseTypeHere extends IParams {}
 
@@ -47,29 +47,10 @@ export interface ServerTimeInfo {
     timeZoneOffset: number;
 }
 
-interface NameValue {
-    name: string;
-    value: string;
-}
-
-type AdditionalParam = NameValue;
-
-export interface NxCamera {
-    id: string;
-    preferredServerId: string;
-    name: string;
-    url: string;
-    status: string; // TODO: enum (@gbezyuk)
-    scheduleEnabled: boolean;
-    disableDualStreaming: boolean;
-    addParams: Array<AdditionalParam>;
-}
-
 export interface NxMediaServer extends ec2MediaServer {
     ip: string,
     port: string,
-    timeInfo?: ServerTimeInfo,
-    cameras: NxCamera[];
+    cameras: ec2Camera[];
 }
 
 export interface Condition {

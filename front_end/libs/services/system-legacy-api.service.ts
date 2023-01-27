@@ -26,7 +26,7 @@ import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
 import { User } from './system-api.types';
 import type {
-    ICamera
+    SaveCameraUserAttributes
 } from './system.service/camera-manager/camera-manager-types';
 import type {
     NxSystemUser
@@ -526,7 +526,7 @@ export class NxSystemAPI {
     }
 
     getSystemSettings() {
-        return this.get<t.Params[]>('/ec2/getSettings')
+        return this.get<t.Param[]>('/ec2/getSettings')
             .toPromise()
             .then(params => {
                 return new t.SystemConfigSettings(params);
@@ -982,17 +982,15 @@ export class NxSystemAPI {
         return this.get<t.ec2Camera>('/ec2/getCamerasEx', params);
     }
 
-    getCamerasWithSeverTime(): Observable<any> {
-        return this.getRequestAggregator<
-            t.NormalResponse<[t.SystemTime, t.ec2Camera]>
-        >(['ec2/getTimeOfServers', 'ec2/getCamerasEx']).pipe(
-            map(({ reply }) => {
-                return [
-                    reply['ec2/getTimeOfServers'].reply,
-                    reply['ec2/getCamerasEx']
-                ];
-            })
-        );
+    getCamerasWithServerTime(): Observable<t.TimeAndCameras> {
+        const routes = ['ec2/getTimeOfServers', 'ec2/getCamerasEx'];
+        return this.getRequestAggregator<t.TimeAndCamerasResp>(routes)
+            .pipe(
+                map(({ reply }) => ({
+                    serverTimes: reply['ec2/getTimeOfServers'].reply,
+                    cameras: reply['ec2/getCamerasEx'],
+                }))
+            );
     }
 
     setResourceParams(params: t.ResourceParam[]) {
@@ -1006,7 +1004,7 @@ export class NxSystemAPI {
         id: cameraId,
         name: cameraName,
         ...params
-    }: Partial<ICamera>) {
+    }: SaveCameraUserAttributes) {
         return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
             cameraName,
             cameraId,
@@ -1032,37 +1030,22 @@ export class NxSystemAPI {
         return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
     }
 
-    updateSystemServersCameras() {
+    updateSystemServersCameras(): Observable<t.CameraManagerUpdate> {
         const routes = [
             '/api/moduleInformation',
             '/ec2/getMediaServersEx',
             'ec2/getTimeOfServers',
-            'ec2/getCamerasEx'
+            'ec2/getCamerasEx',
         ];
-        return this.getRequestAggregator<
-            t.NormalResponse<
-                [
-                    t.ModuleInformationReply,
-                    t.ec2MediaServer[],
-                    t.SystemTime,
-                    t.ec2Camera
-                ]
-            >
-        >(routes).pipe(
-            map(({ reply }) => {
-                return routes.map(route => {
-                    if (
-                        [
-                            '/api/moduleInformation',
-                            'ec2/getTimeOfServers'
-                        ].includes(route)
-                    ) {
-                        return reply[route].reply;
-                    }
-                    return reply[route];
-                });
-            })
-        );
+        return this.getRequestAggregator<t.CameraManagerUpdateResp>(routes)
+            .pipe(
+                map(({ reply }) => ({
+                    moduleInfo: reply['/api/moduleInformation'].reply,
+                    servers: reply['/ec2/getMediaServersEx'],
+                    serverTimes: reply['ec2/getTimeOfServers'].reply,
+                    cameras: reply['ec2/getCamerasEx'],
+                }))
+            );
     }
 
     /* End of Cameras and Servers */
@@ -1071,17 +1054,17 @@ export class NxSystemAPI {
     previewUrl(
         cameraId: string,
         time?: number | string,
-        width?: number,
-        height?: number,
-        rotate?: number,
+        width?: number | string,
+        height?: number | string,
+        rotate?: number | string,
         _auth?: string // For compatibility with rest api signature
     ) {
         const data: {
             cameraId: string;
             time?: number | string;
-            width?: number;
-            height?: number;
-            rotate?: number;
+            width?: number | string;
+            height?: number | string;
+            rotate?: number | string;
             auth?: string;
         } = {
             cameraId: this.cleanId(cameraId)
@@ -1244,7 +1227,6 @@ export class NxSystemAPI {
 
     getHealthValues() {
         return this.get<t.Values>('/ec2/metrics/values');
-        // return this.http.get<AddResponseTypeHere>('/getdata');
     }
 
     getHealthAlarms() {
@@ -1271,11 +1253,11 @@ export class NxSystemAPI {
     // End of Health Monitor
 
     public getPlaybackUrl(
-        cameraId,
+        cameraId: string,
         transport = 'webm',
         resolution = 'low',
         position = undefined
-    ) {
+    ): string {
         let url;
         function hlsResolutionOrEmpty(res) {
             if (res === 'hi' || res === 'lo') {

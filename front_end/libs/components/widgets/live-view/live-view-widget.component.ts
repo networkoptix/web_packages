@@ -92,8 +92,8 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
                 cameras ? Promise.resolve(cameras) : this.system.cameraManager.getCameras()
             ]);
         }),
-        map(([time, cameras]) => cameras.reduce((lookup, { id, rotation, name }) => {
-            const previewUrl = this.system.mediaserver.previewUrl(id, 0, this.size.width, this.size.height, rotation as number);
+        map(([time, cameras]) => cameras.reduce((lookup, { id, parsedAddParams: { rotation }, name }) => {
+            const previewUrl = this.system.mediaserver.previewUrl(id, 0, this.size.width, this.size.height, rotation);
             return {
                 ...lookup,
                 [cleanId(id)]: { previewUrl, name }

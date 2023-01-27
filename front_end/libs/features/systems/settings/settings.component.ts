@@ -36,7 +36,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type {
-    ICamera
+    NxSystemCamera
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
@@ -827,7 +827,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content = { ...this.content };
     }
 
-    getCameraStatusIcon({ id, status, scheduleEnabled, parentId }: ICamera): string {
+    getCameraStatusIcon({ id, status, scheduleEnabled, parentId }: NxSystemCamera): string {
         const parentServer = this.system.servers.find(s => s.id === parentId);
         if (parentServer?.status === 'Offline') {
             return menus.systemSettings.cameras.statusIcons.offline;

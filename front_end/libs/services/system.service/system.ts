@@ -38,7 +38,6 @@ import { NxSystemAPI } from '../system-legacy-api.service';
 import { NxSystemsService } from '../systems.service';
 
 import { CameraManager } from './camera-manager/camera-manager';
-import type { ICamera, ITask } from './camera-manager/camera-manager-types';
 import { CloudStorageManager } from './cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from './license-manager/licence-manager';
 import { ServerManager } from './server-manager/server-manager';
@@ -1069,25 +1068,7 @@ export class NxSystem {
     // Start of deprecated cameraManager methods
 
     /**
-     * @deprecated Property should be referenced from cameraManager instead of directly for system.
-     */
-    get cameras() {
-        return this.cameraManager.cameras;
-    }
-
-    set cameras(newCameras: ICamera[]) {
-        this.cameraManager.cameras = newCameras;
-    }
-
-    /**
-     * @deprecated Method should be referenced from cameraManager instead of directly from system.
-     */
-    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
-        return this.cameraManager.updateRecordingSettings(updatedTask, cameraSettings);
-    }
-
-    /**
-     * @deprecated Method should be referenced from cameraManager instead of directly from system.
+     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
      */
     getCameras() {
         return this.cameraManager.getCameras();
