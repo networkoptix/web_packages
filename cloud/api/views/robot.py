@@ -71,17 +71,17 @@ async def set_flags(request):
 
     async for switch in Switch.objects.all():
         try:
-            json_key = FLAGS.json_key(SWITCHES.value_to_key(switch.name))
+            json_key = SWITCHES.json_key(SWITCHES.value_to_key(switch.name))
         except (TypeError, AttributeError):
             continue
 
-        flags_response[json_key] = [switch.everyone]
+        flags_response[json_key] = [switch.active]
 
         if json_key in flags:
-            switch.everyone = flags[json_key]
+            switch.active = flags[json_key]
             await sync_to_async(switch.save)()
 
-        flags_response[json_key].append(switch.everyone)
+        flags_response[json_key].append(switch.active)
 
     for key in flags:
         if key not in flags_response:
