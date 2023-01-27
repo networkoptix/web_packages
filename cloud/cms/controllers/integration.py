@@ -1,4 +1,5 @@
 import os
+import re
 
 from django.conf import settings
 from cms.controllers.asset_json import generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, \
@@ -9,6 +10,8 @@ from util.base_cache import BaseCache
 
 INTEGRATION_CACHE = BaseCache(cache_key='integrations')
 INTEGRATION = AssetType.ASSET_TYPES.integration
+
+SCREENSHOT_REGEX = re.compile("^(?=.*Screenshot)((?!caption).)*$")
 
 
 def make_integrations_json(assets, language, user=None, show_pending=False, show_drafts=False):
@@ -60,12 +63,30 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
             # Create a copy to remove the version key.
             asset_dict_copy = asset_dict.copy()
             del asset_dict_copy['version']
-
+            format_screenshots(asset_dict_copy)
             asset_dict_copy = add_integration_properties(asset_dict_copy, asset, user, user_assets)
             response_asset_json.append(asset_dict_copy)
 
     return response_asset_json
 
+def format_screenshots(asset_dict):
+    if asset_dict.get('overview'):
+        convert_screenshots_to_list(asset_dict['overview'])
+    if asset_dict.get('instructions'):
+        convert_screenshots_to_list(asset_dict['instructions'])
+
+def sort_func(screenshot):
+    return int(re.findall(r'\d+', screenshot)[0])
+
+def convert_screenshots_to_list(data, screenshots_key='screenshots'):
+    keys = sorted(set([key for key in data if re.match(SCREENSHOT_REGEX, key)]), key=sort_func)
+    data[screenshots_key] = [
+        {
+            "screenshot": data.pop(key, None),
+            "caption": data.pop(f'{key}caption', None)
+        }
+        for key in keys
+    ]
 
 def get_downloads_order(context):
     return {

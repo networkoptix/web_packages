@@ -80,7 +80,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.integrationService.setIntegrationPlugin({});
-
                     const query = Object.entries(results.query).length ? results.query : undefined;
                     this.content = {
                         selectedSection: '', // updated by selectedSectionSubject

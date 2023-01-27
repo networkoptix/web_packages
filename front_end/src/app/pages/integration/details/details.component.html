@@ -182,6 +182,16 @@
                         >{{ plugin.information.companyName }}</a
                     >
                 </div>
+                <div *ngIf="plugin.information.companyPrivacyPolicyLink">
+                    <a
+                        [href]="plugin.information.companyPrivacyPolicyLink"
+                        name="companyPrivacyLink"
+                        target="_blank"
+                        id="info-developer-privacy"
+                        translate
+                        >Privacy Policy</a
+                    >
+                </div>
                 <div *ngIf="plugin.information.termsOfUseLink">
                     <a
                         [href]="plugin.information.termsOfUseLink"

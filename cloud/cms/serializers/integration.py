@@ -22,22 +22,22 @@ class InformationSerializer(serializers.Serializer):
     tags = serializers.CharField(required=False)
     companyName = serializers.CharField(required=False)
     companyWeb = serializers.CharField(required=False)
-    companyPrivacyLink = serializers.CharField(required=False)
+    companyPrivacyPolicyLink = serializers.CharField(required=False)
     termsOfUseLink = serializers.CharField(required=False)
 
+class ScreenShotSerializer(serializers.Serializer):
+    screenshot = serializers.CharField(required=False)
+    caption = serializers.CharField(required=False)
 
 class OverviewSerializer(serializers.Serializer):
     description = serializers.CharField(required=False)
-    overviewScreenshot1 = serializers.CharField(required=False)
-    overviewScreenshot1caption = serializers.CharField(required=False)
-    overviewScreenshot2 = serializers.CharField(required=False)
-    overviewScreenshot2caption = serializers.CharField(required=False)
-    overviewScreenshot3 = serializers.CharField(required=False)
-    overviewScreenshot3caption = serializers.CharField(required=False)
+    screenshots = ScreenShotSerializer(required=False, many=True)
 
 
 class InstructionsSerializer(serializers.Serializer):
     installationInstructions = serializers.CharField(required=False)
+    installationVideo = serializers.CharField(required=False)
+    screenshots = ScreenShotSerializer(required=False, many=True)
 
 
 class SupportSerializer(serializers.Serializer):
