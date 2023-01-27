@@ -16,4 +16,8 @@
         @include typography.regular13nocolor;
         color: var(--dropdown-item-error-color);
     }
+
+    .system-owner span {
+        color: var(--system-admin-info-text);
+    }
 }

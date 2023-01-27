@@ -64,3 +64,7 @@ nx-block div.checkbox-block:last-of-type+.helper-block {
 .btn:disabled {
     opacity: var(--btn-disabled-opacity) !important;
 }
+
+.alexa-message p {
+    color: var(--system-admin-info-text);
+}
