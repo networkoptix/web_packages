@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons } from '@lib/variables/static-variables';
@@ -36,10 +35,10 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Input() emailProcess: Process;
     @Input() errorCode: string;
     @Input() reactivate: () => Promise<void>;
+    @Input() isMobileClient: boolean = true;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendEmail: () => void;
-    isMobile = true;
     @ViewChild('emailForm', { static: false }) emailForm: NgForm;
     header: string;
     subHeader: string | undefined;
@@ -47,11 +46,6 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     emailAutoFilled = false;
     credentialsValidation = credentialsValidation;
     icons = icons;
-
-    constructor(
-        private deviceService: DeviceDetectorService
-    ) {
-    }
 
     private handleErrors(changes: NgChanges<NxAuthorizeEmailComponent>): void {
         const { email } = this.emailForm?.controls;
@@ -72,7 +66,6 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             }
             this.loginEmailChange.emit(this.loginEmail);
         };
-        this.isMobile = this.deviceService.isMobile();
     }
 
     ngOnChanges(changes: NgChanges<NxAuthorizeEmailComponent>): void {

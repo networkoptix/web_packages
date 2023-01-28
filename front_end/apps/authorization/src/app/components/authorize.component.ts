@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
@@ -77,6 +78,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     // email
     loginEmail: string;
+    isMobileClient: boolean;
     emailErrorCode: string;
 
     // password
@@ -157,6 +159,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private themeService: NxThemeService,
         private cookieService: CookieService,
         private scrollMechanicService: NxScrollMechanicsService,
+        private deviceService: DeviceDetectorService,
         @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -265,6 +268,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.redirect_uri ||= this.initialData.redirect_url || '/systems';
 
             const { access_token, access_code, code, email, redirect_uri } = this.initialData;
+            this.isMobileClient = Boolean(redirect_uri) && this.deviceService.isMobile();
             const skipTo2FaClientTypes = [
                 'renewSessionDesktop',
                 'renewSessionWeb',
