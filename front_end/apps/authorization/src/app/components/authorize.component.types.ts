@@ -1,18 +1,18 @@
 export interface AuthorizeParams {
-    response_type: string,
-    client_id: string,
-    redirect_uri?: string,
-    redirect_url?: string,
-    client_type?: ClientType,
-    view_type?: 'desktop' | 'mobile' | 'web',
-    grant_type?: string,
-    scope?: string,
-    state?: string,
-    code?: string,
-    message?: 'passwordReset' | 'activated',
-    email?: string,
-    access_code?: string,
-    access_token?: string
+    response_type: string;
+    client_id: string;
+    redirect_uri?: string;
+    redirect_url?: string;
+    client_type?: ClientType;
+    view_type?: 'desktop' | 'mobile' | 'web';
+    grant_type?: string;
+    scope?: string;
+    state?: string;
+    code?: string;
+    message?: 'passwordReset' | 'activated';
+    email?: string;
+    access_code?: string;
+    access_token?: string;
 }
 
 export type AuthorizeStateType = 'email' |

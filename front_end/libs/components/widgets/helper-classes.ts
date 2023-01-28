@@ -3,11 +3,11 @@ import { ChangeDetectorRef } from '@angular/core';
 import { registerWidget } from '@components/dynamic-widget/register-widget';
 
 export interface WidgetSize {
-    name: string,
+    name: string;
     value: {
-        cols: number,
-        rows: number
-    }
+        cols: number;
+        rows: number;
+    };
 }
 /**
  * These are the static properties required on widgets derived from the FirstPartyWidget
@@ -26,12 +26,12 @@ abstract class BaseFirstPartyWidget {
 export interface WidgetCard<
     BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>
 > {
-    identifier: typeof BaseFirstPartyWidget.IDENTIFIER,
-    title: typeof BaseFirstPartyWidget.NAME,
-    sizes: typeof BaseFirstPartyWidget.SIZES,
-    size: WidgetSize,
-    config: BC & { devSource?: string; devEditSource?: string },
-    editMode?: boolean
+    identifier: typeof BaseFirstPartyWidget.IDENTIFIER;
+    title: typeof BaseFirstPartyWidget.NAME;
+    sizes: typeof BaseFirstPartyWidget.SIZES;
+    size: WidgetSize;
+    config: BC & { devSource?: string; devEditSource?: string };
+    editMode?: boolean;
 }
 
 /**

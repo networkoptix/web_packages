@@ -71,7 +71,7 @@ export class AuthService {
         }
         // TODO: Once client registration is supported verify clientId + redirectUrl before trying to get an access code.
         return this.post(endpoints.token, data)
-            .pipe(map(({ code, error } : { code: string, error: string }) => {
+            .pipe(map(({ code, error } : { code: string; error: string }) => {
                 const [link, qs] = redirectUrl?.split('?') || [this.window.location.origin];
                 const params = new URLSearchParams(qs || '');
                 params.set('code', code);

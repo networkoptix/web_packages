@@ -119,7 +119,7 @@ export class RestartServerModalContent {
                                 const serverObj: { id?: string } = {};
                                 Object.entries(res).forEach((server: [
                                         string,
-                                        { id: string, status: string }
+                                        { id: string; status: string }
                                     ]) => {
                                     serverObj[server[1].id] = server[1].status;
                                 });

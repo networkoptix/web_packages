@@ -27,7 +27,7 @@ export class NxRibbonService {
     }
     /* eslint-disable @typescript-eslint/no-explicit-any */
     show(
-        message: string | { value: string, params?: any },
+        message: string | { value: string; params?: any },
         actions: RibbonAction[],
         type?: string,
         updateFunction?: () => void,

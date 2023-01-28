@@ -60,7 +60,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     newHeader = false;
 
     // content = {};
-    footerItems: { name: string, url: string }[];
+    footerItems: { name: string; url: string }[];
     companyLink: string;
     companyName: string;
 

@@ -59,11 +59,11 @@ export interface DialogsMerge {
 
 export const State: {
     [state: string]: {
-        show: any,
-        showUpdates: any,
-        template: any,
-        errorText: Partial<DialogsMerge>
-    }
+        show: any;
+        showUpdates: any;
+        template: any;
+        errorText: Partial<DialogsMerge>;
+    };
 } = Object.assign({
     thisSystemHasOutdatedServerError: { show: {}, showUpdates: {}, template: {}, errorText: {} },
     failedToFindAnySystem: { show: {}, showUpdates: {}, template: {}, errorText: {} },

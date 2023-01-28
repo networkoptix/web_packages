@@ -48,7 +48,7 @@ export class NxPopoverService {
         target: HTMLElement,
     ): {
         popover: NxPopoverComponent;
-        popoverRef: PopoverRef
+        popoverRef: PopoverRef;
     } {
         const overlayRef = this.overlay.create({
             hasBackdrop,

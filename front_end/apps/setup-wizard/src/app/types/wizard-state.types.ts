@@ -21,15 +21,15 @@ export const enum WIZARD_STATE {
 }
 
 export interface iState {
-    title?: string
-    back?: () => void
-    cancel?: () => void
-    next?: () => void
-    skip?: () => void
-    retry?: () => void
-    jump?: () => void
-    validate?: () => boolean
-    finish?: boolean
+    title?: string;
+    back?: () => void;
+    cancel?: () => void;
+    next?: () => void;
+    skip?: () => void;
+    retry?: () => void;
+    jump?: () => void;
+    validate?: () => boolean;
+    finish?: boolean;
 }
 
 export const enum FORM_STATE {

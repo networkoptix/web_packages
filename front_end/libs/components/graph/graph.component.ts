@@ -42,7 +42,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     view: [number, number]; // fitContainer
     multi: {
         name: string;
-        series: { name: number; value: number; }[]; // name type is number as we use position or uptimeMs to define data points
+        series: { name: number; value: number }[]; // name type is number as we use position or uptimeMs to define data points
     }[];
 
     // options

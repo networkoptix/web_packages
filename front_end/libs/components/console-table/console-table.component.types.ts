@@ -25,13 +25,13 @@ export enum ConfigType {
 }
 
 export interface ColumnConfig {
-    type: ConfigType,
-    name: string,
-    label: string,
-    description?: string,
-    placeholder?: string,
-    hidden?: boolean,
-    meta?: DataStructureMeta
+    type: ConfigType;
+    name: string;
+    label: string;
+    description?: string;
+    placeholder?: string;
+    hidden?: boolean;
+    meta?: DataStructureMeta;
 }
 
 export enum ActionType {
@@ -44,16 +44,16 @@ export enum ActionType {
 }
 
 interface ActionConfig {
-    title: string,
-    modal: ModalType,
-    subheading?: string,
-    icon?: string,
-    type?: ActionType,
+    title: string;
+    modal: ModalType;
+    subheading?: string;
+    icon?: string;
+    type?: ActionType;
 }
 
 export interface ModalManifest {
-    label: string,
-    fields: ColumnConfig[]
+    label: string;
+    fields: ColumnConfig[];
 }
 
 export enum OptionalFeatures {
@@ -67,22 +67,22 @@ export interface ConsoleManifest {
     //     title: string,
     //     content: string
     // },
-    sort: number,
-    title: string,
-    url: string,
-    icon: string
-    perPage: number,
-    pagesToShow: number,
-    searchSubheading: string,
-    noResultsMessage: string,
-    minItemsAdvanced: number,
-    disabled: Record<OptionalFeatures, boolean>,
-    perPageOptions: DropdownItem<string>[],
-    excludeFromSearch: string[],
-    contexts: ColumnConfig[],
-    editManifest: ModalManifest,
-    downloadManifest: ModalManifest,
-    actions: ActionConfig[]
+    sort: number;
+    title: string;
+    url: string;
+    icon: string;
+    perPage: number;
+    pagesToShow: number;
+    searchSubheading: string;
+    noResultsMessage: string;
+    minItemsAdvanced: number;
+    disabled: Record<OptionalFeatures, boolean>;
+    perPageOptions: DropdownItem<string>[];
+    excludeFromSearch: string[];
+    contexts: ColumnConfig[];
+    editManifest: ModalManifest;
+    downloadManifest: ModalManifest;
+    actions: ActionConfig[];
 }
 
 export enum ModalType {

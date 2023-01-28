@@ -12,7 +12,7 @@ import {
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 
-type SliderRange = { start: number, end: number, decimal?: boolean };
+type SliderRange = { start: number; end: number; decimal?: boolean };
 
 @Component({
     selector: 'nx-slider',

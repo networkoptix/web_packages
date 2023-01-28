@@ -5,10 +5,10 @@ import staticLang from '@common/language/language_i18n_static.json';
 
 export interface TemplateText {
     [clientType: string]: {
-        header: string,
-        subHeader?: string | undefined,
-        subHeaderSuffix?: string | undefined
-    }
+        header: string;
+        subHeader?: string | undefined;
+        subHeaderSuffix?: string | undefined;
+    };
 }
 
 export function setupText(

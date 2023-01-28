@@ -54,7 +54,7 @@ interface Transform {
 }
 
 interface HighlightTransform {
-    [id: string]: Transform
+    [id: string]: Transform;
 }
 
 type HighlightState = Point & Size & { resize: Point } & HighlightTransform;
@@ -74,8 +74,8 @@ interface Collisions {
 }
 
 interface LayoutSettings {
-    openMenu: 'left' | 'right' | 'both',
-    previousOpenMenu: 'left' | 'right' | 'both'
+    openMenu: 'left' | 'right' | 'both';
+    previousOpenMenu: 'left' | 'right' | 'both';
 }
 
 @UntilDestroy()
@@ -93,8 +93,8 @@ export class NxLayoutGridComponent {
     @Output() layoutChanged = new EventEmitter<string>();
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() addResource = new EventEmitter<ResourceType>();
-    @Output() removeResource = new EventEmitter<{ resourceType: ResourceType, details: Record<string, unknown> }>();
-    @Output() editResource = new EventEmitter<{ resourceType: ResourceType, details: Record<string, unknown> }>();
+    @Output() removeResource = new EventEmitter<{ resourceType: ResourceType; details: Record<string, unknown> }>();
+    @Output() editResource = new EventEmitter<{ resourceType: ResourceType; details: Record<string, unknown> }>();
 
     SAVE_DELAY = 0;
 
@@ -184,7 +184,7 @@ export class NxLayoutGridComponent {
         untilDestroyed(this)
     );
 
-    #draggingPosition$ = new BehaviorSubject(this.INITIAL_DRAG_STATE as { move?: { x: number, y: number }, id: string, resize?: { x: number, y: number }, transformOrigin?: string });
+    #draggingPosition$ = new BehaviorSubject(this.INITIAL_DRAG_STATE as { move?: { x: number; y: number }; id: string; resize?: { x: number; y: number }; transformOrigin?: string });
 
     #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
         this.#draggingPosition$,
@@ -423,7 +423,7 @@ export class NxLayoutGridComponent {
         return `scale(${this.getConstraint(item, resize).scale})`;
     };
 
-    calculatePosition = ({ x, y }: Point, { cellSize: { width, height }, wrapperPosition, origin }: { cellSize: { width: number, height: number }, wrapperPosition: Pick<Position, 'left' | 'top'>, origin: Point }): Point => ({
+    calculatePosition = ({ x, y }: Point, { cellSize: { width, height }, wrapperPosition, origin }: { cellSize: { width: number; height: number }; wrapperPosition: Pick<Position, 'left' | 'top'>; origin: Point }): Point => ({
         x: Math.round((x - width / 2 - wrapperPosition.left) / width) + origin.x,
         y: Math.round((y - height - wrapperPosition.top) / height) + origin.y
     });
@@ -476,7 +476,7 @@ export class NxLayoutGridComponent {
         };
     }
 
-    calculateSize(items: LayoutItems): { width: number, height: number, originX: number, originY: number } {
+    calculateSize(items: LayoutItems): { width: number; height: number; originX: number; originY: number } {
         const initialValues = { top: Infinity, bottom: -Infinity, left: Infinity, right: -Infinity };
         const { top: originY, bottom, left: originX, right } = items.reduce(
             this.calculateEdges,
@@ -556,7 +556,7 @@ export class NxLayoutGridComponent {
         this.editResource.emit({ resourceType, details });
     };
 
-    hasActions: Partial<Record<ResourceType, { action: string, icon: string, handler: unknown, tooltip?: string }[]>> = {
+    hasActions: Partial<Record<ResourceType, { action: string; icon: string; handler: unknown; tooltip?: string }[]>> = {
         [ResourceType.LAYOUTS]: [
             {
                 action: 'create',

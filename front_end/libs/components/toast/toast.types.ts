@@ -7,6 +7,6 @@ export interface ToastOptions {
 }
 
 export interface Toast extends ToastOptions {
-    content: Translatable
+    content: Translatable;
     type: string;
 }

@@ -59,10 +59,10 @@ export class NxGenericDropdown<
     @IBool() @Input() canSearch: CoercedBoolInput;
     @Input() noMatchMsg: string;
     @Input() forcePosition: {
-        left?: number,
-        top?: number,
-        width?: number,
-        offsetTop?: number
+        left?: number;
+        top?: number;
+        width?: number;
+        offsetTop?: number;
     };
 
     @Output() onSelected = new EventEmitter<Item>();

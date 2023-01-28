@@ -11,9 +11,9 @@ import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { FirstPartyWidget } from '../helper-classes';
 
 interface AssetTypeInterface {
-    name: string,
-    id: string,
-    value: boolean
+    name: string;
+    id: string;
+    value: boolean;
 }
 
 @UntilDestroy()
@@ -56,7 +56,7 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
     LANG = staticLang;
     loading = true;
     treeControl = new NestedTreeControl<ExplorerNode>(node => node.children);
-    dataSource$: Observable<{ last: string, data: ExplorerNode[] }>;
+    dataSource$: Observable<{ last: string; data: ExplorerNode[] }>;
     hasChild = (_: number, node: ExplorerNode): boolean => !!node.children && node.children.length > 0;
 
     updater$ = new BehaviorSubject<number>(null);

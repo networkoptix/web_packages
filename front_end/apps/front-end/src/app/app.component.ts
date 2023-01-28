@@ -353,7 +353,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    headerResize(size: { width: number, height: number }): void {
+    headerResize(size: { width: number; height: number }): void {
         if (this.headerHeight !== size.height) {
             this.appStateService.headerContainerHeight$.next(size.height);
             this.headerHeight = size.height;

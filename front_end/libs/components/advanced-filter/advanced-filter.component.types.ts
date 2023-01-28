@@ -9,16 +9,16 @@ export enum FilterSort {
 }
 
 interface Selection {
-    name: string,
-    value: boolean
+    name: string;
+    value: boolean;
 }
 
 export interface FilterState {
-    sort: FilterSort,
-    selections: Selection[]
+    sort: FilterSort;
+    selections: Selection[];
 }
 
 export interface FilterUpdatePayload {
-    filter: AdditionalFilter,
-    state: FilterState
+    filter: AdditionalFilter;
+    state: FilterState;
 }

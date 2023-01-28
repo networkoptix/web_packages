@@ -1,5 +1,5 @@
 export interface DialogConfig<T = any> {
-    hasBackdrop: boolean
+    hasBackdrop: boolean;
     backdropClass: string;
     data?: T;
     disableClose: boolean;

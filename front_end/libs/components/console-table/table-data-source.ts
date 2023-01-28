@@ -139,7 +139,7 @@ export class TableDataSource extends DataSource<any> {
         }
     }
 
-    findElementIndex(id: number): { index: number, value: any } {
+    findElementIndex(id: number): { index: number; value: any } {
         const index = this.#baseData$.value.findIndex(item => item.id === id);
         return { index, value: this.#baseData$.value[index] };
     }

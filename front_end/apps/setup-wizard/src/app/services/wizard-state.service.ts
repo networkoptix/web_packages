@@ -21,74 +21,74 @@ import { alphabeticalSort } from '@utils/general';
 import { FORM_STATE, iState, SECURITY_LEVEL, WIZARD_STATE } from '../types/wizard-state.types';
 
 interface BindResponse {
-    id: string
-    authKey: string
+    id: string;
+    authKey: string;
 }
 
 interface DiscoveredPeerSetup {
-    compatibleCloudHost: boolean
-    hint: string
-    ip: string
-    isNew: boolean
-    name: string
-    systemName: string
-    url: string
-    visibleName: string
+    compatibleCloudHost: boolean;
+    hint: string;
+    ip: string;
+    isNew: boolean;
+    name: string;
+    systemName: string;
+    url: string;
+    visibleName: string;
 }
 
 interface HasInternet {
-    client: boolean
-    server: boolean
+    client: boolean;
+    server: boolean;
 }
 
 interface NetworkConfig {
-    'dhcp'?: boolean
-    'dns_servers'?: string
-    'extraParams'?: unknown
-    'gateway'?: string
-    'ipAddr'?: string
-    'mac'?: string
-    'name'?: string
-    'netMask'?: string
+    'dhcp'?: boolean;
+    'dns_servers'?: string;
+    'extraParams'?: unknown;
+    'gateway'?: string;
+    'ipAddr'?: string;
+    'mac'?: string;
+    'name'?: string;
+    'netMask'?: string;
 }
 
 interface NormalNetworkConfig extends NormalResponse<NetworkConfig[]> {}
 
 interface NetworkInfo {
-    ip?: string
-    port?: number
+    ip?: string;
+    port?: number;
 }
 
 interface NetworkingInterfaces {
-    interfaces: NetworkInfo[]
+    interfaces: NetworkInfo[];
 }
 
 interface ServerFlags {
-    hasHDD: string
-    newServerFlag: string
-    publicIpFlag: string
-    ifListFlag: string
-    timeCtrlFlag: string
+    hasHDD: string;
+    newServerFlag: string;
+    publicIpFlag: string;
+    ifListFlag: string;
+    timeCtrlFlag: string;
 }
 
 interface SetupConfig {
-    chooseCloudSystem: boolean,
-    savePassword: boolean,
-    systemName: string,
+    chooseCloudSystem: boolean;
+    savePassword: boolean;
+    systemName: string;
 
-    cloudEmail: string,
-    cloudPassword: string,
-    cloudSystemID: string,
+    cloudEmail: string;
+    cloudPassword: string;
+    cloudSystemID: string;
 
-    localLogin: string,
-    localPassword: string,
-    localPasswordConfirmation: string,
-    localLoginDataState: string,
+    localLogin: string;
+    localPassword: string;
+    localPasswordConfirmation: string;
+    localLoginDataState: string;
 
-    remoteSystem: Item,
-    remoteLogin: string,
-    remotePassword: string,
-    mergeDataState: string
+    remoteSystem: Item;
+    remoteLogin: string;
+    remotePassword: string;
+    mergeDataState: string;
 }
 
 @UntilDestroy()

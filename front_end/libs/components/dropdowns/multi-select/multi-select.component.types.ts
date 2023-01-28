@@ -1,6 +1,6 @@
 export interface MultiSelectItem {
-    id: string,
-    label: string,
-    selected?: boolean,
-    tooltip?: string,
+    id: string;
+    label: string;
+    selected?: boolean;
+    tooltip?: string;
 }

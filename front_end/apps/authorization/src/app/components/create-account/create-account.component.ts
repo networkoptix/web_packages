@@ -33,7 +33,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @Input() smallView: boolean;
     @Input() loginEmail: string;
     @Input() fromInvite: boolean;
-    @Input() footerItems: { name: string, url: string }[];
+    @Input() footerItems: { name: string; url: string }[];
     @Input() accountInfo: {
         email: string;
         password: string;
@@ -98,7 +98,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });
         }
         if (changes.footerItems) {
-            changes.footerItems.currentValue.forEach((item: { name: string, name_raw: string, url: string }) => {
+            changes.footerItems.currentValue.forEach((item: { name: string; name_raw: string; url: string }) => {
                 if (item.name_raw === 'Terms') {
                     this.termsUrl = item.url;
                 }

@@ -58,9 +58,9 @@ export class EditModalContent {
     deleteContext: Process;
     dropdownLookup: {
         [key: string]: {
-            selected: DropdownItem<string>,
-            options: DropdownItem<string>[]
-        }
+            selected: DropdownItem<string>;
+            options: DropdownItem<string>[];
+        };
     } = {};
 
     constructor(

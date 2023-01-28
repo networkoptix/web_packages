@@ -60,7 +60,7 @@ class FrameTracker {
     };
 }
 
-type PlaybackDetails = Record<string, { fps: number, players: number }>;
+type PlaybackDetails = Record<string, { fps: number; players: number }>;
 
 type StreamHandler = (stream: MediaStream) => unknown;
 

@@ -96,11 +96,11 @@ export class BaseCloudStorageActionModalContent {
         licenseKey = [],
         password = []
     }: {
-        userId: string[],
-        cloudSystemId: string[],
-        licenseKey: string[],
-        password: string[],
-        status: string
+        userId: string[];
+        cloudSystemId: string[];
+        licenseKey: string[];
+        password: string[];
+        status: string;
     }) => {
         const errors = [];
 

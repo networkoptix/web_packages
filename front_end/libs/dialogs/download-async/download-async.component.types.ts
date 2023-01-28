@@ -12,9 +12,9 @@ export enum PackageState {
 }
 
 export interface PackageStatus {
-    state: PackageState,
-    message?: string,
-    errors: string[],
-    current: number,
-    total: number
+    state: PackageState;
+    message?: string;
+    errors: string[];
+    current: number;
+    total: number;
 }

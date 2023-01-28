@@ -76,17 +76,17 @@ export enum ResourceType {
 export interface BaseResourceNode {
     name: string;
     type: ResourceType;
-    children?: BaseResourceNode[]
+    children?: BaseResourceNode[];
 }
 
 export interface ResourceNode<T = { id: string }> {
     name: string;
     aspectRatio?: number;
     type: ResourceType;
-    children?: ResourceNode[]
+    children?: ResourceNode[];
     details: T;
 }
 
 export interface LayoutResourceTree {
-    tree: BaseResourceNode[]
+    tree: BaseResourceNode[];
 }

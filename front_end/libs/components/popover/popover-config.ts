@@ -8,7 +8,7 @@ export enum POS_STRATEGY {
 }
 
 export interface PopoverConfig<T = never> {
-    hasBackdrop: boolean
+    hasBackdrop: boolean;
     backdropClass: string;
     data?: T;
     disableClose: boolean;

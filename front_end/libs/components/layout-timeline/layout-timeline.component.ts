@@ -28,7 +28,7 @@ export class NxLayoutTimelineComponent {
     MIN_ZOOM = 100;
     position = 0;
     MAX_ZOOM = 10995.1163;
-    tooltipDetails: { selected: string[], position: number, x: number, xActual: number } = { selected: [], position: 0, x: 0, xActual: 0 };
+    tooltipDetails: { selected: string[]; position: number; x: number; xActual: number } = { selected: [], position: 0, x: 0, xActual: 0 };
 
     LANG = staticLang;
 

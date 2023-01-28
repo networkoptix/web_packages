@@ -14,20 +14,20 @@ export type SearchParams = Partial<{
 }>;
 
 export interface SearchTag {
-    id: string,
-    label: string,
-    value: boolean,
+    id: string;
+    label: string;
+    value: boolean;
 }
 
 export interface SearchFilter extends SearchModel {
-    tags?: SearchTag[],
+    tags?: SearchTag[];
     selects?: Array<{
         id: string;
         label: string;
         items: DropdownItem<string>[];
         selected: DropdownItem<string>;
         css?: string;
-    }>,
+    }>;
     multiselects?: Array<{
         id: string;
         label: string;
@@ -36,6 +36,6 @@ export interface SearchFilter extends SearchModel {
         singular?: string;
         searchLabel?: string;
         searchLabelSingular?: string;
-    }>,
+    }>;
     search?: string;
 }

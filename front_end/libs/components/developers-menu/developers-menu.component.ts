@@ -34,9 +34,9 @@ import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-
 export class NxDevelopersMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter<ClickEvent>();
     @Output() handlePrefetch = new EventEmitter<{
-        assetId: number,
-        state?: 'pending' | 'draft',
-        version?: number
+        assetId: number;
+        state?: 'pending' | 'draft';
+        version?: number;
     }>();
     // eslint-disable-next-line lines-between-class-members
     @Output() relatedLinks = new EventEmitter<RelatedLinks>();

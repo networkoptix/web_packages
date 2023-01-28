@@ -61,7 +61,7 @@ const cloudLayoutTours = {
 };
 
 interface ResourceLookup<T = { id: string }> {
-    [id: string]: ResourceNode<T>
+    [id: string]: ResourceNode<T>;
 }
 /**
  * Find better abstraction once we add more action types and resources.
@@ -486,7 +486,7 @@ export class NxLayoutViewComponent {
             ));
     };
 
-    handleRemovingResource = async ({ details: { id } }: { resourceType: ResourceType, details: Record<string, unknown> }): Promise<unknown> => firstValueFrom(
+    handleRemovingResource = async ({ details: { id } }: { resourceType: ResourceType; details: Record<string, unknown> }): Promise<unknown> => firstValueFrom(
         this.layoutItemLookup$.pipe(
             switchMap(items => {
                 const { title, message, footer } = this.LANG.layouts.removeItem;
@@ -502,7 +502,7 @@ export class NxLayoutViewComponent {
             ))
         ));
 
-    handleEditingResource = async ({ resourceType, details }: { resourceType: ResourceType, details: Record<string, unknown> }): Promise<boolean> => this.dialogsService.edit({
+    handleEditingResource = async ({ resourceType, details }: { resourceType: ResourceType; details: Record<string, unknown> }): Promise<boolean> => this.dialogsService.edit({
         contextManifest: editManifests[resourceType],
         values: details,
         deleteProcess: (details: Record<string, unknown>) => this.handleRemovingResource({ resourceType, details }).catch(() => this.handleEditingResource({ resourceType, details })),

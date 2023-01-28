@@ -20,8 +20,8 @@ interface SystemDropdownItem extends DropdownItem<string> {
 }
 
 interface HealthMonitorResource {
-    value: string,
-    name: string
+    value: string;
+    name: string;
 }
 
 const getLeafNodes = (node, result = []) => {

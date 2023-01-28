@@ -70,7 +70,7 @@ interface Account2faActionData {
     [TfaAction.PasswordChange]: {
         newPassword: string;
         oldPassword: string;
-    }
+    };
     [TfaAction.CodeOnLoginEnable]: void;
     [TfaAction.CodeOnLoginDisable]: void;
     [TfaAction.NewBackupCodes]: void;

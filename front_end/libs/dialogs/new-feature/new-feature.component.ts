@@ -25,8 +25,8 @@ export class NewFeatureInformationModalContent<T> {
         public dialogsService: NxDialogsService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) public dialogData: {
-            template: string | TemplateRef<T>,
-            licenseManager?: LicenseManager
+            template: string | TemplateRef<T>;
+            licenseManager?: LicenseManager;
         }
     ) {
         if (dialogData.template instanceof TemplateRef) {

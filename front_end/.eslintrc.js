@@ -226,7 +226,7 @@ const typeLintBlacklist = [
     /* Utils */
     '**/logger.ts',
     /* Packages */
-    '**/dashboard-widget-state/types.ts'
+    '**/dashboard-widget-state/types.ts',
 ];
 
 /**
@@ -286,6 +286,7 @@ module.exports = {
                     ignoreDestructuring: true,
                 }],
                 'comma-dangle': ['error', 'only-multiline'],
+                // 'comma-dangle': ['error', 'always-multiline'],
                 eqeqeq: ['error', 'always'],
                 indent: ['error', 4, {
                     SwitchCase: 1,
@@ -323,7 +324,7 @@ module.exports = {
                 'space-before-function-paren': ['error', {
                     anonymous: 'always',
                     named: 'never',
-                    asyncArrow: 'always'
+                    asyncArrow: 'always',
                 }],
 
                 'import/no-default-export': 'error',
@@ -334,19 +335,19 @@ module.exports = {
                         'internal',
                         'parent',
                         'sibling',
-                        'index'
+                        'index',
                     ],
                     pathGroups: Object.keys(
-                        require('./tsconfig.base.json').compilerOptions.paths
+                        require('./tsconfig.base.json').compilerOptions.paths,
                     ).map(path => ({
                         pattern: `${path}*`,
                         /* Assuming that tsconfig paths end with single asterisk so
                 that the pattern here will end with double asterisk */
-                        group: 'internal'
+                        group: 'internal',
                     })),
                     pathGroupsExcludedImportTypes: ['internal'],
                     'newlines-between': 'always',
-                    alphabetize: { order: 'asc' }
+                    alphabetize: { order: 'asc' },
                 }],
             },
         },
@@ -377,33 +378,34 @@ module.exports = {
                             message: [
                                 'Angular\'s `SimpleChanges` is not type-safe.',
                                 'Use the `NgChanges` utility type instead.',
-                            ].join('\n')
-                        }
+                            ].join('\n'),
+                        },
                     },
                 }],
                 ...tsExtension('brace-style', [
                     'error',
                     '1tbs',
-                    { allowSingleLine: true }
+                    { allowSingleLine: true },
                 ]),
                 ...tsExtension('comma-dangle', ['error', 'only-multiline']),
                 ...tsExtension('comma-spacing'),
                 ...tsExtension('dot-notation', [
                     'error',
-                    { allowKeywords: true }
+                    { allowKeywords: true },
                 ]),
                 ...tsExtension('func-call-spacing'),
                 ...tsExtension('keyword-spacing'),
                 ...tsExtension('lines-between-class-members', ['error', {
-                    exceptAfterSingleLine: true
+                    exceptAfterSingleLine: true,
                 }]),
+                // '@typescript-eslint/member-delimiter-style': 'error',
                 ...tsExtension('no-array-constructor'),
                 ...tsExtension('no-dupe-class-members'),
                 ...tsExtension('no-extra-parens', ['error', 'functions']),
                 ...tsExtension('no-extra-semi'),
                 ...tsExtension('no-implied-eval'),
                 ...tsExtension('no-redeclare', ['error', {
-                    builtinGlobals: false
+                    builtinGlobals: false,
                 }]),
                 ...tsExtension('no-throw-literal'),
                 '@typescript-eslint/no-unnecessary-type-assertion': 'error',
@@ -419,7 +421,7 @@ module.exports = {
                 ...tsExtension('no-unused-expressions', ['error', {
                     allowShortCircuit: true,
                     allowTernary: true,
-                    allowTaggedTemplates: true
+                    allowTaggedTemplates: true,
                 }]),
                 ...tsExtension('no-unused-vars', ['error', {
                     varsIgnorePattern: '^_',
@@ -436,7 +438,7 @@ module.exports = {
                 ...tsExtension('space-before-function-paren', ['error', {
                     anonymous: 'always',
                     named: 'never',
-                    asyncArrow: 'always'
+                    asyncArrow: 'always',
                 }]),
                 ...tsExtension('space-infix-ops'),
             },
@@ -464,13 +466,13 @@ module.exports = {
                             message: [
                                 'Angular\'s `SimpleChanges` is not type-safe.',
                                 'Use the `NgChanges` utility type instead.',
-                            ].join('\n')
-                        }
+                            ].join('\n'),
+                        },
                     },
                 }],
                 '@typescript-eslint/explicit-function-return-type': [
                     'error',
-                    { allowExpressions: true }
+                    { allowExpressions: true },
                 ],
                 '@typescript-eslint/no-empty-function': 'off',
                 '@typescript-eslint/no-empty-interface': 'off',
@@ -514,9 +516,9 @@ module.exports = {
                 '@angular-eslint/component-selector': ['error', {
                     type: 'element',
                     prefix: 'nx',
-                    style: 'kebab-case'
-                }]
-            }
+                    style: 'kebab-case',
+                }],
+            },
         },
         {
             // Don't need to enforce naming on sandbox components
@@ -525,7 +527,7 @@ module.exports = {
                 '@angular-eslint/component-class-suffix': 'off',
                 '@angular-eslint/component-selector': 'off',
                 '@angular-eslint/directive-class-suffix': 'off',
-            }
+            },
         },
         {
             files: ['*.ts'],
@@ -549,7 +551,7 @@ module.exports = {
             files: ['*.spec.ts'],
             rules: {
                 '@typescript-eslint/dot-notation': 'off',
-            }
+            },
         },
         {
             /* Allow top-down organization in types files */
@@ -560,13 +562,13 @@ module.exports = {
                     typedefs: true,
                     ignoreTypeReferences: true,
                 }],
-            }
+            },
         },
         {
             files: ['*.component.html'],
             parser: '@angular-eslint/template-parser',
             plugins: ['@angular-eslint/template'],
-            rules: {}
+            rules: {},
             // Not going to activate any template rules, they seem
             // buggy on fix. Keeping the override for the parser.
         },
@@ -577,7 +579,7 @@ module.exports = {
                 'nx/template/translate-contents': ['error', [
                     'svg-icon',
                 ]],
-            }
+            },
         },
         {
             files: ['*.component.html'],
@@ -591,7 +593,7 @@ module.exports = {
             ],
             rules: {
                 'nx/template/no-untranslated': 'error',
-            }
+            },
         },
         {
             files: ['*.component.html'],
@@ -603,8 +605,8 @@ module.exports = {
                     parser: 'angular',
                     printWidth: 100,
                     singleAttributePerLine: true,
-                }]
-            }
+                }],
+            },
         },
-    ]
+    ],
 };

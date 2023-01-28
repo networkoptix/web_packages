@@ -35,7 +35,7 @@ export class NxLayoutPtzComponent {
         this.action$.next(action);
     }
 
-    handleAction = (updater$: BehaviorSubject<number>) => ({ action, detail }: { action: string, detail: number }): void => {
+    handleAction = (updater$: BehaviorSubject<number>) => ({ action, detail }: { action: string; detail: number }): void => {
         if (action === 'exit') {
             return;
         }
