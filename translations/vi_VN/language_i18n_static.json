@@ -262,11 +262,11 @@
             "low": "Thấp"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "yearS": "{count, plural, =0{# năm} other{# năm}}",
+            "monthS": "{count, plural, =0{# tháng} other{# tháng}}",
+            "weekS": "{count, plural, =0{# tuần} other{# tuần}}",
+            "dayS": "{count, plural, =0{# ngày} other{# ngày}}",
+            "hourS": "{count, plural, =0{# giờ} other{# giờ}}",
             "minuteS": "{count, plural, =0{# phút} other{# phút}}"
         },
         "general": "Chung",
@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Phổ quát"
             }
         },
         "mobile": {
@@ -714,10 +714,10 @@
         "systemList": "Danh sách hệ thống",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "chào mừng",
                 "nodes": [
                     {
-                        "displayName": "Welcome To %CLOUD_NAME%"
+                        "displayName": "Chào mừng bạn đến với %CLOUD_NAME%"
                     }
                 ]
             },
@@ -791,7 +791,7 @@
     "ipvdFeedback": {
         "request": "Vui lòng <span id=\"request\">gửi yêu cầu</span> nếu bạn có thêm câu hỏi / thắc mắc liên quan đến các thiết bị được hỗ trợ."
     },
-    "layoutAutosave": "Auto saving in { time } seconds...",
+    "layoutAutosave": "Tự động lưu trong { time } giây...",
     "systemsCount": "Tìm thấy {count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
     "alertsCount": "{count, plural, =0{# cảnh báo} one{# cảnh báo} other{# cảnh báo}}",
     "ipvdTopXByVolume": "Top {value} theo khối lượng:",
@@ -818,17 +818,17 @@
         "alert": "Cảnh báo"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+        "copyright": "Bản quyền (c) {currentYear} %COMPANY_NAME%. Đã đăng ký Bản quyền"
     },
     "pages": {
         "developers": {
-            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+            "menuNodeContainsErrors": "Nút menu <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> có lỗi"
         },
         "downloadHistory": {
-            "published": "PUBLISHED { date }"
+            "published": "ĐÃ XUẤT BẢN { date }"
         },
         "health": {
-            "importedSystem": "System: { system }",
+            "importedSystem": "Hệ thống: { system }",
             "importedTime": "Đã tạo: { time }"
         }
     },
@@ -1002,15 +1002,15 @@
             "localSuccess": "Hệ thống đã sẵn sàng để sử dụng",
             "merge": "Kết nối máy chủ với Hệ thống hiện có",
             "mergeFailure": "Không thể hợp nhất các hệ thống",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
+            "mergeProcess": "Đang hợp nhất các hệ thống",
+            "start": "Bắt đầu với %VMS_NAME%",
             "systemName": "Nhập tên hệ thống"
         },
         "advancedSettings": {
             "cameraSettingsOptimization": "Cho phép tối ưu hóa cài đặt thiết bị",
             "autoDiscoveryEnabled": "Cho phép tự động phát hiện thiết bị",
             "statisticsAllowed": "Gửi số liệu thống kê sử dụng ẩn danh và báo cáo sự cố",
-            "standard": "Standard",
+            "standard": "Tiêu chuẩn",
             "high": "Cao"
         }
     },
@@ -1036,7 +1036,7 @@
         "status": {
             "offline": "Hệ thống offline",
             "unavailable": "Hệ thống không thể truy cập được",
-            "outOfTimeSync": "Time on one or more servers is out of sync."
+            "outOfTimeSync": "Thời gian trên một hoặc nhiều máy chủ không đồng bộ."
         },
         "users": {
             "cloudDelete": "Xóa người dùng",
@@ -1082,8 +1082,8 @@
     },
     "systemGroups": {
         "root": "Gốc",
-        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
-        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "groupCount": "{count, plural, =0{# NHÓM} other{# NHÓM}}",
+        "systemCount": "{count, plural, =0{# HỆ THỐNG} other{# HỆ THỐNG}}",
         "connectionLost": "Mất kết nối, đang kết nối lại...",
         "connectionRestored": "Đã khôi phục kết nối",
         "couldNotReconnect": "Không thể khôi phục kết nối",
@@ -1112,7 +1112,7 @@
         "unavailable": "không khả dụng"
     },
     "serverDocumentation": {
-        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
+        "accessibleAt": "Đối với Windows trong mã khóa đăng ký: { windowsPath } Máy chủ đa phương tiện \n Đối với tất cả các nền tảng khác, mã khóa này được đặt trong tệp cấu hình: {defaultPath} Để tạm thời điều chỉnh một số cài đặt, hãy thêm ký hiệu gạch dưới (\"_\") vào đầu tên của nó, ví dụ: \"absoluteRtcpTimestamps= false\" chuyển thành \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Đã xảy ra lỗi. Vui lòng làm mới trang sau khoảng 30 giây.",
