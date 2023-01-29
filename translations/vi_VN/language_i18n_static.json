@@ -262,11 +262,11 @@
             "low": "Thấp"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "yearS": "{count, plural, =0{# năm} other{# năm}}",
+            "monthS": "{count, plural, =0{# tháng} other{# tháng}}",
+            "weekS": "{count, plural, =0{# tuần} other{# tuần}}",
+            "dayS": "{count, plural, =0{# ngày} other{# ngày}}",
+            "hourS": "{count, plural, =0{# giờ} other{# giờ}}",
             "minuteS": "{count, plural, =0{# phút} other{# phút}}"
         },
         "general": "Chung",
@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Phổ quát"
             }
         },
         "mobile": {
@@ -765,7 +765,7 @@
     "ipvdFeedback": {
         "request": "Vui lòng <span id=\"request\">gửi yêu cầu</span> nếu bạn có thêm câu hỏi / thắc mắc liên quan đến các thiết bị được hỗ trợ."
     },
-    "layoutAutosave": "Auto saving in { time } seconds...",
+    "layoutAutosave": "Tự động lưu trong { time } giây...",
     "systemsCount": "Tìm thấy {count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}",
     "alertsCount": "{count, plural, =0{# cảnh báo} one{# cảnh báo} other{# cảnh báo}}",
     "ipvdTopXByVolume": "Top {value} theo khối lượng:",
@@ -792,17 +792,17 @@
         "alert": "Cảnh báo"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+        "copyright": "Bản quyền (c) {currentYear} %COMPANY_NAME%. Đã đăng ký Bản quyền"
     },
     "pages": {
         "developers": {
-            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+            "menuNodeContainsErrors": "Nút menu <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> có lỗi"
         },
         "downloadHistory": {
-            "published": "PUBLISHED { date }"
+            "published": "ĐÃ XUẤT BẢN { date }"
         },
         "health": {
-            "importedSystem": "System: { system }",
+            "importedSystem": "Hệ thống: { system }",
             "importedTime": "Đã tạo: { time }"
         }
     },

@@ -150,38 +150,38 @@
         "cloudBothError": "Không thể hợp nhất Hệ thống. Cả hai Hệ thống đều được kết nối với đám mây. Bạn cần ngắt kết nối một hệ thống trước.",
         "cloudHostConflict": "Không thể hợp nhất Hệ thống vì các máy chủ được xây dựng với các host đám mây khác nhau",
         "licenceError": "Cảnh báo! Bạn sắp hợp nhất Hệ thống với giấy phép Starter. Mỗi Hệ thống chỉ cho phép một giấy phép Starter, vì vậy giấy phép thứ hai sẽ bị hủy kích hoạt. Vẫn hợp nhất?",
-        "duplicateServersError": "Cannot merge Systems, because they have at least 1 server with the same ID. Please remove this server and try again.",
-        "connectionFailed": "Connection failed: ",
-        "unknownError": "Unknown error",
-        "mergeFailed": "Merge failed",
-        "mergeSucceed": "Merge succeed.",
-        "newSystemDisplayName": "New System",
-        "incompatibleProtocol": "incompatible version",
-        "incompatibleCloudHost": "cloud conflict",
-        "incompatibleCloudState": "cloud connected"
+        "duplicateServersError": "Không thể hợp nhất các Hệ thống, vì chúng có ít nhất 1 máy chủ có cùng ID. Vui lòng xóa máy chủ này và thử lại.",
+        "connectionFailed": "Kết nối thất bại: ",
+        "unknownError": "Lỗi không xác định",
+        "mergeFailed": "Hợp nhất không thành công",
+        "mergeSucceed": "Hợp nhất thành công.",
+        "newSystemDisplayName": "Hệ thống mới",
+        "incompatibleProtocol": "phiên bản không tương thích",
+        "incompatibleCloudHost": "xung đột đám mây",
+        "incompatibleCloudState": "đám mây đã được kết nối"
     },
     "login": {
-        "incorrectPassword": "Login or password is incorrect",
-        "authLockout": "Too many attempts. Try again in a minute."
+        "incorrectPassword": "Tên người dùng hoặc mật khẩu không chính xác",
+        "authLockout": "Quá nhiều lần thử. Vui lòng thử lại sau một phút."
     },
     "navigaion": {
-        "cannotGetUser": "Server failure: cannot retrieve current user data"
+        "cannotGetUser": "Lỗi máy chủ: không thể truy xuất dữ liệu người dùng hiện tại"
     },
     "offlineDialog": {
-        "serverOffline": "server is offline"
+        "serverOffline": "máy chủ đang ngoại tuyến"
     },
     "restartDialog": {
-        "serverStarting": "server is starting",
-        "serverRestarting": "server is restarting",
-        "serverOffline": "server is offline"
+        "serverStarting": "máy chủ đang khởi động",
+        "serverRestarting": "máy chủ đang khởi động lại",
+        "serverOffline": "máy chủ đang ngoại tuyến"
     },
     "advanced": {
-        "free": "Free",
-        "total": "Total",
-        "occupied": "Occupied",
-        "reserved": "Reserved"
+        "free": "Miễn phí",
+        "total": "Tổng cộng",
+        "occupied": "Đã chiếm dụng",
+        "reserved": "Đã dự phòng"
     },
     "pageTitles": {
-        "default": "{{PRODUCT_NAME}} web interface"
+        "default": "{{PRODUCT_NAME}} giao diện web"
     }
 }
