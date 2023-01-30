@@ -4,7 +4,9 @@
     muted
     [nxRotate]="rotation"
 ></video>
-<nx-pre-loader *ngIf="loading"></nx-pre-loader>
+<nx-pre-loader
+    *ngIf="!error && (loading || webRtcPlayer.paused || !webRtcPlayer.currentTime)"
+></nx-pre-loader>
 
 <ng-container *ngIf="webRtcPlayer.paused && error">
     <div class="connection-error">
