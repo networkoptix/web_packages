@@ -134,8 +134,8 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         if (s.isActive) {
             this.exportUrl();
             this.exportEnabled = !!this.vms.selectedCamera.getRecords(
-                this.status.range.start,
-                this.status.range.end,
+                Math.max(this.status.range.start, this.selection.timeline.fullRange.start),
+                Math.min(this.status.range.end, this.selection.timeline.fullRange.end),
                 1000
             ).length;
         } else {

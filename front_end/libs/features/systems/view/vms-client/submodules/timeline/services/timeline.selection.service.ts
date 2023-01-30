@@ -33,7 +33,7 @@ export class TimelineSelectionService {
     protected _dragAnchorMs: ms = 0;
 
     constructor(
-        protected timeline: TimelineService,
+        public timeline: TimelineService,
         protected playback: PlaybackService,
         protected scroll: TimelineScrollbarRelativeService,
         protected vms: VideoManagementSystemService

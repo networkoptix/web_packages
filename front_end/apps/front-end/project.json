@@ -106,6 +106,14 @@
                 "namedChunks": true
             },
             "configurations": {
+                "regress": {
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.regress.ts"
+                        }
+                    ]
+                },
                 "cloud-test": {
                     "fileReplacements": [
                         {
@@ -203,6 +211,9 @@
                 "ssl": true
             },
             "configurations": {
+                "regress": {
+                    "browserTarget": "front-end:build:regress"
+                },
                 "cloud-test": {
                     "browserTarget": "front-end:build:cloud-test"
                 },
