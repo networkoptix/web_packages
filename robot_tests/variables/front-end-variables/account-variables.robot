@@ -4,13 +4,20 @@ ${url}                                ${ENV}
 ${CZECH ALERT}                        Váš účet byl úspěšně uložen
 
 #account web elements
-${ACCOUNT DROPDOWN}                   //div[@id="accountSettingsDropdown"]/preceding-sibling::button
-${ACCOUNT SETTINGS BUTTON}            //div[@id="accountSettingsDropdown"]//a[@href = '/account/']
+#${ACCOUNT DROPDOWN}                   //div[@id="accountSettingsDropdown"]/preceding-sibling::button
+#${ACCOUNT SETTINGS BUTTON}            //div[@id="accountSettingsDropdown"]//a[@href = '/account/']
+#${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
+#${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
+#${ACCOUNT EMAIL}                      //nx-account//a[@id='settings']//span[contains(text(), "noptixautoqa+")]
+#${ACCOUNT FIRST NAME}                 //input[@id='firstName']
+
+${ACCOUNT DROPDOWN}                   //header//div[@id="accountSettingsDropdown"]/preceding-sibling::button
+${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account/']
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
 ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
-${ACCOUNT EMAIL}                      //nx-account//a[@id='settings']//span[contains(text(), "noptixautoqa+")]
-${ACCOUNT FIRST NAME}                 //input[@id='firstName']
-${ACCOUNT LAST NAME}                  //input[@id='lastName']
+${ACCOUNT EMAIL}                      //a[@id='settings']
+${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
+${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //button[@id="saveSettingsBtn"]
 ${ACCOUNT CANCEL}                     //button[@id="cancelSettingsBtn"]

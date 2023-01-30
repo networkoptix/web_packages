@@ -65,7 +65,8 @@ ${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//f
 ${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
 ${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${RESET SUCCESS MESSAGE TEXT}')]
 
-${LOG IN NAV BAR}                     //a[contains(@class, "login btn") and contains(text(),'${LOG IN BUTTON TEXT}')]
+${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
+# ${LOG IN NAV BAR}                     //a[contains(@class, "login btn") and contains(text(),'${LOG IN BUTTON TEXT}')]
 
 #Header
 ${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]
