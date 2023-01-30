@@ -63,7 +63,11 @@ export class NxPageTitleStrategy extends TitleStrategy {
             title = this.translateService.instant(lang.metaDefaults.default.title);
         }
 
-        description = this.translateService.instant(description ?? lang.metaDefaults.default.description);
+        if (description?.length) {
+            description = this.translateService.instant(description);
+        } else {
+            description = this.translateService.instant(lang.metaDefaults.default.description);
+        }
         this.pageMetaService.setMetaProperties(routerState.url, { title, description });
     }
 }
