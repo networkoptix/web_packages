@@ -466,11 +466,13 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async selectTimeRange(selection: TimelineSelectionService) {
+    public async selectTimeRange(selection: TimelineSelectionService, start: number, end: number) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
-                selection
+                selection,
+                start,
+                end
             }
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);

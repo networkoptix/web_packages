@@ -145,7 +145,11 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     }
 
     public initSetTimeDialog(): void {
-        const dialog = this.dialogs.selectTimeRange(this.selection);
+        const dialog = this.dialogs.selectTimeRange(
+            this.selection,
+            this.timeline.fullRange.start,
+            this.timeline.fullRange.end
+        );
         dialog.then(this._onTimeSetDialogDone);
     }
 

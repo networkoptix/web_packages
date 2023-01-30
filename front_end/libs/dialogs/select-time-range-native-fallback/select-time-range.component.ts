@@ -27,7 +27,12 @@ export class SelectTimeRangeModalContent implements OnInit {
     endTime: string;
 
     selection: TimelineSelectionService;
+    start: number;
+    end: number;
+
     themeClass: string;
+    rangeStartDate: string;
+    rangeEndDate: string;
 
     @Input() closable = true;
 
@@ -38,9 +43,11 @@ export class SelectTimeRangeModalContent implements OnInit {
         @Inject(DIALOG_DATA)
         private dialogData: {
             selection: TimelineSelectionService;
+            start: Date,
+            end: Date,
         },
     ) {
-        pickFrom(this.dialogData, ['selection'], this);
+        pickFrom(this.dialogData, ['selection', 'start', 'end'], this);
 
         this.CONFIG = configService.getConfig();
         this.themeClass = this.CONFIG.isDarkTheme ? 'dark' : 'light';
@@ -69,21 +76,23 @@ export class SelectTimeRangeModalContent implements OnInit {
         }
     };
 
-    checkMaxDate() {
-        const setStartDate = new Date(
+    checkMaxMinDate() {
+        const todayInMs = Date.now();
+
+        const newStartDate = new Date(
             this.startDate + 'T' + this.startTime
         ).getTime();
 
-        if (isNaN(setStartDate)) {
-            this.startDate = '';
+        if (isNaN(newStartDate) || newStartDate < this.start || newStartDate > todayInMs) {
+            this.startDate = this.rangeStartDate;
         }
 
-        const setEndDate = new Date(
+        const newEndDate = new Date(
             this.endDate + 'T' + this.endTime
         ).getTime();
 
-        if (isNaN(setEndDate)) {
-            this.endDate = '';
+        if (isNaN(newEndDate) || newEndDate > todayInMs) {
+            this.endDate = this.rangeEndDate;
         }
     }
 
@@ -97,6 +106,9 @@ export class SelectTimeRangeModalContent implements OnInit {
         this.startTime = dateFormat(tweakedTStart, TIME_FORMAT_STRING);
         this.endDate = dateFormat(tweakedTEnd, DATE_FORMAT_STRING);
         this.endTime = dateFormat(tweakedTEnd, TIME_FORMAT_STRING);
+
+        this.rangeStartDate = new Date(this.start).toISOString().split('T')[0];
+        this.rangeEndDate = new Date(this.end).toISOString().split('T')[0];
     }
 
     close = (msg: boolean | {}): void => {
