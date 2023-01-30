@@ -699,11 +699,11 @@ export class NxDialogsService extends DialogBase {
     /* Bookmarks */
     moreDevices = this.dialogV2Factory<Dt.MoreDevices>(
         () => import('./bookmarks/more-devices/more-devices.component').then(m => m.NxMoreDevicesModalContent),
-        { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
+        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' },
     );
 
     moreTags = this.dialogV2Factory<Dt.MoreTags>(
         () => import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
-        { autoFocus: 'input' }
+        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' }
     );
 }

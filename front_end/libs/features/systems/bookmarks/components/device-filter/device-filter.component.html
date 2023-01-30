@@ -28,6 +28,7 @@
     </div>
     <div>
         <button
+            *ngIf="items.length > 7"
             translate
             (click)="moreDevicesDialog()"
         >

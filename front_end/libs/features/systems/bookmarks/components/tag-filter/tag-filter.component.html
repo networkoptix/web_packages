@@ -14,9 +14,10 @@
 </div>
 <div class="body">
     <div class="tags">
+        <!-- Estimaing 3/row, max 5 rows -->
         <button
             class="tag"
-            *ngFor="let tag of tags"
+            *ngFor="let tag of tags | slice: 0:15"
             [ngClass]="{ selected: selection.isSelected(tag) }"
             (click)="selection.toggle(tag); selectionChange.emit()"
         >
@@ -25,6 +26,7 @@
     </div>
     <div>
         <button
+            *ngIf="tags.length > 15"
             translate
             (click)="moreTagsDialog()"
         >

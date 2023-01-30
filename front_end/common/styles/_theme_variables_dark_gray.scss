@@ -591,7 +591,20 @@ html[data-theme="dark-gray"] {
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
 
-    --dark-opaque-background: rgba(0, 0, 0, .5);
+    /* Bookmarks */
+    --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);
+    --bookmarks-calendar-today-highlight-shadow: var(--light1);
+    --bookmarks-input-border-color: var(--dark11);
+    --bookmarks-time-input-active-bg: var(--dark1);
+    --bookmarks-filter-header-bg: var(--dark7);
+    --bookmarks-filter-clear-btn-bg: var(--dark9);
+    --bookmarks-filter-clear-btn-stroke: var(--light4);
+    --bookmarks-filter-body-bg: var(--dark8);
+    --bookmarks-filter-button-bg: var(--dark6);
+    --bookmarks-filter-filled-text: var(--light2);
+    --bookmarks-text-highlight-bg: var(--dark12);
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
     /* System Admin */

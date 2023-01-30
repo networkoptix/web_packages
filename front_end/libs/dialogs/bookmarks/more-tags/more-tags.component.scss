@@ -7,7 +7,7 @@ nx-simple-search {
 @include tag.tags();
 
 .tags {
-    height: 10rem;
+    height: (tag.$tag-height + tag.$tag-gap) * 18;
     overflow-y: auto;
     align-content: flex-start;
 }

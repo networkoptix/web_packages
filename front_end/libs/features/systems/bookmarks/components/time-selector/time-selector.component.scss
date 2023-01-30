@@ -8,6 +8,12 @@
         &.not-empty {
             background-color: var(--bookmarks-time-input-active-bg) !important;
         }
+
+        &::placeholder {
+            font-size: 0.875rem;
+        }
+
+        border-color: var(--bookmarks-input-border-color) !important;
     }
 
     .period {

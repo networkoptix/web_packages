@@ -1,7 +1,10 @@
 <nx-more-filters-base>
     <ng-container header>{{ 'More Devices' | translate }}</ng-container>
     <ng-container body>
-        <nx-simple-search [(ngModel)]="search"></nx-simple-search>
+        <nx-simple-search
+            [(ngModel)]="search"
+            [placeholder]="LANG.search.quickSearch"
+        ></nx-simple-search>
         <div class="devices">
             <label *ngFor="let device of searchMatches">
                 <nx-checkbox

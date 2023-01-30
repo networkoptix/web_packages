@@ -6,6 +6,12 @@
     input {
         background: transparent !important;
         padding-left: 2rem !important;
+
+        &::placeholder {
+            font-size: 0.875rem;
+        }
+
+        border-color: var(--bookmarks-input-border-color) !important;
     }
 
     .icon-search {

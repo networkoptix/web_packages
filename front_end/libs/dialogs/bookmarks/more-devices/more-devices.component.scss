@@ -3,6 +3,6 @@
 @include device.search-and-list();
 
 .devices {
-    height: device.$label-height * 10;
+    height: device.$label-height * 18;
     overflow-y: auto;
 }

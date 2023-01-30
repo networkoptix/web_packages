@@ -1,5 +1,6 @@
 @use '@angular/material';
 @use 'mat';
+@use 'typography';
 @use '../filter.scss';
 
 .dtf-header {
@@ -23,6 +24,7 @@
             max-width: none !important;
             background-color: var(--bookmarks-filter-button-bg);
             color: var(--body-text-color);
+            font-family: typography.$font-family-regular;
 
             &:hover {
                 background-color: var(--bookmarks-text-highlight-bg);
@@ -35,6 +37,7 @@
         }
     }
 
+    // https://github.com/angular/components/blob/main/src/material/datepicker/_datepicker-theme.scss
     mat-calendar {
         @include material.button-theme(mat.$mat-test-theme);
         @include material.datepicker-theme(mat.$mat-test-theme);
@@ -66,7 +69,6 @@
         .mat-calendar-content {
             padding: 0;
         }
-
         .mat-calendar-body-cell-content {
             border-radius: 2px;
         }
@@ -78,23 +80,71 @@
             border-top-right-radius: 2px;
             border-bottom-right-radius: 2px;
         }
-
         .mat-calendar-button-0,
         thead tr th,
         .mat-calendar-body-label,
         .mat-calendar-body-cell-content {
             color: var(--body-text-color);
         }
+        // Other resets
 
-        // Shared between light/dark
+
+        // Switch between views
+        #mat-calendar-button-0 {
+            font-size: 0.9375rem;
+            font-family: typography.$font-family-medium;
+        }
+
+        // Triangle icon
         .mat-calendar-period-button svg polygon {
             fill: var(--dark17);
-        }
-        .mat-icon-button {
-            color: var(--light16);
+            // Shared between light/dark
         }
 
-        // https://github.com/angular/components/blob/main/src/material/datepicker/_datepicker-theme.scss
+        // < > icons
+        .mat-icon-button {
+            color: var(--light16);
+            // Shared between light/dark
+        }
+
+        // S M T W T F S
+        .mat-calendar-table-header th span {
+            font-size: 0.8125rem;
+            font-family: typography.$font-color-medium;
+        }
+
+        // Divider between day of week header and calendar days
+        .mat-calendar-table-header-divider {
+            visibility: hidden;
+        }
+
+        // Extra text for month/year
+        // If full row remove from DOM, otherwise hide text
+        mat-month-view .mat-calendar-body-label {
+                visibility: hidden;
+
+                &[colspan="7"] {
+                    display: none;
+                }
+        }
+        mat-year-view .mat-calendar-body-label {
+            display: none;
+        }
+
+        // Day/month/year cell
+        .mat-body-cell-content {
+            font-size: 0.875rem !important;
+        }
+
+        // Current day
+        .mat-calendar-body-today {
+            // @mixin _unselected-cell
+            &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+                border-color: var(--bookmarks-calendar-today-border);
+            }
+        }
+
+        // Selection
         .mat-calendar-body-selected {
             background-color: var(--brand-core);
             color: var(--bookmarks-filter-filled-text);
@@ -106,7 +156,15 @@
             &::before {
                 background-color: var(--brand-d1);
             }
+            .mat-calendar-body-today {
+                &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+                    border-color: transparent;
+                    box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-today-highlight-shadow);
+                }
+            }
         }
+
+        // Mouse preview
         .mat-calendar-body-in-comparison-range::before {
             background-color: var(--bookmarks-text-highlight-bg);
         }
@@ -114,18 +172,20 @@
         .mat-calendar-body-in-comparison-range > .mat-calendar-body-selected {
             background-color: var(--brand-core);
         }
-        .mat-calendar-body-today {
-            // @mixin _unselected-cell
-            &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                border-color: var(--bookmarks-calendar-today-border);
+
+        // Quick preview
+        &.quick-preview {
+            .mat-calendar-body-in-range {
+                &:not(.mat-calendar-body-range-start):not(.mat-calendar-body-range-end) .mat-calendar-body-cell-content {
+                    color: var(--body-text-color);
+                }
+                &::before {
+                    background-color: var(--bookmarks-text-highlight-bg);
+                }
             }
         }
-        .mat-calendar-body-in-range .mat-calendar-body-today {
-            &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                border-color: transparent;
-                box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-today-highlight-shadow);
-            }
-        }
+
+        // Focus/hover
         .cdk-keyboard-focused .mat-calendar-body-active,
         .cdk-program-focused .mat-calendar-body-active,
         .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
@@ -138,16 +198,6 @@
                 box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-today-border);
             }
         }
-        &.quick-preview {
-            .mat-calendar-body-in-range {
-                &:not(.mat-calendar-body-range-start):not(.mat-calendar-body-range-end) .mat-calendar-body-cell-content {
-                    color: var(--body-text-color);
-                }
-                &::before {
-                    background-color: var(--bookmarks-text-highlight-bg);
-                }
-            }
-        }
     }
 
     .time-inputs {
@@ -156,6 +206,9 @@
         padding-top: 1rem;
         gap: 1rem;
         & > div {
+            span {
+                font-family: typography.$font-family-medium;
+            }
             flex: 1;
             display: flex;
             flex-direction: column;
