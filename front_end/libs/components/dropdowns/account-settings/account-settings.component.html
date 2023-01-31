@@ -118,7 +118,7 @@
 <ng-template #newHeaderButton>
     <button
         class="btn auth-section"
-        [ngClass]="{ active: show }"
+        [ngClass]="{ active: show || isAccountRoute }"
         (click)="show = !show"
     >
         <a class="user-section logged-in">

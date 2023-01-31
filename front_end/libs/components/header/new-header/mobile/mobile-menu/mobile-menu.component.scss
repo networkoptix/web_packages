@@ -86,21 +86,15 @@
         width: 194px;
         margin: auto;
         border-radius: 2px;
+        @include typography.medium14nocolor;
 
         &.logout-button {
             background-color: var(--mobile-header-logout-btn-bg) !important;
-            @include typography.regular14nocolor;
             color: var(--mobile-header-logout-btn-color);
             box-shadow: inset 0px -1px 0px $dark8;
         }
+        &.login-button {
+            box-shadow: inset 0px -1px 0px var(--brand-d2);
+        }
     }
-}
-
-.logout-button {
-    width: 194px;
-    margin: auto;
-    background-color: $dark12  !important;
-    border-radius: 2px;
-    @include typography.regular14nocolor;
-    color: $light2;
 }
