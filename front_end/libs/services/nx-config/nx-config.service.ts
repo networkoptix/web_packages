@@ -1,15 +1,14 @@
 import { coerceArray } from '@angular/cdk/coercion';
-import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
-import { environment } from '@environments/environment';
 import { FeatureFlagType } from '@services/nx-config/base-config';
 import { WINDOW } from '@services/window-provider';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
+import { DynamicConfig } from './dynamic-config';
 
 const findNode = <T>(targetObject: T, nodes: string[]) => nodes.reduce((ref, nodeName) => ref[nodeName], targetObject);
 
@@ -23,17 +22,17 @@ export class NxConfigService {
     static configChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
-        private http?: HttpClient,
         @Inject(WINDOW) private window?: Window,
-        private session?: LocalStorageService
+        private session?: LocalStorageService,
+        dynamicConfig?: DynamicConfig
     ) {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
         // previewPath: '',
         // ***************************************************************
 
-        this.config = nxConfig;
-
+        this.config = dynamicConfig?.config || nxConfig;
+        this.updateConfigUsingOverrides();
         this.attachDebugConfigToWindow();
     }
 
@@ -107,26 +106,6 @@ export class NxConfigService {
             const target = findNode(config, nodes);
             target[property] = value;
         });
-    }
-
-    getSettings() {
-        if (environment.isLocal) {
-            const webadminConfigRequest =
-                this.http.get('/static/customization/webadmin_config.json').toPromise();
-            const descriptionRequest =
-                this.http.get('/static/customization/description.json').toPromise();
-            const supportedLanguagesRequest =
-                this.http.get('/static/supported_languages.json').toPromise();
-            return Promise.all([webadminConfigRequest, descriptionRequest, supportedLanguagesRequest])
-                .then(([webadminConfig, description, supportedLanguages]: [Object, Object, any]) => ({
-                    defaultLanguage: supportedLanguages.default,
-                    supportedLanguages: supportedLanguages.supported,
-                    webadminConfig,
-                    description
-                }));
-        } else {
-            return this.http.get('/api/utils/settings').toPromise();
-        }
     }
 
     getConfig() {

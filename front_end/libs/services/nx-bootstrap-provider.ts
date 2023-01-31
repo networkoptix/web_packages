@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
 import { processLanguageFactory } from '@utils/nx';
 
 import type { IConfig } from './nx-config/config-types';
@@ -81,19 +80,14 @@ export class NxBootstrapProvider {
 
     load(): Promise<boolean> {
         let setLangFail = false;
-        return new Promise<boolean>((resolve, reject) => {
-            this.CONFIG = this.configService.getConfig();
-            return this.configService.getSettings().then((settings: any) => {
-                // this language will be used as a fallback when a translation
-                // isn't found in the current language
-                this.setSettings(settings);
-                this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
+        this.CONFIG = this.configService.config;
+        this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
 
-                return Promise.all([
-                    this.languageService.loadLanguage(),
-                    this.getModuleInfo()
-                ]);
-            }).then(([language, moduleInfo]: any) => {
+        return new Promise<boolean>((resolve, reject) => {
+            return Promise.all([
+                this.languageService.loadLanguage(),
+                this.getModuleInfo()
+            ]).then(([language, moduleInfo]: any) => {
                 // language fail may have special character or
                 // syntax error ... like use of double curly braces
                 try {
@@ -157,146 +151,5 @@ export class NxBootstrapProvider {
         this.languageService.setTranslations(data.language, processLanguage(data));
 
         this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
-    }
-
-    setSettings(data): void {
-        if (this.environment.isLocal) {
-            // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
-            const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;
-            this.CONFIG.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
-                menu[name] = {
-                    title: name,
-                    description: '',
-                    nodes
-                };
-                return menu;
-            }, {});
-            this.CONFIG.cloudName = description.cloudName;
-            this.CONFIG.vmsName = description.vmsName;
-            this.CONFIG.company = {
-                copyrightYear: description.copyrightYear,
-                links: {
-                    website: description.contact.companyUrl,
-                    support: description.contact.supportAddress
-                },
-                name: description.companyName
-            };
-            this.CONFIG.licenseTypes = webadminConfig.licenseTypes;
-            // Fallback in case licenseTypes from webadmin_config.json is made a string in the cms
-            if (typeof webadminConfig.licenseTypes === 'string') {
-                this.CONFIG.licenseTypes = JSON.parse(webadminConfig.licenseTypes);
-            }
-            this.CONFIG.trialLicenseKey = description.desktop.trialLicenseKey;
-
-            this.CONFIG.defaultLanguage = defaultLanguage || description.defaultLanguage || this.CONFIG.defaultLanguage;
-            this.CONFIG.supportedLanguages = supportedLanguages.length ? supportedLanguages : [this.CONFIG.defaultLanguage];
-        } else if (!this.environment.isLocal && Object.keys(data).length > 0) {
-            // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
-            // This was done every time a system is created. Its only need once
-            this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
-                if (option.permissions) {
-                    option.permissions = option.permissions.split('|').sort().join('|');
-                }
-            });
-
-            const { companyLink, companyName, copyrightYear, privacyLink, supportLink, customization, licenseServer } = data;
-            this.CONFIG.licenseServer = licenseServer;
-            this.CONFIG.customization = customization;
-            this.CONFIG.company = {
-                copyrightYear,
-                links: {
-                    privacy: privacyLink,
-                    support: supportLink,
-                    website: companyLink
-                },
-                name: companyName
-            };
-
-            const {
-                developersEnabled,
-                feedbackEnabled,
-                integrationStoreEnabled,
-                publicDownloads,
-                publicReleases,
-                cloudStorageEnabled,
-                cloudStorageSize,
-                customClientsEnabled,
-                alexaIntegrationEnabled = false,
-                bookmarksEnabled = false,
-                featureFlags = {}
-            } = data;
-            this.CONFIG.cloudCapabilities = {
-                developersEnabled,
-                feedbackEnabled,
-                integrationStore: integrationStoreEnabled,
-                publicDownloads,
-                publicReleases,
-                cloudStorageEnabled,
-                cloudStorageSize,
-                customClientsEnabled,
-                alexaIntegrationEnabled: featureFlags.alexaIntegration && alexaIntegrationEnabled,
-                bookmarksEnabled: featureFlags.bookmarks && bookmarksEnabled
-            };
-
-            const {
-                searchTags,
-                showAnalyticsEvents,
-                sortSupportedDevicesByPopularity,
-                supportedHardwareTypes,
-                supportedResolutions,
-                vendorsShown
-            } = data;
-            this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
-                searchTags,
-                showAnalyticsEvents,
-                sortSupportedDevicesByPopularity,
-                supportedHardwareTypes,
-                supportedResolutions,
-                vendorsShown: parseInt(vendorsShown)
-            });
-
-            const { integrationFilterItems, integrationFilterLimitation } = data;
-            this.CONFIG.integration.filter = {
-                items: integrationFilterItems,
-                limitation: integrationFilterLimitation
-            };
-
-            if (data.appTypesForPlatform) {
-                Object.entries(data.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
-                    if (platform in this.CONFIG.downloads.groups && appTypes) {
-                        this.CONFIG.downloads.groups[platform].appTypes = appTypes;
-                    }
-                });
-            }
-
-            this.CONFIG.cloudName = data.cloudName;
-            this.CONFIG.googleTagManagerId = data.googleTagManagerId;
-            this.CONFIG.cloudMonitoring.logRocket = data.logRocket;
-            this.CONFIG.cloudMonitoring.fullStory = data.fullStory;
-            this.CONFIG.pushConfig = data.pushConfig;
-            this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
-            this.CONFIG.trafficRelayHost = data.trafficRelayHost;
-            this.CONFIG.trialLicenseKey = data.trialLicenseKey;
-            this.CONFIG.vmsName = data.vmsName;
-            if (data.themeConfig) {
-                this.CONFIG.themeConfig = data.themeConfig;
-            }
-            this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription;
-            this.CONFIG.landing.description = data.landingDescription;
-
-            // detect preview mode
-            if (this.window.location.href.includes('preview')) {
-                this.CONFIG.previewPath = 'preview';
-                this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
-            }
-            this.CONFIG.docMenuMap = data?.docMenuMap;
-            this.CONFIG.licenseTypes = data?.licenseTypes;
-
-            this.CONFIG.dynamicMenus = data?.menus;
-
-            Object.assign(this.CONFIG.featureFlags, featureFlags);
-        }
-
-        this.configService.updateConfigUsingOverrides(this.CONFIG);
     }
 }
