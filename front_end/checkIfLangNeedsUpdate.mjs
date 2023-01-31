@@ -16,8 +16,10 @@ const include = [
 console.log('Comparing hash for the following globs: \n');
 
 console.log(JSON.stringify(include, null, 4) + '\n');
-
-const currentHash = fs.readFileSync(hashFile, 'utf8');
+let currentHash = '';
+if (fs.existsSync(hashFile)) {
+    currentHash = fs.readFileSync(hashFile, 'utf8');
+}
 
 console.log(`Current Language Hash: ${currentHash} \n`);
 
