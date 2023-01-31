@@ -11,7 +11,7 @@
                 *ngIf="!node.invisible && !(singleSystem && node.url === '/systems')"
                 class="menu-item"
             >
-                <div class="node-name">{{ node.display_name }}</div>
+                <div class="node-name">{{ node.display_name | translate }}</div>
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: node.nodes }"
                 ></ng-container>
@@ -21,7 +21,7 @@
                 *ngIf="showCurrentSystem && node.url === '/systems'"
             >
                 <div class="node-name">
-                    {{ currentSystemMenu.display_name }}
+                    {{ currentSystemMenu.display_name | translate }}
                 </div>
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
@@ -58,7 +58,7 @@
                         (!headerService.currentLocation?.path && node.url === 'content/about')
                 }"
             >
-                {{ node.display_name }}
+                {{ node.display_name | translate }}
                 <svg-icon
                     *ngIf="node.new_window"
                     [src]="images.dirHeader + 'external_link.svg'"
@@ -98,7 +98,7 @@
                         (!headerService.currentLocation?.path && subnode.url === 'content/about')
                 }"
             >
-                {{ subnode.display_name }}
+                {{ subnode.display_name | translate }}
                 <svg-icon
                     *ngIf="subnode.new_window"
                     [src]="images.dirHeader + 'external_link.svg'"
@@ -114,7 +114,7 @@
         *ngIf="showCurrentSystem"
     >
         <div class="node-name">
-            {{ currentSystemMenu.display_name }}
+            {{ currentSystemMenu.display_name | translate }}
         </div>
         <ng-container
             *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"

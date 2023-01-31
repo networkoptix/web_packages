@@ -7,7 +7,7 @@
             class="menu-item btn btn-menu"
             [href]="node.url"
         >
-            {{ node.display_name }}
+            {{ node.display_name | translate }}
         </a>
     </ng-container>
     <ng-container *ngIf="loggedIn !== undefined">

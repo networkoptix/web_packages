@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
 import type { NgChanges } from '@utils/ng-changes';
 
@@ -23,6 +24,7 @@ import type { Level1Item } from '../menu.types';
     styleUrls: ['level-1-item.component.scss']
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
+    LANG = staticLang;
     @Input() searchMode: boolean;
     @Input() base: string = '';
     @Input() item: Level1Item;
