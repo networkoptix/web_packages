@@ -687,7 +687,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         takeRemoteSettings = true
     ) {
         const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
-        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
+        remoteEndpoint = remoteEndpoint
+            .replace(/https?:\/\/(?:.*@)?/, '')
+            .replace(/\/$/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
