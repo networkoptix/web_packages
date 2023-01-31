@@ -67,10 +67,15 @@ class Group(db.Model):
         return users
 
     def get_users_to_root(self):
-        users = set(self.users)
+        users = {user.email: user for user in self.users}
         if self.parent:
-            self.parent.get_users_to_root().update(users)
-        return users
+            for user in self.parent.get_users_to_root():
+                if user.email not in users:
+                    users[user.email] = user
+                elif users[user.email].is_parent_role_greater(user.role):
+                    # TODO: w/ 5.2 change this to use permission group ids. Using legacy roles for testing!!!
+                    users[user.email] = user
+        return users.values()
 
     # Moving groups
     async def _move_users_in_group(self, modify_users, remove_user=False):
@@ -175,3 +180,9 @@ class User(db.Model):
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def is_parent_role_greater(self, role_from_parent):
+        role_access_by_index = ['owner', 'admin', 'cloudAdmin', 'advancedViewer', 'viewer', 'liveViewer', '']
+        if self.role == role_from_parent:
+            return False
+        return role_access_by_index.index(role_from_parent) < role_access_by_index.index(self.role)
