@@ -234,8 +234,12 @@ export class NxDebugComponent {
                     link,
                     openClientTimeout,
                     openMobileClientTimeout,
-                    () => { alert('Protocol not recognized'); },
-                    () => { alert('Ok - protocol is working'); }
+                    () => {
+                        alert('Protocol not recognized');
+                    },
+                    () => {
+                        alert('Ok - protocol is working');
+                    }
                 );
             });
     }

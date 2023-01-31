@@ -157,7 +157,9 @@ export class Process {
     // Handler method wrappers
 
     public onSuccess = async res => {
-        if (this.canceled) { return; }
+        if (this.canceled) {
+            return;
+        }
         const data = await res;
         const error = this.checkResponseHasError(data);
         if (error || data?.error && data.error !== '0') {

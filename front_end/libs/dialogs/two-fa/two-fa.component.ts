@@ -186,7 +186,9 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
             keepalive: true
         };
         fetch(`${this.apiBase}/account/security`, options)
-            .catch(() => { console.error('something went wrong'); });
+            .catch(() => {
+                console.error('something went wrong');
+            });
     };
 
     ngOnInit(): void {
@@ -563,6 +565,10 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
         this.clipboardService.copy(this.newCodes.join('\n'));
     }
 
-    lock = (): void => { this.dialogRef.disableClose = true; };
-    unlock = (): void => { this.dialogRef.disableClose = false; };
+    lock = (): void => {
+        this.dialogRef.disableClose = true;
+    };
+    unlock = (): void => {
+        this.dialogRef.disableClose = false;
+    };
 }

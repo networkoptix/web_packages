@@ -497,7 +497,9 @@ export class NxCloudApiService {
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
         return this.http.post(apiBase + '/account/loginCode', { code }).pipe(
-            tap((account: Account) => { this.currentAccount = account; }),
+            tap((account: Account) => {
+                this.currentAccount = account;
+            }),
             this.logRocketIdentifyUser
         ).toPromise();
     }

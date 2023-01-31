@@ -74,10 +74,14 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
 
     // Iterates through all the children with the target class and sets their height to the height of the largest one.
     matchHeight(parent: HTMLElement, className: string): void {
-        if (!parent) return;
+        if (!parent) {
+            return;
+        }
 
         const children = parent.getElementsByClassName(className);
-        if (!children) return;
+        if (!children) {
+            return;
+        }
 
         // Resets the height style so that the heights have to recalculate.
         Array.from(children).forEach((child: HTMLElement) => {
@@ -90,7 +94,9 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
             maxHeight = Math.max(maxHeight, child.getBoundingClientRect().height);
         });
 
-        Array.from(children).forEach((child: HTMLElement) => { child.style.height = `${maxHeight}px`; });
+        Array.from(children).forEach((child: HTMLElement) => {
+            child.style.height = `${maxHeight}px`;
+        });
     }
 
     ngOnDestroy(): void {

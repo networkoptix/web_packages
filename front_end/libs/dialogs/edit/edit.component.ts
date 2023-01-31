@@ -227,7 +227,9 @@ export class EditModalContent {
                     toast.success,
                 );
                 this.close({ id: this.values.id, action: 'delete' });
-            }, err => { console.error(err); });
+            }, err => {
+                console.error(err);
+            });
     }
 
     close = (result?: { id: string; action: string }): void => {

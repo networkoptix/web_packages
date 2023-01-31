@@ -130,7 +130,9 @@ export class TimelinePrimaryRulerCanvasRendererService {
             this._prevIntervals = [...intervals];
         }
 
-        if (!intervals || !intervals.length) return [];
+        if (!intervals || !intervals.length) {
+            return [];
+        }
 
         const smallestInterval = intervals[0];
         const intervalsReversed = [...intervals].reverse();

@@ -103,7 +103,9 @@ export class NxMonitoringGraphComponent implements OnChanges {
                 response.reply && response.reply.statistics.forEach(data => {
                     const seriesData = this.multi.find(series => series.name === data.description);
                     if (!seriesData) {
-                        const series = Array.from({ length: 50 }, (_, i) => { return { name: i + 1, value: 0 }; });
+                        const series = Array.from({ length: 50 }, (_, i) => {
+                            return { name: i + 1, value: 0 };
+                        });
                         this.multi.push({
                             name: data.description,
                             series

@@ -112,7 +112,9 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         s === 1 means we started playing.
         s > 1 means the player fired a waiting event and we need to move the time back by that much.
          */
-        setTimeout(() => { this.showOverlay = s === 0; }, 0);
+        setTimeout(() => {
+            this.showOverlay = s === 0;
+        }, 0);
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
             setTimeout(() => this.playback.playArchive(

@@ -162,7 +162,9 @@ export class RestartServerModalContent {
                                         throw Error('system is offline still');
                                     }
                                 })
-                                .catch(err => { throw Error(err); });
+                                .catch(err => {
+                                    throw Error(err);
+                                });
                         }),
                         retryWhen(errors => {
                             /** If single server system or only online server, system goes offline

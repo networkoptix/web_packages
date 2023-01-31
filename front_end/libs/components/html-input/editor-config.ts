@@ -15,7 +15,9 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
 
     for (let i = 0; i < items.length; i++) {
         // Skip content if not image
-        if (!items[i].type.includes('image')) continue;
+        if (!items[i].type.includes('image')) {
+            continue;
+        }
         // Retrieve image on clipboard as blob
         const blob = items[i].getAsFile();
 

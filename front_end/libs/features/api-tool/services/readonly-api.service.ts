@@ -29,8 +29,12 @@ export class NxReadonlyAPIService {
     readonlyAPIStore: Store<ReadOnlyAPIStore> = {};
     readonlyAPIIDs: number[] = []; // Used only to get the first readonlyAPI if none is specified
 
-    get currentReadonlyAPI() { return this.currentReadonlyAPI$.value; }
-    set currentReadonlyAPI(api: ReadOnlyAPIStore) { this.currentReadonlyAPI$.next(api); }
+    get currentReadonlyAPI() {
+        return this.currentReadonlyAPI$.value;
+    }
+    set currentReadonlyAPI(api: ReadOnlyAPIStore) {
+        this.currentReadonlyAPI$.next(api);
+    }
 
     queryParams: Params;
 
@@ -45,7 +49,9 @@ export class NxReadonlyAPIService {
     }
 
     async getReadonlyAPIs(): Promise<void> {
-        if (!this.isEnabled) return;
+        if (!this.isEnabled) {
+            return;
+        }
 
         const readonlyAPIs = await this.api.getReadOnlyAPIs().toPromise();
         for (const API of readonlyAPIs.data) {
@@ -55,7 +61,9 @@ export class NxReadonlyAPIService {
     }
 
     async getReadonlyAPI(id: number) {
-        if (!this.isEnabled) return false;
+        if (!this.isEnabled) {
+            return false;
+        }
 
         if (this.readonlyAPIStore[id]) {
             this.currentReadonlyAPI = this.readonlyAPIStore[id];
@@ -129,7 +137,9 @@ export class NxReadonlyAPIService {
     }
 
     async getReadonlyAPIByQueryParams() {
-        if (!this.isEnabled) return false;
+        if (!this.isEnabled) {
+            return false;
+        }
 
         const systemParam = this.queryParams.system;
         if (systemParam && !isUUID(systemParam)) {
@@ -147,7 +157,9 @@ export class NxReadonlyAPIService {
     }
 
     async setReadonlyAPI(id: number = null) {
-        if (!this.isEnabled) return false;
+        if (!this.isEnabled) {
+            return false;
+        }
 
         if (id) {
             return this.getReadonlyAPI(id);

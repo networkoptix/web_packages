@@ -1044,7 +1044,9 @@ export interface Bookmark {
 export interface BookmarksTagsParams extends Omit<HiddenParams, '_with' | '_orderBy'> {
     limit?: number;
 }
-export interface BookmarksTags { [tagName: string]: number }
+export interface BookmarksTags {
+    [tagName: string]: number;
+}
 
 export type DevicesParams = Omit<HiddenParams, '_local'>;
 export interface Device {

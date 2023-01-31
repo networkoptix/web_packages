@@ -33,7 +33,9 @@ export class Nx503Component implements OnInit {
             .then(result => {
                 this.compTemplate =
                     this.sanitizer.bypassSecurityTrustHtml(result);
-            }).catch(ex => { console.error(ex); });
+            }).catch(ex => {
+                console.error(ex);
+            });
     }
 
     ngAfterViewInit(): void {

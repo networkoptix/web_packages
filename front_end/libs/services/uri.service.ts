@@ -119,7 +119,9 @@ export class NxUriService {
                 relativeTo: this.route,
                 replaceUrl: false
             })
-            .catch(error => { console.error(error); });
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     /**

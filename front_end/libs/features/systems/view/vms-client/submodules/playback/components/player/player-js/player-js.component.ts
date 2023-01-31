@@ -50,7 +50,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     #videojs: videojs;
 
     async initPlayer(): Promise<void> {
-        if (this.player) return;
+        if (this.player) {
+            return;
+        }
 
         let videoJsAutoRetry = 0;
         let stallTimer;

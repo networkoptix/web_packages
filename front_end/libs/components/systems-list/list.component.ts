@@ -204,7 +204,9 @@ export class NxSystemsListComponent implements OnInit {
                         this.systems[0];
                     this.menusService.updateActiveSystemMenu(activeSystem);
                 })
-                .catch(err => { console.error(err); });
+                .catch(err => {
+                    console.error(err);
+                });
         }
     };
 }

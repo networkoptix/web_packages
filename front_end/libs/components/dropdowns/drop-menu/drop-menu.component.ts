@@ -125,7 +125,9 @@ export class NxDropMenu extends BaseDropdown {
      * @param event$ - {width: number}
      */
     handleResize({ width }): void {
-        if (!width) return;
+        if (!width) {
+            return;
+        }
         const minWidth = 160;
 
         // Determines columns and columnWidths

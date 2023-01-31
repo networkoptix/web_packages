@@ -35,7 +35,9 @@ export class ChangeStorageModalContent {
             .createProcess(
                 () => this.deleteAnalyticsDataProcess(),
                 { ignoreError: true },
-                () => { this.close('changeOk'); },
+                () => {
+                    this.close('changeOk');
+                },
                 err => {
                     console.error(err);
                     this.close('error');
@@ -46,7 +48,9 @@ export class ChangeStorageModalContent {
             .createProcess(
                 () => this.keepAnalyticsDataProcess(),
                 { ignoreError: true },
-                () => { this.close('changeOk'); },
+                () => {
+                    this.close('changeOk');
+                },
                 err => {
                     console.error(err);
                     this.close('error');

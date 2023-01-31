@@ -33,7 +33,9 @@ export class NxInfoBlockComponent implements OnInit {
     }
 
     getLookup(columnIndex: number, blockIndex: number, lineIndex: number) {
-        if (!this.heightCache) return undefined;
+        if (!this.heightCache) {
+            return undefined;
+        }
         return this.heightCache[`${columnIndex}-${blockIndex}-${lineIndex}`];
     }
 

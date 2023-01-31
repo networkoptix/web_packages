@@ -281,12 +281,16 @@ module.exports = {
                 'array-bracket-newline': ['error', 'consistent'],
                 'array-element-newline': ['error', 'consistent'],
                 'arrow-parens': ['error', 'as-needed'],
+                'brace-style': ['error', '1tbs', {
+                    allowSingleLine: false,
+                }],
                 camelcase: ['error', {
                     properties: 'never',
                     ignoreDestructuring: true,
                 }],
                 'comma-dangle': ['error', 'only-multiline'],
                 // 'comma-dangle': ['error', 'always-multiline'],
+                curly: ['error', 'all'],
                 eqeqeq: ['error', 'always'],
                 indent: ['error', 4, {
                     SwitchCase: 1,
@@ -385,7 +389,7 @@ module.exports = {
                 ...tsExtension('brace-style', [
                     'error',
                     '1tbs',
-                    { allowSingleLine: true },
+                    { allowSingleLine: false },
                 ]),
                 ...tsExtension('comma-dangle', ['error', 'only-multiline']),
                 ...tsExtension('comma-spacing'),

@@ -8,7 +8,9 @@ export const collectionReducer = createReducer(
     initialState,
     on(removeBook, (state, { bookId }) => state.filter(id => id !== bookId)),
     on(addBook, (state, { bookId }) => {
-        if (state.includes(bookId)) return state;
+        if (state.includes(bookId)) {
+            return state;
+        }
 
         return [...state, bookId];
     })

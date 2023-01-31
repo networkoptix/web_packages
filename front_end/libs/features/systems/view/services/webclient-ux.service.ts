@@ -32,7 +32,9 @@ export class WebClientUxService {
     }
 
     public set isFullScreen(nv: boolean) {
-        if (this._state.isFullScreen === nv) { return; }
+        if (this._state.isFullScreen === nv) {
+            return;
+        }
         this._state.isFullScreen = nv;
         this._state.isSidebarShown = !this._state.isFullScreen;
         this._state.isTimelineShown = !this._state.isFullScreen;

@@ -52,13 +52,17 @@ export class PlaybackAdvControlsComponent implements OnInit {
     }
 
     public playLive(): void {
-        if (!this.canPlayLive) return;
+        if (!this.canPlayLive) {
+            return;
+        }
         this.selection.reset();
         this.playback.playLive();
     }
 
     public stop(): void {
-        if (!this.canStop) return;
+        if (!this.canStop) {
+            return;
+        }
         this.playback.stop();
     }
 

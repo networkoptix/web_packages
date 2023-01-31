@@ -174,7 +174,9 @@ export class NxDevelopersMenuComponent implements OnInit {
     }
 
     handleClick(node: MenuNodeWithParent, clearSearch = false, toggleOpen = true): void {
-        if (toggleOpen) this.toggleOpen(node);
+        if (toggleOpen) {
+            this.toggleOpen(node);
+        }
         this.onClick.emit({ node, clearSearch });
     }
 
@@ -189,7 +191,9 @@ export class NxDevelopersMenuComponent implements OnInit {
     };
 
     updateSearchQuery({ query }): void {
-        if (query !== '' && query === this.searchQuery$.value) return;
+        if (query !== '' && query === this.searchQuery$.value) {
+            return;
+        }
         this.searchQuery$.next(query);
     }
 
@@ -200,11 +204,15 @@ export class NxDevelopersMenuComponent implements OnInit {
             return highlight(node.display_name || node.name, startInd, startInd + query.length);
         };
         const isSeperator = (node: MenuNodeWithParent) => {
-            if (!node) return false;
+            if (!node) {
+                return false;
+            }
             return node.name.includes('-seperator');
         };
         const search = (menuNode: MenuNodeWithParent) => {
-            if (!menuNode) return false;
+            if (!menuNode) {
+                return false;
+            }
             let inQuery = false;
             const name = menuNode.display_name.toLowerCase();
             const startInd = name.indexOf(query.toLowerCase());

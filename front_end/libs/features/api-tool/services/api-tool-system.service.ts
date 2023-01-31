@@ -67,13 +67,23 @@ export class NxAPIToolSystemService {
     loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = '';
     outDatedSystem$ = new BehaviorSubject(false);
 
-    get currentSystemId() { return this.currentSystemId$.value; }
-    set currentSystemId(systemId: string) { this.currentSystemId$.next(systemId); }
+    get currentSystemId() {
+        return this.currentSystemId$.value;
+    }
+    set currentSystemId(systemId: string) {
+        this.currentSystemId$.next(systemId);
+    }
 
-    get currentServerId() { return this.currentServerId$.value; }
-    set currentServerId(value) { this.currentServerId$.next(value); }
+    get currentServerId() {
+        return this.currentServerId$.value;
+    }
+    set currentServerId(value) {
+        this.currentServerId$.next(value);
+    }
 
-    get currentSystem() { return this._currentSystem; }
+    get currentSystem() {
+        return this._currentSystem;
+    }
     set currentSystem(system: NxSystem) {
         this._currentSystem = system;
         if (this.currentSystemId !== system.id) {
@@ -81,8 +91,12 @@ export class NxAPIToolSystemService {
         }
     }
 
-    get systemVersion() { return this.systemVersion$.value; }
-    set systemVersion(version: string) { this.systemVersion$.next(version); }
+    get systemVersion() {
+        return this.systemVersion$.value;
+    }
+    set systemVersion(version: string) {
+        this.systemVersion$.next(version);
+    }
 
     constructor(
         private configService: NxConfigService,
@@ -356,7 +370,9 @@ export class NxAPIToolSystemService {
     };
 
     setQueryParams = (param: string, newValue: string | number) => {
-        if (environment.isLocal && param === 'system') return;
+        if (environment.isLocal && param === 'system') {
+            return;
+        }
 
         const queryParams = cloneDeep(this.queryParams);
         queryParams[param] = newValue;
@@ -441,7 +457,9 @@ export class NxAPIToolSystemService {
     }
 
     useBrandingVariables(data: any) {
-        if (!data) return;
+        if (!data) {
+            return;
+        }
         const customStrings = {
             '%CLOUD_NAME%': this.CONFIG.cloudName,
             '%VMS_NAME%': this.CONFIG.vmsName,
@@ -458,7 +476,9 @@ export class NxAPIToolSystemService {
     };
 
     async getJSONFromCache(route: string, systemId: string, systemVersion: string): Promise<IndexDBCacheObject> {
-        if (this.queryParams.disableCache) return null;
+        if (this.queryParams.disableCache) {
+            return null;
+        }
         const cachedObject = await this.indexedDbService.getByKey('jsons', this.makeCacheKey(systemId, route)).pipe(take(1)).toPromise() as IndexDBCacheObject;
         if (!cachedObject) { // Not cached
             return null;

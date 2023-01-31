@@ -76,8 +76,12 @@ export class MotionMaskState {
     }
 
     rotateMatrix(matrix: number[][], rotation: number, toLandscape = false) {
-        if (!(rotation % 360)) return matrix;
-        if (rotation % 360 === 180) return matrix.reverse().map(row => row.reverse());
+        if (!(rotation % 360)) {
+            return matrix;
+        }
+        if (rotation % 360 === 180) {
+            return matrix.reverse().map(row => row.reverse());
+        }
         if (rotation % 180) {
             const rows = toLandscape
                 ? MotionMaskState.matrixRows

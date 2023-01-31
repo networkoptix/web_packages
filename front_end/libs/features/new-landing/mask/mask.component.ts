@@ -51,7 +51,9 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         // 1200 ms is an arbitrary number, it just matters that the scale is changed before the intro animation is finished
         // otherwise angular will re-check the scale and apply the initial max size to it again when it should be small
         if (!this.landingService.introAnimationFinished$.value) {
-            setTimeout(() => { this.scale = 0.15; }, 1200);
+            setTimeout(() => {
+                this.scale = 0.15;
+            }, 1200);
         }
     }
 

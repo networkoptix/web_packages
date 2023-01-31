@@ -19,7 +19,9 @@ export class Area {
      * @param zone zone to check against
      */
     public borders(zone: Area): boolean {
-        if (this.sensitivity !== zone.sensitivity) return false;
+        if (this.sensitivity !== zone.sensitivity) {
+            return false;
+        }
         return !(this.x + this.width + 1 <= zone.x ||
             this.y + this.height + 1 <= zone.y ||
             this.x - 1 >= zone.x + zone.width ||

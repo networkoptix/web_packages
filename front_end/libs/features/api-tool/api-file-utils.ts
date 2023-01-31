@@ -111,7 +111,9 @@ export const cleanJSON = (api: APIDoc) => {
 };
 
 export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: number | string) => {
-    if (APIDoc.tagsModified) return;
+    if (APIDoc.tagsModified) {
+        return;
+    }
 
     cleanJSON(APIDoc);
     addAPITypeToTags(APIDoc, type);

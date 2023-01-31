@@ -173,7 +173,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.localFilter.tags?.length) {
-            this.localFilter.tags.forEach(tag => { tag.value = false; });
+            this.localFilter.tags.forEach(tag => {
+                tag.value = false;
+            });
             if (this.params.tags) {
                 this.params.tags
                     .split(',')
@@ -327,7 +329,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     clearFilters(): void {
-        this.localFilter.tags?.forEach(filter => { filter.value = false; });
+        this.localFilter.tags?.forEach(filter => {
+            filter.value = false;
+        });
 
         this.localFilter.selects?.forEach(filter => {
             filter.selected = filter.items[0];

@@ -178,8 +178,12 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     switchMap(this.#syncEventRulesSetup),
                     untilDestroyed(this)
                 ).subscribe(
-                    settings => { this.alexaSettings = settings; },
-                    _ => { this.alexaSettings = {}; }
+                    settings => {
+                        this.alexaSettings = settings;
+                    },
+                    _ => {
+                        this.alexaSettings = {};
+                    }
                 );
         }
 

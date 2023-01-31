@@ -39,16 +39,24 @@ export class NxOpenAPIJSONService {
     }
     defaultTypeValue = 1;
 
-    get searchQuery() { return this._searchQuery; }
+    get searchQuery() {
+        return this._searchQuery;
+    }
     set searchQuery(query: string) {
         this._searchQuery = query;
         this.searchMoreShowing$.next(true);
     }
 
-    get currentAPIDoc() { return this.currentAPIDoc$.value; }
-    set currentAPIDoc(api: APIDoc) { this.currentAPIDoc$.next(api); }
+    get currentAPIDoc() {
+        return this.currentAPIDoc$.value;
+    }
+    set currentAPIDoc(api: APIDoc) {
+        this.currentAPIDoc$.next(api);
+    }
 
-    get currentType() { return this.currentType$.value; }
+    get currentType() {
+        return this.currentType$.value;
+    }
     set currentType(type: number) {
         this.APIToolService.setQueryParams('type', type.toString());
         this.currentType$.next(type);
@@ -65,14 +73,18 @@ export class NxOpenAPIJSONService {
     _activeNode: MenuNodeWithParent;
     activeAssetState = ''; // Not used yet
 
-    get activeNode() { return this._activeNode; }
+    get activeNode() {
+        return this._activeNode;
+    }
     set activeNode(node: MenuNodeWithParent) {
         this.isInfoNode = this.determineIsInfoNode(node);
         this.isMarkdownNode = this.determineIsMarkdownNode();
         this._activeNode = node;
     }
 
-    get menuNodes() { return this.menuSubject.value.nodes; }
+    get menuNodes() {
+        return this.menuSubject.value.nodes;
+    }
     set menuNodes(content: MenuNodeWithParent[]) {
         this.menuSubject.next({
             title: 'API',

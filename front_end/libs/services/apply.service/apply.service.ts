@@ -533,7 +533,9 @@ export class NxApplyService {
                     return false;
                 }
             )
-            .finally(() => { this.popupActive = false; });
+            .finally(() => {
+                this.popupActive = false;
+            });
     }
 
     canMove(): Promise<boolean> {
