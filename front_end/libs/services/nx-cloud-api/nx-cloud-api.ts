@@ -107,7 +107,7 @@ export class NxCloudApiService {
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
-    public licenseServerApiFactory: (licenseServer: string, cloudHost: string) => LicenseServerAPI;
+    public licenseServerApiFactory: (licenseServer: string, cloudHost: () => string) => LicenseServerAPI;
     public cloudStorageApi: CloudStorageAPI;
     public cloudDbApi: CloudDbAPI;
     public cloudChannelPartnersApi: ChannelPartnersApi;
@@ -131,13 +131,13 @@ export class NxCloudApiService {
         this.customClient = new CustomClientAPI(this.http, this.consoleService);
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
         const targetInstance = this.cookieService.get('cloud_instance') || '';
-        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(targetInstance);
+        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(targetInstance, () => '');
         const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code), shareReplay({ refCount: true, bufferSize: 1 }));
-        this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(targetInstance, this.CONFIG.customization);
+        this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(targetInstance, () => this.CONFIG.customization);
 
         // TODO: Remove it
         const tempPartnersInstance = 'https://nxlicensed.test.hdw.mx';
-        this.cloudChannelPartnersApi = ChannelPartnersApi.createApiFactory(this.http, this.#withFreshSession, refreshToken)(tempPartnersInstance, '');
+        this.cloudChannelPartnersApi = ChannelPartnersApi.createApiFactory(this.http, this.#withFreshSession, refreshToken)(tempPartnersInstance, () => '');
     }
 
     getSubAPI(route: ConsoleSection) {
