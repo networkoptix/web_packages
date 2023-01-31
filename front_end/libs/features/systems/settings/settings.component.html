@@ -48,7 +48,7 @@
             >
                 <nx-pre-loader *ngIf="account && !menuVisible"></nx-pre-loader>
                 <nx-menu
-                    *ngIf="menuVisible"
+                    *ngIf="account && menuVisible"
                     [ngStyle]="{ display: _menuSearchMode ? 'contents' : 'block' }"
                     [content]="content"
                     [system]="system"

@@ -10,13 +10,13 @@ import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
-import { environment } from '@environments/environment';
 import { icons, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -98,14 +98,12 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.initProcess();
 
         this.accountService
-            .get(true)
-            .then(account => {
+            .get()
+            .then(async account => {
                 if (account?.email) {
                     this.account = { ...account };
-                    if (!environment.isLocal && !this.systemsService.isPolling) {
-                        this.systemsService.getSystems(account.email);
-                    }
                     this.isUserASystemOwner();
+                    await firstValueFrom(this.systemsService.forceUpdateSystems());
 
                     setTimeout(() => {
                         // both form are inside *ngIf="account"

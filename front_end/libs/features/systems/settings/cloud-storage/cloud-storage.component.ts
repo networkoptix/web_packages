@@ -103,14 +103,14 @@ export class NxCloudStorageComponent implements OnInit {
         if (environment.isLocal) {
             this.serverSettings = '/settings/servers';
         } else {
-            settingsService.systemSubject.pipe(
+            settingsService.systemSubject$.pipe(
                 filter(system => !!system?.id),
                 take(1)).toPromise().then(system => {
                 this.serverSettings = `/systems/${system.id}/servers`;
             });
         }
 
-        settingsService.systemSubject.pipe(
+        settingsService.systemSubject$.pipe(
             filter(system => !!system),
             tap(this.initCloudStorageManager),
             switchMap(system => system.getLicenseManager()),

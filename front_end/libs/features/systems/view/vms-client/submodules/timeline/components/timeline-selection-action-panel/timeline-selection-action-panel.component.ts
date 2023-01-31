@@ -79,9 +79,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             } else {
                 this.system = this.systemService.createSystem(
                     account.email,
-                    this.vms.systemId,
-                    undefined,
-                    true
+                    this.vms.systemId
                 );
             }
         });

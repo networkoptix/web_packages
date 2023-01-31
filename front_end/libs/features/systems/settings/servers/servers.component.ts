@@ -109,7 +109,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
         this.applyService.initPageWatcher(this.applyContainerRef);
 
-        this.settingsService.systemSubject
+        this.settingsService.systemSubject$
             .pipe(
                 filter(data => data !== undefined),
                 switchMap(async system => {

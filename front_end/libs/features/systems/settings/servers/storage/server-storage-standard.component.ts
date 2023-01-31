@@ -437,7 +437,7 @@ export class NxSystemStorageComponent implements OnInit {
                         : null;
                 })
             );
-            await this.system.serverManager.initSystemMediaServers();
+            // await this.system.serverManager.initSystemMediaServers();
             const cameraSettingsToSave = this.system.cameraManager.cameras.reduce((cameras, camera) => {
                 if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
                     let retries = 5;

@@ -85,7 +85,7 @@ export class NxSystemLicenseSummaryWidget extends FirstPartyWidget<typeof NxSyst
     getSystem = async (systemId: string): Promise<NxSystem> => {
         const system = this.systemService.createSystem(this.accountService.email, systemId);
         await system.update();
-        await system.serverManager.initSystemMediaServers();
+        // await system.serverManager.initSystemMediaServers();
         const systemName = system.info.name;
         const nameUpdater = this.updateName(`${systemName} - ${
             this.card.config.refreshInterval && this.card.config.autoRefresh ? ' - ' + this.card.config.refreshInterval + 'ms' : ''

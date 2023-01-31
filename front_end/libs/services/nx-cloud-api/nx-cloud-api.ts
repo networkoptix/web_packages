@@ -7,7 +7,7 @@ import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { EMPTY, of, from, BehaviorSubject, throwError, defer } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, switchMap, map, tap, shareReplay } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
 import type {
     AuthorizeParams,
@@ -22,6 +22,7 @@ import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
 import { mapValuesToStrings } from '@utils/general';
+import { defaultHashFunction, memoizeAsync, memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 import { Account } from '../account.service/account';
 import type { IConfig } from '../nx-config/config-types';
@@ -237,6 +238,7 @@ export class NxCloudApiService {
         ).toPromise();
     }
 
+    @memoizeAsyncPersistent
     getStaticLanding() {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
@@ -245,6 +247,7 @@ export class NxCloudApiService {
         return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
+    @memoizeAsyncPersistent
     getStatic(url) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
@@ -253,20 +256,24 @@ export class NxCloudApiService {
         return this.http.get(url, httpOptions);
     }
 
+    @memoizeAsyncPersistent
     getCommonPasswords() {
         return this.http.get<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
+    @memoizeAsyncLong
     getIntegrations() {
         return this.http.get<{ data: t.Integration[] }>(apiBase + '/cms/integrations');
     }
 
+    @memoizeAsyncLong
     getIntegrationsCount() {
         return this.http.get<t.IntegrationCount>(apiBase + '/cms/integration_count');
     }
 
     @staffSWBypass
+    @memoizeAsyncLong
     getIntegrationBy(id: number, status: string) {
         let uri = apiBase + '/cms/integration/' + id;
         uri += (status) ? '?' + status : '';
@@ -274,6 +281,7 @@ export class NxCloudApiService {
         return this.http.get<Array<t.Integration>>(uri);
     }
 
+    @memoizeAsyncLong
     getIPVD() {
         return this.http.get<t.IPVDCameras>(apiBase + '/ipvd');
     }
@@ -282,13 +290,15 @@ export class NxCloudApiService {
         return this.cloudDbApi.getCode(systemId);
     }
 
+    @memoizeAsyncShort
     getSystemAuth(systemId: string) {
-        return this.cloudDbApi.getAuth(systemId);
+        return this.cloudDbApi.getAuth(systemId).pipe(filter(res => !!res), shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
     }
 
+    @memoizeAsyncShort
     getSystemToken(systemId: string): Observable<{ access_token: string, refresh_token: string }> {
         // Todo: Using cloud portal to avoid auth issue with clouddb. Need to revert this once cloudDbApi.getToken is fixed.
-        return this.http.post<{ access_token: string, refresh_token: string }>(`${apiBase}/systems/${systemId}/token`, {});
+        return this.http.post<{ access_token: string, refresh_token: string }>(`${apiBase}/systems/${systemId}/token`, {}).pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
         // return this.cloudDbApi.getToken(systemId);
     }
 
@@ -311,11 +321,13 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
+    @memoizeAsyncPersistent
     getReadOnlyAPIs() {
         return this.http.get<{ data: t.ReadOnlyAPI[] }>(apiBase + '/cms/readonly_apis');
     }
 
     @staffSWBypass
+    @memoizeAsyncPersistent
     getReadOnlyAPI(id: number) {
         return this.http.get<t.ReadOnlyAPIDetail>(apiBase + `/cms/readonly_apis/${id}`);
     }
@@ -365,10 +377,12 @@ export class NxCloudApiService {
         });
     }
 
+    @memoizeAsyncShort
     systems(systemId?: string) {
         return this.cloudDbApi.systems(systemId);
     }
 
+    @memoizeAsyncShort
     users(systemId: string) {
         return this.cloudDbApi.getCloudUsers(systemId);
     }
@@ -510,16 +524,18 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(apiBase + '/account/delete', { password }).toPromise();
     }
 
-    account = (forceUpdate = false) => {
+    @memoizeAsync(
+        defaultHashFunction,
+        forceUpdate => !!forceUpdate,
+        10 * 1000
+    )
+    account(forceUpdate = false) {
         const endpoint = apiBase + '/account';
-        this.cacheService.addToCache(endpoint);
-        let headers = new HttpHeaders();
         const params: { force?: true } = {};
         if (forceUpdate) {
-            headers = headers.set('reset-cache', 'reset');
             params.force = true;
         }
-        return this.http.get<Account>(endpoint, { headers, params })
+        return this.http.get<Account>(endpoint, { params })
             .pipe(
                 map(account => {
                     if (!account.isCloud) {
@@ -531,7 +547,7 @@ export class NxCloudApiService {
                 },
                 tap(this.logRocketIdentifyUser))
             );
-    };
+    }
 
     checkFeatureNotice = <T>(
         noticeKey: string, firstViewCallback: () => T
@@ -571,6 +587,7 @@ export class NxCloudApiService {
         return this.http.post<any>(endpoint, payload);
     }
 
+    @memoizeAsyncPersistent
     getLanguages() {
         const uri = environment.isLocal
             ? '/static/languages.json'
@@ -585,10 +602,12 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @memoizeAsyncPersistent
     getDownloads(): Promise<t.Downloads | null> {
         return this.http.get<t.Downloads | null>(apiBase + '/utils/downloads').toPromise();
     }
 
+    @memoizeAsyncPersistent
     getDownloadsHistory(build: string | undefined): Promise<t.BuildHistory | t.Build> {
         return this.http.get<t.BuildHistory | t.Build>(
             apiBase + '/utils/downloads/' + (build || 'history')
@@ -660,6 +679,7 @@ export class NxCloudApiService {
     }
 
     /* Ownership transfer */
+    @memoizeAsyncLong
     getTransfers(): Observable<t.SystemTransferInfo[]> {
         return this.http.get<t.SystemTransferInfo[]>(
             `${apiBase}/transfer/`
@@ -715,6 +735,7 @@ export class NxCloudApiService {
      *}
      * @param systemId
      */
+    @memoizeAsyncShort
     getCloudStorageUsage(systemId: string): Promise<any> {
         return this.http.get<t.CloudStorageUsage>(apiBase + '/storage/usageStats', {
             params: {
@@ -724,6 +745,7 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
+    @memoizeAsyncPersistent
     getDocumentation(name, type: t.DOC_TYPES, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string, assetVersion?: number) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
@@ -768,6 +790,7 @@ export class NxCloudApiService {
         return this.http.get<any>(route, { headers: { 'cache-request': 'true' } });
     }
 
+    @memoizeAsyncPersistent
     getDocAsset(assetId) {
         const route = `${apiBase}/cms/documentation/${assetId}`;
         return this.http.get<t.DocAsset>(route)
@@ -801,10 +824,12 @@ export class NxCloudApiService {
             });
     };
 
+    @memoizeAsyncShort
     getTimeSinceLogin() {
         return this.http.get<any>(apiBase + '/account/timeSincePassword');
     }
 
+    @memoizeAsyncShort
     getTokensFromCloud(code: string, grant_type: 'authorization_code' | 'refresh_token' = 'authorization_code', response_type: 'token' | 'code' = null) {
         response_type ||= grant_type === 'refresh_token' ? 'code' : 'token';
         const params = {
@@ -854,6 +879,7 @@ export class NxCloudApiService {
         );
     }
 
+    @memoizeAsyncShort
     getTokenInfo(token: string) {
         return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });
     }
@@ -868,6 +894,7 @@ export class NxCloudApiService {
         return this.http.post(apiBase + '/notifications/email_notification', emailNotificationPayload);
     }
 
+    @memoizeAsyncShort
     checkLicenseServer(systemId: string, licenseServer?: string) {
         const endpoint = `${apiBase}/systems/${systemId}/licenseServer`;
         const response = licenseServer ? this.http.post<t.LicenseServerInfo>(endpoint, { licenseServer }) : this.http.get<t.LicenseServerInfo>(endpoint);

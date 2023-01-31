@@ -117,7 +117,7 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.settingsService.systemSubject
+        this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
                 filter(data => data !== undefined),
@@ -125,7 +125,7 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
             .subscribe(system => {
                 this.system = system;
                 if (!this.environment.isLocal) {
-                    this.pageService.pageTitle = this.system.info.name;
+                    this.pageService.pageTitle(this.system.info.nam);
                 }
                 // Route guard did not work :( ... so doing it the old way
                 if (!this.system.userManager.permissions?.editUsers) {

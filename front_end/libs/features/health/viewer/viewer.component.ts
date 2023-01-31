@@ -207,7 +207,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         // Allow time for change detection so child components can reinitialize
         setTimeout(() => {
             this.healthService.ready = true;
-        }, 200);
+        }, 0);
         return of(true);
     }
 
@@ -552,6 +552,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     updateValues(forceUpdate = false): void {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
+            untilDestroyed(this),
             flatMap(result => this.setupReport(result))
         ).subscribe(() => { }, () => {
             if (!this.system.id) {

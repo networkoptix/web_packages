@@ -144,7 +144,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     ) {
         super(cd);
         NxThirdPartyWidgetComponent.sharedState$ ||= new SharedWidgetState(
-            systemsService.systemsSubject.asObservable() as any,
+            systemsService.systemsSubject as any,
             () => systemsService.forceUpdateSystems() as any,
             url => router.navigateByUrl(url));
     }

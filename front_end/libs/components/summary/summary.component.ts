@@ -41,7 +41,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         this.system = this.selectedSystem;
         this.getLicenses();
 
-        this.settingsService.systemSubject
+        this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
                 filter(data => data !== undefined && data.id !== this.system?.id))

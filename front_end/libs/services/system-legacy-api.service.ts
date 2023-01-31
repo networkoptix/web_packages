@@ -16,8 +16,9 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import { memoizeAsync, memoizeAsyncLong, memoizeAsyncMedium, memoizeAsyncPersistent, defaultHashFunction } from '@utils/memoize';
 
-import { apiTool } from '../variables/static-variables';
+import { apiTool, healthMonitoring } from '../variables/static-variables';
 
 import { Account } from './account.service/account';
 import { NxAppStateService } from './nx-app-state.service';
@@ -206,6 +207,9 @@ export class NxSystemAPI {
         return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
 
+    @memoizeAsync(
+        1000
+    )
     protected get<ResponseType = any>(
         url: string,
         params?: any,
@@ -356,6 +360,11 @@ export class NxSystemAPI {
         throw Error(this.notImplementedMsg);
     }
 
+    @memoizeAsync(
+        defaultHashFunction,
+        forceReload => !!forceReload,
+        10 * 1000
+    )
     public getCurrentUser(forceReload?: boolean) {
         let customHeaders;
         if (forceReload) {
@@ -434,16 +443,19 @@ export class NxSystemAPI {
         return this.get(`/api/${nonceType}`, params);
     }
 
+    @memoizeAsyncLong
     protected getRolePermissions(roleId: string) {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
+    @memoizeAsyncPersistent
     getApiDoc(type: APIDocType) {
         if (type === 'main') {
             return this.get<APIDoc>('/static/openapi_legacy.json').toPromise();
         }
     }
 
+    @memoizeAsyncPersistent
     fetchApiToolJSON(route: string) {
         return this.get<APIDoc>(`/static/${route}`).toPromise();
     }
@@ -525,6 +537,7 @@ export class NxSystemAPI {
         return this.post(`/api/execute${script}?${mode}`);
     }
 
+    @memoizeAsyncMedium
     getSystemSettings() {
         return this.get<t.Param[]>('/ec2/getSettings')
             .toPromise()
@@ -635,6 +648,7 @@ export class NxSystemAPI {
         return this.get('/api/backupControl', action && { action }).toPromise();
     }
 
+    @memoizeAsyncLong
     cameraDiagnostic(cameraId: string, type: t.CameraDiagnosticSteps) {
         return this.get('/api/doCameraDiagnosticsStep', {
             cameraId,
@@ -642,6 +656,7 @@ export class NxSystemAPI {
         }).toPromise();
     }
 
+    @memoizeAsyncLong
     getServerNetworkSettings() {
         return this.get<t.NormalResponse<t.ServerNetworkSettings>>(
             '/api/iflist'
@@ -676,6 +691,7 @@ export class NxSystemAPI {
         );
     }
 
+    @memoizeAsyncPersistent
     getSettingsDocumentation(): Promise<t.ServerDocumentation> {
         return this.get('/api/settingsDocumentation').toPromise();
     }
@@ -687,6 +703,7 @@ export class NxSystemAPI {
         return this.get<t.GetStorages[]>('/ec2/getStorages', queryParams);
     }
 
+    @memoizeAsyncLong
     public getStorageAnalytics() {
         const analyticsEndpoint = '/ec2/analyticsLookupObjectTracks?limit=1';
         const getCamerasEndpoint = `/ec2/getCamerasEx?id=${this.serverId}`;
@@ -765,6 +782,7 @@ export class NxSystemAPI {
         return this.get(url);
     }
 
+    @memoizeAsyncLong
     checkForAnalyticsData() {
         const queryParams = {
             startTime: 0,
@@ -780,6 +798,11 @@ export class NxSystemAPI {
         return this.get('/ec2/getCameraHistoryItems');
     }
 
+    @memoizeAsync(
+        defaultHashFunction,
+        useCache => !useCache,
+        10 * 1000
+    )
     getServerStats(useCache = false) {
         return this.get<t.NormalResponse<any>>(
             '/api/metrics/values',
@@ -809,6 +832,7 @@ export class NxSystemAPI {
         ).toPromise();
     }
 
+    @memoizeAsyncLong
     getAnalyticsEngines() {
         return this.get('/ec2/getAnalyticsEngines');
     }
@@ -827,10 +851,12 @@ export class NxSystemAPI {
             .catch(err => Promise.reject(err));
     }
 
+    @memoizeAsyncMedium
     getModuleInfo(): Observable<t.ModuleInformation> {
         return this.get('/api/moduleInformation');
     }
 
+    @memoizeAsyncMedium
     getModuleInfoUsingUrl(url: string): Observable<t.ModuleInformation> {
         return this.http.get<t.ModuleInformation>(
             `${url}/api/moduleInformation`
@@ -852,10 +878,12 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
+    @memoizeAsyncMedium
     getHardwareIdsOfServers() {
         return this.get('/ec2/getHardwareIdsOfServers');
     }
 
+    @memoizeAsyncMedium
     getLicenses() {
         return this.getRequestAggregator([
             'ec2/getLicenses',
@@ -977,11 +1005,13 @@ export class NxSystemAPI {
 
     /* End of Working with users */
     /* Cameras and Servers */
+    @memoizeAsyncMedium
     getCameras(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
         return this.get<t.ec2Camera>('/ec2/getCamerasEx', params);
     }
 
+    @memoizeAsyncMedium
     getCamerasWithServerTime(): Observable<t.TimeAndCameras> {
         const routes = ['ec2/getTimeOfServers', 'ec2/getCamerasEx'];
         return this.getRequestAggregator<t.TimeAndCamerasResp>(routes)
@@ -1012,6 +1042,11 @@ export class NxSystemAPI {
         });
     }
 
+    @memoizeAsync(
+        defaultHashFunction,
+        useCache => !useCache,
+        60 * 1000
+    )
     getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
         const endpoint = '/ec2/getMediaServersEx';
         return this.get<t.ec2MediaServer[]>(
@@ -1021,11 +1056,13 @@ export class NxSystemAPI {
         );
     }
 
+    @memoizeAsyncMedium
     getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
         const routes = ['/ec2/getMediaServersEx', 'ec2/getCamerasEx'];
         return this.getRequestAggregator<t.AggregatedServersAndCameras>(routes);
     }
 
+    @memoizeAsyncPersistent
     getResourceTypes() {
         return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
     }
@@ -1156,6 +1193,7 @@ export class NxSystemAPI {
     /* End of formatting urls */
 
     /* Working with archive */
+    @memoizeAsyncMedium
     getRecords(
         cameraId: string,
         startTime: number,
@@ -1221,30 +1259,37 @@ export class NxSystemAPI {
     }
 
     /* Health Monitor */
+
+    static memoizeHM = memoizeAsync(
+        defaultHashFunction,
+        forceUpdate => !!forceUpdate,
+        healthMonitoring.staleReportTimeout * 60 * 1000
+    );
+
+    @NxSystemAPI.memoizeHM
     getHealthManifest() {
         return this.get<t.Manifests>('/ec2/metrics/manifest');
     }
 
+    @NxSystemAPI.memoizeHM
     getHealthValues() {
         return this.get<t.Values>('/ec2/metrics/values');
     }
 
+    @NxSystemAPI.memoizeHM
     getHealthAlarms() {
         return this.get<t.Alarms>('/ec2/metrics/alarms');
     }
 
+    @NxSystemAPI.memoizeHM
     getAggregateHealthReport(forceUpdate = false): Observable<t.AggregatedHealthReport> {
         const endpoint = '/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms';
         const headers = {};
         const secondsSinceUpdate = ((Date.now() - this.healthService.lastUpdate) / 1000) | 0;
         const stale = secondsSinceUpdate > this.CONFIG.cloudCapabilities.healthMonitorCacheTimeout;
-        if (
-            forceUpdate ||
-            !this.cacheService.addedToCache(`${this.urlBase}${endpoint}`) ||
-            stale
-        ) {
+        this.healthService.lastUpdate = Date.now();
+        if (forceUpdate || stale) {
             this.cacheService.addToCache(`${this.urlBase}${endpoint}`);
-            this.healthService.lastUpdate = Date.now();
             headers['reset-cache'] = 'reset';
         }
 

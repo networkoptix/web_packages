@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
@@ -57,7 +58,7 @@ export class ChangeStorageModalContent {
         try {
             const {
                 reply: { settings: { metadataStorageChangePolicy } }
-            } = await this.system.updateOrGetSystemSettings().toPromise();
+            } = await firstValueFrom(this.system.updateOrGetSystemSettings());
             if (metadataStorageChangePolicy !== 'remove') {
                 await this.system.updateOrGetSystemSettings({
                     metadataStorageChangePolicy: 'remove'
@@ -73,7 +74,7 @@ export class ChangeStorageModalContent {
         try {
             const {
                 reply: { settings: { metadataStorageChangePolicy } }
-            } = await this.system.updateOrGetSystemSettings().toPromise();
+            } = await firstValueFrom(this.system.updateOrGetSystemSettings());
             if (metadataStorageChangePolicy !== 'keep') {
                 await this.system.updateOrGetSystemSettings({
                     metadataStorageChangePolicy: 'keep'

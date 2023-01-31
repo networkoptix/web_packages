@@ -188,16 +188,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 this._tryToRedirectToCamera();
             });
 
-        this.accountService.get().then(account => {
-            if (
-                account &&
-                !environment.isLocal &&
-                !this.systemsService.isPolling
-            ) {
-                this.systemsService.getSystems(account.email);
-            }
-        });
-
         this.setSystemSubscription();
     }
 
@@ -321,9 +311,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
 
             // _initSystem is called on systems subscription
-            const systemInfoFromCDB = this.systems.find(s => s.id === this.systemId);
+            const systemInfoFromCDB: NxSystemInfo = this.systems.find(s => s.id === this.systemId);
             if (systemInfoFromCDB) {
-                this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
+                this.system = this.systemService.createSystem(account.email, this.systemId);
                 this.settingsService.system = this.system;
                 if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
                     this._setInitializationState(true, true);

@@ -1,5 +1,6 @@
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import stringify from 'safe-stable-stringify';
 
 import { environment } from '@environments/environment';
 import { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -12,6 +13,7 @@ import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { alphabeticalSort } from '@utils/general';
+import { memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
@@ -19,12 +21,24 @@ import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo } from '../system-types';
-
 export class ServerManager {
+    static memoizeByServersAndConnections = memoizeDecorator(function (this: ServerManager) {
+        return stringify({
+            mediaserverConnections: Object.keys(this._mediaserverConnections),
+            servers: this.servers.map(server => server.id)
+        });
+    });
+
     readonly cutOff = 5.0;
-    mediaserverConnections: {
+
+    private _mediaserverConnections: {
         [serverId: string]: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
-    };
+    } = {};
+
+    @ServerManager.memoizeByServersAndConnections
+    public get mediaserverConnections() {
+        return this.handleInitSystemMediaServers();
+    }
 
     servers: NxSystemServer[] = [];
     moduleInfo: ModuleInfo;
@@ -38,30 +52,31 @@ export class ServerManager {
         private cloudApi: NxCloudApiService,
         private system: NxSystem,
         private locale: string,
-    ) {}
+    ) { }
 
-    initSystemMediaServers(): Promise<Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2>> {
-        if (this.mediaserverConnections && this.servers.every(({ id }) => id in this.mediaserverConnections)) {
-            return Promise.resolve(this.mediaserverConnections);
+    @ServerManager.memoizeByServersAndConnections
+    handleInitSystemMediaServers(): Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2> {
+        if (this._mediaserverConnections && this.servers.every(({ id }) => id in this._mediaserverConnections)) {
+            return this._mediaserverConnections;
         }
 
         if (this.servers.length) {
-            this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
+            this._mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
                 let unauthorizedCallback = () => Promise.resolve(true);
                 if (!environment.isLocal) {
                     unauthorizedCallback = this.system.useRest
                         ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then(tokens => {
                             (<NxSystemRestAPI> this.mediaserver)
                                 .setTokens(tokens, true)
-                                .subscribe(() => {});
+                                .subscribe(() => { });
                             return Promise.resolve(true);
                         })
                         : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then(authKeys => {
                             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                            return Promise.resolve(true);
+                            return true;
                         });
                 }
-                mediaserverConnections[server.id] = this.systemApiService
+                mediaserverConnections[server.id] ||= this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
                         this.systemId,
@@ -73,9 +88,18 @@ export class ServerManager {
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
             }, {});
-            return Promise.resolve(this.mediaserverConnections);
+            return this._mediaserverConnections;
         }
-        return Promise.reject();
+        throw new Error('No servers found');
+    }
+
+    initSystemMediaServers(): Promise<unknown> {
+        try {
+            const mediaServers = this.handleInitSystemMediaServers();
+            return Promise.resolve(mediaServers);
+        } catch (e) {
+            return Promise.reject(e);
+        }
     }
 
     getServers(): Observable<NxSystemServer[]> {
@@ -211,8 +235,8 @@ export class ServerManager {
             .catch(err => Promise.reject(err));
     }
 
-    logLevel(serverId: string): Promise<LogLevel> {
-        return this.mediaserverConnections[serverId].logLevel().toPromise();
+    async logLevel(serverId: string): Promise<LogLevel> {
+        return firstValueFrom(this.mediaserverConnections[serverId].logLevel());
     }
 
     private setLogsLegacy(serverId: string, loggers: Logger[]): Promise<void> {
@@ -248,14 +272,7 @@ export class ServerManager {
     }
 
     activateLicense(serverId: string, key: string) {
-        if (!this.mediaserverConnections) {
-            return this.initSystemMediaServers()
-                .then(() => {
-                    return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
-                });
-        } else {
-            return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
-        }
+        return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
     }
 
     renameServer(serverId: string, serverName: string): Promise<t.ChangedIdReturned> {
@@ -331,7 +348,7 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].getServerStats(useCache);
     }
 
-    getStatistics(serverId: string) {
+    getStatistics(serverId: string, pollingInterval = 0) {
         return this.mediaserverConnections[serverId].getStatistics();
     }
 

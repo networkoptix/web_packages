@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { forkJoin, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { delay, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -36,14 +36,14 @@ export class NxSystemLicensesComponent implements OnInit {
 
     // Constructor and class initialization methods
     private setupDefaults(): void {
-        this.settingsService.systemSubject
+        this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
                 filter(data => data !== undefined && data.id !== this.system?.id))
             .subscribe((system: NxSystem) => {
                 this.system = system;
                 this.updateLicenses();
-                this.updateMediaServers();
+                // this.updateMediaServers();
             });
     }
 
@@ -56,30 +56,30 @@ export class NxSystemLicensesComponent implements OnInit {
             });
     }
 
-    private updateMediaServers(): void {
-        this.resetSystem$.next(true);
-        this.system.infoSubject
-            .pipe(
-                distinctUntilChanged(),
-                map(system => {
-                    if (!system.servers || system.servers.length === 0) {
-                        throw new Error();
-                    }
-                }),
-                retryWhen(err => err.pipe(delay(1000))),
-                untilDestroyed(this),
-                takeUntil(this.resetSystem$),
-            )
-            .subscribe(() => {
-                if (this.system.currentServerNotBusy) {
-                    this.system.serverManager
-                        .initSystemMediaServers()
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
-            });
-    }
+    // private updateMediaServers(): void {
+    //     this.resetSystem$.next(true);
+    //     this.system.infoSubject
+    //         .pipe(
+    //             distinctUntilChanged(),
+    //             map(system => {
+    //                 if (!system.servers || system.servers.length === 0) {
+    //                     throw new Error();
+    //                 }
+    //             }),
+    //             retryWhen(err => err.pipe(delay(1000))),
+    //             untilDestroyed(this),
+    //             takeUntil(this.resetSystem$),
+    //         )
+    //         .subscribe(() => {
+    //             if (this.system.currentServerNotBusy) {
+    //                 this.system.serverManager
+    //                     .initSystemMediaServers()
+    //                     .catch(error => {
+    //                         console.error(error);
+    //                     });
+    //             }
+    //         });
+    // }
 
     constructor(
         configService: NxConfigService,
@@ -164,9 +164,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private addLicenseSummary(item): void {
         // for license summary block
-        const type = typeof item.info.type === 'function'
-            ? item.info.type()
-            : item.info.type;
+        const type = item.info.type;
         const license = this.licenseSummaries.find(ls => ls.type === type);
 
         let avail = parseInt(item.info.count) || 0;
@@ -193,9 +191,9 @@ export class NxSystemLicensesComponent implements OnInit {
     }
 
     private buildLicensesInfo(info): void {
-        const serversTime = info.times;
-        const hardwareIds = info.hardwareIds.reply;
-        const licensesInfo = info.licensesInfo.licenses;
+        const serversTime = info?.times || [];
+        const hardwareIds = info?.hardwareIds?.reply || [];
+        const licensesInfo = info?.licensesInfo?.licenses || [];
         this.licenseSummaries = [];
 
         if (hardwareIds.length) {
@@ -210,7 +208,7 @@ export class NxSystemLicensesComponent implements OnInit {
                 });
 
                 const server: NxSystemServer | any = (boundServer)
-                    ? this.system.servers.find(server => server.id === boundServer.serverId)
+                    ? this.system.servers.find(server => server.id === boundServer.serverId) || {}
                     : {};
 
                 if (Object.keys(server).length) {
@@ -231,14 +229,14 @@ export class NxSystemLicensesComponent implements OnInit {
                             : this.LANG.license.info.error;
 
                     // monkey patch -> turn off all NVR licenses and then flip only the one with higher channels
-                    if (item.info.type() === this.LANG.license.licenseTypeTitles.NVR) {
+                    if (item.info.type === this.LANG.license.licenseTypeTitles.NVR) {
                         if (maxNvrChannels < +item.info.count) {
                             maxNvrChannels = +item.info.count;
                         }
                         item.info.status = this.LANG.license.info.error;
                     }
                     // monkey patch -> turn off all STARTER licenses and then flip only the one with higher channels
-                    if (item.info.type() === this.LANG.license.licenseTypeTitles.Starter) {
+                    if (item.info.type === this.LANG.license.licenseTypeTitles.Starter) {
                         if (maxStarterChannels < +item.info.count) {
                             maxStarterChannels = +item.info.count;
                         }
@@ -257,14 +255,14 @@ export class NxSystemLicensesComponent implements OnInit {
             // since it's not possible to register new one with fewer channels
             // it's safe to assume that last one is the active
             const nvrs = licensesInfo.filter(item => {
-                return item.info.type() === this.LANG.license.licenseTypeTitles.NVR;
+                return item.info.type === this.LANG.license.licenseTypeTitles.NVR;
             });
             if (nvrs.length) {
                 nvrs[nvrs.length - 1].info.status = this.LANG.license.info.ok;
             }
 
             const starters = licensesInfo.filter(item => {
-                return item.info.type() === this.LANG.license.licenseTypeTitles.Starter;
+                return item.info.type === this.LANG.license.licenseTypeTitles.Starter;
             });
             if (starters.length) {
                 starters[starters.length - 1].info.status = this.LANG.license.info.ok;
@@ -276,11 +274,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private getServerInfo(): void {
         if (this.system.currentServerNotBusy) {
-            forkJoin({
-                times: this.system.getServerTimes(),
-                hardwareIds: this.system.getHardwareIdsOfServers(),
-                licensesInfo: this.system.getLicenses()
-            }).subscribe(info => {
+            this.system.getAggregateLicenseInfo().subscribe(info => {
                 this.buildLicensesInfo(info);
             });
         }

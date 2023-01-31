@@ -1,4 +1,4 @@
-import type { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 import type { RebuildArchiveResponse } from '@services/system-api.types';
 
@@ -67,7 +67,7 @@ export class StorageManager extends StorageState {
     }
 
     async getBackupState(serverId: string) {
-        const settings = (await this.system.updateOrGetSystemSettings().toPromise()).reply?.settings;
+        const settings = (await firstValueFrom(this.system.updateOrGetSystemSettings())).reply?.settings;
         try {
             const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
             await this.system.cameraManager.updateSystemServersCameras();
@@ -93,9 +93,9 @@ export class StorageManager extends StorageState {
         const backup = backupType !== 'BackupManual';
         const custom = backup && (
             backupType === 'BackupSchedule' ||
-                !this.system.cameraManager.cameras.every(({ backupType }) => ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType)) ||
-                settings?.backupNewCamerasByDefault !== 'true' ||
-                 !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(settings?.backupQualities)
+            !this.system.cameraManager.cameras.every(({ backupType }) => ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType)) ||
+            settings?.backupNewCamerasByDefault !== 'true' ||
+            !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(settings?.backupQualities)
         );
         return { backup, custom };
     }

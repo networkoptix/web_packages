@@ -288,7 +288,7 @@
         <nx-system-standard-admin-component
             *ngIf="system.isAdmin"
             [system]="system"
-            [settings]="settingsForSystem"
+            [settings]="settingsForSystem$ | async"
         >
         </nx-system-standard-admin-component>
 

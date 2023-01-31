@@ -83,7 +83,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
                 await this.systemsService.getSystemAsPromise(this.systemId);
                 this.system = this.systemService.createSystem(this.accountService.account.email, this.systemId);
                 await this.system.update();
-                await this.system.serverManager.initSystemMediaServers();
+                // await this.system.serverManager.initSystemMediaServers();
             }
 
             if (this.system && this.selectedServerId) {

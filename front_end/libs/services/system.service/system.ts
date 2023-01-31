@@ -1,11 +1,14 @@
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { memoize } from 'lodash-es';
 import {
     BehaviorSubject,
     Subscription,
-    Observable
+    Observable,
+    forkJoin
 } from 'rxjs';
-import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
+import { auditTime, catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -19,6 +22,7 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { cleanId, KeyFilter } from '@utils/general';
+import { memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -190,7 +194,7 @@ export class NxSystem {
         }
     }
 
-    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string): void {
+    initSystem = memoize((currentUserEmail: string, systemId?: string, serverId?: string, userId?: string): void => {
         this.systemIdInit = systemId;
         this.serverIdInit = serverId;
         this.userIdInit = userId;
@@ -236,9 +240,9 @@ export class NxSystem {
         );
 
         this.storageManager = new StorageManager(this);
-    }
+    }, (...args) => stringify(args));
 
-    updateSystemAuth(force = true) {
+    updateSystemAuth = (force = true) => {
         if (environment.isLocal || !force && this.mediaserver?.authGet) { // no need to update
             return Promise.resolve(true);
         }
@@ -249,9 +253,15 @@ export class NxSystem {
         }).catch(() => {
             this.lostConnection = true;
         });
-    }
+    };
 
-    updateToken(force = true) {
+    updateToken = async (force = true) => {
+        if (!this.mediaserver) {
+            if (!this.serverManager) {
+                return '';
+            }
+            // await this.serverManager.initSystemMediaServers();
+        }
         const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
         if (environment.isLocal || !force && accessToken) {
             return Promise.resolve(accessToken);
@@ -266,7 +276,7 @@ export class NxSystem {
             this.lostConnection ||= this.isOnline;
             return '';
         });
-    }
+    };
 
     /**
      * @deprecated Should be replaced with direct reference to userManager
@@ -369,7 +379,7 @@ export class NxSystem {
                 try {
                     directCapabilities = (await this.getSystemCapabilities()) || {};
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
-                } catch (e) {}
+                } catch (e) { }
                 if (this.info) {
                     Object.assign(this.info, response); // Update
                 } else {
@@ -420,11 +430,11 @@ export class NxSystem {
             if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable &&
-                    this.systemPoll.pipe(auditTime(1000)).subscribe(() => {
+                    this.systemPoll.pipe(auditTime(100)).subscribe(() => {
                         this.systemInfo = this;
                     });
             } else {
-                setTimeout(() => this.startPoll(systemId), 1000);
+                setTimeout(() => this.startPoll(systemId), 50);
             }
         } else if (!systemId || this.id !== systemId) {
             this.subscriberCount++;
@@ -677,6 +687,10 @@ export class NxSystem {
                 return this.mediaserver.getServerTimes().toPromise()
                     .then(
                         r => {
+                            if (!r?.reply) {
+                                this.attempts++;
+                                return this.attempts < apiRequestAttempts ? this.getServerTimes() : Promise.resolve([]);
+                            }
                             this.attempts = 0;
                             const now = Date.now();
                             return r.reply.map(i => ({
@@ -892,6 +906,29 @@ export class NxSystem {
         actionParams: JSON.stringify(actionParams),
         eventCondition: JSON.stringify(eventCondition)
     });
+
+    private updateLicenses$ = new BehaviorSubject(0);
+
+    @memoizeDecorator(function (this: NxSystem) {
+        return stringify({
+            servers: this.serverManager.servers.map(server => server.id)
+        });
+    })
+    private aggregateLicenseFactory() {
+        return this.updateLicenses$.pipe(
+            switchMap(() => forkJoin({
+                times: this.getServerTimes(),
+                hardwareIds: this.getHardwareIdsOfServers(),
+                licensesInfo: this.getLicenses()
+            })),
+            shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 60 * 1000 })
+        );
+    }
+
+    public getAggregateLicenseInfo() {
+        this.updateLicenses$.next(Date.now());
+        return this.aggregateLicenseFactory();
+    }
 
     /**
      * Methods and properties below need to be refactored and moved to respective manager classes.

@@ -841,7 +841,7 @@ export class NxLayoutGridComponent {
         distinctUntilChanged(),
         switchMap(serverId => timer(0, 1000)
             .pipe(
-                switchMap(() => this.system.serverManager.initSystemMediaServers()),
+                // switchMap(() => this.system.serverManager.initSystemMediaServers()),
                 switchMap(() => this.system.serverManager.getStatistics(serverId)),
                 map(({ reply, errorString: error }) => ({ error, statistics: reply.statistics?.map(({ description, value }) => ({ description, value: `${(value * 100).toFixed(2)}%` })) })),
                 startWith(null),

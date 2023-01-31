@@ -192,8 +192,11 @@ export class CloudAccount extends BaseAccount {
     }
 
     async requireLogin(): Promise<void | Account> {
-        await this.sleep(1000);
         return this.get(false)
+            .catch(async () => {
+                await this.sleep(1000);
+                return this.get(false);
+            })
             .then(account => {
                 if (account === null) {
                     this.logoutHelper(true, true);

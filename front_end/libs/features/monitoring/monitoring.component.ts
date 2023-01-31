@@ -141,16 +141,25 @@ export class NxMonitoringComponent implements OnInit {
             this.systemOnline = this.system.isOnline;
 
             if (this.systemOnline) {
-                this.system.serverManager.initSystemMediaServers()
-                    .then(() => {
-                        this.system.infoSubject
-                            .pipe(
-                                untilDestroyed(this),
-                                takeUntil(this.destroy$)
-                            )
-                            .subscribe(() => {
-                                this.updateMonitor(this.system);
-                            });
+                // this.system.serverManager.initSystemMediaServers()
+                //     .then(() => {
+                //         this.system.infoSubject
+                //             .pipe(
+                //                 untilDestroyed(this),
+                //                 takeUntil(this.destroy$)
+                //             )
+                //             .subscribe(() => {
+                //                 this.updateMonitor(this.system);
+                //             });
+                //     });
+
+                this.system.infoSubject
+                    .pipe(
+                        untilDestroyed(this),
+                        takeUntil(this.destroy$)
+                    )
+                    .subscribe(() => {
+                        this.updateMonitor(this.system);
                     });
             }
 

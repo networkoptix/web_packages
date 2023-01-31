@@ -19,6 +19,7 @@ import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
@@ -270,7 +271,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                                     return throwError(error);
                                 }),
                                 switchMap(res => {
-                                    this.setTokens(res, true).subscribe(() => {});
+                                    this.setTokens(res, true).subscribe(() => { });
                                     return of('');
                                 })
                             );
@@ -356,6 +357,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    @memoizeAsync(
+        defaultHashFunction,
+        () => false,
+        1000
+    )
     protected get<ResponseType = any>(
         url: string,
         params?: any,
@@ -458,6 +464,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
+    @memoizeAsync(
+        defaultHashFunction,
+        forceReload => !!forceReload,
+        10 * 1000
+    )
     public getCurrentUser(forceReload?: boolean) {
         let customHeaders;
         if (forceReload) { // Clean cache to
@@ -565,7 +576,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     );
                 }),
                 tap(systemTokens => {
-                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => {});
+                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => { });
                 })
             );
     }

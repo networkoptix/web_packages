@@ -488,7 +488,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.settingsSubscription = this.settingsService.systemSubject
+        this.settingsSubscription = this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
                 filter(data => data !== undefined && data.id !== this.system?.id)
@@ -552,14 +552,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
-                            if (
-                                this.system &&
-                                this.system.cameraManager.cameras &&
-                                this.system.cameraManager.cameras.length
-                            ) {
-                                this.system.serverManager
-                                    .initSystemMediaServers().catch(_ => { });
-                            }
+                            // if (
+                            //     this.system &&
+                            //     this.system.cameraManager.cameras &&
+                            //     this.system.cameraManager.cameras.length
+                            // ) {
+                            //     this.system.serverManager
+                            //         .initSystemMediaServers().catch(_ => { });
+                            // }
                             if (!this.applyService.locked) {
                                 this.setCamera();
                             }
@@ -709,7 +709,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 )),
                 retry(5),
                 delay(cameraCredentialUpdateTimeout),
-                tap(_ => this.settingsService.systemSubject.next(this.system)),
+                tap(_ => this.settingsService.systemSubject$.next(this.system)),
                 catchError(err => {
                     console.error(err);
                     return of(err);

@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -30,6 +30,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { SystemConfigSettings } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -78,7 +79,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     connectToCloudProcess: Process;
     disconnectProcess: Process;
 
-    settingsForSystem;
+    settingsForSystem$: Observable<SystemConfigSettings>;
     systemName: string;
     systemNameFormWatcher: FormWatcher;
     systemNameProcess: Process;
@@ -172,7 +173,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private systemsService: NxSystemsService,
-        private settingsService: NxSettingsService,
+        public settingsService: NxSettingsService,
         private menuService: NxMenuService,
         private router: Router,
         private route: ActivatedRoute,
@@ -207,7 +208,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.settingsServiceSubscription.unsubscribe();
         }
         this.settingsServiceSubscription = this.settingsService
-            .systemSubject
+            .systemSubject$
             .pipe(distinctUntilChanged())
             .subscribe(system => {
                 if (!system) {
@@ -220,7 +221,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.systemSubscription.unsubscribe();
                 }
                 this.systemSubscription = system.infoSubject
-                    .pipe(auditTime(this.CONFIG.system.auditTime))
+                    // .pipe(auditTime(this.CONFIG.system.auditTime))
                     .subscribe(system => {
                         if (!system) return;
                         if (
@@ -247,24 +248,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             this.setNameAndTitle();
                         }
 
-                        if (
-                            !this.environment.isLocal ||
-                            (
-                                this.environment.isLocal &&
-                                this.system.userManager.permissions.isAdmin
-                            )
-                        ) {
-                            this.settingsSubscription = this.system
-                                .updateOrGetSystemSettings()
-                                .subscribe((response: any) => {
-                                    if (response.reply) {
-                                        this.settingsForSystem = response.reply.settings;
-                                    }
-                                }, err => {
-                                    this.settingsForSystem = false;
-                                    console.error(err);
-                                });
-                        }
                         // TODO: In develop add a store for transfers.
                         if (this.ownershipTransferEnabled && !environment.isLocal) {
                             this.cloudApiService.getTransfers()
@@ -275,6 +258,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 });
                         }
                     });
+                if (
+                    !this.environment.isLocal ||
+                        (
+                            this.environment.isLocal &&
+                            this.system.userManager.permissions.isAdmin
+                        )
+                ) {
+                    this.settingsForSystem$ = this.settingsService.getUpdatedSettings().pipe(untilDestroyed(this));
+                }
             });
 
         this.initProcesses();

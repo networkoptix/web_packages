@@ -8,7 +8,6 @@ import {
     Router,
 } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -35,11 +34,13 @@ export class TwofaGuard implements CanActivate {
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const canActivateSubject = new Subject<boolean>();
         this.systemsService.systemsSubject
-            .pipe(take(1))
             .subscribe(async (systems: NxSystemInfo[]) => {
                 const { systemId } = route.params;
                 const systemInfo = systems.find(system => system.id === systemId);
-                const account: Account = await this.accountService.get(true);
+                let account: Account = await this.accountService.get();
+                if (systemInfo?.system2faEnabled && !account.sessionVerified) {
+                    account = await this.accountService.get(true);
+                }
                 if (systemInfo?.system2faEnabled && !account.sessionVerified) {
                     if (!account.totpExistsForAccount) {
                         const noRedirect = this.window.location.href.endsWith(

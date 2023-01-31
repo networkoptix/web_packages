@@ -34,7 +34,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.settingsService.systemSubject
+        this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
                 filter(data => data !== undefined),
@@ -50,5 +50,5 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

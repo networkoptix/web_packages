@@ -93,9 +93,7 @@ export class SystemGuard implements CanActivate {
                 } else {
                     currSystem = this.systemService.createSystem(
                         account.email,
-                        systemId,
-                        undefined,
-                        true
+                        systemId
                     );
                 }
 

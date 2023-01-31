@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { map, delay, retryWhen, take } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -116,8 +116,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     getAdvancedSettings(): void {
-        this.system.updateOrGetSystemSettings()
-            .toPromise()
+        firstValueFrom(this.system.updateOrGetSystemSettings())
             .then((response: any) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);

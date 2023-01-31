@@ -66,14 +66,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     menuSearchable: boolean;
 
     account: Account;
-    system: NxSystem;
     gettingSystem: Process;
     systems: NxSystem[];
     deletingSystem;
 
     _menuSearchMode: boolean;
-    menuVisible: boolean;
     systemId: string;
+    menuVisible: boolean;
     systemNoAccess: boolean;
     debugMode: boolean;
     betaMode: boolean;
@@ -90,8 +89,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     get showPlaceholder(): boolean {
         return this.systemNoAccess ||
             this.show2faRequired ||
-                        this.secondaryMerge ||
+            this.secondaryMerge ||
             this.system && this.system.show404;
+    }
+
+    get system(): NxSystem {
+        return this.settingsService.system;
     }
 
     private cancelPrevious$ = new Subject();
@@ -124,7 +127,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private updateArchivesPresent(): void {
         this.system.getCameraHistoryItems().toPromise().then(response => {
             this.archivesPresent = {};
-            this.archivesPresent = response.reduce((acc, server) => {
+            this.archivesPresent = (response || {}).reduce((acc, server) => {
                 server.archivedCameras.forEach(c => {
                     acc[c] = true;
                 });
@@ -166,7 +169,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
-        private settingsService: NxSettingsService,
+        public settingsService: NxSettingsService,
         private processService: NxProcessService,
         private uriService: NxUriService,
         private menuService: NxMenuService,
@@ -199,7 +202,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = { ...this.content }; // trigger onChange
                 if (!environment.isLocal && this.system) {
                     this.system.stopPoll();
-                    this.system = undefined;
                     this.settingsService.system = undefined;
                 }
                 this.systemNoAccess = false;
@@ -351,11 +353,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private getCloudSystemInfo(): void {
-        // Starts the systems poll if starting on a system.
-        if (!this.systemsService.isPolling) {
-            this.systemsService.getSystems(this.account.email);
-        }
-
         if (this.systemSubscription) {
             this.systemInfoSubscription?.unsubscribe();
             this.systemSubscription.unsubscribe();
@@ -377,13 +374,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 if (this.systemId === this.system?.id) {
                     return;
                 }
-                this.system = this.systemService.createSystem(
+                this.settingsService.system = this.systemService.createSystem(
                     this.account.email,
-                    this.systemId,
-                    undefined,
-                    true
+                    this.route.snapshot.params.systemId
                 );
-
                 this.system.show404 = false;
                 this.gettingSystem.run().catch(() => {
                     this.systemNoAccess = true;
@@ -394,7 +388,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
                 this.systemInfoSubscription = this.system.infoSubject
                     .pipe(
-                        filter(system => system !== undefined),
+                        filter(system => system?.id === this.route.snapshot.params.systemId),
                         tap(({ isOnline }) => {
                             this.applyService.isOnline$.next(!!isOnline);
                             if (isOnline) {
@@ -429,7 +423,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         if (this.system.isAvailable) {
                             this.updateAlert();
                         }
-                        if (this.system.canViewInfo()) {
+                        if (this.system.userManager.canViewInfo()) {
                             // Makes request to get health, this is used to cache request.
                             this.system.mediaserver
                                 .getAggregateHealthReport()
@@ -438,7 +432,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                         this.updateMenu();
                     });
-
                 if (this.connectionSubscription) {
                     this.connectionSubscription.unsubscribe();
                 }
@@ -453,14 +446,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     getSystemInfo(): void {
         this.settingsService.system = undefined;
         this.accountService
-            .get(true)
+            .get()
             .then(account => {
                 if (account) {
                     this.account = account;
                     if (!environment.isLocal) {
                         this.getCloudSystemInfo();
                     } else {
-                        this.system = this.systemService.createLocalSystem(
+                        this.settingsService.system = this.systemService.createLocalSystem(
                             this.accountService.mediaServerApi,
                             account.id,
                             account.email
@@ -474,19 +467,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     this.system.info.systemName || this.system.info.name
                                 );
                             });
-
-                            if (this.systemInfoSubscription) {
-                                this.systemInfoSubscription.unsubscribe();
-                            }
-                            this.systemInfoSubscription =
-                                this.system.infoSubject
-                                    .subscribe(() => {
-                                        this.systemReady();
-                                        this.updateAlert();
-                                        this.updateMenu();
-                                    });
                         });
                     }
+
+                    this.system.infoSubject
+                        .pipe(untilDestroyed(this))
+                        .subscribe(() => {
+                            this.systemReady();
+                            this.updateAlert();
+                            this.updateMenu();
+                        });
+                    this.system.update();
                 }
             });
     }
@@ -572,7 +563,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         const { primary } = this.systemsService.systemsMerging || {};
         this.mergeTargetSystem = this.systemsService.systems
             .find(system => primary.id === system.id) ||
-                { name: this.LANG.system.mergeUnknownName };
+            { name: this.LANG.system.mergeUnknownName };
         this.secondaryMerge = true;
     }
 

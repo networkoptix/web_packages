@@ -1,8 +1,7 @@
-import { Inject, Injectable, LOCALE_ID, OnDestroy } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual } from 'lodash-es';
-import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { of, Observable, BehaviorSubject, timer, firstValueFrom, combineLatest } from 'rxjs';
+import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -10,6 +9,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxSessionService } from '@services/session.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
+import { memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
@@ -22,6 +22,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { NxPollService } from './poll.service';
 import { NxStorageService } from './storage.service';
 import type { NxSystem } from './system.service/system';
+import { NxSystemService } from './system.service/system.service';
 import type { NxSystemInfo } from './systems.service.types';
 import { NxUriService } from './uri.service';
 
@@ -35,15 +36,42 @@ interface MergeInfo {
 @Injectable({
     providedIn: 'root'
 })
-export class NxSystemsService implements OnDestroy {
+export class NxSystemsService {
     CONFIG: IConfig;
     LANG = staticLang;
-    private activeSubscription: Subscription;
-    private currentUser: string;
+    currentUser$ = new BehaviorSubject('');
     mergingSystems = new Set<string>();
-    systems: NxSystemInfo[];
     systemsPoll: Observable<System[]>;
-    systemsSubject = new ReplaySubject<NxSystemInfo[]>(0);
+    systemsSubject = this.currentUser$.pipe(
+        switchMap(() => this._getSystems()),
+        map(systems => {
+            const processedSystems = this.processSystems(systems);
+            this.sessionService.systems = processedSystems;
+            return processedSystems;
+        }),
+        tap(systems => {
+            const systemService = this.injector.get(NxSystemService);
+            for (const { stateOfHealth, id } of systems) {
+                if (stateOfHealth === 'online') {
+                    const system = systemService.createSystem(this.currentUser, id);
+                    try {
+                        (async () => {
+                            await system.update();
+                            // await system.serverManager.initSystemMediaServers();
+
+                            // Prefetch initial data
+                            firstValueFrom(system.updateOrGetSystemSettings());
+                            firstValueFrom(system.getAggregateLicenseInfo());
+                        })();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
+        }),
+        startWith(this.sessionService.systems),
+        shareReplay({ bufferSize: 1, refCount: false })
+    );
     finishedMerged: boolean = false;
     systemsMerging: MergeInfo = {
         primary: undefined,
@@ -52,6 +80,18 @@ export class NxSystemsService implements OnDestroy {
     systemsInPool: number;
 
     private _userDisconnectSystem: boolean = false;
+
+    private set currentUser(value: string) {
+        this.currentUser$.next(value);
+    }
+
+    private get currentUser(): string {
+        return this.currentUser$.value;
+    }
+
+    get systems(): NxSystemInfo[] {
+        return this.sessionService.systems;
+    }
 
     constructor(
         configService: NxConfigService,
@@ -63,16 +103,11 @@ export class NxSystemsService implements OnDestroy {
         private uriService: NxUriService,
         private sessionService: NxSessionService,
         private cloudApi: NxCloudApiService,
+        private injector: Injector,
         // private store: Store,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
-        // this.registerStoreConnection();
-        if (!environment.isLocal) {
-            this.systemsPoll = pollService.createPoll(() => this._getSystems(), updateInterval);
-        } else {
-            this.systemsSubject.next([]);
-        }
     }
 
     get userDisconnectSystem(): boolean {
@@ -81,16 +116,6 @@ export class NxSystemsService implements OnDestroy {
 
     set userDisconnectSystem(value: boolean) {
         this._userDisconnectSystem = value;
-    }
-
-    // private registerStoreConnection(): void {
-    //     this.systemsSubject.subscribe(systems => {
-    //         this.store.dispatch(SystemsActions.set({ systems }));
-    //     });
-    // }
-
-    get isPolling(): boolean {
-        return this.systemsInPool > 0;
     }
 
     processMerge(mergeInfo: MergeInfo): void {
@@ -125,26 +150,27 @@ export class NxSystemsService implements OnDestroy {
     }
 
     private _getSystems(systemId?: string): Observable<System[]> {
-        return this.cloudApi.systems(systemId);
+        return systemId ? this.singleSystem(systemId) : this.systemsList();
+    }
+
+    @memoizeAsyncShort
+    private singleSystem(systemId: string): Observable<System[]> {
+        return this.cloudApi.systems(systemId).pipe(shareReplay({ bufferSize: 1, refCount: false }));
+    }
+
+    @memoizeAsyncPersistent
+    private systemsList(): Observable<System[]> {
+        return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(switchMap(() => this.cloudApi.systems()));
     }
 
     forceUpdateSystems(userEmail?: string): Observable<NxSystemInfo[]> {
-        if (userEmail) {
-            this.currentUser = userEmail;
-        }
-
         if (environment.isLocal) {
-            this.systemsSubject.next([]);
             return of([]);
         }
 
-        return this._getSystems().pipe(
-            map(systems => {
-                this.processSystems(systems);
-                this.systemsSubject.next(this.systems);
-                return this.systems;
-            })
-        );
+        this.currentUser$.next(userEmail || this.currentUser);
+
+        return this.systemsSubject;
     }
 
     forceUpdateSystemsAsPromise(userEmail?: string): Promise<NxSystemInfo[]> {
@@ -199,44 +225,21 @@ export class NxSystemsService implements OnDestroy {
         systemId: string,
         useCache: boolean = true
     ): Promise<NxSystemInfo | System | undefined> {
-        return this.getSystem(systemId, useCache).toPromise();
+        return firstValueFrom(this.getSystem(systemId, useCache));
     }
 
     getSystems(userEmail: string): void {
+        if (this.currentUser === userEmail) {
+            return;
+        }
+
         this.currentUser = userEmail;
-        if (this.activeSubscription) {
-            this.activeSubscription.unsubscribe();
-        }
-        this.activeSubscription = this.systemsPoll
-            .pipe(
-                tap(systems => {
-                    this.systemsInPool = systems.length;
-                    this.processSystems(systems);
-                }),
-                distinctUntilChanged((a, b) => isEqual(a, b)),
-                untilDestroyed(this)
-            )
-            .subscribe((): void => {
-                this.sessionService.systems = this.systems;
-                this.systemsSubject.next(this.systems);
-            });
+        firstValueFrom(this._getSystems());
     }
 
-    stopPoll(): void {
-        if (this.activeSubscription) {
-            this.activeSubscription.unsubscribe();
-        }
-    }
-
-    ngOnDestroy(): void {
-        if (this.activeSubscription) {
-            this.stopPoll();
-        }
-    }
-
-    private processSystems(systems: System[]): void {
+    private processSystems(systems: System[]): NxSystemInfo[] {
         const sortedSystems = this.sortSystems(systems, this.currentUser);
-        this.systems = sortedSystems.map(system => {
+        return sortedSystems.map(system => {
             const isMine = system.ownerAccountEmail === this.currentUser;
             const canMerge = !!(
                 isMine && (

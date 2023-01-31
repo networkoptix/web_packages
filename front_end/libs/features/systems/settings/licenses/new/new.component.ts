@@ -68,7 +68,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     return reject('alreadyRegistered');
                 });
             } else {
-                this.system.serverManager.initSystemMediaServers();
+                // this.system.serverManager.initSystemMediaServers();
                 return this.system.serverManager
                     .activateLicense(this.selectedServer.value, this.formatLicenseKey(this.license))
                     .then((response: any) => {

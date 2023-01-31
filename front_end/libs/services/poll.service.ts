@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, timer } from 'rxjs';
-import { concatMap, takeUntil } from 'rxjs/operators';
+import { concatMap, shareReplay, takeUntil } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -40,6 +40,7 @@ export class NxPollService {
             .pipe(
                 concatMap(apiCall),
                 takeUntil(this.unsub$),
+                shareReplay({ bufferSize: 1, refCount: false })
             );
     }
 }

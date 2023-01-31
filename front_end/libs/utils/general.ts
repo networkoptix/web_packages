@@ -136,9 +136,9 @@ export function mapValuesToStrings(
     Object.entries(obj).forEach(([key, value]) => {
         if (Array.isArray(value)) {
             obj[key] = value.map(String).join(',');
-        // } else if (typeof value === 'object') {
-        //     mapValuesToStrings(value);
-        // Branch doesn't appear to do anything
+            // } else if (typeof value === 'object') {
+            //     mapValuesToStrings(value);
+            // Branch doesn't appear to do anything
         } else {
             obj[key] = String(value);
         }
@@ -161,20 +161,20 @@ export function mapValuesToStrings(
 export function pickFrom<
     S extends Record<string, any>,
     O extends Record<string, any>,
->(
-    source: S,
-    keys: (keyof S)[],
+    >(
+        source: S,
+        keys: (keyof S)[],
 ): O;
 export function pickFrom<
     S extends Record<string, any>,
     T extends Record<string, any>,
     O extends T = T,
->(
-    source: S,
-    keys: (keyof S & keyof O)[],
-    target: T,
-    updateTarget?: boolean
-): O;
+    >(
+        source: S,
+        keys: (keyof S & keyof O)[],
+        target: T,
+        updateTarget?: boolean
+    ): O;
 export function pickFrom<
     S extends Record<string, any>,
     T extends Record<string, any>,

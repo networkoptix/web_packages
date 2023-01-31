@@ -12135,7 +12135,7 @@
             "path": "cloud_portal/front_end/node_modules/safe-json-parse",
             "licenseFile": "cloud_portal/front_end/node_modules/safe-json-parse/LICENCE"
         },
-        "safe-stable-stringify@2.3.1": {
+        "safe-stable-stringify@2.4.2": {
             "licenses": "MIT",
             "repository": "https://github.com/BridgeAR/safe-stable-stringify",
             "publisher": "Ruben Bridgewater",

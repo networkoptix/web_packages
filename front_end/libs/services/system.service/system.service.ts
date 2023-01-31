@@ -9,6 +9,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { memoizeDecorator } from '@utils/memoize';
 
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxPollService } from '../poll.service';
@@ -45,12 +46,13 @@ export class NxSystemService {
         return this.system;
     }
 
+    @memoizeDecorator()
     createSystem(
         currentUserEmail: string,
         systemId: string,
-        serverId?: string,
-        skipPoll?: boolean,
-        skipSettingSystem?: boolean
+        serverId: string = null,
+        skipPoll = false,
+        skipSettingSystem = false
     ): NxSystem {
         const id = systemId || serverId;
         const cloudSystemInfo =
@@ -105,6 +107,7 @@ export class NxSystemService {
         return this.system;
     }
 
+    @memoizeDecorator()
     createLocalSystem(mediaServer: NxSystemRestAPI | NxSystemRestAPI2, userId: string, userEmail = ''): NxSystem {
         if (this.system === undefined) {
             this.system = new NxSystem(

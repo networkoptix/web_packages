@@ -21,7 +21,11 @@ export class CustomAccountProperty<T> {
         initialValue: T,
         username: string
     ): CustomAccountProperty<T> {
-        CustomAccountProperty.INSTANCES[property] ||= new CustomAccountProperty(http, property, initialValue, username);
+        if (CustomAccountProperty.INSTANCES[property]) {
+            CustomAccountProperty.INSTANCES[property].get(true, true);
+        } else {
+            CustomAccountProperty.INSTANCES[property] = new CustomAccountProperty(http, property, initialValue, username);
+        }
         return CustomAccountProperty.INSTANCES[property] as CustomAccountProperty<T>;
     }
 
@@ -53,7 +57,7 @@ export class CustomAccountProperty<T> {
                 ? saveValue(val)
                 : getValue()
             ),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: false })
         );
     }
 
