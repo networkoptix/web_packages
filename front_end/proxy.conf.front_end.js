@@ -44,6 +44,7 @@ const PROXY_CONFIG = [
             '/static/bootstrap',
             '/static/css/main.css',
             // static content from cloud
+            '/static/languages.json',
             '/static/images/logo.png',
             '/static/images/dark_logo.png',
             '/static/images/promo',

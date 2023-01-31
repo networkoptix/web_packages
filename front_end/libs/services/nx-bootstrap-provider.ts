@@ -80,6 +80,7 @@ export class NxBootstrapProvider {
     }
 
     load(): Promise<boolean> {
+        let setLangFail = false;
         return new Promise<boolean>((resolve, reject) => {
             this.CONFIG = this.configService.getConfig();
             return this.configService.getSettings().then((settings: any) => {
@@ -93,7 +94,13 @@ export class NxBootstrapProvider {
                     this.getModuleInfo()
                 ]);
             }).then(([language, moduleInfo]: any) => {
-                this.setLanguage(language);
+                // language fail may have special character or
+                // syntax error ... like use of double curly braces
+                try {
+                    this.setLanguage(language);
+                } catch (e) {
+                    setLangFail = true;
+                }
 
                 if (moduleInfo.reply) {
                     this.isNewSystem = moduleInfo.reply.serverFlags.includes('SF_NewSystem');
@@ -108,9 +115,18 @@ export class NxBootstrapProvider {
                 }
             }).catch(err => {
                 console.error(err);
-                // handle fail in app component
-                this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
-                resolve(true);
+                // some fail handling is done in app component
+                if (setLangFail) {
+                    this.languageService.currentLang = this.CONFIG.defaultLanguage;
+                    new Promise(() => {
+                        this.languageService.loadLanguage();
+                    }).then(language => {
+                        this.setLanguage(language);
+                        this.isLoaded = true;
+                        console.info('Loaded default language due to an error while setting up desired language.');
+                        resolve(true);
+                    });
+                }
             }).finally(() => {
                 this.window.document.querySelector('body').style.backgroundColor = null;
             });
