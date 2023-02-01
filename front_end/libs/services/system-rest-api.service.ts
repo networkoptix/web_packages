@@ -316,8 +316,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (useToken) {
             headers = headers.set(this.token, accessToken || this.#vmsToken || '');
         }
-
-        headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
 
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);

@@ -199,7 +199,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             map(({ serversInfo, serversRunTimeInfo }: ServerTimes): ModuleInfoRest[] => (
                 serversInfo.map(serverInfo => {
                     const runTimeInfo = serversRunTimeInfo.find(({ id }) => id === serverInfo.id);
-                    return { ...serverInfo, osTimeMs: runTimeInfo.osTimeMs, timeZoneOffsetMs: runTimeInfo?.timeZoneOffsetMs || 0 };
+                    return { ...serverInfo, osTimeMs: runTimeInfo?.osTimeMs || 0, timeZoneOffsetMs: runTimeInfo?.timeZoneOffsetMs || 0 };
                 })
             ))
         );
