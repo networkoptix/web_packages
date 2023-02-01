@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -33,7 +32,6 @@ export class NxThemeService {
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
-        private cookieService: CookieService,
         private sessionStorage: SessionStorageService,
         private localStorageService: LocalStorageService,
         @Inject(WINDOW) private window: Window,
@@ -82,7 +80,6 @@ export class NxThemeService {
             NxConfigService.isDarkTheme = e.matches;
             const theme = NxConfigService.isDarkTheme ? this.availThemes.dark : this.availThemes.light;
             this.window.document.documentElement.setAttribute('data-theme', theme);
-            this.cookieService.set('theme', theme, new Date().getDate(), '/');
         });
 
         if (loginState) {
@@ -132,7 +129,6 @@ export class NxThemeService {
                 'data-theme',
                 theme
             );
-            this.cookieService.set('theme', theme, new Date().getDate(), '/');
         } else {
             if (
                 docTheme === this.userTheme &&
@@ -147,7 +143,6 @@ export class NxThemeService {
                 'data-theme',
                 themeSelected
             );
-            this.cookieService.set('theme', themeSelected, new Date().getDate(), '/');
         }
 
         username &&
