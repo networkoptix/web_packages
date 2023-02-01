@@ -26,7 +26,12 @@ export function objectRef(this: Record<string, string>): string {
 }
 
 export function defaultHashFunction(this: { memoizationId: string; }, ...args: unknown[]): Hash {
-    return stringify(args);
+    try {
+        // Issue with Proxy objects from IConfig. Ignore first hashes.
+        return stringify(args);
+    } catch (e) {
+        return uuid();
+    }
 }
 
 export const defaultInvalidateFunction = (): false => false;

@@ -112,6 +112,7 @@ export class NxCloudApiService {
     public cloudStorageApi: CloudStorageAPI;
     public cloudDbApi: CloudDbAPI;
     public cloudChannelPartnersApi: ChannelPartnersApi;
+    public targetInstance: string;
 
     constructor(
         private configService: NxConfigService,
@@ -131,10 +132,15 @@ export class NxCloudApiService {
         // check the parameters before pushing this
         this.customClient = new CustomClientAPI(this.http, this.consoleService);
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
-        const targetInstance = this.cookieService.get('cloud_instance') || '';
-        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(targetInstance);
+        try {
+            const _targetInstance = this.cookieService.get('cloud_instance') || environment.isLocal ? this.CONFIG.cloudHost : '';
+            this.targetInstance = new URL(_targetInstance).hostname === this.window.location.hostname ? '' : _targetInstance;
+        } catch (e) {
+            this.targetInstance = '';
+        }
+        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(this.targetInstance);
         const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code), shareReplay({ refCount: true, bufferSize: 1 }));
-        this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(targetInstance, this.CONFIG.customization);
+        this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(this.targetInstance, this.CONFIG.customization);
 
         // TODO: Remove it
         const tempPartnersInstance = 'https://nxlicensed.test.hdw.mx';
@@ -570,7 +576,7 @@ export class NxCloudApiService {
     customAccountPropertyFactory<T>(property: string, usernameOrInitialValue: string | T, initialValue?: T): CustomAccountProperty<T> {
         const username = initialValue && usernameOrInitialValue ? usernameOrInitialValue as string : '';
         initialValue ||= usernameOrInitialValue as T;
-        return CustomAccountProperty.getInstance(this.http, property, initialValue, username);
+        return CustomAccountProperty.getInstance(this.http, property, initialValue, username, this.targetInstance);
     }
 
     /**

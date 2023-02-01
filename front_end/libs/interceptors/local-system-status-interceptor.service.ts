@@ -55,6 +55,16 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
 
     // appState.systemAvailable for webadmin, overlay-modal.component
     private checkIfSystemAvailable(res: HttpResponse<unknown> | HttpErrorResponse): void {
+        // Ignore external requests
+        try {
+            const url = new URL(res.url);
+            if (url.hostname !== this.window.location.hostname) {
+                return;
+            }
+        } catch (e) {
+            // Ignore invalid URLs
+        }
+
         // res might be just { type: number } and not full response
         const url = res.url && new URL(res.url, this.window.location.origin);
         if (url?.pathname.startsWith('/static')) {

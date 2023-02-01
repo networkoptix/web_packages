@@ -19,12 +19,13 @@ export class CustomAccountProperty<T> {
         http: HttpClient,
         property: string,
         initialValue: T,
-        username: string
+        username: string,
+        targetInstance: string
     ): CustomAccountProperty<T> {
         if (CustomAccountProperty.INSTANCES[property]) {
             CustomAccountProperty.INSTANCES[property].get(true, true);
         } else {
-            CustomAccountProperty.INSTANCES[property] = new CustomAccountProperty(http, property, initialValue, username);
+            CustomAccountProperty.INSTANCES[property] = new CustomAccountProperty(http, property, initialValue, username, targetInstance);
         }
         return CustomAccountProperty.INSTANCES[property] as CustomAccountProperty<T>;
     }
@@ -33,9 +34,10 @@ export class CustomAccountProperty<T> {
         private http: HttpClient,
         property: string,
         initialValue: T,
-        username: string
+        username: string,
+        targetInstance: string
     ) {
-        this.#endpoint = `${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
+        this.#endpoint = `${targetInstance}${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
         const updater$ = new Subject<T>();
 
         const saveValue = (val: T): Promise<T> => {

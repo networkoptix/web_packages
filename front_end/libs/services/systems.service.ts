@@ -1,6 +1,6 @@
 import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { of, Observable, BehaviorSubject, timer, firstValueFrom, combineLatest } from 'rxjs';
+import { of, Observable, BehaviorSubject, timer, firstValueFrom, combineLatest, identity } from 'rxjs';
 import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -43,13 +43,13 @@ export class NxSystemsService {
     mergingSystems = new Set<string>();
     systemsPoll: Observable<System[]>;
     systemsSubject = this.currentUser$.pipe(
-        switchMap(() => this._getSystems()),
+        switchMap(() => environment.isLocal ? Promise.resolve([]) : this._getSystems()),
         map(systems => {
             const processedSystems = this.processSystems(systems);
             this.sessionService.systems = processedSystems;
             return processedSystems;
         }),
-        tap(systems => {
+        environment.isLocal ? identity : tap(systems => {
             const systemService = this.injector.get(NxSystemService);
             for (const { stateOfHealth, id } of systems) {
                 if (stateOfHealth === 'online') {
@@ -69,7 +69,7 @@ export class NxSystemsService {
                 }
             }
         }),
-        startWith(this.sessionService.systems),
+        environment.isLocal ? identity : startWith(this.sessionService.systems),
         shareReplay({ bufferSize: 1, refCount: false })
     );
     finishedMerged: boolean = false;
