@@ -6,6 +6,7 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { NxSystem } from '@services/system.service/system';
 import { isUUID } from '@utils/general';
 
 import { NxAPIToolSystemService } from '../services/api-tool-system.service';
@@ -56,25 +57,17 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         public readonlyAPIService: NxReadonlyAPIService
     ) {
         this.CONFIG = this.configService.getConfig();
+
+        this.APIToolSystemService.systems.forEach(system => {
+            const disabled = !this.APIToolSystemService.systemIsOnline(system);
+            const error = disabled ? 'Offline' : '';
+            this.addSystemToDropdown(system, disabled, error);
+        });
     }
 
     ngOnInit(): void {
         this.APIToolSystemService.systemEmitter$.pipe(untilDestroyed(this), filter(systemInfo => !!systemInfo)).subscribe(({ info: system, disabled, error }) => {
-            const existingItem = this.systems.find(systemItem => systemItem.value === system.id);
-            const sysName = makeSystemName(system);
-            const displayName = makeDropdownDisplayName(sysName, error);
-            if (existingItem) {
-                existingItem.name = displayName;
-                existingItem.disabled = disabled;
-            } else {
-                this.hasSystems = true;
-                this.systems.push({
-                    value: system.id,
-                    name: displayName,
-                    disabled,
-                    icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg'
-                });
-            }
+            this.addSystemToDropdown(system, disabled, error);
         });
 
         this.APIToolSystemService.serverEmitter$.pipe(untilDestroyed(this), filter(serverInfo => !!serverInfo)).subscribe(({ info: serverInfo, disabled, error }) => {
@@ -181,4 +174,22 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         this.types = [];
         this.type = undefined;
     };
+
+    addSystemToDropdown(system: NxSystem, disabled: boolean, error: string): void {
+        const existingItem = this.systems.find(systemItem => systemItem.value === system.id);
+        const sysName = makeSystemName(system);
+        const displayName = makeDropdownDisplayName(sysName, error);
+        if (existingItem) {
+            existingItem.name = displayName;
+            existingItem.disabled = disabled;
+        } else {
+            this.hasSystems = true;
+            this.systems.push({
+                value: system.id,
+                name: displayName,
+                disabled,
+                icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg'
+            });
+        }
+    }
 }
