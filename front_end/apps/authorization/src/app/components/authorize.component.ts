@@ -485,6 +485,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 timeoutMs
             },
             res => {
+                // no success message if password restored, just returns user object
+                if (this.action === 'restore_password' && res.email) {
+                    this.errorDialog$.value && this.errorDialog$.next(false);
+                    this.confirmReset = true;
+                    this.setCurrentState('reset');
+                }
                 if (res.resultCode === 'ok') {
                     this.handleLoginSuccess({});
                 }
@@ -511,6 +517,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             { ignoreError: true, timeoutMs },
             res => {
+                if (this.action === 'restore_password' && res.email) {
+                    this.errorDialog$.value && this.errorDialog$.next(false);
+                    this.confirmReset = true;
+                    this.setCurrentState('reset');
+                }
                 if (res.resultCode === 'ok') {
                     this.handleLoginSuccess({});
                 }
