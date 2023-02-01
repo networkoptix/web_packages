@@ -361,7 +361,7 @@ button,
 
     &-selected {
         @include typography.regular13nocolor;
-        @include mixins.badge-selected(var(--btn-tag-selected-bg),
+        @include mixins.badge-selected(var(--btn-tag-selected-bg) !important,
             var(--btn-tag-selected-hover-bg),
             var(--btn-tag-selected-active-bg));
         color: var(--btn-tag-selected-color) !important;
