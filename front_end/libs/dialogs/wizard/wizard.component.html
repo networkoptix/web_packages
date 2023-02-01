@@ -7,7 +7,7 @@
 <div class="modal-body">
     <iframe
         #iframe
-        src="/static/inline.html"
+        [src]="inlineUrl | safe: 'resourceUrl'"
         height="100%"
         width="100%"
         (load)="setFocus()"

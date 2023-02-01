@@ -245,17 +245,12 @@ export class AppComponent implements AfterViewInit {
             this.appStateService.footerVisibility = false;
             return;
         } else if (bootstrapProvider.newSystem) {
-            // Cleanup any leftovers. Hard clear() cause page reload loop
-            this.cookieService.deleteAll();
-            this.localStorageService.clear('refreshToken');
-            this.localStorageService.clear('cloudAccessToken');
-            this.localStorageService.clear('cloudApiAccessToken');
-            this.localStorageService.clear('cloudApiRefreshToken');
-            // **********************************************************
+            this.cleanUp();
             this.newSystem = true;
             this.CONFIG.newSystem = true;
             this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
+
             return;
         }
 
@@ -383,6 +378,16 @@ export class AppComponent implements AfterViewInit {
         if (this.CONFIG.featureFlags.themesEnabled) {
             this.themeService.initTheme().then();
         }
+    }
+
+    cleanUp(): void {
+        // Cleanup any leftovers. Hard clear() cause page reload loop
+        this.cookieService.deleteAll();
+        this.localStorageService.clear('refreshToken');
+        this.localStorageService.clear('cloudAccessToken');
+        this.localStorageService.clear('cloudApiAccessToken');
+        this.localStorageService.clear('cloudApiRefreshToken');
+        // **********************************************************
     }
 
     headerResize(size: { width: number, height: number }): void {
