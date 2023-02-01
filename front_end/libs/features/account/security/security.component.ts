@@ -1,6 +1,7 @@
 import {
     Component,
     HostListener,
+    OnDestroy,
     OnInit,
     TemplateRef,
     ViewContainerRef
@@ -23,7 +24,7 @@ import type { NxSystemInfo } from '@services/systems.service.types';
     templateUrl: 'security.component.html',
     styleUrls: ['security.component.scss']
 })
-export class NxAccountSecurityComponent implements OnInit {
+export class NxAccountSecurityComponent implements OnInit, OnDestroy {
     LANG = staticLang;
 
     account: Account;
@@ -62,6 +63,10 @@ export class NxAccountSecurityComponent implements OnInit {
                  */
                 this.subV5Systems = systems.filter(sys => !sys.useRest);
             });
+    }
+
+    ngOnDestroy(): void {
+        this.popoverService.close();
     }
 
     toggleVerification(value: boolean): void {
