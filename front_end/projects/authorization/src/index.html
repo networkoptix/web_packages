@@ -24,9 +24,19 @@
     <body>
         <nx-auth-app-root></nx-auth-app-root>
         <script>
-            const viewType = new URLSearchParams(window.location.search).get('view_type') ?? 'web';
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewType = urlParams.get('view_type') ?? 'web';
+            const language = urlParams.get('lang');
             if (viewType !== 'web' && ['desktop', 'mobile'].includes(viewType)) {
                 document.body.classList.add(viewType === 'desktop' ? 'desktopBackground' : 'mobileBackground');
+            }
+            if (language) {
+                const payload = {
+                    method: 'POST',
+                    headers: {'content-type': 'application/json'},
+                    body: JSON.stringify({ language })
+                };
+                fetch('/api/utils/language', payload);
             }
         </script>
     </body>

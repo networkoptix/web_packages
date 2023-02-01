@@ -12,7 +12,8 @@ export interface AuthorizeParams {
     message?: 'passwordReset' | 'activated',
     email?: string,
     access_code?: string,
-    access_token?: string
+    access_token?: string,
+    lang?: string,
 }
 
 export type AuthorizeStateType = 'email' |
