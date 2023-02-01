@@ -547,7 +547,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.createErrorCode = ['email', 'portalError'];
                 } else {
                     // in the case when code is passed with registration (ie when user gets invited to system)
-                    if (res.activated) {
+                    if (res.statusCode === 'activated') {
                         this.activated$.next(true);
                     }
 
