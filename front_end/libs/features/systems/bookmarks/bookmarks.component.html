@@ -17,36 +17,52 @@
     ></nx-tag-filter>
 </div>
 <div class="body">
+    <nx-alert-block
+        *ngIf="(newCreationCutOffTimeMS$ | async) !== (creationCutOffTimeMS$ | async)"
+        type="info"
+        [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
+        [line1]="'New Bookmarks available' | translate"
+        [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
+        [btnCaption]="'Refresh'"
+        (onAction)="refreshBookmarks()"
+    >
+    </nx-alert-block>
+
     <nx-simple-search
         [(ngModel)]="search"
         (ngModelChange)="updateParam('search')"
         [suggestions]="suggestions"
     ></nx-simple-search>
-    <div
-        class="no-bookmarks"
-        *ngIf="!(bookmarks | async)?.length"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [src]="noBksImgSrc"
+    <ng-template #stillLoading>
+        <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>
+    </ng-template>
+    <ng-template #noBookmarks>
+        <div
+            *ngIf="newCreationCutOffTimeMS$ | async; else stillLoading"
+            class="no-bookmarks"
         >
-        </svg-icon>
-        <h2
-            class="no-bookmarks-text"
-            [ngClass]="{
-                'no-bookmarks-text-dark': this.CONFIG.isDarkTheme
-            }"
-            translate
-        >
-            You don't have any Bookmarks yet.
-        </h2>
-    </div>
+            <svg-icon
+                nx-add-svg-src
+                [src]="noBksImgSrc"
+            >
+            </svg-icon>
+            <h2
+                class="no-bookmarks-text"
+                [ngClass]="{
+                    'no-bookmarks-text-dark': CONFIG.isDarkTheme
+                }"
+                translate
+            >
+                You don't have any Bookmarks yet.
+            </h2>
+        </div>
+    </ng-template>
     <div
         class="bookmarks"
-        *ngIf="(bookmarks | async)?.length"
+        *ngIf="bookmarks$ | async as bookmarks; else noBookmarks"
     >
         <div
-            *ngFor="let bookmark of bookmarks | async"
+            *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
             class="bookmarks-container"
             [nxTooltip]="bookmark.description"
             alternateStyle

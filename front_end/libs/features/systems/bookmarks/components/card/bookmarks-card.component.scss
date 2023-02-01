@@ -1,11 +1,35 @@
+:host {
+
+    &:hover,
+    &:active,
+    &:focus-within {
+
+        .bookmarks {
+
+            &-info,
+            &-image-wrapper {
+                background-color: var(--bookmarks-card-background-color-hover);
+            }
+        }
+    }
+}
+
 .bookmarks {
 
     &-image {
-        position: relative;
         width: 320px;
         height: 180px;
+        background-color: var(--light4);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
         &-wrapper {
+            position: relative;
+        }
+
+        &-loaded {
             position: relative;
         }
 
@@ -34,6 +58,7 @@
         height: 140px;
         border: 1px solid var(--border-color);
         border-top: none;
+        background-color: var(--bookmarks-card-background-color);
 
         &-timestamp {
             font-size: 14px;

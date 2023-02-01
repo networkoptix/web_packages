@@ -599,4 +599,8 @@ html[data-theme="light-gray"] {
 
     /* System Admin */
     --system-admin-info-text: #2B383F; //$dark9;
+
+	/* Bookmarks */
+    --bookmarks-background-color: inherit;
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
 }

@@ -3,21 +3,36 @@
         {{ durationMsToTime(bookmark.durationMs) }}
     </span>
     <div class="bookmarks-image">
-        <svg-icon
-            nx-add-svg-src
-            [src]="icons.dir + 'play.svg'"
-            [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
-            class="bookmarks-image-playIcon"
-        ></svg-icon>
-        <img
-            [lazyLoad]="bookmark.thumbnail"
-            [alt]="'thumbnail of ' + bookmark.name"
-        />
+        <div
+            *ngIf="workingThumbnail; else noThumbnail"
+            class="bookmarks-image-loaded"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dir + 'play.svg'"
+                [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
+                class="bookmarks-image-playIcon"
+            ></svg-icon>
+            <img
+                [lazyLoad]="bookmark.thumbnail"
+                [src]="bookmark.thumbnail"
+                [alt]="'thumbnail of ' + bookmark.name"
+                (error)="workingThumbnail = false"
+            />
+        </div>
+        <ng-template #noThumbnail>
+            <svg-icon
+                nx-add-svg-src
+                class="bookmarks-image-noImage"
+                [src]="icons.dirNonStandardView + 'cameras_list_placeholder_offline.svg'"
+                [svgStyle]="{ 'width.px': '200' }"
+            ></svg-icon>
+        </ng-template>
     </div>
 </div>
 <div class="bookmarks-info">
     <span class="bookmarks-info-timestamp">
-        {{ timeMsToDate(bookmark.durationMs) }}
+        {{ timeMsToDate(bookmark.startTimeMs) }}
     </span>
     <h2
         class="bookmarks-info-title"

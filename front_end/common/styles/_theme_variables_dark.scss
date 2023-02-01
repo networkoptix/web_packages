@@ -633,6 +633,7 @@ html[data-theme="dark"] {
     --cloud-storage-info-text: var(--light9);
 
     /* Bookmarks */
+    --bookmarks-background-color: inherit;
     --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);
     --bookmarks-calendar-today-highlight-shadow: var(--light1);
     --bookmarks-input-border-color: var(--dark11);
@@ -645,6 +646,8 @@ html[data-theme="dark"] {
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+    --bookmarks-card-background-color: #181c20;
+    --bookmarks-card-background-color-hover: var(--dark7);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

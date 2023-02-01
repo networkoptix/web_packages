@@ -1,6 +1,6 @@
 import { Component, Inject, Input, LOCALE_ID } from '@angular/core';
 
-import { icons } from '@src/app/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
 
 import { Bookmark } from '../../bookmarks.types';
 
@@ -13,6 +13,7 @@ export class NxBookmarksCardComponent {
     @Input() bookmark: Bookmark;
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
+    workingThumbnail = true;
 
     constructor(@Inject(LOCALE_ID) private locale: string) { }
 

@@ -2,18 +2,20 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { BehaviorSubject, combineLatest, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, take, switchMap, Observable, timer, zip } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
-import { icons } from '@lib/variables/static-variables';
+import { icons, pollingTimeout } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { Bookmark as BookmarkResp } from '@services/system-api.types';
+import type { Bookmark as BookmarkResp, BookmarksParams, BookmarksTags, Device } from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { paramSortFunc } from '@utils/general';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
 
@@ -74,7 +76,10 @@ export class NxBookmarksComponent implements OnInit {
 
     private system: NxSystem;
 
-    bookmarks = new BehaviorSubject<Bookmark[]>([]);
+    _bookmarks: Bookmark[] = [];
+    bookmarks$: Observable<Bookmark[]>;
+    creationCutOffTimeMS$ = new BehaviorSubject<number>(0);
+    newCreationCutOffTimeMS$ = new BehaviorSubject<number>(0);
     devices: string[] = [];
     tags: string[] = [];
 
@@ -150,56 +155,118 @@ export class NxBookmarksComponent implements OnInit {
                         account.email,
                         params.systemId
                     );
-                    this.getData();
+                    this.bookmarksPoll();
                 });
             });
     }
 
-    private getData(): void {
+    updateTags(tags: BookmarksTags): void {
+        this.tags = Object.keys(tags);
+        this.suggestions = {
+            ...this.suggestions,
+            TAGS: this.tags,
+        };
+    }
+
+    updateDevices(devices: Device[]): void {
+        this.devices = devices.filter(d => !!d.model).map(d => d.model);
+        this.suggestions = {
+            ...this.suggestions,
+            DEVICE: this.devices,
+        };
+    }
+
+    bookmarksPoll(): void {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
-        mediaserver.getBookmarks().subscribe(bks => {
-            const formatBookmark = (bk: BookmarkResp): Bookmark => ({
-                ...bk,
-                src: this.system.mediaserver.getExportUrl({
-                    cameraId: bk.deviceId,
-                    duration: bk.durationMs,
-                    endPos: bk.startTimeMs + bk.durationMs,
-                    pos: bk.startTimeMs,
-                    transport: 'mp4'
-                }),
-                thumbnail: this.system.serverManager.getPreviewUrl(
-                    bk.deviceId,
-                    bk.startTimeMs,
-                    320,
-                    180,
-                    0
-                ),
-                tagsFormatted: bk.tags.map(tag => ({
-                    type: 'default',
-                    label: tag
-                })),
-                isVisible: false,
-            });
-            // this.suggestions = {
-            //     ...this.suggestions,
-            //     TITLE: this.bookmarks.map(bk => bk.name)
-            //
-            this.bookmarks.next(bks.map(formatBookmark));
-        });
-        mediaserver.getBookmarkTags().subscribe(tags => {
-            this.tags = Object.keys(tags);
-            this.suggestions = {
-                ...this.suggestions,
-                TAGS: this.tags,
-            };
-        });
-        mediaserver.getDevices().subscribe(devices => {
-            this.devices = devices.filter(d => !!d.model).map(d => d.model);
-            this.suggestions = {
-                ...this.suggestions,
-                DEVICE: this.devices,
-            };
-        });
+        const params: BookmarksParams = {
+            order: 'desc',
+            _orderBy: 'creationTimeMs'
+        };
+        const bookmarksPoll$: Observable<Bookmark[]> = timer(0, pollingTimeout).pipe(
+            // Promise.all for Observables.
+            switchMap(() => zip([mediaserver.getBookmarks(params), mediaserver.getBookmarkTags(), mediaserver.getDevices()])),
+            // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
+            map(([bks, tags, devices]) => {
+                this.updateTags(tags);
+                this.updateDevices(devices);
+                return bks.map((bk: BookmarkResp): Bookmark => ({
+                    ...bk,
+                    src: this.system.mediaserver.getExportUrl({
+                        cameraId: bk.deviceId,
+                        duration: bk.durationMs,
+                        endPos: bk.startTimeMs + bk.durationMs,
+                        pos: bk.startTimeMs,
+                        transport: 'mp4'
+                    }),
+                    thumbnail: this.system.serverManager.getPreviewUrl(
+                        bk.deviceId,
+                        bk.startTimeMs,
+                        320,
+                        180,
+                        0
+                    ),
+                    tagsFormatted: bk.tags.map(tag => ({
+                        type: 'default',
+                        label: tag
+                    })),
+                    isVisible: false,
+                }));
+            }),
+            // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
+            map((bks: Bookmark[]) => {
+                if (bks.length) {
+                    params.creationStartTimeMs = this.findNewestBookmark(bks.length ? bks : this._bookmarks)?.creationTimeMs + 1;
+                    if (!this.creationCutOffTimeMS$.value) {
+                        this.creationCutOffTimeMS$.next(params.creationStartTimeMs);
+                    }
+                    this.newCreationCutOffTimeMS$.next(params.creationStartTimeMs);
+                    bks = bks.sort(paramSortFunc(b => b.creationTimeMs));
+                    this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
+                }
+                return this._bookmarks;
+            }));
+        this.bookmarks$ = combineLatest([this.creationCutOffTimeMS$, bookmarksPoll$]).pipe(
+            map(([creationCutOffTimeMS, bks]) => bks.filter(bk => creationCutOffTimeMS > bk.creationTimeMs)),
+            distinctUntilChanged()
+        );
+    }
+
+    findNewestBookmark(bks: Bookmark[]): Bookmark {
+        return [...bks].sort(paramSortFunc(b => b.creationTimeMs))[bks.length - 1];
+    }
+
+    mergeBookmarks(bookmarks: Bookmark[], newBookmarks: Bookmark[]): Bookmark[] {
+        let currentBookmarks: Bookmark[] = [];
+        let oldBookInc = 0;
+        let newBookInc = 0;
+        const oldBookmarksLen = bookmarks.length;
+        const newBookmarksLen = newBookmarks.length;
+        while (oldBookInc < oldBookmarksLen && newBookInc < newBookmarksLen) {
+            const oldBookmark = bookmarks[oldBookInc];
+            const newBookmark = newBookmarks[newBookInc];
+            if (oldBookmark.startTimeMs <= newBookmark.startTimeMs) {
+                currentBookmarks.push(oldBookmark);
+                ++oldBookInc;
+            } else {
+                currentBookmarks.push(newBookmark);
+                ++newBookInc;
+            }
+        }
+
+        if (oldBookInc < oldBookmarksLen) {
+            currentBookmarks = [...bookmarks.slice(oldBookInc), ...currentBookmarks];
+        } else {
+            currentBookmarks = [...newBookmarks.slice(newBookInc), ...currentBookmarks];
+        }
+        return currentBookmarks;
+    }
+
+    refreshBookmarks(): void {
+        this.creationCutOffTimeMS$.next(this.newCreationCutOffTimeMS$.value);
+    }
+
+    trackBookmarkById(index: number, bk: Bookmark): string {
+        return bk.id;
     }
 
     updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags'): void {
