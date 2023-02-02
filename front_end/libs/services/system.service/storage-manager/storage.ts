@@ -1,11 +1,11 @@
-import { GetStorages } from '@services/system-api.types';
+import type { ec2Storage } from '@services/system-api.types';
 import { ServerManager } from '@services/system.service/server-manager/server-manager';
 import { cleanId } from '@utils/general';
 
 /**
  * TODO: Need to add better types to some of the system-api methods
  */
-export type StorageResponses = [GetStorages[], any, any, any];
+export type StorageResponses = [ec2Storage[], any, any, any];
 
 export enum STORAGE_TYPES {
     LOCAL = 'local',

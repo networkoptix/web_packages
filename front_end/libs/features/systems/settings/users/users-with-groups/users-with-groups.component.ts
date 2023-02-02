@@ -23,7 +23,8 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxUriService } from '@services/uri.service';
 import { cleanId } from '@utils/general';
 
@@ -191,7 +192,7 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
                 user.email = this.email;
                 user.fullName = this.fullName;
                 user.userGroupIds = this.selectedGroups;
-                await this.system.userManager.modifyUser(user);
+                await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (_) {
                 this.toastService.notify(
@@ -339,7 +340,7 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
         const { defaultUserGroupText, customUserGroupText } = this.LANG.dialogs.titles;
         this.processedGroups = [{ id: 'title', label: defaultUserGroupText }];
         let customTitleNeeded = false;
-        this.system.userManager.userGroups.forEach(({ id, name, description, isPredefined }) => {
+        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(({ id, name, description, isPredefined }) => {
             if (name !== 'Owner') {
                 if (!customTitleNeeded && !isPredefined) {
                     customTitleNeeded = true;
@@ -360,7 +361,7 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
 
     private processSelectedGroupsList(newList: string[], localOwner = false): void {
         this.selectedGroupsList = [];
-        this.system.userManager.userGroups.forEach(({ id, name, description }) => {
+        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(({ id, name, description }) => {
             if (newList.includes(id)) {
                 if (localOwner) {
                     description = this.LANG.accessRoles.Administrator.description;

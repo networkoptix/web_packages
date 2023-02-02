@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injector } from '@angular/core';
+import { pick } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { from, Observable, of, throwError } from 'rxjs';
@@ -18,7 +19,6 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
-import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
@@ -96,7 +96,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public get isSessionOauth() {
-        return !environment.isLocal || this.currentUser?.type === 'cloud';
+        return !environment.isLocal || (this.currentUser as t.CurrentUser)?.type === 'cloud';
     }
 
     private get cloudAccessTokenName() {
@@ -469,7 +469,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         forceReload => !!forceReload,
         10 * 1000
     )
-    public getCurrentUser(forceReload?: boolean) {
+    public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
         let customHeaders;
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
@@ -483,26 +483,29 @@ export class NxSystemRestAPI extends NxSystemAPI {
             return this.userRequest;
         }
 
-        if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
+        if (this.userEmail) {
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<Promise<t.NormalResponse<t.User>>>(endpoint, {}, customHeaders).toPromise()
-                .then((result: any) => {
-                    this.currentUser = result.find((user: t.User) => {
+            this.userRequest = this.get<t.ec2User[]>(endpoint, {}, customHeaders).toPromise()
+                .then(result => {
+                    this.currentUser = result.find(user => {
                         return user.name.toLowerCase() === this.userEmail.toLowerCase();
                     });
                     return this.currentUser;
                 });
-        } else if (environment.isLocal && !this.CONFIG.newSystem) { // Local system mode ???
+        } else if (environment.isLocal && !this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
-            this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
-                .then((result: any) => {
+            this.userRequest = this
+                .get<t.UserSession>(endpoint, {}, customHeaders)
+                .toPromise()
+                .then(result => {
                     if (!this.accessToken) {
                         this.#vmsToken = result.token;
                     }
-                    return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
-                })
-                .then(result => {
+                    return this.get<t.CurrentUser[]>(
+                        '/rest/v1/users', { name: result.username }
+                    ).toPromise();
+                }).then(result => {
                     // Todo: convert result to match getCurrentUser result.
                     this.currentUser = result[0];
                     return this.currentUser;
@@ -511,6 +514,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     if (err.errorId === 'cantProcessRequest') {
                         this.accessToken = '';
                     }
+                    return undefined;
                 });
         } else {
             this.userRequest = Promise.resolve(undefined);
@@ -922,7 +926,27 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/api/createEvent', params).toPromise();
     }
 
-    saveUser(user: NxSystemUser): Observable<ChangedIdReturned> {
+    protected override cleanUserObject<U extends t.RestV1SaveUser>(user: U): t.RestV1SaveUser {
+        const supportedFields: (keyof t.RestV1SaveUser)[] = [
+            'id',
+            'email',
+            'name',
+            'fullName',
+            'userId',
+            'userRoleId',
+            'permissions',
+            'isCloud',
+            'isEnabled',
+            'password',
+            'type',
+            'isOwner',
+            'accessibleResources',
+            'isHttpDigestEnabled',
+        ];
+        return pick(user, supportedFields);
+    }
+
+    saveUser<U extends t.RestV1SaveUser>(user: U): Observable<ChangedIdReturned> {
         user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
         user.isHttpDigestEnabled = !user.isCloud;
 

@@ -8,10 +8,11 @@ import { NxHealthService } from '@pages/health/health.service';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
-import * as t from './system-api.types';
+import * as t from './system-api-groups.types.bak';
+import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
 import { IParams } from './system.service/system-types';
-import { NxSystemUser } from './system.service/user-manager/user-manager-types';
+import { NxSystemUser } from './system.service/user-manager/user-manager-types.bak';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
@@ -64,7 +65,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     // }
 
     // saveUser
-    modifyUser(user: Partial<NxSystemUser>, id: string): Observable<NxSystemUser | t.User | t.ChangedIdReturned> {
+    modifyUser(user: Partial<NxSystemUser>, id: string): Observable<NxSystemUser | t.User | ChangedIdReturned> {
         return this.patch(`/rest/v3/users/${id}`, user);
     }
 

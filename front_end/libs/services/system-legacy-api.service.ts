@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injector } from '@angular/core';
+import { pick } from 'lodash-es';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError, Observable } from 'rxjs';
@@ -25,13 +26,9 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
-import { User } from './system-api.types';
 import type {
     SaveCameraUserAttributes
 } from './system.service/camera-manager/camera-manager-types';
-import type {
-    NxSystemUser
-} from './system.service/user-manager/user-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
 import { WINDOW } from './window-provider';
 
@@ -83,9 +80,9 @@ export class NxSystemAPI {
 
     protected serverId: string;
     protected systemId: string;
-    protected currentUser: any;
+    protected currentUser: t.ec2User | t.CurrentUser;
     protected userEmail: string;
-    protected userRequest: Promise<t.NormalResponse<User>>;
+    protected userRequest: Promise<t.ec2User | t.CurrentUser>;
     urlBase: string;
     unauthorizedCallback: (params: unknown) => Promise<any>;
     cacheService: NxUriCacheService;
@@ -365,7 +362,7 @@ export class NxSystemAPI {
         forceReload => !!forceReload,
         10 * 1000
     )
-    public getCurrentUser(forceReload?: boolean) {
+    public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
         let customHeaders;
         if (forceReload) {
             // Clean cache to
@@ -382,33 +379,20 @@ export class NxSystemAPI {
             return this.userRequest;
         }
         if (this.userEmail) {
-            // Cloud portal mode - getCurrentUser is not working
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<Promise<t.NormalResponse<User>>>(
-                endpoint,
-                {},
-                customHeaders
-            )
+            this.userRequest = this.get<t.ec2User[]>(endpoint, {}, customHeaders)
                 .toPromise()
-                .then((result: any) => {
-                    this.currentUser = result.find((user: User) => {
-                        return (
-                            user.name.toLowerCase() ===
-                            this.userEmail.toLowerCase()
-                        );
+                .then(result => {
+                    this.currentUser = result.find(user => {
+                        return user.name.toLowerCase() === this.userEmail.toLowerCase();
                     });
                     return this.currentUser;
                 });
         } else {
-            // Local system mode ???
             const endpoint = '/api/getCurrentUser';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<t.NormalResponse<User>>(
-                endpoint,
-                {},
-                customHeaders
-            )
+            this.userRequest = this.get<t.CurrentUser>(endpoint, {}, customHeaders)
                 .toPromise()
                 .then(result => {
                     this.currentUser = result;
@@ -700,7 +684,7 @@ export class NxSystemAPI {
      * Start of Storage
      */
     public getStoragesInfo(queryParams?) {
-        return this.get<t.GetStorages[]>('/ec2/getStorages', queryParams);
+        return this.get<t.ec2Storage[]>('/ec2/getStorages', queryParams);
     }
 
     @memoizeAsyncLong
@@ -935,7 +919,7 @@ export class NxSystemAPI {
         return this.getRequestAggregator<t.AggregatedUsers>(routes);
     }
 
-    saveUser(user: NxSystemUser): Observable<NxSystemUser | t.User | t.ChangedIdReturned> {
+    saveUser<U extends t.ec2SaveUser>(user: U): Observable<t.ChangedIdReturned> {
         return this.post<t.ChangedIdReturned>(
             '/ec2/saveUser',
             this.cleanUserObject(user)
@@ -952,13 +936,9 @@ export class NxSystemAPI {
         return !id || id === this.emptyId;
     }
 
-    cleanUserObject(user: NxSystemUser): Partial<NxSystemUser> {
-        // Remove unnecessary fields from the object
-        const cleanedUser: Partial<NxSystemUser> = {};
-        if (user.id) {
-            cleanedUser.id = user.id;
-        }
-        const supportedFields = [
+    protected cleanUserObject<U extends t.ec2SaveUser>(user: U): t.ec2SaveUser {
+        const supportedFields: (keyof t.ec2SaveUser)[] = [
+            'id',
             'email',
             'name',
             'fullName',
@@ -968,39 +948,8 @@ export class NxSystemAPI {
             'isCloud',
             'isEnabled',
             'password',
-            'type',
-            'isOwner',
-            'accessibleResources',
-            'isHttpDigestEnabled',
-            'password',
-            'userRoleId'
         ];
-        supportedFields.forEach((field: string) => {
-            if (field in user) {
-                cleanedUser[field] = user[field];
-            }
-        });
-        if (!cleanedUser.userRoleId) {
-            cleanedUser.userRoleId = this.emptyId;
-        }
-
-        return cleanedUser;
-    }
-
-    userObject(fullName: string, email: string): User {
-        return {
-            canBeEdited: true,
-            canBeDeleted: true,
-            email,
-            id: '',
-            isCloud: true,
-            isEnabled: true,
-            userRoleId: this.emptyId,
-            permissions: '',
-            // TODO: Remove the trash below after #VMS-2968
-            name: email,
-            fullName
-        };
+        return pick(user, supportedFields);
     }
 
     /* End of Working with users */

@@ -1,19 +1,26 @@
-import {
-    Component,
-    Input,
-    forwardRef
-} from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
+import { CustomPermission } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemRole, NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import type {
+    NxAccessRole,
+    PredefinedRole,
+    UserRole
+} from '@services/system.service/user-manager/user-manager-types';
 import type { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
+
+// NxAccessLevel with optionLabel added for dropdown
+type AccessLevelItem =
+    PredefinedRole & { optionLabel: string } |
+    UserRole & { optionLabel: string } |
+    CustomPermission & { optionLabel: string };
 
 @Component({
     selector: 'nx-permissions-select',
@@ -28,21 +35,19 @@ import { BaseDropdown } from '../injDropdown';
         }
     ]
 })
-
 export class NxPermissionsDropdown extends BaseDropdown {
     @Input() id: string;
     @Input() name: string;
     @IBool() @Input() disabled: CoercedBoolInput;
-    @Input() user: NxSystemUser;
-    @Input() roles: NxSystemRole[];
+    @Input() roles: NxAccessRole[];
     @Input() system: NxSystem;
 
     componentId: string;
     selection: string;
-    accessRoles: NxSystemRole[] = [];
+    accessRoles: AccessLevelItem[] = [];
     icons = icons;
 
-    private selected: NxSystemRole;
+    private selected: AccessLevelItem;
 
     constructor(
 
@@ -55,7 +60,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     /**
      * Overwrite
      */
-    writeValue(value: NxSystemRole | null): void {
+    writeValue(value: AccessLevelItem | null): void {
         if (value !== null && !this.applyService.locked) {
             this.selected = value;
             this.selection = this.LANG.accessRoles[value.name]?.label ||
@@ -72,17 +77,18 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     private processAccessRoles(): void {
-        this.accessRoles = [];
-        this.roles.forEach(role => {
-            if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
-                const extendedRole = {
-                    ...role,
-                    optionLabel: this.LANG.accessRoles[role.name].label ||
-                        role.name
-                };
-                this.accessRoles.push(extendedRole);
-            }
-        });
+        this.accessRoles = this.roles
+            .filter(role => {
+                const ownerLevel = (role as PredefinedRole).isOwner;
+                const adminLevel = (role as PredefinedRole | UserRole).isAdmin;
+                // Don't allow owner level in dropdown
+                // Don't allow admin level if not owner
+                return !ownerLevel && !(adminLevel && !this.system.isMine);
+            })
+            .map(role => ({
+                ...role,
+                optionLabel: this.LANG.accessRoles[role.name].label || role.name
+            }));
     }
 
     ngOnChanges(changes: NgChanges<NxPermissionsDropdown>): void {
@@ -100,14 +106,17 @@ export class NxPermissionsDropdown extends BaseDropdown {
         }
     }
 
-    changePermission(event: MouseEvent, role: NxSystemRole): void {
+    changePermission(event: MouseEvent, role: AccessLevelItem): void {
         event.preventDefault();
         this.show = false;
         this.selection = role.optionLabel;
 
-        const selectedRole = this.accessRoles.find(accessRole =>
-            accessRole.name === role.name
-        );
+        const {
+            optionLabel: _,
+            ...selectedRole
+        } = this.accessRoles.find(accessRole => accessRole.name === role.name);
+        // Remove optionLabel before sending up
+
         this.onChangeCallback(selectedRole);
     }
 }

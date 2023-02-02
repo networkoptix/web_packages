@@ -47,10 +47,7 @@ import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
 import type { NxMediaServer, ServerTimeInfo } from './system-types';
 import { UserManager } from './user-manager/user-manager';
-import type {
-    NxSystemUser,
-    NxSystemRole
-} from './user-manager/user-manager-types';
+import type { NxEc2LocalUser, NxUser, PreprocessCloudUser } from './user-manager/user-manager-types';
 import { UserWithGroupsManager } from './user-manager/user-with-groups-manager';
 
 /**
@@ -84,7 +81,7 @@ export class NxSystem {
     CONFIG: IConfig;
     LANG = staticLang;
 
-    userManager: Partial<UserManager & UserWithGroupsManager>;
+    userManager: UserManager; // TODO: Reconcile usermanager with groups type
     serverManager: ServerManager;
     cameraManager: CameraManager;
     storageManager: StorageManager;
@@ -328,10 +325,10 @@ export class NxSystem {
                     if (Object.keys(res).length) {
                         parsedSettings = parseSettings(res);
                     }
-                    const currentUser = { ...this.userManager.currentUser };
-                    if (currentUser?.name) {
-                        delete currentUser.name;
-                    }
+                    const currentUser = {
+                        ...this.userManager.currentUser as NxEc2LocalUser
+                    };
+                    delete currentUser.name;
                     Object.assign(parsedSettings, currentUser);
                     if (this.info) {
                         Object.assign(this.info, parsedSettings); // Update
@@ -755,7 +752,7 @@ export class NxSystem {
         );
     }
 
-    #addAlexaRules = async (existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+    #addAlexaRules = async (existingRules: EventRule[], user: NxUser, alarmResourceName: string, doCommandResourceName: string) => {
         const showAlarmRule = NxSystem.createRule(
             {
                 eventCondition: NxSystem.getEventCondition(
@@ -785,7 +782,7 @@ export class NxSystem {
         });
     };
 
-    #removeAlexaRules = async (existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+    #removeAlexaRules = async (existingRules: EventRule[], user: NxUser, alarmResourceName: string, doCommandResourceName: string) => {
         const toRemove = existingRules.filter(({
             eventCondition
         }) => [
@@ -938,18 +935,15 @@ export class NxSystem {
      * TODO: This method needs to be refactored and moved into userManager.
      * @deprecated Not really deprecated yet but should be soon.
      */
-    getUsersCachedInCloud(): Promise<NxSystemUser[]> {
+    private getUsersCachedInCloud(): Promise<PreprocessCloudUser[]> {
         this.isAvailable = false;
-        return this.cloudApi.users(this.id).toPromise().then((data: any) => {
-            if (data && data.resultCode === 'forbidden') {
-                return Promise.reject(data);
-            }
-            data.forEach(user => {
-                user.isCloud = true;
-                user.permissions = this.userManager.normalizePermissionString(user.customPermissions);
-                user.email = user.accountEmail;
-            });
-            return data;
+        return this.cloudApi.users(this.id).toPromise().then(data => {
+            return data.map(user => ({
+                ...user,
+                isCloud: true,
+                permissions: this.userManager.normalizePermissionString(user.customPermissions),
+                email: user.accountEmail,
+            }));
         }).catch(err => err);
     }
 
@@ -959,20 +953,22 @@ export class NxSystem {
      */
     getUsers(reload?: boolean, suppressUpdate = false): Promise<void> {
         if (!this.usersPromise || reload) {
-            let usersPromise: Promise<any>;
+            let usersPromise: Promise<void>;
             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
-                usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
-                    this.isAvailable = true;
-                }).catch(() => {
-                    if (!environment.isLocal && this.isAdmin) {
-                        return this.getUsersCachedInCloud().then(users => {
-                            this.userManager.processUsers(users);
+                usersPromise = this.userManager.getUsersDataFromTheSystem()
+                    .then(() => {
+                        this.isAvailable = true;
+                    })
+                    .catch(() => {
+                        if (!environment.isLocal && this.isAdmin) {
+                            return this.getUsersCachedInCloud().then(users => {
+                                this.userManager.processUsers(users);
+                                return Promise.resolve();
+                            });
+                        } else {
                             return Promise.resolve();
-                        });
-                    } else {
-                        return Promise.resolve();
-                    }
-                });
+                        }
+                    });
             } else if (!environment.isLocal && this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then(users => {
                     return this.userManager.processUsers(users);
@@ -988,7 +984,7 @@ export class NxSystem {
                 if (!suppressUpdate) {
                     this.systemInfo = this;
                 }
-            }); // Handling promise to satisfy the linter.
+            });
         }
         return this.usersPromise;
     }
@@ -998,7 +994,7 @@ export class NxSystem {
      * @deprecated Not really deprecated yet but should be soon.
      */
     filterCamerasFromUserPermissions(): void {
-        const accessRights: { [resourceId: string]: true; } = this.userManager.currentUser?.accessRights;
+        const accessRights = this.userManager.currentUser?.accessRights;
         if (accessRights && this.cameraManager.cameras) {
             this.cameraManager.cameras = this.cameraManager.cameras.filter(camera => accessRights[camera.id]);
         }
@@ -1021,20 +1017,6 @@ export class NxSystem {
      */
     getUsersDataFromTheSystem() {
         return this.userManager.getUsersDataFromTheSystem();
-    }
-
-    /**
-     * @deprecated Method should be referenced from userManager instead of directly from system.
-     */
-    saveUser(user: NxSystemUser, role: NxSystemRole) {
-        return this.userManager.saveUser(user, role);
-    }
-
-    /**
-     * @deprecated Method should be referenced from userManager instead of directly from system.
-     */
-    deleteUser(removedUser: NxSystemUser) {
-        return this.userManager.deleteUser(removedUser);
     }
 
     deleteFromCurrentAccount(password?: string) {

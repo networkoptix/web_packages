@@ -1,79 +1,81 @@
-import { isEqual, cloneDeep } from 'lodash-es';
-
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
+import type {
+    ec2User,
+    ChangedIdReturned,
+    ec2AccessRight,
+    ec2PredefinedRole,
+    ec2UserRole,
+} from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
-import { alphabeticalSort } from '@utils/general';
 
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystemRestAPI } from '../../system-rest-api.service';
 
-import {
-    NxSystemRole,
-    NxSystemUser,
-    SystemPermissions
+import type {
+    NxAccessRole,
+    SystemPermissions,
+    PredefinedRole,
+    NxUserRole,
+    NxUser,
+    NewUserBase,
+    NxEc2LocalUser,
+    NewUserData,
+    UserRole,
+    NxEc2UserPwChange,
+    PreprocessCloudUser,
 } from './user-manager-types';
 
 export class UserManager {
-    CONFIG: IConfig;
-
-    protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
-    protected _ownerEmail: string;
-    protected _accessRole: string = '';
-    protected _userId: string;
-    accessRoles: NxSystemRole[];
-    currentUser: NxSystemUser;
-    currentUserEmail: string;
-    isMine: boolean;
-    permissions: SystemPermissions;
-    users: NxSystemUser[];
+    protected _ownerEmail: string = '';
+    private _accessRole: string = '';
+    accessRoles: NxAccessRole[];
+    currentUser: NxUser;
+    isMine: boolean = false;
+    permissions: SystemPermissions = {
+        editAdmins: false,
+        editUsers: false,
+        isAdmin: false,
+        editCameras: false,
+        viewArchives: false,
+    };
+    users: NxUser[];
 
     constructor(
-        config: IConfig,
-        mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
-        currentUserEmail: string,
-        userId: string,
+        protected CONFIG: IConfig,
+        protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
+        public currentUserEmail: string,
+        private userId: string,
         protected locale: string,
     ) {
-        this.CONFIG = config;
-        this.mediaserver = mediaserver;
-        this.currentUserEmail = currentUserEmail;
-
-        this._ownerEmail = '';
-        this._accessRole = '';
-        this._userId = userId;
         this.accessRoles = this.CONFIG.accessRoles.predefinedRoles;
-        this.isMine = false;
-        this.permissions = new SystemPermissions();
     }
 
-    get accessRole() {
+    get accessRole(): string {
         return this._accessRole;
     }
 
-    set accessRole(accessRole) {
+    set accessRole(accessRole: string) {
         this._accessRole = accessRole || '';
         this.checkPermissions();
     }
 
-    // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
-        this.isMine =
-            (email && this.currentUserEmail === email) ||
+        this.isMine = (email && this.currentUserEmail === email) ||
             this.currentUser?.isLocalOwner;
-        this.processUsers(this.users);
+        this.onOwnerEmailUpdate();
     }
 
-    get currentOwner(): NxSystemUser {
+    get currentOwner(): NxUser {
         return this.users.find(user => user.isCloudOwner);
     }
 
-    canViewInfo() {
+    canViewInfo(): boolean {
         return this.permissions.isAdmin;
     }
 
-    nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
+    nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxUser[] {
         return this.users.filter(user => {
             if (user.isCloud && cloud) {
                 return !user.isCloudOwner;
@@ -85,22 +87,22 @@ export class UserManager {
         });
     }
 
-    isAdmin(user: NxSystemRole) {
-        return user?.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
+    protected isAdmin(userOrRole: { permissions: string }): boolean {
+        return userOrRole.permissions.includes(
+            this.CONFIG.accessRoles.globalAdminPermissionFlag
+        );
     }
 
-    isEmptyGuid(guid?: string) {
-        return guid
-            ? guid.replace(/[{}0-]/gi, '') === ''
-            : true;
-    }
-
-    isOwner(user: NxSystemUser) {
-        return user?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
+    isOwner(user: ec2User | PreprocessCloudUser | NxUser): boolean {
+        if (user === undefined) {
+            return;
+        }
+        return (user as NxUser).isLocalOwner ||
+            user.isCloud && user.email === this._ownerEmail;
     }
 
     checkPermissions(): void {
-        const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
+        const isMine = this.isMine || !!this.currentUser?.isLocalOwner;
         let isAdmin = isMine ||
             this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
         if (!isAdmin && this.currentUser) {
@@ -129,7 +131,7 @@ export class UserManager {
         this.permissions = permissions;
     }
 
-    deleteUser(removedUser: NxSystemUser) {
+    deleteUser(removedUser: Pick<NxUser, 'id'>): Promise<void> {
         return this.mediaserver.deleteUser(removedUser.id).toPromise()
             .then(data => {
                 this.users = this.users.filter(user => {
@@ -142,15 +144,17 @@ export class UserManager {
             });
     }
 
-    findAccessRole(user: NxSystemUser) {
-        const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
-        // TODO Need to figure out role type here
-        let role: NxSystemRole = roles.find((role: NxSystemRole) => {
+    private getUserRole(user: ec2User | PreprocessCloudUser | NxUser): NxUserRole {
+        const roles = this.accessRoles;
+        let role = roles.find(role => {
             // Owner flag has top priority and overrides everything
-            if (role.isOwner) {
+            if ((role as PredefinedRole).isOwner) {
                 return this.isOwner(user);
             }
-            if (!this.isEmptyGuid(role.id)) {
+            if (
+                'id' in role &&
+                role.id !== '{00000000-0000-0000-0000-000000000000}'
+            ) {
                 return role.id === user.userRoleId;
             }
 
@@ -162,16 +166,18 @@ export class UserManager {
         });
         // handles the Custom role
         if (!role) {
-            role = cloneDeep(roles[roles.length - 1]);
-            role.isAdmin = this.isAdmin(user);
-            role.permissions = user.permissions;
+            role = {
+                ...roles[roles.length - 1],
+                isAdmin: this.isAdmin(user),
+                permissions: user.permissions
+            };
         }
 
-        return role || roles[roles.length - 1];
+        return role as NxUserRole;
     }
 
-    getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string | false> {
-        return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
+    getUsersDataFromTheSystem(): Promise<void> {
+        return this.mediaserver.getAggregatedUsersData().toPromise().then(result => {
             if (!result) {
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
@@ -182,76 +188,124 @@ export class UserManager {
             const accessRights = data['ec2/getAccessRights'];
             return new Promise(resolve => {
                 this.updateAccessRoles(predefinedRoles, userRoles);
-                return resolve(this.processUsers(users, accessRights));
+                this.processUsers(users, accessRights);
+                resolve();
             });
         }, () => {
             return Promise.reject('Media server cloud not be reached.');
         });
     }
 
+    // e.g. GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalUserInputPermission
     normalizePermissionString(permissions: string): string {
         return Array.from(new Set(permissions.split('|').sort())).join('|');
     }
 
-    processUsers(users: NxSystemUser[], accessRights = []) {
-        if (!Array.isArray(users)) {
-            return false;
-        }
+    processUsers(
+        users: ec2User[] | PreprocessCloudUser[],
+        accessRightsList: ec2AccessRight[] = []
+    ): void {
         // accessRights if individual camera permissions ever set
-        accessRights = Object.keys(accessRights).length ? accessRights.reduce((obj, next) => {
-            obj[next.userId] = next.resourceIds;
-            return obj;
-        }, {}) : {};
-        // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
-        this.users = users.map(user => {
-            // @ts-expect-error: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
-            if (user.accountFullName && !user.fullName) {
-                // @ts-expect-error TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
-                user.fullName = user.accountFullName;
-            }
+        const accessRightsByUser: Record<string, string[]> = Object.fromEntries(
+            accessRightsList.map(ar => [ar.userId, ar.resourceIds])
+        );
+        const processed = users.map<NxUser>((user: ec2User | PreprocessCloudUser) => {
+            const fullName = 'fullName' in user ? user.fullName : user.accountFullName;
             user.permissions = this.normalizePermissionString(user.permissions);
-            user.role = this.findAccessRole(user);
+            const role = this.getUserRole(user);
             // Update default permissions with role permissions
-            user.permissions = this.normalizePermissionString([user.permissions, user.role.permissions].join('|'));
-            user.accessRole = user.role.name;
+            user.permissions = this.normalizePermissionString(
+                [user.permissions, role.permissions].join('|')
+            );
+            const accessRole = role.name;
             // allMediaPermissionFlag exists if the all camera permission option selected
-            if (!user.permissions.includes(this.CONFIG.accessRoles.allMediaPermissionFlag) && accessRights[user.id]) {
-                user.accessRights = accessRights[user.id].reduce((obj: { [resourceId: string]: true; }, next: string) => {
-                    obj[next] = true;
-                    return obj;
-                }, {});
+            const id = 'id' in user ? user.id : user.accountId;
+            let accessRights: Record<string, true>;
+            if (
+                !user.permissions.includes(
+                    this.CONFIG.accessRoles.allMediaPermissionFlag
+                ) &&
+                accessRightsByUser[id]
+            ) {
+                accessRights = Object.fromEntries(
+                    accessRightsByUser[id].map(rId => [rId, true])
+                );
             }
-            // @ts-expect-error: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
-            user.id = user.id || user.accountId;
+            const isCloudOwner = this.isOwner(user);
+            const isMe = !environment.isLocal
+                ? user.isCloud && user.email === this.currentUserEmail
+                : id === this.userId;
+            const isAdmin = this.isAdmin(user);
+            const isLocalOwner = !user.isCloud && (user as ec2User).name === 'admin';
+            const canBeEdited = this.canBeEdited({
+                isMe,
+                isLocalOwner,
+                isCloudOwner,
+                isAdmin,
+            });
+
+            const processedUser = {
+                ...user,
+                fullName,
+                role,
+                accessRole,
+                accessRights,
+                id,
+                isCloudOwner,
+                isMe,
+                isAdmin,
+                isLocalOwner,
+                canBeEdited,
+            };
+
+            if (isMe) {
+                this.currentUser = processedUser;
+                this.accessRole = processedUser.accessRole;
+            }
+
+            return processedUser;
+        });
+
+        this.users = processed.sort((a, b) => {
+            if (a.isCloud && b.isCloud) {
+                return a.email.localeCompare(b.email, this.locale);
+            } else if (!a.isCloud && !b.isCloud) {
+                return (a as NxEc2LocalUser).name.localeCompare(
+                    (b as NxEc2LocalUser).name,
+                    this.locale
+                );
+            } else {
+                return a.isCloud ? 1 : -1;
+            }
+        });
+    }
+
+    /** Reduced version of .processUsers() for when owner email is changed */
+    private onOwnerEmailUpdate(): void {
+        this.users = this.users?.map(user => {
+            user.permissions = this.normalizePermissionString(user.permissions);
+            user.role = this.getUserRole(user);
+            user.permissions = this.normalizePermissionString(
+                [user.permissions, user.role.permissions].join('|')
+            );
+            user.accessRole = user.role.name;
             user.isCloudOwner = this.isOwner(user);
-            user.isMe = !environment.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
             user.isAdmin = this.isAdmin(user);
-            user.isLocalOwner = !user.isCloud && user.name === 'admin';
-
             user.canBeEdited = this.canBeEdited(user);
-
             if (user.isMe) {
                 this.currentUser = user;
                 this.accessRole = user.accessRole;
             }
-
             return user;
-        }).sort((userA, userB) => {
-            // sorts local before cloud users --> then by email for cloud & name for local
-            if (userA.isCloud === userB.isCloud) {
-                if (userA.isCloud) {
-                    return userA.email.localeCompare(userB.email, this.locale);
-                } else {
-                    return userA.name.localeCompare(userB.name, this.locale);
-                }
-            }
-            return userA.isCloud ? 1 : -1;
         });
-
-        return this.users;
     }
 
-    canBeEdited(user: NxSystemUser): boolean {
+    protected canBeEdited(user: {
+        isMe: boolean,
+        isLocalOwner: boolean,
+        isCloudOwner: boolean,
+        isAdmin: boolean,
+    }): boolean {
         /**
          * User can not be edited if:
          * - this user is the current user
@@ -269,68 +323,65 @@ export class UserManager {
         return isNotMeOrOwner && (this.isMine || !user.isAdmin);
     }
 
-    saveUser(user: NxSystemUser, role?: NxSystemRole): Promise<NxSystemUser> {
-        let userCreated = false;
-        const isSelf = user.id === this.currentUser.id;
+    saveUser(user: NxEc2LocalUser | NxEc2UserPwChange | NewUserBase): Promise<ChangedIdReturned> {
+        const isSelf = (user as NxEc2LocalUser).id === this.currentUser.id;
         if (isSelf && user.isCloud) {
             return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
         }
-
-        if (!user.id) {
-            let existingUser: Partial<NxSystemUser> = this.users.find(u => {
-                return user.email === u.email;
-            });
-            if (!existingUser) { // user not found - create a new one
-                userCreated = true;
-                existingUser = this.mediaserver.userObject(user.fullName, user.email);
-            }
-            user = { ...existingUser, ...user };
-        }
-
-        if (!isSelf && !user.canBeEdited && !this.isMine) {
+        if (!isSelf && !(user as NxEc2LocalUser).canBeEdited && !this.isMine) {
             return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 
-        user.userRoleId = role.id || '';
-        user.permissions = role.permissions || '';
-
-        // The mediaserver doesn't like any attempts to change admin's permissions
-        if (user.isLocalOwner) {
-            delete user.name;
-            delete user.permissions;
+        let userData: NxEc2LocalUser | NewUserData;
+        if ('id' in user) {
+            // Modifying existing user
+            userData = user;
+            // The mediaserver doesn't like any attempts to change admin's permissions
+            if (userData.isLocalOwner) {
+                delete userData.name;
+                delete userData.permissions;
+            }
+        } else {
+            // Creating new user
+            const { role, ...newUser } = user;
+            userData = {
+                ...newUser,
+                canBeEdited: true,
+                userRoleId: (role as UserRole).id ?? '{00000000-0000-0000-0000-000000000000}',
+                permissions: role.permissions,
+                name: user.email,
+            };
         }
 
-        return this.mediaserver.saveUser(user).toPromise().then((result: NxSystemUser) => {
-            user.id = result.id;
-            user.role = role;
-            user.accessRole = role.name || role.label;
-            if (userCreated) {
-                this.users.push(user);
-            }
-            return result;
-        });
+        // Assuming highest version since all previous version properties are allowed
+        return (this.mediaserver as NxSystemRestAPI).saveUser(userData).toPromise();
     }
 
-    updateAccessRoles(predefinedRoles: NxSystemRole[], userDefinedRoles: NxSystemRole[]) {
-        predefinedRoles.forEach((role: NxSystemRole) => {
-            role.permissions = this.normalizePermissionString(role.permissions);
-            role.isAdmin = this.isAdmin(role);
+    private updateAccessRoles(
+        ec2PredefinedRoles: ec2PredefinedRole[],
+        ec2UserRoles: ec2UserRole[]
+    ): NxAccessRole[] {
+        const predefinedRoles = ec2PredefinedRoles.map(role => {
+            return {
+                ...role,
+                isAdmin: this.isAdmin(role),
+                permissions: this.normalizePermissionString(role.permissions)
+            };
         });
 
-        const userRolesList = userDefinedRoles.map((userRole: NxSystemRole) => {
-            userRole.isAdmin = this.isAdmin(userRole);
-            userRole.permissions = this.normalizePermissionString(userRole.permissions);
-            return userRole;
-        }).sort(alphabeticalSort(this.locale, role => role.name));
+        const userRolesList = ec2UserRoles.map(userRole => {
+            return {
+                ...userRole,
+                isAdmin: this.isAdmin(userRole),
+                permissions: this.normalizePermissionString(userRole.permissions)
+            };
+        });
 
-        const newRoles = Array.from(new Set([
+        this.accessRoles = [
             ...predefinedRoles,
             ...userRolesList,
             this.CONFIG.accessRoles.customPermission
-        ]));
-        if (!isEqual(newRoles, this.accessRoles)) {
-            this.accessRoles = newRoles;
-        }
+        ];
         return this.accessRoles;
     }
 }

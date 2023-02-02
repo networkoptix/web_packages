@@ -13,7 +13,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import type {
-    NxSystemUser
+    NxEc2LocalUser,
 } from '@services/system.service/user-manager/user-manager-types';
 import { pickFrom } from '@utils/general';
 
@@ -28,7 +28,7 @@ export class ChangePasswordModalContent {
     LANG = staticLang;
 
     system: NxSystem;
-    user: NxSystemUser;
+    user: NxEc2LocalUser;
     changePassword: Process;
     newPasswordForUser: string;
     currentPasswordForUser: string;
@@ -59,7 +59,10 @@ export class ChangePasswordModalContent {
 
         this.changePassword = this.processService
             .createProcess(() => {
-                this.user.password = this.newPasswordForUser;
+                const updatedUser = {
+                    ...this.user,
+                    password: this.newPasswordForUser
+                };
 
                 if (this.isMe) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
@@ -73,8 +76,8 @@ export class ChangePasswordModalContent {
                         this.currentPasswordForUser,
                         true
                     ).toPromise().then(() => {
-                        return this.system
-                            .saveUser(this.user, this.user.role)
+                        return this.system.userManager
+                            .saveUser(updatedUser)
                             .then(() => this.close(true));
                     }, () => {
                         this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
@@ -83,8 +86,8 @@ export class ChangePasswordModalContent {
                     });
                 }
 
-                return this.system
-                    .saveUser(this.user, this.user.role)
+                return this.system.userManager
+                    .saveUser(updatedUser)
                     .then(() => this.close(true));
             }, {
                 errorCodes: {

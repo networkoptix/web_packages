@@ -6,7 +6,7 @@ import type { Translatable } from '@pipes/any-translate.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 
 import { TfaAction } from './two-fa/two-fa.component.types';
 
@@ -96,7 +96,7 @@ export type AddUser = DialogType<NxSystem, string>;
 export type RemoveUser = DialogType<
     {
         system: NxSystem;
-        user: NxSystemUser;
+        user: NxUser;
     },
     true
 >;

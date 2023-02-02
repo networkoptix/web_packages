@@ -80,7 +80,7 @@ export class LocalAccount extends BaseAccount {
 
     async get(forceUpdate = false): Promise<Account | undefined> {
         try {
-            const user: any = await this.mediaServerApi.getCurrentUser(forceUpdate);
+            const user = await this.mediaServerApi.getCurrentUser(forceUpdate);
             const account = newLocalAccount(user);
             this.account = account;
             return account;

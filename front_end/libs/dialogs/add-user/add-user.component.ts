@@ -8,7 +8,8 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import type { ChangedIdReturned } from '@services/system-api.types';
+import type { NewUserBase, NxAccessRole } from '@services/system.service/user-manager/user-manager-types';
 
 import type { AddUser as DialogTypes } from '../dialogs.types';
 
@@ -26,8 +27,11 @@ export class AddUserModalContent {
     hideErrors: boolean = true;
     systemName: string;
     addUser: Process;
-    user;
-    selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
+    user: NewUserBase;
+    selectedPermissionSubject = new BehaviorSubject<NxAccessRole>({
+        name: '',
+        permissions: '',
+    });
     accessDescription: string;
 
     constructor(
@@ -39,21 +43,19 @@ export class AddUserModalContent {
         this.CONFIG = configService.getConfig();
     }
 
-    get selectedPermission() {
+    get selectedPermission(): NxAccessRole {
         return this.selectedPermissionSubject.getValue();
     }
 
-    set selectedPermission(role) {
+    set selectedPermission(role: NxAccessRole) {
         this.user.role = role;
         this.selectedPermissionSubject.next(role);
     }
 
     private getAccessDescription(): string {
-        if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            return this.LANG.accessRoles[this.selectedPermission.name].description;
-        } else {
-            return this.LANG.accessRoles.customRole.description;
-        }
+        return this.LANG.accessRoles[this.selectedPermission.name]
+            ? this.LANG.accessRoles[this.selectedPermission.name].description
+            : this.LANG.accessRoles.customRole.description;
     }
 
     preSubmit = (): void => {
@@ -65,10 +67,10 @@ export class AddUserModalContent {
         this.accessDescription = this.getAccessDescription();
     }
 
-    private saveUser(): Promise<NxSystemUser> {
+    private saveUser(): Promise<ChangedIdReturned> {
         this.user.email = this.user.email.toLowerCase();
         // this.user.userGroupIds.push(this.userGroupIds);
-        return this.system.userManager.saveUser(this.user, this.user.role)
+        return this.system.userManager.saveUser(this.user)
             .then(user => this.system.getUsers(true).then(() => user));
     }
 

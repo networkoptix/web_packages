@@ -17,18 +17,18 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { credentialsValidation, icons, toast, menus } from '@lib/variables/static-variables';
+import { credentialsValidation, icons, menus, toast } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/any-translate.types';
 import { NxApplyService } from '@services/apply.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import type {
-    NxSystemRole,
-    NxSystemUser
+    NxEc2LocalUser,
+    NxEc2User,
+    NxUserRole,
+    NxUser,
 } from '@services/system.service/user-manager/user-manager-types';
 import { NxUriService } from '@services/uri.service';
 import { cleanId } from '@utils/general';
@@ -43,7 +43,6 @@ import { NxSettingsService } from '../../settings.service';
 })
 
 export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
     readonly environment = environment;
     LANG = staticLang;
 
@@ -53,7 +52,7 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
     private localUserName: string;
 
     accessDescription: Translatable;
-    selectedUser: NxSystemUser;
+    selectedUser: NxUser;
     systemAvailable: boolean;
     system: NxSystem;
     deleteMessage: Translatable;
@@ -63,8 +62,6 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
     role: string;
     credentialsValidation = credentialsValidation;
     icons = icons;
-    toast = toast;
-    menus = menus;
 
     private passwordChanged: boolean = false;
     private userSubscription: Subscription;
@@ -78,8 +75,11 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
         return this.localUserName !== this.username && !this.passwordChanged;
     }
 
+    get isLdap(): boolean {
+        return (this.selectedUser as NxEc2User)?.isLdap;
+    }
+
     constructor(
-        configService: NxConfigService,
         private route: ActivatedRoute,
         private applyService: NxApplyService,
         private pageService: NxPageService,
@@ -88,14 +88,12 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private processService: NxProcessService,
         private uriService: NxUriService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         this.menuService.section = 'users';
     }
 
-    private findUser(): NxSystemUser {
+    private findUser(): NxUser {
         return this.system.userManager.users.find(user =>
             cleanId(user.id) === this.paramUser
         );
@@ -144,16 +142,11 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
                     this.systemAvailable = this.system.isAvailable &&
                         this.system.mergeInfo === undefined;
 
-                    const updatedUser = this.findUser();
-
-                    const cleanUser = { ...this.selectedUser };
-                    delete cleanUser.role?.optionLabel;
-
                     if (
                         !this.applyService.locked && (
                             this.paramUser === undefined ||
                             this.paramUser !== cleanId(this.selectedUser?.id) ||
-                            !isEqual(updatedUser, cleanUser)
+                            !isEqual(this.findUser(), this.selectedUser)
                         )
                     ) {
                         this.setUser();
@@ -177,7 +170,8 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
             if (this.userSettingsForm?.invalid) {
                 return Promise.reject();
             }
-            const user = this.selectedUser;
+            // Only local users can be edited
+            const user = this.selectedUser as NxEc2LocalUser;
             if (!user.name || this.locked.has(user.email)) {
                 return Promise.reject();
             }
@@ -187,7 +181,7 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
                 user.name = this.localUserName;
                 user.email = this.email;
                 user.fullName = this.fullName;
-                await this.system.userManager.saveUser(user, user.role);
+                await this.system.userManager.saveUser(user);
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (_) {
                 this.toastService.notify(
@@ -245,7 +239,7 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
         if (this.system?.userManager?.users?.length) {
             this.locked.clear();
 
-            let user: NxSystemUser;
+            let user: NxUser;
             if (this.paramUser) {
                 user = this.findUser();
             }
@@ -267,9 +261,11 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
 
             this.passwordChanged = false;
 
-            this.selectedUser = { ...user };
-            delete this.selectedUser.role?.optionLabel; // clean any leftovers
-            this.localUserName = this.selectedUser.name;
+            this.selectedUser = user;
+
+            this.localUserName = 'name' in this.selectedUser
+                ? this.selectedUser.name
+                : undefined;
 
             this.deleteMessage = this.selectedUser.isCloud
                 ? this.LANG.system.users.cloudDelete
@@ -280,8 +276,10 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
             this.setPermission(this.selectedUser.role);
             this.fullName = this.selectedUser.fullName;
             this.email = this.selectedUser.email;
-            this.username = user.isCloud ? user.email : user.name;
-            this.role = !user.isCloud && user.name === 'admin'
+            this.username = user.isCloud
+                ? user.email
+                : (user as NxEc2LocalUser).name;
+            this.role = !user.isCloud && (user as NxEc2LocalUser).name === 'admin'
                 ? 'Owner'
                 : user.role.name;
 
@@ -313,18 +311,18 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
 
     public changePassword(): void {
         this.dialogs
-            .changePassword(this.system, this.selectedUser)
+            .changePassword(this.system, this.selectedUser as NxEc2LocalUser)
             .then(result => {
                 this.passwordChanged = result;
             });
     }
 
-    public setPermission(role: NxSystemRole): void {
+    public setPermission(role: NxUserRole): void {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description
             : this.LANG.accessRoles.customRole.description;
-        this.selectedUser.role = { ...role };
+        this.selectedUser.role = role;
         this.role = role.name;
     }
 

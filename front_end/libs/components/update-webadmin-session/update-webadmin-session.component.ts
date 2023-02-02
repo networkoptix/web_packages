@@ -64,7 +64,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
         Promise.all([
             this.system.mediaserver.getCurrentUser(),
             this.system.mediaserver.getModuleInfo().toPromise()
-        ]).then(([account, serverInfo]: any) => {
+        ]).then(([account, serverInfo]) => {
             const moduleInfo = serverInfo?.reply;
             this.auth.login = account.name;
             this.isCloud = this.system.mediaserver.isSessionOauth;

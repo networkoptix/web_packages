@@ -1,6 +1,6 @@
 import { last } from 'lodash-es';
 
-import { User } from '../system-api.types';
+import { CurrentUser, ec2User } from '../system-api.types';
 
 export interface Account {
     email: string;
@@ -23,15 +23,9 @@ export interface Account {
     sessionExpires: number;
 }
 
-export function newLocalAccount({
-    email,
-    fullName,
-    id,
-    permissions,
-    name,
-    isAdmin,
-    isCloud
-}: User): Account {
+export function newLocalAccount(user: ec2User | CurrentUser): Account {
+    const { email, fullName, id, permissions, name } = user;
+    const { isAdmin, isCloud } = user as ec2User;
     const [first, ...rest] = (fullName || name || '').split(' ');
     return {
         email,
@@ -39,9 +33,9 @@ export function newLocalAccount({
         name,
         first_name: first,
         last_name: last((rest || [''])),
-        permissions: (permissions || '').split('|'),
-        is_superuser: isAdmin || permissions?.includes('GlobalAdminPermission'),
-        isCloud
+        permissions: permissions.split('|'),
+        is_superuser: isAdmin || permissions.includes('GlobalAdminPermission'),
+        isCloud,
     } as Account;
     // TODO: This should eventually be its own LocalAccount type
 }

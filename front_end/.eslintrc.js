@@ -219,7 +219,6 @@ const typeLintBlacklist = [
     '**/system.service/storage-manager/storage.ts',
     '**/system.service/system-types.ts',
     '**/system.service/system.ts',
-    '**/system.service/user-manager/user-manager.ts',
     '**/uri.service.ts',
     '**/url-protocol.service.ts',
     '**/url-protocol.service.types.ts',

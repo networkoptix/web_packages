@@ -11,7 +11,7 @@ import {
     SystemPermissions,
     NxUserGroup,
     NxSystemUser,
-} from './user-manager-types';
+} from './user-manager-types.bak';
 
 export class UserWithGroupsManager extends UserManager {
     CONFIG: IConfig;
@@ -90,7 +90,7 @@ export class UserWithGroupsManager extends UserManager {
     }
 
     // returns all users that are not owners
-    nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
+    override nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
         return this.users.filter((user: NxSystemUser) => {
             if (user.type === 'cloud' && cloud || user.type === 'local' && local) {
                 return !user.isOwner;
@@ -99,7 +99,7 @@ export class UserWithGroupsManager extends UserManager {
         });
     }
 
-    checkPermissions(): void {
+    override checkPermissions(): void {
         const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
         let isAdmin = isMine;
         // is there a backup admin check within new permission scheme?
@@ -130,7 +130,7 @@ export class UserWithGroupsManager extends UserManager {
         this.permissions = permissions;
     }
 
-    async deleteUser(removedUser: NxSystemUser): Promise<void> {
+    override async deleteUser(removedUser: NxSystemUser): Promise<void> {
         try {
             const deletedUser = await lastValueFrom(this.mediaserver.deleteUser(removedUser.id));
             this.users = this.users.filter(user => user.id !== deletedUser.id);
@@ -140,7 +140,8 @@ export class UserWithGroupsManager extends UserManager {
         }
     }
 
-    async getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string | false> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    override async getUsersDataFromTheSystem(): Promise<any> {
         try {
             const userGroups: NxUserGroup[] = await lastValueFrom(this.mediaserver.getUserGroups());
             this.processGroups(userGroups);
@@ -185,7 +186,7 @@ export class UserWithGroupsManager extends UserManager {
         return permissionSet;
     }
 
-    processUsers(usersWithGroups: NxSystemUser[]): (NxSystemUser[] | false) {
+    override processUsers(usersWithGroups: NxSystemUser[]): (NxSystemUser[] | false) {
         if (!Array.isArray(usersWithGroups)) {
             return false;
         }
@@ -244,7 +245,7 @@ export class UserWithGroupsManager extends UserManager {
         return this.users;
     }
 
-    canBeEdited(user: NxSystemUser): boolean {
+    override canBeEdited(user: NxSystemUser): boolean {
         /**
          * User can not be edited if:
          * - this user is the current user

@@ -20,27 +20,6 @@ export interface RebuildResponse<Reply = {}> {
     backup?: Reply
 }
 
-interface Permissions {
-    none: boolean,
-    admin: boolean,
-    editCameras: boolean,
-    controlVideowall: boolean,
-    viewLogs: boolean,
-    viewArchive: boolean,
-    exportArchive: boolean,
-    viewBookmarks: boolean,
-    manageBookmarks: boolean,
-    userInput: boolean,
-    accessAllMedia: boolean,
-    customUser: boolean,
-    liveViewerPermissions: boolean,
-    viewerPermissions: boolean,
-    advancedViewerPermissions: boolean,
-    adminPermissions: boolean,
-    videowallModePermissions: boolean,
-    acsModePermissions: boolean
-}
-
 export interface Settings {
     additionalLocalFsTypes: string,
     arecontRtspEnabled: string,
@@ -146,19 +125,12 @@ interface SystemTimeReply {
 }
 export interface SystemTime extends NormalResponse<SystemTimeReply> {}
 
-interface UserPermissions {
-    id: string,
-    name: string,
-    permissions: Permissions
-}
-export interface GetUserRoles extends NormalResponse<UserPermissions> {}
-
 export interface Param {
     name: string,
     value: string
 }
 
-export interface GetStorages {
+export interface ec2Storage {
     addParams: Param[],
     id: string,
     isBackup: boolean,
@@ -233,104 +205,57 @@ export interface ServerTime {
     vmsTime: string,
 }
 
-interface PredefinedRoles {
+export interface ec2AccessRight {
+    resourceIds: string[];
+    userId: string;
+}
+
+export interface ec2PredefinedRole {
     isOwner: boolean,
     name: string,
     permissions: string
 }
-interface ec2PredefinedRoles extends Array<PredefinedRoles> {}
 
-export interface User {
-    canBeEdited: boolean;
-    canBeDeleted: boolean;
-    email: string;
+export interface ec2UserRole {
+    description: string;
     id: string;
-    isCloud: boolean;
-    isAdmin?: boolean;
-    isEnabled: boolean;
-    userRoleId: string;
-    permissions: string;
-    // TODO: Remove the trash below after #VMS-2968
+    isLdap: boolean;
     name: string;
-    fullName: string;
-    username?: string;
-    type?: string;
-    isOwner?: boolean,
-    isHttpDigestEnabled?: boolean,
-    userGroupIds?: string[],
-    resourceAccessRights?: {
-        additionalProp1?: string,
-        additionalProp2?: string,
-        additionalProp3?: string
-    }, // up to here, for only User with Groups
+    parentRoleIds: unknown[];
+    permissions: string;
 }
 
-interface Users {
-    id: string,
-    name: string,
+/** /api/getCurrentUser or /rest/v1/users?name=username */
+export interface CurrentUser {
+    fullName?: string;
+    email?: string;
+    id: string;
+    permissions: string;
+    name: string;
+    isOwner?: boolean;
+    type?: string;
+}
+
+export interface ec2User {
+    cryptSha512Hash: string,
+    digest: string,
     email: string,
     fullName: string,
-    permissions: string,
-    isEnabled: boolean,
-    externalId: string, // up to here, shared between User with Roles & Groups
-    cryptSha512Hash?: string,
-    digest?: string,
-    hash?: string,
-    isAdmin?: boolean,
-    isCloud?: boolean,
-    isLdap?: boolean,
-    parentId?: string,
-    realm?: string,
-    typeId?: string,
-    url?: string,
-    userRoleId?: string, // up to here, for only User with Roles
-    type?: string,
-    isOwner?: boolean,
-    isHttpDigestEnabled?: boolean,
-    userGroupIds?: string[],
-    resourceAccessRights?: {
-        additionalProp1?: string,
-        additionalProp2?: string,
-        additionalProp3?: string
-    }, // up to here, for only User with Groups
-}
-interface ec2GetUsers extends Array<Users> {}
-
-export interface UserGroups {
+    hash: string,
     id: string,
+    isAdmin: boolean,
+    isCloud: boolean,
+    isEnabled: boolean,
+    isLdap: boolean,
     name: string,
-    description: string,
-    type: string,
-    externalId: string,
+    parentId: string,
     permissions: string,
-    parentGroupIds: string[],
-    resourceAccessRights: {
-        additionalProp1: string,
-        additionalProp2: string,
-        additionalProp3: string
-    },
-    isPredefined: boolean
+    realm: string,
+    typeId: string,
+    url: string,
+    userRoleId: string
+    userRoleIds: string[];
 }
-
-// export interface UsersWithGroups {
-//     id: string,
-//     name: string,
-//     email: string,
-//     fullName: string,
-//     type: string,
-//     isOwner: boolean,
-//     permissions: string,
-//     isEnabled: boolean,
-//     isHttpDigestEnabled: boolean,
-//     userGroupIds: string[],
-//     externalId: string,
-//     resourceAccessRights: {
-//         additionalProp1?: string,
-//         additionalProp2?: string,
-//         additionalProp3?: string
-//     },
-//     password?: string
-// }
 
 export interface UserSession {
   username: string,
@@ -340,11 +265,32 @@ export interface UserSession {
 }
 
 interface AggregatedUsersReply {
-    'ec2/getPredefinedRoles': ec2PredefinedRoles,
-    'ec2/getUserRoles': Array<null>,
-    'ec2/getUsers': ec2GetUsers
+    'ec2/getAccessRights': ec2AccessRight[];
+    'ec2/getPredefinedRoles': ec2PredefinedRole[],
+    'ec2/getUserRoles': ec2UserRole[],
+    'ec2/getUsers': ec2User[];
 }
 export interface AggregatedUsers extends NormalResponse<AggregatedUsersReply> {}
+
+export type ec2SaveUser = Partial<{
+    id: string;
+    email: string;
+    name: string;
+    fullName: string;
+    userId: string;
+    userRoleId: string;
+    permissions: string;
+    isCloud: boolean;
+    isEnabled: boolean;
+    password: string;
+}>;
+
+export type RestV1SaveUser = ec2SaveUser & Partial<{
+    type: string;
+    isOwner: boolean;
+    accessibleResources: unknown;
+    isHttpDigestEnabled: boolean;
+}>;
 
 export interface ChangedIdReturned {
     id: string
@@ -424,7 +370,7 @@ export interface ec2MediaServer {
     osInfo: string,
     parentId: string,
     status: string,
-    storages: GetStorages[],
+    storages: ec2Storage[],
     systemInfo: string,
     typeId: string,
     url: string,

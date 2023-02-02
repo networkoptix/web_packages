@@ -10,10 +10,12 @@ import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import type { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import type { ec2User, CurrentUser } from '@services/system-api.types';
 import { NxUriService } from '@services/uri.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -170,7 +172,7 @@ export class NxDropMenu extends BaseDropdown {
                 return; // Account for weird state to avoid errors
             }
             // Todo: Fix so that it checks for admin correctly.
-            let user: any;
+            let user: ec2User | CurrentUser | Account;
             if (environment.isLocal) {
                 user = await this.accountService.mediaServerApi.getCurrentUser(true);
             } else {

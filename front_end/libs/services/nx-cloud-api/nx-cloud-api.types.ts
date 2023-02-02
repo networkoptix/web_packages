@@ -166,6 +166,7 @@ export interface System {
     version: string;
 }
 
+/** Cached user when system cannot be reached */
 export interface CloudUser {
     accessRole: string,
     accountEmail: string,
@@ -179,8 +180,6 @@ export interface CloudUser {
     userRoleId: string,
     vmsUserId: string
 }
-
-export interface CloudUsers extends Array<CloudUser> { }
 
 export interface Downloads {
     backwardsCompatible: boolean;

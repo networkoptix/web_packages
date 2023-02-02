@@ -3,7 +3,7 @@ import md5 from 'md5';
 import { Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { CloudResponse, CloudUsers, System, WithFreshSession } from '../../nx-cloud-api.types';
+import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
 import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
 
 enum NonSystemIdEndpoint {
@@ -63,11 +63,13 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         return this.get(this.systemEndpoint(NonSystemIdEndpoint.get), { params: systemId ? { systemId } : { customization: this.hostOrCustomization } }).pipe(map(({ systems }) => systems));
     }
 
-    public getCloudUsers(systemId = ''): Observable<CloudUsers> {
-        return this.get(this.systemEndpoint(NonSystemIdEndpoint.getCloudUsers), { params: { systemId } }).pipe(map(({ sharing }) => sharing));
+    public getCloudUsers(systemId = ''): Observable<CloudUser[]> {
+        return this.get<{ sharing: CloudUser[] }>(
+            this.systemEndpoint(NonSystemIdEndpoint.getCloudUsers), { params: { systemId } }
+        ).pipe(map(({ sharing }) => sharing));
     }
 
-    public sharing(systemId: string): Observable<CloudUsers>;
+    public sharing(systemId: string): Observable<CloudUser[]>;
     public sharing(systemId: string, body: ShareBody): Observable<CloudResponse>;
     public sharing(systemId: string, body?: ShareBody): Observable<unknown> {
         if (body) {

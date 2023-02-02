@@ -16,7 +16,7 @@ import { CloudStorageManager } from '@services/system.service/cloud-storage-mana
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { pickFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
@@ -337,7 +337,7 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async changePassword(system: NxSystem, user: NxSystemUser): Promise<boolean> {
+    public async changePassword(system: NxSystem, user: NxUser): Promise<boolean> {
         const config: Partial<DialogConfig> = {
             data: {
                 system,

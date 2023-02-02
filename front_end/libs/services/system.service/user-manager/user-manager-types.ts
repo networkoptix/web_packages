@@ -1,101 +1,77 @@
-import { Translatable } from '@pipes/any-translate.types';
+import type { CloudUser } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { ec2PredefinedRole, ec2User, ec2UserRole } from '@services/system-api.types';
 
-import { PredefinedRole } from '../../nx-config/base-config';
+import type { CustomPermission } from '../../nx-config/base-config';
 
-export interface NxSystemRole extends PredefinedRole {
-    id?: string;
-    isAdmin?: boolean;
-    label?: string;
-    optionLabel?: string;
+export interface PredefinedRole extends ec2PredefinedRole {
+    isAdmin: boolean;
 }
 
-export interface NxSystemUser {
-    id: string;
-    name: string;
+export interface UserRole extends ec2UserRole {
+    isAdmin: boolean;
+}
+
+export interface CustomRole extends CustomPermission {
+    isAdmin: boolean;
+}
+
+export type NxAccessRole = PredefinedRole | UserRole | CustomPermission;
+
+// Custom permission is extended with isAdmin in UserManager.getUserRole()
+export type NxUserRole = PredefinedRole | UserRole | CustomRole;
+
+export interface PreprocessCloudUser extends CloudUser {
     email: string;
-    password: string;
+    isCloud: true;
+    permissions: string;
+}
+
+// Properties processed during .processUsers()
+interface ProcessedUserProps {
     fullName: string;
     permissions: string;
-    isEnabled: boolean;
-    externalId: string; // up to here, shared fields between Users with Roles + Users with Groups
-    cryptSha512Hash?: string;
-    digest?: string;
-    hash?: string;
-    parentId?: string;
-    realm?: string;
-    typeId?: string;
-    url?: string;
-    userId?: string;
-    userRoleId?: string;
-    isAdmin: boolean;
-    isCloud: boolean;
-    isLdap: boolean; // up to here, from User with Roles api call
-    role?: NxSystemRole;
-    accessRole?: string;
-    accessRights?: { [resourceId: string]: true; }; // only for use with User with Roles
-    canBeDeleted: boolean;
-    canBeEdited: boolean;
-    isLocalOwner: boolean;
+    role: NxUserRole;
+    accessRole: string;
+    accessRights?: Record<string, true>; // TODO: Use Set
+    id: string;
     isCloudOwner: boolean;
-    isMe: boolean; // calculated fields that can be potentially shared b/t Roles & Groups
-    type?: string;
-    isOwner?: boolean;
-    isHttpDigestEnabled?: boolean;
-    userGroupIds?: string[];
-    resourceAccessRights?: {
-        additionalProp1?: string;
-        additionalProp2?: string;
-        additionalProp3?: string;
-    }; // up to here, from User with Groups api call
-    permissionsSet?: Set<string> // new calculated fields for just Groups
+    isMe: boolean;
+    isAdmin: boolean;
+    isLocalOwner: boolean;
+    canBeEdited: boolean;
 }
 
-export class SystemPermissions {
-    editAdmins = false;
-    editUsers = false;
-    isAdmin = false;
-    editCameras = false;
-    viewArchives = false;
+export type NxEc2User = ec2User & ProcessedUserProps;
+export interface NxEc2CloudUser extends NxEc2User {
+    isCloud: true;
+}
+export interface NxEc2LocalUser extends NxEc2User {
+    isCloud: false;
+}
+export interface NxEc2UserPwChange extends NxEc2LocalUser {
+    password: string;
 }
 
-export interface NxUserGroup {
-    id: string,
-    name: string,
-    description: string | Translatable,
-    type: string,
-    externalId: string,
-    permissions: string,
-    parentGroupIds: string[],
-    resourceAccessRights: {
-        additionalProp1: string,
-        additionalProp2: string,
-        additionalProp3: string
-    },
-    isPredefined: boolean
+export type NxCloudUser = PreprocessCloudUser & ProcessedUserProps;
+
+export type NxUser = NxEc2User | NxCloudUser;
+
+/** The base data for adding a new cloud user */
+export interface NewUserBase extends Pick<ec2User, 'email' | 'isEnabled' | 'isCloud'> {
+    role: NxAccessRole;
 }
 
-export interface NxUserWithGroups {
-    id: string,
-    name: string,
-    email: string,
-    type: string,
-    fullName: string,
-    isOwner: boolean,
-    permissions: string,
-    permissionsSet?: Set<string>
-    isEnabled: boolean,
-    isHttpDigestEnabled: boolean,
-    userGroupIds: string[],
-    externalId: string,
-    resourceAccessRights: {
-        additionalProp1: string,
-        additionalProp2: string,
-        additionalProp3: string
-    },
-    password?: string,
-    isMe?: boolean,
-    isCloudOwner?: boolean,
-    isLocalOwner?: boolean,
-    isAdmin?: boolean,
-    canBeEdited?: boolean,
+export interface NewUserData extends Omit<NewUserBase, 'role'> {
+    canBeEdited: true;
+    userRoleId: string;
+    permissions: string;
+    name: string;
+}
+
+export interface SystemPermissions {
+    editAdmins: boolean;
+    editUsers: boolean;
+    isAdmin: boolean;
+    editCameras: boolean;
+    viewArchives: boolean;
 }

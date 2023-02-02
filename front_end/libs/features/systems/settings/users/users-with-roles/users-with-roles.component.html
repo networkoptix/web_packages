@@ -67,7 +67,6 @@
                             id="permissionsSelect"
                             name="permissionsSelect"
                             [disabled]="!systemAvailable"
-                            [user]="selectedUser"
                             [system]="system"
                             [roles]="system.accessRoles"
                             [ngModel]="selectedUser.role"
@@ -142,7 +141,7 @@
                             id="email"
                             #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
-                            [readonly]="selectedUser.isLdap"
+                            [readonly]="isLdap"
                             [disabled]="
                                 !(environment.isLocal && selectedUser.isMe) &&
                                 !selectedUser.canBeEdited
@@ -190,7 +189,7 @@
                     <button
                         class="btn btn-default"
                         (click)="changePassword()"
-                        [disabled]="selectedUser.isLdap"
+                        [disabled]="isLdap"
                         translate
                     >
                         Change Password
@@ -221,7 +220,7 @@
                                 'pointer-events': 'none'
                             }"
                         ></svg-icon>
-                        <ng-container>{{ deleteMessage | translate }}</ng-container>
+                        {{ deleteMessage | translate }}
                     </button>
                 </div>
             </nx-section>

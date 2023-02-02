@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
 import { processLanguageFactory } from '@utils/nx';
 
 import type { IConfig } from './nx-config/config-types';
@@ -177,7 +176,7 @@ export class NxBootstrapProvider {
         } else if (!this.environment.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
-            this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
+            this.CONFIG.accessRoles.predefinedRoles.forEach(option => {
                 if (option.permissions) {
                     option.permissions = option.permissions.split('|').sort().join('|');
                 }
