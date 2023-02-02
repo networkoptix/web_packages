@@ -89,15 +89,12 @@ export class PushComponent implements OnInit, OnDestroy {
     }
 
     setSystems(): void {
-        timer(10000, 10000).pipe(untilDestroyed(this)).subscribe(() =>
-            this.updateSubStates()
+        this.notification.system = '';
+        timer(0, 10000).pipe(untilDestroyed(this)).subscribe(() => {
+            this.systems = this.systemsService.systems;
+            this.updateSubStates();
+        }
         );
-        this.systemsService.forceUpdateSystemsAsPromise().then(
-            () => {
-                this.systems = this.systemsService.systems;
-                this.notification.system = '';
-                this.updateSubStates();
-            });
     }
 
     setFirebase(): void {
