@@ -6,6 +6,7 @@
     maxlength="5"
     class="form-control"
     [ngClass]="{ 'not-empty': value }"
+    (blur)="onBlur()"
 />
 <button
     class="period"

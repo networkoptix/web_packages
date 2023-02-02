@@ -11,7 +11,7 @@ import {
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@src/app/variables/static-variables';
 
-const oneToTwelve = '(0?[1-9])|(1[1-2])';
+const oneToTwelve = '(0?[1-9])|(1[0-2])';
 const zeroToTwentyfour = '(0?\\d)|(1\\d)|(2[0-4])';
 const zerozeroToFiftynine = '[0-5]\\d';
 
@@ -75,6 +75,7 @@ export class NxTimeSelectorComponent implements OnInit {
     timeRegex: RegExp;
     period: string = this.AM;
     placeholder: string;
+    lastValidValue: string | null = null;
 
     constructor(@Inject(LOCALE_ID) locale: string) {
         // https://stackoverflow.com/a/63736713
@@ -90,9 +91,11 @@ export class NxTimeSelectorComponent implements OnInit {
             if (this.hour12) {
                 const [time, PM] = msToHour12(this.time);
                 this.value = time;
+                this.lastValidValue = time;
                 this.period = PM ? this.PM : this.AM;
             } else {
                 this.value = msToHour24(this.time);
+                this.lastValidValue = this.value;
             }
         }
     }
@@ -101,11 +104,30 @@ export class NxTimeSelectorComponent implements OnInit {
         const trimmed = value.trim();
         const validValue = this.timeRegex.test(trimmed);
         if (validValue) {
+            this.lastValidValue = trimmed;
             this.timeChange.emit(
                 timeStrToMs(trimmed, this.hour12 && this.period === this.PM)
             );
-        } else {
+        } else if (!trimmed) {
+            this.lastValidValue = null;
             this.timeChange.emit(null);
+        }
+    }
+
+    /**
+     * Because there is no incremental adjustment, changes are made by
+     * deleting and typing. But because filtering is supposed to be instant
+     * without having to click an apply button, we want the last valid value
+     * to "stick" until either the input is cleared or another valid value is
+     * typed instead of immediately clearing filtering on an invalid value.
+     */
+    onBlur(): void {
+        if (!this.lastValidValue || this.lastValidValue === this.value) {
+            // No stored value or valid value
+        } else if (!this.value.trim()) {
+            this.value = '';
+        } else if (!this.timeRegex.test(this.value.trim())) {
+            this.value = this.lastValidValue;
         }
     }
 }
