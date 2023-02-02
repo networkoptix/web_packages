@@ -6,6 +6,9 @@ Test Teardown     Run Keywords    QA Video Recording Stop       storage-resource
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
+*** Variables ***
+@{storage string}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid    ${EMPTY}    ${EMPTY}
+
 *** Test Cases ***
 1. Loading State of Storage Locations Block
     [Tags]    C81803
@@ -27,7 +30,7 @@ Force Tags        storage
 
 3. Analytics DB Storage dropdown is not visible
     [Tags]    C81740    Analytics     
-    [Setup]     Storage Test Setup      email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
+    [Setup]     Storage Test Setup      email=${server 2['cloudOwner']}     system=${server 2['id']}     config storage=${False}
     Verify on Servers Page
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
 
@@ -257,7 +260,7 @@ Force Tags        storage
 
 12. Storage Locations Table without control buttons
     [Tags]    C81572
-    [Setup]     Storage Test Setup       email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
+    [Setup]     Storage Test Setup       email=${server 2['cloudOwner']}     system=${server 2['id']}     config storage=${False}
     Wait Until Elements Are Visible With Retry
     ...    ${STORAGE LOCATIONS BLOCK}
     ...    ${STORAGE ADD BUTTON}
@@ -270,7 +273,7 @@ Force Tags        storage
 
 13. Not able to load storage information
     [Tags]    C84518
-    [Setup]     Storage Test Setup       email=${server 3['owner']}     system=${server 3['cloud id']}     config storage=${False}
+    [Setup]     Storage Test Setup       email=${server 3['cloudOwner']}     system=${server 3['id']}     config storage=${False}
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE NOT ABLE TO LOAD}
     Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
@@ -336,7 +339,7 @@ Force Tags        storage
     Wait Until Element is Visible     ${SAVE BUTTON}
     Click    Button    ${SAVE BUTTON}
     Log    Step 4 - C81779
-    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}    ${value}    ${camera resourceId}     ${server 1['local auth']}
+    Turn On Analytics    https://${QA BURBANK IP}:${server 1}[port][0]    ${value}    ${camera resourceId}     ${server 1['localAuth']}
     Reload Page
     Log    C81754
     Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
@@ -530,7 +533,7 @@ Force Tags        storage
 
 24. Detailed Info button works (system has one storage)
     [Tags]
-    [Setup]     Storage Test Setup       email=${server 2['owner']}     system=${server 2['cloud id']}
+    [Setup]     Storage Test Setup       email=${server 2['cloudOwner']}     system=${server 2['id']}
     Verify on Servers Page
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click    Button     ${STORAGE INFO BUTTON}
@@ -703,7 +706,7 @@ Force Tags        storage
 
 30. Failed to add external storage: server is offline
     [Tags]    C81600    external
-    [Setup]     Storage Test Setup      system=${server 2['cloud id']}   config storage=${False}
+    [Setup]     Storage Test Setup      system=${server 2['id']}   config storage=${False}
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -783,13 +786,13 @@ Force Tags        storage
 
     Log    Add external storage: path is already added to another server - Cancel, Close, Back
     # ${server2} =    Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}
-    Merge Systems Local    ${LOCAL AUTH}    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${server 1}[port]    ${QA BURBANK IP}:${server 3}[port]    currentPassword=${BASE PASSWORD}
+    Merge Systems Local    ${LOCAL AUTH}    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${server 1}[port][0]    ${QA BURBANK IP}:${server 3}[port][0]    currentPassword=${BASE PASSWORD}
     Sleep    30
     Make Directory    disk-invalid
     Restart Docker Servers    ${server 1}[name]     ${server 3}[name]
     Sleep    90
     Remove Directory    disk-invalid
-    Go To    ${ENV}/systems/${server 1['cloud id']}/servers/${server 3['id']}
+    Go To    ${ENV}/systems/${server 1['id']}/servers/${server 3['id']}
     Select Server By Name    ${server 3['id']}
     #Wait Until Element is Visible With Retry    ${STORAGE MAIN MODE}
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
@@ -939,10 +942,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test     5.0    5.1    msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
-        Log in to user and system    ${account}     ${server 1['cloud id']}
+    FOR    ${account}    IN    ${server 1['cloudOwner']}    ${server 1}[cloudUsers][cloudAdmin]
+        Log in to user and system    ${account}     ${server 1['id']}
         Go To Servers
         Verify on Servers Page
         Select Server By Name    ${server 1['id']}
@@ -950,8 +953,8 @@ Force Tags        storage
         Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
         Log Out
     END
-    FOR    ${account}    IN    ${server 1}[cloud users][advancedViewer]    ${server 1}[cloud users][liveViewer]    ${server 1}[cloud users][viewer]    ${server 1}[cloud users][custom]
-        Log in to user and system    ${account}     ${server 1['cloud id']}
+    FOR    ${account}    IN    ${server 1}[cloudUsers][advancedViewer]    ${server 1}[cloudUsers][liveViewer]    ${server 1}[cloudUsers][viewer]    ${server 1}[cloudUsers][custom]
+        Log in to user and system    ${account}     ${server 1['id']}
         Sleep     2
         Element Should Not Be Visible    ${SERVERS LINK}
         Log Out
@@ -969,10 +972,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -984,10 +987,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -999,10 +1002,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -1056,10 +1059,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -1079,10 +1082,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -1103,10 +1106,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -1141,10 +1144,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
@@ -1188,10 +1191,10 @@ Force Tags        storage
     [Setup]     QA Video Recording Start
     Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
-        Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
+        Initialize Backup For User and System    ${server 1['cloudOwner']}     ${server 1['id']}
     END
-    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
+    Log in to user and system    ${server 1['cloudOwner']}     ${server 1['id']}
     Go To Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}

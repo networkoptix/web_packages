@@ -813,10 +813,16 @@ class GenericKeywords(object):
             )
         with open(jsonPath,  encoding="utf-8") as suite_json:
             serversJson = json.load(suite_json)
-            runName = choices(string.ascii_lowercase + string.digits, k=8)
+            if BuiltIn().get_variable_value('${random}'):
+                runName = BuiltIn().get_variable_value('${random}')
+            else:
+                runName = choices(string.ascii_lowercase + string.digits, k=8)
+            storageString = BuiltIn().get_variable_value('${storage string}')
             # Start Docker server for each server in the JSON
             for idx, server in enumerate(serversJson):
                 server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}{idx}_"
+                if storageString:
+                    server["storage"] = storageString[idx]
                 server.update(self.create_docker_server(server, runName))
             
             # Set up systems
@@ -930,7 +936,7 @@ class GenericKeywords(object):
             port_count = port_count + 1
         cloud_host_command = f"-e CLOUD_HOST={self.cloud_host.replace('https://', '')}"
         return (
-            f"{base_command} {name_command} {mac_command} {port_command}"
+            f"{base_command} {name_command} {mac_command} {port_command} "
             f"{storage_command} {cloud_host_command} {self.image}")
 
 
