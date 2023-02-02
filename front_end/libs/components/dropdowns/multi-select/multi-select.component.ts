@@ -134,7 +134,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                     ? {
                         value: this.LANG.userGroups.multiple,
                         params: {
-                            number: this.innerValue.length
+                            count: this.innerValue.length
                         }
                     }
                     : this.LANG.search.Any;
@@ -145,13 +145,13 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                     ? {
                         value: this.LANG.userGroups.multiple,
                         params: {
-                            number: this.innerValue.length
+                            count: this.innerValue.length
                         }
                     }
                     : {
                         value: this.LANG.search.selected,
                         params: {
-                            number: this.innerValue.length
+                            count: this.innerValue.length
                         }
                     };
                 break;
