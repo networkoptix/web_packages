@@ -90,7 +90,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
             .map(licence => {
                 const title = this.CONFIG.licenseTypes.find(item =>
                     item.name === licence
-                ).title || licence.charAt(0).toUpperCase() + licence.slice(1);
+                )?.title || licence.charAt(0).toUpperCase() + licence.slice(1);
                 return {
                     type: title,
                     count: response[licence].total,

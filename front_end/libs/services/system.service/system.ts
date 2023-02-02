@@ -1,5 +1,4 @@
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { memoize } from 'lodash-es';
 import {
     BehaviorSubject,
@@ -168,7 +167,6 @@ export class NxSystem {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private router: Router,
-        private translateService: TranslateService,
         private locale: string,
         currentUserEmail: string,
         systemId?: string,
@@ -731,12 +729,12 @@ export class NxSystem {
 
     public getLicenseManager = () => {
         return this.getLicenseServerApi().pipe(
-            map(licenseServerApi => new LicenseManager(licenseServerApi, this, this.systemsService, this.translateService)
+            map(licenseServerApi => new LicenseManager(licenseServerApi, this, this.systemsService)
             ));
     };
 
     public getCloudStorageManager(cloudStorageApi: CloudStorageAPI) {
-        return new CloudStorageManager(cloudStorageApi, this, this.systemsService, this.translateService);
+        return new CloudStorageManager(cloudStorageApi, this, this.systemsService);
     }
 
     /**

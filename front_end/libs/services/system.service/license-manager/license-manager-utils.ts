@@ -1,8 +1,9 @@
 import { map, Observable } from 'rxjs';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { LicenseInfo, LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { NxSystemsService } from '@services/systems.service';
-import { bytesToString } from '@utils/bits-to-string';
+import { bitsToString } from '@utils/bits-to-string';
 
 import { LicenseKeyInfo, ProcessedLicenseKey } from './license-manager.types';
 
@@ -34,9 +35,9 @@ export const processLicenseKeys = (systemsService: NxSystemsService, translate: 
         .map(({
             expirationDate, licenseState, cloudSystemId, licenseKey, cloudStorageSizeBytes
         }) => ({
-            size: bytesToString(+cloudStorageSizeBytes),
+            size: bitsToString(+cloudStorageSizeBytes),
             state: licenseState,
-            system: licenseState === LicenseState.ACTIVE ? systems.find(({ id }) => id === cloudSystemId)?.name || cloudSystemId : translate('Unassigned'),
+            system: licenseState === LicenseState.ACTIVE ? systems.find(({ id }) => id === cloudSystemId)?.name || cloudSystemId : translate(staticLang.cloudStorage.fromServer.Unassigned),
             expires: new Date(expirationDate).toLocaleDateString(),
             key: licenseKey,
             sizeBytes: +cloudStorageSizeBytes

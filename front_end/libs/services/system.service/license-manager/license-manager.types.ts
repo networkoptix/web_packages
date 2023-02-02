@@ -1,3 +1,4 @@
+import type staticLang from '@common/language/language_i18n_static.json';
 import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 
 export enum CLOUD_STORAGE_STATES {
@@ -29,3 +30,5 @@ export interface LicenseTagInfo {
     info: string;
     warningText?: string;
 }
+
+export type LicenseTranslationBaseKeys = keyof typeof staticLang.cloudStorage.fromServer;

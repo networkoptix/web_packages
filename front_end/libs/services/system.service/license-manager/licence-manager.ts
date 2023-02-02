@@ -1,8 +1,9 @@
-import { TranslateService } from '@ngx-translate/core';
 import { chunk } from 'lodash-es';
 import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, catchError } from 'rxjs';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { Translatable } from '@pipes/any-translate.types';
 import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { Destroyable } from '@utils/Destroyable';
@@ -11,15 +12,14 @@ import { LicenseServerAPI } from '../../nx-cloud-api/cloud-services/license-serv
 import { NxSystem } from '../system';
 
 import { mapLicenseKeyInfo, processLicenseKeys } from './license-manager-utils';
-import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo } from './license-manager.types';
+import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo, LicenseTranslationBaseKeys } from './license-manager.types';
 
 export class LicenseManager extends Destroyable {
     #systemsService: NxSystemsService;
-    #translateService: TranslateService;
 
     #updater$ = new BehaviorSubject<('system' | 'user')[]>(['system', 'user']);
 
-    static readonly TRANSLATION_KEY = 'cloudStorage.fromServer.';
+    static readonly TRANSLATION_BASE = staticLang.cloudStorage.fromServer;
 
     /** Base State */
     public readonly systemLicenses$ = new BehaviorSubject<LicenseInfo[]>(null);
@@ -51,7 +51,7 @@ export class LicenseManager extends Destroyable {
 
     /** License Manager Helpers */
 
-    translateMessage = (text: string, params?: unknown): string => this.#translateService.instant(`${LicenseManager.TRANSLATION_KEY}${text}`, params).replace(LicenseManager.TRANSLATION_KEY, '');
+    translateMessage = (key: LicenseTranslationBaseKeys, params?: unknown): Translatable => ({ value: LicenseManager.TRANSLATION_BASE[key], params: params || {} });
 
     #toTagInfo = (keyInfo: ProcessedLicenseKey): LicenseTagInfo => ({
         key: keyInfo.key,
@@ -145,10 +145,9 @@ export class LicenseManager extends Destroyable {
         );
     };
 
-    constructor(private licenseServerApi: LicenseServerAPI, private system: NxSystem, systemsService: NxSystemsService, translateService: TranslateService) {
+    constructor(private licenseServerApi: LicenseServerAPI, private system: NxSystem, systemsService: NxSystemsService) {
         super();
         this.#systemsService = systemsService;
-        this.#translateService = translateService;
 
         this.#updater$.pipe(
             filter(updates => updates.includes('system')),

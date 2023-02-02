@@ -68,7 +68,7 @@
     <div class="license-info-block">
         <ng-container *ngIf="(systemLicenses$ | async)?.[0] as license; else preloader">
             <h2>{{ license.size }}</h2>
-            <span>{{ TRANSLATION_KEY + 'until' | translate: license }}</span>
+            <span>{{ TRANSLATION_BASE.until | translate: license }}</span>
         </ng-container>
     </div>
 </ng-template>
@@ -89,7 +89,7 @@
     <div class="usage-info-block">
         <h4>
             <span *ngIf="(usages$ | async)?.length; else noStorages">{{
-                usageMessage$ | async
+                usageMessage$ | async | translate
             }}</span>
         </h4>
         <ng-template #activateNotice>
@@ -115,8 +115,8 @@
                             [style.background]="usage.color"
                             class="legend"
                         ></div>
-                        <div class="description">{{ usage.title }}</div>
-                        <div class="size">{{ usage.sizeText }}</div>
+                        <div class="description">{{ usage.title | translate }}</div>
+                        <div class="size">{{ usage.sizeText | translate }}</div>
                     </div>
                 </ng-template>
                 <div
@@ -286,16 +286,20 @@
                     *cdkCellDef="let element"
                     [ngClass]="{ 'fs-mask': field === 'key' }"
                 >
-                    <ng-container [ngSwitch]="field">
-                        <ng-container *ngSwitchCase="'key'">{{
-                            element[field] | mask: MASK
-                        }}</ng-container>
+                    <ng-container
+                        *ngIf="
+                            TRANSLATION_BASE[element[field]] || element[field] | translate as value
+                        "
+                        [ngSwitch]="field"
+                    >
+                        <ng-container *ngSwitchCase="'key'">{{ value | mask: MASK }}</ng-container>
                         <span
                             *ngSwitchCase="'state'"
                             [ngClass]="element[field]"
-                            >{{ TRANSLATION_KEY + element[field] | translate }}</span
+                            >{{ value }}</span
                         >
-                        <ng-container *ngSwitchDefault>{{ element[field] }}</ng-container>
+                        <span *ngSwitchCase="'system'">{{ value }}</span>
+                        <ng-container *ngSwitchDefault>{{ value }}</ng-container>
                     </ng-container>
                 </td>
             </ng-container>

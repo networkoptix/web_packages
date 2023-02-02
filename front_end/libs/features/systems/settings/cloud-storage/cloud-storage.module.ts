@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
@@ -20,7 +19,6 @@ import { NxCloudStorageComponent } from './cloud-storage.component';
         CommonModule,
         RouterModule,
         FormsModule,
-        TranslateModule,
         ComponentsModule,
         NgxMaskModule.forRoot(),
         CdkTableModule,

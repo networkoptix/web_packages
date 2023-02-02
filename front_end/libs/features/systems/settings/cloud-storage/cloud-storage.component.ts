@@ -31,7 +31,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     LANG = staticLang;
 
-    TRANSLATION_KEY = LicenseManager.TRANSLATION_KEY;
+    TRANSLATION_BASE = LicenseManager.TRANSLATION_BASE;
 
     readonly MASK = 'AAAA-AAAA-AAAA-AAAA';
 

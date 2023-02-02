@@ -1,13 +1,15 @@
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, switchMap, filter, catchError, shareReplay, Observable, from, map, throwError } from 'rxjs';
 
+import staticLang from '@common/language/language_i18n_static.json';
+import { Translatable } from '@pipes/any-translate.types';
 import { uuid } from '@services/nx-cloud-api/cloud-services/base-cloud-service-api.types';
 import { BoundSystem, StorageInfo } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { Destroyable } from '@utils/Destroyable';
-import { bytesToString } from '@utils/bits-to-string';
+import { bitsToString } from '@utils/bits-to-string';
 
 import { CloudStorageAPI } from '../../nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
+import { LicenseTranslationBaseKeys } from '../license-manager/license-manager.types';
 import { NxSystem } from '../system';
 
 export enum CloudStorageUpdate {
@@ -27,9 +29,8 @@ export interface Usage {
 export class CloudStorageManager extends Destroyable {
     // @ts-expect-error will need later
     #systemsService: NxSystemsService;
-    #translateService: TranslateService;
 
-    static readonly TRANSLATION_KEY = 'cloudStorage.fromServer.';
+    static readonly TRANSLATION_BASE = staticLang.cloudStorage.fromServer;
 
     #updater$ = new BehaviorSubject<CloudStorageUpdate[]>(Object.values(CloudStorageUpdate).filter(val => val !== CloudStorageUpdate.ACTIVATE));
 
@@ -83,9 +84,9 @@ export class CloudStorageManager extends Destroyable {
 
     /** Cloud Storage Manager Helpers */
 
-    #translateMessage = (text: string, params?: unknown): string => this.#translateService.instant(`${CloudStorageManager.TRANSLATION_KEY}${text}`, params).replace(CloudStorageManager.TRANSLATION_KEY, '');
+    #translateMessage = (key: LicenseTranslationBaseKeys, params?: unknown): Translatable => ({ value: CloudStorageManager.TRANSLATION_BASE[key], params: params || {} });
 
-    #getSizeText = (usageSpace: number, percentage: number): string => this.#translateMessage('usedSpace', { usageSpace: bytesToString(usageSpace), percentage });
+    #getSizeText = (usageSpace: number, percentage: number): string => this.#translateMessage('usedSpace' as LicenseTranslationBaseKeys, { usageSpace: bitsToString(usageSpace), percentage });
 
     /**
      * Gets plain text usage message.
@@ -105,9 +106,9 @@ export class CloudStorageManager extends Destroyable {
         return this.systemStorages$.pipe(
             map(storages => storages.reduce((total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace, 0)),
             map(usedSpace => {
-                const total = bytesToString(totalSpace);
-                const used = usedSpace === 0 ? `0 ${total.split(' ')[1]}` : bytesToString(usedSpace);
-                const percent = Math.round(usedSpace / totalSpace);
+                const total = bitsToString(totalSpace);
+                const used = usedSpace === 0 ? `0 ${total.split(' ')[1]}` : bitsToString(usedSpace);
+                const percent = Math.round(usedSpace / totalSpace * 100);
 
                 return this.#translateMessage('used', { used, total, percent });
             })
@@ -150,7 +151,7 @@ export class CloudStorageManager extends Destroyable {
                     usages.push({
                         size: freeSpacePercentage,
                         color: 'transparent',
-                        title: this.#translateMessage('Available'),
+                        title: this.#translateMessage('available'),
                         sizeText: this.#getSizeText(freeSpace, freeSpacePercentage)
                     });
                 }
@@ -171,9 +172,8 @@ export class CloudStorageManager extends Destroyable {
         );
     }
 
-    constructor(private cloudStorageApi: CloudStorageAPI, private system: NxSystem, systemsService: NxSystemsService, translateService: TranslateService) {
+    constructor(private cloudStorageApi: CloudStorageAPI, private system: NxSystem, systemsService: NxSystemsService) {
         super();
         this.#systemsService = systemsService;
-        this.#translateService = translateService;
     }
 }
