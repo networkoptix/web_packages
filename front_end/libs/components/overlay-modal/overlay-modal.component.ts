@@ -71,20 +71,6 @@ export class NxOverlayModalComponent implements OnInit {
             setTimeout(() => this.window.location.reload(), 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
-            /* Temporary patch for Firefox-specific behavior where a false state is emitted
-            before a true state after successful login, which results in a overlay flash
-
-            Caused by errors when getting login sessions, which is intercepted by
-            LocalSystemStatusInterceptor on FF right after successful login and sets
-            appState.systemAvailable$ to false
-
-            This should be removed once the underlying issue is fixed
-            https://networkoptix.atlassian.net/browse/CLOUD-9674
-            */
-            if (!state && !this.system) {
-                return;
-            }
-
             if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available
@@ -101,27 +87,26 @@ export class NxOverlayModalComponent implements OnInit {
             this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
         });
 
-        this.accountService.get().then(account => {
-            if (!account) {
-                return;
-            }
-            const system = this.systemService.createLocalSystem(
-                this.accountService.mediaServerApi,
-                account.id,
-                account.email
-            );
-            system.update().then(() => {
-                this.system = system;
-                this.currentRoute = `/#${this.router.url}`;
-                this.getServers();
-                this.serverId = (environment.isLocal)
-                    ? this.CONFIG.localServerId
-                    : this.system.moduleInfo.id;
-                this.routeSubscription = this.router.events.subscribe(route => {
-                    if (route instanceof NavigationEnd) {
-                        this.currentRoute = `/#${route.url}`;
-                    }
-                });
+        const account = this.accountService.account;
+        if (!account) {
+            return;
+        }
+        const system = this.systemService.createLocalSystem(
+            this.accountService.mediaServerApi,
+            account.id,
+            account.email
+        );
+        system.update().then(() => {
+            this.system = system;
+            this.currentRoute = `/#${this.router.url}`;
+            this.getServers();
+            this.serverId = (environment.isLocal)
+                ? this.CONFIG.localServerId
+                : this.system.moduleInfo.id;
+            this.routeSubscription = this.router.events.subscribe(route => {
+                if (route instanceof NavigationEnd) {
+                    this.currentRoute = `/#${route.url}`;
+                }
             });
         });
 
