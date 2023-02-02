@@ -87,26 +87,27 @@ export class NxOverlayModalComponent implements OnInit {
             this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
         });
 
-        const account = this.accountService.account;
-        if (!account) {
-            return;
-        }
-        const system = this.systemService.createLocalSystem(
-            this.accountService.mediaServerApi,
-            account.id,
-            account.email
-        );
-        system.update().then(() => {
-            this.system = system;
-            this.currentRoute = `/#${this.router.url}`;
-            this.getServers();
-            this.serverId = (environment.isLocal)
-                ? this.CONFIG.localServerId
-                : this.system.moduleInfo.id;
-            this.routeSubscription = this.router.events.subscribe(route => {
-                if (route instanceof NavigationEnd) {
-                    this.currentRoute = `/#${route.url}`;
-                }
+        this.accountService.get().then(account => {
+            if (!account) {
+                return;
+            }
+            const system = this.systemService.createLocalSystem(
+                this.accountService.mediaServerApi,
+                account.id,
+                account.email
+            );
+            system.update().then(() => {
+                this.system = system;
+                this.currentRoute = `/#${this.router.url}`;
+                this.getServers();
+                this.serverId = (environment.isLocal)
+                    ? this.CONFIG.localServerId
+                    : this.system.moduleInfo.id;
+                this.routeSubscription = this.router.events.subscribe(route => {
+                    if (route instanceof NavigationEnd) {
+                        this.currentRoute = `/#${route.url}`;
+                    }
+                });
             });
         });
 

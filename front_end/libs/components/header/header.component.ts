@@ -407,30 +407,29 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         if (this.environment.isLocal) {
             this.hideWebAdmin = true;
-            const account = this.accountService.account;
-            // this.accountService.get().then(account => {
-            this.hideWebAdmin = !account || this.bootstrapProvider.newSystem;
-            if (!account || this.bootstrapProvider.newSystem) {
-                return;
-            }
-            this.system = this.systemService.createLocalSystem(
-                this.accountService.mediaServerApi,
-                account?.id,
-                account?.email
-            );
-            this.system.update().then(() => {
-                this.singleSystem = true;
-                this.systemCounter = 1;
-                this.system.infoSubject
-                    .pipe(untilDestroyed(this))
-                    .subscribe(system => {
-                        this.systems = [system];
-                        this.updateActiveSystem();
-                        this.updateActive();
-                        this.headerService.activeSystem = system?.moduleInfo;
-                    });
+            this.accountService.get().then(account => {
+                this.hideWebAdmin = !account || this.bootstrapProvider.newSystem;
+                if (!account || this.bootstrapProvider.newSystem) {
+                    return;
+                }
+                this.system = this.systemService.createLocalSystem(
+                    this.accountService.mediaServerApi,
+                    account?.id,
+                    account?.email
+                );
+                this.system.update().then(() => {
+                    this.singleSystem = true;
+                    this.systemCounter = 1;
+                    this.system.infoSubject
+                        .pipe(untilDestroyed(this))
+                        .subscribe(system => {
+                            this.systems = [system];
+                            this.updateActiveSystem();
+                            this.updateActive();
+                            this.headerService.activeSystem = system?.moduleInfo;
+                        });
+                });
             });
-            // });
         } else {
             this.systemsService.systemsSubject
                 .pipe(untilDestroyed(this))
