@@ -7,6 +7,7 @@ import logging
 from django.conf import settings
 from django import shortcuts
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 import waffle
 
@@ -247,6 +248,7 @@ def check_redirect(request):
 SHARE_CRAWLER_REGEX = r'^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$'
 
 
+@csrf_exempt
 def app_view(request):
     response = None
     if redirect_path := check_redirect(request):
@@ -266,10 +268,10 @@ def app_view(request):
 
     response = response or shortcuts.render(request, "static/index.html")
 
-    if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
-        # Used on the frontend to bypass cors issues due to differences between running locally and behind nginx
-        response.set_cookie('cloud_instance', urllib.parse.quote_plus(f'{settings.LOCAL_CORS_BYPASS}{settings.CLOUD_PORTAL_URL}'))
-        response.set_cookie('cors_bypass', urllib.parse.quote_plus(settings.LOCAL_CORS_BYPASS))
+    if settings.LOCAL_ENVIRONMENT and not settings.TESTING and request.get_full_path().startswith('/cdb'):
+        from proxy.views import proxy_view
+        remoteurl = f'{settings.CLOUD_PORTAL_URL}{request.get_full_path()}'
+        return proxy_view(request, remoteurl)
 
     return response
 

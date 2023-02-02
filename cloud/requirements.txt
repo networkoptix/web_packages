@@ -42,6 +42,7 @@ django-model-utils==3.1.2
 django-nested-admin==3.3.0
 django-npm==1.0.0
 django-oauth-toolkit==1.7.0
+django-proxy==1.2.2
 django-push-notifications==3.0.0
 django-redis==5.2.0
 django-rest-hooks==1.7.1
