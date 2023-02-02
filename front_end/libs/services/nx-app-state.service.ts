@@ -10,7 +10,7 @@ export class NxAppStateService {
     authorizeSubject = new BehaviorSubject(false);
     ribbonSubject = new BehaviorSubject(false);
     headerContainerHeight$ = new BehaviorSubject(48);
-    footerVisibleSubject = new BehaviorSubject(false);
+    footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
