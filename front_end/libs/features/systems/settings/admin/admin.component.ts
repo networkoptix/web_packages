@@ -68,7 +68,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
-    settingsSubscription: Subscription;
     settingsServiceSubscription: Subscription;
     systemsSubscription: Subscription;
     systemSubscription: Subscription;
@@ -243,9 +242,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         // TODO: Restore cloud admin rename permissions
                         // See CB-1596
 
-                        if (this.settingsSubscription) {
-                            this.settingsSubscription.unsubscribe();
-                        }
                         if (!this.applyService.locked) {
                             this.setNameAndTitle();
                         }
@@ -259,16 +255,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     );
                                 });
                         }
+                        if (
+                            !this.environment.isLocal ||
+                                (
+                                    this.environment.isLocal &&
+                                    this.system.userManager.permissions.isAdmin
+                                )
+                        ) {
+                            this.settingsForSystem$ = this.settingsService.getUpdatedSettings().pipe(untilDestroyed(this));
+                        }
                     });
-                if (
-                    !this.environment.isLocal ||
-                        (
-                            this.environment.isLocal &&
-                            this.system.userManager.permissions.isAdmin
-                        )
-                ) {
-                    this.settingsForSystem$ = this.settingsService.getUpdatedSettings().pipe(untilDestroyed(this));
-                }
             });
 
         this.initProcesses();
