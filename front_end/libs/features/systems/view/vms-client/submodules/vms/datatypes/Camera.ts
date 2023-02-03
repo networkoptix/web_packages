@@ -11,8 +11,8 @@ import {
 } from './ICamera';
 
 interface NameValue {
-    name: string,
-    value: string,
+    name: string;
+    value: string;
 }
 
 export class Camera implements ICamera {

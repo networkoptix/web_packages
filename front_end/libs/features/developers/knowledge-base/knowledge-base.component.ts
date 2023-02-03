@@ -221,7 +221,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    projectedLinkHandler({ url, target }: { url: string, target: string }) {
+    projectedLinkHandler({ url, target }: { url: string; target: string }) {
         const base = this.window.location.origin;
         if (target || !url.startsWith(base)) {
             return this.window.open(url, target || '_self');

@@ -110,7 +110,7 @@ export class NxSystemStorageComponent implements OnInit {
     reindexingStorages: MODE[] = [];
     previouslyReserved = new Set<string>();
     beingUpdated: string[] = [];
-    cachedSizes: Record<string, { vms: number, total: number }> = {};
+    cachedSizes: Record<string, { vms: number; total: number }> = {};
 
     stopReindex$ = new Subject<TARGET_STORAGE>();
     currentStorageState: CurrentStorageState;

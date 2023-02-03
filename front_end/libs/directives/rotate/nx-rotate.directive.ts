@@ -24,7 +24,7 @@ export class NxRotate {
         this.el.nativeElement.style.transform = `rotate(${this.#rotation}deg)`;
     };
 
-    #constrainToParent = ({ width, height }: { width: number, height: number }): void => {
+    #constrainToParent = ({ width, height }: { width: number; height: number }): void => {
         this.el.nativeElement.style.maxHeight = this.changeAspect ? `${width}px` : '';
         this.el.nativeElement.style.maxWidth = this.changeAspect ? `${height}px` : '';
         if (this.changeAspect) {

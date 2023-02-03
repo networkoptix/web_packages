@@ -28,7 +28,7 @@ import type {
     TimelineSelectionServiceStatus,
 } from '../../services/timeline.services.types';
 
-type ssRange = { start: number, end: number };
+type ssRange = { start: number; end: number };
 
 @UntilDestroy()
 @Component({

@@ -64,13 +64,13 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
     role: string;
     roles: string[];
     selectedGroups: string[];
-    selectedGroupsList: { name: Translatable, description: Translatable }[];
+    selectedGroupsList: { name: Translatable; description: Translatable }[];
     credentialsValidation = credentialsValidation;
     icons = icons;
     menus = menus;
     toast = toast;
 
-    processedGroups: { id: string, label: Translatable, tooltip?: string }[];
+    processedGroups: { id: string; label: Translatable; tooltip?: string }[];
 
     private passwordChanged: boolean = false;
 

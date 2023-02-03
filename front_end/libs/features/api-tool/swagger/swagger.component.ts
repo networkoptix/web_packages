@@ -422,7 +422,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     generateComponent<C>(
         componentClass: Type<C>
-    ): { componentRef: ComponentRef<C>, element: HTMLElement } {
+    ): { componentRef: ComponentRef<C>; element: HTMLElement } {
         const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
         const componentRef = this.VCR.createComponent(factory);
         const element = componentRef.location.nativeElement as HTMLElement;

@@ -25,9 +25,9 @@ import { getIntervalDiffDict } from './utils/getIntervalDiffDict';
 import { percentageToHex } from './utils/percentageToHex';
 
 interface RulerSerif {
-    interval: IrregularLengthInterval,
-    time: ms,
-    weight: int,
+    interval: IrregularLengthInterval;
+    time: ms;
+    weight: int;
 }
 
 @Injectable({

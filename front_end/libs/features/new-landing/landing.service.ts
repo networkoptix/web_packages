@@ -8,7 +8,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 @UntilDestroy()
 @Injectable()
 export class NxLandingService {
-    screenSize$: Observable<{ width:number, height: number }>;
+    screenSize$: Observable<{ width:number; height: number }>;
     scrollPosition$: Observable<number>;
     introAnimationFinished$ = new BehaviorSubject<boolean>(false);
     // First maskFinishedLoading$ emits which triggers the backgroundGraphic to start loading

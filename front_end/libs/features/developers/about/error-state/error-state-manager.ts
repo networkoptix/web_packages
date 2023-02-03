@@ -1,13 +1,13 @@
 import type { AboutNode } from '../about.component.types';
 
 export interface AssetBlock {
-    type: string,
-    contentHTML: string,
-    content: string
+    type: string;
+    contentHTML: string;
+    content: string;
 }
 
 export interface ErrorStateStructure {
-  [key: string]: boolean | string | number | AssetBlock | ErrorStateStructure
+  [key: string]: boolean | string | number | AssetBlock | ErrorStateStructure;
 }
 
 type AboutNodeFields = 'assetId'
@@ -28,8 +28,8 @@ type BaseErrorConfig = {
 };
 
 interface ErrorConfig extends Partial<BaseErrorConfig> {
-    nodes?: ErrorConfig
-    asset?: ErrorConfig
+    nodes?: ErrorConfig;
+    asset?: ErrorConfig;
 }
 
 export class ErrorStateManager {

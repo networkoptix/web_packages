@@ -8,50 +8,50 @@ import type {
 import type { TimeRange } from './TimeRange';
 
 export interface TimelineScrollbarRelativeServiceStatus {
-    magnification: float,
-    offset: float,
-    canScrollLeft: boolean,
-    canScrollRight: boolean,
+    magnification: float;
+    offset: float;
+    canScrollLeft: boolean;
+    canScrollRight: boolean;
 }
 
 export interface TimelineScrollbarAbsoluteServiceStatus extends TimelineScrollbarRelativeServiceStatus {
-    isIllusionary: boolean,
-    left: px,
-    honestLeft: px,
-    width: px,
-    honestWidth: px,
-    isBarGrabbed: boolean,
+    isIllusionary: boolean;
+    left: px;
+    honestLeft: px;
+    width: px;
+    honestWidth: px;
+    isBarGrabbed: boolean;
 }
 
 export interface PixelRange {
-    left: px,
-    right: px,
+    left: px;
+    right: px;
 }
 
 export interface TimelineSelectionServiceStatus {
-    isActive: boolean,
-    range: TimeRange,
-    pixelRange: PixelRange,
-    dragMode: number,
-    hoverMode: boolean,
+    isActive: boolean;
+    range: TimeRange;
+    pixelRange: PixelRange;
+    dragMode: number;
+    hoverMode: boolean;
 }
 
 export interface TimelineServiceStatus {
-    fullRange: TimeRange,
-    visibleRange: TimeRange,
-    canvasGeometry: CanvasGeometry,
+    fullRange: TimeRange;
+    visibleRange: TimeRange;
+    canvasGeometry: CanvasGeometry;
     zoom: {
-        canZoomIn: boolean,
-        canZoomOut: boolean,
-    },
-    canvasGeometryUpdateRequested: boolean,
+        canZoomIn: boolean;
+        canZoomOut: boolean;
+    };
+    canvasGeometryUpdateRequested: boolean;
 }
 
 export interface TimelineTimeUnderMouseServiceStatus {
-    isMouseInside: boolean,
-    timeUnderMouse: ms,
-    offsetX: px,
-    pressed: boolean,
+    isMouseInside: boolean;
+    timeUnderMouse: ms;
+    offsetX: px;
+    pressed: boolean;
 }
 
 export enum SELECTION_DRAG_MODE {

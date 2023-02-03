@@ -20,20 +20,20 @@ export interface Disclaimer {
 }
 
 export type csvData = {
-        'Vendor': string,
-        'Model': string,
-        'Type': string,
-        'Max Resolution': string,
-        'Max FPS': number,
-        'Codec': string,
-        'Audio': string,
-        '2-Way Audio': string,
-        'PTZ': string,
-        'Advanced PTZ': string,
-        'Fisheye': string,
-        'Motion': string,
-        'I/O': string,
-        'Analytics': string
+        'Vendor': string;
+        'Model': string;
+        'Type': string;
+        'Max Resolution': string;
+        'Max FPS': number;
+        'Codec': string;
+        'Audio': string;
+        '2-Way Audio': string;
+        'PTZ': string;
+        'Advanced PTZ': string;
+        'Fisheye': string;
+        'Motion': string;
+        'I/O': string;
+        'Analytics': string;
     };
 
 /**

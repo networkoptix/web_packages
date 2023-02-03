@@ -11,40 +11,40 @@ export enum PLAYBACK_ERROR {
 }
 
 export interface AbstractPlaybackState {
-    mode: PLAYBACK_MODE,
-    initializedAt: ms,
+    mode: PLAYBACK_MODE;
+    initializedAt: ms;
 }
 
 export interface StoppedPlaybackState extends AbstractPlaybackState {
-    mode: PLAYBACK_MODE.STOPPED,
-    quality: PlaybackQuality,
-    transport: PlaybackTransport,
-    error: string
+    mode: PLAYBACK_MODE.STOPPED;
+    quality: PlaybackQuality;
+    transport: PlaybackTransport;
+    error: string;
 }
 
 export interface ArchivePlaybackState extends AbstractPlaybackState {
-    mode: PLAYBACK_MODE.ARCHIVE,
-    sourceUrl: string,
-    posterUrl?: string,
-    startTime: ms,
-    currentTime: ms,
-    started: boolean,
-    paused: boolean,
-    encrypted: boolean,
-    quality: PlaybackQuality,
-    transport: PlaybackTransport,
-    error: string
+    mode: PLAYBACK_MODE.ARCHIVE;
+    sourceUrl: string;
+    posterUrl?: string;
+    startTime: ms;
+    currentTime: ms;
+    started: boolean;
+    paused: boolean;
+    encrypted: boolean;
+    quality: PlaybackQuality;
+    transport: PlaybackTransport;
+    error: string;
 }
 
 export interface LivePlaybackState extends AbstractPlaybackState {
-    mode: PLAYBACK_MODE.LIVE,
-    sourceUrl: string,
-    posterUrl?: string,
-    currentTime: ms,
-    started: boolean,
-    quality: PlaybackQuality,
-    transport: PlaybackTransport,
-    error: string
+    mode: PLAYBACK_MODE.LIVE;
+    sourceUrl: string;
+    posterUrl?: string;
+    currentTime: ms;
+    started: boolean;
+    quality: PlaybackQuality;
+    transport: PlaybackTransport;
+    error: string;
 }
 
 export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState;

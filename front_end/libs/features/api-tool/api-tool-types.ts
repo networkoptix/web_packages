@@ -1,14 +1,14 @@
 export interface MethodInfo {
-    description: string,
-    parameters?: Array<Parameter>,
+    description: string;
+    parameters?: Array<Parameter>;
     responses: {
         default: {
-            description: string
-        }
-    },
-    requestBody?: RequestBody
-    summary: string,
-    tags: string[]
+            description: string;
+        };
+    };
+    requestBody?: RequestBody;
+    summary: string;
+    tags: string[];
     deprecated?: boolean;
 }
 
@@ -26,38 +26,38 @@ interface RequestBody {
                         description: string;
                         type: string;
                         readOnly: boolean;
-                    }
-                }
-            }
-        }
-    }
+                    };
+                };
+            };
+        };
+    };
 }
 
 export type method = [string, MethodInfo];
 
 export interface APIInfo {
-    title: string,
-    description: string,
-    version: string
+    title: string;
+    description: string;
+    version: string;
 }
 
 export interface APIDoc {
-    info? : APIInfo,
+    info? : APIInfo;
     tags : {
-                name: string,
-                description?: string,
-                [key:string]: any
-            }[],
+                name: string;
+                description?: string;
+                [key:string]: any;
+            }[];
     paths : {
         [key:string]: {
-            [key:string]: MethodInfo
-        }
-    },
-    servers?: { url: string }[],
-    tagsModified?: boolean
+            [key:string]: MethodInfo;
+        };
+    };
+    servers?: { url: string }[];
+    tagsModified?: boolean;
     components?: {
-        schemas: Object
-    }
+        schemas: Object;
+    };
 }
 
 export enum requestTypes {
@@ -73,7 +73,7 @@ export enum requestTypes {
 export type Markdown = string;
 
 export interface APIToolCacheObject {
-    version: string,
-    json: APIDoc,
-    markdown?: Markdown
+    version: string;
+    json: APIDoc;
+    markdown?: Markdown;
 }

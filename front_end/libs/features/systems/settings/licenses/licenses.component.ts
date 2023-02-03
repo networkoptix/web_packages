@@ -203,7 +203,7 @@ export class NxSystemLicensesComponent implements OnInit {
             licensesInfo.forEach(item => {
                 this.createLicenseInfo(item);
 
-                const boundServer = hardwareIds.find((server: { hardwareIds: string[], serverId: string }) => {
+                const boundServer = hardwareIds.find((server: { hardwareIds: string[]; serverId: string }) => {
                     return server.hardwareIds.find((id: string) => id === item.info.hwid);
                 });
 

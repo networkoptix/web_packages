@@ -20,7 +20,7 @@ import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
 import { NumberParser } from '@utils/number-parser';
 
-type CachedSizes = Record<string, { vms: number, total: number }>;
+type CachedSizes = Record<string, { vms: number; total: number }>;
 
 @UntilDestroy({ checkProperties: true })
 @Component({

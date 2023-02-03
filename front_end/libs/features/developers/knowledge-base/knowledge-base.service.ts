@@ -18,7 +18,7 @@ export class NxKnowledgebaseService {
     activeAssetIdSubject = new BehaviorSubject<string>('');
     activeNode: MenuNode;
     activeAssetState = '';
-    prefetchedDocuments: { assetId: number, version?: number, state?: string }[] = [];
+    prefetchedDocuments: { assetId: number; version?: number; state?: string }[] = [];
 
     LANG = staticLang;
     account: Account;

@@ -40,7 +40,7 @@ export class MediaServerListComponent implements OnChanges {
     }
 
     public isServerExpanded: {
-        [serverId: string]: boolean
+        [serverId: string]: boolean;
     } = {};
 
     constructor(

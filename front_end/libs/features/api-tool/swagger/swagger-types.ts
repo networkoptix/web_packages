@@ -1,9 +1,9 @@
 import { ComponentRef } from '@angular/core';
 
 export interface componentMap {
-    [uuid: string]: ComponentRef<unknown>
+    [uuid: string]: ComponentRef<unknown>;
 }
 
 export interface textareaMap {
-    [uuid: string]: string
+    [uuid: string]: string;
 }

@@ -30,8 +30,8 @@ import type { IpvdParams } from '../../ipvd.types';
 interface TagFilter {
     label: string;
     tagId?: string;
-    select?: { id: string, value: string },
-    multiselect?: { id: string, value: string }
+    select?: { id: string; value: string };
+    multiselect?: { id: string; value: string };
 }
 
 /* USAGE

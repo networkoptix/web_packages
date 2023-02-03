@@ -4,15 +4,15 @@ import { ms, int } from '@vms-client/utils/type-aliases';
 export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized';
 
 export interface ISimpleTimeRange {
-    start: ms,
-    end: ms,
-    duration: ms,
+    start: ms;
+    end: ms;
+    duration: ms;
     /* eslint-disable @typescript-eslint/no-use-before-define */
-    clone(): SimpleTimeRange,
-    contains(r: SimpleTimeRange): boolean,
-    isContained(r: SimpleTimeRange): boolean,
-    isDisjointWith(r: SimpleTimeRange): boolean,
-    overlapsWith(r: SimpleTimeRange): boolean,
+    clone(): SimpleTimeRange;
+    contains(r: SimpleTimeRange): boolean;
+    isContained(r: SimpleTimeRange): boolean;
+    isDisjointWith(r: SimpleTimeRange): boolean;
+    overlapsWith(r: SimpleTimeRange): boolean;
     /* eslint-enable @typescript-eslint/no-use-before-define */
 }
 
@@ -57,61 +57,61 @@ export class SimpleTimeRange {
 }
 
 export interface MediaStreamInfo {
-    codec: number,
-    customStreamParams: { [key: string]: string },
-    encoderIndex: number,
-    resolution: string,
-    transports: string[],
-    transcodingRequired: boolean
+    codec: number;
+    customStreamParams: { [key: string]: string };
+    encoderIndex: number;
+    resolution: string;
+    transports: string[];
+    transcodingRequired: boolean;
 }
 
 export type CameraArchive = Array<IRecord>;
 
 export interface AvailableTransportsAndResolutions {
-    [s: string]: { [key: string]: string } // means: [s: PlaybackTransport]
+    [s: string]: { [key: string]: string }; // means: [s: PlaybackTransport]
 }
 
 export interface ICamera {
-    id: string,
-    name: string,
-    url: string,
-    ip: string,
-    status: CAMERA_STATUS,
-    isVirtual: boolean,
-    isOnline: boolean,
-    isRecording: boolean,
-    isLive: boolean,
-    isAuthorized: boolean,
-    isOffline: boolean,
-    isUnauthorized: boolean,
+    id: string;
+    name: string;
+    url: string;
+    ip: string;
+    status: CAMERA_STATUS;
+    isVirtual: boolean;
+    isOnline: boolean;
+    isRecording: boolean;
+    isLive: boolean;
+    isAuthorized: boolean;
+    isOffline: boolean;
+    isUnauthorized: boolean;
 
-    isScheduleEnabled: boolean,
-    disableDualStreaming: boolean,
+    isScheduleEnabled: boolean;
+    disableDualStreaming: boolean;
 
-    hasArchive: boolean,
-    archiveRange: ISimpleTimeRange,
-    archive: CameraArchive,
-    readonly archiveEnd: ms,
+    hasArchive: boolean;
+    archiveRange: ISimpleTimeRange;
+    archive: CameraArchive;
+    readonly archiveEnd: ms;
 
-    thumbnailUrl: string,
+    thumbnailUrl: string;
 
-    getVideoUrl: (transport: string, quality: string, t?: ms) => string,
-    getPosterUrl(t?: ms, width?: number, height?: number),
-    getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
-    setRecords(range: ISimpleTimeRange, records: CameraArchive)
+    getVideoUrl: (transport: string, quality: string, t?: ms) => string;
+    getPosterUrl(t?: ms, width?: number, height?: number);
+    getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>;
+    setRecords(range: ISimpleTimeRange, records: CameraArchive);
 
-    mediaStreams: Array<MediaStreamInfo>
-    rotation: int
-    streamUrls: string[]
+    mediaStreams: Array<MediaStreamInfo>;
+    rotation: int;
+    streamUrls: string[];
 
-    availableTransports: Array<PlaybackTransport>,
-    availableTransportsAndResolutions: AvailableTransportsAndResolutions
+    availableTransports: Array<PlaybackTransport>;
+    availableTransportsAndResolutions: AvailableTransportsAndResolutions;
 
-    pushRecordedChunks (rs: CameraArchive)
+    pushRecordedChunks (rs: CameraArchive);
 
-    isThereRecord (t: ms)
-    getNextRecord (t: ms): ISimpleTimeRange
+    isThereRecord (t: ms);
+    getNextRecord (t: ms): ISimpleTimeRange;
 
-    preferredServerId: string,
-    parentServerId: string,
+    preferredServerId: string;
+    parentServerId: string;
 }

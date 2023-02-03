@@ -16,15 +16,15 @@ export enum GroupingOptions {
 }
 
 export interface DataStructureFilter {
-    sortable?: SortOptions,
-    multiSelect?: boolean,
-    grouping?: GroupingOptions
+    sortable?: SortOptions;
+    multiSelect?: boolean;
+    grouping?: GroupingOptions;
 }
 
 export interface DataStructureMeta {
-    options?: Record<any, any>,
-    icon?: string,
-    tooltip?: string,
-    styles? : string,
-    filter? : DataStructureFilter
+    options?: Record<any, any>;
+    icon?: string;
+    tooltip?: string;
+    styles? : string;
+    filter? : DataStructureFilter;
 }

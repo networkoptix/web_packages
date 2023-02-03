@@ -25,7 +25,7 @@ import {
 } from './store/groups.selectors';
 
 interface sidebarSettings {
-    showSidebarState: boolean
+    showSidebarState: boolean;
 }
 
 @Component({

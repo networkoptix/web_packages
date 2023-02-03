@@ -10,11 +10,11 @@ export enum VMS_MODE {
 }
 
 export interface AbstractVmsState {
-    mode: VMS_MODE,
+    mode: VMS_MODE;
 }
 
 export interface NotInitializedVmsState extends AbstractVmsState {
-    mode: VMS_MODE.NOT_INITIALIZED,
+    mode: VMS_MODE.NOT_INITIALIZED;
 }
 
 export function createNotInitializedState(): NotInitializedVmsState {
@@ -26,14 +26,14 @@ export function createNotInitializedState(): NotInitializedVmsState {
 export type CameraDict = {
     // [id: GUID]: ICamera
     // keys can't be a type aliases, sadly, due to TypeScript limitations
-    [id: string]: ICamera
+    [id: string]: ICamera;
 };
 
 export interface CameraNotSelectedVmsState extends AbstractVmsState {
-    mode: VMS_MODE.CAMERA_NOT_SELECTED,
-    systemId: string,
-    mediaServers: Array<IMediaServer>,
-    cameras: CameraDict
+    mode: VMS_MODE.CAMERA_NOT_SELECTED;
+    systemId: string;
+    mediaServers: Array<IMediaServer>;
+    cameras: CameraDict;
 }
 
 export function createCameraNotSelectedState(
@@ -54,12 +54,12 @@ export function createCameraNotSelectedState(
 }
 
 export interface CameraSelectedVmsState extends AbstractVmsState {
-    mode: VMS_MODE.CAMERA_SELECTED,
-    systemId: string,
-    mediaServers: Array<IMediaServer>,
-    cameras: CameraDict
-    selectedCameraId: GUID,
-    selectedCamera: ICamera,
+    mode: VMS_MODE.CAMERA_SELECTED;
+    systemId: string;
+    mediaServers: Array<IMediaServer>;
+    cameras: CameraDict;
+    selectedCameraId: GUID;
+    selectedCamera: ICamera;
 }
 
 export function createCameraSelectedState(

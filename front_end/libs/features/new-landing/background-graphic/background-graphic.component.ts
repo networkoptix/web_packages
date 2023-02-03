@@ -12,8 +12,8 @@ import { NgChanges } from '@utils/ng-changes';
 import { NxLandingService } from '../landing.service';
 
 interface layer {
-    scale : number
-    path : string
+    scale : number;
+    path : string;
 }
 
 @Component({

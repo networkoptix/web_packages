@@ -52,7 +52,7 @@ export class FormApplyExampleComponent {
     langCode: string = 'en_US';
     selectedDDItem: DropdownItem<string>;
 
-    tags: { name: string, selected: boolean, type?: string }[];
+    tags: { name: string; selected: boolean; type?: string }[];
 
     constructor(
         private applyService: NxApplyService,

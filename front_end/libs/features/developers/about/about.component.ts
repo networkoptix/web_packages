@@ -57,7 +57,7 @@ export class NxAboutComponent {
 
     getInvalidTemplateError({
         template, node: { title }
-    }: { template: string, node: AboutNode }) {
+    }: { template: string; node: AboutNode }) {
         const helper = template
             ? `Template name "${template}" is not a valid template`
             : 'Template name is required';

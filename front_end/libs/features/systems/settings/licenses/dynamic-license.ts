@@ -3,14 +3,14 @@ import type { IConfig } from '@services/nx-config/config-types';
 export interface DynamicLicense {
     [key: string]: {
         title: string;
-        deactivationsAllowed
-    }
+        deactivationsAllowed;
+    };
 }
 
 export const getDynamicLicense = (
     instance: {
-        CONFIG: IConfig,
-        licenseTypeTitles: { [key: string]: string }
+        CONFIG: IConfig;
+        licenseTypeTitles: { [key: string]: string };
     }
 ): DynamicLicense => instance.CONFIG.licenseTypes.reduce((
     licenses,

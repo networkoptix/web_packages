@@ -19,7 +19,7 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 
 interface SystemSetting {
-    [key: string]: unknown
+    [key: string]: unknown;
 }
 
 @UntilDestroy()

@@ -50,7 +50,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     viewScrollFixedTop: boolean = false;
     viewScrollFixedBottom: boolean = false;
 
-    camera: { title: string, param?: string, secondaryParam?: string }[];
+    camera: { title: string; param?: string; secondaryParam?: string }[];
 
     @ViewChild('nxCamView', { static: false })
     cameraView: ElementRef<HTMLDivElement>;

@@ -9,8 +9,8 @@ import {
 import { _getNextRecord } from './utils';
 
 export interface SubrangeIndicies {
-    firstIndex: int,
-    lastIndex: int,
+    firstIndex: int;
+    lastIndex: int;
 }
 
 function simpleComparator(a, b, m) {

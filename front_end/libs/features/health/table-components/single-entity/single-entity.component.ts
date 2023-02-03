@@ -14,7 +14,7 @@ import {
 import { NxHealthService } from '../../health.service';
 
 type SectionLookup = {
-    [key: string]: [InfoBlockSection]
+    [key: string]: [InfoBlockSection];
 };
 
 @Component({

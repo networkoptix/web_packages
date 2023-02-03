@@ -90,7 +90,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         }
     };
 
-    getElementPosition(elm: HTMLElement): { top: number, left: number } {
+    getElementPosition(elm: HTMLElement): { top: number; left: number } {
         const rect = elm.getBoundingClientRect();
         const scrollLeft = this.window.pageXOffset ||
             this.document.documentElement.scrollLeft;

@@ -32,7 +32,7 @@ export interface IncomingData {
     create_group: {
         action: WebSocketAction.CREATE_GROUP;
         data: BaseGroupItem;
-    }
+    };
     delete_group: {
         action: WebSocketAction.DELETE_GROUP;
         data: { msg: string };
@@ -40,7 +40,7 @@ export interface IncomingData {
     list_groups: {
         action: WebSocketAction.LIST_GROUPS;
         data: BaseGroupsItem[];
-    }
+    };
     update_group: {
         action: WebSocketAction.UPDATE_GROUP;
         data: never; // TODO
@@ -88,12 +88,12 @@ export interface OutgoingData {
         action: WebSocketAction.MOVE_GROUP;
         group_id: string;
         target_id: string | null;
-    }
+    };
     move_system: {
         action: WebSocketAction.MOVE_SYSTEM;
         system_id: string;
         group_id: string | null;
-    }
+    };
     systems: { action: WebSocketAction.SYSTEMS };
 }
 
