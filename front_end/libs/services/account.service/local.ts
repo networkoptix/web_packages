@@ -79,15 +79,16 @@ export class LocalAccount extends BaseAccount {
     }
 
     async get(forceUpdate = false): Promise<Account | undefined> {
-        try {
+        if (this.sessionService.loginState || this.storageService.cloudAccessToken) {
             const user: any = await this.mediaServerApi.getCurrentUser(forceUpdate);
             const account = newLocalAccount(user);
             this.account = account;
+
             return account;
-        } catch (err) {
-            if (!this.loginDialogActive) {
-                return this.showLoginDialog().then(() => undefined);
-            }
+        }
+
+        if (!this.loginDialogActive) {
+            return this.showLoginDialog().then(() => undefined);
         }
     }
 

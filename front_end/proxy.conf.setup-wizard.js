@@ -25,6 +25,7 @@ const PROXY_CONFIG = [
             '/static/images/logo.png',
             '/static/supported_languages.json',
             '/static/languages.json',
+            '/static/scripts/commonPasswordsList.json',
             '/swagger-ui',
             '/web',
         ],

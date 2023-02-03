@@ -316,8 +316,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (useToken) {
             headers = headers.set(this.token, accessToken || this.#vmsToken || '');
         }
-
-        headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
 
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
@@ -682,7 +683,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         takeRemoteSettings = true
     ) {
         const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
-        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
+        remoteEndpoint = remoteEndpoint
+            .replace(/https?:\/\/(?:.*@)?/, '')
+            .replace(/\/$/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});

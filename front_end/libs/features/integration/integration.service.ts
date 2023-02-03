@@ -124,21 +124,17 @@ export class IntegrationService implements OnDestroy {
     }
 
     private formatScreenshots(section): void {
-        if (section) {
-            section.screenshots = Object.keys(section).filter(element => {
-                return element.match(/screenshot[\d]+/i) && section[element];
-            }).map(key => {
-                const match = key.match(/([\d]+)/i);
-                return { id: key, value: section[key], sortKey: parseInt(match[0], 10) };
+        if (section.screenshots) {
+            const processed: any = [];
+            section.screenshots.forEach(screenshot => {
+                processed.push({
+                    id: processed.length + 1,
+                    value: screenshot.screenshot,
+                    sortKey: processed.length + 1,
+                    caption: screenshot.caption
+                });
             });
-
-            if (section.screenshots.length < 1) {
-                delete section.screenshots;
-            } else {
-                section.screenshots.sort(
-                    paramSortFunc((elm: any) => elm.sortKey)
-                );
-            }
+            section.screenshots = processed;
         }
     }
 
@@ -149,32 +145,12 @@ export class IntegrationService implements OnDestroy {
             return;
         }
 
-        Object.entries(plugin.overview).forEach(item => {
-            const matchScreenshot = item[0].match(/Screenshot([\d]+)$/);
-
-            if (matchScreenshot) {
-                processed.push({
-                    id: item[0].replace('overview', ''),
-                    value: item[1],
-                    sortKey: parseInt(matchScreenshot[1], 10)
-                });
-            }
-        });
-
-        Object.entries(plugin.overview).forEach(item => {
-            const matchCaption = item[0].match(/Screenshot[\d]+caption$/);
-
-            if (matchCaption) {
-                processed.find(i => {
-                    if (i.id === matchCaption[0].replace('caption', '')) {
-                        i.caption = item[1];
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            }
-        });
+        processed.push(...(plugin.overview.screenshots.map(screenshot => ({
+            id: processed.length + 1,
+            value: screenshot.screenshot,
+            sortKey: processed.length + 1,
+            caption: screenshot.caption
+        }))));
 
         if (processed.length) {
             processed.sort(paramSortFunc((elm: any) => {
