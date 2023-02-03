@@ -79,6 +79,7 @@ class BaseAccountModelSerializer(CdbAccountMixin, serializers.ModelSerializer):
         fields = CdbAccountMixin.Meta.fields + ('first_name', 'last_name', 'language', 'account2faEnabled')
 
     def __init__(self, request=None, *args, **kwargs):
+        kwargs['context'] = {'request': request}
         super().__init__(request.user if request else None, *args, **kwargs)
         if request:
             super().get_cdb_fields(request)

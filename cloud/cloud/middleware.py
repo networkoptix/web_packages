@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 
+from util.helpers import get_customization_name_from_cloud_host
+
 logger = logging.getLogger(__name__)
 
 
@@ -46,12 +48,22 @@ class FilterErrorMiddleware(MiddlewareMixin):
 
         return response
 
-class CachedMiddleware(object):
-    def __init__(self, get_response):
-        self.get_response = get_response
 
-    def __call__(self, request):
-        response = self.get_response(request)
+class CachedMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
         if request.GET.get('cached', False):
             response['Vary'] = 'customization'
         return response
+
+
+class CustomizationMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        host = request.get_host()
+        # If local set customization name from setting
+        if host.startswith('localhost') and settings.LOCAL_CUSTOMIZATION:
+            customization_name = settings.LOCAL_CUSTOMIZATION
+        else:
+            customization_name = get_customization_name_from_cloud_host(host)
+
+        request.META['CUSTOMIZATION'] = customization_name
+        request.CUSTOMIZATION = customization_name

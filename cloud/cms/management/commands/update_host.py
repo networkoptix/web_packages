@@ -21,8 +21,12 @@ class Command(BaseCommand):
             name=customization).first()
         if current_customization:
             conf = config.get_config()
-            host = conf["cloud_portal"]["url"].lstrip(
-                'https://').lstrip('http://')
+            host = conf["cloud_portal"]["url"]
+            if host.startswith('http://'):
+                host = host[7:]
+            elif host.startswith('https://'):
+                host = host[8:]
+
             if current_customization.host != host:
                 current_customization.host = host
                 current_customization.save()

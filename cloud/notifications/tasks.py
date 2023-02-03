@@ -128,7 +128,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
             and attempt < settings.MAX_RETRIES
         ):
             send_email.apply_async(
-                args=[message.id, queue, attempt + 1, email_type, failed_emails], queue=queue, customization=get_customization(request))
+                args=[message.id, queue, attempt + 1, email_type, failed_emails], queue=queue, customization=customization)
         elif attempt >= settings.MAX_RETRIES:
             error = MaxResendException()
         log_error(
